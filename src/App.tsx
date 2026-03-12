@@ -1,5 +1,5 @@
 import { useEffect, Suspense } from "react";
-import { lazyRetry } from "@/utils/lazyRetry";
+import { lazyRetry } from "./utils/lazyRetry";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
