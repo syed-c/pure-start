@@ -64,7 +64,7 @@ export function AISmartSearch({
   const [typingIndicator, setTypingIndicator] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { search, isSearching, results, response, error, clear } = useAISearch({
     onSuccess: (data) => {

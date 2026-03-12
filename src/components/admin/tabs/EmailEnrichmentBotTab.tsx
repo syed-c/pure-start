@@ -114,7 +114,7 @@ export default function EmailEnrichmentBotTab() {
   const [currentBatch, setCurrentBatch] = useState(0);
   
   // Ref for polling interval
-  const pollingRef = useRef<NodeJS.Timeout | null>(null);
+  const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isProcessingRef = useRef(false);
 
   // Load saved state from localStorage on mount
