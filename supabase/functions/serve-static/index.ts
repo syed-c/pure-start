@@ -11,7 +11,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const BASE_URL = "https://www.AppointPanda.ae";
+const BASE_URL = "https://www.appointpanda.ae";
 
 // IMPORTANT:
 // When we call Prerender.io, we must NOT use a bot User-Agent.
@@ -92,7 +92,7 @@ const CORE_SERVICES = [
   { name: 'Emergency Dental Care', slug: 'emergency-dental-care' },
   { name: 'Teeth Cleaning', slug: 'teeth-cleaning' },
   { name: 'Dental Fillings', slug: 'dental-fillings' },
-  { name: 'Braces', slug: 'braces' },
+  { name: 'Orthodontics', slug: 'orthodontics' },
   { name: 'Wisdom Teeth Removal', slug: 'wisdom-teeth-removal' },
   { name: 'Dental X-Ray', slug: 'dental-x-ray' },
   { name: 'Gum Treatment', slug: 'gum-treatment' },
@@ -106,9 +106,9 @@ const CORE_SERVICES = [
 function matchRoute(routePattern: string, actualPath: string): boolean {
   const routeParts = routePattern.split('/').filter(Boolean);
   const pathParts = actualPath.split('/').filter(Boolean);
-
+  
   if (routeParts.length !== pathParts.length) return false;
-
+  
   for (let i = 0; i < routeParts.length; i++) {
     const routePart = routeParts[i];
     const pathPart = pathParts[i];
@@ -118,19 +118,19 @@ function matchRoute(routePattern: string, actualPath: string): boolean {
     }
     if (routePart !== pathPart) return false;
   }
-
+  
   return true;
 }
 
 function classifyPath(pathname: string): { indexable: boolean; pageType: string | null } {
   const normalizedPath = pathname === '/' ? '/' : pathname.replace(/\/+$/, '');
-
+  
   for (const pattern of PRIVATE_ROUTE_PATTERNS) {
     if (normalizedPath.startsWith(pattern)) {
       return { indexable: false, pageType: null };
     }
   }
-
+  
   for (const { route, pageType } of INDEXABLE_ROUTE_PATTERNS) {
     if (matchRoute(route, normalizedPath)) {
       // For /:stateSlug/:citySlug pattern, check if second segment is a service slug
@@ -148,7 +148,7 @@ function classifyPath(pathname: string): { indexable: boolean; pageType: string 
       return { indexable: true, pageType };
     }
   }
-
+  
   return { indexable: false, pageType: null };
 }
 
@@ -157,15 +157,15 @@ function classifyPath(pathname: string): { indexable: boolean; pageType: string 
  */
 function extractPathInfo(path: string): { stateSlug?: string; citySlug?: string; serviceSlug?: string; clinicSlug?: string; dentistSlug?: string } {
   const parts = path.replace(/\/+$/, '').split('/').filter(Boolean);
-
+  
   if (parts[0] === 'services' && parts[1]) {
     return { serviceSlug: parts[1] };
   }
-
+  
   if (parts[0] === 'clinic' && parts[1]) {
     return { clinicSlug: parts[1] };
   }
-
+  
   if (parts[0] === 'dentist' && parts[1]) {
     return { dentistSlug: parts[1] };
   }
@@ -177,11 +177,11 @@ function extractPathInfo(path: string): { stateSlug?: string; citySlug?: string;
   if (parts[0] === 'compare' && parts[1]) {
     return { serviceSlug: parts[1] };
   }
-
+  
   if (parts.length === 1 && !['blog', 'insurance', 'services', 'about', 'contact', 'faq', 'privacy', 'terms', 'pricing', 'sitemap', 'how-it-works', 'cost', 'compare'].includes(parts[0])) {
     return { stateSlug: parts[0] };
   }
-
+  
   if (parts.length === 2) {
     // Check if second part is a service (state-service page)
     const isServiceSlug = CORE_SERVICES.some(s => s.slug === parts[1]);
@@ -190,11 +190,11 @@ function extractPathInfo(path: string): { stateSlug?: string; citySlug?: string;
     }
     return { stateSlug: parts[0], citySlug: parts[1] };
   }
-
+  
   if (parts.length === 3) {
     return { stateSlug: parts[0], citySlug: parts[1], serviceSlug: parts[2] };
   }
-
+  
   return {};
 }
 
@@ -221,20 +221,20 @@ async function fetchSeoContent(supabase: any, path: string): Promise<{
       `/${normalizedPath}/`,
       normalizedPath.replace(/\/$/, ''),
     ];
-
+    
     const { data } = await supabase
       .from('seo_pages')
       .select('h1, meta_title, meta_description, content, faqs')
       .in('slug', candidates)
       .limit(1)
       .maybeSingle();
-
+    
     // Parse FAQs from content if faqs column is empty
     if (data && !data.faqs && data.content) {
       const faqs = parseFaqsFromContent(data.content);
       data.faqs = faqs;
     }
-
+    
     return data;
   } catch (err) {
     console.log('Failed to fetch SEO content:', err);
@@ -293,9 +293,9 @@ async function fetchNearbyCities(supabase: any, stateSlug: string): Promise<{ na
       .or(`slug.eq.${stateSlug},abbreviation.ilike.${stateSlug}`)
       .limit(1)
       .maybeSingle();
-
+    
     if (!state) return [];
-
+    
     const { data: cities } = await supabase
       .from('cities')
       .select('name, slug')
@@ -303,7 +303,7 @@ async function fetchNearbyCities(supabase: any, stateSlug: string): Promise<{ na
       .eq('is_active', true)
       .order('dentist_count', { ascending: false })
       .limit(8);
-
+    
     return cities || [];
   } catch (err) {
     return [];
@@ -324,9 +324,9 @@ async function fetchCityListings(supabase: any, stateSlug: string, citySlug: str
       .eq('slug', citySlug)
       .limit(1)
       .maybeSingle();
-
+    
     if (!city) return { clinics: [], count: 0 };
-
+    
     const { data: clinics, count } = await supabase
       .from('clinics')
       .select('name, slug, rating, address', { count: 'exact' })
@@ -334,8 +334,8 @@ async function fetchCityListings(supabase: any, stateSlug: string, citySlug: str
       .eq('is_active', true)
       .order('rating', { ascending: false })
       .limit(10);
-
-    return {
+    
+    return { 
       clinics: (clinics || []).map((c: any) => ({
         name: c.name,
         slug: c.slug,
@@ -374,16 +374,16 @@ async function fetchClinicProfile(supabase: any, clinicSlug: string): Promise<{
       .eq('slug', clinicSlug)
       .eq('is_active', true)
       .maybeSingle();
-
+    
     if (!clinic) return null;
-
+    
     // Fetch services
     const { data: treatments } = await supabase
       .from('clinic_treatments')
       .select('treatment:treatments(name)')
       .eq('clinic_id', clinic.id)
       .limit(8);
-
+    
     return {
       name: clinic.name,
       description: clinic.description || '',
@@ -412,10 +412,10 @@ async function generateMinimalHtmlWithContent(
 ): Promise<string> {
   const pathInfo = extractPathInfo(path);
   const { stateSlug, citySlug, serviceSlug, clinicSlug, dentistSlug } = pathInfo;
-
+  
   // Fetch real SEO content from database
   const seoContent = await fetchSeoContent(supabase, path);
-
+  
   // Build contextual title and description
   // IMPORTANT: Generate page-type-specific defaults FIRST, then override with seo_pages data
   let title = 'AppointPanda - Find Your Perfect Dentist in UAE';
@@ -425,7 +425,7 @@ async function generateMinimalHtmlWithContent(
   let faqHtml = '';
   let listingsHtml = '';
   let clinicProfileHtml = '';
-
+  
   // Generate page-type-specific defaults based on URL structure
   // These apply regardless of whether seo_pages has data
   if (pageType === 'state' && stateSlug) {
@@ -497,18 +497,18 @@ async function generateMinimalHtmlWithContent(
     h1 = `Find Your Perfect Dentist in the UAE`;
     description = `AppointPanda is the UAE's leading dental directory. Find, compare, and book appointments with 6,600+ verified dental clinics across all 7 Emirates.`;
   }
-
+  
   // Override with seo_pages data if available (DB content takes priority)
   if (seoContent?.meta_title) title = seoContent.meta_title;
   if (seoContent?.h1) h1 = seoContent.h1;
   if (seoContent?.meta_description) description = seoContent.meta_description;
-
+  
   // Parse content into semantic HTML sections
   if (seoContent?.content) {
     const contentLines = seoContent.content.split('\n').filter((l: string) => l.trim());
     const sections: { heading?: string; paragraphs: string[] }[] = [];
     let currentSection: { heading?: string; paragraphs: string[] } = { paragraphs: [] };
-
+    
     for (const line of contentLines) {
       if (line.startsWith('## ')) {
         if (currentSection.paragraphs.length > 0 || currentSection.heading) {
@@ -527,7 +527,7 @@ async function generateMinimalHtmlWithContent(
     if (currentSection.paragraphs.length > 0 || currentSection.heading) {
       sections.push(currentSection);
     }
-
+    
     // Generate semantic HTML from sections (limit to 6 sections for performance)
     contentHtml = sections.slice(0, 6).map(section => {
       const paragraphsHtml = section.paragraphs.map(p => `<p>${p}</p>`).join('\n        ');
@@ -540,7 +540,7 @@ async function generateMinimalHtmlWithContent(
       return paragraphsHtml;
     }).join('\n      ');
   }
-
+  
   // Generate FAQ HTML (critical for SEO)
   const faqs = seoContent?.faqs || [];
   if (faqs.length > 0) {
@@ -559,7 +559,7 @@ async function generateMinimalHtmlWithContent(
       </dl>
     </section>`;
   }
-
+  
   // Fetch and render clinic listings for city/service-location pages
   if ((pageType === 'city' || pageType === 'service-location') && stateSlug && citySlug) {
     const listings = await fetchCityListings(supabase, stateSlug, citySlug);
@@ -584,7 +584,7 @@ async function generateMinimalHtmlWithContent(
     </section>`;
     }
   }
-
+  
   // Fetch clinic profile for clinic pages
   if (pageType === 'clinic' && clinicSlug) {
     const profile = await fetchClinicProfile(supabase, clinicSlug);
@@ -592,7 +592,7 @@ async function generateMinimalHtmlWithContent(
       title = `${profile.name} | Dentist in ${profile.cityName} | AppointPanda`;
       h1 = profile.name;
       description = profile.description || `${profile.name} is a dental clinic in ${profile.cityName}, ${profile.stateName}. Book your appointment online.`;
-
+      
       clinicProfileHtml = `
     <section itemscope itemtype="https://schema.org/Dentist">
       <meta itemprop="name" content="${profile.name}" />
@@ -615,7 +615,7 @@ async function generateMinimalHtmlWithContent(
     </section>`;
     }
   }
-
+  
   // Generate fallback body content when no seo_pages content exists
   if (!seoContent?.content) {
     if (pageType === 'state-service' && stateSlug && serviceSlug) {
@@ -681,35 +681,35 @@ async function generateMinimalHtmlWithContent(
       </section>`;
     }
   }
-
+  
   // Fetch nearby cities for internal linking
   const nearbyCities = stateSlug ? await fetchNearbyCities(supabase, stateSlug) : [];
-
+  
   // Build navigation links - CRITICAL for crawl discovery and internal linking
   // CANONICAL: All links use trailing slash (except root /)
-  const stateLinks = CORE_STATES.map(s =>
+  const stateLinks = CORE_STATES.map(s => 
     `<li><a href="${BASE_URL}/${s.slug}/">Dentists in ${s.name}, UAE</a></li>`
   ).join('\n            ');
-
-  const serviceLinks = CORE_SERVICES.map(s =>
+  
+  const serviceLinks = CORE_SERVICES.map(s => 
     `<li><a href="${BASE_URL}/services/${s.slug}/">${s.name}</a></li>`
   ).join('\n            ');
-
+  
   // Dynamic nearby city links (filtered to exclude current city)
-  const nearbyCityLinks = nearbyCities.length > 0
+  const nearbyCityLinks = nearbyCities.length > 0 
     ? nearbyCities
-      .filter(c => c.slug !== citySlug)
-      .map(c => `<li><a href="${BASE_URL}/${stateSlug}/${c.slug}/">Dentists in ${c.name}</a></li>`)
-      .join('\n            ')
+        .filter(c => c.slug !== citySlug)
+        .map(c => `<li><a href="${BASE_URL}/${stateSlug}/${c.slug}/">Dentists in ${c.name}</a></li>`)
+        .join('\n            ')
     : '';
-
+  
   // Service-location links for cities
-  const serviceLocationLinks = (citySlug && stateSlug)
-    ? CORE_SERVICES.slice(0, 6).map(s =>
-      `<li><a href="${BASE_URL}/${stateSlug}/${citySlug}/${s.slug}/">${s.name} in ${formatSlugToName(citySlug)}</a></li>`
-    ).join('\n            ')
+  const serviceLocationLinks = (citySlug && stateSlug) 
+    ? CORE_SERVICES.slice(0, 6).map(s => 
+        `<li><a href="${BASE_URL}/${stateSlug}/${citySlug}/${s.slug}/">${s.name} in ${formatSlugToName(citySlug)}</a></li>`
+      ).join('\n            ')
     : '';
-
+  
   const mainNavLinks = `
     <li><a href="${BASE_URL}/">Home</a></li>
     <li><a href="${BASE_URL}/services/">All Dental Services</a></li>
@@ -718,11 +718,11 @@ async function generateMinimalHtmlWithContent(
     <li><a href="${BASE_URL}/contact/">Contact</a></li>
     <li><a href="${BASE_URL}/sitemap/">Sitemap</a></li>
   `;
-
+  
   // Contextual breadcrumbs (trailing slashes)
   let breadcrumbNav = `<a href="${BASE_URL}/">Home</a>`;
   const breadcrumbItems = [{ name: 'Home', url: `${BASE_URL}/` }];
-
+  
   if (stateSlug) {
     const stateName = formatSlugToName(stateSlug);
     breadcrumbNav += ` → <a href="${BASE_URL}/${stateSlug}/">${stateName}</a>`;
@@ -761,7 +761,7 @@ async function generateMinimalHtmlWithContent(
       item: item.url,
     })),
   };
-
+  
   const organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -770,7 +770,7 @@ async function generateMinimalHtmlWithContent(
     logo: `${BASE_URL}/logo.png`,
     description: 'Find and book appointments with top-rated dental professionals across the UAE. Compare verified clinics in Dubai, Abu Dhabi, Sharjah with transparent AED pricing.',
   };
-
+  
   // FAQ schema (if FAQs exist)
   const faqSchema = faqs.length > 0 ? {
     '@context': 'https://schema.org',
@@ -949,16 +949,16 @@ async function fetchWithRetry(
   maxRetries: number = 3
 ): Promise<Response> {
   let lastError: Error | null = null;
-
+  
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       const response = await fetch(url, options);
-
+      
       // Success or client error (don't retry 4xx)
       if (response.ok || (response.status >= 400 && response.status < 500)) {
         return response;
       }
-
+      
       // Server error - retry
       if (response.status >= 500) {
         console.log(`Attempt ${attempt}/${maxRetries} failed with ${response.status}, retrying...`);
@@ -968,14 +968,14 @@ async function fetchWithRetry(
       console.log(`Attempt ${attempt}/${maxRetries} failed with error, retrying...`);
       lastError = err as Error;
     }
-
+    
     // Exponential backoff: 1s, 2s, 4s
     if (attempt < maxRetries) {
       const delay = Math.pow(2, attempt - 1) * 1000;
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
-
+  
   throw lastError || new Error('All retries failed');
 }
 
@@ -991,47 +991,47 @@ async function prerenderAndCache(
 ): Promise<{ html: string; cached: boolean }> {
   const targetUrl = `${BASE_URL}${path}`;
   const prerenderUrl = `https://service.prerender.io/${targetUrl}`;
-
+  
   console.log(`Prerendering on-demand: ${path} (forceRecache: ${forceRecache})`);
-
+  
   try {
     const headers: Record<string, string> = {
       "X-Prerender-Token": prerenderToken,
       "User-Agent": BROWSER_USER_AGENT,
       "X-Prerender-Render-Delay": "4000", // Increased for full page hydration
     };
-
+    
     if (forceRecache) {
       headers['X-Prerender-Recache'] = 'true';
     }
-
+    
     const response = await fetchWithRetry(prerenderUrl, { headers }, 3);
-
+    
     if (!response.ok) {
       console.error(`Prerender failed for ${path}: ${response.status}`);
       const fallbackHtml = await generateMinimalHtmlWithContent(supabase, path, pageType);
       return { html: fallbackHtml, cached: false };
     }
-
+    
     let html = await response.text();
-
+    
     // Validate we got meaningful content (not empty or error page)
     if (!html || html.length < 500 || html.includes('Prerender Error')) {
       console.error(`Prerender returned invalid content for ${path}`);
       const fallbackHtml = await generateMinimalHtmlWithContent(supabase, path, pageType);
       return { html: fallbackHtml, cached: false };
     }
-
+    
     // Ensure no noindex in prerendered content for indexable pages
     html = html.replace(
       /<meta\s+name=["']robots["']\s+content=["'][^"']*noindex[^"']*["']\s*\/?>/gi,
       '<meta name="robots" content="index, follow">'
     );
-
+    
     // Generate a storage path
     const contentHash = hashContent(html);
     const storagePath = `${pageType}${path.replace(/\//g, '_')}${contentHash}.html`;
-
+    
     // Try to upload and cache (best effort)
     try {
       await supabase.storage
@@ -1040,9 +1040,9 @@ async function prerenderAndCache(
           contentType: 'text/html',
           upsert: true
         });
-
+      
       const cachePath = path.endsWith('/') ? path : path + '/';
-
+      
       await supabase
         .from('static_page_cache')
         .upsert({
@@ -1053,7 +1053,7 @@ async function prerenderAndCache(
           generated_at: new Date().toISOString(),
           is_stale: false
         }, { onConflict: 'path' });
-
+      
       console.log(`Cached prerendered page: ${path}`);
       return { html, cached: true };
     } catch (cacheErr) {
@@ -1081,16 +1081,16 @@ serve(async (req) => {
     const url = new URL(req.url);
     let requestedPath = url.searchParams.get('path') || url.pathname.replace('/serve-static', '');
     const isTestMode = url.searchParams.get('test') === '1';
-
+    
     if (!requestedPath.startsWith('/')) {
       requestedPath = '/' + requestedPath;
     }
-
+    
     // Handle sitemap XML requests
     if (requestedPath.match(/^\/sitemap.*\.xml$/i)) {
       const sitemapUrl = `${supabaseUrl}/functions/v1/sitemap`;
       let sitemapType = '';
-
+      
       const typeMatch = requestedPath.match(/sitemap-([^.]+)\.xml/);
       if (typeMatch) {
         const typePart = typeMatch[1];
@@ -1102,13 +1102,13 @@ serve(async (req) => {
           sitemapType = `?type=${typePart}`;
         }
       }
-
+      
       console.log(`Redirecting sitemap request ${requestedPath} to sitemap function`);
-
+      
       const response = await fetch(`${sitemapUrl}${sitemapType}`, {
         headers: { 'Authorization': `Bearer ${supabaseKey}` }
       });
-
+      
       const xml = await response.text();
       return new Response(xml, {
         status: 200,
@@ -1119,7 +1119,7 @@ serve(async (req) => {
         },
       });
     }
-
+    
     // Handle robots.txt and llms.txt
     if (requestedPath === '/robots.txt' || requestedPath.match(/^\/llms.*\.txt$/i)) {
       const fileUrl = `${BASE_URL}${requestedPath}`;
@@ -1136,7 +1136,7 @@ serve(async (req) => {
         },
       });
     }
-
+    
     // CANONICAL: Enforce trailing slash (except root /)
     // 301 redirect non-trailing slash URLs to trailing slash version
     if (requestedPath !== '/' && !requestedPath.endsWith('/') && !requestedPath.includes('.')) {
@@ -1151,7 +1151,7 @@ serve(async (req) => {
         },
       });
     }
-
+    
     // Normalize: ensure trailing slash for internal processing (except root)
     if (requestedPath !== '/' && !requestedPath.endsWith('/')) {
       requestedPath = requestedPath + '/';
@@ -1182,14 +1182,14 @@ serve(async (req) => {
 
     // Classify the path
     const classification = classifyPath(requestedPath);
-
+    
     // Non-indexable pages: check if it's a private route or a 404
     if (!classification.indexable) {
       // Check if it's a known private route (these should not redirect)
-      const isKnownPrivate = PRIVATE_ROUTE_PATTERNS.some(pattern =>
+      const isKnownPrivate = PRIVATE_ROUTE_PATTERNS.some(pattern => 
         requestedPath.startsWith(pattern)
       );
-
+      
       if (isKnownPrivate) {
         console.log(`Path ${requestedPath} is a private/utility page`);
         return new Response(`<!DOCTYPE html>
@@ -1211,7 +1211,7 @@ serve(async (req) => {
           },
         });
       }
-
+      
       // Not a known indexable route and not a private route = 404
       // IMPORTANT: Do NOT redirect 404s to homepage. Keep users/bots on the 404 URL.
       console.log(`404 Not Found: ${requestedPath}`);
@@ -1256,7 +1256,7 @@ serve(async (req) => {
           classification.pageType,
           prerenderToken
         );
-
+        
         return new Response(html, {
           status: 200,
           headers: {
@@ -1268,7 +1268,7 @@ serve(async (req) => {
           },
         });
       }
-
+      
       // Serve cached content
       const { data: fileData, error: downloadError } = await supabase.storage
         .from('static-pages')
@@ -1293,7 +1293,7 @@ serve(async (req) => {
 
     // CACHE MISS - Prerender on-demand
     console.log(`Cache miss for indexable page: ${requestedPath}`);
-
+    
     if (prerenderToken && classification.pageType) {
       const { html, cached } = await prerenderAndCache(
         supabase,
@@ -1301,7 +1301,7 @@ serve(async (req) => {
         classification.pageType,
         prerenderToken
       );
-
+      
       return new Response(html, {
         status: 200,
         headers: {
@@ -1313,9 +1313,9 @@ serve(async (req) => {
         },
       });
     }
-
+    
     // No prerender token - return minimal HTML with full content structure
-    const minimalHtml = classification.pageType
+    const minimalHtml = classification.pageType 
       ? await generateMinimalHtmlWithContent(supabase, requestedPath, classification.pageType)
       : `<!DOCTYPE html>
 <html lang="en">
@@ -1332,7 +1332,7 @@ serve(async (req) => {
   <p><a href="${BASE_URL}${requestedPath}">Visit this page</a></p>
 </body>
 </html>`;
-
+    
     return new Response(minimalHtml, {
       status: 200,
       headers: {

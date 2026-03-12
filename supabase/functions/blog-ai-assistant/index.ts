@@ -83,7 +83,7 @@ serve(async (req) => {
       throw new Error("AIMLAPI_KEY is not configured");
     }
 
-    const { action, title, content, excerpt, url, count } = await req.json();
+    const { action, title, content, count } = await req.json();
 
     // Handle image generation separately using AIMLAPI Image endpoint
     if (action === "generate_image") {
@@ -210,63 +210,54 @@ serve(async (req) => {
         if (supabaseUrl && supabaseServiceKey) {
           const supabase = createClient(supabaseUrl, supabaseServiceKey);
           
-          // Fetch treatments, cities, states, and blog posts
-          const [treatmentsRes, citiesRes, statesRes, blogsRes, clinicsRes] = await Promise.all([
-            supabase.from("treatments").select("slug, name").eq("is_active", true).limit(100),
-            supabase.from("cities").select("slug, name, states(slug, name)").eq("is_active", true).limit(100),
+          // Fetch only service and location pages for strict internal interlinking
+          const [treatmentsRes, citiesRes, statesRes] = await Promise.all([
+            supabase.from("treatments").select("slug, name").eq("is_active", true).limit(150),
+            supabase.from("cities").select("slug, name, states(slug, name)").eq("is_active", true).limit(150),
             supabase.from("states").select("slug, name").eq("is_active", true),
-            supabase.from("blog_posts").select("slug, title").eq("status", "published").limit(50),
-            supabase.from("clinics").select("slug, name, cities(slug, states(slug))").eq("is_active", true).limit(50),
           ]);
           
           const pages: string[] = [];
           
-          // Add treatments/services
+          // Add services
           (treatmentsRes.data || []).forEach((t: any) => {
-            pages.push(`Service: "${t.name}" → /services/${t.slug}`);
+            pages.push(`Service: "${t.name}" → /services/${t.slug}/`);
           });
           
           // Add states
           (statesRes.data || []).forEach((s: any) => {
-            pages.push(`State: "${s.name}" → /${s.slug}`);
+            pages.push(`Location State: "${s.name}" → /${s.slug}/`);
           });
           
           // Add cities with state
           (citiesRes.data || []).forEach((c: any) => {
             const state = Array.isArray(c.states) ? c.states[0] : c.states;
             if (state?.slug) {
-              pages.push(`City: "${c.name}, ${state.name || ''}" → /${state.slug}/${c.slug}`);
+              pages.push(`Location City: "${c.name}, ${state.name || ''}" → /${state.slug}/${c.slug}/`);
             }
           });
           
-          // Add blog posts
-          (blogsRes.data || []).forEach((b: any) => {
-            pages.push(`Blog: "${b.title}" → /blog/${b.slug}`);
-          });
-          
-          // Add clinics
-          (clinicsRes.data || []).forEach((cl: any) => {
-            const city = Array.isArray(cl.cities) ? cl.cities[0] : cl.cities;
-            const state = city?.states ? (Array.isArray(city.states) ? city.states[0] : city.states) : null;
-            if (state?.slug && city?.slug) {
-              pages.push(`Clinic: "${cl.name}" → /${state.slug}/${city.slug}/${cl.slug}`);
-            }
-          });
-          
-          availablePages = pages.slice(0, 200).join("\n");
+          availablePages = pages.slice(0, 250).join("\n");
         }
         
-        systemPrompt = `You are an SEO content strategist for a dental directory website. Analyze the blog content and identify internal linking opportunities. Match mentions in the content to the available pages on the site. Focus on natural anchor text that would improve SEO and user experience.
+        systemPrompt = `You are an SEO content strategist for a dental directory website. Analyze the blog content and identify internal linking opportunities.
+
+STRICT RULES:
+- ONLY use internal URLs from the available pages list
+- ONLY link to service and location pages
+- NEVER suggest clinic profile links, blog links, Google Maps links, metro links, or any external URLs
+- Prefer /services/{service-slug}/ and /{state-slug}/{city-slug}/ patterns
+- Use exact anchor text that appears naturally in the content
 
 Available pages on the site:
-${availablePages || "No page data available - suggest generic dental service and location page patterns."}`;
+${availablePages || "No page data available - suggest only these patterns: /services/{service-slug}/ and /{state-slug}/{city-slug}/"}`;
         
         userPrompt = `Blog content to analyze:\n${content?.substring(0, 4000)}\n\nFind 5-10 internal linking opportunities. For each, identify:
 1. The exact anchor text from the content that should be linked
-2. The URL it should link to (from the available pages list)
+2. The URL it should link to (ONLY service/location pages)
 3. Brief reason why this link adds value
 
-Return JSON: {"links": [{"anchor_text": "exact text from content", "url": "/actual/page/path", "reason": "why this link helps", "type": "service|city|blog|clinic"}]}`;
+Return JSON: {"links": [{"anchor_text": "exact text from content", "url": "/actual/page/path/", "reason": "why this link helps", "type": "service|location|service_location"}]}`;
         break;
       }
 
@@ -293,6 +284,35 @@ Return JSON: {"links": [{"anchor_text": "exact text from content", "url": "/actu
         userPrompt = `Title: ${title}\n\nContent:\n${content?.substring(0, 3000)}\n\nProvide improvement suggestions in JSON format: {"suggestions": [{"type": "...", "description": "...", "priority": "high|medium|low"}]}`;
         break;
 
+      case "generate_full_post": {
+        systemPrompt = `You are an expert dental SEO content writer for AppointPanda.ae — the UAE's largest dental directory with 6,600+ DHA/DOH/MOHAP verified clinics. Write in a trusted, warm, factual tone. Always use AED for pricing, reference DHA/DOH/MOHAP (never FDA/NHS), and mention WhatsApp booking where relevant.
+
+RULES:
+- Start with a direct answer in the first paragraph
+- Use H2/H3 headings with semantic keyword variations
+- Include an AED pricing table (Low/Mid/High ranges) for commercial content
+- Add 5+ FAQs at the end in Q&A format
+- Use ONLY internal link placeholders to service/location pages
+- Allowed internal formats only: [LINK: /services/{service-slug}/], [LINK: /{state-slug}/], [LINK: /{state-slug}/{city-slug}/], [LINK: /{state-slug}/{city-slug}/{service-slug}/]
+- Do NOT include Google Maps links, metro links, or any external URLs
+- End with: "Consult a DHA-licensed dentist for a personalised treatment plan."
+- All years must be 2026
+- Target the specified word count`;
+        
+        const wordTarget = content?.match(/Word Count:\s*(\d+)/)?.[1] || "1500";
+        const keyword = content?.match(/Primary Keyword:\s*(.+)/)?.[1] || title;
+        
+        userPrompt = `Write a complete, SEO-optimized blog post.
+
+Title: ${title}
+${content || ''}
+
+Write approximately ${wordTarget} words. Primary keyword: "${keyword}"
+
+Return JSON: {"content": "full markdown content", "excerpt": "2-3 sentence excerpt under 160 chars", "seo_title": "under 60 chars with keyword", "seo_description": "under 155 chars with keyword and CTA"}`;
+        break;
+      }
+
       case "generate_slug":
         systemPrompt = "You are a URL optimization expert. Generate an SEO-friendly URL slug for the blog post. The slug should be lowercase, use hyphens, be concise (3-6 words), and include the primary keyword.";
         userPrompt = `Title: ${title}\n\nGenerate a slug (just the slug, nothing else):`;
@@ -302,7 +322,7 @@ Return JSON: {"links": [{"anchor_text": "exact text from content", "url": "/actu
         throw new Error("Invalid action");
     }
 
-    const maxTokens = action === "generate_faqs" ? 1800 : 1000;
+    const maxTokens = action === "generate_full_post" ? 4000 : action === "generate_faqs" ? 1800 : 1000;
 
     const response = await fetch("https://api.aimlapi.com/v1/chat/completions", {
       method: "POST",

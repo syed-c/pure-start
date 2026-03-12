@@ -1,4 +1,3 @@
-'use client';
 /**
  * Advanced Features Panel - Sprint 4.2
  * 

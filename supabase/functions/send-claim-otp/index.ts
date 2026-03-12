@@ -46,7 +46,7 @@ async function getSmtpSettings(supabaseClient: any): Promise<SMTPSettings | null
     port: parseInt(smtp.port?.toString() || '587'),
     user: smtp.username,
     pass: smtp.password,
-    from: smtp.from_email ? `${smtp.from_name || 'AppointPanda'} <${smtp.from_email}>` : 'AppointPanda <no-reply@AppointPanda.ae>',
+    from: smtp.from_email ? `${smtp.from_name || 'Appoint Panda'} <${smtp.from_email}>` : 'Appoint Panda <no-reply@appointpanda.ae>',
     secure: smtp.port === 465,
   };
 }
@@ -108,7 +108,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const token = authHeader.replace("Bearer ", "");
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser(token);
-
+    
     if (authError || !user) {
       return new Response(JSON.stringify({ error: "Invalid authentication" }), {
         status: 401,
@@ -119,10 +119,10 @@ const handler = async (req: Request): Promise<Response> => {
     // Parse and validate input
     const body = await req.json();
     const validationResult = SendOTPSchema.safeParse(body);
-
+    
     if (!validationResult.success) {
       console.error("Validation error:", validationResult.error.issues);
-      return new Response(JSON.stringify({
+      return new Response(JSON.stringify({ 
         error: "Invalid request. Please check your input and try again."
       }), {
         status: 400,
@@ -152,7 +152,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Use businessEmail if provided, else email, else clinic.email
     const targetVerificationEmail = businessEmail || email || clinic.email;
-
+    
     // Create or update claim request with OTP
     const { error: upsertError } = await supabaseClient
       .from("claim_requests")
@@ -189,10 +189,10 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const emailToSend = targetVerificationEmail || user.email;
-
+    
     if (!emailToSend) {
-      return new Response(JSON.stringify({
-        success: false,
+      return new Response(JSON.stringify({ 
+        success: false, 
         error: "No email address available for verification."
       }), {
         status: 400,
@@ -233,7 +233,7 @@ const handler = async (req: Request): Promise<Response> => {
           <tr>
             <td style="padding: 30px 40px; background-color: #f4f4f5; text-align: center;">
               <p style="margin: 0; color: #6b7280; font-size: 12px;">
-                © 2024 AppointPanda. All rights reserved.
+                © 2024 Appoint Panda. All rights reserved.
               </p>
             </td>
           </tr>
@@ -244,19 +244,19 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Try SMTP first
     const smtpSettings = await getSmtpSettings(supabaseClient);
-
+    
     if (smtpSettings) {
       const smtpResult = await sendEmailViaSMTP(
         smtpSettings,
         emailToSend,
-        `Your Verification Code: ${otp} - AppointPanda`,
+        `Your Verification Code: ${otp} - Appoint Panda`,
         emailHtml
       );
 
       if (smtpResult.success) {
         console.log("OTP email sent via SMTP to:", emailToSend);
-        return new Response(JSON.stringify({
-          success: true,
+        return new Response(JSON.stringify({ 
+          success: true, 
           message: `Verification code sent to ${method}`
         }), {
           status: 200,
@@ -269,7 +269,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Fallback to Resend if SMTP not configured or failed
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
-
+    
     if (resendApiKey) {
       const emailResponse = await fetch("https://api.resend.com/emails", {
         method: "POST",
@@ -278,18 +278,18 @@ const handler = async (req: Request): Promise<Response> => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "AppointPanda <no-reply@AppointPanda.ae>",
+          from: "Appoint Panda <no-reply@appointpanda.ae>",
           to: [emailToSend],
-          subject: `Your Verification Code: ${otp} - AppointPanda`,
+          subject: `Your Verification Code: ${otp} - Appoint Panda`,
           html: emailHtml,
         }),
       });
 
       const result = await emailResponse.json();
       console.log("OTP email sent via Resend to:", emailToSend, result);
-
-      return new Response(JSON.stringify({
-        success: true,
+      
+      return new Response(JSON.stringify({ 
+        success: true, 
         message: `Verification code sent to ${method}`
       }), {
         status: 200,
@@ -299,8 +299,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // No email service configured
     console.log("OTP generated but no email service configured - OTP stored in database only");
-    return new Response(JSON.stringify({
-      success: false,
+    return new Response(JSON.stringify({ 
+      success: false, 
       error: "Email service not configured. Please configure SMTP settings in admin or contact support."
     }), {
       status: 503,

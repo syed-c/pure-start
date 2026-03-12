@@ -1,7 +1,5 @@
-'use client';
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import Link from "next/link";
+import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAnalytics } from "@/hooks/useAnalytics";
@@ -53,11 +51,9 @@ import { ConversationalQABlock, AIDiscoveryMeta } from "@/components/ai-seo";
 import { generateClinicQA } from "@/lib/ai-seo/generateQAContent";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
-import { proxyImageUrl } from "@/lib/proxyImageUrl";
 
 const ClinicPage = () => {
-  const router = useRouter();
-  const clinicSlug = typeof router.query?.clinicSlug === 'string' ? router.query.clinicSlug : '';
+  const { clinicSlug } = useParams();
   const slug = clinicSlug || "";
   const [bookingOpen, setBookingOpen] = useState(false);
   const [selectedDentistId, setSelectedDentistId] = useState<string | undefined>();
@@ -210,7 +206,7 @@ const ClinicPage = () => {
 
   // Signal prerender when ALL SEO-critical data is ready
   // This includes clinic data, treatments (for services list), and SEO content
-  const isDataReady = !isLoading && !!clinic &&
+  const isDataReady = !isLoading && !!clinic && 
     !!treatments && // Services list is SEO-critical
     (!!seoContent || !seoSlug); // SEO content loaded or not expected
   usePrerenderReady(isDataReady, { delay: 600 });
@@ -245,7 +241,7 @@ const ClinicPage = () => {
               The clinic you're looking for doesn't exist or has been removed.
             </p>
             <Button asChild className="rounded-xl font-bold">
-              <Link href="/search">Browse Clinics</Link>
+              <Link to="/search">Browse Clinics</Link>
             </Button>
           </div>
         </Section>
@@ -260,7 +256,7 @@ const ClinicPage = () => {
 
   // Get state slug from city data
   const stateSlug = clinic.city?.state?.slug || '';
-
+  
   const breadcrumbs = [
     { label: "Clinics", href: "/search" },
     ...(clinic.city?.state ? [{ label: clinic.city.state.name, href: `/${clinic.city.state.slug}` }] : []),
@@ -312,7 +308,7 @@ const ClinicPage = () => {
       <div className="relative h-56 md:h-72 bg-muted">
         {clinic.cover_image_url ? (
           <img
-            src={proxyImageUrl(clinic.cover_image_url) || clinic.cover_image_url}
+            src={clinic.cover_image_url}
             alt={clinic.name}
             className="w-full h-full object-cover"
           />
@@ -320,7 +316,7 @@ const ClinicPage = () => {
           <div className="w-full h-full bg-gradient-to-br from-primary/20 via-purple/10 to-gold/20" />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-
+        
         {/* Breadcrumbs */}
         <div className="absolute top-4 left-0 right-0">
           <div className="container">
@@ -338,7 +334,7 @@ const ClinicPage = () => {
               <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-card overflow-hidden border-4 border-background shadow-elevated">
                 {clinic.cover_image_url ? (
                   <img
-                    src={proxyImageUrl(clinic.cover_image_url) || clinic.cover_image_url}
+                    src={clinic.cover_image_url}
                     alt={clinic.name}
                     className="w-full h-full object-cover"
                   />
@@ -370,9 +366,9 @@ const ClinicPage = () => {
                 )}
                 {isGmbConnected && (
                   <Badge variant="outline" className="rounded-full px-3 py-1 text-xs">
-                    <img
-                      src="https://www.google.com/favicon.ico"
-                      alt="Google"
+                    <img 
+                      src="https://www.google.com/favicon.ico" 
+                      alt="Google" 
                       className="h-3 w-3 mr-1"
                     />
                     GMB Synced
@@ -432,7 +428,7 @@ const ClinicPage = () => {
               {isClaimed && (
                 <div className="flex flex-wrap gap-3 mt-3">
                   {clinic.phone && (
-                    <a
+                    <a 
                       href={`tel:${clinic.phone}`}
                       className="text-sm text-primary hover:underline flex items-center gap-1"
                     >
@@ -441,7 +437,7 @@ const ClinicPage = () => {
                     </a>
                   )}
                   {clinic.website && (
-                    <a
+                    <a 
                       href={clinic.website}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -459,9 +455,9 @@ const ClinicPage = () => {
 
             {/* Action Buttons - Desktop */}
             <div className="hidden lg:flex flex-col gap-2 shrink-0">
-              <Button
-                size="lg"
-                className="rounded-xl font-bold"
+              <Button 
+                size="lg" 
+                className="rounded-xl font-bold" 
                 onClick={() => handleBookClick()}
               >
                 <Calendar className="h-4 w-4 mr-2" />
@@ -504,7 +500,7 @@ const ClinicPage = () => {
                 </div>
               </div>
               <Button asChild className="bg-gradient-to-r from-red-500 to-orange-500 text-white border-0 hover:from-red-600 hover:to-orange-600">
-                <Link href="/pricing">
+                <Link to="/pricing">
                   View Plans
                 </Link>
               </Button>
@@ -516,9 +512,9 @@ const ClinicPage = () => {
       {/* Unclaimed Notice Banner */}
       {!isClaimed && (
         <Section size="sm" className="pt-0">
-          <ClaimProfileCTA
-            clinicId={clinic.id}
-            clinicName={clinic.name}
+          <ClaimProfileCTA 
+            clinicId={clinic.id} 
+            clinicName={clinic.name} 
             variant="banner"
           />
         </Section>
@@ -558,14 +554,14 @@ const ClinicPage = () => {
                 {/* Description - Show optimized SEO content if available */}
                 <div className="card-modern p-4 md:p-6 overflow-hidden">
                   <h2 className="font-display text-lg md:text-xl font-bold mb-4">About This Clinic</h2>
-
+                  
                   {/* Use optimized SEO content if available */}
                   {parsedContent && parsedContent.intro ? (
                     <div className="space-y-4 overflow-hidden">
                       <p className="text-muted-foreground leading-relaxed text-sm md:text-base break-words">
                         {parsedContent.intro}
                       </p>
-
+                      
                       {/* Render H2/H3 sections from optimized content */}
                       {parsedContent.sections.filter(s => !s.heading.toLowerCase().includes('faq')).slice(0, 3).map((section, idx) => (
                         <div key={idx} className="mt-6 overflow-hidden">
@@ -574,7 +570,7 @@ const ClinicPage = () => {
                           ) : (
                             <h4 className="font-semibold text-foreground mb-2 text-sm md:text-base">{section.heading}</h4>
                           )}
-                          <div
+                          <div 
                             className="text-muted-foreground leading-relaxed prose prose-sm max-w-none text-sm md:text-base break-words overflow-hidden"
                             dangerouslySetInnerHTML={{ __html: section.content.replace(/\n/g, '<br/>') }}
                           />
@@ -586,12 +582,12 @@ const ClinicPage = () => {
                       {clinic.description || `${clinic.name} is a dental clinic in ${clinic.area?.name || clinic.city?.name || 'Dubai'}${isClaimed ? ', offering comprehensive dental services with a focus on patient comfort and quality care.' : '. More details will be available once the clinic claims their profile.'}`}
                     </p>
                   )}
-
+                  
                   {!isClaimed && (
                     <div className="mt-4">
-                      <ClaimProfileCTA
-                        clinicId={clinic.id}
-                        clinicName={clinic.name}
+                      <ClaimProfileCTA 
+                        clinicId={clinic.id} 
+                        clinicName={clinic.name} 
                         variant="inline"
                       />
                     </div>
@@ -644,7 +640,7 @@ const ClinicPage = () => {
                         return (
                           <Link
                             key={ct.id}
-                            href={serviceUrl}
+                            to={serviceUrl}
                             className="px-3 py-2 rounded-xl bg-muted/50 hover:bg-muted hover:text-primary transition-colors max-w-full"
                           >
                             <span className="text-sm font-medium truncate">{ct.treatment?.name}</span>
@@ -677,7 +673,7 @@ const ClinicPage = () => {
               <TabsContent value="services" className="animate-fade-in-up">
                 <div className="card-modern p-4 md:p-6 overflow-hidden space-y-6">
                   <h2 className="font-display text-lg md:text-xl font-bold">Services Offered</h2>
-
+                  
                   {/* AED Pricing Display */}
                   {treatments && treatments.length > 0 ? (
                     <AEDPricingDisplay
@@ -690,8 +686,8 @@ const ClinicPage = () => {
                     />
                   ) : (
                     <p className="text-muted-foreground text-sm md:text-base">
-                      {isClaimed
-                        ? "Contact the clinic for available services."
+                      {isClaimed 
+                        ? "Contact the clinic for available services." 
                         : "Services will be listed once the clinic claims their profile."}
                     </p>
                   )}
@@ -762,13 +758,13 @@ const ClinicPage = () => {
                 teamMembers={dentists || []}
                 isClaimed={isClaimed}
               />
-
+              
               {/* Claim CTA in sidebar for unclaimed */}
               {!isClaimed && (
                 <div className="mt-6">
-                  <ClaimProfileCTA
-                    clinicId={clinic.id}
-                    clinicName={clinic.name}
+                  <ClaimProfileCTA 
+                    clinicId={clinic.id} 
+                    clinicName={clinic.name} 
                     variant="sidebar"
                   />
                 </div>
@@ -805,7 +801,7 @@ const ClinicPage = () => {
 
         {/* Mobile Sticky Book Button */}
         <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur border-t border-border z-40">
-          <Button
+          <Button 
             className="w-full rounded-xl font-bold h-12 text-base"
             size="lg"
             onClick={() => handleBookClick()}
@@ -815,7 +811,7 @@ const ClinicPage = () => {
           </Button>
         </div>
       </Section>
-
+      
       {/* AI Discovery Meta for AI crawlers */}
       <AIDiscoveryMeta
         pageTitle={clinic.name}
@@ -841,7 +837,7 @@ const ClinicPage = () => {
         open={bookingOpen}
         onOpenChange={setBookingOpen}
         profileId={selectedDentistId || clinic.id}
-        profileName={selectedDentistId
+        profileName={selectedDentistId 
           ? dentists?.find(d => d.id === selectedDentistId)?.name || clinic.name
           : clinic.name
         }

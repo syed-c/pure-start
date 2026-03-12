@@ -1,15 +1,14 @@
-'use client';
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  Code,
-  CheckCircle,
-  AlertTriangle,
-  XCircle,
+import { 
+  Code, 
+  CheckCircle, 
+  AlertTriangle, 
+  XCircle, 
   RefreshCw,
   Building2,
   MapPin,
@@ -52,7 +51,7 @@ export function SchemaValidationPanel() {
   const [isValidating, setIsValidating] = useState(false);
   const [selectedSchema, setSelectedSchema] = useState('organization');
   const [schemaSettings, setSchemaSettings] = useState<any>(null);
-
+  
   // Validation results based on actual schema implementation
   const [validationResults] = useState<SchemaValidation[]>([
     {
@@ -65,8 +64,8 @@ export function SchemaValidationPanel() {
         { field: '@context', present: true, value: 'https://schema.org' },
         { field: '@type', present: true, value: 'Organization' },
         { field: 'name', present: true, value: 'AppointPanda' },
-        { field: 'url', present: true, value: 'https://www.AppointPanda.ae' },
-        { field: 'logo', present: true, value: 'https://www.AppointPanda.ae/logo.png' }
+        { field: 'url', present: true, value: 'https://www.appointpanda.ae' },
+        { field: 'logo', present: true, value: 'https://www.appointpanda.ae/logo.png' }
       ],
       recommendedFields: [
         { field: 'description', present: true },
@@ -184,7 +183,7 @@ export function SchemaValidationPanel() {
     const { data } = await supabase
       .from('schema_settings')
       .select('setting_key, setting_value');
-
+    
     if (data) {
       const settings: Record<string, any> = {};
       data.forEach(row => {
@@ -200,9 +199,9 @@ export function SchemaValidationPanel() {
       title: "Validating Schema Markup",
       description: "Checking JSON-LD implementation across all page types..."
     });
-
+    
     await new Promise(resolve => setTimeout(resolve, 2500));
-
+    
     setIsValidating(false);
     toast({
       title: "Validation Complete",
@@ -229,7 +228,7 @@ export function SchemaValidationPanel() {
   const errors = validationResults.reduce((sum, r) => sum + r.issues.filter(i => i.type === 'error').length, 0);
   const warnings = validationResults.reduce((sum, r) => sum + r.issues.filter(i => i.type === 'warning').length, 0);
 
-  const selectedResult = validationResults.find(r =>
+  const selectedResult = validationResults.find(r => 
     r.schemaType.toLowerCase().includes(selectedSchema)
   ) || validationResults[0];
 
@@ -324,14 +323,14 @@ export function SchemaValidationPanel() {
             <TabsList className="flex flex-wrap h-auto gap-1">
               {SCHEMA_TYPES.map(schema => {
                 const Icon = schema.icon;
-                const result = validationResults.find(r =>
+                const result = validationResults.find(r => 
                   r.schemaType.toLowerCase().includes(schema.id)
                 );
                 const hasIssues = result && result.issues.some(i => i.type === 'error' || i.type === 'warning');
-
+                
                 return (
-                  <TabsTrigger
-                    key={schema.id}
+                  <TabsTrigger 
+                    key={schema.id} 
                     value={schema.id}
                     className="flex items-center gap-1.5"
                   >
@@ -463,9 +462,9 @@ export function SchemaValidationPanel() {
               </p>
             </div>
             <Button variant="outline" asChild>
-              <a
-                href="https://search.google.com/test/rich-results"
-                target="_blank"
+              <a 
+                href="https://search.google.com/test/rich-results" 
+                target="_blank" 
                 rel="noopener noreferrer"
               >
                 Open Tool ↗

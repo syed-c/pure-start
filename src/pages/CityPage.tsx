@@ -1,6 +1,5 @@
-'use client';
 import { useState as useReactState, useMemo } from "react";
-import { useRouter } from "next/router";
+import { useParams, Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -28,8 +27,8 @@ import { useAreaLocalContent, generateAreaIntro } from "@/hooks/useAreaLocalCont
 import { normalizeStateSlug } from "@/lib/slug/normalizeStateSlug";
 import NotFound from "./NotFound";
 import StateServicePage from "./StateServicePage";
-import {
-  Star,
+import { 
+  Star, 
   Users,
   Clock,
   Stethoscope,
@@ -50,13 +49,14 @@ import {
 } from "@/components/ui/sheet";
 
 const MIN_DENTIST_COUNT = 2; // noindex pages with fewer than 2 dentists
+const MIN_PROFILES = 10; // Minimum profiles to show on a city page
 
 const CityPage = () => {
-  const { stateSlug, citySlug } = useRouter().query as { stateSlug?: string; citySlug?: string };
+  const { stateSlug, citySlug } = useParams();
   const normalizedStateSlug = normalizeStateSlug(stateSlug);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useReactState(false);
   const { filters, setFilters } = useBudgetFilters();
-
+  
   const { data: state, isLoading: stateLoading } = useStateData(normalizedStateSlug || '');
   const { data: city, isLoading: cityLoading } = useCity(citySlug || '', normalizedStateSlug || '');
 
@@ -109,9 +109,9 @@ const CityPage = () => {
     queryKey: ['city-profiles', citySlug, pinnedProfiles?.map(p => p.id).join(',')],
     queryFn: async () => {
       if (!city) return [];
-
+      
       const pinnedIds = (pinnedProfiles || []).map(p => p.id);
-
+      
       const { data: clinics } = await supabase
         .from('clinics')
         .select(`
@@ -123,10 +123,35 @@ const CityPage = () => {
         .eq('is_active', true)
         .order('rating', { ascending: false })
         .limit(50);
-
-      const resultIds = new Set((clinics || []).map(c => c.id));
+      
+      let allClinics = clinics || [];
+      
+      // Fallback: if fewer than MIN_PROFILES, fill from UAE-wide clinics
+      if (allClinics.length < MIN_PROFILES) {
+        const existingIds = allClinics.map(c => c.id);
+        const needed = MIN_PROFILES - allClinics.length;
+        let fallbackQuery = supabase
+          .from('clinics')
+          .select(`
+            id, name, slug, description, cover_image_url, rating, review_count,
+            address, phone, verification_status, claim_status,
+            city:cities(name, slug, state:states(name, abbreviation))
+          `)
+          .eq('is_active', true)
+          .order('rating', { ascending: false })
+          .limit(needed);
+        
+        if (existingIds.length > 0) {
+          fallbackQuery = fallbackQuery.not('id', 'in', `(${existingIds.join(',')})`);
+        }
+        
+        const { data: fallbackData } = await fallbackQuery;
+        allClinics = [...allClinics, ...(fallbackData || [])];
+      }
+      
+      const resultIds = new Set(allClinics.map(c => c.id));
       const missingPinnedIds = pinnedIds.filter(id => !resultIds.has(id));
-
+      
       let pinnedClinics: any[] = [];
       if (missingPinnedIds.length > 0) {
         const { data: extraPinned } = await supabase
@@ -140,15 +165,15 @@ const CityPage = () => {
           .eq('is_active', true);
         pinnedClinics = extraPinned || [];
       }
-
+      
       const seenIds = new Set<string>();
-      const allClinics = [...(clinics || []), ...pinnedClinics].filter(c => {
+      const combined = [...allClinics, ...pinnedClinics].filter(c => {
         if (seenIds.has(c.id)) return false;
         seenIds.add(c.id);
         return true;
       });
-
-      return allClinics.map(c => ({
+      
+      return combined.map(c => ({
         id: c.id,
         name: c.name,
         slug: c.slug,
@@ -172,14 +197,14 @@ const CityPage = () => {
     const sorted = sortWithPinnedFirst(rawProfiles, pinnedProfiles || []);
     const pinnedIds = new Set((pinnedProfiles || []).map(p => p.id));
     let result = sorted.map(p => ({ ...p, isPinned: pinnedIds.has(p.id) }));
-
+    
     if (filters.minRating > 0) {
       result = result.filter(p => (p.rating || 0) >= filters.minRating);
     }
     if (filters.verifiedOnly) {
       result = result.filter(p => p.isVerified);
     }
-
+    
     return result;
   }, [rawProfiles, pinnedProfiles, filters]);
 
@@ -212,16 +237,16 @@ const CityPage = () => {
   }
 
   if (stateSlug && normalizedStateSlug && stateSlug !== normalizedStateSlug) {
-    return <Navigate href={`/${normalizedStateSlug}/${citySlug}/`} replace />;
+    return <Navigate to={`/${normalizedStateSlug}/${citySlug}/`} replace />;
   }
 
   if (stateSlug === "clinic") {
-    return <Navigate href={`/clinic/${citySlug}/`} replace />;
+    return <Navigate to={`/clinic/${citySlug}/`} replace />;
   }
   if (stateSlug === "dentist") {
-    return <Navigate href={`/dentist/${citySlug}/`} replace />;
+    return <Navigate to={`/dentist/${citySlug}/`} replace />;
   }
-
+  
   if (stateLoading || cityLoading) {
     return (
       <PageLayout>
@@ -281,7 +306,7 @@ const CityPage = () => {
   const pageTitle = seoContent?.meta_title || `Best Dentists in ${cityName}, ${stateAbbr} - Find Dental Clinics`;
   const pageDescription = seoContent?.meta_description || `Find and book appointments with top-rated dental professionals in ${cityName}, ${stateName}. Compare ${profiles?.length || 0}+ verified clinics.`;
   const pageH1 = seoContent?.h1 || `Best Dentists in ${locationDisplay}`;
-
+  
   const faqs = seoFaqs.length > 0 ? seoFaqs.map(f => ({ q: f.question, a: f.answer })) : [
     {
       q: `How do I find a good dentist in ${cityName}?`,
@@ -356,7 +381,7 @@ const CityPage = () => {
         ]}
         id="city-page-schema"
       />
-
+      
       {/* Hero Section — Dark theme matching homepage */}
       <section className="relative overflow-hidden min-h-[45vh] flex items-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -367,14 +392,14 @@ const CityPage = () => {
             backgroundSize: '60px 60px',
           }} />
         </div>
-
+        
         <div className="container relative z-10 py-14 md:py-18 px-4">
           <div className="flex justify-center mb-4">
             <Breadcrumbs items={breadcrumbs} className="[&_a]:text-white/60 [&_span]:text-white/40 [&_svg]:text-white/30" />
           </div>
-
+          
           <div className="max-w-3xl mx-auto text-center">
-            <motion.div
+            <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="inline-flex items-center gap-2 bg-primary/15 backdrop-blur-md border border-primary/30 rounded-full px-4 py-2 mb-4"
@@ -382,13 +407,13 @@ const CityPage = () => {
               <Stethoscope className="h-4 w-4 text-primary" />
               <span className="text-xs md:text-sm font-bold text-primary">Licensed Dental Specialists</span>
             </motion.div>
-
-            <motion.h1
+            
+            <motion.h1 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-3 px-2"
-              style={{ fontFamily: "'Nunito', 'Plus Jakarta Sans', system-ui, sans-serif" }}
+              className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-3 px-2" 
+              style={{ fontFamily: "'Varela Round', system-ui, sans-serif" }}
             >
               {pageH1.includes(cityName) ? (
                 <>
@@ -400,8 +425,8 @@ const CityPage = () => {
                 <span className="text-white">{pageH1}</span>
               )}
             </motion.h1>
-
-            <motion.p
+            
+            <motion.p 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
@@ -413,7 +438,7 @@ const CityPage = () => {
               }
             </motion.p>
 
-            <motion.div
+            <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
@@ -423,7 +448,7 @@ const CityPage = () => {
             </motion.div>
 
             {/* Stats */}
-            <motion.div
+            <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
@@ -510,7 +535,7 @@ const CityPage = () => {
                 />
               </div>
             </aside>
-
+            
             {/* Main Content Column */}
             <div className="flex-1 min-w-0 space-y-8">
               {/* Dentist List Frame */}

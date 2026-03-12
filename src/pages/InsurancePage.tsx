@@ -1,6 +1,5 @@
-'use client';
 import { useState, useMemo } from "react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
@@ -39,12 +38,16 @@ const InsurancePage = () => {
   const { data: clinicCounts } = useQuery({
     queryKey: ["insurance-clinic-counts"],
     queryFn: async () => {
-      const { data } = await supabase
-        .from("clinic_insurances")
-        .select("insurance_id");
+      const { data, error } = await supabase
+        .from("insurances")
+        .select("id, clinic_insurances(count)")
+        .eq("is_active", true);
+
+      if (error) throw error;
+
       const counts: Record<string, number> = {};
-      (data || []).forEach((item) => {
-        counts[item.insurance_id] = (counts[item.insurance_id] || 0) + 1;
+      (data || []).forEach((item: any) => {
+        counts[item.id] = item.clinic_insurances?.[0]?.count || 0;
       });
       return counts;
     },
@@ -82,7 +85,7 @@ const InsurancePage = () => {
       <div className="bg-gradient-to-b from-muted/50 to-background border-b border-border">
         <div className="container py-12 md:py-16">
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+            <Link to="/" className="hover:text-primary transition-colors">Home</Link>
             <span>/</span>
             <span className="text-foreground font-medium">Insurance</span>
           </nav>
@@ -181,7 +184,7 @@ const InsurancePage = () => {
             {filtered.map((insurance) => (
               <Link
                 key={insurance.id}
-                href={buildInsuranceUrl(insurance.slug)}
+                to={buildInsuranceUrl(insurance.slug)}
                 className="group p-4 rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-md transition-all"
               >
                 <div className="flex items-center gap-3 mb-2">
@@ -240,13 +243,13 @@ const InsurancePage = () => {
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <Button asChild className="rounded-xl font-bold" size="sm">
-              <Link href="/contact/">
+              <Link to="/contact/">
                 <Phone className="h-4 w-4 mr-2" />
                 Contact Us
               </Link>
             </Button>
             <Button variant="outline" asChild className="rounded-xl font-bold" size="sm">
-              <Link href="/search/">
+              <Link to="/search/">
                 <Search className="h-4 w-4 mr-2" />
                 Browse Clinics
               </Link>

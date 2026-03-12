@@ -14,10 +14,10 @@ const corsHeaders = {
 // Those are managed by Meta Optimizer and FAQ Studio respectively.
 
 const CONTENT_STUDIO_ALLOWED_FIELDS = [
-  'h1', 'page_intro', 'h2_sections', 'content',
+  'h1', 'page_intro', 'h2_sections', 'content', 
   'internal_links_intro', 'word_count', 'is_thin_content',
   'last_content_edit_source', 'updated_at', 'is_optimized',
-  'optimized_at', 'metadata_hash', 'is_duplicate',
+  'optimized_at', 'metadata_hash', 'is_duplicate', 
   'similarity_score', 'similar_to_slug', 'last_generated_at'
 ];
 
@@ -91,15 +91,15 @@ serve(async (req) => {
       global: { headers: { Authorization: `Bearer ${token}` } },
     });
 
-    const { data: claimsData, error: claimsError } = await userClient.auth.getClaims(token);
-    if (claimsError || !claimsData?.claims) {
+    const { data: userData, error: userError } = await userClient.auth.getUser(token);
+    if (userError || !userData?.user) {
       return new Response(JSON.stringify({ success: false, error: "Invalid authentication" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const userId = claimsData.claims.sub as string;
+    const userId = userData.user.id;
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
     // Verify admin role
@@ -108,7 +108,7 @@ serve(async (req) => {
       .select("role")
       .eq("user_id", userId);
 
-    const isAdmin = (roles ?? []).some((r) =>
+    const isAdmin = (roles ?? []).some((r) => 
       ["super_admin", "district_manager", "content_team", "seo_team"].includes(r.role)
     );
     if (!isAdmin) {
@@ -131,7 +131,7 @@ serve(async (req) => {
           await new Promise(r => setTimeout(r, delay));
           console.log(`content-generation-studio: Retry attempt ${attempt + 1}/${maxRetries}`);
         }
-
+        
         try {
           const response = await fetch("https://api.aimlapi.com/v1/chat/completions", {
             method: "POST",
@@ -143,12 +143,12 @@ serve(async (req) => {
           });
 
           if (response.ok) return response;
-
+          
           if (response.status >= 500 || response.status === 429) {
             lastError = new Error(`AI gateway returned ${response.status}`);
             continue;
           }
-
+          
           return response;
         } catch (networkError) {
           lastError = networkError instanceof Error ? networkError : new Error(String(networkError));
@@ -269,7 +269,7 @@ End with calm, helpful CTA encouraging users to:
     function generateUniquenessSeed(slug: string, pageType: string): string {
       const timestamp = Date.now();
       const randomId = Math.random().toString(36).substring(2, 8);
-
+      
       // Opening style variations
       const openingStyles = [
         "Start with a compelling question that addresses the reader's immediate concern.",
@@ -281,7 +281,7 @@ End with calm, helpful CTA encouraging users to:
         "Start with a comparison or contrast that highlights key differences.",
         "Open with an engaging anecdote about dental care experiences."
       ];
-
+      
       // Structure variations
       const structureStyles = [
         "Use a problem-solution framework throughout.",
@@ -293,10 +293,10 @@ End with calm, helpful CTA encouraging users to:
         "Use a comparison framework highlighting options.",
         "Organize chronologically from initial visit to ongoing care."
       ];
-
+      
       const selectedOpening = openingStyles[timestamp % openingStyles.length];
       const selectedStructure = structureStyles[(timestamp + 3) % structureStyles.length];
-
+      
       return `
 === UNIQUENESS DIRECTIVE (ID: ${randomId}) ===
 This content MUST be completely different from all other pages. Use these specific instructions:
@@ -318,17 +318,17 @@ MANDATORY DIFFERENTIATION:
     // Generate content for a page
     async function generateContent(pageData: any, wordCount: number, clinicData?: any) {
       const { page_type, slug, title, content: existingContent } = pageData;
-
+      
       // Determine if this is a clinic page (uses different voice/strategy)
       const isClinicPage = page_type === "clinic" || page_type === "dentist";
-
+      
       // Generate uniqueness seed
       const uniquenessSeed = generateUniquenessSeed(slug, page_type);
-
+      
       // Build context based on page type
       let pageContext = "";
       const parts = slug.split("/").filter(Boolean);
-
+      
       switch (page_type) {
         case "state":
           const stateName = title || parts[0]?.toUpperCase() || "this state";
@@ -336,7 +336,7 @@ MANDATORY DIFFERENTIATION:
 Context: Show all dental providers in ${stateName}. Explain how AppointPanda helps patients find dentists across the state.
 Include: Overview of dental care landscape, how to find a dentist, what AppointPanda offers, popular services.`;
           break;
-
+          
         case "city":
           const cityName = title || parts[1] || parts[0] || "this city";
           const stateAbbr = parts[0]?.toUpperCase() || "";
@@ -345,7 +345,7 @@ Context: Show dentists in ${cityName}. Explain how AppointPanda helps local resi
 Include: Local dental care overview, finding the right dentist, services available, cost considerations.
 LOCAL SPECIFICITY: Mention specific aspects of ${cityName} - its neighborhoods, community character, or regional healthcare landscape.`;
           break;
-
+          
         case "treatment":
         case "service":
           const serviceName = title || slug.replace(/-/g, " ");
@@ -353,7 +353,7 @@ LOCAL SPECIFICITY: Mention specific aspects of ${cityName} - its neighborhoods, 
 Context: Explain what ${serviceName} is, who needs it, what to expect.
 Include: What is this treatment, who is it for, process overview, cost considerations, how AppointPanda helps find providers.`;
           break;
-
+          
         case "service_location":
         case "city_treatment":
           const treatmentName = title || parts[parts.length - 1]?.replace(/-/g, " ") || "dental treatment";
@@ -364,7 +364,7 @@ Context: Explain ${treatmentName} and how to find providers offering it in ${loc
 Include: What is ${treatmentName}, local availability, cost in this area, how to choose a provider, AppointPanda's role.
 IMPORTANT: Make this unique - combine local ${locationCity} context with ${treatmentName} specifics. Don't just merge generic content.`;
           break;
-
+          
         case "clinic":
         case "dentist":
           // For clinic pages, extract clinic name and location for branded SEO
@@ -373,7 +373,7 @@ IMPORTANT: Make this unique - combine local ${locationCity} context with ${treat
           const clinicState = clinicData?.state || "";
           const clinicAddress = clinicData?.address || "";
           const clinicServices = clinicData?.services?.join(", ") || "general dental services";
-
+          
           pageContext = `This is a CLINIC PROFILE page for: ${clinicName}
 ${clinicCity ? `Location: ${clinicCity}${clinicState ? `, ${clinicState}` : ""}` : ""}
 ${clinicAddress ? `Address: ${clinicAddress}` : ""}
@@ -389,13 +389,13 @@ Content Focus:
 - DO NOT create fake testimonials
 - Focus on what patients searching for this clinic would want to know`;
           break;
-
+          
         case "static":
           pageContext = `This is a STATIC page (About, Features, Policy, etc.).
 Context: Write informative content appropriate for the page's purpose.
 Include: Clear explanation of the topic, how it relates to AppointPanda, user benefits.`;
           break;
-
+          
         default:
           pageContext = `This is a general page on AppointPanda.
 Context: Write helpful, informative content for dental patients.
@@ -404,9 +404,9 @@ Include: Clear explanations, how AppointPanda helps, relevant information for th
 
       // Select the appropriate system prompt
       const systemPrompt = isClinicPage ? CLINIC_SYSTEM_PROMPT : PLATFORM_SYSTEM_PROMPT;
-
+      
       // Build user prompt - include uniqueness seed for differentiation
-      const userPrompt = isClinicPage
+      const userPrompt = isClinicPage 
         ? `Generate SEO-optimized content for this CLINIC profile page:
 
 PAGE URL: /${slug}
@@ -449,8 +449,8 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
             type: "function",
             function: {
               name: "generate_page_content",
-              description: isClinicPage
-                ? "Generate BODY CONTENT ONLY for a dental clinic profile page (no meta tags, no FAQs)"
+              description: isClinicPage 
+                ? "Generate BODY CONTENT ONLY for a dental clinic profile page (no meta tags, no FAQs)" 
                 : "Generate BODY CONTENT ONLY for SEO page (no meta tags, no FAQs - those are handled separately)",
               parameters: {
                 type: "object",
@@ -500,7 +500,7 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
       }
 
       const aiJson = await response.json();
-
+      
       // Extract from tool call
       if (aiJson.choices?.[0]?.message?.tool_calls?.[0]) {
         const toolCall = aiJson.choices[0].message.tool_calls[0];
@@ -512,7 +512,7 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
           }
         }
       }
-
+      
       // Fallback: try parsing content
       const content = aiJson.choices?.[0]?.message?.content;
       if (content) {
@@ -529,15 +529,15 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
     // NOTE: FAQs are NOT included here - they are managed separately by FAQ Studio
     function buildContentMarkdown(generated: any): string {
       let markdown = "";
-
+      
       if (generated.intro_paragraph) {
         markdown += generated.intro_paragraph + "\n\n";
       }
-
+      
       if (generated.h2_sections && Array.isArray(generated.h2_sections)) {
         for (const section of generated.h2_sections) {
           markdown += `## ${section.heading}\n\n${section.content}\n\n`;
-
+          
           if (section.h3_subsections && Array.isArray(section.h3_subsections)) {
             for (const subsection of section.h3_subsections) {
               markdown += `### ${subsection.heading}\n\n${subsection.content}\n\n`;
@@ -545,19 +545,19 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
           }
         }
       }
-
+      
       // FAQs REMOVED - FAQ Studio is responsible for FAQs (strict tool separation)
       // The FAQ section will be rendered from the dedicated `faqs` JSONB column
-
+      
       if (generated.closing_paragraph) {
         markdown += generated.closing_paragraph + "\n";
       }
-
+      
       // Add internal links intro if provided
       if (generated.internal_links_intro) {
         markdown += "\n" + generated.internal_links_intro + "\n";
       }
-
+      
       return markdown;
     }
 
@@ -593,36 +593,36 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
         .neq('id', pageId)
         .not('content', 'is', null)
         .limit(100);
-
+      
       let maxSimilarity = 0;
       let similarSlug: string | null = null;
-
+      
       // Normalize content for comparison
       const normalizeText = (text: string) => text.toLowerCase()
         .replace(/[^a-z0-9\s]/g, '')
         .split(/\s+/)
         .filter(w => w.length > 3);
-
+      
       const words1 = new Set(normalizeText(content));
-
+      
       // Also check opening sentences (first 100 words) for intro uniqueness
       const intro1 = normalizeText(content.slice(0, 500));
-
+      
       for (const candidate of candidates || []) {
         if (!candidate.content) continue;
-
+        
         const words2 = new Set(normalizeText(candidate.content));
         const intro2 = normalizeText(candidate.content.slice(0, 500));
-
+        
         if (words1.size === 0 || words2.size === 0) continue;
-
+        
         // Calculate word overlap similarity
         let shared = 0;
         for (const word of words1) {
           if (words2.has(word)) shared++;
         }
         const wordSimilarity = shared / Math.max(words1.size, words2.size);
-
+        
         // Calculate intro overlap (stricter check for opening)
         let introShared = 0;
         const introSet1 = new Set(intro1);
@@ -630,16 +630,16 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
           if (introSet1.has(word)) introShared++;
         }
         const introSimilarity = intro2.length > 0 ? introShared / Math.max(intro1.length, intro2.length) : 0;
-
+        
         // Combined similarity (weight intro more heavily as it's often most duplicated)
         const combinedSimilarity = (wordSimilarity * 0.6) + (introSimilarity * 0.4);
-
+        
         if (combinedSimilarity > maxSimilarity) {
           maxSimilarity = combinedSimilarity;
           similarSlug = candidate.slug;
         }
       }
-
+      
       // Stricter threshold: 70% instead of 80%
       return {
         isUnique: maxSimilarity < 0.70,
@@ -657,15 +657,15 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
         .eq("seo_page_id", pageId)
         .order("version_number", { ascending: false })
         .limit(1);
-
+      
       const nextVersion = (versions?.[0]?.version_number || 0) + 1;
-
+      
       // Mark existing versions as not current
       await supabaseAdmin
         .from("seo_content_versions")
         .update({ is_current: false })
         .eq("seo_page_id", pageId);
-
+      
       // Insert new version
       await supabaseAdmin.from("seo_content_versions").insert({
         seo_page_id: pageId,
@@ -710,22 +710,22 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
           });
         }
 
-        const wordCount = config?.word_count || 700;
-
+        const wordCount = config?.word_count || 800;
+        
         // For clinic pages, fetch additional clinic data for better content
         let clinicData = null;
         if (page.page_type === "clinic" || page.page_type === "dentist") {
           // Try to extract clinic ID from slug (e.g., /clinic/clinic-slug)
           const slugParts = page.slug.split("/").filter(Boolean);
           const clinicSlug = slugParts[slugParts.length - 1];
-
+          
           // Fetch clinic data for richer content
           const { data: clinic } = await supabaseAdmin
             .from("clinics")
             .select("id, name, city, state, address, services, description")
             .eq("slug", clinicSlug)
             .single();
-
+          
           if (clinic) {
             clinicData = {
               name: clinic.name,
@@ -737,9 +737,9 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
             };
           }
         }
-
+        
         const generated = await generateContent(page, wordCount, clinicData);
-
+        
         // Build full content
         const fullContent = buildContentMarkdown(generated);
         const actualWordCount = countWords(fullContent);
@@ -768,11 +768,11 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
 
           // Check uniqueness before saving
           const uniquenessResult = await checkContentUniqueness(fullContent, page_id, page.page_type);
-
+          
           // Update the page with uniqueness info
           // STRICT SEPARATION: Content Studio does NOT write to meta_title, meta_description, or faqs
           const contentHash = hashContent(fullContent);
-
+          
           // Build update object - ONLY body content fields
           const updateData: Record<string, any> = {
             // meta_title REMOVED - Meta Optimizer responsibility
@@ -783,7 +783,7 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
             internal_links_intro: generated.internal_links_intro || null,
             content: fullContent,
             word_count: actualWordCount,
-            is_thin_content: actualWordCount < 300,
+            is_thin_content: actualWordCount < 800,
             is_optimized: true,
             optimized_at: now,
             updated_at: now,
@@ -794,7 +794,7 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
             last_generated_at: now,
             last_content_edit_source: 'content_studio',
           };
-
+          
           // Validate we're not writing to blocked fields
           const validation = validateContentStudioWrite(Object.keys(updateData));
           if (!validation.valid) {
@@ -804,7 +804,7 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
               delete updateData[blocked];
             }
           }
-
+          
           const { error: updateError } = await supabaseAdmin
             .from("seo_pages")
             .update(updateData)
@@ -818,14 +818,20 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
             });
           }
 
+          // Audit log for content generation
+          await supabaseAdmin.from("audit_logs").insert({
+            user_id: userId,
+            action: "generate_content",
+            entity_type: "seo_page",
+            entity_id: page_id,
+            new_values: { word_count: actualWordCount, h1: generated.h1, is_unique: !page.is_duplicate },
+          });
+
           // Save new version - ONLY body content fields (no meta, no faqs)
           await saveContentVersion(page_id, {
-            // meta_title REMOVED - Meta Optimizer responsibility
-            // meta_description REMOVED - Meta Optimizer responsibility
             h1: generated.h1,
             content: fullContent,
             seo_score: generated.seo_score,
-            // faq REMOVED - FAQ Studio responsibility
           }, "content_studio", `Generated ${actualWordCount} words (body content only)`);
         }
 
@@ -872,20 +878,30 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
         }
         const wordCount = countWords(fullContent);
 
-        // Update page
+        // Update page - STRICT SEPARATION: only body content fields
+        const applyData: Record<string, any> = {
+          h1: content.h1,
+          content: fullContent,
+          page_intro: content.intro_paragraph || null,
+          h2_sections: content.h2_sections || null,
+          internal_links_intro: content.internal_links_intro || null,
+          word_count: wordCount,
+          is_thin_content: wordCount < 800,
+          is_optimized: true,
+          optimized_at: now,
+          updated_at: now,
+          last_content_edit_source: 'content_studio',
+        };
+        
+        // Validate strict separation
+        const applyValidation = validateContentStudioWrite(Object.keys(applyData));
+        if (!applyValidation.valid) {
+          for (const blocked of applyValidation.blockedFields) delete applyData[blocked];
+        }
+
         const { error: updateError } = await supabaseAdmin
           .from("seo_pages")
-          .update({
-            meta_title: content.meta_title,
-            meta_description: content.meta_description,
-            h1: content.h1,
-            content: fullContent,
-            word_count: wordCount,
-            is_thin_content: wordCount < 300,
-            is_optimized: true,
-            optimized_at: now,
-            updated_at: now,
-          })
+          .update(applyData)
           .eq("id", page_id);
 
         if (updateError) {
@@ -895,13 +911,19 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
           });
         }
 
-        // Save new version
+        // Audit log
+        await supabaseAdmin.from("audit_logs").insert({
+          user_id: userId,
+          action: "apply_content",
+          entity_type: "seo_page",
+          entity_id: page_id,
+          new_values: { word_count: wordCount, h1: content.h1 },
+        });
+
+        // Save new version - body content only
         await saveContentVersion(page_id, {
-          meta_title: content.meta_title,
-          meta_description: content.meta_description,
           h1: content.h1,
           content: fullContent,
-          faq: content.faq,
         }, "ai_applied", "Content applied from preview");
 
         return new Response(JSON.stringify({ success: true }), {
@@ -935,18 +957,19 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
 
         const wordCount = countWords(content.content || "");
 
-        // Update page
+        // Update page - manual edits can include meta since it's explicit admin action
+        const manualData: Record<string, any> = {
+          h1: content.h1,
+          content: content.content,
+          word_count: wordCount,
+          is_thin_content: wordCount < 800,
+          updated_at: now,
+          last_content_edit_source: 'manual',
+        };
+
         const { error: updateError } = await supabaseAdmin
           .from("seo_pages")
-          .update({
-            meta_title: content.meta_title,
-            meta_description: content.meta_description,
-            h1: content.h1,
-            content: content.content,
-            word_count: wordCount,
-            is_thin_content: wordCount < 300,
-            updated_at: now,
-          })
+          .update(manualData)
           .eq("id", page_id);
 
         if (updateError) {
@@ -956,10 +979,17 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
           });
         }
 
+        // Audit log
+        await supabaseAdmin.from("audit_logs").insert({
+          user_id: userId,
+          action: "manual_edit",
+          entity_type: "seo_page",
+          entity_id: page_id,
+          new_values: { word_count: wordCount, h1: content.h1 },
+        });
+
         // Save new version
         await saveContentVersion(page_id, {
-          meta_title: content.meta_title,
-          meta_description: content.meta_description,
           h1: content.h1,
           content: content.content,
         }, "manual_edit", "Manual edit by admin");
@@ -1016,7 +1046,7 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
             h1: version.h1,
             content: version.content,
             word_count: version.word_count,
-            is_thin_content: (version.word_count || 0) < 300,
+            is_thin_content: (version.word_count || 0) < 800,
             updated_at: now,
           })
           .eq("id", page_id);
@@ -1040,6 +1070,15 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
           .update({ is_current: true })
           .eq("id", version_id);
 
+        // Audit log for rollback
+        await supabaseAdmin.from("audit_logs").insert({
+          user_id: userId,
+          action: "rollback_content",
+          entity_type: "seo_page",
+          entity_id: page_id,
+          new_values: { restored_version: version.version_number },
+        });
+
         return new Response(JSON.stringify({ success: true, restored_version: version.version_number }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
@@ -1054,8 +1093,8 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
 
   } catch (error) {
     console.error("content-generation-studio error:", error);
-    return new Response(JSON.stringify({
-      error: error instanceof Error ? error.message : "Internal server error"
+    return new Response(JSON.stringify({ 
+      error: error instanceof Error ? error.message : "Internal server error" 
     }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },

@@ -1,4 +1,3 @@
-'use client';
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -11,13 +10,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ACTIVE_STATE_SLUGS } from '@/lib/constants/activeStates';
-import {
-  Layout,
-  Menu,
-  Link as LinkIcon,
-  Plus,
-  Edit,
-  Trash2,
+import { 
+  Layout, 
+  Menu, 
+  Link as LinkIcon, 
+  Plus, 
+  Edit, 
+  Trash2, 
   Save,
   GripVertical,
   Facebook,
@@ -139,7 +138,7 @@ export default function SiteConfigTab() {
         .select('*')
         .in('key', ['header_nav', 'footer_config', 'social_links', 'contact_details', 'platform', 'legal']);
       if (error) throw error;
-
+      
       const config: Record<string, unknown> = {};
       (data || []).forEach((item: any) => {
         config[item.key] = item.value;
@@ -187,27 +186,21 @@ export default function SiteConfigTab() {
       } else {
         // Default footer sections (no /ae/ prefix)
         setFooterSections([
-          {
-            id: '1', title: 'Services', order: 1, links: [
-              { label: 'Teeth Whitening', path: '/services/teeth-whitening' },
-              { label: 'Dental Implants', path: '/services/dental-implants' },
-              { label: 'Invisalign', path: '/services/invisalign' },
-            ]
-          },
-          {
-            id: '2', title: 'Locations', order: 2, links: [
-              { label: 'California', path: '/california' },
-              { label: 'Massachusetts', path: '/massachusetts' },
-            ]
-          },
-          {
-            id: '3', title: 'Company', order: 3, links: [
-              { label: 'About Us', path: '/about' },
-              { label: 'Contact', path: '/contact' },
-              { label: 'FAQs', path: '/faq' },
-              { label: 'Pricing', path: '/pricing' },
-            ]
-          },
+          { id: '1', title: 'Services', order: 1, links: [
+            { label: 'Teeth Whitening', path: '/services/teeth-whitening' },
+            { label: 'Dental Implants', path: '/services/dental-implants' },
+            { label: 'Invisalign', path: '/services/invisalign' },
+          ]},
+          { id: '2', title: 'Locations', order: 2, links: [
+            { label: 'California', path: '/california' },
+            { label: 'Massachusetts', path: '/massachusetts' },
+          ]},
+          { id: '3', title: 'Company', order: 3, links: [
+            { label: 'About Us', path: '/about' },
+            { label: 'Contact', path: '/contact' },
+            { label: 'FAQs', path: '/faq' },
+            { label: 'Pricing', path: '/pricing' },
+          ]},
         ]);
       }
 
@@ -255,7 +248,7 @@ export default function SiteConfigTab() {
         .select('id')
         .eq('key', key)
         .single();
-
+      
       if (existing) {
         const { error } = await supabase
           .from('global_settings')
@@ -268,7 +261,7 @@ export default function SiteConfigTab() {
           .insert([{ key, value: value as any }]);
         if (error) throw error;
       }
-
+      
       await createAuditLog({
         action: 'UPDATE',
         entityType: 'global_settings',
@@ -291,7 +284,7 @@ export default function SiteConfigTab() {
   const handleSaveFooter = async () => {
     // Save footer sections
     await saveConfig.mutateAsync({ key: 'footer_config', value: { sections: footerSections } });
-
+    
     // Save social links in the new format used by useSiteSettings
     const socialObj: Record<string, string> = {};
     socialLinks.forEach(s => {
@@ -300,16 +293,16 @@ export default function SiteConfigTab() {
       }
     });
     await saveConfig.mutateAsync({ key: 'social_links', value: socialObj });
-
+    
     // Save legal text
-    await saveConfig.mutateAsync({
-      key: 'legal',
-      value: {
-        copyright_text: footerText.copyright,
-        footer_text: footerText.legal
-      }
+    await saveConfig.mutateAsync({ 
+      key: 'legal', 
+      value: { 
+        copyright_text: footerText.copyright, 
+        footer_text: footerText.legal 
+      } 
     });
-
+    
     toast.success('Footer configuration saved');
   };
 
@@ -333,8 +326,8 @@ export default function SiteConfigTab() {
 
   const updateHeaderLink = () => {
     if (!editingLink) return;
-    setHeaderLinks(headerLinks.map(l =>
-      l.id === editingLink.id
+    setHeaderLinks(headerLinks.map(l => 
+      l.id === editingLink.id 
         ? { ...l, label: linkForm.label, path: linkForm.path, type: linkForm.type }
         : l
     ));
@@ -347,7 +340,7 @@ export default function SiteConfigTab() {
   };
 
   const toggleLinkActive = (id: string) => {
-    setHeaderLinks(headerLinks.map(l =>
+    setHeaderLinks(headerLinks.map(l => 
       l.id === id ? { ...l, isActive: !l.isActive } : l
     ));
   };
@@ -355,29 +348,29 @@ export default function SiteConfigTab() {
   // Build linkable pages list
   const getLinkablePages = () => {
     const pages: { label: string; path: string; category: string }[] = [];
-
+    
     // Static pages
     STATIC_PAGES.forEach(p => {
       pages.push({ ...p, category: 'Pages' });
     });
-
+    
     // Services
     treatments.forEach((t: any) => {
       pages.push({ label: t.name, path: `/services/${t.slug}`, category: 'Services' });
     });
-
+    
     // States
     states.forEach((s: any) => {
       pages.push({ label: s.name, path: `/${s.slug}`, category: 'States' });
     });
-
+    
     // Cities
     cities.forEach((c: any) => {
       if (c.state_slug) {
         pages.push({ label: `${c.name}`, path: `/${c.state_slug}/${c.slug}`, category: 'Cities' });
       }
     });
-
+    
     return pages;
   };
 
@@ -411,7 +404,7 @@ export default function SiteConfigTab() {
 
   const addLinkToSection = (sectionId: string) => {
     setFooterSections(footerSections.map(s =>
-      s.id === sectionId
+      s.id === sectionId 
         ? { ...s, links: [...s.links, { label: '', path: '' }] }
         : s
     ));
@@ -506,8 +499,8 @@ export default function SiteConfigTab() {
                       value={linkForm.path}
                       onValueChange={(value) => {
                         const page = linkablePages.find(p => p.path === value);
-                        setLinkForm({
-                          ...linkForm,
+                        setLinkForm({ 
+                          ...linkForm, 
                           path: value,
                           label: linkForm.label || page?.label || ''
                         });
@@ -662,7 +655,7 @@ export default function SiteConfigTab() {
                         <Label className="text-xs text-muted-foreground capitalize">{social.platform}</Label>
                         <Input
                           value={social.url}
-                          onChange={(e) => setSocialLinks(socialLinks.map(s =>
+                          onChange={(e) => setSocialLinks(socialLinks.map(s => 
                             s.id === social.id ? { ...s, url: e.target.value, isActive: !!e.target.value } : s
                           ))}
                           placeholder={`https://${social.platform}.com/...`}
@@ -751,7 +744,7 @@ export default function SiteConfigTab() {
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
-
+                    
                     <div className="space-y-2">
                       {section.links.map((link, idx) => (
                         <div key={idx} className="flex items-center gap-2 p-2 bg-background rounded-lg">
@@ -805,7 +798,7 @@ export default function SiteConfigTab() {
                           </Button>
                         </div>
                       ))}
-
+                      
                       <Button
                         variant="outline"
                         size="sm"

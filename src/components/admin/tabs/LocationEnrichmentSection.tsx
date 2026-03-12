@@ -1,4 +1,3 @@
-'use client';
 import { useState, useRef, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -32,7 +31,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 
 const WORD_COUNT_OPTIONS = [
   { value: 200, label: '200 words (Standard)' },
@@ -740,7 +739,7 @@ export default function LocationEnrichmentSection() {
                         </TableCell>
                         <TableCell>
                           <Link
-                            href={item.type === 'state' ? `/${item.slug}` : `/${item.stateSlug}/${item.slug}`}
+                            to={item.type === 'state' ? `/${item.slug}` : `/${item.stateSlug}/${item.slug}`}
                             target="_blank"
                             className="text-primary hover:underline text-sm"
                           >

@@ -1,4 +1,3 @@
-'use client';
 import { useMemo, useState } from 'react';
 import { useAdminAreas } from '@/hooks/useAdminLocations';
 import { useCities, useStates } from '@/hooks/useLocations';

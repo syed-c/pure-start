@@ -1,5 +1,3 @@
-'use client'
-
 /**
  * Animated KPI Card with Circular Progress
  * Premium dashboard card with animations and visual effects

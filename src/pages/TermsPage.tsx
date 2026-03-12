@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
 import { SEOHead } from "@/components/seo/SEOHead";
@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 const TermsPage = () => {
   const { data: siteSettings } = useSiteSettings();
   const { data: seoContent } = useSeoPageContent("terms");
-  const supportEmail = siteSettings?.contactDetails?.support_email || 'support@AppointPanda.ae';
+  const supportEmail = siteSettings?.contactDetails?.support_email || 'support@appointpanda.ae';
 
   const sections = [
     {
@@ -99,7 +99,7 @@ We are not responsible for any damages arising from your use of the Platform or 
     },
     {
       title: "9. Limitation of Liability",
-      content: `TO THE MAXIMUM EXTENT PERMITTED BY LAW, AppointPanda SHALL NOT BE LIABLE FOR:
+      content: `TO THE MAXIMUM EXTENT PERMITTED BY LAW, APPOINTPANDA SHALL NOT BE LIABLE FOR:
 
 • Indirect, incidental, or consequential damages
 • Loss of profits, data, or business opportunities
@@ -153,7 +153,7 @@ Email: ${supportEmail}`
         title={seoContent?.meta_title || "Terms and Conditions | AppointPanda Service Agreement"}
         description={seoContent?.meta_description || "Read AppointPanda's terms and conditions. Understand the rules, policies, and guidelines for using our dental directory platform for patients and professionals."}
         canonical="/terms/"
-        keywords={['terms and conditions', 'service agreement', 'dental directory terms', 'AppointPanda terms']}
+        keywords={['terms and conditions', 'service agreement', 'dental directory terms', 'appointpanda terms']}
       />
 
       {/* Dark Hero Section */}
@@ -161,19 +161,19 @@ Email: ${supportEmail}`
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.15),transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(139,92,246,0.1),transparent_50%)]" />
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
-
+        
         <div className="container relative py-16 md:py-24">
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
               <FileText className="h-4 w-4 text-primary" />
               <span className="text-sm font-bold text-primary">Legal</span>
             </div>
-
+            
             <h1 className="font-display text-4xl md:text-5xl font-bold mb-6">
               Terms &{" "}
               <span className="text-gradient">Conditions</span>
             </h1>
-
+            
             <p className="text-lg text-dark-section-foreground/70 max-w-xl mx-auto mb-8">
               Please read these terms carefully before using AppointPanda. By using our platform, you agree to these terms.
             </p>
@@ -224,7 +224,7 @@ Email: ${supportEmail}`
             <div className="mt-12 pt-8 border-t text-center">
               <p className="text-muted-foreground mb-4">Have questions about our terms?</p>
               <Button asChild variant="outline" className="rounded-2xl font-bold">
-                <Link href="/contact">
+                <Link to="/contact">
                   Contact Us
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>

@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
@@ -20,7 +19,7 @@ import { BarChart3, MapPin, ArrowRight, TrendingDown, TrendingUp } from "lucide-
 import { motion } from "framer-motion";
 
 const EmirateComparisonPage = () => {
-  const query = useRouter().query; const serviceSlug = query.comparison as string || ""; const parts = serviceSlug.split("-vs-"); const emirate1 = parts[0] || ""; const emirate2 = parts[1] || "";
+  const { serviceSlug, emirate1, emirate2 } = useParams();
   const slug = serviceSlug || "";
 
   const { data: treatment } = useQuery({
@@ -130,7 +129,7 @@ const EmirateComparisonPage = () => {
                           Average: AED {Math.round((emirate.data.price_min + emirate.data.price_max) / 2).toLocaleString()}
                         </p>
                         <Link
-                          href={`/${emirate.slug}`}
+                          to={`/${emirate.slug}`}
                           className="inline-flex items-center gap-1 text-sm text-primary font-bold hover:underline"
                         >
                           Find clinics in {emirate.name} <ArrowRight className="h-3 w-3" />
@@ -173,7 +172,7 @@ const EmirateComparisonPage = () => {
               <span key={range.id}>
                 {i > 0 && <span className="text-muted-foreground mx-2">·</span>}
                 <Link
-                  href={`/compare/${slug}/${emirate1}-vs-${range.state?.slug}`}
+                  to={`/compare/${slug}/${emirate1}-vs-${range.state?.slug}`}
                   className="text-primary font-bold hover:underline"
                 >
                   {emirate1Name} vs {range.state?.name}
@@ -182,7 +181,7 @@ const EmirateComparisonPage = () => {
             ))}
           </div>
           <div className="mt-4">
-            <Link href={`/cost/${slug}`} className="text-primary font-bold hover:underline inline-flex items-center gap-1">
+            <Link to={`/cost/${slug}`} className="text-primary font-bold hover:underline inline-flex items-center gap-1">
               View all emirates <ArrowRight className="h-3 w-3" />
             </Link>
           </div>

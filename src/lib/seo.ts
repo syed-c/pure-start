@@ -2,45 +2,45 @@
 
 export const SITE_CONFIG = {
   name: 'AppointPanda',
-  domain: 'AppointPanda.ae',
-  baseUrl: 'https://www.AppointPanda.ae',
+  domain: 'appointpanda.ae',
+  baseUrl: 'https://www.appointpanda.ae',
   defaultCountry: 'ae',
   defaultCity: 'dubai',
 };
 
 // URL helper functions
-export const getCountryUrl = (countryCode: string = SITE_CONFIG.defaultCountry) =>
+export const getCountryUrl = (countryCode: string = SITE_CONFIG.defaultCountry) => 
   `/${countryCode}`;
 
-export const getCityUrl = (citySlug: string, countryCode: string = SITE_CONFIG.defaultCountry) =>
+export const getCityUrl = (citySlug: string, countryCode: string = SITE_CONFIG.defaultCountry) => 
   `/${countryCode}/${citySlug}`;
 
-export const getAreaUrl = (citySlug: string, areaSlug: string, countryCode: string = SITE_CONFIG.defaultCountry) =>
+export const getAreaUrl = (citySlug: string, areaSlug: string, countryCode: string = SITE_CONFIG.defaultCountry) => 
   `/${countryCode}/${citySlug}/${areaSlug}`;
 
-export const getServiceUrl = (serviceSlug: string, countryCode: string = SITE_CONFIG.defaultCountry) =>
+export const getServiceUrl = (serviceSlug: string, countryCode: string = SITE_CONFIG.defaultCountry) => 
   `/${countryCode}/services/${serviceSlug}`;
 
-export const getCityServiceUrl = (citySlug: string, serviceSlug: string, countryCode: string = SITE_CONFIG.defaultCountry) =>
+export const getCityServiceUrl = (citySlug: string, serviceSlug: string, countryCode: string = SITE_CONFIG.defaultCountry) => 
   `/${countryCode}/${citySlug}/${serviceSlug}`;
 
-export const getAreaServiceUrl = (citySlug: string, areaSlug: string, serviceSlug: string, countryCode: string = SITE_CONFIG.defaultCountry) =>
+export const getAreaServiceUrl = (citySlug: string, areaSlug: string, serviceSlug: string, countryCode: string = SITE_CONFIG.defaultCountry) => 
   `/${countryCode}/${citySlug}/${areaSlug}/${serviceSlug}`;
 
-export const getClinicUrl = (clinicSlug: string, countryCode: string = SITE_CONFIG.defaultCountry) =>
+export const getClinicUrl = (clinicSlug: string, countryCode: string = SITE_CONFIG.defaultCountry) => 
   `/${countryCode}/clinic/${clinicSlug}`;
 
-export const getDentistUrl = (dentistSlug: string, countryCode: string = SITE_CONFIG.defaultCountry) =>
+export const getDentistUrl = (dentistSlug: string, countryCode: string = SITE_CONFIG.defaultCountry) => 
   `/${countryCode}/dentist/${dentistSlug}`;
 
-export const getBlogUrl = (countryCode: string = SITE_CONFIG.defaultCountry) =>
+export const getBlogUrl = (countryCode: string = SITE_CONFIG.defaultCountry) => 
   `/${countryCode}/blog`;
 
-export const getBlogPostUrl = (postSlug: string, countryCode: string = SITE_CONFIG.defaultCountry) =>
+export const getBlogPostUrl = (postSlug: string, countryCode: string = SITE_CONFIG.defaultCountry) => 
   `/${countryCode}/blog/${postSlug}`;
 
 // SEO meta generators
-export const generatePageTitle = (parts: string[]) =>
+export const generatePageTitle = (parts: string[]) => 
   [...parts, SITE_CONFIG.name].join(' | ');
 
 export const generateLocationMeta = (locationName: string, type: 'city' | 'area') => ({
@@ -56,7 +56,7 @@ export const generateLocationMeta = (locationName: string, type: 'city' | 'area'
 });
 
 export const generateServiceMeta = (serviceName: string, locationName?: string) => ({
-  title: locationName
+  title: locationName 
     ? `${serviceName} in ${locationName} - Find Specialists & Book Online`
     : `${serviceName} in UAE - Find Specialists & Book Online`,
   description: locationName
@@ -128,11 +128,11 @@ export const generateLocationBreadcrumbs = (
     { label: 'Home', href: `/${countryCode}` },
     { label: cityName, href: areaSlug ? getCityUrl(citySlug, countryCode) : undefined },
   ];
-
+  
   if (areaName && areaSlug) {
     crumbs.push({ label: areaName });
   }
-
+  
   return crumbs;
 };
 
@@ -147,7 +147,7 @@ export const generateServiceBreadcrumbs = (
     { label: 'Home', href: `/${countryCode}` },
     { label: 'Services', href: `/${countryCode}/services` },
   ];
-
+  
   if (cityName && citySlug) {
     crumbs.push(
       { label: serviceName, href: getServiceUrl(serviceSlug, countryCode) },
@@ -156,7 +156,7 @@ export const generateServiceBreadcrumbs = (
   } else {
     crumbs.push({ label: serviceName });
   }
-
+  
   return crumbs;
 };
 
@@ -166,10 +166,10 @@ export const generateClinicBreadcrumbs = (
   citySlug?: string,
   countryCode: string = SITE_CONFIG.defaultCountry
 ): BreadcrumbItem[] => [
-    { label: 'Home', href: `/${countryCode}` },
-    ...(cityName && citySlug ? [{ label: cityName, href: getCityUrl(citySlug, countryCode) }] : []),
-    { label: clinicName },
-  ];
+  { label: 'Home', href: `/${countryCode}` },
+  ...(cityName && citySlug ? [{ label: cityName, href: getCityUrl(citySlug, countryCode) }] : []),
+  { label: clinicName },
+];
 
 export const generateDentistBreadcrumbs = (
   dentistName: string,
@@ -177,16 +177,16 @@ export const generateDentistBreadcrumbs = (
   citySlug?: string,
   countryCode: string = SITE_CONFIG.defaultCountry
 ): BreadcrumbItem[] => [
-    { label: 'Home', href: `/${countryCode}` },
-    ...(cityName && citySlug ? [{ label: cityName, href: getCityUrl(citySlug, countryCode) }] : []),
-    { label: dentistName },
-  ];
+  { label: 'Home', href: `/${countryCode}` },
+  ...(cityName && citySlug ? [{ label: cityName, href: getCityUrl(citySlug, countryCode) }] : []),
+  { label: dentistName },
+];
 
 export const generateBlogBreadcrumbs = (
   postTitle?: string,
   countryCode: string = SITE_CONFIG.defaultCountry
 ): BreadcrumbItem[] => [
-    { label: 'Home', href: `/${countryCode}` },
-    { label: 'Blog', href: postTitle ? getBlogUrl(countryCode) : undefined },
-    ...(postTitle ? [{ label: postTitle }] : []),
-  ];
+  { label: 'Home', href: `/${countryCode}` },
+  { label: 'Blog', href: postTitle ? getBlogUrl(countryCode) : undefined },
+  ...(postTitle ? [{ label: postTitle }] : []),
+];

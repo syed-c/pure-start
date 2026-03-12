@@ -26,13 +26,13 @@ async function getEmailSettings(supabase: any): Promise<EmailSettings | null> {
     .select('value')
     .eq('key', 'email')
     .single();
-
+  
   if (data?.value) {
     return data.value as EmailSettings;
   }
-
+  
   return {
-    from_email: 'no-reply@AppointPanda.com',
+    from_email: 'no-reply@appointpanda.com',
     from_name: 'AppointPanda'
   };
 }
@@ -57,7 +57,7 @@ async function sendEmailViaResend(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const cleanHtml = minifyHtml(html);
-
+    
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -208,7 +208,7 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
-
+    
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const body: NotifyRequest = await req.json();
@@ -244,7 +244,7 @@ serve(async (req) => {
 
     // Check if form submission notifications are enabled
     const notifyFormSubmission = automationSettings?.is_messaging_enabled !== false;
-
+    
     if (!notifyFormSubmission) {
       console.log('Form submission notifications disabled for clinic:', clinicId);
       return new Response(
@@ -283,7 +283,7 @@ serve(async (req) => {
     const emailSettings = await getEmailSettings(supabase);
 
     // Generate dashboard URL
-    const dashboardUrl = 'https://www.AppointPanda.com/dashboard?tab=my-intake-forms';
+    const dashboardUrl = 'https://www.appointpanda.com/dashboard?tab=my-intake-forms';
 
     // Generate and send email
     const emailHtml = generateNotificationEmailHTML(

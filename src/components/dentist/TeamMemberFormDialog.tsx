@@ -1,4 +1,3 @@
-'use client';
 import { useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';

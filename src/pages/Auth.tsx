@@ -1,8 +1,7 @@
-'use client';
 import { useState, useEffect } from 'react';
-import { useRouter } from "next/router";
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
+import { lovable } from '@/integrations/lovable';
 import { clearGmbProviderToken } from '@/lib/gmbAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,15 +17,15 @@ const passwordSchema = z.string().min(6, 'Password must be at least 6 characters
 
 export default function Auth() {
   const { user, roles, signIn, signUp, isLoading } = useAuth();
-  const router = useRouter();
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [hasRedirected, setHasRedirected] = useState(false);
-
+  
   // Login form
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
-
+  
   // Signup form
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
@@ -38,10 +37,10 @@ export default function Auth() {
 
     // Check if there's an active GMB flow - don't redirect if so
     const isGmbFlow = localStorage.getItem('gmb_listing_flow') === 'true' ||
-      localStorage.getItem('gmb_relink_flow') === 'true' ||
-      localStorage.getItem('gmb_pending') === 'true' ||
-      localStorage.getItem('gmb_restore_session') === 'true';
-
+                      localStorage.getItem('gmb_relink_flow') === 'true' ||
+                      localStorage.getItem('gmb_pending') === 'true' ||
+                      localStorage.getItem('gmb_restore_session') === 'true';
+    
     if (isGmbFlow) {
       console.log('[Auth] GMB flow in progress, not redirecting');
       return;
@@ -56,26 +55,26 @@ export default function Auth() {
 
     // SuperAdmins go directly to /admin - no delays, no onboarding
     if (isSuperAdmin || isAdmin) {
-      router.replace('/admin');
+      navigate('/admin', { replace: true });
     } else if (isDentist) {
       // Dentists go to their dashboard
-      router.replace('/dashboard?tab=my-dashboard');
+      navigate('/dashboard?tab=my-dashboard', { replace: true });
     } else if (roles.length === 0) {
       // User has no roles - might still be loading, or is a new user
       // Send to onboarding
-      router.replace('/onboarding?new=true');
+      navigate('/onboarding?new=true', { replace: true });
     } else if (roles.includes('super_admin') || roles.includes('district_manager')) {
       // Admin users go directly to admin dashboard
-      router.replace('/admin');
+      navigate('/admin', { replace: true });
     } else {
       // Has some other role, default to onboarding
-      router.replace('/onboarding?new=true');
+      navigate('/onboarding?new=true', { replace: true });
     }
-  }, [user, roles, isLoading, router, hasRedirected]);
+  }, [user, roles, isLoading, navigate, hasRedirected]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    
     try {
       emailSchema.parse(loginEmail);
       passwordSchema.parse(loginPassword);
@@ -100,7 +99,7 @@ export default function Auth() {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    
     try {
       emailSchema.parse(signupEmail);
       passwordSchema.parse(signupPassword);
@@ -134,20 +133,14 @@ export default function Auth() {
       localStorage.removeItem('gmb_restore_session');
       clearGmbProviderToken();
 
-      // Use current origin for OAuth callback to ensure proper domain handling
-      const currentOrigin = window.location.origin;
-      const redirectTo = `${currentOrigin}/auth/callback`;
-
-      console.log('[Auth] Starting Google OAuth, redirect:', redirectTo);
-
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'select_account',
-          },
+      console.log('[Auth] Starting Google OAuth sign-in');
+      
+      const { error } = await lovable.auth.signInWithOAuth('google', {
+        redirect_uri: `${window.location.origin}/auth/callback`,
+        extraParams: {
+          scope: 'openid email profile',
+          access_type: 'offline',
+          prompt: 'select_account',
         },
       });
 
@@ -167,7 +160,7 @@ export default function Auth() {
       document.head.appendChild(meta);
     }
     meta.setAttribute('content', 'noindex, nofollow');
-
+    
     return () => {
       meta?.setAttribute('content', 'index, follow');
     };
@@ -186,7 +179,7 @@ export default function Auth() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-coral bg-clip-text text-transparent">
-            AppointPanda
+            Appoint Panda
           </CardTitle>
           <CardDescription>
             Sign in to manage your dental practice or find the best dentists
@@ -203,9 +196,9 @@ export default function Auth() {
             {isGoogleLoading ? (
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
             ) : (
-              <img
-                src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png"
-                alt="Google"
+              <img 
+                src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png" 
+                alt="Google" 
                 className="h-5 w-5 mr-2"
               />
             )}
@@ -226,7 +219,7 @@ export default function Auth() {
               <TabsTrigger value="login">Sign In</TabsTrigger>
               <TabsTrigger value="signup">Sign Up</TabsTrigger>
             </TabsList>
-
+            
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
@@ -256,7 +249,7 @@ export default function Auth() {
                 </Button>
               </form>
             </TabsContent>
-
+            
             <TabsContent value="signup">
               <form onSubmit={handleSignup} className="space-y-4">
                 <div className="space-y-2">

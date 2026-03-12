@@ -1,5 +1,3 @@
-'use client'
-
 /**
  * CriticalResourceLoader - Phase 8 Technical Performance
  * 

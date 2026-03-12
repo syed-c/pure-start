@@ -24,7 +24,7 @@ function escapeHtml(input: string): string {
 }
 
 function isInternalHref(href: string): boolean {
-  return href.startsWith("/") || href.includes("AppointPanda.ae");
+  return href.startsWith("/") || href.includes("appointpanda.ae");
 }
 
 function normalizeHref(rawHref: string): string | null {
@@ -43,7 +43,7 @@ function normalizeHref(rawHref: string): string | null {
     try {
       const url = new URL(href);
       // if it's our domain, convert to internal path (keeps SPA routing + canonical)
-      if (url.hostname.includes("AppointPanda.ae")) {
+      if (url.hostname.includes("appointpanda.ae")) {
         return withTrailingSlash(url.pathname + url.search + url.hash);
       }
       return url.toString();
@@ -288,6 +288,23 @@ export function parseMarkdownToHtml(content: string): string {
     // Blank line => paragraph break
     if (!trimmed) {
       flushParagraph();
+      i++;
+      continue;
+    }
+
+    // Headings (## through ######)
+    const headingMatch = trimmed.match(/^(#{2,6})\s+(.+)$/);
+    if (headingMatch) {
+      flushParagraph();
+      const level = headingMatch[1].length; // 2–6
+      const text = parseInlineMarkdownToHtml(headingMatch[2]);
+      const tag = `h${level}`;
+      const cls = level === 2
+        ? "text-2xl font-bold mt-8 mb-4"
+        : level === 3
+          ? "text-xl font-bold mt-6 mb-3"
+          : "text-lg font-semibold mt-5 mb-2";
+      blocks.push(`<${tag} class="${cls}">${text}</${tag}>`);
       i++;
       continue;
     }

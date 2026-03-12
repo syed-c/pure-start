@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -184,7 +182,7 @@ export function AssignClinicModal({
                     <button
                       key={clinic.id}
                       onClick={() => setSelectedClinic(clinic)}
-                      disabled={Boolean(isClaimed && clinic.claimed_by && clinic.claimed_by !== userId)}
+                      disabled={isClaimed && clinic.claimed_by !== userId}
                       className={`w-full p-3 rounded-lg text-left transition-colors ${
                         isSelected
                           ? 'bg-primary/10 border-2 border-primary'

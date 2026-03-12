@@ -1,4 +1,3 @@
-'use client';
 import { useState, useCallback, useMemo } from "react";
 import { Filter, Star, Banknote, Stethoscope, X, ChevronDown, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";

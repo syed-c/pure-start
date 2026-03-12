@@ -54,7 +54,7 @@ const EditorialPolicyPage = () => {
           <PolicySection
             icon={AlertTriangle}
             title="Corrections & Updates"
-            content="We take accuracy seriously. If you identify an error or outdated information, please contact us at editorial@AppointPanda.ae. Corrections are made promptly and transparently. Significant corrections are noted at the top of the affected content."
+            content="We take accuracy seriously. If you identify an error or outdated information, please contact us at editorial@appointpanda.ae. Corrections are made promptly and transparently. Significant corrections are noted at the top of the affected content."
           />
           <PolicySection
             icon={RefreshCw}

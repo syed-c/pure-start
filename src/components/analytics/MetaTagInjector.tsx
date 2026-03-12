@@ -1,5 +1,3 @@
-'use client'
-
 /**
  * MetaTagInjector - Dynamically injects meta tags, verification codes,
  * tracking pixels, and custom scripts from global_settings into the document head.

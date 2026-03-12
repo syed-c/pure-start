@@ -1,4 +1,3 @@
-'use client';
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -12,13 +11,13 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from 'sonner';
-import {
-  Code,
-  CheckCircle2,
-  XCircle,
-  AlertTriangle,
-  ExternalLink,
-  RefreshCw,
+import { 
+  Code, 
+  CheckCircle2, 
+  XCircle, 
+  AlertTriangle, 
+  ExternalLink, 
+  RefreshCw, 
   Search,
   Building2,
   MapPin,
@@ -109,12 +108,12 @@ function SchemaValidationEngine({ samplePages }: { samplePages?: Record<string, 
 
   const runValidation = () => {
     setScanning(true);
-
+    
     // Simulate schema validation by checking what schemas SHOULD exist per page type
     const validationResults: ValidationResult[] = Object.entries(EXPECTED_SCHEMAS).map(([pageType, expected]) => {
       const pages = samplePages?.[pageType] || [];
       const sampleCount = pages.length;
-
+      
       // Determine which schemas are implemented based on our codebase knowledge
       const implemented: Record<string, string[]> = {
         homepage: ['Organization', 'WebSite', 'SearchAction'],
@@ -126,11 +125,11 @@ function SchemaValidationEngine({ samplePages }: { samplePages?: Record<string, 
         'service-location': ['MedicalProcedure', 'BreadcrumbList', 'FAQPage'],
         blog: ['Article', 'BreadcrumbList'],
       };
-
+      
       const impl = implemented[pageType] || [];
       const missing = expected.filter(s => !impl.includes(s));
       const coverage = expected.length > 0 ? ((expected.length - missing.length) / expected.length) * 100 : 100;
-
+      
       return {
         pageType,
         sampleCount,
@@ -140,7 +139,7 @@ function SchemaValidationEngine({ samplePages }: { samplePages?: Record<string, 
         status: coverage >= 100 ? 'pass' as const : coverage >= 60 ? 'warn' as const : 'fail' as const,
       };
     });
-
+    
     setTimeout(() => {
       setResults(validationResults);
       setScanning(false);
@@ -148,8 +147,8 @@ function SchemaValidationEngine({ samplePages }: { samplePages?: Record<string, 
     }, 800);
   };
 
-  const overallCoverage = results.length > 0
-    ? results.reduce((sum, r) => sum + r.coverage, 0) / results.length
+  const overallCoverage = results.length > 0 
+    ? results.reduce((sum, r) => sum + r.coverage, 0) / results.length 
     : 0;
 
   return (
@@ -236,8 +235,8 @@ function SchemaValidationEngine({ samplePages }: { samplePages?: Record<string, 
                         <td className="p-3 text-right">
                           <Badge className={
                             r.coverage >= 100 ? 'bg-teal/20 text-teal border-teal/30' :
-                              r.coverage >= 60 ? 'bg-gold/20 text-gold border-gold/30' :
-                                'bg-destructive/20 text-destructive border-destructive/30'
+                            r.coverage >= 60 ? 'bg-gold/20 text-gold border-gold/30' :
+                            'bg-destructive/20 text-destructive border-destructive/30'
                           }>
                             {Math.round(r.coverage)}%
                           </Badge>
@@ -277,7 +276,7 @@ export default function StructuredDataTab() {
   const [selectedPageType, setSelectedPageType] = useState<string | null>(null);
   const [newSocialUrl, setNewSocialUrl] = useState('');
   const [newFounder, setNewFounder] = useState('');
-
+  
   const queryClient = useQueryClient();
 
   // Fetch schema settings from database
@@ -287,9 +286,9 @@ export default function StructuredDataTab() {
       const { data, error } = await supabase
         .from('schema_settings')
         .select('*');
-
+      
       if (error) throw error;
-
+      
       const settings: Record<string, any> = {};
       data?.forEach(row => {
         settings[row.setting_key] = row.setting_value;
@@ -353,21 +352,21 @@ export default function StructuredDataTab() {
     queryKey: ['schema-sample-pages'],
     queryFn: async () => {
       const samples: Record<string, { slug: string; name: string }[]> = {};
-
+      
       const { data: clinics } = await supabase
         .from('clinics')
         .select('slug, name')
         .eq('is_active', true)
         .limit(5);
       samples.clinic = clinics?.map(c => ({ slug: `/clinic/${c.slug}`, name: c.name })) || [];
-
+      
       const { data: dentists } = await supabase
         .from('dentists')
         .select('slug, name')
         .eq('is_active', true)
         .limit(5);
       samples.dentist = dentists?.map(d => ({ slug: `/dentist/${d.slug}`, name: d.name })) || [];
-
+      
       const { data: cities } = await supabase
         .from('cities')
         .select('slug, name, states(slug)')
@@ -375,35 +374,35 @@ export default function StructuredDataTab() {
         .limit(5);
       samples.city = cities?.map(c => {
         const stateData = Array.isArray(c.states) ? c.states[0] : c.states;
-        return {
-          slug: `/${stateData?.slug}/${c.slug}`,
-          name: c.name
+        return { 
+          slug: `/${stateData?.slug}/${c.slug}`, 
+          name: c.name 
         };
       }) || [];
-
+      
       const { data: states } = await supabase
         .from('states')
         .select('slug, name')
         .eq('is_active', true)
         .limit(5);
       samples.state = states?.map(s => ({ slug: `/${s.slug}`, name: s.name })) || [];
-
+      
       const { data: treatments } = await supabase
         .from('treatments')
         .select('slug, name')
         .eq('is_active', true)
         .limit(5);
       samples.service = treatments?.map(t => ({ slug: `/services/${t.slug}`, name: t.name })) || [];
-
+      
       const { data: posts } = await supabase
         .from('blog_posts')
         .select('slug, title')
         .eq('status', 'published')
         .limit(5);
       samples.blog = posts?.map(p => ({ slug: `/blog/${p.slug}`, name: p.title })) || [];
-
+      
       samples.homepage = [{ slug: '/', name: 'Homepage' }];
-
+      
       if (samples.city?.[0] && samples.service?.[0]) {
         const cityData = cities?.[0];
         const stateData = Array.isArray(cityData?.states) ? cityData.states[0] : cityData?.states;
@@ -412,7 +411,7 @@ export default function StructuredDataTab() {
           name: `${t.name} in ${cityData?.name}`
         })) || [];
       }
-
+      
       return samples;
     },
   });
@@ -420,10 +419,10 @@ export default function StructuredDataTab() {
   const testStructuredData = async (url: string) => {
     setTesting(true);
     try {
-      const fullUrl = url.startsWith('http') ? url : `https://www.AppointPanda.ae${url}`;
+      const fullUrl = url.startsWith('http') ? url : `https://www.appointpanda.ae${url}`;
       const pageType = detectPageType(url);
       const expectedSchemas = PAGE_TYPES.find(p => p.id === pageType)?.schemaTypes || [];
-
+      
       const result: SchemaTestResult = {
         url: fullUrl,
         schemaTypes: expectedSchemas,
@@ -432,19 +431,19 @@ export default function StructuredDataTab() {
         warnings: [],
         rawSchema: [],
       };
-
+      
       if (!expectedSchemas.includes('Breadcrumb') && pageType !== 'homepage') {
         result.warnings.push('Missing BreadcrumbList schema - recommended for navigation');
       }
-
+      
       if (pageType === 'clinic' && !expectedSchemas.includes('LocalBusiness')) {
         result.errors.push('Clinic pages must have LocalBusiness schema');
       }
-
+      
       if ((pageType === 'city' || pageType === 'service') && !expectedSchemas.includes('FAQPage')) {
         result.warnings.push('Consider adding FAQPage schema for better SERP features');
       }
-
+      
       setTestResult(result);
       toast.success('Schema analysis complete');
     } catch (error) {
@@ -473,12 +472,12 @@ export default function StructuredDataTab() {
   };
 
   const openRichResultsTest = (url: string) => {
-    const fullUrl = url.startsWith('http') ? url : `https://www.AppointPanda.ae${url}`;
+    const fullUrl = url.startsWith('http') ? url : `https://www.appointpanda.ae${url}`;
     window.open(`https://search.google.com/test/rich-results?url=${encodeURIComponent(fullUrl)}`, '_blank');
   };
 
   const openSchemaValidator = (url: string) => {
-    const fullUrl = url.startsWith('http') ? url : `https://www.AppointPanda.ae${url}`;
+    const fullUrl = url.startsWith('http') ? url : `https://www.appointpanda.ae${url}`;
     window.open(`https://validator.schema.org/?url=${encodeURIComponent(fullUrl)}`, '_blank');
   };
 
@@ -594,7 +593,7 @@ export default function StructuredDataTab() {
                       <Globe className="h-5 w-5 text-primary" />
                       <CardTitle>Organization Schema Settings</CardTitle>
                     </div>
-                    <Button
+                    <Button 
                       onClick={() => orgSettings && saveOrgMutation.mutate(orgSettings)}
                       disabled={saveOrgMutation.isPending}
                     >
@@ -631,7 +630,7 @@ export default function StructuredDataTab() {
                             id="org-url"
                             value={orgSettings.url}
                             onChange={(e) => setOrgSettings({ ...orgSettings, url: e.target.value })}
-                            placeholder="https://www.AppointPanda.ae"
+                            placeholder="https://www.appointpanda.ae"
                           />
                         </div>
                         <div className="space-y-2">
@@ -640,7 +639,7 @@ export default function StructuredDataTab() {
                             id="org-logo"
                             value={orgSettings.logo}
                             onChange={(e) => setOrgSettings({ ...orgSettings, logo: e.target.value })}
-                            placeholder="https://www.AppointPanda.ae/logo.png"
+                            placeholder="https://www.appointpanda.ae/logo.png"
                           />
                           <p className="text-xs text-muted-foreground">Recommended: 112x112 to 600x600 pixels</p>
                         </div>
@@ -678,7 +677,7 @@ export default function StructuredDataTab() {
                               type="email"
                               value={orgSettings.email}
                               onChange={(e) => setOrgSettings({ ...orgSettings, email: e.target.value })}
-                              placeholder="contact@AppointPanda.ae"
+                              placeholder="contact@appointpanda.ae"
                             />
                           </div>
                           <div className="space-y-2">
@@ -702,8 +701,8 @@ export default function StructuredDataTab() {
                             <Input
                               id="org-street"
                               value={orgSettings.address?.streetAddress || ''}
-                              onChange={(e) => setOrgSettings({
-                                ...orgSettings,
+                              onChange={(e) => setOrgSettings({ 
+                                ...orgSettings, 
                                 address: { ...orgSettings.address, streetAddress: e.target.value }
                               })}
                               placeholder="123 Main St"
@@ -714,8 +713,8 @@ export default function StructuredDataTab() {
                             <Input
                               id="org-city"
                               value={orgSettings.address?.addressLocality || ''}
-                              onChange={(e) => setOrgSettings({
-                                ...orgSettings,
+                              onChange={(e) => setOrgSettings({ 
+                                ...orgSettings, 
                                 address: { ...orgSettings.address, addressLocality: e.target.value }
                               })}
                               placeholder="San Francisco"
@@ -726,8 +725,8 @@ export default function StructuredDataTab() {
                             <Input
                               id="org-region"
                               value={orgSettings.address?.addressRegion || ''}
-                              onChange={(e) => setOrgSettings({
-                                ...orgSettings,
+                              onChange={(e) => setOrgSettings({ 
+                                ...orgSettings, 
                                 address: { ...orgSettings.address, addressRegion: e.target.value }
                               })}
                               placeholder="CA"
@@ -738,8 +737,8 @@ export default function StructuredDataTab() {
                             <Input
                               id="org-postal"
                               value={orgSettings.address?.postalCode || ''}
-                              onChange={(e) => setOrgSettings({
-                                ...orgSettings,
+                              onChange={(e) => setOrgSettings({ 
+                                ...orgSettings, 
                                 address: { ...orgSettings.address, postalCode: e.target.value }
                               })}
                               placeholder="94102"
@@ -750,8 +749,8 @@ export default function StructuredDataTab() {
                             <Input
                               id="org-country"
                               value={orgSettings.address?.addressCountry || 'US'}
-                              onChange={(e) => setOrgSettings({
-                                ...orgSettings,
+                              onChange={(e) => setOrgSettings({ 
+                                ...orgSettings, 
                                 address: { ...orgSettings.address, addressCountry: e.target.value }
                               })}
                               placeholder="US"
@@ -771,8 +770,8 @@ export default function StructuredDataTab() {
                             <div key={index} className="flex items-center gap-2">
                               <LinkIcon className="h-4 w-4 text-muted-foreground" />
                               <Input value={url} disabled className="flex-1" />
-                              <Button
-                                variant="ghost"
+                              <Button 
+                                variant="ghost" 
                                 size="icon"
                                 onClick={() => removeSocialProfile(index)}
                               >
@@ -784,7 +783,7 @@ export default function StructuredDataTab() {
                             <Input
                               value={newSocialUrl}
                               onChange={(e) => setNewSocialUrl(e.target.value)}
-                              placeholder="https://facebook.com/AppointPanda"
+                              placeholder="https://facebook.com/appointpanda"
                               onKeyDown={(e) => e.key === 'Enter' && addSocialProfile()}
                             />
                             <Button variant="outline" onClick={addSocialProfile}>
@@ -803,8 +802,8 @@ export default function StructuredDataTab() {
                             <div key={index} className="flex items-center gap-2">
                               <User className="h-4 w-4 text-muted-foreground" />
                               <Input value={name} disabled className="flex-1" />
-                              <Button
-                                variant="ghost"
+                              <Button 
+                                variant="ghost" 
                                 size="icon"
                                 onClick={() => removeFounder(index)}
                               >
@@ -846,9 +845,9 @@ export default function StructuredDataTab() {
                   <pre className="p-4 rounded-lg bg-muted text-xs overflow-x-auto max-h-96">
                     {JSON.stringify(generateOrgSchemaPreview(), null, 2)}
                   </pre>
-                  <Button
-                    variant="outline"
-                    size="sm"
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
                     className="mt-2"
                     onClick={() => copyToClipboard(JSON.stringify(generateOrgSchemaPreview(), null, 2))}
                   >
@@ -866,7 +865,7 @@ export default function StructuredDataTab() {
                       <Settings className="h-5 w-5 text-primary" />
                       <CardTitle>Sitewide Schema Settings</CardTitle>
                     </div>
-                    <Button
+                    <Button 
                       size="sm"
                       onClick={() => sitewideSettings && saveSitewideMutation.mutate(sitewideSettings)}
                       disabled={saveSitewideMutation.isPending}
@@ -954,8 +953,8 @@ export default function StructuredDataTab() {
               const Icon = pageType.icon;
               const samples = samplePages?.[pageType.id] || [];
               return (
-                <Card
-                  key={pageType.id}
+                <Card 
+                  key={pageType.id} 
                   className={`cursor-pointer transition-all hover:shadow-md ${selectedPageType === pageType.id ? 'ring-2 ring-primary' : ''}`}
                   onClick={() => setSelectedPageType(selectedPageType === pageType.id ? null : pageType.id)}
                 >
@@ -997,8 +996,8 @@ export default function StructuredDataTab() {
                 <ScrollArea className="h-[300px]">
                   <div className="space-y-2">
                     {(samplePages?.[selectedPageType] || []).map((page, idx) => (
-                      <div
-                        key={idx}
+                      <div 
+                        key={idx} 
                         className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50"
                       >
                         <div className="flex-1 min-w-0">
@@ -1006,24 +1005,24 @@ export default function StructuredDataTab() {
                           <p className="text-xs text-muted-foreground truncate">{page.slug}</p>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Button
-                            size="sm"
+                          <Button 
+                            size="sm" 
                             variant="outline"
                             onClick={() => openRichResultsTest(page.slug)}
                           >
                             <ExternalLink className="h-3 w-3 mr-1" />
                             Rich Results
                           </Button>
-                          <Button
-                            size="sm"
+                          <Button 
+                            size="sm" 
                             variant="outline"
                             onClick={() => openSchemaValidator(page.slug)}
                           >
                             <CheckCircle2 className="h-3 w-3 mr-1" />
                             Validate
                           </Button>
-                          <Button
-                            size="sm"
+                          <Button 
+                            size="sm" 
                             variant="ghost"
                             onClick={() => {
                               setTestUrl(page.slug);
@@ -1059,7 +1058,7 @@ export default function StructuredDataTab() {
                   onChange={(e) => setTestUrl(e.target.value)}
                   className="flex-1"
                 />
-                <Button
+                <Button 
                   onClick={() => testStructuredData(testUrl)}
                   disabled={testing || !testUrl}
                 >
@@ -1082,16 +1081,16 @@ export default function StructuredDataTab() {
                       </p>
                     </div>
                     <div className="flex gap-2">
-                      <Button
-                        size="sm"
+                      <Button 
+                        size="sm" 
                         variant="outline"
                         onClick={() => openRichResultsTest(testUrl)}
                       >
                         <ExternalLink className="h-3 w-3 mr-1" />
                         Google Rich Results Test
                       </Button>
-                      <Button
-                        size="sm"
+                      <Button 
+                        size="sm" 
                         variant="outline"
                         onClick={() => openSchemaValidator(testUrl)}
                       >
@@ -1195,7 +1194,7 @@ export default function StructuredDataTab() {
               </CardHeader>
               <CardContent>
                 <pre className="p-4 rounded-lg bg-muted text-xs overflow-x-auto">
-                  {`{
+{`{
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "{{organization.name}}",
@@ -1206,9 +1205,9 @@ export default function StructuredDataTab() {
   "sameAs": [...]
 }`}
                 </pre>
-                <Button
-                  variant="link"
-                  size="sm"
+                <Button 
+                  variant="link" 
+                  size="sm" 
                   className="mt-2 p-0"
                   onClick={() => setActiveTab('settings')}
                 >
@@ -1227,7 +1226,7 @@ export default function StructuredDataTab() {
               </CardHeader>
               <CardContent>
                 <pre className="p-4 rounded-lg bg-muted text-xs overflow-x-auto">
-                  {`{
+{`{
   "@context": "https://schema.org",
   "@type": ["Dentist", "LocalBusiness"],
   "name": "{{clinic.name}}",
@@ -1259,7 +1258,7 @@ export default function StructuredDataTab() {
               </CardHeader>
               <CardContent>
                 <pre className="p-4 rounded-lg bg-muted text-xs overflow-x-auto">
-                  {`{
+{`{
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
@@ -1267,7 +1266,7 @@ export default function StructuredDataTab() {
       "@type": "ListItem",
       "position": 1,
       "name": "Home",
-      "item": "https://www.AppointPanda.ae"
+      "item": "https://www.appointpanda.ae"
     },
     {
       "@type": "ListItem",
@@ -1291,7 +1290,7 @@ export default function StructuredDataTab() {
               </CardHeader>
               <CardContent>
                 <pre className="p-4 rounded-lg bg-muted text-xs overflow-x-auto">
-                  {`{
+{`{
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
@@ -1329,9 +1328,9 @@ export default function StructuredDataTab() {
                     <p className="text-sm text-muted-foreground mt-1">
                       Organization schema fields like email, phone, address, and social profiles are now configurable.
                     </p>
-                    <Button
-                      variant="outline"
-                      size="sm"
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
                       className="mt-2"
                       onClick={() => setActiveTab('settings')}
                     >
@@ -1354,16 +1353,16 @@ export default function StructuredDataTab() {
                   <Badge variant="outline" className="bg-green-500/10">✓ Empty slugs are filtered out</Badge>
                 </div>
                 <div className="mt-4 flex gap-2">
-                  <Button
-                    variant="outline"
+                  <Button 
+                    variant="outline" 
                     size="sm"
-                    onClick={() => window.open('https://www.AppointPanda.ae/sitemap.xml', '_blank')}
+                    onClick={() => window.open('https://www.appointpanda.ae/sitemap.xml', '_blank')}
                   >
                     <ExternalLink className="h-3 w-3 mr-1" />
                     View Live Sitemap
                   </Button>
-                  <Button
-                    variant="outline"
+                  <Button 
+                    variant="outline" 
                     size="sm"
                     onClick={() => window.open('https://search.google.com/search-console', '_blank')}
                   >
@@ -1405,24 +1404,24 @@ export default function StructuredDataTab() {
               <div className="p-4 rounded-lg border">
                 <h4 className="font-medium mb-2">Schema Validation Tools</h4>
                 <div className="flex flex-wrap gap-2 mt-2">
-                  <Button
-                    variant="outline"
+                  <Button 
+                    variant="outline" 
                     size="sm"
                     onClick={() => window.open('https://search.google.com/test/rich-results', '_blank')}
                   >
                     <ExternalLink className="h-3 w-3 mr-1" />
                     Google Rich Results Test
                   </Button>
-                  <Button
-                    variant="outline"
+                  <Button 
+                    variant="outline" 
                     size="sm"
                     onClick={() => window.open('https://validator.schema.org/', '_blank')}
                   >
                     <ExternalLink className="h-3 w-3 mr-1" />
                     Schema.org Validator
                   </Button>
-                  <Button
-                    variant="outline"
+                  <Button 
+                    variant="outline" 
                     size="sm"
                     onClick={() => window.open('https://search.google.com/search-console', '_blank')}
                   >

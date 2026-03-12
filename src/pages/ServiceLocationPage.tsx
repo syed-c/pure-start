@@ -1,7 +1,5 @@
-'use client';
 import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { useParams, Link, Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -41,7 +39,7 @@ import {
 const MIN_PROFILE_COUNT = 2; // noindex pages with fewer than 2 providers
 
 const ServiceLocationPage = () => {
-  const { stateSlug, citySlug, serviceSlug } = useRouter().query as { stateSlug?: string; citySlug?: string; serviceSlug?: string };
+  const { stateSlug, citySlug, serviceSlug } = useParams();
   const normalizedStateSlug = normalizeStateSlug(stateSlug);
   const service = serviceSlug || "";
 
@@ -122,7 +120,7 @@ const ServiceLocationPage = () => {
 
   // Redirect legacy slugs
   if (stateSlug && normalizedStateSlug && stateSlug !== normalizedStateSlug && citySlug && serviceSlug) {
-    return <Navigate href={`/${normalizedStateSlug}/${citySlug}/${serviceSlug}/`} replace />;
+    return <Navigate to={`/${normalizedStateSlug}/${citySlug}/${serviceSlug}/`} replace />;
   }
 
   const breadcrumbs = [
@@ -248,7 +246,7 @@ const ServiceLocationPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
               className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-3 px-2" 
-              style={{ fontFamily: "'Nunito', 'Plus Jakarta Sans', system-ui, sans-serif" }}
+              style={{ fontFamily: "'Varela Round', system-ui, sans-serif" }}
             >
               {pageH1.includes(locationName) ? (
                 <>
@@ -326,7 +324,7 @@ const ServiceLocationPage = () => {
               locationName={locationName}
               emptyMessage={`We're still adding ${treatmentName.toLowerCase()} specialists in ${locationName}.`}
               maxHeight={700}
-              initialCount={6}
+              initialCount={10}
             />
 
             {/* SEO Content Block */}

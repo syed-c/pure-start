@@ -1,4 +1,3 @@
-'use client';
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -16,8 +15,8 @@ import { Slider } from '@/components/ui/slider';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ACTIVE_STATE_SLUGS, isPageInActiveState } from '@/lib/constants/activeStates';
-import {
-  Stethoscope, MapPin, BookOpen, Play, Pause, CheckCircle,
+import { 
+  Stethoscope, MapPin, BookOpen, Play, Pause, CheckCircle, 
   Clock, FileText, BarChart3, Loader2, Target, Sparkles,
   ChevronRight, Eye, AlertCircle, RefreshCw, Layers, Filter
 } from 'lucide-react';
@@ -33,8 +32,8 @@ const SPRINT_DEFINITIONS = {
     targetWordCount: 3500,
     maxWordCount: 5000,
     priority: [
-      'dental-implants', 'teeth-whitening', 'invisalign', 'root-canal-treatment', 'dental-crowns',
-      'dental-veneers', 'cosmetic-dentistry', 'emergency-dental-care', 'dentures', 'dental-bridges'
+      'dental-implants', 'teeth-whitening', 'invisalign', 'root-canal', 'dental-crowns',
+      'veneers', 'cosmetic-dentistry', 'emergency-dental-care', 'dentures', 'dental-bridges'
     ],
     template: 'service',
   },
@@ -97,13 +96,13 @@ export default function Phase2SprintHubTab() {
   const [searchQuery, setSearchQuery] = useState('');
   const [contentFilter, setContentFilter] = useState<string>('__all__');
   const [wordCountRange, setWordCountRange] = useState<[number, number]>([0, 10000]);
-
+  
   // Generation state
   const [currentJob, setCurrentJob] = useState<GenerationJob | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const stopFlagRef = useRef(false);
   const logsScrollRef = useRef<HTMLDivElement>(null);
-
+  
   // Preview state
   const [previewPage, setPreviewPage] = useState<SeoPage | null>(null);
   const [showPreview, setShowPreview] = useState(false);
@@ -127,17 +126,17 @@ export default function Phase2SprintHubTab() {
           .from('blog_posts')
           .select('id, slug, title, content, status, updated_at')
           .order('updated_at', { ascending: false });
-
+        
         if (error) throw error;
-
+        
         // Transform to match SeoPage interface
         return (data || []).map(post => ({
           id: post.id,
           slug: `blog/${post.slug}`,
           page_type: 'blog',
           h1: post.title,
-          content: typeof post.content === 'object' && post.content !== null
-            ? (post.content as any).body || ''
+          content: typeof post.content === 'object' && post.content !== null 
+            ? (post.content as any).body || '' 
             : '',
           word_count: typeof post.content === 'object' && post.content !== null
             ? ((post.content as any).body || '').split(/\s+/).filter(Boolean).length
@@ -175,18 +174,18 @@ export default function Phase2SprintHubTab() {
   // Calculate sprint stats
   const stats = useMemo(() => {
     if (!sprintPages) return null;
-
+    
     const total = sprintPages.length;
     const goodContent = sprintPages.filter(p => (p.word_count || 0) >= sprintDef.targetWordCount).length;
     const thinContent = sprintPages.filter(p => (p.word_count || 0) > 0 && (p.word_count || 0) < sprintDef.targetWordCount).length;
     const noContent = sprintPages.filter(p => !p.content || (p.word_count || 0) === 0).length;
-
+    
     // Priority pages status
-    const priorityPages = sprintPages.filter(p =>
+    const priorityPages = sprintPages.filter(p => 
       sprintDef.priority.some(slug => p.slug.toLowerCase().includes(slug.toLowerCase()))
     );
     const priorityComplete = priorityPages.filter(p => (p.word_count || 0) >= sprintDef.targetWordCount).length;
-
+    
     return {
       total,
       goodContent,
@@ -195,7 +194,7 @@ export default function Phase2SprintHubTab() {
       priorityPages: priorityPages.length,
       priorityComplete,
       completionRate: total > 0 ? Math.round((goodContent / total) * 100) : 0,
-      avgWordCount: total > 0
+      avgWordCount: total > 0 
         ? Math.round(sprintPages.reduce((sum, p) => sum + (p.word_count || 0), 0) / total)
         : 0,
     };
@@ -204,7 +203,7 @@ export default function Phase2SprintHubTab() {
   // Filter pages
   const filteredPages = useMemo(() => {
     if (!sprintPages) return [];
-
+    
     return sprintPages.filter(page => {
       // Content filter
       if (contentFilter === 'good' && (page.word_count || 0) < sprintDef.targetWordCount) return false;
@@ -213,17 +212,17 @@ export default function Phase2SprintHubTab() {
       if (contentFilter === 'priority') {
         if (!sprintDef.priority.some(slug => page.slug.toLowerCase().includes(slug.toLowerCase()))) return false;
       }
-
+      
       // Word count range
       const wc = page.word_count || 0;
       if (wc < wordCountRange[0] || wc > wordCountRange[1]) return false;
-
+      
       // Search
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
         if (!page.slug.toLowerCase().includes(q) && !(page.h1 || '').toLowerCase().includes(q)) return false;
       }
-
+      
       return true;
     });
   }, [sprintPages, contentFilter, wordCountRange, searchQuery, sprintDef]);
@@ -258,7 +257,7 @@ export default function Phase2SprintHubTab() {
 
     setIsGenerating(true);
     stopFlagRef.current = false;
-
+    
     const jobId = `phase2_${activeSprint}_${Date.now()}`;
     setCurrentJob({
       id: jobId,
@@ -272,7 +271,7 @@ export default function Phase2SprintHubTab() {
     });
 
     addLog({ page: '', action: 'started', message: `Starting Sprint ${activeSprint} generation for ${selectedPages.length} pages...` });
-
+    
     let success = 0;
     let errors = 0;
 
@@ -310,17 +309,17 @@ export default function Phase2SprintHubTab() {
         if (error) throw error;
 
         success++;
-        addLog({
-          page: pageName,
-          action: 'completed',
+        addLog({ 
+          page: pageName, 
+          action: 'completed', 
           message: `✓ Generated ${data?.word_count || 'N/A'} words, ${data?.sections_count || 0} sections`,
         });
 
       } catch (err) {
         errors++;
-        addLog({
-          page: pageName,
-          action: 'error',
+        addLog({ 
+          page: pageName, 
+          action: 'error', 
           message: `✗ Failed: ${err instanceof Error ? err.message : 'Unknown error'}`,
         });
       }
@@ -417,7 +416,7 @@ export default function Phase2SprintHubTab() {
                         <span className="font-medium">{stats.completionRate}%</span>
                       </div>
                       <Progress value={stats.completionRate} className="h-2" />
-
+                      
                       <div className="grid grid-cols-2 gap-2 text-sm">
                         <div className="flex items-center gap-2">
                           <div className="w-3 h-3 rounded-full bg-green-500" />
@@ -479,8 +478,8 @@ export default function Phase2SprintHubTab() {
 
                   <div>
                     <Label className="text-xs">Search</Label>
-                    <Input
-                      className="mt-1"
+                    <Input 
+                      className="mt-1" 
                       placeholder="Search pages..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
@@ -524,8 +523,8 @@ export default function Phase2SprintHubTab() {
                     </Button>
                   </div>
 
-                  <Button
-                    className="w-full"
+                  <Button 
+                    className="w-full" 
                     onClick={startGeneration}
                     disabled={isGenerating || selectedPages.length === 0}
                   >
@@ -579,11 +578,11 @@ export default function Phase2SprintHubTab() {
                         </TableHeader>
                         <TableBody>
                           {filteredPages.map(page => {
-                            const isPriority = sprintDef.priority.some(s =>
+                            const isPriority = sprintDef.priority.some(s => 
                               page.slug.toLowerCase().includes(s.toLowerCase())
                             );
                             return (
-                              <TableRow
+                              <TableRow 
                                 key={page.id}
                                 className={selectedPages.includes(page.id) ? 'bg-muted/50' : ''}
                               >
@@ -653,8 +652,8 @@ export default function Phase2SprintHubTab() {
               </CardHeader>
               <CardContent>
                 <Progress value={(currentJob.processed / currentJob.total) * 100} className="h-2 mb-4" />
-
-                <div
+                
+                <div 
                   ref={logsScrollRef}
                   className="bg-muted/50 rounded-lg p-3 h-48 overflow-y-auto font-mono text-xs space-y-1"
                 >
@@ -663,8 +662,8 @@ export default function Phase2SprintHubTab() {
                       <span className="text-muted-foreground">{format(log.timestamp, 'HH:mm:ss')}</span>
                       <span className={
                         log.action === 'error' ? 'text-red-400' :
-                          log.action === 'completed' ? 'text-green-400' :
-                            'text-foreground'
+                        log.action === 'completed' ? 'text-green-400' :
+                        'text-foreground'
                       }>
                         {log.page && `[${log.page}] `}{log.message}
                       </span>

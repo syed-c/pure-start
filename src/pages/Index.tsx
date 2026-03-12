@@ -1,4 +1,3 @@
-'use client';
 import { ArrowRight, Shield, Clock, Star, MapPin, Heart, Search, Building2, Stethoscope, Calendar, CheckCheck, Sparkles, Globe, ChevronRight, Users, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
@@ -8,8 +7,7 @@ import { AIExplainerSection, ForDentistsAISection } from "@/components/ai";
 import { AutoScrollCarousel } from "@/components/AutoScrollCarousel";
 import { TypewriterText } from "@/components/TypewriterText";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import { useTopDentistsPerLocation } from "@/hooks/useProfiles";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,6 +18,26 @@ import { useStatesWithClinics } from "@/hooks/useLocations";
 import { ACTIVE_STATES } from "@/lib/constants/activeStates";
 import { useRealCounts } from "@/hooks/useRealCounts";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
+
+
+// Emirate landmark images
+import dubaiImg from "@/assets/emirates/dubai.jpg";
+import abuDhabiImg from "@/assets/emirates/abu-dhabi.jpg";
+import sharjahImg from "@/assets/emirates/sharjah.jpg";
+import ajmanImg from "@/assets/emirates/ajman.jpg";
+import rakImg from "@/assets/emirates/ras-al-khaimah.jpg";
+import fujairahImg from "@/assets/emirates/fujairah.jpg";
+import uaqImg from "@/assets/emirates/umm-al-quwain.jpg";
+
+const emirateLandmarks: Record<string, string> = {
+  'dubai': dubaiImg,
+  'abu-dhabi': abuDhabiImg,
+  'sharjah': sharjahImg,
+  'ajman': ajmanImg,
+  'ras-al-khaimah': rakImg,
+  'fujairah': fujairahImg,
+  'umm-al-quwain': uaqImg,
+};
 
 const heroTexts = [
   "Teeth Whitening",
@@ -54,10 +72,10 @@ const benefits = [
 ];
 
 const popularAreas = [
-  // Dubai Areas
+  // Dubai
   { name: "Jumeirah", emirate: "Dubai", slug: "dubai/jumeirah" },
-  { name: "Dubai Marina", emirate: "Dubai", slug: "dubai/marina" },
-  { name: "Downtown Dubai", emirate: "Dubai", slug: "dubai/downtown" },
+  { name: "Marina", emirate: "Dubai", slug: "dubai/marina" },
+  { name: "Downtown", emirate: "Dubai", slug: "dubai/downtown" },
   { name: "Deira", emirate: "Dubai", slug: "dubai/deira" },
   { name: "Al Barsha", emirate: "Dubai", slug: "dubai/al-barsha" },
   { name: "Business Bay", emirate: "Dubai", slug: "dubai/business-bay" },
@@ -65,38 +83,27 @@ const popularAreas = [
   { name: "Mirdif", emirate: "Dubai", slug: "dubai/mirdif" },
   { name: "DIFC", emirate: "Dubai", slug: "dubai/difc" },
   { name: "Karama", emirate: "Dubai", slug: "dubai/karama" },
-  { name: "Bur Dubai", emirate: "Dubai", slug: "dubai/bur-dubai" },
-  { name: "JBR", emirate: "Dubai", slug: "dubai/jbr" },
-  { name: "Palm Jumeirah", emirate: "Dubai", slug: "dubai/palm-jumeirah" },
-  { name: "Dubai Silicon Oasis", emirate: "Dubai", slug: "dubai/silicon-oasis" },
-  { name: "Al Qusais", emirate: "Dubai", slug: "dubai/al-qusais" },
+  { name: "Silicon Oasis", emirate: "Dubai", slug: "dubai/silicon-oasis" },
+  { name: "JVC", emirate: "Dubai", slug: "dubai/jvc" },
+  { name: "Al Quoz", emirate: "Dubai", slug: "dubai/al-quoz" },
   { name: "International City", emirate: "Dubai", slug: "dubai/international-city" },
-  { name: "Jumeirah Village Circle", emirate: "Dubai", slug: "dubai/jvc" },
+  { name: "Sports City", emirate: "Dubai", slug: "dubai/sports-city" },
+  { name: "Palm Jumeirah", emirate: "Dubai", slug: "dubai/palm-jumeirah" },
+  { name: "Bur Dubai", emirate: "Dubai", slug: "dubai/bur-dubai" },
   { name: "Al Nahda Dubai", emirate: "Dubai", slug: "dubai/al-nahda" },
-  { name: "Dubai Healthcare City", emirate: "Dubai", slug: "dubai/dhcc" },
-  { name: "Motor City", emirate: "Dubai", slug: "dubai/motor-city" },
-  // Abu Dhabi Areas
+  // Abu Dhabi
   { name: "Khalidiyah", emirate: "Abu Dhabi", slug: "abu-dhabi/khalidiyah" },
-  { name: "Al Reem Island", emirate: "Abu Dhabi", slug: "abu-dhabi/reem-island" },
-  { name: "Corniche Abu Dhabi", emirate: "Abu Dhabi", slug: "abu-dhabi/corniche" },
-  { name: "Yas Island", emirate: "Abu Dhabi", slug: "abu-dhabi/yas-island" },
-  { name: "Mussafah", emirate: "Abu Dhabi", slug: "abu-dhabi/mussafah" },
+  { name: "Al Reem Island", emirate: "Abu Dhabi", slug: "abu-dhabi/al-reem-island" },
+  { name: "Khalifa City", emirate: "Abu Dhabi", slug: "abu-dhabi/khalifa-city" },
   { name: "Al Ain", emirate: "Abu Dhabi", slug: "abu-dhabi/al-ain" },
-  // Sharjah Areas
+  // Sharjah
   { name: "Al Nahda Sharjah", emirate: "Sharjah", slug: "sharjah/al-nahda" },
   { name: "Al Majaz", emirate: "Sharjah", slug: "sharjah/al-majaz" },
-  { name: "Al Qasimia", emirate: "Sharjah", slug: "sharjah/al-qasimia" },
-  { name: "Muwaileh", emirate: "Sharjah", slug: "sharjah/muwaileh" },
-  // Ajman
+  { name: "Al Khan", emirate: "Sharjah", slug: "sharjah/al-khan" },
+  // Other Emirates
   { name: "Ajman Downtown", emirate: "Ajman", slug: "ajman/downtown" },
-  { name: "Al Nuaimiya", emirate: "Ajman", slug: "ajman/al-nuaimiya" },
-  // Ras Al Khaimah
   { name: "RAK City", emirate: "Ras Al Khaimah", slug: "ras-al-khaimah/rak-city" },
-  { name: "Al Nakheel RAK", emirate: "Ras Al Khaimah", slug: "ras-al-khaimah/al-nakheel" },
-  // Fujairah
   { name: "Fujairah City", emirate: "Fujairah", slug: "fujairah/fujairah-city" },
-  // Umm Al Quwain
-  { name: "UAQ City Center", emirate: "Umm Al Quwain", slug: "umm-al-quwain/city-center" },
 ];
 
 const uaeFaqs = [
@@ -122,51 +129,6 @@ const uaeFaqs = [
   },
 ];
 
-const defaultEmirateImages: Record<string, string> = {
-  "dubai": "/assets/dubai-BMHiWEKF.jpg",
-  "abu-dhabi": "/assets/abu-dhabi-DlB1ZtlL.jpg",
-  "sharjah": "/assets/sharjah-dG2ZD8ZB.jpg",
-  "ajman": "/assets/ajman-CX4URw3V.jpg",
-  "ras-al-khaimah": "/assets/ras-al-khaimah-Cxa1wpyV.jpg",
-  "fujairah": "/assets/fujairah-ffT7cCkx.jpg",
-  "umm-al-quwain": "/assets/umm-al-quwain-DLTMgQDO.jpg",
-};
-
-function EmirateCard({ state, index }: { state: any; index: number }) {
-  const imageUrl = defaultEmirateImages[state.slug];
-  const isFirst = index < ACTIVE_STATES.length;
-  const headingFont = "'Nunito', 'Plus Jakarta Sans', system-ui, sans-serif";
-
-  return (
-    <Link
-      key={`${state.slug}-${index}`}
-      href={`/${state.slug}`}
-      className="group flex flex-col items-center gap-3 text-center shrink-0"
-    >
-      <div className="h-24 w-24 md:h-28 md:w-28 rounded-full border-3 border-primary/30 overflow-hidden group-hover:scale-110 group-hover:border-primary group-hover:shadow-xl group-hover:shadow-primary/20 transition-all duration-300 relative bg-gradient-to-br from-primary/20 via-primary/10 to-teal/10 flex items-center justify-center">
-        {imageUrl ? (
-          <>
-            <img
-              src={imageUrl}
-              alt={`${state.name} landmark`}
-              className="h-full w-full object-cover"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-          </>
-        ) : (
-          <span className="text-sm md:text-base font-black text-primary" style={{ fontFamily: headingFont }}>
-            {state.name.substring(0, 2)}
-          </span>
-        )}
-      </div>
-      <span className="font-bold text-sm md:text-base text-foreground group-hover:text-primary transition-colors whitespace-nowrap" style={{ fontFamily: headingFont }}>
-        {state.name}
-      </span>
-    </Link>
-  );
-}
-
 const staggerContainer = {
   hidden: {},
   show: { transition: { staggerChildren: 0.08 } },
@@ -178,20 +140,8 @@ const staggerItem = {
 };
 
 const Index = () => {
-  const router = useRouter();
-  const legacyPostId = typeof router.query?.p === 'string' ? router.query.p : null;
-
-  // Debug: Test Supabase connection
-  const { data: testData } = useQuery({
-    queryKey: ['test-supabase'],
-    queryFn: async () => {
-      console.log('Testing Supabase connection...');
-      const { data, error } = await supabase.from('states').select('*').limit(1);
-      console.log('Supabase test result:', data, error);
-      return data;
-    },
-    enabled: true,
-  });
+  const location = useLocation();
+  const legacyPostId = new URLSearchParams(location.search).get("p");
 
   const { data: profiles } = useTopDentistsPerLocation(30);
   const { data: statesWithClinics } = useStatesWithClinics();
@@ -222,8 +172,7 @@ const Index = () => {
   });
 
   if (legacyPostId) {
-    if (typeof window !== 'undefined') router.replace('/blog');
-    return null;
+    return <Navigate to="/blog" replace />;
   }
 
   const stats = [
@@ -243,7 +192,7 @@ const Index = () => {
     type: p.type,
   })) || [];
 
-  const headingFont = "'Nunito', 'Plus Jakarta Sans', system-ui, sans-serif";
+  const headingFont = "'Varela Round', 'Quicksand', system-ui, sans-serif";
 
   return (
     <div className="min-h-screen bg-background">
@@ -254,7 +203,7 @@ const Index = () => {
         keywords={['dentist in dubai', 'dental clinics UAE', 'DHA licensed dentist', 'dentist abu dhabi', 'best dentist sharjah', 'dental implants dubai', 'teeth whitening UAE']}
       />
       <StructuredData type="organization" />
-      <SyncStructuredData data={{ type: 'webSite', name: 'AppointPanda', url: 'https://www.AppointPanda.ae', searchUrl: 'https://www.AppointPanda.ae/search' }} />
+      <SyncStructuredData data={{ type: 'webSite', name: 'AppointPanda', url: 'https://www.appointpanda.ae', searchUrl: 'https://www.appointpanda.ae/search' }} />
       <Navbar />
 
       {/* ══════════════════════════════════════════
@@ -398,9 +347,9 @@ const Index = () => {
       </section>
 
       {/* ══════════════════════════════════════════
-          BROWSE BY EMIRATE
+          BROWSE BY EMIRATE — Auto-scrolling landmark circles
           ══════════════════════════════════════════ */}
-      <section className="py-16 md:py-24 bg-background relative">
+      <section className="py-16 md:py-24 bg-background relative overflow-hidden">
         <div className="container px-5 md:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -421,19 +370,41 @@ const Index = () => {
             </p>
           </motion.div>
 
-          {/* Emirates as circular badges with infinite scroll list */}
-          <div className="overflow-hidden">
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
-              className="flex gap-8 md:gap-10 py-4 animate-scroll max-w-none mt-6 w-max"
-            >
-              {[...states, ...states].map((state, index) => (
-                <EmirateCard key={`${state.slug}-${index}`} state={state} index={index} />
-              ))}
-            </motion.div>
+          {/* Slow auto-scrolling emirate circles with landmark images */}
+          <div className="relative">
+            {/* Fade edges */}
+            <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+            
+            <div className="overflow-hidden">
+              <motion.div
+                className="flex gap-8 md:gap-10 py-4"
+                animate={{ x: ['0%', '-50%'] }}
+                transition={{ x: { duration: 30, repeat: Infinity, ease: 'linear' } }}
+              >
+                {/* Duplicate for seamless loop */}
+                {[...states, ...states].map((state, idx) => (
+                  <Link
+                    key={`${state.slug}-${idx}`}
+                    to={`/${state.slug}`}
+                    className="group flex flex-col items-center gap-3 text-center shrink-0"
+                  >
+                    <div className="h-24 w-24 md:h-28 md:w-28 rounded-full border-3 border-primary/30 overflow-hidden group-hover:scale-110 group-hover:border-primary group-hover:shadow-xl group-hover:shadow-primary/20 transition-all duration-300 relative">
+                      <img
+                        src={emirateLandmarks[state.slug] || dubaiImg}
+                        alt={`${state.name} landmark`}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                    </div>
+                    <span className="font-bold text-sm md:text-base text-foreground group-hover:text-primary transition-colors whitespace-nowrap" style={{ fontFamily: headingFont }}>
+                      {state.name}
+                    </span>
+                  </Link>
+                ))}
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -453,102 +424,27 @@ const Index = () => {
               Popular <span className="text-primary">Areas</span>
             </h2>
             <p className="text-muted-foreground mt-2 max-w-lg mx-auto">
-              Browse dentists in top neighborhoods across all 7 Emirates.
+              Browse dentists in top neighborhoods across Dubai, Abu Dhabi, Sharjah & more.
             </p>
           </motion.div>
-          
-          {/* Dubai Areas */}
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
             viewport={{ once: true }}
-            className="mb-6"
+            className="flex flex-wrap justify-center gap-2 max-w-5xl mx-auto"
           >
-            <h3 className="text-lg font-bold text-primary mb-3 text-center" style={{ fontFamily: headingFont }}>Dubai</h3>
-            <div className="flex flex-wrap justify-center gap-x-2 gap-y-2 max-w-5xl mx-auto">
-              {popularAreas.filter(a => a.emirate === "Dubai").map((area, i, arr) => (
-                <span key={area.slug} className="inline-flex items-center">
-                  <Link
-                    href={`/${area.slug}/`}
-                    className="text-foreground hover:text-primary font-semibold hover:underline transition-colors text-sm md:text-base"
-                  >
-                    {area.name}
-                  </Link>
-                  {i < arr.length - 1 && <span className="text-muted-foreground/50 ml-2">·</span>}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Abu Dhabi Areas */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="mb-6"
-          >
-            <h3 className="text-lg font-bold text-primary mb-3 text-center" style={{ fontFamily: headingFont }}>Abu Dhabi</h3>
-            <div className="flex flex-wrap justify-center gap-x-2 gap-y-2 max-w-4xl mx-auto">
-              {popularAreas.filter(a => a.emirate === "Abu Dhabi").map((area, i, arr) => (
-                <span key={area.slug} className="inline-flex items-center">
-                  <Link
-                    href={`/${area.slug}/`}
-                    className="text-foreground hover:text-primary font-semibold hover:underline transition-colors text-sm md:text-base"
-                  >
-                    {area.name}
-                  </Link>
-                  {i < arr.length - 1 && <span className="text-muted-foreground/50 ml-2">·</span>}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Sharjah Areas */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.15 }}
-            className="mb-6"
-          >
-            <h3 className="text-lg font-bold text-primary mb-3 text-center" style={{ fontFamily: headingFont }}>Sharjah</h3>
-            <div className="flex flex-wrap justify-center gap-x-2 gap-y-2 max-w-4xl mx-auto">
-              {popularAreas.filter(a => a.emirate === "Sharjah").map((area, i, arr) => (
-                <span key={area.slug} className="inline-flex items-center">
-                  <Link
-                    href={`/${area.slug}/`}
-                    className="text-foreground hover:text-primary font-semibold hover:underline transition-colors text-sm md:text-base"
-                  >
-                    {area.name}
-                  </Link>
-                  {i < arr.length - 1 && <span className="text-muted-foreground/50 ml-2">·</span>}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Other Emirates */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            <h3 className="text-lg font-bold text-primary mb-3 text-center" style={{ fontFamily: headingFont }}>Other Emirates</h3>
-            <div className="flex flex-wrap justify-center gap-x-2 gap-y-2 max-w-4xl mx-auto">
-              {popularAreas.filter(a => !["Dubai", "Abu Dhabi", "Sharjah"].includes(a.emirate)).map((area, i, arr) => (
-                <span key={area.slug} className="inline-flex items-center">
-                  <Link
-                    href={`/${area.slug}/`}
-                    className="text-foreground hover:text-primary font-semibold hover:underline transition-colors text-sm md:text-base"
-                  >
-                    {area.name}
-                  </Link>
-                  {i < arr.length - 1 && <span className="text-muted-foreground/50 ml-2">·</span>}
-                </span>
-              ))}
-            </div>
+            {popularAreas.map((area) => (
+              <motion.span key={area.slug} variants={staggerItem}>
+                <Link
+                  to={`/${area.slug}/`}
+                  className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-all"
+                >
+                  <MapPin className="h-3 w-3" />
+                  {area.name}
+                </Link>
+              </motion.span>
+            ))}
           </motion.div>
         </div>
       </section>
@@ -634,7 +530,7 @@ const Index = () => {
             <AutoScrollCarousel doctors={carouselProfiles} autoScrollSpeed={25} />
             <div className="mt-10 text-center">
               <Button asChild size="lg" className="rounded-2xl font-black px-10 h-14 text-base shadow-lg shadow-primary/20" style={{ fontFamily: headingFont }}>
-                <Link href="/search">
+                <Link to="/search">
                   View Full Directory <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
@@ -644,48 +540,50 @@ const Index = () => {
       )}
 
       {/* ══════════════════════════════════════════
-          DENTAL SERVICES CATALOG
+          DENTAL SERVICES — pill-style with location links
           ══════════════════════════════════════════ */}
-      <section className="py-16 md:py-24 bg-background relative overflow-hidden">
-        <div className="container relative z-10 px-5 md:px-8">
-          <div className="relative overflow-hidden rounded-[2rem] border border-border bg-card/60 backdrop-blur-sm p-8 md:p-12">
-            <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-primary/10 blur-[100px]" />
-              <div className="absolute -bottom-28 -right-20 h-80 w-80 rounded-full bg-accent/10 blur-[100px]" />
-            </div>
-            <div className="relative flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
-              <div>
-                <span className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-5 py-2.5 mb-5 border border-primary/20">
-                  <Building2 className="h-4 w-4 text-primary" />
-                  <span className="text-sm font-bold text-primary">Comprehensive Care</span>
-                </span>
-                <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-foreground" style={{ fontFamily: headingFont }}>
-                  Dental <span className="text-primary">Services</span>
-                </h2>
-                <p className="text-muted-foreground mt-3 text-base md:text-lg max-w-lg">
-                  Find specialists for every dental need across the UAE. AED pricing on all profiles.
-                </p>
-              </div>
-              <Link href="/services" className="group inline-flex items-center gap-2 text-primary hover:text-primary/80 font-bold transition-all">
-                View All Services <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-            <div className="relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-              {treatments?.map((treatment) => (
+      <section className="py-16 md:py-24 bg-background relative">
+        <div className="container px-5 md:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-8 md:mb-12"
+          >
+            <span className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-5 py-2.5 mb-5 border border-primary/20">
+              <Stethoscope className="h-4 w-4 text-primary" />
+              <span className="text-sm font-bold text-primary">Comprehensive Care</span>
+            </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground" style={{ fontFamily: headingFont }}>
+              Dental <span className="text-primary">Services</span>
+            </h2>
+            <p className="text-muted-foreground mt-2 max-w-lg mx-auto">
+              Find specialists for every dental need across the UAE. AED pricing on all profiles.
+            </p>
+          </motion.div>
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="flex flex-wrap justify-center gap-2 max-w-5xl mx-auto"
+          >
+            {treatments?.map((treatment) => (
+              <motion.span key={treatment.id} variants={staggerItem}>
                 <Link
-                  key={treatment.id}
-                  href={`/services/${treatment.slug}`}
-                  className="group relative bg-background/60 border border-border rounded-2xl p-4 md:p-5 hover:border-primary/40 hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
+                  to={`/dubai/${treatment.slug}/`}
+                  className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium bg-muted text-foreground hover:bg-primary/10 hover:text-primary transition-all"
                 >
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="font-bold text-sm md:text-base text-foreground group-hover:text-primary transition-colors line-clamp-1">{treatment.name}</span>
-                    <div className="shrink-0 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-all">
-                      <ArrowRight className="h-4 w-4 text-primary group-hover:text-primary-foreground transition-all" />
-                    </div>
-                  </div>
+                  <Stethoscope className="h-3 w-3" />
+                  {treatment.name}
                 </Link>
-              ))}
-            </div>
+              </motion.span>
+            ))}
+          </motion.div>
+          <div className="text-center mt-8">
+            <Link to="/services" className="group inline-flex items-center gap-2 text-primary hover:text-primary/80 font-bold transition-all">
+              View All Services <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
         </div>
       </section>
@@ -734,7 +632,7 @@ const Index = () => {
           </div>
           <div className="text-center mt-8">
             <Button asChild variant="outline" className="rounded-2xl font-black" style={{ fontFamily: headingFont }}>
-              <Link href="/faq">View All FAQs <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              <Link to="/faq">View All FAQs <ArrowRight className="ml-2 h-4 w-4" /></Link>
             </Button>
           </div>
         </div>
@@ -799,7 +697,7 @@ const Index = () => {
 
           <div className="text-center mt-12">
             <Button asChild size="lg" className="rounded-2xl font-black px-10 h-14 text-base shadow-lg shadow-primary/20" style={{ fontFamily: headingFont }}>
-              <Link href="/search">
+              <Link to="/search">
                 Start Your Search <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
@@ -857,12 +755,12 @@ const Index = () => {
 
               <div className="flex flex-col sm:flex-row justify-center gap-4">
                 <Button asChild size="lg" className="rounded-2xl font-black px-10 h-14 text-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-xl shadow-primary/30" style={{ fontFamily: headingFont }}>
-                  <Link href="/search">
+                  <Link to="/search">
                     Find a Dentist <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="rounded-2xl font-black px-10 h-14 text-lg border-2 border-white/20 text-white bg-white/5 hover:bg-white/10" style={{ fontFamily: headingFont }}>
-                  <Link href="/list-your-practice">
+                  <Link to="/list-your-practice">
                     <Stethoscope className="mr-2 h-5 w-5" /> I'm a Dentist
                   </Link>
                 </Button>

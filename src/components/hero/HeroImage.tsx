@@ -12,7 +12,7 @@ export const HeroImage = () => {
         transition={{ duration: 0.6 }}
       >
         <img 
-          src={heroSmileImage.src} 
+          src={heroSmileImage} 
           alt="Happy dental patient with a bright smile" 
           className="w-full h-auto object-cover aspect-[16/10] lg:aspect-[4/3]"
         />

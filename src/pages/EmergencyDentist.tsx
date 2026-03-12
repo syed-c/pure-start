@@ -1,4 +1,3 @@
-'use client';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -8,13 +7,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import {
-  Zap, Phone, MapPin, Clock, AlertTriangle,
+import { 
+  Zap, Phone, MapPin, Clock, AlertTriangle, 
   Navigation, Search, CheckCircle, Star, Shield,
   Heart, Thermometer, ArrowRight, Stethoscope,
   Building2
 } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Section } from '@/components/layout/Section';
@@ -149,17 +148,17 @@ export default function EmergencyDentistFinder() {
           <div className="flex justify-center mb-4">
             <Breadcrumbs items={breadcrumbs} />
           </div>
-
+          
           <div className="max-w-3xl mx-auto text-center">
             <motion.div {...fadeUp} className="inline-flex items-center gap-2 bg-destructive/10 border border-destructive/20 rounded-full px-4 py-2 mb-4">
               <Zap className="h-4 w-4 text-destructive" />
               <span className="text-xs font-semibold text-destructive">Urgent Dental Care</span>
             </motion.div>
-
+            
             <motion.h1 {...fadeUp} transition={{ delay: 0.1 }} className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
               Emergency <span className="text-destructive">Dentist</span> Finder
             </motion.h1>
-
+            
             <motion.p {...fadeUp} transition={{ delay: 0.2 }} className="text-base md:text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
               Find dentists open now for urgent dental care across the UAE. Select your location to see available clinics immediately.
             </motion.p>
@@ -265,7 +264,7 @@ export default function EmergencyDentistFinder() {
                   <h3 className="font-display text-lg font-bold mb-2">No clinics found</h3>
                   <p className="text-muted-foreground mb-4">Try a nearby city or broader emirate search.</p>
                   <Button variant="outline" className="rounded-xl" asChild>
-                    <Link href="/search">Browse All Dentists</Link>
+                    <Link to="/search">Browse All Dentists</Link>
                   </Button>
                 </CardContent>
               </Card>
@@ -398,7 +397,7 @@ export default function EmergencyDentistFinder() {
               Emergency Dental <span className="text-primary">FAQs</span>
             </h2>
           </motion.div>
-
+          
           <Accordion type="single" collapsible className="space-y-3">
             {[
               { q: "How much does an emergency dental visit cost in UAE?", a: "Emergency visits typically cost 200–500 AED for exam and X-rays. Procedures like root canals or extractions cost more. Many insurance plans cover emergency dental care." },
@@ -436,10 +435,10 @@ export default function EmergencyDentistFinder() {
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <Button size="lg" className="rounded-xl font-semibold" asChild>
-              <Link href="/search">Find a Dentist <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              <Link to="/search">Find a Dentist <ArrowRight className="ml-2 h-4 w-4" /></Link>
             </Button>
             <Button size="lg" variant="outline" className="rounded-xl font-semibold" asChild>
-              <Link href="/services">Browse Services</Link>
+              <Link to="/services">Browse Services</Link>
             </Button>
           </div>
         </div>
@@ -488,7 +487,7 @@ function ClinicCard({ clinic, isOpen }: { clinic: any; isOpen: boolean }) {
             </Button>
           )}
           <Button size="sm" className="rounded-xl" asChild>
-            <Link href={`/clinic/${clinic.slug || clinic.id}`}>
+            <Link to={`/clinic/${clinic.slug || clinic.id}`}>
               <Navigation className="h-4 w-4 mr-1" /> View Profile
             </Link>
           </Button>

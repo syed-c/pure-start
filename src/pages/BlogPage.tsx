@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
@@ -23,8 +23,7 @@ const BlogPage = () => {
         .from("blog_posts")
         .select("*")
         .eq("status", "published")
-        .order("published_at", { ascending: false })
-        .order("created_at", { ascending: false });
+        .order("published_at", { ascending: false });
       return data || [];
     },
   });
@@ -95,21 +94,21 @@ const BlogPage = () => {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(234,179,8,0.1),transparent_50%)]" />
         <div className="absolute top-20 right-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
         <div className="absolute bottom-10 left-10 w-96 h-96 bg-gold/10 rounded-full blur-3xl" />
-
+        
         <div className="container relative py-16 md:py-24">
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
               <BookOpen className="h-4 w-4 text-primary" />
               <span className="text-sm font-bold text-primary">Dental Insights</span>
             </div>
-
+            
             <h1 className="font-display text-4xl md:text-5xl font-bold mb-6">
               Dental Health{" "}
               <span className="text-gradient">Blog</span>
             </h1>
-
+            
             <p className="text-lg text-dark-section-foreground/70 max-w-xl mx-auto mb-8">
-              Expert advice, dental tips, and the latest news from top dental professionals across the UAE.
+              Expert advice, dental tips, and the latest news from top dental professionals across the United States.
             </p>
 
             <div className="flex flex-wrap justify-center gap-4 text-sm">
@@ -137,7 +136,7 @@ const BlogPage = () => {
             {featuredPosts.map((post, i) => (
               <Link
                 key={post.id}
-                href={`/blog/${post.slug}`}
+                to={`/blog/${post.slug}`}
                 className={`card-modern overflow-hidden group ${i === 0 ? "md:col-span-2 md:row-span-2" : ""}`}
               >
                 <div className={`relative ${i === 0 ? "h-80 md:h-full" : "h-48"}`}>
@@ -164,6 +163,9 @@ const BlogPage = () => {
                     <h3 className={`font-display font-bold text-white group-hover:text-primary transition-colors ${i === 0 ? "text-2xl md:text-3xl" : "text-lg"}`}>
                       {post.title}
                     </h3>
+                    {i === 0 && post.excerpt && (
+                      <p className="text-white/70 mt-2 line-clamp-2">{post.excerpt}</p>
+                    )}
                     <div className="flex items-center gap-4 mt-3 text-sm text-white/60">
                       {post.author_name && (
                         <span className="flex items-center gap-1">
@@ -229,7 +231,7 @@ const BlogPage = () => {
                 {posts.map((post) => (
                   <Link
                     key={post.id}
-                    href={`/blog/${post.slug}`}
+                    to={`/blog/${post.slug}`}
                     className="card-modern overflow-hidden group card-hover"
                   >
                     <div className="h-48 relative overflow-hidden">
@@ -263,6 +265,11 @@ const BlogPage = () => {
                       <h3 className="font-display text-lg font-bold group-hover:text-primary transition-colors line-clamp-2">
                         {post.title}
                       </h3>
+                      {post.excerpt && (
+                        <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
+                          {post.excerpt}
+                        </p>
+                      )}
                       <div className="flex items-center gap-2 mt-4 text-sm font-bold text-primary">
                         Read More
                         <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -307,7 +314,7 @@ const BlogPage = () => {
                 Browse {counts?.clinics?.toLocaleString() || "6,600+"}+ verified dental professionals and book your appointment today.
               </p>
               <Button asChild className="w-full rounded-xl font-bold">
-                <Link href="/search">
+                <Link to="/search">
                   Search Now
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
@@ -324,14 +331,15 @@ const BlogPage = () => {
                 {popularStates?.map((state) => (
                   <Link
                     key={state.slug}
-                    href={`/${state.slug}`}
+                    to={`/${state.slug}`}
                     className="flex items-center justify-between p-3 rounded-xl bg-muted/50 hover:bg-primary/10 transition-colors group"
                   >
                     <span className="font-medium group-hover:text-primary">{state.name}</span>
                     <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
                   </Link>
                 ))}
-                <Link href="/search"
+                <Link
+                  to="/search"
                   className="flex items-center justify-center p-3 rounded-xl border border-dashed border-border hover:border-primary hover:text-primary transition-colors text-sm font-medium"
                 >
                   View All Locations
@@ -349,7 +357,7 @@ const BlogPage = () => {
                 {popularTreatments?.map((treatment) => (
                   <Link
                     key={treatment.slug}
-                    href={`/services/${treatment.slug}`}
+                    to={`/services/${treatment.slug}`}
                     className="px-3 py-1.5 text-sm rounded-full bg-muted hover:bg-primary/10 hover:text-primary transition-colors"
                   >
                     {treatment.name}
@@ -365,7 +373,7 @@ const BlogPage = () => {
                 Get the latest dental health tips and news delivered to your inbox.
               </p>
               <Button asChild variant="outline" className="w-full rounded-xl font-bold border-gold/30 hover:bg-gold/10">
-                <Link href="/contact">Subscribe</Link>
+                <Link to="/contact">Subscribe</Link>
               </Button>
             </div>
           </aside>
@@ -379,10 +387,10 @@ const BlogPage = () => {
             Ready to Find Your Dentist?
           </h2>
           <p className="text-primary-foreground/80 mb-8 max-w-xl mx-auto">
-            Browse our directory of verified dental professionals across the UAE.
+            Browse our directory of verified dental professionals across the United States.
           </p>
           <Button asChild size="lg" variant="secondary" className="rounded-2xl font-bold">
-            <Link href="/search">
+            <Link to="/search">
               Find a Dentist
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>

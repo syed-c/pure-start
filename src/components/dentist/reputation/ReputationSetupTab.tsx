@@ -1,7 +1,7 @@
-'use client';
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { lovable } from '@/integrations/lovable';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -161,7 +161,7 @@ export default function ReputationSetupTab({
       localStorage.setItem('gmb_relink_flow', 'true');
       localStorage.setItem('gmb_restore_session', 'true');
 
-      const redirectTo = 'https://www.AppointPanda.ae/auth/callback?relink=true';
+      const redirectTo = 'https://www.appointpanda.ae/auth/callback?relink=true';
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {

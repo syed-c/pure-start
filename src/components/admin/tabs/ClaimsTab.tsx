@@ -1,4 +1,3 @@
-'use client';
 import { useState } from 'react';
 import { useClaimRequests, useApproveClaim, useRejectClaim } from '@/hooks/useAdminClaims';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

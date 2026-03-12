@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
@@ -11,10 +10,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { getContentBody, calculateReadingTime } from "@/lib/blogContent";
+import { useRealCounts } from "@/hooks/useRealCounts";
+import { parseMarkdownToHtml } from "@/lib/utils/parseMarkdown";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
 import { BlogDentistList } from "@/components/blog/BlogDentistList";
 import { BlogFAQList } from "@/components/blog/BlogFAQList";
-import {
+import { 
   Calendar, User, Clock, ArrowLeft, Share2, Facebook, Twitter, Linkedin,
   MapPin, Search, Phone, Star, Shield, ArrowRight
 } from "lucide-react";
@@ -35,8 +36,10 @@ type BlogContentBlock = {
 };
 
 const BlogPostPage = () => {
-  const { postSlug } = useRouter().query as { postSlug?: string };
+  const { postSlug } = useParams();
   const slug = postSlug || "";
+  const { data: realCounts } = useRealCounts();
+  const clinicCount = realCounts?.clinics?.toLocaleString() || "6,600";
 
   const { data: post, isLoading } = useQuery({
     queryKey: ["blog-post", slug],
@@ -125,7 +128,7 @@ const BlogPostPage = () => {
               The blog post you're looking for doesn't exist.
             </p>
             <Button asChild className="rounded-xl font-bold">
-              <Link href="/blog">Back to Blog</Link>
+              <Link to="/blog">Back to Blog</Link>
             </Button>
           </div>
         </Section>
@@ -153,8 +156,8 @@ const BlogPostPage = () => {
   const contentBlocks = extractBlocksFromContent(post.content);
   const contentStringForReading = contentBlocks
     ? contentBlocks
-      .map((b) => [b.headingText, b.content, b.imageAlt].filter(Boolean).join(" "))
-      .join("\n")
+        .map((b) => [b.headingText, b.content, b.imageAlt].filter(Boolean).join(" "))
+        .join("\n")
     : getContentBody(post.content);
   const readingTime = calculateReadingTime(contentStringForReading);
 
@@ -163,10 +166,81 @@ const BlogPostPage = () => {
     return /<[a-z][\s\S]*>/i.test(content) && !content.includes('<!-- DENTIST_LIST:') && !content.includes('<!-- FAQ_LIST:');
   };
 
+  const decodeHtmlEntities = (input: string) =>
+    input
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&amp;/g, '&');
+
+  const renderNarrativeBlock = (textContent: string, key: string) => {
+    const decoded = decodeHtmlEntities(textContent);
+
+    if (isHtmlContent(decoded)) {
+      return <div key={key} className="blog-content" dangerouslySetInnerHTML={{ __html: decoded }} />;
+    }
+
+    return <div key={key} className="blog-content" dangerouslySetInnerHTML={{ __html: parseMarkdownToHtml(decoded) }} />;
+  };
+
+  // Extract FAQ Q/A pairs from content and return them separately
+  const extractFAQs = (content: string): { cleanContent: string; faqs: Array<{ question: string; answer: string }> } => {
+    const faqs: Array<{ question: string; answer: string }> = [];
+    const lines = content.split('\n');
+    const nonFaqLines: string[] = [];
+    let i = 0;
+    let inFaqSection = false;
+
+    while (i < lines.length) {
+      const trimmed = lines[i].trim();
+
+      // Detect FAQ heading
+      if (/^#{1,4}\s+.*(?:FAQ|Frequently Asked)/i.test(trimmed)) {
+        inFaqSection = true;
+        i++;
+        continue;
+      }
+
+      // Match Q/A pairs: "Q1: ...", "**Q1: ...**", etc.
+      const stripped = trimmed.replace(/^\*\*/, '').replace(/\*\*$/, '');
+      const qMatch = stripped.match(/^Q\d*[:.)]\s*(.+)/i);
+      if (qMatch) {
+        inFaqSection = true;
+        const question = qMatch[1].trim();
+        i++;
+        // Collect answer: everything until next Q line, heading, or double blank
+        let answerParts: string[] = [];
+        while (i < lines.length) {
+          const nextTrimmed = lines[i].trim();
+          // Stop at next Q line or heading
+          if (/^\*{0,2}Q\d*[:.)]\s/i.test(nextTrimmed) || /^#{1,4}\s/.test(nextTrimmed)) break;
+          // Strip A prefix and bold markers if present
+          const aStripped = nextTrimmed.replace(/^\*\*/, '').replace(/\*\*$/, '').replace(/^A\d*[:.)]\s*/i, '');
+          if (aStripped) answerParts.push(aStripped);
+          else if (answerParts.length > 0) break; // double blank ends answer
+          i++;
+        }
+        if (answerParts.length > 0) {
+          faqs.push({ question, answer: answerParts.join(' ') });
+        }
+        continue;
+      }
+
+      if (inFaqSection && trimmed === '') { i++; continue; }
+      if (!inFaqSection) nonFaqLines.push(lines[i]);
+      else if (trimmed) nonFaqLines.push(lines[i]); // non-Q content after FAQ heading (like disclaimer)
+      i++;
+    }
+
+    return { cleanContent: nonFaqLines.join('\n'), faqs };
+  };
+
   // Parse special block markers from content
   const parseSpecialBlocks = (content: string): React.ReactNode[] => {
+    const { cleanContent, faqs } = extractFAQs(content);
     const elements: React.ReactNode[] = [];
-    const lines = content.split('\n');
+    const lines = cleanContent.split('\n');
     let currentTextBlock: string[] = [];
     let elementKey = 0;
 
@@ -175,9 +249,7 @@ const BlogPostPage = () => {
         const textContent = currentTextBlock.join('\n');
         if (textContent.trim()) {
           elements.push(
-            <div key={`text-${elementKey++}`}>
-              {renderTextContent(textContent)}
-            </div>
+            renderNarrativeBlock(textContent, `text-${elementKey++}`)
           );
         }
         currentTextBlock = [];
@@ -192,7 +264,7 @@ const BlogPostPage = () => {
         try {
           const data = JSON.parse(dentistMatch[1]);
           elements.push(
-            <BlogDentistList
+            <BlogDentistList 
               key={`dentist-${elementKey++}`}
               clinicIds={data.clinicIds || []}
               locationLabel={data.locationLabel}
@@ -211,7 +283,7 @@ const BlogPostPage = () => {
         try {
           const data = JSON.parse(faqMatch[1]);
           elements.push(
-            <BlogFAQList
+            <BlogFAQList 
               key={`faq-${elementKey++}`}
               faqs={data.faqs || []}
             />
@@ -226,61 +298,164 @@ const BlogPostPage = () => {
     }
 
     flushTextBlock();
+
+    // Append extracted FAQs as accordion at the end
+    if (faqs.length > 0) {
+      elements.push(
+        <BlogFAQList 
+          key={`faq-extracted-${elementKey++}`}
+          faqs={faqs}
+          headingText="Frequently Asked Questions"
+        />
+      );
+    }
+
     return elements;
+  };
+
+  // Render a markdown table
+  const renderTable = (tableLines: string[]): React.ReactNode => {
+    const rows = tableLines
+      .filter(line => !line.match(/^\s*\|[\s:-]+\|\s*$/)) // skip separator rows
+      .map(line => 
+        line.split('|').map(cell => cell.trim()).filter(Boolean)
+      );
+    
+    if (rows.length === 0) return null;
+    const headers = rows[0];
+    const bodyRows = rows.slice(1);
+
+    return (
+      <div className="overflow-x-auto my-6">
+        <table className="w-full border-collapse rounded-xl overflow-hidden text-sm">
+          <thead>
+            <tr className="bg-primary/10">
+              {headers.map((h, i) => (
+                <th key={i} className="px-4 py-3 text-left font-bold border border-border">{renderInlineContent(h)}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {bodyRows.map((row, ri) => (
+              <tr key={ri} className={ri % 2 === 0 ? 'bg-muted/30' : 'bg-background'}>
+                {row.map((cell, ci) => (
+                  <td key={ci} className="px-4 py-3 border border-border">{renderInlineContent(cell)}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
   };
 
   // Render text content (markdown-like format with link support)
   const renderTextContent = (content: string): React.ReactNode[] => {
-    return content
-      .split('\n')
-      .map((line, i) => {
-        if (line.startsWith('# ')) {
-          return <h2 key={i} className="text-3xl font-bold mt-8 mb-4">{renderInlineContent(line.slice(2))}</h2>;
-        } else if (line.startsWith('## ')) {
-          return <h2 key={i} className="text-2xl font-bold mt-8 mb-4">{renderInlineContent(line.slice(3))}</h2>;
-        } else if (line.startsWith('### ')) {
-          return <h3 key={i} className="text-xl font-bold mt-6 mb-3">{renderInlineContent(line.slice(4))}</h3>;
-        } else if (line.startsWith('- **')) {
-          const match = line.match(/- \*\*(.+?)\*\*:?\s*(.*)/);
-          if (match) {
-            return (
-              <li key={i} className="ml-6 mb-2">
-                <strong className="text-foreground">{match[1]}</strong>
-                {match[2] && <span>: {renderInlineContent(match[2])}</span>}
-              </li>
-            );
-          }
-        } else if (line.startsWith('- ')) {
-          return <li key={i} className="ml-6 mb-2">{renderInlineContent(line.slice(2))}</li>;
-        } else if (line.match(/^\d+\.\s/)) {
-          return <li key={i} className="ml-6 mb-2 list-decimal">{renderInlineContent(line.replace(/^\d+\.\s/, ''))}</li>;
-        } else if (line.match(/^!\[.*?\]\(.*?\)$/)) {
-          // Image markdown: ![alt](url)
-          const imgMatch = line.match(/^!\[(.*?)\]\((.*?)\)$/);
-          if (imgMatch) {
-            return (
-              <figure key={i} className="my-6">
-                <img
-                  src={imgMatch[2]}
-                  alt={imgMatch[1]}
-                  className="w-full rounded-xl"
-                  loading="lazy"
-                />
-                {imgMatch[1] && (
-                  <figcaption className="text-sm text-muted-foreground text-center mt-2">
-                    {imgMatch[1]}
-                  </figcaption>
-                )}
-              </figure>
-            );
-          }
-        } else if (line.trim() === '') {
-          return <div key={i} className="h-4" />;
-        } else {
-          return <p key={i} className="mb-4 leading-relaxed">{renderInlineContent(line)}</p>;
+    const lines = content.split('\n');
+    const elements: React.ReactNode[] = [];
+    let i = 0;
+
+    while (i < lines.length) {
+      const line = lines[i];
+
+      // Detect markdown table (line starts with |)
+      if (line.trim().startsWith('|')) {
+        const tableLines: string[] = [];
+        while (i < lines.length && lines[i].trim().startsWith('|')) {
+          tableLines.push(lines[i]);
+          i++;
         }
-        return <p key={i} className="mb-4 leading-relaxed">{line}</p>;
-      });
+        elements.push(<div key={`table-${i}`}>{renderTable(tableLines)}</div>);
+        continue;
+      }
+
+      // Headings
+      if (line.startsWith('# ')) {
+        elements.push(<h1 key={i} className="text-3xl font-bold mt-8 mb-4">{renderInlineContent(line.slice(2))}</h1>);
+      } else if (line.startsWith('## ')) {
+        elements.push(<h2 key={i} className="text-2xl font-bold mt-8 mb-4">{renderInlineContent(line.slice(3))}</h2>);
+      } else if (line.startsWith('### ')) {
+        elements.push(<h3 key={i} className="text-xl font-bold mt-6 mb-3">{renderInlineContent(line.slice(4))}</h3>);
+      } else if (line.startsWith('#### ')) {
+        elements.push(<h4 key={i} className="text-lg font-bold mt-5 mb-2">{renderInlineContent(line.slice(5))}</h4>);
+      }
+      // Bold list items (- **text**: description)
+      else if (line.match(/^[-*]\s+\*\*/)) {
+        const match = line.match(/^[-*]\s+\*\*(.+?)\*\*:?\s*(.*)/);
+        if (match) {
+          elements.push(
+            <li key={i} className="ml-6 mb-2 list-disc">
+              <strong className="text-foreground">{match[1]}</strong>
+              {match[2] && <span>: {renderInlineContent(match[2])}</span>}
+            </li>
+          );
+        } else {
+          elements.push(<li key={i} className="ml-6 mb-2 list-disc">{renderInlineContent(line.replace(/^[-*]\s+/, ''))}</li>);
+        }
+      }
+      // Regular list items (- or *)
+      else if (line.match(/^[-*]\s+/)) {
+        elements.push(<li key={i} className="ml-6 mb-2 list-disc">{renderInlineContent(line.replace(/^[-*]\s+/, ''))}</li>);
+      }
+      // Numbered list items
+      else if (line.match(/^\d+\.\s/)) {
+        elements.push(<li key={i} className="ml-6 mb-2 list-decimal">{renderInlineContent(line.replace(/^\d+\.\s/, ''))}</li>);
+      }
+      // FAQ Q&A format
+      else if (line.match(/^Q\d*:/i)) {
+        elements.push(
+          <h4 key={i} className="text-lg font-bold mt-6 mb-2 text-foreground">{renderInlineContent(line)}</h4>
+        );
+      } else if (line.match(/^A\d*:/i)) {
+        elements.push(
+          <p key={i} className="mb-4 leading-relaxed pl-4 border-l-2 border-primary/30">{renderInlineContent(line)}</p>
+        );
+      }
+      // Image markdown
+      else if (line.match(/^!\[.*?\]\(.*?\)$/)) {
+        const imgMatch = line.match(/^!\[(.*?)\]\((.*?)\)$/);
+        if (imgMatch) {
+          elements.push(
+            <figure key={i} className="my-6">
+              <img src={imgMatch[2]} alt={imgMatch[1]} className="w-full rounded-xl" loading="lazy" />
+              {imgMatch[1] && (
+                <figcaption className="text-sm text-muted-foreground text-center mt-2">{imgMatch[1]}</figcaption>
+              )}
+            </figure>
+          );
+        }
+      }
+      // Horizontal rule
+      else if (line.match(/^-{3,}$/) || line.match(/^\*{3,}$/)) {
+        elements.push(<hr key={i} className="my-8 border-border" />);
+      }
+      // Blockquote
+      else if (line.startsWith('> ')) {
+        elements.push(
+          <blockquote key={i} className="border-l-4 border-primary/40 pl-4 py-1 my-4 italic text-muted-foreground">
+            {renderInlineContent(line.slice(2))}
+          </blockquote>
+        );
+      }
+      // Disclaimer italics
+      else if (line.startsWith('*') && line.endsWith('*') && !line.startsWith('**')) {
+        elements.push(
+          <p key={i} className="mb-4 text-sm italic text-muted-foreground">{renderInlineContent(line.slice(1, -1))}</p>
+        );
+      }
+      // Empty line
+      else if (line.trim() === '') {
+        elements.push(<div key={i} className="h-4" />);
+      }
+      // Regular paragraph
+      else {
+        elements.push(<p key={i} className="mb-4 leading-relaxed">{renderInlineContent(line)}</p>);
+      }
+
+      i++;
+    }
+
+    return elements;
   };
 
   // Render inline content with links and bold text
@@ -303,19 +478,19 @@ const BlogPostPage = () => {
         const isExternal = linkUrl.startsWith('http');
         parts.push(
           isExternal ? (
-            <a
+            <a 
               key={`link-${match.index}`}
-              href={linkUrl}
-              target="_blank"
+              href={linkUrl} 
+              target="_blank" 
               rel="noopener noreferrer"
               className="text-primary hover:underline"
             >
               {match[2]}
             </a>
           ) : (
-            <Link
+            <Link 
               key={`link-${match.index}`}
-              href={linkUrl}
+              to={linkUrl}
               className="text-primary hover:underline"
             >
               {match[2]}
@@ -376,12 +551,13 @@ const BlogPostPage = () => {
       }
 
       if (b.type === "heading") {
-        // Never use h1 for content headings - only h2 and h3 (main title is already h1)
-        const HTag = (b.headingLevel === "h3" ? "h3" : "h2") as "h2" | "h3";
+        const HTag = (b.headingLevel || "h2") as "h1" | "h2" | "h3";
         const headingClass =
-          HTag === "h3"
-            ? "text-xl font-bold mt-6 mb-3"
-            : "text-2xl font-bold mt-8 mb-4";
+          HTag === "h1"
+            ? "text-3xl font-bold mt-8 mb-4"
+            : HTag === "h3"
+              ? "text-xl font-bold mt-6 mb-3"
+              : "text-2xl font-bold mt-8 mb-4";
 
         return (
           <div key={b.id || `heading-${i}`}>
@@ -403,20 +579,6 @@ const BlogPostPage = () => {
     }
 
     const content = getContentBody(rawContent);
-
-    // If content contains HTML tags (and no special markers), render as HTML directly
-    if (isHtmlContent(content)) {
-      // Replace all H1 tags with H2 tags to avoid duplicate H1s (main title is already H1)
-      const contentWithoutH1 = content.replace(/<h1(\s[^>]*)?>/gi, '<h2$1>').replace(/<\/h1>/gi, '</h2>');
-      return (
-        <div
-          className="blog-content"
-          dangerouslySetInnerHTML={{ __html: contentWithoutH1 }}
-        />
-      );
-    }
-
-    // Parse content with special block markers
     return parseSpecialBlocks(content);
   };
 
@@ -507,11 +669,25 @@ const BlogPostPage = () => {
                     className="w-full h-full object-cover"
                   />
                 </div>
+                <div className="p-3 bg-muted/30 border-t border-border">
+                  <p className="text-xs text-muted-foreground text-center">
+                    Featured image for: {post.title}
+                  </p>
+                </div>
               </div>
             )}
 
             {/* Content Card */}
             <div className="card-modern p-6 md:p-8">
+              {/* Excerpt/Summary */}
+              {post.excerpt && (
+                <div className="bg-primary/5 border-l-4 border-primary rounded-r-xl p-4 mb-8">
+                  <p className="text-lg text-muted-foreground italic leading-relaxed">
+                    {post.excerpt}
+                  </p>
+                </div>
+              )}
+
               {/* Main Content */}
               <div className="prose prose-lg max-w-none text-foreground blog-content">
                 {post.content ? (
@@ -542,25 +718,25 @@ const BlogPostPage = () => {
                   Share this article:
                 </span>
                 <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
                     className="rounded-full h-10 w-10 hover:bg-blue-500/10 hover:border-blue-500/50"
                     onClick={() => window.open(`https://facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank')}
                   >
                     <Facebook className="h-4 w-4" />
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
                     className="rounded-full h-10 w-10 hover:bg-sky-500/10 hover:border-sky-500/50"
                     onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(post.title)}`, '_blank')}
                   >
                     <Twitter className="h-4 w-4" />
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
                     className="rounded-full h-10 w-10 hover:bg-blue-700/10 hover:border-blue-700/50"
                     onClick={() => window.open(`https://linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(post.title)}`, '_blank')}
                   >
@@ -588,7 +764,7 @@ const BlogPostPage = () => {
                 Ready to book an appointment? Find verified dental professionals in your city.
               </p>
               <Button asChild className="w-full rounded-xl font-bold">
-                <Link href="/search">
+                <Link to="/search">
                   Browse Dentists
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
@@ -605,7 +781,7 @@ const BlogPostPage = () => {
                 {popularStates?.map((state) => (
                   <Link
                     key={state.slug}
-                    href={`/${state.slug}`}
+                    to={`/${state.slug}`}
                     className="flex items-center justify-between p-3 rounded-xl bg-muted/50 hover:bg-primary/10 transition-colors group"
                   >
                     <span className="font-medium group-hover:text-primary">{state.name}</span>
@@ -625,7 +801,7 @@ const BlogPostPage = () => {
                 {popularTreatments?.map((treatment) => (
                   <Link
                     key={treatment.slug}
-                    href={`/services/${treatment.slug}`}
+                    to={`/services/${treatment.slug}`}
                     className="px-3 py-1.5 text-sm rounded-full bg-muted hover:bg-primary/10 hover:text-primary transition-colors"
                   >
                     {treatment.name}
@@ -645,7 +821,7 @@ const BlogPostPage = () => {
                   <div className="h-5 w-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                     <span className="text-emerald-500 text-xs">✓</span>
                   </div>
-                  <span>6,600+ verified dental clinics</span>
+                  <span>{clinicCount}+ verified dental clinics</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <div className="h-5 w-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -678,7 +854,7 @@ const BlogPostPage = () => {
                 Our team can help you find the right dentist for your needs.
               </p>
               <Button asChild variant="outline" className="w-full rounded-xl font-bold border-coral/30 hover:bg-coral/10">
-                <Link href="/contact">Contact Us</Link>
+                <Link to="/contact">Contact Us</Link>
               </Button>
             </div>
           </aside>
@@ -687,7 +863,7 @@ const BlogPostPage = () => {
         {/* Back to Blog */}
         <div className="mt-8">
           <Button asChild variant="outline" className="rounded-xl font-bold">
-            <Link href="/blog">
+            <Link to="/blog">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Blog
             </Link>
@@ -704,7 +880,7 @@ const BlogPostPage = () => {
               {relatedPosts.map((relatedPost) => (
                 <Link
                   key={relatedPost.id}
-                  href={`/blog/${relatedPost.slug}`}
+                  to={`/blog/${relatedPost.slug}`}
                   className="card-modern overflow-hidden group card-hover"
                 >
                   <div className="h-40 relative overflow-hidden">
@@ -744,13 +920,13 @@ const BlogPostPage = () => {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button asChild size="lg" variant="secondary" className="rounded-2xl font-bold">
-              <Link href="/search">
+              <Link to="/search">
                 Find a Dentist
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="rounded-2xl font-bold bg-transparent border-white/30 text-white hover:bg-white/10">
-              <Link href="/services">
+              <Link to="/services">
                 Browse Services
               </Link>
             </Button>

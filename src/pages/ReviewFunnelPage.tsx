@@ -1,6 +1,5 @@
-'use client';
 import { useState, useEffect } from 'react';
-import { useRouter } from "next/router";
+import { useParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';

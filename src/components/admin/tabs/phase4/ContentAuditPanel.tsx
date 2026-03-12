@@ -1,4 +1,3 @@
-'use client';
 /**
  * Content Audit Panel - Sprint 4.1
  * 

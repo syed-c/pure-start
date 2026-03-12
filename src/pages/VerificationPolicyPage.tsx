@@ -138,7 +138,7 @@ const VerificationPolicyPage = () => {
               <h3 className="font-bold text-foreground mb-1">Report a Concern</h3>
               <p className="text-sm text-muted-foreground">
                 If you believe a listed practice is unlicensed or misrepresenting their credentials, please report it to{" "}
-                <a href="mailto:trust@AppointPanda.ae" className="text-primary hover:underline">trust@AppointPanda.ae</a>.
+                <a href="mailto:trust@appointpanda.ae" className="text-primary hover:underline">trust@appointpanda.ae</a>.
                 All reports are investigated within 48 hours.
               </p>
             </div>

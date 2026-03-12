@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/button";
@@ -116,20 +116,20 @@ const HowItWorksPage = () => {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(139,92,246,0.1),transparent_50%)]" />
         <div className="absolute top-20 right-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
         <div className="absolute bottom-10 left-10 w-96 h-96 bg-gold/10 rounded-full blur-3xl" />
-
+        
         <div className="container relative py-20 md:py-28">
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
               <Sparkles className="h-4 w-4 text-primary" />
               <span className="text-sm font-bold text-primary">Simple & Easy</span>
             </div>
-
+            
             <h1 className="font-display text-4xl md:text-6xl font-bold mb-6">
               How{" "}
               <span className="text-gradient">AppointPanda</span>{" "}
               Works
             </h1>
-
+            
             <p className="text-xl md:text-2xl text-dark-section-foreground/70 max-w-2xl mx-auto mb-8">
               Whether you're a patient looking for dental care or a dentist wanting to grow your practice, we make it easy.
             </p>
@@ -205,7 +205,7 @@ const HowItWorksPage = () => {
             </div>
             <div className="text-center md:text-right">
               <Button asChild size="lg" className="rounded-2xl font-bold shadow-glow">
-                <Link href="/search">
+                <Link to="/search">
                   Find a Dentist
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
@@ -262,13 +262,13 @@ const HowItWorksPage = () => {
             </div>
             <div className="text-center md:text-right space-y-3">
               <Button asChild size="lg" className="rounded-2xl font-bold shadow-glow">
-                <Link href="/list-your-practice">
+                <Link to="/list-your-practice">
                   List Your Practice
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
               <p className="text-white/60 text-sm">
-                Already listed? <Link href="/claim-profile" className="text-primary hover:underline">Claim your profile</Link>
+                Already listed? <Link to="/claim-profile" className="text-primary hover:underline">Claim your profile</Link>
               </p>
             </div>
           </div>
@@ -286,10 +286,10 @@ const HowItWorksPage = () => {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button asChild size="lg" variant="secondary" className="rounded-2xl font-bold">
-              <Link href="/search">Find a Dentist</Link>
+              <Link to="/search">Find a Dentist</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="rounded-2xl font-bold border-white/40 text-white bg-white/10 hover:bg-white/20">
-              <Link href="/list-your-practice">List Your Practice</Link>
+              <Link to="/list-your-practice">List Your Practice</Link>
             </Button>
           </div>
         </div>

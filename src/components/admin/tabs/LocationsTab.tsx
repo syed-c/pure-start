@@ -1,4 +1,3 @@
-'use client';
 import { useState, useMemo } from 'react';
 import { useCountries, useAdminCities, useAdminAreas, useCreateCity, useUpdateCity, useCreateArea, useUpdateArea, useAdminStates, useCreateState, useUpdateState, useToggleStateActive, useToggleCityActive, useCitiesWithClinics } from '@/hooks/useAdminLocations';
 import { useQueryClient } from '@tanstack/react-query';

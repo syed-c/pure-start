@@ -1,4 +1,3 @@
-'use client';
 import { useState } from 'react';
 import { useAdminSeoPages, useCreateSeoPage, useUpdateSeoPage } from '@/hooks/useAdminSeoPages';
 import { useTreatments } from '@/hooks/useTreatments';

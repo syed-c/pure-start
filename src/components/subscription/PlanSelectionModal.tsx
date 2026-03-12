@@ -1,4 +1,3 @@
-'use client';
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
@@ -8,7 +7,7 @@ import { Check, Star, Crown, Zap, Shield, Loader2, ArrowRight, Sparkles, Rocket,
 import { useSubscriptionPlans, useClinicSubscription, getPlanTier } from '@/hooks/useClinicFeatures';
 import { useStripeCheckout } from '@/hooks/useStripeCheckout';
 import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from "next/router";
+import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { getDiscountedPrice } from './PromotionBanner';
 
@@ -108,7 +107,7 @@ export function PlanSelectionModal({
   featureName,
   requiredPlan,
 }: PlanSelectionModalProps) {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { data: plansFromDB, isLoading: plansLoading } = useSubscriptionPlans();
   const { data: currentSubscription } = useClinicSubscription(clinicId);
@@ -133,13 +132,13 @@ export function PlanSelectionModal({
 
   const handleSelectPlan = (planSlug: string) => {
     if (!user) {
-      router.push('/auth?redirect=/pricing');
+      navigate('/auth?redirect=/pricing');
       onOpenChange(false);
       return;
     }
 
     if (!clinicId) {
-      router.push('/list-your-practice');
+      navigate('/list-your-practice');
       onOpenChange(false);
       return;
     }
@@ -313,7 +312,7 @@ export function PlanSelectionModal({
         <div className="mt-6 text-center">
           <p className="text-sm text-muted-foreground mb-3">
             Need help choosing?{' '}
-            <Button variant="link" className="p-0 h-auto" onClick={() => { onOpenChange(false); router.push('/pricing'); }}>
+            <Button variant="link" className="p-0 h-auto" onClick={() => { onOpenChange(false); navigate('/pricing'); }}>
               View full comparison
             </Button>
           </p>

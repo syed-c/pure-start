@@ -1,4 +1,3 @@
-'use client';
 import { useState } from 'react';
 import { useAdminTreatments, useCreateTreatment, useUpdateTreatment, useDeleteTreatment } from '@/hooks/useAdminTreatments';
 import { Card, CardContent } from '@/components/ui/card';

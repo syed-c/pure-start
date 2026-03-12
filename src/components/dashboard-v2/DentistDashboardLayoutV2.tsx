@@ -1,5 +1,3 @@
-'use client'
-
 /**
  * Premium Dentist Dashboard Layout v2
  * Modern, responsive layout with sidebar, topbar, and content area

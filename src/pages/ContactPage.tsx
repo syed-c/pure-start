@@ -1,6 +1,5 @@
-'use client';
 import { useState } from "react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/button";
@@ -85,7 +84,7 @@ const ContactPage = () => {
     setIsSubmitting(true);
 
     try {
-      const messageContent = userType === 'dentist'
+      const messageContent = userType === 'dentist' 
         ? `[DENTIST INQUIRY]\nPractice: ${formData.practiceName || 'Not specified'}\nSubject: ${formData.subject}\n\n${formData.message}`
         : `[PATIENT INQUIRY]\nSubject: ${formData.subject}\n\n${formData.message}`;
 
@@ -138,25 +137,25 @@ const ContactPage = () => {
 
   // Contact departments - using values from Contact Details tab in admin
   const departments = [
-    {
-      icon: Headphones,
-      title: "General Support",
+    { 
+      icon: Headphones, 
+      title: "General Support", 
       description: "Questions about using AppointPanda",
       phone: supportPhone,
       email: supportEmail,
       color: "from-primary/20 to-teal/10"
     },
-    {
-      icon: CalendarCheck,
-      title: "Booking Assistance",
+    { 
+      icon: CalendarCheck, 
+      title: "Booking Assistance", 
       description: "Help with appointments",
       phone: bookingPhone,
       email: bookingEmail,
       color: "from-gold/20 to-amber-500/10"
     },
-    {
-      icon: ShoppingBag,
-      title: "Sales & Partnerships",
+    { 
+      icon: ShoppingBag, 
+      title: "Sales & Partnerships", 
       description: "Business inquiries",
       phone: salesPhone,
       email: salesEmail,
@@ -177,7 +176,7 @@ const ContactPage = () => {
         title={seoContent?.meta_title || "Contact Us | Get in Touch with AppointPanda"}
         description={seoContent?.meta_description || "Have questions about finding a dentist or listing your practice? Contact the AppointPanda team. We're here to help with dental appointments and practice listings."}
         canonical="/contact/"
-        keywords={['contact AppointPanda', 'dental help', 'dentist questions', 'dental support']}
+        keywords={['contact appointpanda', 'dental help', 'dentist questions', 'dental support']}
       />
 
       {/* Dark Hero Section */}
@@ -187,19 +186,19 @@ const ContactPage = () => {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(139,92,246,0.1),transparent_50%)]" />
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple/10 rounded-full blur-3xl" />
-
+        
         <div className="container relative py-20 md:py-28">
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
               <Sparkles className="h-4 w-4 text-primary" />
               <span className="text-sm font-bold text-primary">We're Here to Help</span>
             </div>
-
+            
             <h1 className="font-display text-4xl md:text-6xl font-bold mb-6">
               Get in{" "}
               <span className="text-gradient">Touch</span>
             </h1>
-
+            
             <p className="text-xl md:text-2xl text-dark-section-foreground/70 max-w-2xl mx-auto mb-8">
               Have questions about finding a dentist or listing your practice? Our team is ready to assist you.
             </p>
@@ -221,8 +220,8 @@ const ContactPage = () => {
       <Section size="lg" className="-mt-10 relative z-20">
         <div className="grid md:grid-cols-3 gap-6 mb-12">
           {departments.map((dept, i) => (
-            <div
-              key={i}
+            <div 
+              key={i} 
               className="card-modern p-8 text-center hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
             >
               <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${dept.color} flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform`}>
@@ -231,15 +230,15 @@ const ContactPage = () => {
               <h3 className="font-display font-bold text-xl mb-2">{dept.title}</h3>
               <p className="text-sm text-muted-foreground mb-5">{dept.description}</p>
               <div className="space-y-3">
-                <a
-                  href={`tel:${dept.phone.replace(/[^\d+]/g, '')}`}
+                <a 
+                  href={`tel:${dept.phone.replace(/[^\d+]/g, '')}`} 
                   className="flex items-center justify-center gap-2 text-sm font-bold text-foreground hover:text-primary transition-colors"
                 >
                   <Phone className="h-4 w-4" />
                   {dept.phone}
                 </a>
-                <a
-                  href={`mailto:${dept.email}`}
+                <a 
+                  href={`mailto:${dept.email}`} 
                   className="flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   <Mail className="h-4 w-4" />
@@ -259,10 +258,11 @@ const ContactPage = () => {
                 <button
                   type="button"
                   onClick={() => setUserType('patient')}
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-sm transition-all ${userType === 'patient'
-                    ? 'bg-primary text-primary-foreground shadow-md'
-                    : 'text-muted-foreground hover:text-foreground'
-                    }`}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-sm transition-all ${
+                    userType === 'patient' 
+                      ? 'bg-primary text-primary-foreground shadow-md' 
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
                 >
                   <User className="h-4 w-4" />
                   I'm a Patient
@@ -270,10 +270,11 @@ const ContactPage = () => {
                 <button
                   type="button"
                   onClick={() => setUserType('dentist')}
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-sm transition-all ${userType === 'dentist'
-                    ? 'bg-primary text-primary-foreground shadow-md'
-                    : 'text-muted-foreground hover:text-foreground'
-                    }`}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-sm transition-all ${
+                    userType === 'dentist' 
+                      ? 'bg-primary text-primary-foreground shadow-md' 
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
                 >
                   <Stethoscope className="h-4 w-4" />
                   I'm a Dentist
@@ -281,10 +282,11 @@ const ContactPage = () => {
               </div>
 
               <div className="flex items-center gap-4 mb-6">
-                <div className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center ${userType === 'patient'
-                  ? 'bg-gradient-to-br from-primary/20 to-teal/10'
-                  : 'bg-gradient-to-br from-purple/20 to-indigo-500/10'
-                  }`}>
+                <div className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center ${
+                  userType === 'patient' 
+                    ? 'bg-gradient-to-br from-primary/20 to-teal/10' 
+                    : 'bg-gradient-to-br from-purple/20 to-indigo-500/10'
+                }`}>
                   {userType === 'patient' ? (
                     <Send className="h-6 w-6 md:h-7 md:w-7 text-primary" />
                   ) : (
@@ -296,8 +298,8 @@ const ContactPage = () => {
                     {userType === 'patient' ? 'Patient Inquiry' : 'Dentist Inquiry'}
                   </h2>
                   <p className="text-muted-foreground text-sm">
-                    {userType === 'patient'
-                      ? 'Questions about finding a dentist or booking?'
+                    {userType === 'patient' 
+                      ? 'Questions about finding a dentist or booking?' 
                       : 'Interested in listing your practice?'
                     }
                   </p>
@@ -394,7 +396,7 @@ const ContactPage = () => {
                   <Textarea
                     id="message"
                     name="message"
-                    placeholder={userType === 'patient'
+                    placeholder={userType === 'patient' 
                       ? "Tell us how we can help you find the right dentist..."
                       : "Tell us about your practice and how we can help..."
                     }
@@ -422,8 +424,8 @@ const ContactPage = () => {
                 Contact Information
               </h3>
               <div className="space-y-1">
-                <a
-                  href={`tel:${supportPhone.replace(/[^\d+]/g, '')}`}
+                <a 
+                  href={`tel:${supportPhone.replace(/[^\d+]/g, '')}`} 
                   className="flex items-start gap-4 p-4 rounded-xl hover:bg-muted/50 transition-colors group"
                 >
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-teal/10 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
@@ -435,8 +437,8 @@ const ContactPage = () => {
                   </div>
                 </a>
 
-                <a
-                  href={`mailto:${supportEmail}`}
+                <a 
+                  href={`mailto:${supportEmail}`} 
                   className="flex items-start gap-4 p-4 rounded-xl hover:bg-muted/50 transition-colors group"
                 >
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-gold/20 to-amber-500/10 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
@@ -476,19 +478,19 @@ const ContactPage = () => {
             <div className="card-modern p-6 bg-gradient-to-br from-primary/5 via-transparent to-teal/5 border-primary/10">
               <h3 className="font-display font-bold mb-5">Quick Links</h3>
               <div className="space-y-2">
-                <Link href="/faq" className="flex items-center gap-3 p-3 rounded-xl hover:bg-background transition-colors group">
+                <Link to="/faq" className="flex items-center gap-3 p-3 rounded-xl hover:bg-background transition-colors group">
                   <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                     <MessageSquare className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                   </div>
                   <span className="font-semibold">Frequently Asked Questions</span>
                 </Link>
-                <Link href="/list-your-practice" className="flex items-center gap-3 p-3 rounded-xl hover:bg-background transition-colors group">
+                <Link to="/list-your-practice" className="flex items-center gap-3 p-3 rounded-xl hover:bg-background transition-colors group">
                   <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                     <Building2 className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                   </div>
                   <span className="font-semibold">List Your Practice</span>
                 </Link>
-                <Link href="/claim-profile" className="flex items-center gap-3 p-3 rounded-xl hover:bg-background transition-colors group">
+                <Link to="/claim-profile" className="flex items-center gap-3 p-3 rounded-xl hover:bg-background transition-colors group">
                   <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                     <Globe className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                   </div>
@@ -511,13 +513,13 @@ const ContactPage = () => {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button asChild size="lg" className="rounded-2xl font-bold shadow-glow">
-              <Link href="/search">
+              <Link to="/search">
                 Find a Dentist
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="rounded-2xl font-bold border-white/40 text-white bg-white/10 hover:bg-white/20">
-              <Link href="/list-your-practice">List Your Practice</Link>
+              <Link to="/list-your-practice">List Your Practice</Link>
             </Button>
           </div>
         </div>

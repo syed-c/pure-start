@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { MapPin, Users, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buildStateUrl, buildCityUrl } from "@/lib/url/buildProfileUrl";
@@ -43,7 +43,7 @@ export const LocationCard = ({
 
   return (
     <Link 
-      href={href}
+      to={href}
       className={cn(
         "group relative h-64 rounded-3xl overflow-hidden card-hover",
         className

@@ -1,6 +1,5 @@
-'use client';
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
-import { useRouter } from "next/router";
+import { useNavigate, useParams } from "react-router-dom";
 import { MapPin, Search, Stethoscope, Shield, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -63,7 +62,7 @@ function levenshtein(a: string, b: string): number {
   return dp[m][n];
 }
 
-const headingFont = "'Nunito', 'Plus Jakarta Sans', system-ui, sans-serif";
+const headingFont = "'Varela Round', 'Quicksand', system-ui, sans-serif";
 
 function SmartSearchInput({
   placeholder,
@@ -193,8 +192,8 @@ export function SearchBox({
   stateSlug: propStateSlug,
   showInsurance = true,
 }: SearchBoxProps) {
-  const router = useRouter();
-  const { stateSlug: routeStateSlug, citySlug: routeCitySlug } = useRouter().query as { stateSlug?: string; citySlug?: string };
+  const navigate = useNavigate();
+  const { stateSlug: routeStateSlug, citySlug: routeCitySlug } = useParams();
   const [city, setCity] = useState<string>(defaultCity ?? "");
   const [_cityLabel, setCityLabel] = useState<string>("");
   const [treatment, setTreatment] = useState<string>(defaultTreatment ?? "");
@@ -252,7 +251,7 @@ export function SearchBox({
     [treatmentsData]);
 
   const insuranceOptions: SearchOption[] = useMemo(() =>
-    insurancesData?.map(ins => ({ value: ins.slug || '', label: ins.name, slug: ins.slug || undefined })) || [],
+    insurancesData?.map(ins => ({ value: ins.slug, label: ins.name, slug: ins.slug })) || [],
     [insurancesData]);
 
   const handleSearch = () => {
@@ -263,20 +262,20 @@ export function SearchBox({
         params.set('city', citySlug);
         params.set('state', targetStateSlug);
         if (treatment) params.set('treatment', treatment);
-        router.push(`/insurance/${insurance}?${params.toString()}`);
+        navigate(`/insurance/${insurance}?${params.toString()}`);
         return;
       }
       if (treatment) {
-        router.push(`/${targetStateSlug}/${citySlug}/${treatment}`);
+        navigate(`/${targetStateSlug}/${citySlug}/${treatment}`);
       } else {
-        router.push(`/${targetStateSlug}/${citySlug}`);
+        navigate(`/${targetStateSlug}/${citySlug}`);
       }
     } else if (insurance) {
-      router.push(`/insurance/${insurance}`);
+      navigate(`/insurance/${insurance}`);
     } else if (stateContext) {
-      router.push(`/${stateContext}`);
+      navigate(`/${stateContext}`);
     } else {
-      router.push('/search');
+      navigate('/search');
     }
   };
 

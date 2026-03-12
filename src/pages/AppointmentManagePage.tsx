@@ -1,6 +1,5 @@
-'use client';
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useParams, useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
@@ -53,8 +52,8 @@ const timeSlots = Array.from({ length: 20 }, (_, i) => {
 });
 
 const AppointmentManagePage = () => {
-  const { token } = useRouter().query as { token?: string };
-  const router = useRouter(); const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+  const { token } = useParams();
+  const [searchParams] = useSearchParams();
   const action = searchParams.get("action");
   const { toast } = useToast();
   const queryClient = useQueryClient();

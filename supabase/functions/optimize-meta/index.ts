@@ -91,11 +91,11 @@ async function callAIWithRetry(
           await delay(backoffTime);
           continue;
         }
-
+        
         if (aiResponse.status === 402) {
           throw new Error("AI credits exhausted. Please add funds.");
         }
-
+        
         throw new Error(`AI Gateway error: ${aiResponse.status}`);
       }
 
@@ -207,7 +207,7 @@ serve(async (req) => {
       needs_optimization: false,
       last_meta_edit_source: 'meta_optimizer',
     };
-
+    
     // Validate we're not writing to blocked fields
     const validation = validateMetaOptimizerWrite(Object.keys(updateData));
     if (!validation.valid) {
@@ -217,7 +217,7 @@ serve(async (req) => {
         delete updateData[blocked];
       }
     }
-
+    
     const { error: updateError } = await supabase
       .from("seo_pages")
       .update(updateData)
@@ -249,28 +249,28 @@ serve(async (req) => {
 
 function buildPageContext(page: any): string {
   const parts: string[] = [];
-
+  
   parts.push(`Page Type: ${page.page_type}`);
   parts.push(`URL Slug: /${page.slug}`);
-
+  
   if (page.title) {
     parts.push(`Current Title: ${page.title}`);
   }
-
+  
   if (page.h1) {
     parts.push(`H1 Heading: ${page.h1}`);
   }
-
+  
   if (page.content) {
     // Include first 500 chars of content for context
     const contentPreview = page.content.substring(0, 500).replace(/\n+/g, " ").trim();
     parts.push(`Content Preview: ${contentPreview}`);
   }
-
+  
   if (page.meta_title) {
     parts.push(`Existing Meta Title: ${page.meta_title} (${page.meta_title.length} chars)`);
   }
-
+  
   if (page.meta_description) {
     parts.push(`Existing Meta Description: ${page.meta_description} (${page.meta_description.length} chars)`);
   }
@@ -311,39 +311,39 @@ function buildPageContext(page: any): string {
 function generateFallbackTitle(page: any): string {
   const slug = page.slug || "";
   const parts = slug.split("/").filter(Boolean);
-
+  
   if (page.page_type === "city" && parts.length >= 2) {
     const city = parts[1].replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
     return `Find Top Dentists in ${city} | AppointPanda`;
   }
-
+  
   if (page.page_type === "service-location" && parts.length >= 3) {
     const city = parts[1].replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
     const service = parts[2].replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
     return `${service} in ${city} | AppointPanda`;
   }
-
+  
   if (page.title) {
     return page.title.length > 50 ? page.title.substring(0, 47) + "..." : page.title + " | AppointPanda";
   }
-
+  
   return "Find Trusted Dentists Near You | AppointPanda";
 }
 
 function generateFallbackDescription(page: any): string {
   const slug = page.slug || "";
   const parts = slug.split("/").filter(Boolean);
-
+  
   if (page.page_type === "city" && parts.length >= 2) {
     const city = parts[1].replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
     return `Find top-rated dentists in ${city}. Read patient reviews, compare services, and book appointments online. Your trusted dental care starts here.`;
   }
-
+  
   if (page.page_type === "service-location" && parts.length >= 3) {
     const city = parts[1].replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
     const service = parts[2].replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
     return `Looking for ${service.toLowerCase()} in ${city}? Find qualified dentists, read reviews, and book your appointment online today.`;
   }
-
+  
   return "Find trusted dentists near you. Compare reviews, services, and book appointments online with AppointPanda.";
 }

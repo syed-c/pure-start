@@ -1,7 +1,6 @@
-'use client';
 import { useState } from 'react';
 import { useAdminStats, usePlatformAlerts } from '@/hooks/useAdminStats';
-import { useRouter } from "next/router";
+import { useSearchParams } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -52,7 +51,7 @@ import { toast } from 'sonner';
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--teal))', 'hsl(var(--gold))', 'hsl(var(--coral))'];
 
 export default function OverviewTab() {
-  const router = useRouter();
+  const [, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { data: stats, isLoading, refetch: refetchStats } = useAdminStats();

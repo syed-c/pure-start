@@ -1,4 +1,3 @@
-'use client';
 import { useState } from 'react';
 import { useAnalyticsDashboard } from '@/hooks/useAnalyticsDashboard';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';

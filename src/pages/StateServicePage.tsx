@@ -3,7 +3,7 @@
  * Renders when URL is /{emirate}/{service}/ (e.g., /dubai/teeth-whitening/)
  * Shows all clinics offering that service across the entire emirate.
  */
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -194,7 +194,7 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
               className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-3 px-2"
-              style={{ fontFamily: "'Nunito', 'Plus Jakarta Sans', system-ui, sans-serif" }}
+              style={{ fontFamily: "'Varela Round', system-ui, sans-serif" }}
             >
               <span className="text-white">{treatmentName} in </span>
               <span className="text-primary">{stateName}</span>
@@ -252,11 +252,11 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
       <Section size="md">
         <div className="max-w-4xl mx-auto">
           <p className="text-muted-foreground leading-relaxed">
-            Looking for <strong>{treatmentName.toLowerCase()}</strong> in {stateName}? Our directory features {profiles?.length || 0}+ verified dental clinics offering {treatmentName.toLowerCase()} across {stateName}.
+            Looking for <strong>{treatmentName.toLowerCase()}</strong> in {stateName}? Our directory features {profiles?.length || 0}+ verified dental clinics offering {treatmentName.toLowerCase()} across {stateName}. 
             Compare prices, read patient reviews, and book your appointment online. Whether you're in{' '}
             {cityLinks.slice(0, 3).map((c, i) => (
               <span key={c.slug}>
-                <Link href={`/${normalizedStateSlug}/${c.slug}/${serviceSlug}/`} className="text-primary hover:underline font-medium">{c.name}</Link>
+                <Link to={`/${normalizedStateSlug}/${c.slug}/${serviceSlug}/`} className="text-primary hover:underline font-medium">{c.name}</Link>
                 {i < 2 ? (i === 1 ? ', or ' : ', ') : ''}
               </span>
             ))}
@@ -295,7 +295,7 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
               {cityLinks.map((city, i) => (
                 <span key={city.slug}>
                   <Link
-                    href={`/${normalizedStateSlug}/${city.slug}/${serviceSlug}/`}
+                    to={`/${normalizedStateSlug}/${city.slug}/${serviceSlug}/`}
                     className="text-primary hover:text-primary/80 font-semibold hover:underline transition-colors"
                   >
                     {treatmentName} in {city.name}

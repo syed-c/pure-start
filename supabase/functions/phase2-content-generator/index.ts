@@ -488,7 +488,7 @@ serve(async (req) => {
       .select("role")
       .eq("user_id", userId);
 
-    const isAdmin = (roles ?? []).some((r) =>
+    const isAdmin = (roles ?? []).some((r) => 
       ["super_admin", "district_manager", "content_team", "seo_team"].includes(r.role)
     );
     if (!isAdmin) {
@@ -509,14 +509,14 @@ serve(async (req) => {
     // AI call helper with retries
     async function callAI(messages: any[], maxRetries = 4): Promise<any> {
       let lastError: Error | null = null;
-
+      
       for (let attempt = 0; attempt < maxRetries; attempt++) {
         if (attempt > 0) {
           const delay = Math.pow(2, attempt) * 1000;
           await new Promise(r => setTimeout(r, delay));
           console.log(`phase2-content-generator: Retry ${attempt + 1}/${maxRetries}`);
         }
-
+        
         try {
           const response = await fetch("https://api.aimlapi.com/v1/chat/completions", {
             method: "POST",
@@ -545,7 +545,7 @@ serve(async (req) => {
           lastError = e instanceof Error ? e : new Error(String(e));
         }
       }
-
+      
       throw lastError || new Error("AI call failed");
     }
 
@@ -583,7 +583,7 @@ serve(async (req) => {
     if (template === "service") {
       // Sprint 2.1: Service pages
       const serviceName = pageData.title || pageData.slug?.split("/").pop()?.replace(/-/g, " ") || "Dental Service";
-
+      
       systemPrompt = SERVICE_PAGE_TEMPLATE;
       userPrompt = `Generate a COMPLETE service page for: ${serviceName}
 
@@ -625,7 +625,7 @@ Write in AppointPanda's voice. Return pure markdown content.`;
       // Sprint 2.3: Blog posts
       const category = blog_category || "cost-guides";
       const blogTemplate = BLOG_TEMPLATES[category as keyof typeof BLOG_TEMPLATES] || BLOG_TEMPLATES["cost-guides"];
-
+      
       systemPrompt = blogTemplate;
       userPrompt = `Generate a COMPLETE blog post.
 
@@ -749,9 +749,9 @@ Return pure markdown content.`;
   } catch (error) {
     console.error("phase2-content-generator error:", error);
     return new Response(
-      JSON.stringify({
-        success: false,
-        error: error instanceof Error ? error.message : "Unknown error"
+      JSON.stringify({ 
+        success: false, 
+        error: error instanceof Error ? error.message : "Unknown error" 
       }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );

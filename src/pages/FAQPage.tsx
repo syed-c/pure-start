@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ const FAQPage = () => {
   const { data: siteSettings } = useSiteSettings();
   const { data: counts } = useRealCounts();
   const { data: seoContent } = useSeoPageContent("faq");
-  const supportEmail = siteSettings?.contactDetails?.support_email || 'support@AppointPanda.ae';
+  const supportEmail = siteSettings?.contactDetails?.support_email || 'support@appointpanda.ae';
   const supportPhone = siteSettings?.contactDetails?.support_phone || '+971 4 123 4567';
 
   const categories = [
@@ -128,19 +128,19 @@ const FAQPage = () => {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(139,92,246,0.1),transparent_50%)]" />
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-gold/10 rounded-full blur-3xl" />
-
+        
         <div className="container relative py-16 md:py-24">
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
               <HelpCircle className="h-4 w-4 text-primary" />
               <span className="text-sm font-bold text-primary">Help Center</span>
             </div>
-
+            
             <h1 className="text-4xl md:text-5xl font-black mb-6" style={{ fontFamily: "'Varela Round', 'Quicksand', sans-serif" }}>
               Frequently Asked{" "}
               <span className="text-primary">Questions</span>
             </h1>
-
+            
             <p className="text-lg text-dark-section-foreground/70 max-w-xl mx-auto mb-8">
               Find answers about dental care in the UAE — from DHA licensing to AED costs and insurance coverage.
             </p>
@@ -174,7 +174,7 @@ const FAQPage = () => {
                 </div>
                 <h2 className="text-2xl font-black" style={{ fontFamily: "'Varela Round', 'Quicksand', sans-serif" }}>{category.title}</h2>
               </div>
-
+              
               <Accordion type="single" collapsible className="w-full">
                 {category.faqs.map((faq, faqIndex) => (
                   <AccordionItem key={faqIndex} value={`${catIndex}-${faqIndex}`} className="border-border/50">
@@ -206,7 +206,7 @@ const FAQPage = () => {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Button asChild size="lg" className="rounded-2xl font-bold">
-              <Link href="/contact">
+              <Link to="/contact">
                 Contact Support
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
@@ -232,13 +232,13 @@ const FAQPage = () => {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button asChild size="lg" className="rounded-2xl font-bold shadow-glow">
-              <Link href="/search">
+              <Link to="/search">
                 <Search className="mr-2 h-5 w-5" />
                 Find a Dentist
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="rounded-2xl font-bold border-white/40 text-white bg-white/10 hover:bg-white/20">
-              <Link href="/list-your-practice">List Your Practice</Link>
+              <Link to="/list-your-practice">List Your Practice</Link>
             </Button>
           </div>
         </div>

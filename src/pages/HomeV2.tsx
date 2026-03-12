@@ -1,7 +1,6 @@
-'use client';
 import { useState } from "react";
-import {
-  ArrowRight, Shield, Star, MapPin,
+import { 
+  ArrowRight, Shield, Star, MapPin, 
   Heart, Search, Building2, Stethoscope, Calendar,
   ChevronRight, BadgeCheck, Timer,
   Quote, CheckCircle
@@ -11,8 +10,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SearchBox } from "@/components/SearchBox";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { SEOHead } from "@/components/seo/SEOHead";
@@ -34,7 +32,7 @@ const fadeUp = {
 };
 
 const HomeV2 = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { data: _states } = useStatesWithClinics();
   const { data: realCounts } = useRealCounts();
   const { data: treatments } = useTreatments();
@@ -118,9 +116,9 @@ const HomeV2 = () => {
       <section className="relative min-h-[520px] md:min-h-[580px] flex items-center justify-center overflow-hidden">
         {/* Background image */}
         <div className="absolute inset-0">
-          <img
-            src={heroDentalFamily}
-            alt="Happy family at dental clinic"
+          <img 
+            src={heroDentalFamily} 
+            alt="Happy family at dental clinic" 
             className="w-full h-full object-cover"
             loading="eager"
           />
@@ -161,12 +159,12 @@ const HomeV2 = () => {
 
           {/* CTA Buttons */}
           <motion.div {...fadeUp} transition={{ delay: 0.3 }} className="flex flex-wrap justify-center gap-3">
-            <Button size="lg" className="rounded-xl font-semibold h-12 px-8 shadow-lg" onClick={() => router.push("/search")}>
+            <Button size="lg" className="rounded-xl font-semibold h-12 px-8 shadow-lg" onClick={() => navigate("/search")}>
               <Search className="mr-2 h-4 w-4" />
               Find a Dentist
             </Button>
             <Button size="lg" variant="outline" className="rounded-xl font-semibold h-12 px-8 bg-background/10 border-background/30 text-background hover:bg-background/20 hover:text-background" asChild>
-              <Link href="/list-your-practice">
+              <Link to="/list-your-practice">
                 <Stethoscope className="mr-2 h-4 w-4" />
                 I'm a Dentist
               </Link>
@@ -201,11 +199,11 @@ const HomeV2 = () => {
               { step: "02", title: "Compare", description: "Browse verified clinic profiles, real reviews, and AED pricing.", icon: Star, gradient: "from-gold/15 to-gold/5" },
               { step: "03", title: "Book", description: "Schedule your appointment online in under 60 seconds.", icon: Calendar, gradient: "from-primary/15 to-teal/5" },
             ].map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+              <motion.div 
+                key={i} 
+                initial={{ opacity: 0, y: 30 }} 
+                whileInView={{ opacity: 1, y: 0 }} 
+                viewport={{ once: true }} 
                 transition={{ delay: i * 0.15, duration: 0.5 }}
                 className="text-center group"
               >
@@ -230,10 +228,10 @@ const HomeV2 = () => {
         <div className="container px-4">
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center max-w-6xl mx-auto">
             {/* Image — Panda mascot */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+            <motion.div 
+              initial={{ opacity: 0, x: -30 }} 
+              whileInView={{ opacity: 1, x: 0 }} 
+              viewport={{ once: true }} 
               transition={{ duration: 0.6 }}
               className="flex justify-center"
             >
@@ -242,7 +240,7 @@ const HomeV2 = () => {
                 <img src={pandaMascot} alt="AppointPanda mascot" className="w-64 md:w-80 h-auto rounded-2xl" loading="lazy" />
               </div>
             </motion.div>
-
+            
             {/* Content */}
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}>
               <span className="inline-block text-xs font-bold uppercase tracking-widest text-primary mb-3">Why Choose Us</span>
@@ -256,8 +254,8 @@ const HomeV2 = () => {
                   { icon: Heart, title: "Transparent AED Pricing", desc: "Clear cost ranges in AED for every dental service." },
                   { icon: Timer, title: "Book in 60 Seconds", desc: "No phone calls needed. Schedule your appointment instantly online." },
                 ].map((item, i) => (
-                  <motion.div
-                    key={i}
+                  <motion.div 
+                    key={i} 
                     initial={{ opacity: 0, x: 20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
@@ -293,7 +291,7 @@ const HomeV2 = () => {
             {ACTIVE_STATES.map((emirate) => (
               <Link
                 key={emirate.slug}
-                href={`/${emirate.slug}`}
+                to={`/${emirate.slug}`}
                 className="bg-card border border-border rounded-xl px-5 py-3 text-sm font-medium text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all shadow-sm hover:shadow-md"
               >
                 <MapPin className="inline h-3.5 w-3.5 mr-1.5 opacity-50" />
@@ -315,7 +313,7 @@ const HomeV2 = () => {
             </motion.div>
             <div className="flex flex-wrap gap-2">
               {dubaiAreas.map((area) => (
-                <Link key={area.id} href={`/dubai/${area.slug}`} className="inline-flex items-center gap-1.5 bg-muted/60 border border-border/50 rounded-lg px-3.5 py-2 text-sm font-medium text-foreground hover:border-primary/40 hover:text-primary transition-all">
+                <Link key={area.id} to={`/dubai/${area.slug}`} className="inline-flex items-center gap-1.5 bg-muted/60 border border-border/50 rounded-lg px-3.5 py-2 text-sm font-medium text-foreground hover:border-primary/40 hover:text-primary transition-all">
                   <MapPin className="h-3 w-3 text-primary/60" />
                   {area.name}
                 </Link>
@@ -335,7 +333,7 @@ const HomeV2 = () => {
             </motion.div>
             <div className="flex flex-wrap gap-2">
               {sharjahAreas.map((area) => (
-                <Link key={area.id} href={`/sharjah/${area.slug}`} className="inline-flex items-center gap-1.5 bg-background border border-border/50 rounded-lg px-3.5 py-2 text-sm font-medium text-foreground hover:border-primary/40 hover:text-primary transition-all">
+                <Link key={area.id} to={`/sharjah/${area.slug}`} className="inline-flex items-center gap-1.5 bg-background border border-border/50 rounded-lg px-3.5 py-2 text-sm font-medium text-foreground hover:border-primary/40 hover:text-primary transition-all">
                   <MapPin className="h-3 w-3 text-primary/60" />
                   {area.name}
                 </Link>
@@ -354,14 +352,14 @@ const HomeV2 = () => {
                 <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-1">Dental <span className="text-primary">Services</span></h2>
                 <p className="text-sm text-muted-foreground">Find specialists for every dental need</p>
               </div>
-              <Link href="/services" className="hidden md:inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+              <Link to="/services" className="hidden md:inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
                 All Services <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </motion.div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {popularTreatments.map((treatment, i) => (
                 <motion.div key={treatment.id} {...fadeUp} transition={{ delay: i * 0.04 }}>
-                  <Link href={`/services/${treatment.slug}`} className="group flex items-center justify-between bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-md transition-all">
+                  <Link to={`/services/${treatment.slug}`} className="group flex items-center justify-between bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-md transition-all">
                     <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{treatment.name}</span>
                     <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
                   </Link>
@@ -369,7 +367,7 @@ const HomeV2 = () => {
               ))}
             </div>
             <div className="md:hidden text-center mt-6">
-              <Link href="/services" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+              <Link to="/services" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
                 View All Services <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
@@ -422,7 +420,7 @@ const HomeV2 = () => {
             <AutoScrollCarousel doctors={carouselProfiles} autoScrollSpeed={25} />
             <div className="text-center mt-8">
               <Button variant="outline" className="rounded-xl font-medium" asChild>
-                <Link href="/search">View Full Directory <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                <Link to="/search">View Full Directory <ArrowRight className="ml-2 h-4 w-4" /></Link>
               </Button>
             </div>
           </div>
@@ -459,7 +457,7 @@ const HomeV2 = () => {
                 ))}
               </div>
               <Button className="rounded-xl font-semibold" asChild>
-                <Link href="/list-your-practice">
+                <Link to="/list-your-practice">
                   List Your Practice Free <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -491,7 +489,7 @@ const HomeV2 = () => {
                 { to: "/insurance/", icon: Shield, label: "Insurance Guide" },
                 { to: "/how-it-works/", icon: Search, label: "How It Works" },
               ].map((link) => (
-                <Link key={link.to} href={link.to} className="flex items-center gap-2 bg-card border border-border rounded-xl p-3.5 hover:border-primary/30 transition-all group">
+                <Link key={link.to} to={link.to} className="flex items-center gap-2 bg-card border border-border rounded-xl p-3.5 hover:border-primary/30 transition-all group">
                   <link.icon className="h-4 w-4 text-primary" />
                   <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{link.label}</span>
                   <ChevronRight className="h-3.5 w-3.5 text-muted-foreground ml-auto" />
@@ -526,7 +524,7 @@ const HomeV2 = () => {
               ))}
             </div>
             <div className="text-center mt-6">
-              <Link href="/faq/" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+              <Link to="/faq/" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
                 View all FAQs <ChevronRight className="h-3.5 w-3.5" />
               </Link>
             </div>
@@ -546,12 +544,12 @@ const HomeV2 = () => {
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               <Button size="lg" className="rounded-xl font-semibold h-12 px-8" asChild>
-                <Link href="/search">
+                <Link to="/search">
                   Find a Dentist <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="rounded-xl font-semibold h-12 px-8 border-border" asChild>
-                <Link href="/list-your-practice">
+                <Link to="/list-your-practice">
                   <Stethoscope className="mr-2 h-4 w-4" /> I'm a Dentist
                 </Link>
               </Button>

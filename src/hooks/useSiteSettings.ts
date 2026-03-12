@@ -9,6 +9,7 @@ export interface ContactDetails {
   support_phone?: string;
   booking_phone?: string;
   sales_phone?: string;
+  whatsapp?: string;
   address_line1?: string;
   address_line2?: string;
   city?: string;
@@ -59,16 +60,16 @@ export interface SiteSettings {
 // These should match the values stored in global_settings table
 const DEFAULT_SITE_SETTINGS: SiteSettings = {
   siteName: 'AppointPanda',
-  siteUrl: 'https://www.AppointPanda.ae/',
-  siteTagline: 'UAE Dental Directory',
-  contactDetails: {
-    support_email: 'support@AppointPanda.ae',
-    booking_email: 'bookings@AppointPanda.ae',
-    sales_email: 'sales@AppointPanda.ae',
-    partnerships_email: 'partners@AppointPanda.ae',
-    support_phone: '+971 4 123 4567',
-    booking_phone: '+971 4 123 4567',
-    sales_phone: '+971 4 123 4567',
+    siteUrl: 'https://www.appointpanda.ae/',
+    siteTagline: 'UAE Dental Directory',
+    contactDetails: {
+      support_email: 'support@appointpanda.ae',
+      booking_email: 'bookings@appointpanda.ae',
+      sales_email: 'sales@appointpanda.ae',
+      partnerships_email: 'partners@appointpanda.ae',
+      support_phone: '+971 4 123 4567',
+      booking_phone: '+971 4 123 4567',
+      sales_phone: '+971 4 123 4567',
     address_line1: '',
     address_line2: '',
     city: '',
@@ -77,10 +78,10 @@ const DEFAULT_SITE_SETTINGS: SiteSettings = {
     country: 'United Arab Emirates',
   },
   socialLinks: {
-    facebook: 'https://facebook.com/AppointPanda',
-    instagram: 'https://instagram.com/AppointPanda',
-    twitter: 'https://twitter.com/AppointPanda',
-    linkedin: 'https://linkedin.com/company/AppointPanda',
+    facebook: 'https://facebook.com/appointpanda',
+    instagram: 'https://instagram.com/appointpanda',
+    twitter: 'https://twitter.com/appointpanda',
+    linkedin: 'https://linkedin.com/company/appointpanda',
     youtube: '',
     tiktok: '',
   },
@@ -141,6 +142,7 @@ export function useSiteSettings() {
           support_phone: (contacts.support_phone as string) || DEFAULT_SITE_SETTINGS.contactDetails.support_phone,
           booking_phone: (contacts.booking_phone as string) || '',
           sales_phone: (contacts.sales_phone as string) || '',
+          whatsapp: (contacts.whatsapp as string) || '',
           address_line1: (contacts.address_line1 as string) || '',
           address_line2: (contacts.address_line2 as string) || '',
           city: (contacts.city as string) || '',

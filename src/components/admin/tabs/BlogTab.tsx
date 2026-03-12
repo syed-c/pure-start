@@ -1,4 +1,3 @@
-'use client';
 import { useState, useEffect, type ClipboardEvent } from 'react';
 import { useAdminBlogPosts, useCreateBlogPost, useUpdateBlogPost, useDeleteBlogPost, getPostContentAsString } from '@/hooks/useAdminBlog';
 import { useCheckBlogSimilarity, useSuggestInternalLinks, useAutoAssignCluster, useBlogTopicClusters, useCreateTopicCluster, useDeleteTopicCluster } from '@/hooks/useBlogAntiCannibalization';
@@ -18,14 +17,15 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { BookOpen, Search, Plus, Edit, Trash2, Eye, EyeOff, AlertTriangle, Link2, Loader2, Sparkles, FileText, Users, Tags, Settings, ChevronDown, ChevronRight, Wand2, ExternalLink, RefreshCw, FolderTree, ImageIcon } from 'lucide-react';
+import { BookOpen, Search, Plus, Edit, Trash2, Eye, EyeOff, AlertTriangle, Link2, Loader2, Sparkles, FileText, Users, Tags, Settings, ChevronDown, ChevronRight, Wand2, ExternalLink, RefreshCw, FolderTree, ImageIcon, Lightbulb } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import BlogContentBlockEditor, { type ContentBlock, blocksToMarkdown, markdownToBlocks } from '@/components/admin/blog/BlogContentBlockEditor';
 import DentistListInserter from '@/components/admin/blog/DentistListInserter';
 import FAQGeneratorInserter from '@/components/admin/blog/FAQGeneratorInserter';
+import BlogTopicsLibrary from '@/components/admin/blog/BlogTopicsLibrary';
 
-type MainTab = 'posts' | 'categories' | 'authors' | 'clusters';
+type MainTab = 'posts' | 'categories' | 'authors' | 'clusters' | 'topics';
 
 export default function BlogTab() {
   const [mainTab, setMainTab] = useState<MainTab>('posts');
@@ -519,10 +519,14 @@ export default function BlogTab() {
 
       {/* Main Tabs */}
       <Tabs value={mainTab} onValueChange={(v) => setMainTab(v as MainTab)}>
-        <TabsList className="grid grid-cols-4 w-full max-w-xl">
+        <TabsList className="grid grid-cols-5 w-full max-w-2xl">
           <TabsTrigger value="posts" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
             Posts
+          </TabsTrigger>
+          <TabsTrigger value="topics" className="flex items-center gap-2">
+            <Lightbulb className="h-4 w-4" />
+            Topics Library
           </TabsTrigger>
           <TabsTrigger value="categories" className="flex items-center gap-2">
             <Tags className="h-4 w-4" />
@@ -537,6 +541,11 @@ export default function BlogTab() {
             Clusters
           </TabsTrigger>
         </TabsList>
+
+        {/* Topics Library Tab */}
+        <TabsContent value="topics" className="space-y-6">
+          <BlogTopicsLibrary />
+        </TabsContent>
 
         {/* Posts Tab */}
         <TabsContent value="posts" className="space-y-6">

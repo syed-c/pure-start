@@ -16,18 +16,18 @@ export interface SiteBranding {
 }
 
 // Default branding configuration - using local domain paths for SEO (Google indexes domain URLs)
-// IMPORTANT: All assets use www.AppointPanda.ae domain URLs to ensure Google indexes the correct favicon
+// IMPORTANT: All assets use www.appointpanda.ae domain URLs to ensure Google indexes the correct favicon
 const DEFAULT_BRANDING: SiteBranding = {
   siteName: 'AppointPanda',
-  domain: 'AppointPanda.ae',
-  siteUrl: 'https://www.AppointPanda.ae',
-  logoUrl: 'https://www.AppointPanda.ae/logo.png',
-  logoDarkUrl: 'https://www.AppointPanda.ae/logo-dark.png',
+  domain: 'appointpanda.ae',
+  siteUrl: 'https://www.appointpanda.ae',
+  logoUrl: 'https://www.appointpanda.ae/logo.png',
+  logoDarkUrl: 'https://www.appointpanda.ae/logo-dark.png',
   // Favicon with cache-busting version to force Google re-indexing
-  faviconUrl: 'https://www.AppointPanda.ae/favicon.png?v=5',
-  supportEmail: 'support@AppointPanda.ae',
-  fromEmail: 'no-reply@AppointPanda.ae',
-  fromName: 'AppointPanda',
+  faviconUrl: 'https://www.appointpanda.ae/favicon.png?v=5',
+  supportEmail: 'support@appointpanda.ae',
+  fromEmail: 'no-reply@appointpanda.ae',
+  fromName: 'Appoint Panda',
   primaryColor: '#0d9488',
   copyrightText: `© ${new Date().getFullYear()} AppointPanda. All rights reserved by Quick Commerce LLC FZ.`,
 };

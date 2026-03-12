@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from "react";
 import { format, addDays, startOfWeek, addWeeks, subWeeks, isSameDay, isToday, isBefore, startOfDay } from "date-fns";
 import { Button } from "@/components/ui/button";

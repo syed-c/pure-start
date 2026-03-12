@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,7 +7,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Camera, Sparkles, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { proxyImageUrl } from "@/lib/proxyImageUrl";
 
 interface BeforeAfterGalleryProps {
   clinicId: string;
@@ -43,7 +40,7 @@ export function BeforeAfterGallery({ clinicId, isClaimed }: BeforeAfterGalleryPr
 
   // Get unique treatments for filtering
   const treatments = [...new Set(cases?.map(c => c.treatment_name) || [])];
-
+  
   const filteredCases = selectedTreatment
     ? cases?.filter(c => c.treatment_name === selectedTreatment)
     : cases;
@@ -128,7 +125,7 @@ export function BeforeAfterGallery({ clinicId, isClaimed }: BeforeAfterGalleryPr
             <div className="absolute inset-0 flex">
               <div className="w-1/2 relative overflow-hidden">
                 <img
-                  src={proxyImageUrl(caseItem.before_image_url) || caseItem.before_image_url}
+                  src={caseItem.before_image_url}
                   alt="Before"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
@@ -140,7 +137,7 @@ export function BeforeAfterGallery({ clinicId, isClaimed }: BeforeAfterGalleryPr
               </div>
               <div className="w-1/2 relative overflow-hidden border-l-2 border-white">
                 <img
-                  src={proxyImageUrl(caseItem.after_image_url) || caseItem.after_image_url}
+                  src={caseItem.after_image_url}
                   alt="After"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
@@ -182,7 +179,7 @@ export function BeforeAfterGallery({ clinicId, isClaimed }: BeforeAfterGalleryPr
               <div className="grid md:grid-cols-2">
                 <div className="relative aspect-square bg-muted">
                   <img
-                    src={proxyImageUrl(selectedCase.before_image_url) || selectedCase.before_image_url}
+                    src={selectedCase.before_image_url}
                     alt="Before"
                     className="w-full h-full object-cover"
                   />
@@ -192,7 +189,7 @@ export function BeforeAfterGallery({ clinicId, isClaimed }: BeforeAfterGalleryPr
                 </div>
                 <div className="relative aspect-square bg-muted">
                   <img
-                    src={proxyImageUrl(selectedCase.after_image_url) || selectedCase.after_image_url}
+                    src={selectedCase.after_image_url}
                     alt="After"
                     className="w-full h-full object-cover"
                   />

@@ -31,9 +31,9 @@ serve(async (req) => {
       throw new Error("AIMLAPI_KEY is not configured");
     }
 
-    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-      req.headers.get("x-real-ip") ||
-      "unknown";
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || 
+                     req.headers.get("x-real-ip") || 
+                     "unknown";
 
     const { messages, sessionId, visitorId }: ChatRequest = await req.json();
 
@@ -176,7 +176,7 @@ COMPLIANCE:
 - Never reference ADA, CDC, HIPAA, or US authorities
 
 For dentists wanting to list: Direct to [List your practice](/list-your-practice)
-Support: ${contact.support_email || "support@AppointPanda.ae"}`;
+Support: ${contact.support_email || "support@appointpanda.ae"}`;
     const response = await fetch("https://api.aimlapi.com/v1/chat/completions", {
       method: "POST",
       headers: {

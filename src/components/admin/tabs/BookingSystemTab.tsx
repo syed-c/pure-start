@@ -1,4 +1,3 @@
-'use client';
 import { useState, useMemo } from 'react';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -61,7 +60,7 @@ import {
   Power,
 } from 'lucide-react';
 import { format, subDays } from 'date-fns';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 
@@ -821,7 +820,7 @@ export default function BookingSystemTab() {
                                 Settings
                               </Button>
                               <Button variant="ghost" size="sm" asChild>
-                                <Link href={`/clinic/${clinic.slug}`} target="_blank">
+                                <Link to={`/clinic/${clinic.slug}`} target="_blank">
                                   <ExternalLink className="h-3 w-3" />
                                 </Link>
                               </Button>

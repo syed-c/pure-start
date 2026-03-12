@@ -1,4 +1,3 @@
-'use client';
 /**
  * Advanced Search Filters - Phase 4 Sprint 4.2
  * 

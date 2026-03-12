@@ -117,12 +117,12 @@ export function useAISearch(options: UseAISearchOptions = {}) {
       }
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/ai-search`,
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-search`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY}`,
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
           },
           body: JSON.stringify({
             query: query.trim(),
@@ -162,12 +162,12 @@ export function useAISearch(options: UseAISearchOptions = {}) {
   const logClick = useCallback(async (resultId: string) => {
     try {
       await fetch(
-        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/ai-search`,
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-search`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY}`,
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
           },
           body: JSON.stringify({
             sessionId,

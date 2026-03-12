@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
@@ -21,7 +20,7 @@ import { DollarSign, TrendingUp, MapPin, Shield, BarChart3 } from "lucide-react"
 import { motion } from "framer-motion";
 
 const ServicePricePage = () => {
-  const { serviceSlug } = useRouter().query as { serviceSlug?: string };
+  const { serviceSlug } = useParams();
   const slug = serviceSlug || "";
 
   const { data: treatment } = useQuery({
@@ -161,7 +160,7 @@ const ServicePricePage = () => {
                   >
                     <div className="flex items-center justify-between mb-3">
                       <Link
-                        href={`/${range.state?.slug}`}
+                        to={`/${range.state?.slug}`}
                         className="flex items-center gap-2 hover:text-primary transition-colors"
                       >
                         <MapPin className="h-4 w-4 text-primary" />
@@ -183,7 +182,7 @@ const ServicePricePage = () => {
                     <div className="flex justify-between mt-1">
                       <span className="text-xs text-muted-foreground">AED {range.price_min.toLocaleString()}</span>
                       <Link
-                        href={`/${range.state?.slug}/${slug ? '' : ''}`.replace(/\/$/, '')}
+                        to={`/${range.state?.slug}/${slug ? '' : ''}`.replace(/\/$/, '')}
                         className="text-xs text-primary font-bold hover:underline"
                       >
                         Find clinics in {range.state?.name} →
@@ -237,18 +236,18 @@ const ServicePricePage = () => {
             </p>
             <p>
               <strong className="text-foreground">Consider nearby emirates.</strong> If you live in Dubai, clinics in{" "}
-              <Link href="/sharjah" className="text-primary font-bold hover:underline">Sharjah</Link> and{" "}
-              <Link href="/ajman" className="text-primary font-bold hover:underline">Ajman</Link> often offer the same treatments at 20-35% lower prices. Many residents make the short drive for significant savings on procedures like{" "}
-              <Link href={`/services/${slug}`} className="text-primary font-bold hover:underline">{treatmentName.toLowerCase()}</Link>.
+              <Link to="/sharjah" className="text-primary font-bold hover:underline">Sharjah</Link> and{" "}
+              <Link to="/ajman" className="text-primary font-bold hover:underline">Ajman</Link> often offer the same treatments at 20-35% lower prices. Many residents make the short drive for significant savings on procedures like{" "}
+              <Link to={`/services/${slug}`} className="text-primary font-bold hover:underline">{treatmentName.toLowerCase()}</Link>.
             </p>
             <p>
               <strong className="text-foreground">Maximize your insurance.</strong> Contact your insurance provider to understand your{" "}
-              <Link href="/insurance" className="text-primary font-bold hover:underline">dental coverage</Link> before booking. Some plans cover up to 80% of treatment costs. Our{" "}
-              <Link href="/tools/insurance-checker" className="text-primary font-bold hover:underline">Insurance Checker</Link> tool can help you verify coverage.
+              <Link to="/insurance" className="text-primary font-bold hover:underline">dental coverage</Link> before booking. Some plans cover up to 80% of treatment costs. Our{" "}
+              <Link to="/tools/insurance-checker" className="text-primary font-bold hover:underline">Insurance Checker</Link> tool can help you verify coverage.
             </p>
             <p>
               <strong className="text-foreground">Compare across clinics.</strong> Use our directory to{" "}
-              <Link href="/search" className="text-primary font-bold hover:underline">compare dentists</Link> across different areas. Prices can vary by 40-60% even within the same emirate, so comparing 3-4 clinics is always worthwhile.
+              <Link to="/search" className="text-primary font-bold hover:underline">compare dentists</Link> across different areas. Prices can vary by 40-60% even within the same emirate, so comparing 3-4 clinics is always worthwhile.
             </p>
           </div>
         </div>
@@ -268,7 +267,7 @@ const ServicePricePage = () => {
               <span key={range.id}>
                 {i > 0 && <span className="text-muted-foreground mx-2">·</span>}
                 <Link
-                  href={`/${range.state?.slug}`}
+                  to={`/${range.state?.slug}`}
                   className="text-primary font-bold hover:underline"
                 >
                   {treatmentName} in {range.state?.name}
@@ -293,7 +292,7 @@ const ServicePricePage = () => {
               {relatedTreatments.map((t, i) => (
                 <span key={t.id}>
                   {i > 0 && <span className="text-muted-foreground mx-2">·</span>}
-                  <Link href={`/cost/${t.slug}`} className="text-primary font-bold hover:underline">
+                  <Link to={`/cost/${t.slug}`} className="text-primary font-bold hover:underline">
                     {t.name} Cost
                   </Link>
                 </span>

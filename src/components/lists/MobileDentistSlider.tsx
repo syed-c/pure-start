@@ -1,9 +1,8 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { Star, MapPin, CheckCircle, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Profile } from "@/hooks/useProfiles";
 import { cn } from "@/lib/utils";
-import { proxyImageUrl } from "@/lib/proxyImageUrl";
 
 interface MobileDentistSliderProps {
   profiles: Profile[];
@@ -18,9 +17,9 @@ export function MobileDentistSlider({ profiles, className }: MobileDentistSlider
       {/* Mobile: Vertical stacked list */}
       <div className="md:hidden space-y-3">
         {profiles.map((profile, index) => (
-          <MobileProfileRow
-            key={profile.id}
-            profile={profile}
+          <MobileProfileRow 
+            key={profile.id} 
+            profile={profile} 
             style={{ animationDelay: `${index * 0.03}s` }}
           />
         ))}
@@ -38,11 +37,11 @@ export function MobileDentistSlider({ profiles, className }: MobileDentistSlider
 
 function MobileProfileRow({ profile, style }: { profile: Profile; style?: React.CSSProperties }) {
   const profileLink = profile.type === "clinic" ? `/clinic/${profile.slug}` : `/dentist/${profile.slug}`;
-  const displayImage = proxyImageUrl(profile.image) || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=0f766e&color=fff&size=100&font-size=0.35&bold=true`;
+  const displayImage = profile.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=0f766e&color=fff&size=100&font-size=0.35&bold=true`;
 
   return (
     <Link
-      href={profileLink}
+      to={profileLink}
       className="flex items-center gap-3 bg-muted/50 border border-border rounded-2xl p-3 hover:border-primary/50 transition-all group animate-fade-in-up"
       style={style}
     >
@@ -87,7 +86,7 @@ function MobileProfileRow({ profile, style }: { profile: Profile; style?: React.
 
 function DesktopProfileCard({ profile }: { profile: Profile }) {
   const profileLink = profile.type === "clinic" ? `/clinic/${profile.slug}` : `/dentist/${profile.slug}`;
-  const displayImage = proxyImageUrl(profile.image) || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=0f766e&color=fff&size=200&font-size=0.35&bold=true`;
+  const displayImage = profile.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=0f766e&color=fff&size=200&font-size=0.35&bold=true`;
 
   return (
     <div className="flex items-center gap-5 bg-muted/50 border border-border rounded-2xl p-4 hover:border-primary/50 transition-all group">
@@ -129,7 +128,7 @@ function DesktopProfileCard({ profile }: { profile: Profile }) {
       {/* Action */}
       <div className="shrink-0">
         <Button asChild variant="outline" size="sm" className="rounded-xl font-bold">
-          <Link href={profileLink}>
+          <Link to={profileLink}>
             View Profile
             <ChevronRight className="h-4 w-4 ml-1" />
           </Link>

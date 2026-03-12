@@ -1,4 +1,3 @@
-'use client';
 import { useState } from 'react';
 import { useAdminAppointments, useUpdateAppointment, useDentistBookingCounts } from '@/hooks/useAdminAppointments';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

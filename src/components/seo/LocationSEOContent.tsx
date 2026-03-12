@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { 
   Stethoscope, 
   Users, 
@@ -195,7 +195,7 @@ const StateSEOContent = ({
             {popularTreatments.map((treatment) => (
               <Link
                 key={treatment.slug}
-                href={`/services/${treatment.slug}`}
+                to={`/services/${treatment.slug}`}
                 className="bg-primary/10 text-primary rounded-full px-4 py-2 text-sm font-medium hover:bg-primary/20 transition-colors"
               >
                 {treatment.name}
@@ -232,7 +232,7 @@ const StateSEOContent = ({
           },
           {
             title: "4. Verify Insurance & Payment Options",
-            desc: "Confirm that the dentist accepts your insurance plan. Many offices also offer payment plans, membership programs for uninsured patients, and accept CareCredit."
+            desc: "Confirm that the dentist accepts your insurance plan. Many clinics in the UAE offer direct billing with providers like Daman, AXA, Cigna, and Nextcare, as well as flexible payment plans."
           },
           {
             title: "5. Visit for a Consultation",
@@ -352,7 +352,7 @@ const CitySEOContent = ({
             {popularTreatments.slice(0, 8).map((treatment) => (
               <Link
                 key={treatment.slug}
-                href={stateSlug ? `/${stateSlug}/${treatment.slug}` : `/services/${treatment.slug}`}
+                to={stateSlug ? `/${stateSlug}/${treatment.slug}` : `/services/${treatment.slug}`}
                 className="bg-primary/10 text-primary rounded-full px-4 py-2 text-sm font-medium hover:bg-primary/20 transition-colors"
               >
                 {treatment.name}
@@ -418,7 +418,7 @@ const CitySEOContent = ({
           {nearbyLocations.map((location) => (
             <Link
               key={location.slug}
-              href={`/${stateSlug}/${location.slug}`}
+              to={`/${stateSlug}/${location.slug}`}
               className="bg-muted hover:bg-muted/80 text-foreground rounded-full px-4 py-2 text-sm font-medium transition-colors flex items-center gap-1"
             >
               <MapPin className="h-3 w-3" />
@@ -510,8 +510,8 @@ const ServiceLocationSEOContent = ({
             <h3 className="font-bold text-foreground mb-2">Cost & Payment Options</h3>
             <p className="text-muted-foreground">
               {treatmentName} costs in {locationName} depend on the complexity of your case and the 
-              dentist you choose. Many practices accept dental insurance, offer payment plans, or 
-              accept financing options like CareCredit to make treatment affordable.
+              dentist you choose. Many clinics accept major UAE insurance providers with direct billing, 
+              offer flexible payment plans, and provide transparent pricing in AED.
             </p>
           </div>
           <div>
@@ -558,7 +558,7 @@ const ServiceLocationSEOContent = ({
             {nearbyLocations.map((location) => (
               <Link
                 key={location.slug}
-                href={`/${stateSlug}/${location.slug}/${treatmentName.toLowerCase().replace(/\s+/g, '-')}`}
+                to={`/${stateSlug}/${location.slug}/${treatmentName.toLowerCase().replace(/\s+/g, '-')}`}
                 className="bg-muted hover:bg-muted/80 text-foreground rounded-full px-4 py-2 text-sm font-medium transition-colors flex items-center gap-1"
               >
                 <MapPin className="h-3 w-3" />

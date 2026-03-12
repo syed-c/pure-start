@@ -3574,6 +3574,75 @@ export type Database = {
         }
         Relationships: []
       }
+      page_translations: {
+        Row: {
+          content: string | null
+          created_at: string
+          faq: Json | null
+          h1: string | null
+          id: string
+          language_code: string
+          meta_description: string | null
+          meta_title: string | null
+          quality_notes: string | null
+          quality_score: number | null
+          seo_page_id: string | null
+          slug: string
+          translated_at: string | null
+          translation_status: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          faq?: Json | null
+          h1?: string | null
+          id?: string
+          language_code: string
+          meta_description?: string | null
+          meta_title?: string | null
+          quality_notes?: string | null
+          quality_score?: number | null
+          seo_page_id?: string | null
+          slug: string
+          translated_at?: string | null
+          translation_status?: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          faq?: Json | null
+          h1?: string | null
+          id?: string
+          language_code?: string
+          meta_description?: string | null
+          meta_title?: string | null
+          quality_notes?: string | null
+          quality_score?: number | null
+          seo_page_id?: string | null
+          slug?: string
+          translated_at?: string | null
+          translation_status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "page_translations_language_code_fkey"
+            columns: ["language_code"]
+            isOneToOne: false
+            referencedRelation: "supported_languages"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "page_translations_seo_page_id_fkey"
+            columns: ["seo_page_id"]
+            isOneToOne: false
+            referencedRelation: "seo_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       page_views: {
         Row: {
           city_slug: string | null
@@ -4750,6 +4819,7 @@ export type Database = {
           last_audited_at: string | null
           last_content_edit_source: string | null
           last_crawled_at: string | null
+          last_faq_edit_source: string | null
           last_generated_at: string | null
           last_identity_scan_at: string | null
           last_meta_edit_source: string | null
@@ -4809,6 +4879,7 @@ export type Database = {
           last_audited_at?: string | null
           last_content_edit_source?: string | null
           last_crawled_at?: string | null
+          last_faq_edit_source?: string | null
           last_generated_at?: string | null
           last_identity_scan_at?: string | null
           last_meta_edit_source?: string | null
@@ -4868,6 +4939,7 @@ export type Database = {
           last_audited_at?: string | null
           last_content_edit_source?: string | null
           last_crawled_at?: string | null
+          last_faq_edit_source?: string | null
           last_generated_at?: string | null
           last_identity_scan_at?: string | null
           last_meta_edit_source?: string | null
@@ -5301,6 +5373,90 @@ export type Database = {
             columns: ["clinic_id"]
             isOneToOne: false
             referencedRelation: "clinics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      supported_languages: {
+        Row: {
+          code: string
+          created_at: string
+          display_order: number
+          is_active: boolean
+          is_rtl: boolean
+          name: string
+          native_name: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          display_order?: number
+          is_active?: boolean
+          is_rtl?: boolean
+          name: string
+          native_name: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          display_order?: number
+          is_active?: boolean
+          is_rtl?: boolean
+          name?: string
+          native_name?: string
+        }
+        Relationships: []
+      }
+      translation_queue: {
+        Row: {
+          attempts: number
+          created_at: string
+          error_message: string | null
+          id: string
+          language_code: string
+          max_attempts: number
+          priority: number
+          processed_at: string | null
+          seo_page_id: string
+          status: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          language_code: string
+          max_attempts?: number
+          priority?: number
+          processed_at?: string | null
+          seo_page_id: string
+          status?: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          language_code?: string
+          max_attempts?: number
+          priority?: number
+          processed_at?: string | null
+          seo_page_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "translation_queue_language_code_fkey"
+            columns: ["language_code"]
+            isOneToOne: false
+            referencedRelation: "supported_languages"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "translation_queue_seo_page_id_fkey"
+            columns: ["seo_page_id"]
+            isOneToOne: false
+            referencedRelation: "seo_pages"
             referencedColumns: ["id"]
           },
         ]

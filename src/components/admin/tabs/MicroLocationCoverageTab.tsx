@@ -1,4 +1,3 @@
-'use client';
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -131,7 +130,7 @@ const AREA_LOCAL_CONTEXT: Record<string, {
   'al-rashidiya': {
     character: 'established residential near airport',
     demographics: 'families, airport workers and long-term residents',
-    landmarks: ['Rashidiya Metro', 'near DXB Airport'],
+    landmarks: ['Rashidiya Metro', 'near Dubai International Airport'],
     narrative: 'airport-accessible dental care',
   },
   'dubai-hills': {

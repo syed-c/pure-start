@@ -1,7 +1,5 @@
-'use client';
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { Link, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -59,11 +57,11 @@ const extractEmailDomain = (email: string): string | null => {
 };
 
 const ClaimProfilePage = () => {
-  const router = useRouter(); const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+  const [searchParams, setSearchParams] = useSearchParams();
   const prefilledClinic = searchParams.get("clinic");
   const { user } = useAuth();
   const { toast } = useToast();
-
+  
   const [searchQuery, setSearchQuery] = useState("");
   const [searchType, setSearchType] = useState<"clinic" | "dentist">("clinic");
   const [selectedClinic, setSelectedClinic] = useState<any>(null);
@@ -76,7 +74,7 @@ const ClaimProfilePage = () => {
   const [emailPrefix, setEmailPrefix] = useState("");
   const [selectedClaimEmail, setSelectedClaimEmail] = useState<string | null>(null);
   const [emailSource, setEmailSource] = useState<EmailSource>("domain");
-
+  
   // Manual review form fields
   const [manualForm, setManualForm] = useState({
     name: "",
@@ -89,7 +87,7 @@ const ClaimProfilePage = () => {
   // Get domain from selected clinic's website
   const clinicDomain = selectedClinic ? extractDomain(selectedClinic.website) : null;
   const fullBusinessEmail = emailPrefix && clinicDomain ? `${emailPrefix}@${clinicDomain}` : "";
-
+  
   // Get claim emails from clinic
   const claimEmails: string[] = selectedClinic?.claim_emails || [];
   const hasClaimEmails = claimEmails.length > 0;
@@ -100,14 +98,14 @@ const ClaimProfilePage = () => {
       setSearchQuery(prefilledClinic);
       setSearchParams({}, { replace: true });
     }
-  }, [prefilledClinic, router]);
+  }, [prefilledClinic, setSearchParams]);
 
   // Search clinics
   const { data: searchResults, isLoading: searching } = useQuery({
     queryKey: ["claim-search", searchQuery, searchType],
     queryFn: async () => {
       if (!searchQuery || searchQuery.length < 2) return [];
-
+      
       if (searchType === "clinic") {
         const { data } = await supabase
           .from("clinics")
@@ -161,7 +159,7 @@ const ClaimProfilePage = () => {
       setStep("manual-form");
     }
   };
-
+  
   const handleSelectEmailSource = (source: EmailSource, email?: string) => {
     setEmailSource(source);
     if (source === "claim_email" && email) {
@@ -181,7 +179,7 @@ const ClaimProfilePage = () => {
     }
 
     let emailToVerify: string;
-
+    
     if (emailSource === "claim_email" && selectedClaimEmail) {
       emailToVerify = selectedClaimEmail;
     } else if (emailPrefix && clinicDomain) {
@@ -373,15 +371,15 @@ const ClaimProfilePage = () => {
       document.head.appendChild(meta);
     }
     meta.setAttribute('content', 'noindex, nofollow');
-
+    
     let canonical = document.querySelector('link[rel="canonical"]');
     if (!canonical) {
       canonical = document.createElement('link');
       canonical.setAttribute('rel', 'canonical');
       document.head.appendChild(canonical);
     }
-    canonical.setAttribute('href', 'https://www.AppointPanda.ae/claim-profile');
-
+    canonical.setAttribute('href', 'https://www.appointpanda.ae/claim-profile');
+    
     return () => {
       meta?.setAttribute('content', 'index, follow');
       canonical?.remove();
@@ -394,7 +392,7 @@ const ClaimProfilePage = () => {
       <div className="bg-gradient-to-b from-primary/5 to-background pt-8 pb-6">
         <div className="container">
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+            <Link to="/" className="hover:text-foreground">Home</Link>
             <span>/</span>
             <span>Claim Profile</span>
           </div>
@@ -414,7 +412,7 @@ const ClaimProfilePage = () => {
             {step === "search" && (
               <div className="card-modern p-6 md:p-8">
                 <h2 className="font-display text-xl font-bold mb-5">Find Your Profile</h2>
-
+                
                 {/* Search Type Toggle */}
                 <div className="flex gap-2 mb-5">
                   <Button
@@ -495,7 +493,7 @@ const ClaimProfilePage = () => {
                   <div className="text-center py-6">
                     <p className="text-muted-foreground mb-4">No profiles found matching your search.</p>
                     <Button asChild variant="outline" className="rounded-xl font-bold" size="sm">
-                      <Link href="/list-your-practice">
+                      <Link to="/list-your-practice">
                         List Your Practice Instead
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
@@ -510,7 +508,7 @@ const ClaimProfilePage = () => {
                     If your clinic isn't listed yet, you can add it for free.
                   </p>
                   <Button asChild variant="outline" className="rounded-xl font-bold border-gold text-gold hover:bg-gold hover:text-white" size="sm">
-                    <Link href="/list-your-practice">
+                    <Link to="/list-your-practice">
                       List Your Practice
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
@@ -553,10 +551,11 @@ const ClaimProfilePage = () => {
                   <button
                     onClick={() => handleChooseMethod("otp")}
                     disabled={!clinicDomain && !hasClaimEmails}
-                    className={`w-full p-5 rounded-xl border-2 transition-all text-left group ${(clinicDomain || hasClaimEmails)
-                      ? "border-border hover:border-primary/50"
-                      : "border-border/50 opacity-60 cursor-not-allowed"
-                      }`}
+                    className={`w-full p-5 rounded-xl border-2 transition-all text-left group ${
+                      (clinicDomain || hasClaimEmails)
+                        ? "border-border hover:border-primary/50"
+                        : "border-border/50 opacity-60 cursor-not-allowed"
+                    }`}
                   >
                     <div className="flex items-start gap-4">
                       <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -565,9 +564,9 @@ const ClaimProfilePage = () => {
                       <div className="flex-1">
                         <h3 className="font-bold mb-1">Verify via Email</h3>
                         <p className="text-sm text-muted-foreground mb-2">
-                          {hasClaimEmails
+                          {hasClaimEmails 
                             ? `We have ${claimEmails.length} email${claimEmails.length > 1 ? 's' : ''} on file for this clinic.`
-                            : clinicDomain
+                            : clinicDomain 
                               ? "We'll send a code to any email at your website domain."
                               : "No email options available."
                           }
@@ -687,7 +686,7 @@ const ClaimProfilePage = () => {
                         <span>or use website domain</span>
                         <div className="flex-1 h-px bg-border" />
                       </div>
-
+                      
                       <button
                         onClick={() => handleSelectEmailSource("domain")}
                         className="w-full p-4 rounded-xl border-2 border-border hover:border-primary/50 transition-all text-left group"
@@ -751,7 +750,7 @@ const ClaimProfilePage = () => {
                     <User className="h-10 w-10 mx-auto mb-3 text-muted-foreground" />
                     <p className="text-muted-foreground mb-4">Please sign in to continue</p>
                     <Button asChild className="rounded-xl font-bold">
-                      <Link href="/auth?redirect=/claim-profile">Sign In to Continue</Link>
+                      <Link to="/auth?redirect=/claim-profile">Sign In to Continue</Link>
                     </Button>
                   </div>
                 ) : (
@@ -789,8 +788,8 @@ const ClaimProfilePage = () => {
                       </div>
                     )}
 
-                    <Button
-                      onClick={handleSendVerification}
+                    <Button 
+                      onClick={handleSendVerification} 
                       className="w-full rounded-xl font-bold mb-5"
                       disabled={isSendingOtp || (emailSource === "domain" && !emailPrefix)}
                     >
@@ -879,7 +878,7 @@ const ClaimProfilePage = () => {
                     <User className="h-10 w-10 mx-auto mb-3 text-muted-foreground" />
                     <p className="text-muted-foreground mb-4">Please sign in to submit a request</p>
                     <Button asChild className="rounded-xl font-bold">
-                      <Link href="/auth?redirect=/claim-profile">Sign In to Continue</Link>
+                      <Link to="/auth?redirect=/claim-profile">Sign In to Continue</Link>
                     </Button>
                   </div>
                 ) : (
@@ -984,10 +983,10 @@ const ClaimProfilePage = () => {
                 </p>
                 <div className="flex flex-col gap-3">
                   <Button asChild className="rounded-xl font-bold">
-                    <Link href="/dashboard?tab=my-dashboard">Go to Dashboard</Link>
+                    <Link to="/dashboard?tab=my-dashboard">Go to Dashboard</Link>
                   </Button>
                   <Button asChild variant="outline" className="rounded-xl font-bold">
-                    <Link href={`/clinic/${selectedClinic?.slug}`}>View Your Profile</Link>
+                    <Link to={`/clinic/${selectedClinic?.slug}`}>View Your Profile</Link>
                   </Button>
                 </div>
               </div>
@@ -1005,10 +1004,10 @@ const ClaimProfilePage = () => {
                 </p>
                 <div className="flex flex-col gap-3">
                   <Button asChild className="rounded-xl font-bold">
-                    <Link href="/">Return Home</Link>
+                    <Link to="/">Return Home</Link>
                   </Button>
                   <Button asChild variant="outline" className="rounded-xl font-bold">
-                    <Link href={`/clinic/${selectedClinic?.slug}`}>View Clinic Profile</Link>
+                    <Link to={`/clinic/${selectedClinic?.slug}`}>View Clinic Profile</Link>
                   </Button>
                 </div>
               </div>

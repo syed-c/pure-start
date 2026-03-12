@@ -3,7 +3,7 @@
  * Generates contextual cross-links between insurance, location, and service pages.
  */
 
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { buildInsuranceUrl, buildServiceUrl, buildCityUrl } from "@/lib/url/buildProfileUrl";
@@ -106,7 +106,7 @@ export function InsuranceInternalLinks({
               {filteredInsurances.map((ins) => (
                 <li key={ins.slug}>
                   <Link
-                    href={buildInsuranceUrl(ins.slug)}
+                    to={buildInsuranceUrl(ins.slug)}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
                     {ins.name} Dentists
@@ -114,7 +114,8 @@ export function InsuranceInternalLinks({
                 </li>
               ))}
               <li>
-                <Link href="/insurance/"
+                <Link
+                  to="/insurance/"
                   className="text-sm font-medium text-primary hover:underline"
                 >
                   View All Insurance →
@@ -133,7 +134,7 @@ export function InsuranceInternalLinks({
               {filteredServices.map((svc) => (
                 <li key={svc.slug}>
                   <Link
-                    href={buildServiceUrl(svc.slug)}
+                    to={buildServiceUrl(svc.slug)}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
                     {svc.name}
@@ -141,7 +142,8 @@ export function InsuranceInternalLinks({
                 </li>
               ))}
               <li>
-                <Link href="/services/"
+                <Link
+                  to="/services/"
                   className="text-sm font-medium text-primary hover:underline"
                 >
                   All Services →
@@ -160,7 +162,7 @@ export function InsuranceInternalLinks({
               {filteredEmirates.map((em) => (
                 <li key={em.slug}>
                   <Link
-                    href={withTrailingSlash(`/${em.slug}`)}
+                    to={withTrailingSlash(`/${em.slug}`)}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
                     Dentists in {em.name}

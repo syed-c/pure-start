@@ -1,4 +1,3 @@
-'use client';
 import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { DollarSign, Star, Shield, Sparkles, Filter, ChevronDown, ChevronUp, X, Stethoscope, MapPin } from "lucide-react";

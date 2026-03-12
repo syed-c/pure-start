@@ -1,13 +1,10 @@
-'use client'
-
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
-import { useRouter } from "next/router";
+import { useNavigate } from "react-router-dom";
 import { Search, Sparkles, Loader2, MapPin, Banknote, Shield, AlertCircle, ArrowRight, X, TrendingUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { proxyImageUrl } from "@/lib/proxyImageUrl";
 import { useAISearch, SearchResult, AISearchResponse } from "@/hooks/useAISearch";
 
 interface AISmartSearchProps {
@@ -23,7 +20,7 @@ interface AISmartSearchProps {
 // Generate context-aware example queries
 function generateExamples(city?: string, state?: string, service?: string): string[] {
   const examples: string[] = [];
-
+  
   if (service && city) {
     // Service + Location page examples
     examples.push(`Affordable ${service.toLowerCase()} in ${city}`);
@@ -49,19 +46,19 @@ function generateExamples(city?: string, state?: string, service?: string): stri
     examples.push(`Emergency tooth extraction today`);
     examples.push(`Teeth whitening in Dubai`);
   }
-
+  
   return examples.slice(0, 4);
 }
 
-export function AISmartSearch({
-  variant = "hero",
-  className,
+export function AISmartSearch({ 
+  variant = "hero", 
+  className, 
   onResultClick,
   contextCity,
   contextState,
   contextService,
 }: AISmartSearchProps) {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [typingIndicator, setTypingIndicator] = useState("");
@@ -73,7 +70,7 @@ export function AISmartSearch({
     onSuccess: (data) => {
       // Auto-redirect if single strong match
       if (data.redirectTo && data.results.length === 1) {
-        router.push(data.redirectTo);
+        navigate(data.redirectTo);
       }
     },
   });
@@ -133,10 +130,10 @@ export function AISmartSearch({
     if (onResultClick) {
       onResultClick(result);
     } else {
-      router.push(`/clinic/${result.slug}`);
+      navigate(`/clinic/${result.slug}`);
     }
     setShowResults(false);
-  }, [router, onResultClick]);
+  }, [navigate, onResultClick]);
 
   const handleExampleClick = useCallback((example: string) => {
     setQuery(example);
@@ -300,7 +297,7 @@ export function AISmartSearch({
                     <div className="w-20 h-20 rounded-xl overflow-hidden bg-muted shrink-0">
                       {result.cover_image_url ? (
                         <img
-                          src={proxyImageUrl(result.cover_image_url) || result.cover_image_url}
+                          src={result.cover_image_url}
                           alt={result.name}
                           className="w-full h-full object-cover"
                         />
@@ -457,7 +454,7 @@ export function AISmartSearch({
               <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg overflow-hidden bg-muted shrink-0">
                 {result.cover_image_url ? (
                   <img
-                    src={proxyImageUrl(result.cover_image_url) || result.cover_image_url}
+                    src={result.cover_image_url}
                     alt={result.name}
                     className="w-full h-full object-cover"
                   />

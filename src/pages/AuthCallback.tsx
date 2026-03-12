@@ -1,16 +1,15 @@
-'use client';
 import { useEffect, useState } from 'react';
-import { useRouter } from "next/router";
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2, CheckCircle, XCircle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { createAuditLog } from '@/lib/audit';
-import {
-  setGmbProviderToken,
-  getOriginalSession,
+import { 
+  setGmbProviderToken, 
+  getOriginalSession, 
   clearOriginalSession,
-  clearGmbProviderToken
+  clearGmbProviderToken 
 } from '@/lib/gmbAuth';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -27,8 +26,8 @@ import { useAuth } from '@/hooks/useAuth';
  * This prevents creating a new user account for the GMB-linked Google account.
  */
 export default function AuthCallback() {
-  const router = useRouter();
-  const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { refreshRoles } = useAuth();
 
   const [status, setStatus] = useState<'processing' | 'success' | 'error'>('processing');
@@ -44,7 +43,7 @@ export default function AuthCallback() {
       document.head.appendChild(meta);
     }
     meta.setAttribute('content', 'noindex, nofollow');
-
+    
     return () => {
       meta?.setAttribute('content', 'index, follow');
     };
@@ -118,7 +117,7 @@ export default function AuthCallback() {
     const handleListingFlow = async (accessToken: string) => {
       try {
         setMessage('Preparing business discovery...');
-
+        
         // Just verify the user is authenticated, don't create anything yet
         // The actual business discovery will happen on the GMBBusinessSelection page
         return true;
@@ -166,7 +165,7 @@ export default function AuthCallback() {
           searchParams.get('listing') === 'true' || localStorage.getItem('gmb_listing_flow') === 'true';
         const isRelinkFlow =
           searchParams.get('relink') === 'true' || localStorage.getItem('gmb_relink_flow') === 'true';
-
+        
         // Check if we need to restore the original user's session after getting GMB token
         const shouldRestoreSession = localStorage.getItem('gmb_restore_session') === 'true';
         const originalSession = getOriginalSession();
@@ -228,16 +227,16 @@ export default function AuthCallback() {
         // Capture the GMB provider token
         const providerToken = providerTokenFromExchange ?? gmbOAuthSession.provider_token ?? null;
         console.log('Provider token available:', !!providerToken);
-
+        
         if (providerToken) {
           setGmbProviderToken(providerToken);
-
+          
           // Store the token server-side for persistence
           if (isGmbCallback || isListingFlow || isRelinkFlow) {
             try {
               const { error: storeError } = await supabase.functions.invoke('gmb-store-token', {
                 headers: { Authorization: `Bearer ${gmbOAuthSession.access_token}` },
-                body: {
+                body: { 
                   providerToken,
                   scopes: 'openid email profile https://www.googleapis.com/auth/business.manage'
                 },
@@ -257,21 +256,21 @@ export default function AuthCallback() {
         // restore the original user's session instead of keeping the GMB Google account logged in
         let session = gmbOAuthSession;
         let restoredOriginalUser = false;
-
+        
         if (shouldRestoreSession && originalSession && (isRelinkFlow || isGmbCallback)) {
           setMessage('Restoring your session...');
           console.log('Restoring original user session after GMB OAuth');
-
+          
           try {
             // Don't sign out first - just try to refresh the original session directly
             // This is more reliable than sign out + set session
             const { data: refreshedSession, error: refreshError } = await supabase.auth.refreshSession({
               refresh_token: originalSession.refreshToken,
             });
-
+            
             if (refreshError || !refreshedSession?.session) {
               console.warn('Failed to refresh original session, trying setSession...', refreshError);
-
+              
               // Try setSession as fallback (might work if token is still valid)
               const { data: restoredSession, error: restoreError } = await supabase.auth.setSession({
                 access_token: originalSession.accessToken,
@@ -299,7 +298,7 @@ export default function AuthCallback() {
             // User can still complete the GMB flow, they just might be logged in as a different account
             console.warn('Continuing with current session after restore failure');
           }
-
+          
           // Clean up stored session regardless of outcome
           clearOriginalSession();
           localStorage.removeItem('gmb_restore_session');
@@ -316,7 +315,7 @@ export default function AuthCallback() {
             isListingFlow,
             restoredOriginalUser,
           },
-        }).catch(() => { });
+        }).catch(() => {});
 
         // Read current roles
         let roles = await readRoles(session.user.id);
@@ -326,7 +325,7 @@ export default function AuthCallback() {
         // GMB sync flow (existing dentist linking GMB to their clinic)
         let gmbSuccess = false;
         let shouldSelectGmbBusiness = false;
-
+        
         if (isGmbCallback && !restoredOriginalUser) {
           gmbSuccess = await handleGmbTransfer(session.access_token);
           if (!gmbSuccess) {
@@ -370,7 +369,7 @@ export default function AuthCallback() {
         const isDentist = roles.includes('dentist');
 
         // Route decision
-
+        
         // If this is a GMB relink or listing flow, always go to GMB selection
         // regardless of whether we restored the original user or not
         if (isRelinkFlow || isListingFlow || shouldSelectGmbBusiness) {
@@ -379,22 +378,22 @@ export default function AuthCallback() {
             localStorage.setItem('gmb_relink_flow', 'true');
           }
           console.log('Redirecting to GMB selection page', { isRelinkFlow, isListingFlow, restoredOriginalUser });
-          router.push('/gmb-select', { replace: true, state: { providerToken } });
+          navigate('/gmb-select', { replace: true, state: { providerToken } });
           return;
         }
 
         if (isGmbCallback && gmbSuccess) {
           // Existing dentist successfully completed GMB link → go to dashboard
-          router.replace('/dashboard?tab=settings&gmb_connected=true');
+          navigate('/dashboard?tab=settings&gmb_connected=true', { replace: true });
           return;
         }
 
         // SuperAdmins and Admins go directly to /admin - no delays or onboarding
         if (isSuperAdmin || isAdmin) {
-          router.replace('/admin');
+          navigate('/admin', { replace: true });
         } else if (isDentist) {
           // Dentists go directly to dashboard (no onboarding redirect)
-          router.replace('/dashboard?tab=my-dashboard');
+          navigate('/dashboard?tab=my-dashboard', { replace: true });
         } else {
           // No role yet - bootstrap dentist role if Google provider login
           if (isGoogleProvider) {
@@ -403,42 +402,42 @@ export default function AuthCallback() {
               const { data: bootstrapData, error: bootstrapError } = await supabase.functions.invoke('dentist-onboarding-bootstrap', {
                 headers: { Authorization: `Bearer ${session.access_token}` },
               });
-
+              
               if (bootstrapError) {
                 console.error('Bootstrap error:', bootstrapError);
               } else {
                 console.log('Bootstrap complete:', bootstrapData);
               }
-
+              
               // Wait a moment for role to propagate
               await sleep(500);
-
+              
               // Refresh roles after bootstrap
               await refreshRoles();
-
+              
               // Re-read roles to confirm
               const newRoles = await readRoles(session.user.id);
               console.log('New roles after bootstrap:', newRoles);
-
+              
               // Check if user needs to add a clinic
               if (bootstrapData?.needsClinic) {
                 // New user without clinic - redirect to GMB business selection
                 // so they can add their practice via GMB or manually
                 localStorage.setItem('gmb_listing_flow', 'true');
-                router.push('/gmb-select', { replace: true, state: { providerToken, isNewUser: true } });
+                navigate('/gmb-select', { replace: true, state: { providerToken, isNewUser: true } });
               } else {
                 // User already has a clinic - go to dashboard
-                router.replace('/dashboard?tab=my-dashboard');
+                navigate('/dashboard?tab=my-dashboard', { replace: true });
               }
             } catch (err) {
               console.error('Failed to bootstrap dentist:', err);
               // Still try to navigate to GMB selection for new users
               localStorage.setItem('gmb_listing_flow', 'true');
-              router.push('/gmb-select', { replace: true, state: { providerToken, isNewUser: true } });
+              navigate('/gmb-select', { replace: true, state: { providerToken, isNewUser: true } });
             }
           } else {
             // Non-Google signup without role - go to onboarding
-            router.replace('/onboarding?new=true');
+            navigate('/onboarding?new=true', { replace: true });
           }
         }
       } catch (err) {
@@ -457,14 +456,14 @@ export default function AuthCallback() {
     };
 
     void handleCallback();
-  }, [searchParams, router, refreshRoles]);
+  }, [searchParams, navigate, refreshRoles]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-coral bg-clip-text text-transparent">
-            AppointPanda
+            Appoint Panda
           </CardTitle>
           <CardDescription>
             {status === 'processing' && 'Completing authentication...'}
@@ -498,10 +497,10 @@ export default function AuthCallback() {
               <p className="text-foreground font-medium">{message}</p>
               {errorDetails && <p className="text-sm text-muted-foreground text-center">{errorDetails}</p>}
               <div className="flex gap-2 mt-4">
-                <Button variant="outline" onClick={() => router.push('/auth')}>
+                <Button variant="outline" onClick={() => navigate('/auth')}>
                   Try Again
                 </Button>
-                <Button onClick={() => router.push('/')}>Go Home</Button>
+                <Button onClick={() => navigate('/')}>Go Home</Button>
               </div>
             </>
           )}

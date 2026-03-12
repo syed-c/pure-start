@@ -1,4 +1,3 @@
-'use client';
 import { useState } from 'react';
 import { useAdminLeads, useUpdateLead } from '@/hooks/useAdminLeads';
 import { supabase } from '@/integrations/supabase/client';

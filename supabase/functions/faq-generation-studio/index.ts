@@ -534,6 +534,15 @@ Return ONLY a valid JSON array like: [{"question":"...","answer":"..."},...]`;
 
         if (updateError) throw updateError;
 
+        // Audit log for FAQ generation
+        await supabaseAdmin.from("audit_logs").insert({
+          user_id: userId,
+          action: "generate_faqs",
+          entity_type: "seo_page",
+          entity_id: page_id,
+          new_values: { faq_count: generatedFAQs.length, is_unique: uniquenessCheck.isUnique },
+        });
+
         // Save version history
         try {
           const { data: currentVersion } = await supabaseAdmin

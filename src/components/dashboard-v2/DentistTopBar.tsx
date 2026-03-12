@@ -1,5 +1,3 @@
-'use client'
-
 /**
  * Premium Dentist Dashboard Top Bar
  * Sticky header with search, notifications, and quick actions

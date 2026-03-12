@@ -1,4 +1,3 @@
-'use client';
 import { useState, useRef } from 'react';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -38,7 +37,7 @@ import {
   Stethoscope,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import LocationEnrichmentSection from './LocationEnrichmentSection';
 import ServiceLocationEnrichmentSection from './ServiceLocationEnrichmentSection';
 
@@ -1014,7 +1013,7 @@ export default function ClinicEnrichmentTab() {
                               Write
                             </Button>
                             <Button size="sm" variant="ghost" asChild>
-                              <Link href={`/clinic/${clinic.slug}`} target="_blank">
+                              <Link to={`/clinic/${clinic.slug}`} target="_blank">
                                 <ExternalLink className="h-4 w-4" />
                               </Link>
                             </Button>
@@ -1106,7 +1105,7 @@ export default function ClinicEnrichmentTab() {
                               <Edit className="h-4 w-4" />
                             </Button>
                             <Button size="sm" variant="ghost" asChild>
-                              <Link href={`/clinic/${clinic.slug}`} target="_blank">
+                              <Link to={`/clinic/${clinic.slug}`} target="_blank">
                                 <Eye className="h-4 w-4" />
                               </Link>
                             </Button>

@@ -1,13 +1,8 @@
 import type { Config } from "tailwindcss";
 
-const config: Config = {
+export default {
   darkMode: ["class"],
-  content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
   prefix: "",
   theme: {
     container: {
@@ -19,8 +14,8 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', '"Nunito"', "system-ui", "sans-serif"],
-        display: ['"Nunito"', '"Plus Jakarta Sans"', "system-ui", "sans-serif"],
+        sans: ['"DM Sans"', '"Plus Jakarta Sans"', "system-ui", "sans-serif"],
+        display: ['"Quicksand"', '"DM Sans"', "system-ui", "sans-serif"],
       },
       fontWeight: {
         normal: "400",
@@ -166,6 +161,4 @@ const config: Config = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-};
-
-export default config;
+} satisfies Config;

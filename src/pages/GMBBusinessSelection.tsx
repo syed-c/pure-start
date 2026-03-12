@@ -1,8 +1,8 @@
-'use client';
 import { useState, useEffect } from 'react';
-import { useRouter } from "next/router";
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import { lovable } from '@/integrations/lovable';
 import { getGmbProviderToken, setGmbProviderToken, clearGmbProviderToken } from '@/lib/gmbAuth';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -49,7 +49,7 @@ interface LocationMatchResult {
 }
 
 export default function GMBBusinessSelection() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const location = useLocation();
   const { user, refreshRoles } = useAuth();
   const providerTokenFromNavState = (location.state as any)?.providerToken as string | undefined;
@@ -100,7 +100,7 @@ export default function GMBBusinessSelection() {
       document.head.appendChild(meta);
     }
     meta.setAttribute('content', 'noindex, nofollow');
-
+    
     return () => {
       meta?.setAttribute('content', 'index, follow');
     };
@@ -112,7 +112,7 @@ export default function GMBBusinessSelection() {
     const timer = setTimeout(() => {
       if (!user) {
         console.log('[GMB] No user found, redirecting to auth');
-        router.replace('/auth');
+        navigate('/auth', { replace: true });
         return;
       }
 
@@ -120,7 +120,7 @@ export default function GMBBusinessSelection() {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [user, router]);
+  }, [user, navigate]);
 
   const fetchBusinesses = async () => {
     setIsLoading(true);
@@ -201,7 +201,7 @@ export default function GMBBusinessSelection() {
 
       // Check if this is a re-link flow (existing dentist linking GMB to their clinic)
       const isRelinkFlow = localStorage.getItem('gmb_relink_flow') === 'true';
-
+      
       if (isRelinkFlow) {
         // For re-link, just update the existing clinic with the new google_place_id
         const { data: existingClinic } = await supabase
@@ -209,7 +209,7 @@ export default function GMBBusinessSelection() {
           .select('id')
           .eq('claimed_by', user?.id)
           .single();
-
+        
         if (existingClinic) {
           const { error: updateError } = await supabase
             .from('clinics')
@@ -229,14 +229,14 @@ export default function GMBBusinessSelection() {
               updated_at: new Date().toISOString(),
             })
             .eq('id', existingClinic.id);
-
+          
           if (updateError) throw updateError;
-
+          
           toast.success('Google Business Profile connected successfully!');
           localStorage.removeItem('gmb_relink_flow');
           clearGmbProviderToken();
-
-          router.replace('/dashboard?tab=settings&gmb_connected=true');
+          
+          navigate('/dashboard?tab=settings&gmb_connected=true', { replace: true });
           return;
         }
       }
@@ -264,16 +264,16 @@ export default function GMBBusinessSelection() {
 
       // Check if location requires manual selection
       const locationMatch: LocationMatchResult = data.locationMatch;
-
+      
       if (locationMatch?.requiresManualSelection) {
         // Navigate to onboarding with location selection needed flag
-        router.push(
+        navigate(
           `/onboarding?gmb_connected=true&listing_created=true&location_pending=true&detected_city=${encodeURIComponent(locationMatch.cityName || '')}&detected_city_id=${locationMatch.cityId || ''}`,
           { replace: true }
         );
       } else {
         // Location auto-matched, go directly to onboarding
-        router.replace('/onboarding?gmb_connected=true&listing_created=true&location_verified=true');
+        navigate('/onboarding?gmb_connected=true&listing_created=true&location_verified=true', { replace: true });
       }
     } catch (err: any) {
       console.error('Failed to create listing:', err);
@@ -286,19 +286,19 @@ export default function GMBBusinessSelection() {
   const handleSkipGMB = async () => {
     // If user doesn't want to select a business, check if this is a relink flow
     const isRelinkFlow = localStorage.getItem('gmb_relink_flow') === 'true';
-
+    
     // Clean up flow flags
     localStorage.removeItem('gmb_listing_flow');
     localStorage.removeItem('gmb_relink_flow');
     localStorage.removeItem('gmb_restore_session');
     clearGmbProviderToken();
-
+    
     if (isRelinkFlow) {
       // For relink flow, go back to dashboard settings
-      router.replace('/dashboard?tab=settings');
+      navigate('/dashboard?tab=settings', { replace: true });
     } else {
       // For new listing flow, go to manual onboarding
-      router.replace('/onboarding?new=true&skip_gmb=true');
+      navigate('/onboarding?new=true&skip_gmb=true', { replace: true });
     }
   };
 
@@ -326,21 +326,22 @@ export default function GMBBusinessSelection() {
     }
 
     // Always use production domain for OAuth callback
-    const redirectTo = `https://www.AppointPanda.ae/auth/callback?${isRelinkFlow ? 'relink=true' : 'listing=true'}`;
+    const redirectTo = `https://www.appointpanda.ae/auth/callback?${isRelinkFlow ? 'relink=true' : 'listing=true'}`;
 
     // IMPORTANT: Always use signInWithOAuth (not linkIdentity) for GMB flows
     // signInWithOAuth ensures we get a fresh provider_token with business.manage scope
-    supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        scopes: 'openid email profile https://www.googleapis.com/auth/business.manage',
-        redirectTo,
-        queryParams: {
-          access_type: 'offline',
-          prompt: 'consent select_account',
-        },
+    const { error } = await lovable.auth.signInWithOAuth('google', {
+      redirect_uri: redirectTo,
+      extraParams: {
+        scope: 'openid email profile https://www.googleapis.com/auth/business.manage',
+        access_type: 'offline',
+        prompt: 'consent select_account',
       },
     });
+
+    if (error) {
+      toast.error(error.message || 'Failed to reconnect Google account');
+    }
   };
 
   if (isLoading) {
@@ -436,7 +437,7 @@ export default function GMBBusinessSelection() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2">Select Your Practice</h1>
           <p className="text-muted-foreground">
-            Choose the Google Business Profile you want to list on AppointPanda
+            Choose the Google Business Profile you want to list on Appoint Panda
           </p>
         </div>
 
@@ -444,25 +445,27 @@ export default function GMBBusinessSelection() {
           {businesses.map((business) => (
             <Card
               key={business.id}
-              className={`cursor-pointer transition-all ${selectedBusiness?.id === business.id
-                ? 'border-primary ring-2 ring-primary/20 bg-primary/5'
-                : 'hover:border-primary/30'
-                }`}
+              className={`cursor-pointer transition-all ${
+                selectedBusiness?.id === business.id
+                  ? 'border-primary ring-2 ring-primary/20 bg-primary/5'
+                  : 'hover:border-primary/30'
+              }`}
               onClick={() => setSelectedBusiness(business)}
             >
               <CardContent className="p-6">
                 <div className="flex items-start gap-4">
-                  <div className={`h-12 w-12 rounded-full flex items-center justify-center flex-shrink-0 ${selectedBusiness?.id === business.id
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted'
-                    }`}>
+                  <div className={`h-12 w-12 rounded-full flex items-center justify-center flex-shrink-0 ${
+                    selectedBusiness?.id === business.id
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted'
+                  }`}>
                     {selectedBusiness?.id === business.id ? (
                       <CheckCircle className="h-6 w-6" />
                     ) : (
                       <Building2 className="h-6 w-6 text-muted-foreground" />
                     )}
                   </div>
-
+                  
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-bold text-lg truncate">{business.name}</h3>
@@ -472,7 +475,7 @@ export default function GMBBusinessSelection() {
                         </Badge>
                       )}
                     </div>
-
+                    
                     <div className="space-y-1 text-sm text-muted-foreground">
                       {business.address && (
                         <div className="flex items-center gap-2">

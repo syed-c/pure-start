@@ -1,7 +1,5 @@
-'use client';
 import { useState, useCallback, useMemo, useEffect } from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { useSearchParams, Link } from "react-router-dom";
 import {
   Search, MapPin, Star, Shield, ChevronRight,
   Filter, X, Building2, User, Loader2, Stethoscope,
@@ -356,7 +354,7 @@ function useSearchResults(filters: SearchFilters, page: number) {
 
 // ── Page Component ─────────────────────────────────────────
 export default function SearchPage() {
-  const router = useRouter(); const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+  const [searchParams] = useSearchParams();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [page, setPage] = useState(1);
 
@@ -716,7 +714,7 @@ function ResultCard({ item }: { item: SearchResultItem }) {
 
   return (
     <Link
-      href={linkTo}
+      to={linkTo}
       className="group block bg-card border rounded-xl overflow-hidden hover:shadow-lg hover:border-primary/30 transition-all"
     >
       {/* Image */}

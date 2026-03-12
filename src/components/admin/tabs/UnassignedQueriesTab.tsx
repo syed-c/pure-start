@@ -1,4 +1,3 @@
-'use client';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -106,9 +105,9 @@ export default function UnassignedQueriesTab() {
         .eq('is_active', true);
 
       if (error) throw error;
-
+      
       // Filter to only paid clinics (with active subscription)
-      return (data || []).filter((c: any) =>
+      return (data || []).filter((c: any) => 
         c.subscriptions?.some((s: any) => s.status === 'active')
       );
     },
@@ -243,7 +242,7 @@ export default function UnassignedQueriesTab() {
   const stats = {
     total: appointments?.length || 0,
     pending: appointments?.filter(a => a.status === 'pending').length || 0,
-    today: appointments?.filter(a =>
+    today: appointments?.filter(a => 
       a.created_at && new Date(a.created_at).toDateString() === new Date().toDateString()
     ).length || 0,
   };

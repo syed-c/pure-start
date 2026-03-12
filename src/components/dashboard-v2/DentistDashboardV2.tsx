@@ -1,12 +1,10 @@
-'use client'
-
 /**
  * Dentist Dashboard V2 Tab
  * Wrapper component that uses the new v2 layout and components
  */
 
 import { useState } from 'react';
-import { useRouter } from "next/router";
+import { useSearchParams } from 'react-router-dom';
 import DentistDashboardLayoutV2 from './DentistDashboardLayoutV2';
 import DashboardOverviewV2 from './DashboardOverviewV2';
 import MyPracticePage from './MyPracticePage';
@@ -31,7 +29,7 @@ import NotificationPreferencesTab from '@/components/dentist/NotificationPrefere
 import FormWorkflowTab from '@/components/dentist/FormWorkflowTab';
 
 export default function DentistDashboardV2() {
-  const router = useRouter(); const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+  const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(() => {
     return searchParams.get('tab') || 'my-dashboard';
   });

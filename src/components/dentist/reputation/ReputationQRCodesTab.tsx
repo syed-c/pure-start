@@ -1,4 +1,3 @@
-'use client';
 import { useState, useRef, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -356,8 +355,9 @@ export default function ReputationQRCodesTab({
                     <button
                       key={style.id}
                       onClick={() => updateSettings({ selectedStyle: style.id })}
-                      className={`h-8 w-8 rounded-full bg-gradient-to-br ${style.gradient} transition-all ${settings.selectedStyle === style.id ? 'ring-2 ring-offset-2 ring-primary scale-110' : 'opacity-70 hover:opacity-100'
-                        }`}
+                      className={`h-8 w-8 rounded-full bg-gradient-to-br ${style.gradient} transition-all ${
+                        settings.selectedStyle === style.id ? 'ring-2 ring-offset-2 ring-primary scale-110' : 'opacity-70 hover:opacity-100'
+                      }`}
                       title={style.name}
                     />
                   ))}
@@ -374,7 +374,7 @@ export default function ReputationQRCodesTab({
                       <p className="text-sm opacity-90 mb-2">{settings.customSubtitle}</p>
                       {settings.showStars && (
                         <div className="flex justify-center gap-1">
-                          {[1, 2, 3, 4, 5].map(i => (
+                          {[1,2,3,4,5].map(i => (
                             <Star key={i} className="h-4 w-4 text-yellow-400 fill-yellow-400" />
                           ))}
                         </div>

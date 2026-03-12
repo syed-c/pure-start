@@ -1,7 +1,5 @@
-'use client';
 import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -26,7 +24,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import {
+import { 
   Users,
   Star,
   Shield,
@@ -41,7 +39,7 @@ import {
 const MIN_PROFILE_COUNT = 2;
 
 const ServicePage = () => {
-  const { serviceSlug: serviceSlugParam } = useRouter().query as { serviceSlug?: string };
+  const { serviceSlug: serviceSlugParam } = useParams();
   const serviceSlug = serviceSlugParam || "";
 
   const seoSlug = `services/${serviceSlug}`;
@@ -140,30 +138,30 @@ const ServicePage = () => {
         areaServed="United Arab Emirates"
       />
       <StructuredData type="faq" questions={faqs.map(f => ({ question: f.q, answer: f.a }))} />
-
+      
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-b from-background via-emerald-light/30 to-background pt-6 pb-10">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <motion.div
+          <motion.div 
             className="absolute top-20 left-[10%] w-48 md:w-64 h-48 md:h-64 bg-foreground/5 rounded-full blur-3xl"
             animate={{ scale: [1, 1.1, 1], opacity: [0.05, 0.1, 0.05] }}
             transition={{ duration: 6, repeat: Infinity }}
           />
-          <motion.div
+          <motion.div 
             className="absolute bottom-10 right-[15%] w-56 md:w-80 h-56 md:h-80 bg-primary/10 rounded-full blur-3xl"
             animate={{ scale: [1, 1.15, 1], opacity: [0.1, 0.15, 0.1] }}
             transition={{ duration: 8, repeat: Infinity, delay: 2 }}
           />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--foreground)/0.02)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--foreground)/0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
         </div>
-
+        
         <div className="container relative z-10 px-4">
           <div className="flex justify-center mb-4">
             <Breadcrumbs items={breadcrumbs} />
           </div>
-
+          
           <div className="max-w-3xl mx-auto text-center">
-            <motion.div
+            <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="inline-flex items-center gap-2 bg-foreground/5 backdrop-blur-sm border border-foreground/10 rounded-full px-4 py-2 mb-4"
@@ -171,8 +169,8 @@ const ServicePage = () => {
               <Stethoscope className="h-4 w-4 text-emerald" />
               <span className="text-xs md:text-sm font-bold text-foreground/80">UAE Dental Service</span>
             </motion.div>
-
-            <motion.h1
+            
+            <motion.h1 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
@@ -180,8 +178,8 @@ const ServicePage = () => {
             >
               {treatmentName} in <span className="text-primary">UAE</span>
             </motion.h1>
-
-            <motion.p
+            
+            <motion.p 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
@@ -190,7 +188,7 @@ const ServicePage = () => {
               {treatment?.description || `Find the best ${treatmentName.toLowerCase()} specialists across all 7 UAE emirates. Compare prices, check insurance coverage, and book verified clinics.`}
             </motion.p>
 
-            <motion.div
+            <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
@@ -200,7 +198,7 @@ const ServicePage = () => {
             </motion.div>
 
             {/* Stats */}
-            <motion.div
+            <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
@@ -255,7 +253,7 @@ const ServicePage = () => {
                 UAE-wide prices range from <strong className="text-primary">AED {uaeMin.toLocaleString()}</strong> to <strong className="text-primary">AED {uaeMax.toLocaleString()}</strong>
               </p>
             </div>
-
+            
             <div className="space-y-3 mb-6">
               {sortedByPrice.map((range, i) => {
                 const barWidth = uaeMax > 0 ? ((range.price_max - range.price_min) / uaeMax) * 100 : 50;
@@ -269,7 +267,7 @@ const ServicePage = () => {
                     className="bg-card border border-border rounded-2xl p-4 hover:border-primary/30 transition-all"
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <Link href={`/${range.state?.slug}`} className="flex items-center gap-2 hover:text-primary transition-colors">
+                      <Link to={`/${range.state?.slug}`} className="flex items-center gap-2 hover:text-primary transition-colors">
                         <MapPin className="h-4 w-4 text-primary" />
                         <span className="font-bold text-foreground">{range.state?.name}</span>
                       </Link>
@@ -290,7 +288,7 @@ const ServicePage = () => {
 
             <div className="text-center">
               <Link
-                href={`/cost/${serviceSlug}`}
+                to={`/cost/${serviceSlug}`}
                 className="inline-flex items-center gap-2 text-primary font-bold hover:underline"
               >
                 <BarChart3 className="h-4 w-4" />
@@ -312,7 +310,7 @@ const ServicePage = () => {
               locationName="UAE"
               emptyMessage="We're still adding specialists for this service."
               maxHeight={700}
-              initialCount={6}
+              initialCount={10}
             />
 
             <SEOContentBlock
@@ -345,7 +343,7 @@ const ServicePage = () => {
                   <span key={state.id}>
                     {i > 0 && (i === states.length - 1 ? ', and ' : ', ')}
                     <Link
-                      href={`/${state.slug}`}
+                      to={`/${state.slug}`}
                       className="text-primary font-bold hover:underline"
                     >
                       {treatmentName} in {state.name}
@@ -367,7 +365,7 @@ const ServicePage = () => {
                       <span key={range.id}>
                         {i > 0 && <span className="text-muted-foreground mx-2">·</span>}
                         <Link
-                          href={`/compare/${serviceSlug}/${range.state?.slug}-vs-${nextRange.state?.slug}`}
+                          to={`/compare/${serviceSlug}/${range.state?.slug}-vs-${nextRange.state?.slug}`}
                           className="text-primary font-bold hover:underline text-sm"
                         >
                           {range.state?.name} vs {nextRange.state?.name}
@@ -391,7 +389,7 @@ const ServicePage = () => {
               Frequently Asked <span className="text-primary">Questions</span>
             </h2>
           </div>
-
+          
           <Accordion type="single" collapsible className="space-y-3">
             {faqs.map((faq, i) => (
               <AccordionItem

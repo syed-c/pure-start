@@ -1,6 +1,5 @@
-'use client';
 import { useState, useEffect } from 'react';
-import { useRouter } from "next/router";
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -53,8 +52,8 @@ interface ProfileCompleteness {
  */
 export default function GMBOnboarding() {
   const { user, roles, refreshRoles, isLoading: authLoading } = useAuth();
-  const router = useRouter();
-  const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const queryClient = useQueryClient();
 
   const [step, setStep] = useState<'welcome' | 'password' | 'location' | 'complete'>('welcome');
@@ -116,7 +115,7 @@ export default function GMBOnboarding() {
       document.head.appendChild(meta);
     }
     meta.setAttribute('content', 'noindex, nofollow');
-
+    
     return () => {
       meta?.setAttribute('content', 'index, follow');
     };
@@ -126,7 +125,7 @@ export default function GMBOnboarding() {
   useEffect(() => {
     if (authLoading || clinicLoading) return;
     if (!user) {
-      router.replace('/auth');
+      navigate('/auth', { replace: true });
       return;
     }
 
@@ -139,18 +138,18 @@ export default function GMBOnboarding() {
 
     // Super admins and district managers should NEVER see onboarding
     if (isAdmin) {
-      router.replace('/admin');
+      navigate('/admin', { replace: true });
       return;
     }
 
     if (isExistingUser && (onboardingComplete || noOnboardingRecord)) {
       if (isDentist) {
-        router.replace('/dashboard?tab=my-dashboard');
+        navigate('/dashboard?tab=my-dashboard', { replace: true });
       } else {
-        router.replace('/');
+        navigate('/', { replace: true });
       }
     }
-  }, [authLoading, clinicLoading, user, onboarding, isNewSignup, gmbConnected, isDentist, isAdmin, router]);
+  }, [authLoading, clinicLoading, user, onboarding, isNewSignup, gmbConnected, isDentist, isAdmin, navigate]);
 
   // Calculate profile completeness
   const completeness: ProfileCompleteness = {
@@ -247,7 +246,7 @@ export default function GMBOnboarding() {
       .eq('user_id', user!.id);
 
     const hasDentistRole = (rolesData ?? []).some((r) => r.role === 'dentist');
-
+    
     if (!hasDentistRole) {
       // Call bootstrap function to create role
       try {
@@ -264,7 +263,7 @@ export default function GMBOnboarding() {
     }
 
     await markOnboardingComplete();
-    router.replace('/dashboard?tab=my-dashboard');
+    navigate('/dashboard?tab=my-dashboard', { replace: true });
   };
 
   const handleCompleteProfile = async () => {
@@ -275,7 +274,7 @@ export default function GMBOnboarding() {
       .eq('user_id', user!.id);
 
     const hasDentistRole = (rolesData ?? []).some((r) => r.role === 'dentist');
-
+    
     if (!hasDentistRole) {
       try {
         const { data: { session } } = await supabase.auth.getSession();
@@ -291,7 +290,7 @@ export default function GMBOnboarding() {
     }
 
     // Don't mark complete yet - they're going to edit profile
-    router.replace('/dashboard?tab=my-profile');
+    navigate('/dashboard?tab=my-profile', { replace: true });
   };
 
   if (authLoading || clinicLoading) {
@@ -312,7 +311,7 @@ export default function GMBOnboarding() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-coral bg-clip-text text-transparent mb-2">
-            AppointPanda
+            Appoint Panda
           </h1>
           <p className="text-muted-foreground">Your dental practice dashboard</p>
         </div>
@@ -329,12 +328,12 @@ export default function GMBOnboarding() {
                 {listingCreated
                   ? 'Your practice has been successfully listed!'
                   : isNewSignup && skippedGmb
-                    ? "Let's set up your practice profile manually."
-                    : isNewSignup
-                      ? "You've successfully signed up. Let's set up your practice profile."
-                      : gmbConnected
-                        ? 'Your Google Business Profile is now connected!'
-                        : "Welcome back! Let's complete your practice setup."}
+                  ? "Let's set up your practice profile manually."
+                  : isNewSignup
+                  ? "You've successfully signed up. Let's set up your practice profile."
+                  : gmbConnected
+                  ? 'Your Google Business Profile is now connected!'
+                  : "Welcome back! Let's complete your practice setup."}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -508,7 +507,7 @@ export default function GMBOnboarding() {
 
               {/* US-Only Notice */}
               <p className="text-xs text-center text-muted-foreground pt-2">
-                AppointPanda is currently available for dental practices in California, Massachusetts, and Connecticut.
+                Appoint Panda is currently available for dental practices in California, Massachusetts, and Connecticut.
               </p>
             </CardContent>
           </Card>
@@ -600,7 +599,7 @@ export default function GMBOnboarding() {
             queryClient.invalidateQueries({ queryKey: ['user-clinic'] });
             toast.success('Location confirmed! Your clinic is now live.');
             // Navigate without the location_pending flag
-            router.replace('/onboarding?gmb_connected=true&listing_created=true&location_verified=true');
+            navigate('/onboarding?gmb_connected=true&listing_created=true&location_verified=true', { replace: true });
           }}
         />
       )}

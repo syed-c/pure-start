@@ -1,4 +1,3 @@
-'use client';
 /**
  * Phase 4 Sprint Hub - Optimization & Scaling (Weeks 25-52)
  * 

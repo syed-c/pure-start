@@ -1,8 +1,8 @@
-import Head from 'next/head';
+import { Helmet } from 'react-helmet-async';
 import { useSchemaSettings } from '@/hooks/useSchemaSettings';
 import { withTrailingSlash } from '@/lib/url/withTrailingSlash';
 
-const BASE_URL = 'https://www.AppointPanda.ae';
+const BASE_URL = 'https://www.appointpanda.ae';
 
 // Organization Schema
 export interface OrganizationSchemaProps {
@@ -121,7 +121,7 @@ const generateOrganizationSchema = (settings?: {
   if (org.email) schema.email = org.email;
   if (org.phone) schema.telephone = org.phone;
   if (org.foundingDate) schema.foundingDate = org.foundingDate;
-
+  
   if (org.founders && org.founders.length > 0) {
     schema.founder = org.founders.map(name => ({
       '@type': 'Person',
@@ -152,59 +152,49 @@ const generateOrganizationSchema = (settings?: {
   return schema;
 };
 
-const generateLocalBusinessSchema = (props: LocalBusinessSchemaProps) => {
-  const schema: Record<string, any> = {
-    '@context': 'https://schema.org',
-    '@type': ['Dentist', 'LocalBusiness'],
-    name: props.name,
-    description: props.description,
-    url: `${BASE_URL}${withTrailingSlash(props.url)}`,
-    image: props.image,
-    telephone: props.phone,
-    email: props.email,
-    priceRange: props.priceRange || '$$',
-  };
-
-  if (props.address) {
-    schema.address = {
-      '@type': 'PostalAddress',
-      streetAddress: props.address,
-      addressLocality: props.city,
-      addressCountry: props.country || 'AE',
-    };
-  }
-
-  if (props.geo) {
-    schema.geo = {
-      '@type': 'GeoCoordinates',
-      latitude: props.geo.lat,
-      longitude: props.geo.lng,
-    };
-  }
-
-  // Only include aggregateRating if both rating AND reviewCount are positive
-  // Google Search Console requires reviewCount to be positive when aggregateRating is present
-  if (props.rating && props.rating > 0 && props.reviewCount && props.reviewCount > 0) {
-    schema.aggregateRating = {
-      '@type': 'AggregateRating',
-      ratingValue: props.rating,
-      reviewCount: props.reviewCount,
-      bestRating: 5,
-      worstRating: 1,
-    };
-  }
-
-  if (props.openingHours && props.openingHours.length > 0) {
-    schema.openingHoursSpecification = props.openingHours.map((h) => ({
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: h.day,
-      opens: h.open,
-      closes: h.close,
-    }));
-  }
-
-  return schema;
-};
+const generateLocalBusinessSchema = (props: LocalBusinessSchemaProps) => ({
+  '@context': 'https://schema.org',
+  '@type': ['Dentist', 'LocalBusiness'],
+  name: props.name,
+  description: props.description,
+  url: `${BASE_URL}${withTrailingSlash(props.url)}`,
+  image: props.image,
+  telephone: props.phone,
+  email: props.email,
+  priceRange: props.priceRange || '$$',
+  address: props.address
+    ? {
+        '@type': 'PostalAddress',
+        streetAddress: props.address,
+        addressLocality: props.city,
+        addressCountry: props.country || 'AE',
+      }
+    : undefined,
+  geo: props.geo
+    ? {
+        '@type': 'GeoCoordinates',
+        latitude: props.geo.lat,
+        longitude: props.geo.lng,
+      }
+    : undefined,
+  aggregateRating:
+    props.rating && props.reviewCount && props.reviewCount > 0
+      ? {
+          '@type': 'AggregateRating',
+          ratingValue: props.rating,
+          reviewCount: props.reviewCount,
+          ratingCount: props.reviewCount,
+          bestRating: 5,
+          worstRating: 1,
+        }
+      : undefined,
+  openingHoursSpecification: props.openingHours?.map((h) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: h.day,
+    opens: h.open,
+    closes: h.close,
+  })),
+});
 
 const generatePersonSchema = (props: PersonSchemaProps) => ({
   '@context': 'https://schema.org',
@@ -216,10 +206,10 @@ const generatePersonSchema = (props: PersonSchemaProps) => ({
   url: `${BASE_URL}${withTrailingSlash(props.url)}`,
   worksFor: props.worksFor
     ? {
-      '@type': 'Dentist',
-      name: props.worksFor.name,
-      url: `${BASE_URL}${withTrailingSlash(props.worksFor.url)}`,
-    }
+        '@type': 'Dentist',
+        name: props.worksFor.name,
+        url: `${BASE_URL}${withTrailingSlash(props.worksFor.url)}`,
+      }
     : undefined,
   hasCredential: props.qualifications?.map((q) => ({
     '@type': 'EducationalOccupationalCredential',
@@ -254,18 +244,24 @@ const generateArticleSchema = (props: ArticleSchemaProps) => ({
   },
 });
 
-const generateFAQSchema = (props: FAQSchemaProps) => ({
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: props.questions.map((q) => ({
-    '@type': 'Question',
-    name: q.question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: q.answer,
-    },
-  })),
-});
+const generateFAQSchema = (props: FAQSchemaProps) => {
+  // Filter out FAQs with empty questions or answers to prevent schema errors
+  const validQuestions = props.questions.filter(q => q.question?.trim() && q.answer?.trim());
+  if (validQuestions.length === 0) return null;
+  
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: validQuestions.map((q) => ({
+      '@type': 'Question',
+      name: q.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: q.answer,
+      },
+    })),
+  };
+};
 
 const generateBreadcrumbSchema = (props: BreadcrumbSchemaProps) => ({
   '@context': 'https://schema.org',
@@ -292,22 +288,22 @@ const generateServiceSchema = (props: ServiceSchemaProps) => ({
   url: `${BASE_URL}${withTrailingSlash(props.url)}`,
   provider: props.provider
     ? {
-      '@type': 'Organization',
-      name: props.provider,
-    }
+        '@type': 'Organization',
+        name: props.provider,
+      }
     : {
-      '@type': 'Organization',
-      name: 'AppointPanda',
-    },
+        '@type': 'Organization',
+        name: 'AppointPanda',
+      },
   areaServed: props.areaServed
     ? {
-      '@type': 'City',
-      name: props.areaServed,
-    }
+        '@type': 'City',
+        name: props.areaServed,
+      }
     : {
-      '@type': 'Country',
-      name: 'United Arab Emirates',
-    },
+        '@type': 'Country',
+        name: 'United Arab Emirates',
+      },
   serviceType: 'Dental Service',
 });
 
@@ -340,13 +336,12 @@ export const StructuredData = (props: StructuredDataProps) => {
       break;
   }
 
+  if (!schema) return null;
+
   return (
-    <Head>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      />
-    </Head>
+    <Helmet>
+      <script type="application/ld+json">{JSON.stringify(schema)}</script>
+    </Helmet>
   );
 };
 

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
 import { SectionHeader } from "@/components/layout/SectionHeader";
@@ -53,7 +53,7 @@ const AboutPage = () => {
         title={seoContent?.meta_title || "About AppointPanda | UAE's Trusted Dental Directory"}
         description={seoContent?.meta_description || "Learn about AppointPanda, the UAE's trusted platform connecting patients with verified dental professionals across all Emirates."}
         canonical="/about/"
-        keywords={['about AppointPanda', 'dental directory', 'find dentist', 'dental care platform']}
+        keywords={['about appointpanda', 'dental directory', 'find dentist', 'dental care platform']}
       />
 
       {/* Dark Hero Section */}
@@ -63,32 +63,32 @@ const AboutPage = () => {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(139,92,246,0.1),transparent_50%)]" />
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple/10 rounded-full blur-3xl" />
-
+        
         <div className="container relative py-20 md:py-28">
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
               <Sparkles className="h-4 w-4 text-primary" />
               <span className="text-sm font-bold text-primary">About Us</span>
             </div>
-
+            
             <h1 className="font-display text-4xl md:text-6xl font-bold mb-6">
               Making Quality Dental Care{" "}
               <span className="text-gradient">Accessible</span>
             </h1>
-
+            
             <p className="text-xl md:text-2xl text-dark-section-foreground/70 max-w-2xl mx-auto mb-8">
               The UAE's trusted platform connecting patients with verified dental professionals. Your smile, our mission.
             </p>
 
             <div className="flex flex-wrap justify-center gap-4">
               <Button asChild size="lg" className="rounded-2xl font-bold shadow-glow">
-                <Link href="/search">
+                <Link to="/search">
                   Find a Dentist
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="rounded-2xl font-bold border-white/40 text-white bg-white/10 hover:bg-white/20">
-                <Link href="/list-your-practice">List Your Practice</Link>
+                <Link to="/list-your-practice">List Your Practice</Link>
               </Button>
             </div>
           </div>
@@ -119,11 +119,11 @@ const AboutPage = () => {
               Connecting Patients with <span className="text-primary">Trusted Dentists</span>
             </h2>
             <p className="text-muted-foreground text-lg leading-relaxed mb-6">
-              We believe everyone deserves access to quality dental care. AppointPanda was founded with a simple mission:
+              We believe everyone deserves access to quality dental care. AppointPanda was founded with a simple mission: 
               to connect patients across the UAE with trusted, verified dental professionals aligned with DHA and MOHAP standards.
             </p>
             <p className="text-muted-foreground leading-relaxed mb-6">
-              Through our platform, patients can easily find, compare, and book appointments with dentists who meet
+              Through our platform, patients can easily find, compare, and book appointments with dentists who meet 
               our rigorous verification standards. We're not just a directory—we're a trusted partner in your dental health journey.
             </p>
             <div className="grid sm:grid-cols-2 gap-3">
@@ -145,7 +145,7 @@ const AboutPage = () => {
             </div>
             <div className="absolute -bottom-6 -left-6 w-48 h-48 bg-primary/10 rounded-3xl blur-2xl" />
             <div className="absolute -top-6 -right-6 w-32 h-32 bg-purple/10 rounded-3xl blur-2xl" />
-
+            
             {/* Floating stat card */}
             <div className="absolute -bottom-4 -right-4 card-modern p-4 shadow-elevated">
               <div className="flex items-center gap-3">
@@ -220,13 +220,13 @@ const AboutPage = () => {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button asChild size="lg" className="rounded-2xl font-bold shadow-glow">
-              <Link href="/search">
+              <Link to="/search">
                 Find a Dentist
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="rounded-2xl font-bold border-white/40 text-white bg-white/10 hover:bg-white/20">
-              <Link href="/list-your-practice">List Your Practice</Link>
+              <Link to="/list-your-practice">List Your Practice</Link>
             </Button>
           </div>
         </div>

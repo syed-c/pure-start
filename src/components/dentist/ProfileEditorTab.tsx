@@ -1,10 +1,8 @@
-'use client'
-
 import { useState, useRef, useEffect } from 'react';
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { lovable } from '@/integrations/lovable';
 import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -81,7 +79,7 @@ const TIME_SLOTS = Array.from({ length: 48 }, (_, i) => {
 export default function ProfileEditorTab() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const router = useRouter(); const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState<Partial<ClinicData>>({});
   const [hours, setHours] = useState<ClinicHours[]>([]);
@@ -90,7 +88,7 @@ export default function ProfileEditorTab() {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const galleryFileInputRef = useRef<HTMLInputElement>(null);
-
+  
   // GMB integration state
   const [isConnectingGoogle, setIsConnectingGoogle] = useState(false);
   const [isSyncingGmb, setIsSyncingGmb] = useState(false);
@@ -110,7 +108,7 @@ export default function ProfileEditorTab() {
       newParams.set('tab', 'my-profile');
       setSearchParams(newParams, { replace: true });
     }
-  }, [searchParams, router]);
+  }, [searchParams, setSearchParams]);
 
   // Fetch clinic data
   const { data: clinic, isLoading } = useQuery({
@@ -157,7 +155,7 @@ export default function ProfileEditorTab() {
         .order('day_of_week');
 
       if (error) throw error;
-
+      
       // Initialize hours for all days if not present
       const existingHours = data || [];
       const allHours: ClinicHours[] = DAYS.map((_, index) => {
@@ -272,7 +270,7 @@ export default function ProfileEditorTab() {
   const addImageMutation = useMutation({
     mutationFn: async (imageUrl: string) => {
       if (!clinic?.id) throw new Error('No clinic found');
-
+      
       const { error } = await supabase
         .from('clinic_images')
         .insert({
@@ -280,7 +278,7 @@ export default function ProfileEditorTab() {
           image_url: imageUrl,
           display_order: (images?.length || 0) + 1,
         });
-
+      
       if (error) throw error;
     },
     onSuccess: () => {
@@ -299,7 +297,7 @@ export default function ProfileEditorTab() {
         .from('clinic_images')
         .delete()
         .eq('id', imageId);
-
+      
       if (error) throw error;
     },
     onSuccess: () => {
@@ -323,7 +321,7 @@ export default function ProfileEditorTab() {
     try {
       const fileExt = file.name.split('.').pop();
       const fileName = `${clinic.id}/profile-${Date.now()}.${fileExt}`;
-
+      
       const { error: uploadError } = await supabase.storage
         .from('clinic-assets')
         .upload(fileName, file, { upsert: true });
@@ -352,7 +350,7 @@ export default function ProfileEditorTab() {
     try {
       const fileExt = file.name.split('.').pop();
       const fileName = `${clinic.id}/gallery-${Date.now()}.${fileExt}`;
-
+      
       const { error: uploadError } = await supabase.storage
         .from('clinic-assets')
         .upload(fileName, file);
@@ -396,7 +394,7 @@ export default function ProfileEditorTab() {
       // Get current session to store before OAuth
       const { data: { session: currentSession } } = await supabase.auth.getSession();
       const { data: { user: currentUser } } = await supabase.auth.getUser();
-
+      
       if (!currentSession || !currentUser) {
         throw new Error('Please sign in first');
       }
@@ -443,19 +441,16 @@ export default function ProfileEditorTab() {
       localStorage.setItem('gmb_restore_session', 'true');
 
       // Always use production domain for OAuth callback
-      const redirectTo = 'https://www.AppointPanda.ae/auth/callback?gmb=true';
+      const redirectTo = 'https://www.appointpanda.ae/auth/callback?gmb=true';
 
       // Use signInWithOAuth to get the GMB token
       // The callback handler will capture the token and restore the original user session
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          scopes: 'openid email profile https://www.googleapis.com/auth/business.manage',
-          redirectTo,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent select_account',
-          },
+      const { error } = await lovable.auth.signInWithOAuth('google', {
+        redirect_uri: redirectTo,
+        extraParams: {
+          scope: 'openid email profile https://www.googleapis.com/auth/business.manage',
+          access_type: 'offline',
+          prompt: 'consent select_account',
         },
       });
 
@@ -480,10 +475,10 @@ export default function ProfileEditorTab() {
     try {
       // Call GMB import edge function for this clinic
       const { error } = await supabase.functions.invoke('gmb-import', {
-        body: {
+        body: { 
           placeId: clinic.google_place_id,
           clinicId: clinic.id,
-          syncOnly: true
+          syncOnly: true 
         },
       });
       if (error) throw error;
@@ -503,21 +498,21 @@ export default function ProfileEditorTab() {
     try {
       const { error } = await supabase
         .from('clinics')
-        .update({
+        .update({ 
           google_place_id: manualPlaceId.trim(),
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString() 
         })
         .eq('id', clinic.id);
-
+      
       if (error) throw error;
-
+      
       await createAuditLog({
         action: 'UPDATE',
         entityType: 'clinic',
         entityId: clinic.id,
         newValues: { google_place_id: manualPlaceId.trim() },
       });
-
+      
       toast.success('Google Place ID saved successfully');
       setManualPlaceId('');
       queryClient.invalidateQueries({ queryKey: ['dentist-clinic-profile'] });
@@ -546,7 +541,7 @@ export default function ProfileEditorTab() {
           Please claim your practice profile first to edit it.
         </p>
         <Button asChild>
-          <Link href="/claim-profile">Claim Your Profile</Link>
+          <Link to="/claim-profile">Claim Your Profile</Link>
         </Button>
       </div>
     );
@@ -581,9 +576,9 @@ export default function ProfileEditorTab() {
           <div className="flex items-start gap-6">
             <div className="relative">
               {formData.cover_image_url ? (
-                <img
-                  src={formData.cover_image_url}
-                  alt="Clinic"
+                <img 
+                  src={formData.cover_image_url} 
+                  alt="Clinic" 
                   className="h-32 w-32 rounded-2xl object-cover border-2 border-border shadow-md"
                 />
               ) : (
@@ -592,9 +587,9 @@ export default function ProfileEditorTab() {
                 </div>
               )}
               {formData.cover_image_url && (
-                <Button
-                  size="icon"
-                  variant="destructive"
+                <Button 
+                  size="icon" 
+                  variant="destructive" 
                   className="absolute -top-2 -right-2 h-8 w-8 rounded-full"
                   onClick={() => setFormData({ ...formData, cover_image_url: null })}
                 >
@@ -613,8 +608,8 @@ export default function ProfileEditorTab() {
                   onChange={handleProfilePhotoUpload}
                   className="hidden"
                 />
-                <Button
-                  variant="outline"
+                <Button 
+                  variant="outline" 
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
                   className="w-full gap-2"
@@ -627,7 +622,7 @@ export default function ProfileEditorTab() {
                   {isUploading ? 'Uploading...' : 'Choose Image'}
                 </Button>
               </div>
-
+              
               {/* Or use URL */}
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
@@ -637,7 +632,7 @@ export default function ProfileEditorTab() {
                   <span className="bg-card px-2 text-muted-foreground">Or paste URL</span>
                 </div>
               </div>
-
+              
               <div className="space-y-2">
                 <div className="flex gap-2">
                   <Input
@@ -745,10 +740,10 @@ export default function ProfileEditorTab() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <svg className="h-5 w-5" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
             Google Business Profile Sync
           </CardTitle>
@@ -766,7 +761,7 @@ export default function ProfileEditorTab() {
                   <div className="flex items-center gap-2 mt-3">
                     <Badge variant="outline">{clinic.google_place_id}</Badge>
                     <Button variant="ghost" size="sm" asChild>
-                      <a
+                      <a 
                         href={`https://www.google.com/maps/place/?q=place_id:${clinic.google_place_id}`}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -777,8 +772,8 @@ export default function ProfileEditorTab() {
                   </div>
                 </div>
               </div>
-              <Button
-                variant="outline"
+              <Button 
+                variant="outline" 
                 className="w-full"
                 onClick={() => handleGmbSync()}
                 disabled={isSyncingGmb}
@@ -787,10 +782,10 @@ export default function ProfileEditorTab() {
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 ) : (
                   <svg className="h-4 w-4 mr-2" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                   </svg>
                 )}
                 Sync Now from Google
@@ -807,13 +802,13 @@ export default function ProfileEditorTab() {
                   </p>
                 </div>
               </div>
-
+              
               {/* Sign in with Google Button */}
               <div className="p-4 bg-background rounded-xl border space-y-4">
                 <div className="text-center">
                   <p className="text-sm font-medium mb-3">Connect with your Google account</p>
-                  <Button
-                    variant="outline"
+                  <Button 
+                    variant="outline" 
                     className="w-full gap-3 h-12 text-base"
                     onClick={() => handleGoogleSignIn()}
                     disabled={isConnectingGoogle}
@@ -822,10 +817,10 @@ export default function ProfileEditorTab() {
                       <Loader2 className="h-5 w-5 animate-spin" />
                     ) : (
                       <svg className="h-5 w-5" viewBox="0 0 24 24">
-                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                       </svg>
                     )}
                     Sign in with Google
@@ -852,7 +847,7 @@ export default function ProfileEditorTab() {
                       onChange={(e) => setManualPlaceId(e.target.value)}
                       placeholder="ChIJ..."
                     />
-                    <Button
+                    <Button 
                       onClick={() => handleManualPlaceIdSave()}
                       disabled={!manualPlaceId.trim() || isSavingPlaceId}
                     >
@@ -865,9 +860,9 @@ export default function ProfileEditorTab() {
                   </div>
                   <p className="text-xs text-muted-foreground">
                     Find your Place ID at{' '}
-                    <a
-                      href="https://developers.google.com/maps/documentation/places/web-service/place-id"
-                      target="_blank"
+                    <a 
+                      href="https://developers.google.com/maps/documentation/places/web-service/place-id" 
+                      target="_blank" 
                       rel="noopener noreferrer"
                       className="text-primary hover:underline"
                     >
@@ -971,9 +966,9 @@ export default function ProfileEditorTab() {
               onChange={handleGalleryFileUpload}
               className="hidden"
             />
-            <Button
-              size="sm"
-              variant="outline"
+            <Button 
+              size="sm" 
+              variant="outline" 
               className="gap-2"
               onClick={() => galleryFileInputRef.current?.click()}
               disabled={isUploading}
@@ -1007,16 +1002,16 @@ export default function ProfileEditorTab() {
                   </div>
                   {newImageUrl && (
                     <div className="rounded-lg overflow-hidden border">
-                      <img
-                        src={newImageUrl}
-                        alt="Preview"
+                      <img 
+                        src={newImageUrl} 
+                        alt="Preview" 
                         className="w-full h-48 object-cover"
                         onError={(e) => (e.currentTarget.src = 'https://via.placeholder.com/400x200?text=Invalid+URL')}
                       />
                     </div>
                   )}
-                  <Button
-                    className="w-full"
+                  <Button 
+                    className="w-full" 
                     onClick={handleAddGalleryImage}
                     disabled={!newImageUrl.trim() || addImageMutation.isPending}
                   >
@@ -1037,15 +1032,15 @@ export default function ProfileEditorTab() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {images.map((img) => (
                 <div key={img.id} className="relative group rounded-xl overflow-hidden border">
-                  <img
-                    src={img.image_url}
-                    alt={img.caption || 'Gallery'}
+                  <img 
+                    src={img.image_url} 
+                    alt={img.caption || 'Gallery'} 
                     className="w-full h-32 object-cover"
                   />
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <Button
-                      size="icon"
-                      variant="destructive"
+                    <Button 
+                      size="icon" 
+                      variant="destructive" 
                       className="h-8 w-8"
                       onClick={() => deleteImageMutation.mutate(img.id)}
                     >

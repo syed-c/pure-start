@@ -135,7 +135,7 @@ const AREA_LOCAL_CONTEXT: Record<string, {
   'al-rashidiya': {
     character: 'established residential near airport',
     demographics: 'families, airport workers and long-term residents',
-    landmarks: ['Rashidiya Metro', 'DXB Airport'],
+    landmarks: ['Rashidiya Metro', 'Dubai International Airport'],
     narrative: 'airport-accessible dental care',
     description: 'a well-established residential area near Dubai International Airport with excellent metro connectivity',
   },

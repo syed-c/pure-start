@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
@@ -77,7 +77,7 @@ const ServicesPage = () => {
               Verified Specialists
             </Badge>
             
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4" style={{ fontFamily: "'Nunito', 'Plus Jakarta Sans', system-ui, sans-serif" }}>
+            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4" style={{ fontFamily: "'Varela Round', system-ui, sans-serif" }}>
               <span className="text-white">Dental</span>
               <span className="block text-primary">Services</span>
             </h1>
@@ -132,7 +132,7 @@ const ServicesPage = () => {
             {popularTreatments.map((treatment, i) => (
               <Link
                 key={treatment.id}
-                href={`/services/${treatment.slug}`}
+                to={`/services/${treatment.slug}`}
                 className="group bg-card border border-border rounded-2xl p-6 hover:border-primary hover:shadow-xl transition-all animate-fade-in-up"
                 style={{ animationDelay: `${i * 0.05}s` }}
               >
@@ -167,7 +167,7 @@ const ServicesPage = () => {
             {allTreatments.map((treatment, i) => (
               <Link
                 key={treatment.id}
-                href={`/services/${treatment.slug}`}
+                to={`/services/${treatment.slug}`}
                 className="bg-white/5 border border-white/10 rounded-2xl px-5 py-3 font-bold text-white hover:border-primary hover:text-primary hover:bg-white/10 transition-all animate-fade-in-up"
                 style={{ animationDelay: `${i * 0.03}s` }}
               >
@@ -189,7 +189,7 @@ const ServicesPage = () => {
           {states?.map((state, i) => (
             <Link
               key={state.id}
-              href={`/${state.slug}`}
+              to={`/${state.slug}`}
               className="group bg-card border border-border rounded-2xl p-6 hover:border-primary hover:shadow-lg transition-all animate-fade-in-up"
               style={{ animationDelay: `${i * 0.1}s` }}
             >
@@ -217,7 +217,7 @@ const ServicesPage = () => {
             Book a consultation with a general dentist who can assess your needs and recommend the right treatment.
           </p>
           <Button asChild size="lg" variant="secondary" className="rounded-2xl font-bold">
-            <Link href="/search">
+            <Link to="/search">
               Find a Dentist
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>

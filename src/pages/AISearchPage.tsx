@@ -1,8 +1,7 @@
-'use client';
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/router";
-import {
-  Search, Sparkles, MapPin, DollarSign, Star, Shield, Clock,
+import { useSearchParams } from "react-router-dom";
+import { 
+  Search, Sparkles, MapPin, DollarSign, Star, Shield, Clock, 
   ArrowRight, Loader2, Building2, CheckCircle, Navigation, MessageCircle, Send
 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
@@ -10,13 +9,12 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { useRealCounts } from "@/hooks/useRealCounts";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { useAISearch, type SearchResult, type AISearchResponse } from "@/hooks/useAISearch";
 import { cn } from "@/lib/utils";
-import { proxyImageUrl } from "@/lib/proxyImageUrl";
 
 // Service suggestions for quick selection
 const SERVICE_SUGGESTIONS = [
@@ -51,9 +49,9 @@ interface ConversationMessage {
 }
 
 const AISearchPage = () => {
-  const router = useRouter(); const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+  const [searchParams, setSearchParams] = useSearchParams();
   const initialQuery = searchParams.get("q") || "";
-
+  
   const [query, setQuery] = useState(initialQuery);
   const [currentStep, setCurrentStep] = useState(0);
   const [conversation, setConversation] = useState<ConversationMessage[]>([]);
@@ -62,10 +60,10 @@ const AISearchPage = () => {
     service?: string;
     location?: string;
   }>({});
-
+  
   const inputRef = useRef<HTMLInputElement>(null);
   const conversationEndRef = useRef<HTMLDivElement>(null);
-
+  
   const { data: realCounts } = useRealCounts();
   const { search, results, isSearching, response, error, requestLocationPermission } = useAISearch();
 
@@ -97,10 +95,10 @@ const AISearchPage = () => {
 
     // Add user message to conversation
     setConversation(prev => [...prev, { type: "user", text: input }]);
-
+    
     // Build the full query with context
     let fullQuery = input;
-
+    
     // Check if this is answering a follow-up question
     if (response?.conversationStep === "ask_service" || (!conversationContext.service && conversationContext.budget)) {
       // User is providing service
@@ -117,7 +115,7 @@ const AISearchPage = () => {
         setConversationContext({ budget: parseInt(budgetMatch[1]) });
       }
     }
-
+    
     // Clear input and search
     setQuery("");
     setSearchParams({ q: fullQuery });
@@ -130,8 +128,8 @@ const AISearchPage = () => {
       if (location) {
         handleUserInput("near me");
       } else {
-        setConversation(prev => [...prev, {
-          type: "assistant",
+        setConversation(prev => [...prev, { 
+          type: "assistant", 
           text: "I couldn't access your location. Please type your city name instead."
         }]);
       }
@@ -150,30 +148,30 @@ const AISearchPage = () => {
   // Build assistant response with follow-up
   const getAssistantMessage = (): ConversationMessage | null => {
     if (!response) return null;
-
+    
     if (response.followUpQuestion) {
       let suggestions: Array<{ label: string; value: string; isNearMe?: boolean }> = [];
-
+      
       if (response.conversationStep === "ask_service") {
         suggestions = SERVICE_SUGGESTIONS;
       } else if (response.conversationStep === "ask_location") {
         suggestions = LOCATION_SUGGESTIONS;
       }
-
+      
       return {
         type: "assistant",
         text: response.followUpQuestion,
         suggestions,
       };
     }
-
+    
     if (results.length > 0) {
       return {
         type: "assistant",
         text: `Found ${results.length} dentist${results.length !== 1 ? 's' : ''} matching your criteria${response.intent?.budget?.max ? ` within $${response.intent.budget.max}` : ''}${response.intent?.location?.city ? ` in ${response.intent.location.city}` : ''}.`,
       };
     }
-
+    
     return null;
   };
 
@@ -204,7 +202,7 @@ const AISearchPage = () => {
             <div className="absolute top-0 right-0 w-64 h-64 md:w-[400px] md:h-[400px] bg-primary/20 rounded-full blur-3xl opacity-50" />
             <div className="absolute bottom-0 left-0 w-48 h-48 md:w-[300px] md:h-[300px] bg-teal/15 rounded-full blur-3xl" />
           </div>
-
+          
           <div className="relative z-10 text-center max-w-3xl mx-auto">
             <Badge className="bg-primary/20 text-primary border-primary/30 rounded-full px-4 py-1.5 text-xs md:text-sm font-bold mb-3 md:mb-4">
               <MessageCircle className="h-3 w-3 md:h-4 md:w-4 mr-1" />
@@ -217,7 +215,7 @@ const AISearchPage = () => {
             <p className="text-sm md:text-base text-white/60 max-w-xl mx-auto">
               Describe your dental needs naturally — we'll find the perfect match.
             </p>
-
+            
             {/* Stats - Compact on mobile */}
             <div className="flex justify-center gap-3 md:gap-4 mt-4 md:mt-6">
               <div className="flex items-center gap-1.5 bg-white/10 rounded-lg px-2.5 py-1.5 md:px-3 md:py-2">
@@ -333,7 +331,7 @@ const AISearchPage = () => {
                     {assistantMessage.text}
                   </div>
                 </div>
-
+                
                 {assistantMessage.suggestions && assistantMessage.suggestions.length > 0 && (
                   <div className="flex flex-wrap gap-2 pl-2">
                     {assistantMessage.suggestions.map((sug, i) => (
@@ -420,7 +418,7 @@ const AISearchPage = () => {
                 )}
               </Button>
             </div>
-
+            
             {/* Quick actions - Only show when no active search */}
             {!isSearching && !response?.followUpQuestion && (
               <div className="flex gap-2 mt-2 overflow-x-auto pb-1 scrollbar-hide">
@@ -466,7 +464,7 @@ const AISearchPage = () => {
 function ResultCard({ result, index }: { result: SearchResult; index: number }) {
   return (
     <Link
-      href={`/clinic/${result.slug}`}
+      to={`/clinic/${result.slug}`}
       className={cn(
         "block bg-white/5 border border-white/10 rounded-xl md:rounded-2xl p-3 md:p-4 hover:border-primary/50 hover:bg-white/10 transition-all",
         "animate-fade-in-up"
@@ -477,7 +475,7 @@ function ResultCard({ result, index }: { result: SearchResult; index: number }) 
         {/* Image - Smaller on mobile */}
         <div className="w-16 h-16 md:w-20 md:h-20 rounded-lg md:rounded-xl overflow-hidden bg-white/10 flex-shrink-0">
           {result.cover_image_url ? (
-            <img src={proxyImageUrl(result.cover_image_url) || result.cover_image_url} alt={result.name} className="w-full h-full object-cover" />
+            <img src={result.cover_image_url} alt={result.name} className="w-full h-full object-cover" />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
               <Building2 className="h-6 w-6 md:h-8 md:w-8 text-white/30" />

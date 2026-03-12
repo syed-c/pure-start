@@ -1,10 +1,9 @@
-'use client';
-import Link from "next/link";
-import {
-  MapPin,
-  Stethoscope,
-  Building2,
-  FileText,
+import { Link } from "react-router-dom";
+import { 
+  MapPin, 
+  Stethoscope, 
+  Building2, 
+  FileText, 
   ChevronRight,
   Home,
   Info,
@@ -72,7 +71,7 @@ const SitemapPage = () => {
         .eq('is_duplicate', false)
         .order('name')
         .limit(100);
-
+      
       return { clinics: data || [], count: count || 0 };
     }
   });
@@ -93,7 +92,7 @@ const SitemapPage = () => {
       return data || [];
     }
   });
-
+  
   // Count cities with at least one clinic
   const { data: citiesWithClinics } = useQuery({
     queryKey: ['cities-with-clinics-count'],
@@ -103,7 +102,7 @@ const SitemapPage = () => {
         .select('city_id')
         .eq('is_active', true)
         .eq('is_duplicate', false);
-
+      
       const uniqueCities = new Set(data?.map(c => c.city_id).filter(Boolean));
       return uniqueCities.size;
     }
@@ -147,8 +146,8 @@ const SitemapPage = () => {
     { label: "Sitemap" },
   ];
 
-  const totalPages = (mainPages.length + forDentists.length + legalPages.length +
-    (states?.length || 0) + (citiesWithClinics || cities?.length || 0) + (treatments?.length || 0) +
+  const totalPages = (mainPages.length + forDentists.length + legalPages.length + 
+    (states?.length || 0) + (citiesWithClinics || cities?.length || 0) + (treatments?.length || 0) + 
     totalClinics + (dentists?.length || 0) + (blogPosts?.length || 0));
 
   // Signal prerender ready when all critical data is loaded
@@ -216,7 +215,7 @@ const SitemapPage = () => {
                   </p>
                 </div>
               </div>
-              <a
+              <a 
                 href="/sitemap.xml"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -240,9 +239,9 @@ const SitemapPage = () => {
               </div>
               <div className="grid gap-3">
                 {mainPages.map((page) => (
-                  <Link
+                  <Link 
                     key={page.path}
-                    href={page.path}
+                    to={page.path}
                     className="flex items-center gap-3 p-3 rounded-xl hover:bg-primary/5 transition-colors group"
                   >
                     <page.icon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -268,9 +267,9 @@ const SitemapPage = () => {
                 </div>
                 <div className="grid gap-3">
                   {forDentists.map((page) => (
-                    <Link
+                    <Link 
                       key={page.path}
-                      href={page.path}
+                      to={page.path}
                       className="flex items-center gap-3 p-3 rounded-xl hover:bg-coral/10 transition-colors group"
                     >
                       <page.icon className="h-5 w-5 text-muted-foreground group-hover:text-coral transition-colors" />
@@ -292,9 +291,9 @@ const SitemapPage = () => {
                 </div>
                 <div className="flex flex-wrap gap-4">
                   {legalPages.map((page) => (
-                    <Link
+                    <Link 
                       key={page.path}
-                      href={page.path}
+                      to={page.path}
                       className="text-muted-foreground hover:text-primary transition-colors"
                     >
                       {page.name}
@@ -314,7 +313,7 @@ const SitemapPage = () => {
               <h2 className="text-xl font-bold">Dental Services</h2>
               {treatments && <Badge variant="secondary" className="ml-2">{treatments.length} services</Badge>}
             </div>
-
+            
             {treatmentsLoading ? (
               <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {[...Array(8)].map((_, i) => (
@@ -323,7 +322,8 @@ const SitemapPage = () => {
               </div>
             ) : (
               <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
-                <Link href="/services"
+                <Link 
+                  to="/services"
                   className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-gold/10 to-gold/5 border border-gold/20 hover:border-gold/40 transition-colors group"
                 >
                   <Star className="h-5 w-5 text-gold" />
@@ -331,9 +331,9 @@ const SitemapPage = () => {
                   <ArrowRight className="h-4 w-4 text-gold ml-auto" />
                 </Link>
                 {treatments?.map((treatment) => (
-                  <Link
+                  <Link 
                     key={treatment.slug}
-                    href={`/services/${treatment.slug}`}
+                    to={`/services/${treatment.slug}`}
                     className="flex items-center gap-3 p-4 rounded-2xl bg-muted/30 border hover:border-primary/40 hover:bg-primary/5 transition-colors group"
                   >
                     <span className="font-medium group-hover:text-primary transition-colors">{treatment.name}</span>
@@ -366,8 +366,8 @@ const SitemapPage = () => {
                   const stateCities = citiesByState[state.slug]?.cities || [];
                   return (
                     <div key={state.slug} className="rounded-3xl bg-gradient-to-br from-background to-muted/30 border p-6 hover:shadow-lg transition-shadow">
-                      <Link
-                        href={`/${state.slug}`}
+                      <Link 
+                        to={`/${state.slug}`}
                         className="flex items-center gap-3 mb-4 group"
                       >
                         <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -381,9 +381,9 @@ const SitemapPage = () => {
                       </Link>
                       <div className="flex flex-wrap gap-2">
                         {stateCities.slice(0, 8).map((city) => (
-                          <Link
+                          <Link 
                             key={city.slug}
-                            href={`/${state.slug}/${city.slug}`}
+                            to={`/${state.slug}/${city.slug}`}
                             className="text-sm px-3 py-1 rounded-full bg-muted hover:bg-primary/10 hover:text-primary transition-colors"
                           >
                             {city.name}
@@ -421,9 +421,9 @@ const SitemapPage = () => {
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {clinics?.slice(0, 20).map((clinic) => (
-                  <Link
+                  <Link 
                     key={clinic.slug}
-                    href={`/clinic/${clinic.slug}`}
+                    to={`/clinic/${clinic.slug}`}
                     className="flex flex-col p-4 rounded-2xl bg-muted/30 border hover:border-primary/40 hover:bg-primary/5 transition-colors group"
                   >
                     <span className="font-medium group-hover:text-primary transition-colors line-clamp-1">{clinic.name}</span>
@@ -433,7 +433,8 @@ const SitemapPage = () => {
                   </Link>
                 ))}
                 {clinics && clinics.length > 20 && (
-                  <Link href="/search"
+                  <Link 
+                    to="/search"
                     className="flex items-center justify-center gap-2 p-4 rounded-2xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-colors text-primary font-semibold"
                   >
                     View All Clinics
@@ -463,9 +464,9 @@ const SitemapPage = () => {
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {dentists?.slice(0, 16).map((dentist) => (
-                  <Link
+                  <Link 
                     key={dentist.slug}
-                    href={`/dentist/${dentist.slug}`}
+                    to={`/dentist/${dentist.slug}`}
                     className="flex flex-col p-4 rounded-2xl bg-muted/30 border hover:border-coral/40 hover:bg-coral/5 transition-colors group"
                   >
                     <span className="font-medium group-hover:text-coral transition-colors line-clamp-1">{dentist.name}</span>
@@ -475,7 +476,8 @@ const SitemapPage = () => {
                   </Link>
                 ))}
                 {dentists && dentists.length > 16 && (
-                  <Link href="/search"
+                  <Link 
+                    to="/search"
                     className="flex items-center justify-center gap-2 p-4 rounded-2xl bg-coral/10 border border-coral/20 hover:bg-coral/20 transition-colors text-coral font-semibold"
                   >
                     View All Dentists
@@ -504,7 +506,8 @@ const SitemapPage = () => {
               </div>
             ) : blogPosts && blogPosts.length > 0 ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <Link href="/blog"
+                <Link 
+                  to="/blog"
                   className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 hover:border-primary/40 transition-colors group"
                 >
                   <BookOpen className="h-5 w-5 text-primary" />
@@ -512,9 +515,9 @@ const SitemapPage = () => {
                   <ArrowRight className="h-4 w-4 text-primary ml-auto" />
                 </Link>
                 {blogPosts.map((post) => (
-                  <Link
+                  <Link 
                     key={post.slug}
-                    href={`/blog/${post.slug}`}
+                    to={`/blog/${post.slug}`}
                     className="flex items-center p-4 rounded-2xl bg-muted/30 border hover:border-primary/40 hover:bg-primary/5 transition-colors group"
                   >
                     <span className="font-medium group-hover:text-primary transition-colors line-clamp-1">{post.title}</span>
@@ -537,15 +540,15 @@ const SitemapPage = () => {
                 <p className="text-sm text-muted-foreground">Dedicated pages for every service in every city</p>
               </div>
             </div>
-
+            
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
               {states?.slice(0, 3).flatMap((state) => {
                 const stateCities = citiesByState[state.slug]?.cities || [];
-                return stateCities.slice(0, 3).flatMap((city) =>
+                return stateCities.slice(0, 3).flatMap((city) => 
                   treatments?.slice(0, 2).map((treatment) => (
-                    <Link
+                    <Link 
                       key={`${state.slug}-${city.slug}-${treatment.slug}`}
-                      href={`/${state.slug}/${city.slug}/${treatment.slug}`}
+                      to={`/${state.slug}/${city.slug}/${treatment.slug}`}
                       className="text-sm px-4 py-2 rounded-full bg-muted hover:bg-primary/10 hover:text-primary transition-colors text-center"
                     >
                       {treatment.name} in {city.name}
@@ -554,7 +557,7 @@ const SitemapPage = () => {
                 );
               })}
             </div>
-
+            
             {treatments && cities && (
               <p className="text-sm text-muted-foreground mt-6 text-center">
                 <span className="font-semibold text-primary">{treatments.length * (cities?.length || 0)}+</span> total service-location combinations available

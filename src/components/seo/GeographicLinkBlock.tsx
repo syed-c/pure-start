@@ -10,11 +10,11 @@
  * CANONICAL: All URLs use trailing slash format.
  */
 
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import {
-  MapPin,
-  Stethoscope,
+import { 
+  MapPin, 
+  Stethoscope, 
   ArrowRight,
   Building2,
   Navigation
@@ -70,18 +70,18 @@ const NEIGHBORING_STATES: Record<string, { name: string; slug: string }[]> = {
 const RELATED_SERVICES: Record<string, string[]> = {
   "dental-implants": ["dental-crowns", "dental-veneers", "teeth-whitening", "bone-grafting"],
   "teeth-whitening": ["dental-veneers", "teeth-cleaning", "invisalign", "smile-makeover"],
-  "root-canal-treatment": ["dental-crowns", "teeth-cleaning", "dental-implants", "tooth-extraction"],
-  "dental-crowns": ["dental-veneers", "root-canal-treatment", "dental-implants", "dental-bridges"],
+  "root-canal": ["dental-crowns", "teeth-cleaning", "dental-implants", "tooth-extraction"],
+  "dental-crowns": ["dental-veneers", "root-canal", "dental-implants", "dental-bridges"],
   "invisalign": ["braces", "teeth-whitening", "dental-veneers", "retainers"],
   "dental-veneers": ["teeth-whitening", "dental-crowns", "invisalign", "smile-makeover"],
-  "teeth-cleaning": ["teeth-whitening", "root-canal-treatment", "dental-crowns", "gum-treatment"],
+  "teeth-cleaning": ["teeth-whitening", "root-canal", "dental-crowns", "gum-treatment"],
   "braces": ["invisalign", "teeth-cleaning", "teeth-whitening", "retainers"],
-  "gum-treatment": ["teeth-cleaning", "root-canal-treatment", "dental-implants"],
-  "tooth-extraction": ["dental-implants", "root-canal-treatment", "wisdom-teeth-removal"],
+  "gum-treatment": ["teeth-cleaning", "root-canal", "dental-implants"],
+  "tooth-extraction": ["dental-implants", "root-canal", "wisdom-teeth-removal"],
   "dental-bridges": ["dental-crowns", "dental-implants", "dental-veneers"],
   "smile-makeover": ["dental-veneers", "teeth-whitening", "invisalign"],
   "pediatric-dentistry": ["teeth-cleaning", "braces", "dental-sealants"],
-  "wisdom-teeth-removal": ["tooth-extraction", "dental-implants", "root-canal-treatment"],
+  "wisdom-teeth-removal": ["tooth-extraction", "dental-implants", "root-canal"],
 };
 
 interface GeographicLinkBlockProps {
@@ -138,7 +138,7 @@ export const GeographicLinkBlock = ({
               {topCities.slice(0, 6).map((city) => (
                 <Link
                   key={city.slug}
-                  href={`/${stateSlug}/${city.slug}/`}
+                  to={`/${stateSlug}/${city.slug}/`}
                   className="block text-sm text-foreground hover:text-primary transition-colors"
                 >
                   Dentists in {city.name} →
@@ -156,7 +156,7 @@ export const GeographicLinkBlock = ({
               {services.slice(0, 6).map((service) => (
                 <Link
                   key={service.slug}
-                  href={`/services/${service.slug}/`}
+                  to={`/services/${service.slug}/`}
                   className="block text-sm text-foreground hover:text-primary transition-colors"
                 >
                   {service.name} →
@@ -175,7 +175,7 @@ export const GeographicLinkBlock = ({
                 {neighboringStates.map((state) => (
                   <Link
                     key={state.slug}
-                    href={`/${state.slug}/`}
+                    to={`/${state.slug}/`}
                     className="block text-sm text-foreground hover:text-primary transition-colors"
                   >
                     Dentists in {state.name} →
@@ -213,7 +213,7 @@ export const GeographicLinkBlock = ({
               {services.slice(0, 6).map((service) => (
                 <Link
                   key={service.slug}
-                  href={`/${stateSlug}/${citySlug}/${service.slug}/`}
+                  to={`/${stateSlug}/${citySlug}/${service.slug}/`}
                   className="block text-sm text-foreground hover:text-primary transition-colors"
                 >
                   {service.name} →
@@ -231,7 +231,7 @@ export const GeographicLinkBlock = ({
               {nearbyCities.slice(0, 6).map((city) => (
                 <Link
                   key={city.slug}
-                  href={`/${stateSlug}/${city.slug}/`}
+                  to={`/${stateSlug}/${city.slug}/`}
                   className="block text-sm text-foreground hover:text-primary transition-colors"
                 >
                   Dentists in {city.name} →
@@ -247,7 +247,7 @@ export const GeographicLinkBlock = ({
             </h4>
             <nav className="space-y-1.5">
               <Link
-                href={`/${stateSlug}/`}
+                to={`/${stateSlug}/`}
                 className="block text-sm text-foreground hover:text-primary transition-colors"
               >
                 All cities in {stateName} →
@@ -255,7 +255,7 @@ export const GeographicLinkBlock = ({
               {neighboringStates.slice(0, 2).map((state) => (
                 <Link
                   key={state.slug}
-                  href={`/${state.slug}/`}
+                  to={`/${state.slug}/`}
                   className="block text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   Dentists in {state.name} →
@@ -292,7 +292,7 @@ export const GeographicLinkBlock = ({
               {nearbyCities.slice(0, 5).map((city) => (
                 <Link
                   key={city.slug}
-                  href={`/${stateSlug}/${city.slug}/${serviceSlug}/`}
+                  to={`/${stateSlug}/${city.slug}/${serviceSlug}/`}
                   className="block text-sm text-foreground hover:text-primary transition-colors"
                 >
                   {serviceName} in {city.name} →
@@ -310,14 +310,14 @@ export const GeographicLinkBlock = ({
               {relatedServices.map((service) => (
                 <Link
                   key={service.slug}
-                  href={`/${stateSlug}/${citySlug}/${service.slug}/`}
+                  to={`/${stateSlug}/${citySlug}/${service.slug}/`}
                   className="block text-sm text-foreground hover:text-primary transition-colors"
                 >
                   {service.name} →
                 </Link>
               ))}
               <Link
-                href={`/${stateSlug}/${citySlug}/`}
+                to={`/${stateSlug}/${citySlug}/`}
                 className="block text-sm text-primary hover:underline font-medium mt-2"
               >
                 All services in {cityName} →
@@ -332,19 +332,19 @@ export const GeographicLinkBlock = ({
             </h4>
             <nav className="space-y-1.5">
               <Link
-                href={`/${stateSlug}/${citySlug}/`}
+                to={`/${stateSlug}/${citySlug}/`}
                 className="block text-sm text-foreground hover:text-primary transition-colors"
               >
                 All dentists in {cityName} →
               </Link>
               <Link
-                href={`/${stateSlug}/`}
+                to={`/${stateSlug}/`}
                 className="block text-sm text-foreground hover:text-primary transition-colors"
               >
                 All cities in {stateName} →
               </Link>
               <Link
-                href={`/services/${serviceSlug}/`}
+                to={`/services/${serviceSlug}/`}
                 className="block text-sm text-foreground hover:text-primary transition-colors"
               >
                 {serviceName} nationwide →

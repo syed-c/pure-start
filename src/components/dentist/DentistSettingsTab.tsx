@@ -1,8 +1,7 @@
-'use client'
-
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { lovable } from '@/integrations/lovable';
 import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
+import { 
   Settings,
   Globe,
   Instagram,
@@ -57,7 +56,7 @@ export default function DentistSettingsTab() {
   const [unlinkGmbDialog, setUnlinkGmbDialog] = useState(false);
 
   // Check if user signed in with Google
-  const isGoogleUser = user?.app_metadata?.provider === 'google' ||
+  const isGoogleUser = user?.app_metadata?.provider === 'google' || 
     (user?.app_metadata?.providers as string[] | undefined)?.includes('google');
 
   // Fetch clinic (without sensitive gmb fields that are now in clinic_oauth_tokens)
@@ -194,19 +193,16 @@ export default function DentistSettingsTab() {
       localStorage.setItem('gmb_restore_session', 'true');
 
       // Always use production domain for OAuth callback
-      const redirectTo = 'https://www.AppointPanda.ae/auth/callback?relink=true';
+      const redirectTo = 'https://www.appointpanda.ae/auth/callback?relink=true';
 
       // IMPORTANT: Use signInWithOAuth to get the GMB token from the Google account
       // The callback will capture the token and then restore the original user session
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          scopes: 'openid email profile https://www.googleapis.com/auth/business.manage',
-          redirectTo,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent select_account',
-          },
+      const { error } = await lovable.auth.signInWithOAuth('google', {
+        redirect_uri: redirectTo,
+        extraParams: {
+          scope: 'openid email profile https://www.googleapis.com/auth/business.manage',
+          access_type: 'offline',
+          prompt: 'consent select_account',
         },
       });
 
@@ -279,7 +275,7 @@ export default function DentistSettingsTab() {
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center shadow-sm">
                   <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </div>
                 <div>
@@ -295,9 +291,9 @@ export default function DentistSettingsTab() {
                     <CheckCircle className="h-3 w-3 mr-1" />
                     Connected
                   </Badge>
-                  <Button
-                    variant="ghost"
-                    size="sm"
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
                     className="text-coral hover:text-coral"
                     onClick={() => setUnlinkGmbDialog(true)}
                   >
@@ -459,8 +455,8 @@ export default function DentistSettingsTab() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div>
-            <Button
-              onClick={handleUpdatePassword}
+            <Button 
+              onClick={handleUpdatePassword} 
               disabled={isUpdatingPassword || !newPassword || !confirmPassword}
               className="w-full"
             >

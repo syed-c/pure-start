@@ -1,7 +1,7 @@
-'use client';
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { lovable } from '@/integrations/lovable';
 import { storeOriginalSession } from '@/lib/gmbAuth';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -74,15 +74,12 @@ export default function GMBConnectionCard({
 
       // IMPORTANT: Use signInWithOAuth to get the GMB token from the Google account
       // The callback will capture the token and then restore the original user session
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          scopes: 'openid email profile https://www.googleapis.com/auth/business.manage',
-          redirectTo,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent select_account',
-          },
+      const { error } = await lovable.auth.signInWithOAuth('google', {
+        redirect_uri: redirectTo,
+        extraParams: {
+          scope: 'openid email profile https://www.googleapis.com/auth/business.manage',
+          access_type: 'offline',
+          prompt: 'consent select_account',
         },
       });
 

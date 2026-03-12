@@ -1,4 +1,3 @@
-'use client';
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -38,6 +37,7 @@ interface ContactDetails {
   support_phone: string;
   booking_phone: string;
   sales_phone: string;
+  whatsapp: string;
   address_line1: string;
   address_line2: string;
   city: string;
@@ -64,6 +64,7 @@ const DEFAULT_CONTACT: ContactDetails = {
   support_phone: '',
   booking_phone: '',
   sales_phone: '',
+  whatsapp: '',
   address_line1: '',
   address_line2: '',
   city: '',
@@ -107,7 +108,7 @@ export default function ContactDetailsTab() {
     if (settings) {
       const contactSetting = settings.find(s => s.key === 'contact_details');
       const socialSetting = settings.find(s => s.key === 'social_links');
-
+      
       if (contactSetting?.value) {
         setContactDetails({ ...DEFAULT_CONTACT, ...(contactSetting.value as unknown as Partial<ContactDetails>) });
       }
@@ -120,31 +121,23 @@ export default function ContactDetailsTab() {
   // Save mutation
   const saveMutation = useMutation({
     mutationFn: async () => {
-      // Save contact details
-      const contactExists = settings?.find(s => s.key === 'contact_details');
-      if (contactExists) {
-        await supabase
-          .from('global_settings')
-          .update({ value: contactDetails as any, updated_at: new Date().toISOString() })
-          .eq('key', 'contact_details');
-      } else {
-        await supabase
-          .from('global_settings')
-          .insert({ key: 'contact_details', value: contactDetails as any, description: 'Platform contact information' });
-      }
+      const now = new Date().toISOString();
 
-      // Save social links
-      const socialExists = settings?.find(s => s.key === 'social_links');
-      if (socialExists) {
-        await supabase
-          .from('global_settings')
-          .update({ value: socialLinks as any, updated_at: new Date().toISOString() })
-          .eq('key', 'social_links');
-      } else {
-        await supabase
-          .from('global_settings')
-          .insert({ key: 'social_links', value: socialLinks as any, description: 'Social media links' });
-      }
+      const { error: contactError } = await supabase
+        .from('global_settings')
+        .upsert(
+          { key: 'contact_details', value: contactDetails as any, updated_at: now },
+          { onConflict: 'key' }
+        );
+      if (contactError) throw contactError;
+
+      const { error: socialError } = await supabase
+        .from('global_settings')
+        .upsert(
+          { key: 'social_links', value: socialLinks as any, updated_at: now },
+          { onConflict: 'key' }
+        );
+      if (socialError) throw socialError;
 
       await createAuditLog({
         action: 'UPDATE_CONTACT_SETTINGS',
@@ -191,7 +184,7 @@ export default function ContactDetailsTab() {
           </p>
         </div>
         {hasChanges && (
-          <Button
+          <Button 
             onClick={() => saveMutation.mutate()}
             disabled={saveMutation.isPending}
             className="gap-2 bg-teal hover:bg-teal/90"
@@ -260,7 +253,7 @@ export default function ContactDetailsTab() {
                     type="email"
                     value={contactDetails.support_email}
                     onChange={(e) => updateContact('support_email', e.target.value)}
-                    placeholder="support@AppointPanda.ae"
+                    placeholder="support@appointpanda.ae"
                   />
                   <p className="text-xs text-muted-foreground">For customer inquiries and help requests</p>
                 </div>
@@ -274,7 +267,7 @@ export default function ContactDetailsTab() {
                     type="email"
                     value={contactDetails.booking_email}
                     onChange={(e) => updateContact('booking_email', e.target.value)}
-                    placeholder="bookings@AppointPanda.ae"
+                    placeholder="bookings@appointpanda.ae"
                   />
                   <p className="text-xs text-muted-foreground">For appointment-related questions</p>
                 </div>
@@ -288,7 +281,7 @@ export default function ContactDetailsTab() {
                     type="email"
                     value={contactDetails.sales_email}
                     onChange={(e) => updateContact('sales_email', e.target.value)}
-                    placeholder="sales@AppointPanda.ae"
+                    placeholder="sales@appointpanda.ae"
                   />
                   <p className="text-xs text-muted-foreground">For pricing and subscription inquiries</p>
                 </div>
@@ -302,7 +295,7 @@ export default function ContactDetailsTab() {
                     type="email"
                     value={contactDetails.partnerships_email}
                     onChange={(e) => updateContact('partnerships_email', e.target.value)}
-                    placeholder="partners@AppointPanda.ae"
+                    placeholder="partners@appointpanda.ae"
                   />
                   <p className="text-xs text-muted-foreground">For business partnerships and collaborations</p>
                 </div>
@@ -324,7 +317,7 @@ export default function ContactDetailsTab() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label className="flex items-center gap-2">
                     <Headphones className="h-4 w-4 text-muted-foreground" />
@@ -334,7 +327,7 @@ export default function ContactDetailsTab() {
                     type="tel"
                     value={contactDetails.support_phone}
                     onChange={(e) => updateContact('support_phone', e.target.value)}
-                    placeholder="1-800-555-1234"
+                    placeholder="+971 4 123 4567"
                   />
                   <p className="text-xs text-muted-foreground">Main customer support line</p>
                 </div>
@@ -348,7 +341,7 @@ export default function ContactDetailsTab() {
                     type="tel"
                     value={contactDetails.booking_phone}
                     onChange={(e) => updateContact('booking_phone', e.target.value)}
-                    placeholder="1-800-555-5678"
+                    placeholder="+971 4 123 4567"
                   />
                   <p className="text-xs text-muted-foreground">For appointment scheduling</p>
                 </div>
@@ -362,9 +355,23 @@ export default function ContactDetailsTab() {
                     type="tel"
                     value={contactDetails.sales_phone}
                     onChange={(e) => updateContact('sales_phone', e.target.value)}
-                    placeholder="1-800-555-9012"
+                    placeholder="+971 4 123 4567"
                   />
                   <p className="text-xs text-muted-foreground">For sales inquiries</p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                    WhatsApp Number
+                  </Label>
+                  <Input
+                    type="tel"
+                    value={contactDetails.whatsapp}
+                    onChange={(e) => updateContact('whatsapp', e.target.value)}
+                    placeholder="+971 50 123 4567"
+                  />
+                  <p className="text-xs text-muted-foreground">WhatsApp contact for quick messaging</p>
                 </div>
               </div>
             </CardContent>
@@ -483,7 +490,7 @@ export default function ContactDetailsTab() {
                   <Input
                     value={socialLinks.facebook}
                     onChange={(e) => updateSocial('facebook', e.target.value)}
-                    placeholder="https://facebook.com/AppointPanda"
+                    placeholder="https://facebook.com/appointpanda"
                   />
                 </div>
 
@@ -495,7 +502,7 @@ export default function ContactDetailsTab() {
                   <Input
                     value={socialLinks.instagram}
                     onChange={(e) => updateSocial('instagram', e.target.value)}
-                    placeholder="https://instagram.com/AppointPanda"
+                    placeholder="https://instagram.com/appointpanda"
                   />
                 </div>
 
@@ -507,7 +514,7 @@ export default function ContactDetailsTab() {
                   <Input
                     value={socialLinks.twitter}
                     onChange={(e) => updateSocial('twitter', e.target.value)}
-                    placeholder="https://twitter.com/AppointPanda"
+                    placeholder="https://twitter.com/appointpanda"
                   />
                 </div>
 
@@ -519,7 +526,7 @@ export default function ContactDetailsTab() {
                   <Input
                     value={socialLinks.linkedin}
                     onChange={(e) => updateSocial('linkedin', e.target.value)}
-                    placeholder="https://linkedin.com/company/AppointPanda"
+                    placeholder="https://linkedin.com/company/appointpanda"
                   />
                 </div>
 
@@ -531,7 +538,7 @@ export default function ContactDetailsTab() {
                   <Input
                     value={socialLinks.youtube}
                     onChange={(e) => updateSocial('youtube', e.target.value)}
-                    placeholder="https://youtube.com/@AppointPanda"
+                    placeholder="https://youtube.com/@appointpanda"
                   />
                 </div>
 
@@ -543,7 +550,7 @@ export default function ContactDetailsTab() {
                   <Input
                     value={socialLinks.tiktok}
                     onChange={(e) => updateSocial('tiktok', e.target.value)}
-                    placeholder="https://tiktok.com/@AppointPanda"
+                    placeholder="https://tiktok.com/@appointpanda"
                   />
                 </div>
               </div>
@@ -555,11 +562,11 @@ export default function ContactDetailsTab() {
                 <div className="mt-2 flex flex-wrap gap-2">
                   {Object.entries(socialLinks).map(([key, value]) => {
                     if (!value) return null;
-                    const Icon = key === 'facebook' ? Facebook :
-                      key === 'instagram' ? Instagram :
-                        key === 'twitter' ? Twitter :
-                          key === 'linkedin' ? Linkedin :
-                            key === 'youtube' ? Youtube : Globe;
+                    const Icon = key === 'facebook' ? Facebook : 
+                                key === 'instagram' ? Instagram :
+                                key === 'twitter' ? Twitter :
+                                key === 'linkedin' ? Linkedin :
+                                key === 'youtube' ? Youtube : Globe;
                     return (
                       <Badge key={key} variant="secondary" className="gap-1 capitalize">
                         <Icon className="h-3 w-3" />
@@ -580,7 +587,7 @@ export default function ContactDetailsTab() {
 
       {/* Save Button at Bottom */}
       <div className="flex justify-end">
-        <Button
+        <Button 
           onClick={() => saveMutation.mutate()}
           disabled={saveMutation.isPending || !hasChanges}
           size="lg"

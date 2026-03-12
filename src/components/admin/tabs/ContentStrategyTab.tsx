@@ -1,4 +1,3 @@
-'use client';
 /**
  * ContentStrategyTab - Phase 10: Content Strategy
  * 

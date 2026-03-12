@@ -1,10 +1,9 @@
-'use client';
 import { useState } from "react";
 import { SEOHead } from "@/components/seo/SEOHead";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/button";
@@ -63,10 +62,10 @@ const formSchema = z.object({
 
 const ListYourPracticePage = () => {
   const { user } = useAuth();
-  const router = useRouter();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const { data: treatments = [] } = useTreatments();
-
+  
   const [listingMethod, setListingMethod] = useState<'gmb' | 'manual' | null>(null);
   const [isConnectingGoogle, setIsConnectingGoogle] = useState(false);
   const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -97,17 +96,14 @@ const ListYourPracticePage = () => {
     try {
       localStorage.setItem('gmb_listing_flow', 'true');
       // Always use production domain for OAuth callback
-      const redirectTo = 'https://www.AppointPanda.ae/auth/callback?listing=true';
+      const redirectTo = 'https://www.appointpanda.ae/auth/callback?listing=true';
 
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          scopes: 'openid email profile https://www.googleapis.com/auth/business.manage',
-          redirectTo,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
-          },
+      const { error } = await lovable.auth.signInWithOAuth('google', {
+        redirect_uri: redirectTo,
+        extraParams: {
+          scope: 'openid email profile https://www.googleapis.com/auth/business.manage',
+          access_type: 'offline',
+          prompt: 'consent',
         },
       });
 
@@ -127,7 +123,7 @@ const ListYourPracticePage = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-
+    
     // Format phone number for UAE
     if (name === 'phone') {
       const formatted = formatUAEPhone(value);
@@ -135,15 +131,15 @@ const ListYourPracticePage = () => {
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
-
+    
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
     }
   };
 
   const handleServiceToggle = (serviceId: string) => {
-    setSelectedServices(prev =>
-      prev.includes(serviceId)
+    setSelectedServices(prev => 
+      prev.includes(serviceId) 
         ? prev.filter(id => id !== serviceId)
         : [...prev, serviceId]
     );
@@ -199,7 +195,7 @@ const ListYourPracticePage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    
     if (!formData.agreeTerms) {
       toast({
         title: "Terms Required",
@@ -280,7 +276,7 @@ const ListYourPracticePage = () => {
         description: "Our team will review your listing and contact you within 24-48 hours.",
       });
 
-      router.push("/list-your-practice/success");
+      navigate("/list-your-practice/success");
     } catch (error) {
       toast({
         title: "Submission Failed",
@@ -315,7 +311,7 @@ const ListYourPracticePage = () => {
             <div className="mb-6">
               <PromotionBanner variant="inline" />
             </div>
-
+            
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-4">
               <Building2 className="h-4 w-4" />
               For Dental Professionals
@@ -345,7 +341,7 @@ const ListYourPracticePage = () => {
                     </div>
 
                     {/* GMB Option */}
-                    <Card
+                    <Card 
                       className="border-2 border-primary/30 bg-gradient-to-br from-primary/5 to-teal/5 cursor-pointer hover:border-primary/50 transition-all"
                       onClick={handleGoogleSignIn}
                     >
@@ -355,9 +351,9 @@ const ListYourPracticePage = () => {
                             {isConnectingGoogle ? (
                               <Loader2 className="h-8 w-8 animate-spin text-primary" />
                             ) : (
-                              <img
-                                src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png"
-                                alt="Google"
+                              <img 
+                                src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png" 
+                                alt="Google" 
                                 className="h-8 w-8"
                               />
                             )}
@@ -391,7 +387,7 @@ const ListYourPracticePage = () => {
                     </div>
 
                     {/* Manual Option */}
-                    <Card
+                    <Card 
                       className="border border-border cursor-pointer hover:border-primary/30 transition-all"
                       onClick={() => setListingMethod('manual')}
                     >
@@ -412,7 +408,7 @@ const ListYourPracticePage = () => {
                     </Card>
 
                     <p className="text-xs text-center text-muted-foreground">
-                      By continuing, you agree to our <Link href="/terms" className="text-primary hover:underline">Terms</Link> and <Link href="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
+                      By continuing, you agree to our <Link to="/terms" className="text-primary hover:underline">Terms</Link> and <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
                     </p>
                   </div>
                 )}
@@ -432,8 +428,9 @@ const ListYourPracticePage = () => {
                     <div className="flex items-center gap-2 mb-8">
                       {[1, 2, 3].map((s) => (
                         <div key={s} className="flex items-center gap-2 flex-1">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${step >= s ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-                            }`}>
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
+                            step >= s ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                          }`}>
                             {step > s ? <CheckCircle className="h-5 w-5" /> : s}
                           </div>
                           {s < 3 && (
@@ -611,10 +608,11 @@ const ListYourPracticePage = () => {
                                 {treatments.map((treatment: any) => (
                                   <label
                                     key={treatment.id}
-                                    className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${selectedServices.includes(treatment.id)
-                                      ? 'border-primary bg-primary/5'
-                                      : 'border-border hover:border-primary/30'
-                                      }`}
+                                    className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
+                                      selectedServices.includes(treatment.id)
+                                        ? 'border-primary bg-primary/5'
+                                        : 'border-border hover:border-primary/30'
+                                    }`}
                                   >
                                     <Checkbox
                                       checked={selectedServices.includes(treatment.id)}
@@ -650,7 +648,7 @@ const ListYourPracticePage = () => {
                                 onCheckedChange={(checked) => setFormData(prev => ({ ...prev, agreeTerms: checked === true }))}
                               />
                               <Label htmlFor="agreeTerms" className="text-sm leading-relaxed cursor-pointer">
-                                I agree to the <Link href="/terms" className="text-primary hover:underline">Terms & Conditions</Link> and <Link href="/privacy" className="text-primary hover:underline">Privacy Policy</Link>. I confirm that I am authorized to list this practice.
+                                I agree to the <Link to="/terms" className="text-primary hover:underline">Terms & Conditions</Link> and <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>. I confirm that I am authorized to list this practice.
                               </Label>
                             </div>
                           </div>
@@ -694,7 +692,7 @@ const ListYourPracticePage = () => {
                   If your clinic is already listed, claim and verify it instead.
                 </p>
                 <Button asChild variant="outline" size="sm" className="rounded-xl font-bold w-full">
-                  <Link href="/claim-profile">
+                  <Link to="/claim-profile">
                     Claim Existing Profile
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>

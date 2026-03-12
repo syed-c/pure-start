@@ -10,7 +10,7 @@ export const ACTIVE_STATE_SLUGS = ['dubai', 'abu-dhabi', 'sharjah', 'ajman', 'ra
 export type ActiveStateSlug = 'dubai' | 'abu-dhabi' | 'sharjah' | 'ajman' | 'ras-al-khaimah' | 'fujairah' | 'umm-al-quwain';
 
 export const ACTIVE_STATES = [
-  { name: 'Dubai', slug: 'dubai', abbr: 'DXB', fullSlug: 'dubai' },
+  { name: 'Dubai', slug: 'dubai', abbr: 'Dubai', fullSlug: 'dubai' },
   { name: 'Abu Dhabi', slug: 'abu-dhabi', abbr: 'AUH', fullSlug: 'abu-dhabi' },
   { name: 'Sharjah', slug: 'sharjah', abbr: 'SHJ', fullSlug: 'sharjah' },
   { name: 'Ajman', slug: 'ajman', abbr: 'AJM', fullSlug: 'ajman' },

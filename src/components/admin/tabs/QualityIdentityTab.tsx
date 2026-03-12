@@ -1,4 +1,3 @@
-'use client';
 import { useState, Suspense, lazy } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Fingerprint, Heart, Loader2 } from 'lucide-react';

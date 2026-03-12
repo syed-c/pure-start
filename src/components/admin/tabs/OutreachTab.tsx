@@ -1,4 +1,3 @@
-'use client';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -14,11 +13,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import {
-  Mail,
-  Send,
-  Plus,
-  Edit,
+import { 
+  Mail, 
+  Send, 
+  Plus, 
+  Edit, 
   Play,
   Pause,
   FileText,
@@ -384,11 +383,11 @@ export default function OutreachTab() {
   const sendBulkEmails = useMutation({
     mutationFn: async ({ templateId, filter, limit }: { templateId: string; filter: Record<string, unknown>; limit: number }) => {
       const { data, error } = await supabase.functions.invoke('send-outreach', {
-        body: {
-          action: 'send-bulk',
-          templateId,
+        body: { 
+          action: 'send-bulk', 
+          templateId, 
           targetFilter: filter,
-          limit
+          limit 
         },
       });
       if (error) throw error;
@@ -450,9 +449,9 @@ export default function OutreachTab() {
     const sampleData: Record<string, string> = {
       clinic_name: 'Premium Dental Care',
       patient_name: 'Sarah Johnson',
-      claim_link: 'https://AppointPanda.ae/claim/abc123',
-      review_link: 'https://AppointPanda.ae/review/abc123',
-      unsubscribe_link: 'https://AppointPanda.ae/unsubscribe',
+      claim_link: 'https://appointpanda.ae/claim/abc123',
+      review_link: 'https://appointpanda.ae/review/abc123',
+      unsubscribe_link: 'https://appointpanda.ae/unsubscribe',
     };
     let content = html;
     Object.entries(sampleData).forEach(([key, value]) => {
@@ -639,7 +638,7 @@ export default function OutreachTab() {
                       </TableCell>
                       <TableCell>
                         <div className="text-sm">
-                          <span className="text-muted-foreground">Sent:</span> {campaign.total_sent} |
+                          <span className="text-muted-foreground">Sent:</span> {campaign.total_sent} | 
                           <span className="text-muted-foreground"> Opened:</span> {campaign.total_opened}
                         </div>
                       </TableCell>
@@ -742,17 +741,17 @@ export default function OutreachTab() {
                       <div className="flex items-center justify-between">
                         <Label>Live Preview</Label>
                         <div className="flex gap-1">
-                          <Button
-                            type="button"
-                            variant={previewMode === 'mobile' ? 'default' : 'outline'}
+                          <Button 
+                            type="button" 
+                            variant={previewMode === 'mobile' ? 'default' : 'outline'} 
                             size="sm"
                             onClick={() => setPreviewMode('mobile')}
                           >
                             <Smartphone className="h-4 w-4" />
                           </Button>
-                          <Button
-                            type="button"
-                            variant={previewMode === 'desktop' ? 'default' : 'outline'}
+                          <Button 
+                            type="button" 
+                            variant={previewMode === 'desktop' ? 'default' : 'outline'} 
                             size="sm"
                             onClick={() => setPreviewMode('desktop')}
                           >
@@ -859,16 +858,16 @@ export default function OutreachTab() {
                 <div className="flex items-center justify-between">
                   <DialogTitle>Template Preview: {previewTemplate?.name}</DialogTitle>
                   <div className="flex gap-1">
-                    <Button
-                      variant={previewMode === 'mobile' ? 'default' : 'outline'}
+                    <Button 
+                      variant={previewMode === 'mobile' ? 'default' : 'outline'} 
                       size="sm"
                       onClick={() => setPreviewMode('mobile')}
                     >
                       <Smartphone className="h-4 w-4 mr-1" />
                       Mobile
                     </Button>
-                    <Button
-                      variant={previewMode === 'desktop' ? 'default' : 'outline'}
+                    <Button 
+                      variant={previewMode === 'desktop' ? 'default' : 'outline'} 
                       size="sm"
                       onClick={() => setPreviewMode('desktop')}
                     >
@@ -915,9 +914,9 @@ export default function OutreachTab() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label>Email Address</Label>
-                  <Input
-                    type="email"
-                    placeholder="test@example.com"
+                  <Input 
+                    type="email" 
+                    placeholder="test@example.com" 
                     value={testEmail}
                     onChange={(e) => setTestEmail(e.target.value)}
                   />
@@ -936,7 +935,7 @@ export default function OutreachTab() {
                     </SelectContent>
                   </Select>
                 </div>
-                <Button
+                <Button 
                   onClick={() => sendTestEmail.mutate({ email: testEmail, templateId: selectedTestTemplate || undefined })}
                   disabled={!testEmail || sendTestEmail.isPending}
                   className="w-full"
@@ -959,7 +958,7 @@ export default function OutreachTab() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label>Target Clinics</Label>
-                  <Select value={bulkFilter.claim_status} onValueChange={(v) => setBulkFilter({ ...bulkFilter, claim_status: v })}>
+                  <Select value={bulkFilter.claim_status} onValueChange={(v) => setBulkFilter({...bulkFilter, claim_status: v})}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -985,19 +984,19 @@ export default function OutreachTab() {
                 </div>
                 <div className="space-y-2">
                   <Label>Limit (max emails)</Label>
-                  <Input
-                    type="number"
+                  <Input 
+                    type="number" 
                     value={bulkFilter.limit}
-                    onChange={(e) => setBulkFilter({ ...bulkFilter, limit: parseInt(e.target.value) || 5 })}
+                    onChange={(e) => setBulkFilter({...bulkFilter, limit: parseInt(e.target.value) || 5})}
                     min={1}
                     max={50}
                   />
                 </div>
-                <Button
-                  onClick={() => sendBulkEmails.mutate({
-                    templateId: selectedTestTemplate,
+                <Button 
+                  onClick={() => sendBulkEmails.mutate({ 
+                    templateId: selectedTestTemplate, 
                     filter: { claim_status: bulkFilter.claim_status },
-                    limit: bulkFilter.limit
+                    limit: bulkFilter.limit 
                   })}
                   disabled={!selectedTestTemplate || sendBulkEmails.isPending}
                   className="w-full"

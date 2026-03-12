@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
   Stethoscope, 
@@ -95,7 +95,7 @@ export const LocationQuickLinks = ({
         {items.slice(0, 8).map((item, index) => (
           <Link
             key={item.slug}
-            href={buildLink(item)}
+            to={buildLink(item)}
             className={`
               inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-all
               ${variant === "treatments" 

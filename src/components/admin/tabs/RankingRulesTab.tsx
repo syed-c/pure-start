@@ -1,4 +1,3 @@
-'use client';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -97,13 +96,7 @@ export default function RankingRulesTab() {
       
       if (data?.value) {
         const config = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
-        // Merge saved config with default icons (icons can't be serialized to JSON)
-        if (config.factors) {
-          setFactors(config.factors.map((f: any) => {
-            const defaultFactor = defaultFactors.find(df => df.key === f.key);
-            return { ...f, icon: defaultFactor?.icon || Settings };
-          }));
-        }
+        if (config.factors) setFactors(config.factors);
         if (config.boosts) setBoosts(config.boosts);
         if (config.penalties) setPenalties(config.penalties);
       }

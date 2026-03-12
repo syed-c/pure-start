@@ -1,5 +1,3 @@
-'use client'
-
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -131,7 +129,7 @@ export default function NotificationPreferencesTab() {
 
   const sendTestNotification = useMutation({
     mutationFn: async (channel: 'email' | 'whatsapp') => {
-      const destination = channel === 'email'
+      const destination = channel === 'email' 
         ? (settings.notification_email_secondary || user?.email)
         : settings.notification_whatsapp_number;
 

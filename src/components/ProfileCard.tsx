@@ -1,12 +1,10 @@
-'use client';
 import { Star, MapPin, CheckCircle, Clock, Building2, ChevronRight, Calendar, Pin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { Profile } from "@/hooks/useProfiles";
 import { useState } from "react";
 import { MultiStepBookingModal } from "./MultiStepBookingModal";
 import { Badge } from "@/components/ui/badge";
-import { proxyImageUrl } from "@/lib/proxyImageUrl";
 
 interface ProfileCardProps {
   profile: Profile;
@@ -26,14 +24,14 @@ function getLetterAvatar(name: string): string {
 
 export function ProfileCard({ profile, variant = "list" }: ProfileCardProps) {
   const [bookingOpen, setBookingOpen] = useState(false);
-
-  const profileLink = profile.type === 'clinic'
-    ? `/clinic/${profile.slug}`
+  
+  const profileLink = profile.type === 'clinic' 
+    ? `/clinic/${profile.slug}` 
     : `/dentist/${profile.slug}`;
 
   // Use letter avatar if no image available - shows first letter of name
-  const displayImage = proxyImageUrl(profile.image) || getLetterAvatar(profile.name);
-  const hasRealImage = !!proxyImageUrl(profile.image);
+  const displayImage = profile.image || getLetterAvatar(profile.name);
+  const hasRealImage = !!profile.image;
 
   // List variant - horizontal card for search results (mobile-optimized)
   if (variant === "list") {
@@ -71,25 +69,25 @@ export function ProfileCard({ profile, variant = "list" }: ProfileCardProps) {
                   <span className="text-xs font-bold">{profile.rating.toFixed(1)}</span>
                 </div>
               </div>
-
+              
               <h3 className="font-bold text-foreground text-base leading-tight mb-1 line-clamp-1">{profile.name}</h3>
-
+              
               <div className="flex items-center gap-1 text-muted-foreground text-xs">
                 <MapPin className="h-3 w-3 text-primary/50" />
                 <span className="truncate">{profile.location}</span>
               </div>
             </div>
           </div>
-
+          
           {/* Mobile action buttons - full width */}
           <div className="flex gap-2 mt-3 pt-3 border-t border-border">
             <Button variant="outline" size="sm" className="flex-1 rounded-xl font-bold text-xs h-9" asChild>
-              <Link href={profileLink}>
+              <Link to={profileLink}>
                 View Profile
               </Link>
             </Button>
-            <Button
-              size="sm"
+            <Button 
+              size="sm" 
               className="flex-1 rounded-xl font-bold text-xs h-9 bg-foreground text-background hover:bg-primary"
               onClick={() => setBookingOpen(true)}
             >
@@ -133,9 +131,9 @@ export function ProfileCard({ profile, variant = "list" }: ProfileCardProps) {
                 )}
               </div>
             </div>
-
+            
             <h3 className="text-data text-xl md:text-2xl text-foreground mb-2 tracking-tight">{profile.name}</h3>
-
+            
             <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
               {profile.clinicName && profile.type === 'dentist' && (
                 <span className="flex items-center gap-1.5 text-sm font-medium">
@@ -162,22 +160,22 @@ export function ProfileCard({ profile, variant = "list" }: ProfileCardProps) {
                 <p className="text-data text-primary capitalize">{profile.type}</p>
               </div>
             </div>
-
+            
             {profile.languages && profile.languages.length > 0 && (
               <div>
                 <p className="text-micro mb-1">Languages</p>
                 <p className="text-sm font-bold text-foreground">{profile.languages.slice(0, 3).join(', ')}</p>
               </div>
             )}
-
+            
             <div className="flex items-center gap-2 mt-2">
               <Button variant="outline" size="sm" className="rounded-xl font-bold" asChild>
-                <Link href={profileLink}>
+                <Link to={profileLink}>
                   Profile <ChevronRight className="h-4 w-4 ml-1" />
                 </Link>
               </Button>
-              <Button
-                size="sm"
+              <Button 
+                size="sm" 
                 className="rounded-xl font-bold bg-foreground text-background hover:bg-primary"
                 onClick={() => setBookingOpen(true)}
               >
@@ -240,13 +238,13 @@ export function ProfileCard({ profile, variant = "list" }: ProfileCardProps) {
               <span className="font-medium">{profile.location}</span>
             </div>
             <div className="flex gap-2">
-              <Link href={profileLink} className="flex-1">
+              <Link to={profileLink} className="flex-1">
                 <Button variant="outline" size="sm" className="w-full rounded-xl font-bold">
                   View Profile
                 </Button>
               </Link>
-              <Button
-                size="sm"
+              <Button 
+                size="sm" 
                 className="rounded-xl font-bold"
                 onClick={() => setBookingOpen(true)}
               >
@@ -303,13 +301,13 @@ export function ProfileCard({ profile, variant = "list" }: ProfileCardProps) {
             <span className="font-medium">{profile.location}</span>
           </div>
           <div className="flex gap-2">
-            <Link href={profileLink} className="flex-1">
+            <Link to={profileLink} className="flex-1">
               <Button variant="outline" size="sm" className="w-full rounded-xl font-bold">
                 View Profile
               </Button>
             </Link>
-            <Button
-              size="sm"
+            <Button 
+              size="sm" 
               className="rounded-xl font-bold"
               onClick={() => setBookingOpen(true)}
             >

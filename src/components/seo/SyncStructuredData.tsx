@@ -1,4 +1,3 @@
-'use client';
 /**
  * SyncStructuredData - Synchronous JSON-LD Schema Renderer
  * 
@@ -12,7 +11,7 @@
 import { useSchemaSettings } from '@/hooks/useSchemaSettings';
 import { withTrailingSlash } from '@/lib/url/withTrailingSlash';
 
-const BASE_URL = 'https://www.AppointPanda.ae';
+const BASE_URL = 'https://www.appointpanda.ae';
 
 // ========================== SCHEMA GENERATORS ==========================
 
@@ -197,6 +196,7 @@ const generateLocalBusinessSchema = (data: LocalBusinessSchemaData) => ({
       '@type': 'AggregateRating',
       ratingValue: data.rating,
       reviewCount: data.reviewCount,
+      ratingCount: data.reviewCount,
       bestRating: 5,
       worstRating: 1,
     },
@@ -284,18 +284,23 @@ const generateArticleSchema = (data: ArticleSchemaData) => ({
   },
 });
 
-const generateFAQSchema = (data: FAQSchemaData) => ({
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: data.questions.map((q) => ({
-    '@type': 'Question',
-    name: q.question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: q.answer,
-    },
-  })),
-});
+const generateFAQSchema = (data: FAQSchemaData) => {
+  const validQuestions = data.questions.filter(q => q.question?.trim() && q.answer?.trim());
+  if (validQuestions.length === 0) return null;
+  
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: validQuestions.map((q) => ({
+      '@type': 'Question',
+      name: q.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: q.answer,
+      },
+    })),
+  };
+};
 
 const generateBreadcrumbSchema = (data: BreadcrumbSchemaData) => ({
   '@context': 'https://schema.org',
@@ -336,13 +341,10 @@ const generateItemListSchema = (data: ItemListSchemaData) => ({
   itemListElement: data.items.map((item, index) => ({
     '@type': 'ListItem',
     position: item.position || index + 1,
-    item: {
-      '@type': 'Thing',
-      name: item.name,
-      url: item.url.startsWith('http') ? item.url : `${BASE_URL}${withTrailingSlash(item.url)}`,
-      ...(item.image && { image: item.image }),
-      ...(item.description && { description: item.description }),
-    },
+    name: item.name,
+    url: item.url.startsWith('http') ? item.url : `${BASE_URL}${withTrailingSlash(item.url)}`,
+    ...(item.image && { image: item.image }),
+    ...(item.description && { description: item.description }),
   })),
 });
 
@@ -401,7 +403,7 @@ const generatePlaceSchema = (data: PlaceSchemaData) => ({
 });
 
 // Main generator function
-function generateSchema(data: SyncSchemaData, organizationSettings?: any): object {
+function generateSchema(data: SyncSchemaData, organizationSettings?: any): object | null {
   switch (data.type) {
     case 'organization':
       return generateOrganizationSchema(organizationSettings);
@@ -444,14 +446,26 @@ interface SyncStructuredDataProps {
  */
 export const SyncStructuredData = ({ data, id }: SyncStructuredDataProps) => {
   const { data: schemaSettings } = useSchemaSettings();
-
+  
   const schemas = Array.isArray(data) ? data : [data];
-
+  
   // Generate all schemas
   const jsonLdScripts = schemas.map((schemaData, index) => {
     const schema = generateSchema(schemaData, schemaSettings?.organization);
-    const schemaId = id ? `${id}-${index}` : `sync-schema-${schemaData.type}-${index}`;
+    if (!schema || Object.keys(schema).length === 0) return null;
 
+    // Safety: strip aggregateRating if reviewCount/ratingCount is not positive
+    const s = schema as Record<string, any>;
+    if (s.aggregateRating) {
+      const rc = s.aggregateRating.reviewCount;
+      const rkc = s.aggregateRating.ratingCount;
+      if ((!rc || rc <= 0) && (!rkc || rkc <= 0)) {
+        delete s.aggregateRating;
+      }
+    }
+
+    const schemaId = id ? `${id}-${index}` : `sync-schema-${schemaData.type}-${index}`;
+    
     return (
       <script
         key={schemaId}
@@ -460,7 +474,7 @@ export const SyncStructuredData = ({ data, id }: SyncStructuredDataProps) => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
     );
-  });
+  }).filter(Boolean);
 
   return <>{jsonLdScripts}</>;
 };

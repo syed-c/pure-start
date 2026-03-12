@@ -1,5 +1,3 @@
-'use client'
-
 /**
  * Appointments Page v2
  * Calendar view with appointment management

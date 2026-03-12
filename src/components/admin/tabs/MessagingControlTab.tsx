@@ -1,4 +1,3 @@
-'use client';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -102,7 +101,7 @@ export default function MessagingControlTab() {
   const [previewDialog, setPreviewDialog] = useState(false);
   const [previewTemplate, setPreviewTemplate] = useState<typeof messageTemplates[0] | null>(null);
   const [previewMode, setPreviewMode] = useState<'mobile' | 'desktop'>('mobile');
-
+  
   // Sample data for preview
   const sampleData = {
     patient_name: 'Sarah Johnson',
@@ -110,12 +109,12 @@ export default function MessagingControlTab() {
     date: 'January 15, 2026',
     time: '10:30 AM',
     treatment: 'Teeth Cleaning',
-    review_link: 'https://AppointPanda.ae/review/abc123',
-    booking_link: 'https://AppointPanda.ae/book/abc123',
-    reschedule_link: 'https://AppointPanda.ae/reschedule/abc123',
-    cancel_link: 'https://AppointPanda.ae/cancel/abc123',
+    review_link: 'https://appointpanda.ae/review/abc123',
+    booking_link: 'https://appointpanda.ae/book/abc123',
+    reschedule_link: 'https://appointpanda.ae/reschedule/abc123',
+    cancel_link: 'https://appointpanda.ae/cancel/abc123',
   };
-
+  
   const renderPreviewContent = (template: string) => {
     let content = template;
     Object.entries(sampleData).forEach(([key, value]) => {
@@ -123,7 +122,7 @@ export default function MessagingControlTab() {
     });
     return content;
   };
-
+  
   const openPreview = (template: typeof messageTemplates[0]) => {
     setPreviewTemplate(template);
     setPreviewDialog(true);
@@ -339,8 +338,8 @@ export default function MessagingControlTab() {
                         {template.template.substring(0, 50)}...
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button
-                          variant="outline"
+                        <Button 
+                          variant="outline" 
                           size="sm"
                           onClick={() => openPreview(template)}
                         >
@@ -588,15 +587,15 @@ export default function MessagingControlTab() {
             <DialogTitle className="flex items-center justify-between">
               <span>Preview: {previewTemplate?.name}</span>
               <div className="flex gap-2">
-                <Button
-                  variant={previewMode === 'mobile' ? 'default' : 'outline'}
+                <Button 
+                  variant={previewMode === 'mobile' ? 'default' : 'outline'} 
                   size="sm"
                   onClick={() => setPreviewMode('mobile')}
                 >
                   <Smartphone className="h-4 w-4" />
                 </Button>
-                <Button
-                  variant={previewMode === 'desktop' ? 'default' : 'outline'}
+                <Button 
+                  variant={previewMode === 'desktop' ? 'default' : 'outline'} 
                   size="sm"
                   onClick={() => setPreviewMode('desktop')}
                 >
@@ -607,11 +606,12 @@ export default function MessagingControlTab() {
           </DialogHeader>
           <div className="py-4">
             <div className="flex justify-center">
-              <div
-                className={`bg-muted rounded-2xl p-4 ${previewMode === 'mobile'
-                  ? 'w-80 min-h-96'
-                  : 'w-full min-h-48'
-                  }`}
+              <div 
+                className={`bg-muted rounded-2xl p-4 ${
+                  previewMode === 'mobile' 
+                    ? 'w-80 min-h-96' 
+                    : 'w-full min-h-48'
+                }`}
               >
                 <div className="flex items-center gap-2 mb-4 pb-2 border-b">
                   <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">

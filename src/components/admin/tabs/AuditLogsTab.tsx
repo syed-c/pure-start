@@ -1,4 +1,3 @@
-'use client';
 import { useState } from 'react';
 import { useAuditLogs, useAuditLogActions, useAuditLogEntityTypes } from '@/hooks/useAdminAuditLogs';
 import { Card, CardContent } from '@/components/ui/card';

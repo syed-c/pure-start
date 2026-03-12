@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
 interface SEOContentSectionProps {
   locationName?: string;
@@ -110,7 +110,7 @@ export function SEOContentSection({
             {relatedLinks.map((link) => (
               <Link
                 key={link.href}
-                href={link.href}
+                to={link.href}
                 className="bg-muted hover:bg-primary hover:text-primary-foreground rounded-xl px-4 py-2 text-sm font-bold transition-all"
               >
                 {link.label}
@@ -206,7 +206,7 @@ export function SEOContentSection({
             {relatedLinks.map((link) => (
               <Link
                 key={link.href}
-                href={link.href}
+                to={link.href}
                 className="bg-muted hover:bg-primary hover:text-primary-foreground rounded-xl px-4 py-2 text-sm font-bold transition-all"
               >
                 {link.label}
