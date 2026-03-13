@@ -462,7 +462,7 @@ export default function PagesTab() {
     switch (createForm.pageType) {
       case 'state': {
         const state = states?.find(s => s.id === createForm.stateId);
-        if (!state) { toast.error('Please select an emirate'); return; }
+        if (!state) { toast.error('Please select a region'); return; }
         pageUrl = `/${state.slug}`;
         pageName = state.name;
         break;
