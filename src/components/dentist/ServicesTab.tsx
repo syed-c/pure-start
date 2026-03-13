@@ -313,9 +313,9 @@ export default function ServicesTab() {
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <Label className="text-xs text-white/60">Price To (USD)</Label>
+                  <Label className="text-xs text-white/60">Price To (£)</Label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40">$</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40">£</span>
                     <Input
                       type="number"
                       value={priceTo}
