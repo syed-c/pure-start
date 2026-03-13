@@ -419,7 +419,7 @@ const ClinicPage = () => {
                 {dentists && dentists.length > 0 && (
                   <div className="flex items-center gap-1 text-muted-foreground">
                     <Users className="h-4 w-4" />
-                    <span>{dentists.length} Dentists</span>
+                    <span>{dentists.length} Team Members</span>
                   </div>
                 )}
               </div>
