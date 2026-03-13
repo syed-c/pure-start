@@ -282,7 +282,7 @@ export default function MyPracticePage({ onNavigate }: MyPracticePageProps) {
               <EmptyState
                 icon={Clock}
                 title="No hours set"
-                description="Add your operating hours to help patients find you"
+                description="Add your operating hours to help carers find you"
                 action={
                   <Button size="sm" variant="outline" onClick={() => onNavigate('my-availability')}>
                     Add Hours
