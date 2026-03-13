@@ -286,7 +286,7 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Left Column - Schedule & Quick Actions */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Today's Schedule */}
+          {/* Today's Enquiries */}
           <PremiumCard padding="none" className="overflow-hidden">
             {/* Gradient top accent */}
             <div className="h-1 bg-gradient-to-r from-primary via-teal to-emerald-500" />
@@ -294,7 +294,7 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <SectionHeader
-                  title="Today's Schedule"
+                  title="Today's Enquiries"
                   description={format(new Date(), 'EEEE, MMMM d, yyyy')}
                   icon={Calendar}
                 />
@@ -312,8 +312,8 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
               {todayAppointments.length === 0 ? (
                 <EmptyState
                   icon={Calendar}
-                  title="No appointments today"
-                  description="Your schedule is clear. Set up your availability to start receiving bookings."
+                  title="No enquiries today"
+                  description="No new enquiries yet. Complete your profile to start receiving carer applications."
                   action={
                     <Button
                       variant="outline"
