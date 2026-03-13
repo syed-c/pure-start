@@ -59,16 +59,9 @@ export default function Auth() {
     } else if (isDentist) {
       // Dentists go to their dashboard
       navigate('/dashboard?tab=my-dashboard', { replace: true });
-    } else if (roles.length === 0) {
-      // User has no roles - might still be loading, or is a new user
-      // Send to onboarding
-      navigate('/onboarding?new=true', { replace: true });
-    } else if (roles.includes('super_admin') || roles.includes('district_manager')) {
-      // Admin users go directly to admin dashboard
-      navigate('/admin', { replace: true });
     } else {
-      // Has some other role, default to onboarding
-      navigate('/onboarding?new=true', { replace: true });
+      // User has no specific role or unrecognised role - go to home
+      navigate('/', { replace: true });
     }
   }, [user, roles, isLoading, navigate, hasRedirected]);
 
