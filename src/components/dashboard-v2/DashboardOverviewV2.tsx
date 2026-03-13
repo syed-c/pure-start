@@ -232,21 +232,21 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
 
       {/* Animated KPI Stats Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Today's Appointments - Circular Progress */}
+        {/* Today's Enquiries - Circular Progress */}
         <AnimatedKPICard
-          label="Today's Appointments"
+          label="Today's Enquiries"
           value={todayAppointments.length}
           icon={Calendar}
           variant="circular"
           maxValue={Math.max(10, todayAppointments.length)}
           onClick={() => onNavigate('my-appointments')}
-          action={{ label: 'View schedule', onClick: () => onNavigate('my-appointments') }}
+          action={{ label: 'View enquiries', onClick: () => onNavigate('my-appointments') }}
           delay={0}
         />
         
-        {/* Total Patients - Dark Gradient */}
+        {/* Total Carers - Dark Gradient */}
         <AnimatedKPICard
-          label="Total Patients"
+          label="Total Carers"
           value={patientStats?.total || 0}
           icon={Users}
           variant="dark"
