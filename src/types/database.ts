@@ -38,7 +38,9 @@ export interface State {
   abbreviation: string;
   country_code: string;
   image_url: string | null;
-  agency_count: number;
+  dentist_count?: number;
+  clinic_count?: number;
+  agency_count?: number;
   is_active: boolean;
   display_order: number;
   created_at: string;
@@ -52,7 +54,8 @@ export interface City {
   state_id: string | null;
   country: string;
   image_url: string | null;
-  agency_count: number;
+  dentist_count?: number;
+  agency_count?: number;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -65,7 +68,8 @@ export interface Area {
   name: string;
   slug: string;
   image_url: string | null;
-  agency_count: number;
+  dentist_count?: number;
+  agency_count?: number;
   is_active: boolean;
   created_at: string;
   updated_at: string;
