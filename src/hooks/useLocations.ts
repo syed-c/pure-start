@@ -10,7 +10,7 @@ const STATIC_STATES: State[] = ACTIVE_REGIONS.map((r, i) => ({
   id: r.slug,
   name: r.name,
   slug: r.slug,
-  abbreviation: r.abbreviation,
+  abbreviation: r.abbr,
   country_code: 'GB',
   image_url: null,
   agency_count: 0,
