@@ -26,10 +26,10 @@ import { cn } from '@/lib/utils';
 
 // Message Templates
 const MESSAGE_TEMPLATES = [
-  { id: 'review_request', name: 'Review Request', icon: Star, description: 'Ask for a review after visit' },
-  { id: 'follow_up', name: 'Follow-up', icon: MessageSquare, description: 'Check in after treatment' },
-  { id: 'appointment_reminder', name: 'Appointment Reminder', icon: Calendar, description: 'Remind about upcoming appointment' },
-  { id: 'thank_you', name: 'Thank You', icon: Sparkles, description: 'Thank patient for their visit' },
+  { id: 'review_request', name: 'Review Request', icon: Star, description: 'Ask for a review after meeting' },
+  { id: 'follow_up', name: 'Follow-up', icon: MessageSquare, description: 'Check in after assessment' },
+  { id: 'meeting_reminder', name: 'Meeting Reminder', icon: Calendar, description: 'Remind about upcoming meeting' },
+  { id: 'thank_you', name: 'Thank You', icon: Sparkles, description: 'Thank carer for choosing your agency' },
 ];
 
 interface Patient {
@@ -61,7 +61,7 @@ interface Patient {
 const SEND_TEMPLATES = [
   { id: 'review_request', name: 'Review Request', icon: Star },
   { id: 'follow_up', name: 'Follow-up', icon: MessageSquare },
-  { id: 'appointment_reminder', name: 'Appointment Reminder', icon: Calendar },
+  { id: 'meeting_reminder', name: 'Meeting Reminder', icon: Calendar },
   { id: 'thank_you', name: 'Thank You', icon: Sparkles },
   { id: 'reschedule', name: 'Reschedule Request', icon: Calendar },
 ];
