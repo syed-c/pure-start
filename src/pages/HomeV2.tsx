@@ -190,7 +190,7 @@ const HomeV2 = () => {
             <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3">
               Book in <span className="text-primary">3 Simple Steps</span>
             </h2>
-            <p className="text-muted-foreground max-w-md mx-auto text-sm">Finding the right dentist shouldn't be complicated.</p>
+            <p className="text-muted-foreground max-w-md mx-auto text-sm">Finding the right fostering agency shouldn't be complicated.</p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
