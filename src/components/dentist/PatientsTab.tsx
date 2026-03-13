@@ -157,7 +157,7 @@ export default function PatientsTab() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success('Patient added');
+      toast.success('Carer added');
       setAddDialogOpen(false);
       setNewPatient({ 
         name: '', phone: '', email: '', notes: '', 
