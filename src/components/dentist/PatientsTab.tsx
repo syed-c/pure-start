@@ -427,7 +427,7 @@ export default function PatientsTab() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 className="pl-10 rounded-xl bg-background"
-                placeholder="Search patients by name, phone, or email..."
+                placeholder="Search carers by name, phone, or email..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
