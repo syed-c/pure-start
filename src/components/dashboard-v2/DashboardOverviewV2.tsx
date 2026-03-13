@@ -371,21 +371,21 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
               <QuickAction
                 icon={Send}
                 label="Send Request"
-                description="Review request"
+                description="Feedback request"
                 onClick={() => onNavigate('my-reputation')}
                 color="from-primary to-teal"
               />
               <QuickAction
                 icon={Plus}
-                label="Add Patient"
-                description="New patient"
+                label="Add Carer"
+                description="New carer contact"
                 onClick={() => onNavigate('my-patients')}
                 color="from-teal to-emerald-500"
               />
               <QuickAction
                 icon={Calendar}
-                label="Appointments"
-                description="View schedule"
+                label="Enquiries"
+                description="View enquiries"
                 onClick={() => onNavigate('my-appointments')}
                 color="from-purple-500 to-indigo-500"
               />
