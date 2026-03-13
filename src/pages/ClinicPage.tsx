@@ -236,12 +236,12 @@ const ClinicPage = () => {
       <PageLayout>
         <Section>
           <div className="text-center py-20">
-            <h1 className="font-display text-3xl font-bold mb-4">Clinic Not Found</h1>
+            <h1 className="font-display text-3xl font-bold mb-4">Agency Not Found</h1>
             <p className="text-muted-foreground mb-8">
-              The clinic you're looking for doesn't exist or has been removed.
+              The fostering agency you're looking for doesn't exist or has been removed.
             </p>
             <Button asChild className="rounded-xl font-bold">
-              <Link to="/search">Browse Clinics</Link>
+              <Link to="/search">Browse Agencies</Link>
             </Button>
           </div>
         </Section>
@@ -258,7 +258,7 @@ const ClinicPage = () => {
   const stateSlug = clinic.city?.state?.slug || '';
   
   const breadcrumbs = [
-    { label: "Clinics", href: "/search" },
+    { label: "Agencies", href: "/search" },
     ...(clinic.city?.state ? [{ label: clinic.city.state.name, href: `/${clinic.city.state.slug}` }] : []),
     ...(clinic.city ? [{ label: clinic.city.name, href: `/${stateSlug}/${clinic.city.slug}` }] : []),
     { label: clinic.name },
@@ -267,10 +267,10 @@ const ClinicPage = () => {
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || `${clinic.name} - Dental Clinic in ${clinic.city?.name || 'UAE'}`}
-        description={seoContent?.meta_description || clinic.description || `Book an appointment at ${clinic.name}. ${isVerified ? 'Verified' : ''} dental clinic in ${clinic.city?.name || 'UAE'} with ${dentists?.length || 0} specialists.`}
+        title={seoContent?.meta_title || `${clinic.name} - Fostering Agency in ${clinic.city?.name || 'UK'}`}
+        description={seoContent?.meta_description || clinic.description || `Learn about ${clinic.name}. ${isVerified ? 'Verified' : ''} fostering agency in ${clinic.city?.name || 'UK'}.`}
         canonical={`/clinic/${clinic.slug}/`}
-        keywords={[clinic.name, `dental clinic ${clinic.city?.name}`, `dentist ${clinic.city?.state?.abbreviation || 'US'}`]}
+        keywords={[clinic.name, `fostering agency ${clinic.city?.name}`, `foster care ${clinic.city?.state?.abbreviation || 'UK'}`]}
       />
       {/* Synchronous JSON-LD structured data for SEO */}
       <SyncStructuredData
@@ -287,11 +287,11 @@ const ClinicPage = () => {
           {
             type: 'localBusiness',
             name: clinic.name,
-            description: clinic.description || `Professional dental clinic in ${clinic.city?.name || 'UAE'}`,
+            description: clinic.description || `Fostering agency in ${clinic.city?.name || 'UK'}`,
             address: clinic.address || '',
             city: clinic.city?.name || '',
             state: clinic.city?.state?.abbreviation || '',
-            country: 'United Arab Emirates',
+            country: 'United Kingdom',
             phone: clinic.phone || '',
             url: `/clinic/${clinic.slug}/`,
             geo: clinic.latitude && clinic.longitude ? { lat: Number(clinic.latitude), lng: Number(clinic.longitude) } : undefined,
@@ -419,7 +419,7 @@ const ClinicPage = () => {
                 {dentists && dentists.length > 0 && (
                   <div className="flex items-center gap-1 text-muted-foreground">
                     <Users className="h-4 w-4" />
-                    <span>{dentists.length} Dentists</span>
+                    <span>{dentists.length} Team Members</span>
                   </div>
                 )}
               </div>

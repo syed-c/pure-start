@@ -182,7 +182,7 @@ const StatePage = () => {
         name: c.name,
         slug: c.slug,
         type: 'clinic' as const,
-        specialty: 'Dental Clinic',
+        specialty: 'Fostering Agency',
         location: c.city ? `${c.city.name}, ${c.city.state?.name || c.city.state?.abbreviation || ''}` : '',
         rating: c.rating || 0,
         reviewCount: c.review_count || 0,
@@ -277,27 +277,27 @@ const StatePage = () => {
     : seoContent?.content ? parseFaqFromContent(seoContent.content) : [];
 
   // Use SEO content if optimized, otherwise use defaults
-  const pageTitle = seoContent?.meta_title || `Find Dentists in ${stateName} - Top Dental Clinics in ${stateName}`;
-  const pageDescription = seoContent?.meta_description || `Find and book appointments with top-rated dental professionals in ${stateName}. Compare verified clinics across ${cities?.length || 0}+ areas.`;
-  const pageH1 = seoContent?.h1 || `Find Dentists in ${stateName}`;
+  const pageTitle = seoContent?.meta_title || `Find Fostering Agencies in ${stateName} - Trusted Agencies`;
+  const pageDescription = seoContent?.meta_description || `Find Ofsted-rated fostering agencies in ${stateName}. Compare agencies across ${cities?.length || 0}+ cities.`;
+  const pageH1 = seoContent?.h1 || `Fostering Agencies in ${stateName}`;
 
   // Use SEO FAQs if available, otherwise use defaults
   const faqs = seoFaqs.length > 0 ? seoFaqs.map(f => ({ q: f.question, a: f.answer })) : [
     {
-      q: `How do I find a dentist in ${stateName}?`,
-      a: `Browse our verified list of dentists across ${stateName}. Select your city, then filter by specialty, rating, and insurance to find the perfect match.`,
+      q: `How do I find a fostering agency in ${stateName}?`,
+      a: `Browse our verified list of agencies across ${stateName}. Select your city, then filter by fostering type and rating to find the perfect match.`,
     },
     {
-      q: `Are dentists in ${stateName} verified?`,
-      a: `All dentists on our platform are licensed professionals. Profiles with the "Verified" badge have completed our additional verification process.`,
+      q: `Are agencies in ${stateName} Ofsted registered?`,
+      a: `All agencies listed are Ofsted-registered. Agencies with the "Verified" badge have completed our additional verification process.`,
     },
     {
       q: `What cities in ${stateName} do you cover?`,
       a: `We cover major cities across ${stateName} including ${cities?.slice(0, 5).map(c => c.name).join(', ') || 'multiple locations'}. More cities are being added regularly.`,
     },
     {
-      q: `Can I book same-day appointments?`,
-      a: `Many dental offices in ${stateName} offer same-day or next-day appointments. Use our search filters to find clinics with immediate availability.`,
+      q: `How do I become a foster carer?`,
+      a: `Contact agencies in ${stateName} through our directory. They will guide you through the assessment process which typically takes 4-6 months.`,
     },
   ];
 
@@ -310,7 +310,7 @@ const StatePage = () => {
         title={pageTitle}
         description={pageDescription}
         canonical={`/${normalizedStateSlug}/`}
-        keywords={[`dentists ${stateName}`, `dental clinics ${stateName}`, `find dentist ${stateName}`, 'book dental appointment']}
+        keywords={[`fostering agencies ${stateName}`, `foster care ${stateName}`, `find fostering agency ${stateName}`, 'become a foster carer']}
       />
       <StructuredData
         type="breadcrumb"
@@ -343,7 +343,7 @@ const StatePage = () => {
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 bg-primary/15 backdrop-blur-md border border-primary/30 rounded-full px-4 py-2 mb-6">
               <Shield className="h-4 w-4 text-primary" />
-              <span className="text-sm font-bold text-primary">Licensed Dental Professionals</span>
+              <span className="text-sm font-bold text-primary">Ofsted Rated Fostering Agencies</span>
             </div>
             
             <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 px-2" style={{ fontFamily: "'Varela Round', system-ui, sans-serif" }}>
@@ -358,13 +358,13 @@ const StatePage = () => {
             </h1>
             
             <p className="text-lg md:text-xl text-white/40 mb-8 max-w-2xl mx-auto">
-              Discover top-rated dental professionals across {stateName}. Browse by city, compare reviews, and book your appointment online.
+              Discover trusted fostering agencies across {stateName}. Browse by city, compare reviews, and start your fostering journey.
             </p>
 
             <div className="flex flex-wrap justify-center gap-3 mb-8">
               <Link to="/search">
                 <Button size="lg" className="h-12 px-6 font-bold rounded-2xl">
-                  Find a Dentist <ArrowRight className="ml-2 h-4 w-4" />
+                  Find an Agency <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>
@@ -400,8 +400,8 @@ const StatePage = () => {
 
       {/* Page Intro Section - CMS Content */}
       <PageIntroSection
-        title={parsedContent?.sections?.[0]?.heading || `About Dental Care in ${stateName}`}
-        content={(seoContent as any)?.page_intro || parsedContent?.intro || parsedContent?.sections?.[0]?.content || `Discover top-rated dental professionals across ${stateName}. Browse by city, compare reviews, and book your appointment online.`}
+        title={parsedContent?.sections?.[0]?.heading || `About Fostering in ${stateName}`}
+        content={(seoContent as any)?.page_intro || parsedContent?.intro || parsedContent?.sections?.[0]?.content || `Discover trusted fostering agencies across ${stateName}. Browse by city, compare reviews, and start your fostering journey.`}
         isLoading={isSeoContentPending}
       />
 

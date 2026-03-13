@@ -72,21 +72,21 @@ const HomeV2 = () => {
 
   const testimonials = [
     {
-      name: "Fatima A.",
-      location: "Dubai Marina, Dubai",
-      text: "Found an amazing cosmetic dentist in JLT within my budget. The whole process took less than 5 minutes!",
+      name: "Sarah T.",
+      location: "London, England",
+      text: "Foster Connect helped us find the perfect agency. The whole process was straightforward and we felt supported throughout.",
       rating: 5,
     },
     {
-      name: "Ahmed R.",
-      location: "Al Majaz, Sharjah",
-      text: "I was nervous about finding a new dentist after moving to Sharjah. AppointPanda made it so easy to compare clinics.",
+      name: "James R.",
+      location: "Birmingham, England",
+      text: "We were nervous about fostering but the agency we found through Foster Connect provided amazing training and support.",
       rating: 5,
     },
     {
-      name: "Sarah K.",
-      location: "Khalifa City, Abu Dhabi",
-      text: "The reviews and AED pricing were super helpful. Found a great pediatric dentist for my kids!",
+      name: "Maria K.",
+      location: "Manchester, England",
+      text: "The reviews and agency profiles were super helpful. Found a great therapeutic fostering agency near us!",
       rating: 5,
     },
   ];
@@ -95,8 +95,8 @@ const HomeV2 = () => {
 
   const carouselProfiles = profiles?.map(p => ({
     name: p.name,
-    specialty: p.specialty || 'Dental Professional',
-    location: p.location || 'UAE',
+    specialty: p.specialty || 'Fostering Agency',
+    location: p.location || 'UK',
     rating: p.rating,
     image: p.image || 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400',
     slug: p.slug,
@@ -106,8 +106,8 @@ const HomeV2 = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={seoContent?.meta_title || "Find the Best Dentists in UAE | Dentist in Dubai"}
-        description={seoContent?.meta_description || "Find and book appointments with top-rated dental professionals across the UAE. Compare verified clinics in Dubai, Sharjah, Abu Dhabi."}
+        title={seoContent?.meta_title || "Find Fostering Agencies in England & UK | Foster Connect"}
+        description={seoContent?.meta_description || "Find Ofsted-rated fostering agencies across England. Compare reviews, explore fostering types & connect with agencies near you."}
         canonical="/"
       />
       <Navbar />
@@ -118,7 +118,7 @@ const HomeV2 = () => {
         <div className="absolute inset-0">
           <img 
             src={heroDentalFamily} 
-            alt="Happy family at dental clinic" 
+            alt="Happy foster family" 
             className="w-full h-full object-cover"
             loading="eager"
           />
@@ -129,26 +129,26 @@ const HomeV2 = () => {
         <div className="relative z-10 container px-4 py-16 md:py-20 text-center">
           <motion.div {...fadeUp} className="inline-flex items-center gap-2 bg-background/15 backdrop-blur-sm border border-background/20 rounded-full px-4 py-1.5 mb-6">
             <BadgeCheck className="h-4 w-4 text-background" />
-            <span className="text-xs font-semibold text-background">UAE's Trusted Dental Directory</span>
+            <span className="text-xs font-semibold text-background">UK's Trusted Fostering Directory</span>
           </motion.div>
 
           <motion.h1 {...fadeUp} transition={{ delay: 0.1 }} className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-background leading-[1.15] mb-4 max-w-3xl mx-auto">
-            Find Your Perfect{" "}
-            <span className="text-primary">Dentist</span>{" "}
-            in the UAE
+            Find Your Trusted{" "}
+            <span className="text-primary">Fostering Agency</span>{" "}
+            in the UK
           </motion.h1>
 
           <motion.p {...fadeUp} transition={{ delay: 0.2 }} className="text-base md:text-lg text-background/80 leading-relaxed mb-8 max-w-xl mx-auto">
-            Compare verified clinics, read real reviews, check AED pricing — and book in under 60 seconds.
+            Compare Ofsted-rated agencies, read carer reviews, explore fostering types — and start your journey today.
           </motion.p>
 
           {/* Trust indicators */}
           <motion.div {...fadeUp} transition={{ delay: 0.25 }} className="flex flex-wrap items-center justify-center gap-4 md:gap-6 mb-8">
             {[
-              { icon: Shield, text: "DHA Verified" },
-              { icon: Star, text: "4.9 Rating" },
-              { icon: Building2, text: `${realCounts?.clinics?.toLocaleString() || '500+'} Clinics` },
-              { icon: Timer, text: "60s Booking" },
+              { icon: Shield, text: "Ofsted Rated" },
+              { icon: Star, text: "4.8 Rating" },
+              { icon: Building2, text: `${realCounts?.clinics?.toLocaleString() || '500+'} Agencies` },
+              { icon: Timer, text: "Free to Use" },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-1.5 text-background/70">
                 <item.icon className="h-4 w-4 text-primary" />
@@ -161,12 +161,12 @@ const HomeV2 = () => {
           <motion.div {...fadeUp} transition={{ delay: 0.3 }} className="flex flex-wrap justify-center gap-3">
             <Button size="lg" className="rounded-xl font-semibold h-12 px-8 shadow-lg" onClick={() => navigate("/search")}>
               <Search className="mr-2 h-4 w-4" />
-              Find a Dentist
+              Find an Agency
             </Button>
             <Button size="lg" variant="outline" className="rounded-xl font-semibold h-12 px-8 bg-background/10 border-background/30 text-background hover:bg-background/20 hover:text-background" asChild>
               <Link to="/list-your-practice">
                 <Stethoscope className="mr-2 h-4 w-4" />
-                I'm a Dentist
+                I'm an Agency
               </Link>
             </Button>
           </motion.div>
@@ -190,14 +190,14 @@ const HomeV2 = () => {
             <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3">
               Book in <span className="text-primary">3 Simple Steps</span>
             </h2>
-            <p className="text-muted-foreground max-w-md mx-auto text-sm">Finding the right dentist shouldn't be complicated.</p>
+            <p className="text-muted-foreground max-w-md mx-auto text-sm">Finding the right fostering agency shouldn't be complicated.</p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {[
-              { step: "01", title: "Search", description: "Select your emirate, area, and the dental service you need.", icon: Search, gradient: "from-primary/15 to-primary/5" },
-              { step: "02", title: "Compare", description: "Browse verified clinic profiles, real reviews, and AED pricing.", icon: Star, gradient: "from-gold/15 to-gold/5" },
-              { step: "03", title: "Book", description: "Schedule your appointment online in under 60 seconds.", icon: Calendar, gradient: "from-primary/15 to-teal/5" },
+              { step: "01", title: "Search", description: "Select your region, city, and the type of fostering you're interested in.", icon: Search, gradient: "from-primary/15 to-primary/5" },
+              { step: "02", title: "Compare", description: "Browse agency profiles, Ofsted ratings, and real carer reviews.", icon: Star, gradient: "from-gold/15 to-gold/5" },
+              { step: "03", title: "Enquire", description: "Contact your chosen agency and start your fostering journey.", icon: Calendar, gradient: "from-primary/15 to-teal/5" },
             ].map((item, i) => (
               <motion.div 
                 key={i} 
@@ -237,22 +237,22 @@ const HomeV2 = () => {
             >
               <div className="relative">
                 <div className="absolute -inset-4 bg-gradient-to-br from-primary/10 to-primary/5 rounded-3xl -z-10" />
-                <img src={pandaMascot} alt="AppointPanda mascot" className="w-64 md:w-80 h-auto rounded-2xl" loading="lazy" />
+                <img src={pandaMascot} alt="Foster Connect" className="w-64 md:w-80 h-auto rounded-2xl" loading="lazy" />
               </div>
             </motion.div>
             
             {/* Content */}
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}>
               <span className="inline-block text-xs font-bold uppercase tracking-widest text-primary mb-3">Why Choose Us</span>
-              <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-6">
-                Why Patients Trust <span className="text-primary">AppointPanda</span>
-              </h2>
-              <div className="space-y-4">
-                {[
-                  { icon: Shield, title: "DHA & MOHAP Verified", desc: "Every listed clinic is verified against UAE health authority standards." },
-                  { icon: Star, title: "Real Patient Reviews", desc: "Authentic, unfiltered reviews from actual patients across UAE." },
-                  { icon: Heart, title: "Transparent AED Pricing", desc: "Clear cost ranges in AED for every dental service." },
-                  { icon: Timer, title: "Book in 60 Seconds", desc: "No phone calls needed. Schedule your appointment instantly online." },
+               <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-6">
+                 Why Families Trust <span className="text-primary">Foster Connect</span>
+               </h2>
+               <div className="space-y-4">
+                 {[
+                   { icon: Shield, title: "Ofsted Verified", desc: "Every listed agency is registered and rated by Ofsted or the relevant authority." },
+                   { icon: Star, title: "Real Carer Reviews", desc: "Authentic reviews from foster carers who've worked with these agencies." },
+                   { icon: Heart, title: "All Fostering Types", desc: "Emergency, respite, long-term, therapeutic — find the right match." },
+                   { icon: Timer, title: "Free to Use", desc: "Our directory is completely free for prospective foster carers." },
                 ].map((item, i) => (
                   <motion.div 
                     key={i} 
@@ -281,10 +281,10 @@ const HomeV2 = () => {
       <section className="py-16 md:py-20 bg-muted/30">
         <div className="container px-4">
           <motion.div {...fadeUp} className="text-center mb-10">
-            <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-2">
-              Browse by <span className="text-primary">Emirate</span>
-            </h2>
-            <p className="text-sm text-muted-foreground">Find dental clinics across all seven UAE Emirates</p>
+             <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-2">
+               Browse by <span className="text-primary">Region</span>
+             </h2>
+             <p className="text-sm text-muted-foreground">Find fostering agencies across all UK nations</p>
           </motion.div>
 
           <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto">
@@ -349,17 +349,17 @@ const HomeV2 = () => {
           <div className="container px-4">
             <motion.div {...fadeUp} className="flex items-end justify-between mb-8">
               <div>
-                <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-1">Dental <span className="text-primary">Services</span></h2>
-                <p className="text-sm text-muted-foreground">Find specialists for every dental need</p>
+                 <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-1">Fostering <span className="text-primary">Categories</span></h2>
+                 <p className="text-sm text-muted-foreground">Find agencies specialising in specific types of fostering</p>
               </div>
-              <Link to="/services" className="hidden md:inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
-                All Services <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
+               <Link to="/categories" className="hidden md:inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+                 All Categories <ArrowRight className="h-3.5 w-3.5" />
+               </Link>
             </motion.div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {popularTreatments.map((treatment, i) => (
                 <motion.div key={treatment.id} {...fadeUp} transition={{ delay: i * 0.04 }}>
-                  <Link to={`/services/${treatment.slug}`} className="group flex items-center justify-between bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-md transition-all">
+                  <Link to={`/categories/${treatment.slug}`} className="group flex items-center justify-between bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-md transition-all">
                     <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{treatment.name}</span>
                     <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
                   </Link>
@@ -367,9 +367,9 @@ const HomeV2 = () => {
               ))}
             </div>
             <div className="md:hidden text-center mt-6">
-              <Link to="/services" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
-                View All Services <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
+               <Link to="/categories" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+                 View All Categories <ArrowRight className="h-3.5 w-3.5" />
+               </Link>
             </div>
           </div>
         </section>
@@ -379,7 +379,7 @@ const HomeV2 = () => {
       <section className="py-16 md:py-20 bg-muted/30">
         <div className="container px-4">
           <motion.div {...fadeUp} className="text-center mb-10">
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-2">What <span className="text-primary">Patients</span> Say</h2>
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-2">What <span className="text-primary">Carers</span> Say</h2>
           </motion.div>
 
           <div className="max-w-2xl mx-auto">
@@ -414,8 +414,8 @@ const HomeV2 = () => {
         <section className="py-16 md:py-20 bg-background">
           <div className="container px-4">
             <motion.div {...fadeUp} className="text-center mb-10">
-              <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-2">Top-Rated <span className="text-primary">Dental Professionals</span></h2>
-              <p className="text-sm text-muted-foreground">Verified dentists with excellent patient reviews across UAE</p>
+               <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-2">Top-Rated <span className="text-primary">Fostering Agencies</span></h2>
+               <p className="text-sm text-muted-foreground">Verified agencies with excellent carer reviews across the UK</p>
             </motion.div>
             <AutoScrollCarousel doctors={carouselProfiles} autoScrollSpeed={25} />
             <div className="text-center mt-8">
@@ -433,35 +433,35 @@ const HomeV2 = () => {
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-center">
             <motion.div {...fadeUp}>
               <div className="rounded-2xl overflow-hidden shadow-lg">
-                <img src={dentalPracticeGrowth} alt="Grow your dental practice" className="w-full h-auto object-cover aspect-[4/3]" loading="lazy" />
-              </div>
-            </motion.div>
-            <motion.div {...fadeUp} transition={{ delay: 0.1 }}>
-              <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-3">
-                Grow Your Practice with <span className="text-primary">AppointPanda</span>
-              </h2>
-              <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
-                Join dental professionals across the UAE who trust our platform to reach patients, manage bookings, and build their reputation.
-              </p>
-              <div className="space-y-3 mb-6">
-                {[
-                  "Reach patients across all 7 Emirates",
-                  "Smart scheduling reduces no-shows",
-                  "Collect & showcase patient reviews",
-                  "Free listing to get started",
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-2.5">
-                    <CheckCircle className="h-4 w-4 text-primary shrink-0" />
-                    <span className="text-sm text-foreground">{item}</span>
-                  </div>
-                ))}
-              </div>
-              <Button className="rounded-xl font-semibold" asChild>
-                <Link to="/list-your-practice">
-                  List Your Practice Free <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </motion.div>
+                 <img src={dentalPracticeGrowth} alt="Grow your fostering agency" className="w-full h-auto object-cover aspect-[4/3]" loading="lazy" />
+               </div>
+             </motion.div>
+             <motion.div {...fadeUp} transition={{ delay: 0.1 }}>
+               <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-3">
+                 Grow Your Agency with <span className="text-primary">Foster Connect</span>
+               </h2>
+               <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
+                 Join fostering agencies across the UK who trust our platform to connect with prospective carers and build their reputation.
+               </p>
+               <div className="space-y-3 mb-6">
+                 {[
+                   "Reach carers across all UK nations",
+                   "Showcase your Ofsted rating and reviews",
+                   "Manage enquiries from prospective carers",
+                   "Free listing to get started",
+                 ].map((item, i) => (
+                   <div key={i} className="flex items-center gap-2.5">
+                     <CheckCircle className="h-4 w-4 text-primary shrink-0" />
+                     <span className="text-sm text-foreground">{item}</span>
+                   </div>
+                 ))}
+               </div>
+               <Button className="rounded-xl font-semibold" asChild>
+                 <Link to="/list-your-practice">
+                   List Your Agency Free <ArrowRight className="ml-2 h-4 w-4" />
+                 </Link>
+               </Button>
+             </motion.div>
           </div>
         </div>
       </section>
@@ -471,31 +471,31 @@ const HomeV2 = () => {
         <div className="container px-4">
           <div className="max-w-3xl mx-auto">
             <motion.div {...fadeUp} className="text-center mb-8">
-              <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-3">
-                About <span className="text-primary">AppointPanda</span>
-              </h2>
-            </motion.div>
-            <div className="prose prose-sm max-w-none text-muted-foreground space-y-3">
-              <p>
-                AppointPanda is the UAE's leading dental directory platform, built to help patients across Dubai, Sharjah, Abu Dhabi, Ajman, Ras Al Khaimah, Fujairah, and Umm Al Quwain find trusted dental professionals. Whether you need teeth cleaning, implants, Invisalign, or emergency care, we connect you with verified clinics — all with transparent AED pricing and real patient reviews.
-              </p>
-              <p>
-                Every clinic listed is verified against DHA, DoH, and MOHAP standards. Our platform covers {realCounts?.clinics?.toLocaleString() || '500'}+ dental practices offering {treatments?.length || '15'}+ services including cosmetic dentistry, orthodontics, pediatric care, and oral surgery.
-              </p>
-            </div>
-            <div className="mt-6 grid sm:grid-cols-3 gap-3">
-              {[
-                { to: "/about/", icon: Heart, label: "Our Mission" },
-                { to: "/insurance/", icon: Shield, label: "Insurance Guide" },
-                { to: "/how-it-works/", icon: Search, label: "How It Works" },
-              ].map((link) => (
-                <Link key={link.to} to={link.to} className="flex items-center gap-2 bg-card border border-border rounded-xl p-3.5 hover:border-primary/30 transition-all group">
-                  <link.icon className="h-4 w-4 text-primary" />
-                  <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{link.label}</span>
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground ml-auto" />
-                </Link>
-              ))}
-            </div>
+               <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-3">
+                 About <span className="text-primary">Foster Connect</span>
+               </h2>
+             </motion.div>
+             <div className="prose prose-sm max-w-none text-muted-foreground space-y-3">
+               <p>
+                 Foster Connect is the UK's leading fostering agency directory, helping prospective foster carers across England, Scotland, Wales, and Northern Ireland find trusted, Ofsted-rated agencies. Whether you're interested in emergency fostering, long-term care, therapeutic placements, or respite fostering, we connect you with verified agencies — all with real carer reviews.
+               </p>
+               <p>
+                 Every agency listed is registered with Ofsted or the relevant regulatory body. Our directory covers {realCounts?.clinics?.toLocaleString() || '500'}+ fostering agencies offering {treatments?.length || '9'}+ types of fostering placements.
+               </p>
+             </div>
+             <div className="mt-6 grid sm:grid-cols-3 gap-3">
+               {[
+                 { to: "/about/", icon: Heart, label: "Our Mission" },
+                 { to: "/how-it-works/", icon: Search, label: "How It Works" },
+                 { to: "/faq/", icon: Search, label: "FAQs" },
+               ].map((link) => (
+                 <Link key={link.to} to={link.to} className="flex items-center gap-2 bg-card border border-border rounded-xl p-3.5 hover:border-primary/30 transition-all group">
+                   <link.icon className="h-4 w-4 text-primary" />
+                   <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{link.label}</span>
+                   <ChevronRight className="h-3.5 w-3.5 text-muted-foreground ml-auto" />
+                 </Link>
+               ))}
+             </div>
           </div>
         </div>
       </section>
@@ -510,12 +510,12 @@ const HomeV2 = () => {
               </h2>
             </motion.div>
             <div className="space-y-3">
-              {[
-                { q: "How do I find a dentist near me in Dubai?", a: "Use AppointPanda's search to select your emirate and area. Browse verified clinic profiles with real patient reviews, AED pricing, and available services." },
-                { q: "Is AppointPanda free for patients?", a: "Yes, AppointPanda is completely free for patients. Search, compare, and book appointments across all seven UAE Emirates at no cost." },
-                { q: "Are the dentists on AppointPanda verified?", a: "All clinics are verified against DHA, DoH, and MOHAP standards. Look for the verified badge on clinic profiles." },
-                { q: "Can I search by dental insurance provider?", a: "Yes. Use our insurance search to find dentists who accept your plan — including Daman, Oman Insurance, AXA, and MetLife." },
-                { q: "How accurate are the prices shown?", a: "Prices shown are estimated ranges in AED. Final costs require an in-person consultation. We encourage confirming pricing directly with your chosen clinic." },
+               {[
+                 { q: "How do I find a fostering agency near me?", a: "Use Foster Connect's search to select your region and city. Browse verified agency profiles with Ofsted ratings, carer reviews, and fostering types." },
+                 { q: "Is Foster Connect free to use?", a: "Yes, Foster Connect is completely free for prospective foster carers. Search, compare, and enquire with agencies at no cost." },
+                 { q: "Are the agencies on Foster Connect verified?", a: "All agencies are registered with Ofsted or the relevant regulatory body. Look for the verified badge on agency profiles." },
+                 { q: "What types of fostering are available?", a: "Our directory covers emergency, respite, long-term, short-term, therapeutic, parent & child fostering, and specialist placements." },
+                 { q: "How long does it take to become a foster carer?", a: "The assessment process typically takes 4-6 months. Agencies provide training, home visits, and ongoing support throughout." },
               ].map((faq, i) => (
                 <motion.div key={i} {...fadeUp} transition={{ delay: i * 0.04 }} className="bg-card border border-border rounded-xl p-5 hover:border-primary/20 transition-all">
                   <h3 className="font-display text-sm font-bold text-foreground mb-1.5">{faq.q}</h3>
@@ -536,23 +536,23 @@ const HomeV2 = () => {
       <section className="py-16 md:py-20 bg-primary/5 border-t border-primary/10">
         <div className="container px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4">
-              Ready to Find Your <span className="text-primary">Perfect Dentist?</span>
-            </h2>
-            <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
-              Join thousands of patients across Dubai, Sharjah, and Abu Dhabi who've found exceptional dental care through our platform.
-            </p>
-            <div className="flex flex-wrap justify-center gap-3">
-              <Button size="lg" className="rounded-xl font-semibold h-12 px-8" asChild>
-                <Link to="/search">
-                  Find a Dentist <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="rounded-xl font-semibold h-12 px-8 border-border" asChild>
-                <Link to="/list-your-practice">
-                  <Stethoscope className="mr-2 h-4 w-4" /> I'm a Dentist
-                </Link>
-              </Button>
+             <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4">
+               Ready to Start Your <span className="text-primary">Fostering Journey?</span>
+             </h2>
+             <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
+               Join hundreds of families across the UK who've found their ideal fostering agency through our platform.
+             </p>
+             <div className="flex flex-wrap justify-center gap-3">
+               <Button size="lg" className="rounded-xl font-semibold h-12 px-8" asChild>
+                 <Link to="/search">
+                   Find an Agency <ArrowRight className="ml-2 h-4 w-4" />
+                 </Link>
+               </Button>
+               <Button size="lg" variant="outline" className="rounded-xl font-semibold h-12 px-8 border-border" asChild>
+                 <Link to="/list-your-practice">
+                   <Stethoscope className="mr-2 h-4 w-4" /> I'm an Agency
+                 </Link>
+               </Button>
             </div>
           </div>
         </div>

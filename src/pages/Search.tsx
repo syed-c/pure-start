@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { MapPin, ShieldCheck, ArrowRight, Building2, Search as SearchIcon, ChevronDown, X, Stethoscope, Star, Calculator, Shield, Zap } from "lucide-react";
+import { MapPin, ShieldCheck, ArrowRight, Building2, Search as SearchIcon, ChevronDown, X, Star } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ const Search = () => {
   const { data: realCounts } = useRealCounts();
   const { data: seoContent } = useSeoPageContent("search");
 
-  // Fetch treatments
+  // Fetch treatments (fostering categories)
   const { data: treatments } = useQuery({
     queryKey: ["treatments-directory"],
     queryFn: async () => {
@@ -36,7 +36,7 @@ const Search = () => {
     staleTime: 10 * 60 * 1000,
   });
 
-  // Fetch states
+  // Fetch states (nations/regions)
   const { data: states, isLoading: statesLoading } = useQuery({
     queryKey: ["states-directory"],
     queryFn: async () => {
@@ -50,7 +50,7 @@ const Search = () => {
     staleTime: 10 * 60 * 1000,
   });
 
-  // Fetch cities for selected state (or all top cities)
+  // Fetch cities
   const { data: cities, isLoading: citiesLoading } = useQuery({
     queryKey: ["directory-cities", selectedState],
     queryFn: async () => {
@@ -70,7 +70,6 @@ const Search = () => {
     staleTime: 5 * 60 * 1000,
   });
 
-  // Filter cities by search
   const filteredCities = useMemo(() => {
     if (!cities) return [];
     if (!searchQuery.trim()) return cities;
@@ -87,20 +86,20 @@ const Search = () => {
 
   const breadcrumbs = [
     { label: "Home", href: "/" },
-    { label: "Dental Directory" },
+    { label: "Fostering Directory" },
   ];
 
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={seoContent?.meta_title || "Dental Directory | Find Dentists by Emirate & Area"}
-        description={seoContent?.meta_description || "Browse our comprehensive directory of verified dentists across the UAE. Filter by Emirate, area, and treatment to find the perfect dental professional."}
+        title={seoContent?.meta_title || "Fostering Agency Directory | Find Agencies by Region & City"}
+        description={seoContent?.meta_description || "Browse our comprehensive directory of Ofsted-rated fostering agencies across the UK. Filter by region, city, and fostering type to find the right agency."}
         canonical="/search/"
-        keywords={["dental directory UAE", "find dentist Dubai", "dentist directory UAE", "dental clinics by emirate"]}
+        keywords={["fostering agency directory", "find fostering agency UK", "fostering agencies near me", "foster care agencies"]}
       />
       <Navbar />
 
-      {/* Clean Hero */}
+      {/* Hero */}
       <section className="border-b border-border bg-gradient-to-b from-background to-muted/30 pt-4 pb-10 md:pb-14">
         <div className="container px-4">
           <div className="flex justify-center mb-4">
@@ -110,27 +109,26 @@ const Search = () => {
           <div className="max-w-3xl mx-auto text-center">
             <Badge variant="outline" className="mb-4 rounded-full px-4 py-1.5 font-bold text-xs border-primary/30 text-primary">
               <ShieldCheck className="h-3.5 w-3.5 mr-1.5" />
-              {realCounts?.clinics?.toLocaleString() || 0}+ Verified Providers
+              {realCounts?.clinics?.toLocaleString() || 0}+ Verified Agencies
             </Badge>
             
             <h1 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground tracking-tight mb-3">
-              UAE Dental <span className="text-primary">Directory</span>
+              UK Fostering <span className="text-primary">Directory</span>
             </h1>
             <p className="text-sm md:text-base text-muted-foreground mb-6 max-w-xl mx-auto">
-              Find top-rated dentists across {realCounts?.states || 7} Emirates and {realCounts?.cities?.toLocaleString() || 0}+ areas. Browse by location or specialty.
+              Find Ofsted-rated fostering agencies across {realCounts?.states || 4} nations and {realCounts?.cities?.toLocaleString() || 0}+ cities. Browse by location or fostering type.
             </p>
 
-            {/* Quick stats */}
             <div className="flex flex-wrap justify-center gap-2 md:gap-3">
               <div className="flex items-center gap-1.5 bg-card border border-border rounded-xl px-3 py-2 shadow-sm">
                 <Building2 className="h-4 w-4 text-primary" />
                 <span className="font-bold text-sm">{realCounts?.clinics?.toLocaleString() || 0}</span>
-                <span className="text-xs text-muted-foreground">Clinics</span>
+                <span className="text-xs text-muted-foreground">Agencies</span>
               </div>
               <div className="flex items-center gap-1.5 bg-card border border-border rounded-xl px-3 py-2 shadow-sm">
                 <MapPin className="h-4 w-4 text-primary" />
                 <span className="font-bold text-sm">{realCounts?.cities?.toLocaleString() || 0}</span>
-                <span className="text-xs text-muted-foreground">Areas</span>
+                <span className="text-xs text-muted-foreground">Cities</span>
               </div>
               <div className="flex items-center gap-1.5 bg-card border border-border rounded-xl px-3 py-2 shadow-sm">
                 <Star className="h-4 w-4 text-gold fill-gold" />
@@ -146,11 +144,10 @@ const Search = () => {
       <div className="sticky top-16 z-30 bg-card/95 backdrop-blur-md border-b border-border shadow-sm">
         <div className="container px-4 py-3">
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-stretch sm:items-center">
-            {/* Search */}
             <div className="relative flex-1 max-w-md">
               <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search areas..."
+                placeholder="Search cities..."
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 className="pl-9 rounded-xl h-10 font-medium"
@@ -162,7 +159,6 @@ const Search = () => {
               )}
             </div>
 
-            {/* State filter pills */}
             <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
               <button
                 onClick={() => { setSelectedState(null); setShowAllCities(false); }}
@@ -172,7 +168,7 @@ const Search = () => {
                     : 'bg-muted text-muted-foreground hover:bg-muted/80'
                 }`}
               >
-                All Emirates
+                All Regions
               </button>
               {states?.map(state => (
                 <button
@@ -184,7 +180,7 @@ const Search = () => {
                       : 'bg-muted text-muted-foreground hover:bg-muted/80'
                   }`}
                 >
-                  {state.abbreviation}
+                  {state.name}
                 </button>
               ))}
             </div>
@@ -192,16 +188,16 @@ const Search = () => {
         </div>
       </div>
 
-      {/* State Cards (when no state selected) */}
+      {/* State Cards */}
       {!selectedState && (
         <section className="py-8 md:py-12">
           <div className="container px-4">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="font-display text-lg md:text-2xl font-bold text-foreground">
-                  Browse by <span className="text-primary">Emirate</span>
+                  Browse by <span className="text-primary">Region</span>
                 </h2>
-                <p className="text-sm text-muted-foreground mt-0.5">Select an Emirate to see all areas</p>
+                <p className="text-sm text-muted-foreground mt-0.5">Select a region to see all cities</p>
               </div>
             </div>
             
@@ -244,20 +240,20 @@ const Search = () => {
             <div>
               <h2 className="font-display text-lg md:text-2xl font-bold text-foreground">
                 {selectedState ? (
-                  <>Dentists in <span className="text-primary">{selectedStateName}</span></>
+                  <>Agencies in <span className="text-primary">{selectedStateName}</span></>
                 ) : (
-                  <>Top Areas by <span className="text-primary">Dentist Count</span></>
+                  <>Top Cities by <span className="text-primary">Agency Count</span></>
                 )}
               </h2>
               <p className="text-sm text-muted-foreground mt-0.5">
-                {filteredCities.length} {filteredCities.length === 1 ? 'area' : 'areas'} found
+                {filteredCities.length} {filteredCities.length === 1 ? 'city' : 'cities'} found
                 {searchQuery && ` for "${searchQuery}"`}
               </p>
             </div>
             {selectedState && (
               <Link to={`/${states?.find(s => s.id === selectedState)?.slug || ''}/`}>
                 <Button variant="outline" size="sm" className="rounded-xl font-bold gap-1">
-                  View Emirate Page <ArrowRight className="h-3.5 w-3.5" />
+                  View Region Page <ArrowRight className="h-3.5 w-3.5" />
                 </Button>
               </Link>
             )}
@@ -282,11 +278,11 @@ const Search = () => {
                           {city.name}
                         </h3>
                         <p className="text-xs text-muted-foreground mt-0.5">
-                          {(city.state as any)?.abbreviation} • {city.dentist_count || 0} Dentists
+                          {(city.state as any)?.name} • {(city as any).dentist_count || 0} Agencies
                         </p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0 ml-2">
-                        {(city.dentist_count || 0) > 20 && (
+                        {((city as any).dentist_count || 0) > 20 && (
                           <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-5 rounded-lg font-bold">
                             Popular
                           </Badge>
@@ -305,7 +301,7 @@ const Search = () => {
                     onClick={() => setShowAllCities(true)}
                     className="rounded-xl font-bold gap-2"
                   >
-                    Show All {filteredCities.length} Areas
+                    Show All {filteredCities.length} Cities
                     <ChevronDown className="h-4 w-4" />
                   </Button>
                 </div>
@@ -314,30 +310,30 @@ const Search = () => {
           ) : (
             <div className="text-center py-12 bg-card border border-border rounded-3xl">
               <MapPin className="h-10 w-10 text-muted-foreground/40 mx-auto mb-3" />
-              <h3 className="font-bold text-foreground mb-1">No areas found</h3>
+              <h3 className="font-bold text-foreground mb-1">No cities found</h3>
               <p className="text-sm text-muted-foreground">
-                {searchQuery ? 'Try a different search term' : 'Select an Emirate to browse areas'}
+                {searchQuery ? 'Try a different search term' : 'Select a region to browse cities'}
               </p>
             </div>
           )}
         </div>
       </section>
 
-      {/* Services Section */}
+      {/* Fostering Categories Section */}
       <section className="py-8 md:py-12 border-t border-border">
         <div className="container px-4">
           <div className="text-center mb-6">
             <h2 className="font-display text-lg md:text-2xl font-bold text-foreground">
-              Browse by <span className="text-primary">Treatment</span>
+              Browse by <span className="text-primary">Fostering Type</span>
             </h2>
-            <p className="text-sm text-muted-foreground mt-0.5">Find specialists for specific dental services</p>
+            <p className="text-sm text-muted-foreground mt-0.5">Find agencies specialising in specific types of fostering</p>
           </div>
           
           <div className="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto">
             {treatments?.map(treatment => (
               <Link
                 key={treatment.id}
-                to={`/services/${treatment.slug}/`}
+                to={`/categories/${treatment.slug}/`}
                 className="bg-card border border-border rounded-2xl px-4 py-2.5 font-bold text-foreground hover:border-primary hover:text-primary transition-all text-sm"
               >
                 {treatment.name}
@@ -347,76 +343,10 @@ const Search = () => {
           
           <div className="text-center mt-6">
             <Button asChild variant="outline" className="rounded-xl font-bold gap-1">
-              <Link to="/services/">
-                View All Services <ArrowRight className="ml-1 h-4 w-4" />
+              <Link to="/categories/">
+                View All Categories <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
             </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Free Tools Section */}
-      <section className="py-8 md:py-12 border-t border-border">
-        <div className="container px-4">
-          <div className="text-center mb-6">
-            <h2 className="font-display text-lg md:text-2xl font-bold text-foreground">
-              Free Dental <span className="text-primary">Tools</span>
-            </h2>
-            <p className="text-sm text-muted-foreground mt-0.5">Compare costs, check insurance, and find emergency care</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
-            <Link
-              to="/tools/dental-cost-calculator"
-              className="group bg-card border border-border rounded-2xl p-6 hover:border-primary/50 hover:shadow-md transition-all text-center"
-            >
-              <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/20 transition-colors">
-                <Calculator className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="font-bold text-foreground group-hover:text-primary transition-colors mb-1">Dental Cost Calculator</h3>
-              <p className="text-xs text-muted-foreground">Compare real prices from verified dentists</p>
-            </Link>
-            
-            <Link
-              to="/tools/insurance-checker"
-              className="group bg-card border border-border rounded-2xl p-6 hover:border-primary/50 hover:shadow-md transition-all text-center"
-            >
-              <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/20 transition-colors">
-                <Shield className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="font-bold text-foreground group-hover:text-primary transition-colors mb-1">Insurance Checker</h3>
-              <p className="text-xs text-muted-foreground">Find dentists who accept your plan</p>
-            </Link>
-            
-            <Link
-              to="/emergency-dentist"
-              className="group bg-card border border-border rounded-2xl p-6 hover:border-primary/50 hover:shadow-md transition-all text-center"
-            >
-              <div className="h-12 w-12 rounded-xl bg-destructive/10 flex items-center justify-center mx-auto mb-3 group-hover:bg-destructive/20 transition-colors">
-                <Zap className="h-6 w-6 text-destructive" />
-              </div>
-              <h3 className="font-bold text-foreground group-hover:text-primary transition-colors mb-1">Emergency Dentist</h3>
-              <p className="text-xs text-muted-foreground">Find dentists open now near you</p>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Banner */}
-      <section className="py-8 border-t border-border bg-muted/20">
-        <div className="container px-4">
-          <div className="bg-card border border-border rounded-3xl p-6 md:p-8 max-w-3xl mx-auto border-l-4 border-l-primary">
-            <div className="flex items-start gap-4">
-              <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                <ShieldCheck className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-bold text-foreground mb-1">All Providers Are Licensed</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Every dental professional listed in our directory is a licensed practitioner. Browse by state or city, compare patient reviews, and book appointments directly.
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </section>

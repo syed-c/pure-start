@@ -178,7 +178,7 @@ const CityPage = () => {
         name: c.name,
         slug: c.slug,
         type: 'clinic' as const,
-        specialty: 'Dental Clinic',
+        specialty: 'Fostering Agency',
         location: c.city ? `${c.city.name}, ${c.city.state?.abbreviation || ''}` : '',
         rating: c.rating || 0,
         reviewCount: c.review_count || 0,
@@ -303,26 +303,26 @@ const CityPage = () => {
     ? seoContent.faqs
     : seoContent?.content ? parseFaqFromContent(seoContent.content) : [];
 
-  const pageTitle = seoContent?.meta_title || `Best Dentists in ${cityName}, ${stateAbbr} - Find Dental Clinics`;
-  const pageDescription = seoContent?.meta_description || `Find and book appointments with top-rated dental professionals in ${cityName}, ${stateName}. Compare ${profiles?.length || 0}+ verified clinics.`;
-  const pageH1 = seoContent?.h1 || `Best Dentists in ${locationDisplay}`;
+  const pageTitle = seoContent?.meta_title || `Best Fostering Agencies in ${cityName}, ${stateAbbr} - Find Agencies`;
+  const pageDescription = seoContent?.meta_description || `Find trusted fostering agencies in ${cityName}, ${stateName}. Compare ${profiles?.length || 0}+ Ofsted-rated agencies.`;
+  const pageH1 = seoContent?.h1 || `Fostering Agencies in ${locationDisplay}`;
   
   const faqs = seoFaqs.length > 0 ? seoFaqs.map(f => ({ q: f.question, a: f.answer })) : [
     {
-      q: `How do I find a good dentist in ${cityName}?`,
-      a: `Browse our verified list of dentists in ${cityName}. Look for verified badges, patient reviews, and specializations that match your needs.`,
+      q: `How do I find a fostering agency in ${cityName}?`,
+      a: `Browse our verified list of fostering agencies in ${cityName}. Look for Ofsted ratings, carer reviews, and fostering types that match your needs.`,
     },
     {
-      q: `Are the dentists in ${cityName} verified?`,
-      a: `All dentists on our platform are licensed professionals. Profiles with the "Verified" badge have claimed and completed our verification process.`,
+      q: `Are the agencies in ${cityName} Ofsted registered?`,
+      a: `All agencies listed are Ofsted-registered or regulated by the relevant authority. Agencies with the "Verified" badge have completed our additional verification process.`,
     },
     {
-      q: `How much does dental treatment cost in ${cityName}?`,
-      a: `Dental costs vary by treatment. A basic checkup typically ranges from 150-400 AED, while specialized treatments can range from 2,500-6,000 AED.`,
+      q: `What types of fostering are available in ${cityName}?`,
+      a: `Agencies in ${cityName} offer various fostering types including emergency, respite, long-term, short-term, therapeutic, and parent & child fostering.`,
     },
     {
-      q: `Can I book emergency dental appointments in ${cityName}?`,
-      a: `Yes, many clinics in ${cityName} offer same-day emergency appointments. Use our search to find clinics with emergency availability.`,
+      q: `How do I become a foster carer in ${cityName}?`,
+      a: `Contact agencies in ${cityName} through our directory. The process typically takes 4-6 months and includes training, home visits, and assessments.`,
     },
   ];
 
@@ -342,7 +342,7 @@ const CityPage = () => {
         title={pageTitle}
         description={pageDescription}
         canonical={`/${normalizedStateSlug}/${citySlug}/`}
-        keywords={[`dentists ${cityName}`, `dental clinics ${cityName} ${stateAbbr}`, `best dentist ${cityName}`]}
+        keywords={[`fostering agencies ${cityName}`, `foster care ${cityName} ${stateAbbr}`, `best fostering agency ${cityName}`]}
         noindex={shouldNoIndex}
       />
       {/* Synchronous JSON-LD structured data for SEO */}
@@ -362,8 +362,8 @@ const CityPage = () => {
           },
           {
             type: 'itemList',
-            name: `Dentists in ${cityName}, ${stateAbbr}`,
-            description: `Top-rated dental clinics and dentists in ${cityName}`,
+            name: `Fostering Agencies in ${cityName}, ${stateAbbr}`,
+            description: `Top-rated fostering agencies in ${cityName}`,
             items: (profiles || []).slice(0, 10).map((p, i) => ({
               name: p.name,
               url: `/clinic/${p.slug}/`,
@@ -374,7 +374,7 @@ const CityPage = () => {
           {
             type: 'place' as const,
             name: cityName,
-            description: `Find the best dentists and dental clinics in ${cityName}, ${stateName}`,
+            description: `Find the best fostering agencies in ${cityName}, ${stateName}`,
             url: `/${normalizedStateSlug}/${citySlug}/`,
             containedInPlace: stateName,
           },
@@ -405,7 +405,7 @@ const CityPage = () => {
               className="inline-flex items-center gap-2 bg-primary/15 backdrop-blur-md border border-primary/30 rounded-full px-4 py-2 mb-4"
             >
               <Stethoscope className="h-4 w-4 text-primary" />
-              <span className="text-xs md:text-sm font-bold text-primary">Licensed Dental Specialists</span>
+              <span className="text-xs md:text-sm font-bold text-primary">Ofsted Rated Agencies</span>
             </motion.div>
             
             <motion.h1 
