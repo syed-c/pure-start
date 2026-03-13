@@ -687,7 +687,7 @@ export default function ProfileEditorTab() {
             <Textarea
               value={formData.description || ''}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Tell patients about your clinic, services, and expertise..."
+              placeholder="Tell prospective carers about your agency, services, and expertise..."
               rows={4}
             />
           </div>
