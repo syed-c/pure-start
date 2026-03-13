@@ -148,7 +148,7 @@ export default function ServicesTab() {
       setPriceTo('');
       setSearchTerm('');
     },
-    onError: (e: any) => toast.error(e.message || 'Failed to add treatment'),
+    onError: (e: any) => toast.error(e.message || 'Failed to add fostering type'),
   });
 
   // Remove treatment mutation
