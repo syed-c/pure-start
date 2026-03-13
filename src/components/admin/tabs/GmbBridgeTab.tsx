@@ -296,7 +296,7 @@ export default function GmbBridgeTab() {
 
       setResults(allResults);
       setSearchProgress('');
-      toast.success(`Found ${allResults.length} unique dental practices!`);
+      toast.success(`Found ${allResults.length} unique fostering agencies!`);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Search failed';
       toast.error(message);
