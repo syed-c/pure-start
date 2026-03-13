@@ -1,5 +1,5 @@
 /**
- * CredentialsBadge - Displays dentist qualifications and credentials
+ * CredentialsBadge - Displays agency qualifications and credentials
  * in a professional, trust-building format.
  */
 
@@ -42,8 +42,8 @@ export function CredentialsBadge({
             <Shield className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <p className="font-bold text-sm">{yearsExperience}+ Years of Practice</p>
-            <p className="text-xs text-muted-foreground">Licensed dental professional</p>
+            <p className="font-bold text-sm">{yearsExperience}+ Years of Service</p>
+            <p className="text-xs text-muted-foreground">Registered fostering professional</p>
           </div>
         </div>
       )}
@@ -67,10 +67,10 @@ export function CredentialsBadge({
         </div>
       )}
 
-      {/* Specializations */}
+      {/* Specialisations */}
       {specializations && specializations.length > 0 && (
         <div>
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Specializations</p>
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Specialisations</p>
           <div className="flex flex-wrap gap-2">
             {specializations.map((s, i) => (
               <Badge

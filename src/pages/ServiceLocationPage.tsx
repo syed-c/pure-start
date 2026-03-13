@@ -33,10 +33,10 @@ import {
   Shield,
   Clock,
   Star,
-  Stethoscope
+  Building2
 } from "lucide-react";
 
-const MIN_PROFILE_COUNT = 2; // noindex pages with fewer than 2 providers
+const MIN_PROFILE_COUNT = 2;
 
 const ServiceLocationPage = () => {
   const { stateSlug, citySlug, serviceSlug } = useParams();
@@ -46,7 +46,6 @@ const ServiceLocationPage = () => {
   const { data: state } = useStateData(normalizedStateSlug || '');
   const { data: city } = useCity(citySlug || '', normalizedStateSlug || '');
 
-  // Fetch SEO content
   const seoSlug = `${normalizedStateSlug || ""}/${citySlug || ""}/${serviceSlug || ""}`;
   const {
     data: seoContent,
@@ -54,12 +53,8 @@ const ServiceLocationPage = () => {
     isFetching: seoContentFetching,
   } = useSeoPageContent(seoSlug);
 
-  // IMPORTANT: react-query's `isFetching` can be true during background refetches
-  // even when we already have content. We must not hide SEO content during those
-  // refetches (it looks like “content disappeared”).
   const isSeoContentPending = !seoContent && (seoContentLoading || seoContentFetching);
 
-  // Fetch treatment data
   const { data: treatment, isLoading: treatmentLoading, isFetching: treatmentFetching } = useQuery({
     queryKey: ["treatment", service],
     queryFn: async () => {
@@ -73,14 +68,12 @@ const ServiceLocationPage = () => {
     enabled: !!service,
   });
 
-  // Fetch profiles
   const { data: profiles, isLoading: profilesLoading } = useProfiles({
     cityId: city?.id,
     treatmentId: treatment?.id,
     limit: 50,
   });
 
-  // Fetch related services
   const { data: relatedServices, isLoading: relatedServicesLoading } = useQuery({
     queryKey: ["related-services", service],
     queryFn: async () => {
@@ -95,11 +88,8 @@ const ServiceLocationPage = () => {
     },
   });
 
-  // Fetch nearby cities
   const { data: nearbyCities, isLoading: nearbyCitiesLoading } = useCitiesByStateSlug(normalizedStateSlug || '');
 
-  // Signal prerender when ALL SEO-critical data is ready
-  // Includes: location, profiles (for listings), related services (internal links), nearby cities, treatment info, and SEO content
   const isDataReady =
     !!state &&
     !!city &&
@@ -118,7 +108,6 @@ const ServiceLocationPage = () => {
   const treatmentName = treatment?.name || service.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
   const locationDisplay = stateName ? `${locationName}, ${stateName}` : locationName;
 
-  // Redirect legacy slugs
   if (stateSlug && normalizedStateSlug && stateSlug !== normalizedStateSlug && citySlug && serviceSlug) {
     return <Navigate to={`/${normalizedStateSlug}/${citySlug}/${serviceSlug}/`} replace />;
   }
@@ -130,33 +119,31 @@ const ServiceLocationPage = () => {
     { label: treatmentName },
   ];
 
-  // Parse SEO content
   const parsedContent = seoContent?.content ? parseMarkdownContent(seoContent.content) : null;
-  // Use dedicated faqs column first, fallback to parsing from content for legacy pages
   const seoFaqs = seoContent?.faqs && Array.isArray(seoContent.faqs) && seoContent.faqs.length > 0
     ? seoContent.faqs
     : seoContent?.content ? parseFaqFromContent(seoContent.content) : [];
 
-  const pageTitle = seoContent?.meta_title || `${treatmentName} in ${locationDisplay} - Find Best Specialists`;
-  const pageDescription = seoContent?.meta_description || `Find the best ${treatmentName.toLowerCase()} specialists in ${locationDisplay}. Compare ${profiles?.length || 0}+ verified clinics.`;
+  const pageTitle = seoContent?.meta_title || `${treatmentName} in ${locationDisplay} - Find Agencies`;
+  const pageDescription = seoContent?.meta_description || `Find the best ${treatmentName.toLowerCase()} agencies in ${locationDisplay}. Compare ${profiles?.length || 0}+ verified agencies.`;
   const pageH1 = seoContent?.h1 || `${treatmentName} in ${locationDisplay}`;
 
   const faqs = seoFaqs.length > 0 ? seoFaqs.map(f => ({ q: f.question, a: f.answer })) : [
     {
-      q: `Where can I find ${treatmentName} specialists in ${locationName}?`,
-      a: `We have ${profiles?.length || 0}+ verified ${treatmentName.toLowerCase()} specialists in ${locationName}. Browse our directory above to compare ratings and book appointments.`,
+      q: `Where can I find ${treatmentName} agencies in ${locationName}?`,
+      a: `We have ${profiles?.length || 0}+ verified ${treatmentName.toLowerCase()} agencies in ${locationName}. Browse our directory above to compare ratings and submit enquiries.`,
     },
     {
-      q: `How much does ${treatmentName} cost in ${locationName}?`,
-      a: `${treatmentName} costs in ${locationName} vary by clinic. Prices depend on the procedure complexity and clinic location. We recommend booking a consultation for an accurate quote in AED.`,
+      q: `What support do ${treatmentName} carers get in ${locationName}?`,
+      a: `${treatmentName} carers in ${locationName} receive comprehensive training, 24/7 support, and competitive fostering allowances. Specific support varies by agency — check individual profiles for details.`,
     },
     {
-      q: `Are the ${treatmentName} dentists in ${locationName} verified?`,
-      a: `All dentists on our platform are licensed. Profiles with the "Verified" badge have completed our additional verification process.`,
+      q: `Are the ${treatmentName} agencies in ${locationName} Ofsted registered?`,
+      a: `All agencies on our platform are Ofsted-registered. Profiles with the "Verified" badge have completed our additional verification process.`,
     },
     {
-      q: `How do I book a ${treatmentName} appointment in ${locationName}?`,
-      a: `Browse the specialists above, click "Book Now" on any profile, and follow the easy booking process. The clinic will confirm your appointment.`,
+      q: `How do I enquire about ${treatmentName} in ${locationName}?`,
+      a: `Browse the agencies above, click "Enquire" on any profile, and fill in your details. The agency will contact you to discuss the next steps in your fostering journey.`,
     },
   ];
 
@@ -175,10 +162,9 @@ const ServiceLocationPage = () => {
         title={pageTitle}
         description={pageDescription}
         canonical={`/${normalizedStateSlug}/${citySlug}/${service}/`}
-        keywords={[`${treatmentName} ${locationName}`, `${treatmentName} specialist`, `best ${treatmentName} clinic`]}
+        keywords={[`${treatmentName} ${locationName}`, `${treatmentName} agency`, `best ${treatmentName} agency`]}
         noindex={shouldNoIndex}
       />
-      {/* Synchronous JSON-LD structured data for SEO */}
       <SyncStructuredData
         data={[
           {
@@ -195,17 +181,9 @@ const ServiceLocationPage = () => {
             questions: faqs.map(f => ({ question: f.q, answer: f.a })),
           },
           {
-            type: 'medicalProcedure',
-            name: treatmentName,
-            description: `${treatmentName} dental services in ${locationName}`,
-            url: `/${normalizedStateSlug}/${citySlug}/${service}/`,
-            bodyLocation: 'Oral cavity',
-            procedureType: 'Dental procedure',
-          },
-          {
             type: 'itemList',
-            name: `${treatmentName} Providers in ${locationName}`,
-            description: `Top-rated ${treatmentName.toLowerCase()} specialists in ${locationName}`,
+            name: `${treatmentName} Agencies in ${locationName}`,
+            description: `Top-rated ${treatmentName.toLowerCase()} agencies in ${locationName}`,
             items: (profiles || []).slice(0, 10).map((p, i) => ({
               name: p.name,
               url: `/clinic/${p.slug}/`,
@@ -217,7 +195,7 @@ const ServiceLocationPage = () => {
         id="service-location-schema"
       />
       
-      {/* Hero Section — Dark theme matching homepage */}
+      {/* Hero Section */}
       <section className="relative overflow-hidden min-h-[45vh] flex items-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-primary/15 rounded-full blur-[120px]" />
@@ -236,8 +214,8 @@ const ServiceLocationPage = () => {
           <div className="max-w-4xl mx-auto text-center">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
               <Badge variant="secondary" className="rounded-full px-4 py-1.5 text-xs md:text-sm font-bold mb-4 bg-primary/15 text-primary border-primary/30 backdrop-blur-md">
-                <Stethoscope className="h-3 w-3 md:h-4 md:w-4 mr-1.5" />
-                Licensed Specialists
+                <Building2 className="h-3 w-3 md:h-4 md:w-4 mr-1.5" />
+                Ofsted Registered Agencies
               </Badge>
             </motion.div>
             
@@ -264,7 +242,7 @@ const ServiceLocationPage = () => {
               transition={{ delay: 0.2 }}
               className="text-sm md:text-base lg:text-lg text-white/40 max-w-2xl mx-auto mb-5 px-2"
             >
-              Find and book appointments with top-rated {treatmentName.toLowerCase()} specialists in {locationName}.
+              Find and enquire with top-rated {treatmentName.toLowerCase()} agencies in {locationName}.
             </motion.p>
 
             <motion.div 
@@ -285,15 +263,15 @@ const ServiceLocationPage = () => {
             >
               <div className="flex items-center gap-1.5 bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-xl px-3 py-2">
                 <Users className="h-4 w-4 text-primary" />
-                <span className="font-bold text-sm text-white">{profiles?.length || 0}+ Specialists</span>
+                <span className="font-bold text-sm text-white">{profiles?.length || 0}+ Agencies</span>
               </div>
               <div className="flex items-center gap-1.5 bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-xl px-3 py-2">
                 <Star className="h-4 w-4 text-gold fill-gold" />
                 <span className="font-bold text-sm text-white">4.8 Avg. Rating</span>
               </div>
               <div className="flex items-center gap-1.5 bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-xl px-3 py-2">
-                <Clock className="h-4 w-4 text-primary" />
-                <span className="font-bold text-sm text-white">Book in 60s</span>
+                <Shield className="h-4 w-4 text-primary" />
+                <span className="font-bold text-sm text-white">Ofsted Registered</span>
               </div>
             </motion.div>
           </div>
@@ -306,10 +284,10 @@ const ServiceLocationPage = () => {
         </div>
       </section>
 
-      {/* Page Intro Section - CMS Content */}
+      {/* Page Intro Section */}
       <PageIntroSection
         title={parsedContent?.sections?.[0]?.heading || `${treatmentName} Services in ${locationName}`}
-        content={(seoContent as any)?.page_intro || parsedContent?.intro || parsedContent?.sections?.[0]?.content || `Find the best ${treatmentName.toLowerCase()} specialists in ${locationDisplay}. Our directory features verified dental professionals with proven expertise in ${treatmentName.toLowerCase()} procedures.`}
+        content={(seoContent as any)?.page_intro || parsedContent?.intro || parsedContent?.sections?.[0]?.content || `Find the best ${treatmentName.toLowerCase()} agencies in ${locationDisplay}. Our directory features Ofsted-registered agencies with proven expertise in ${treatmentName.toLowerCase()}.`}
         isLoading={isSeoContentPending}
       />
 
@@ -317,17 +295,15 @@ const ServiceLocationPage = () => {
       <Section size="lg">
         <div className="container px-4">
           <div className="max-w-5xl mx-auto space-y-8">
-            {/* Dentist List Frame */}
             <DentistListFrame
               profiles={profiles || []}
               isLoading={profilesLoading}
               locationName={locationName}
-              emptyMessage={`We're still adding ${treatmentName.toLowerCase()} specialists in ${locationName}.`}
+              emptyMessage={`We're still adding ${treatmentName.toLowerCase()} agencies in ${locationName}.`}
               maxHeight={700}
               initialCount={10}
             />
 
-            {/* SEO Content Block */}
             <SEOContentBlock
               variant="service-location"
               locationName={locationName}
@@ -343,7 +319,6 @@ const ServiceLocationPage = () => {
               isLoading={isSeoContentPending}
             />
 
-            {/* Geographic Link Block - SEO Authority Distribution */}
             <GeographicLinkBlock
               pageType="service-location"
               stateSlug={normalizedStateSlug || ''}
@@ -356,7 +331,6 @@ const ServiceLocationPage = () => {
               services={relatedTreatments}
             />
 
-            {/* Nearby Cities */}
             {nearbyLocations.length > 0 && (
               <LocationQuickLinks
                 variant="nearby"

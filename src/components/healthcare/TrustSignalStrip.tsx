@@ -1,11 +1,11 @@
 /**
- * TrustSignalStrip - Healthcare trust badges displayed prominently on profile pages.
+ * TrustSignalStrip - Trust badges displayed prominently on profile pages.
  * 
- * Shows DHA/MOHAP verification, years active, patient count, and safety indicators
- * in a calm, medical-authority visual style.
+ * Shows Ofsted verification, years active, review count, and safety indicators
+ * in a calm, authority visual style.
  */
 
-import { Shield, BadgeCheck, Clock, Users, Award, Heart, Stethoscope } from 'lucide-react';
+import { Shield, BadgeCheck, Clock, Users, Award, Heart, Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface TrustSignalStripProps {
@@ -34,8 +34,8 @@ export function TrustSignalStrip({
   if (isVerified) {
     signals.push({
       icon: Shield,
-      label: 'DHA Verified',
-      sublabel: 'Licensed Practice',
+      label: 'Ofsted Registered',
+      sublabel: 'Verified Agency',
       colorClass: 'text-teal bg-teal/10 border-teal/20',
     });
   }
@@ -60,9 +60,9 @@ export function TrustSignalStrip({
 
   if (dentistCount && dentistCount > 0) {
     signals.push({
-      icon: Stethoscope,
-      label: `${dentistCount} Specialists`,
-      sublabel: 'On Staff',
+      icon: Building2,
+      label: `${dentistCount} Staff`,
+      sublabel: 'Team Members',
       colorClass: 'text-primary bg-primary/10 border-primary/20',
     });
   }

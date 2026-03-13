@@ -1,11 +1,11 @@
 /**
- * Generates contextual Q&A content for AI search optimization.
+ * Generates contextual Q&A content for AI search optimisation.
  * Pre-computed, no API calls — pure template-based generation
- * using UAE dental context for AI crawlers.
+ * using UK fostering context for AI crawlers.
  */
 import type { QAItem } from "@/components/ai-seo/ConversationalQABlock";
 
-// Clinic-specific Q&A
+// Agency-specific Q&A
 export function generateClinicQA(clinic: {
   name: string;
   city?: string;
@@ -18,37 +18,37 @@ export function generateClinicQA(clinic: {
   const items: QAItem[] = [];
 
   items.push({
-    question: `Is ${clinic.name} a good dental clinic?`,
+    question: `Is ${clinic.name} a good fostering agency?`,
     answer: clinic.rating
-      ? `${clinic.name}${location ? ` in ${location}` : ""} has a rating of ${clinic.rating}/5 based on ${clinic.reviewCount || 0} patient reviews. Patients can book appointments online through AppointPanda to experience their services firsthand.`
-      : `${clinic.name}${location ? ` is located in ${location}` : ""} and accepts online bookings through AppointPanda. Check recent patient reviews on the clinic's profile for the latest feedback.`,
-    followUp: "You can compare this clinic with others in the area using our search filters.",
+      ? `${clinic.name}${location ? ` in ${location}` : ""} has a rating of ${clinic.rating}/5 based on ${clinic.reviewCount || 0} reviews. You can make an enquiry through Foster Connect to learn more about their services.`
+      : `${clinic.name}${location ? ` is located in ${location}` : ""} and accepts enquiries through Foster Connect. Check recent reviews on the agency's profile for the latest feedback.`,
+    followUp: "You can compare this agency with others in the area using our search filters.",
   });
 
   if (location) {
     items.push({
       question: `Where is ${clinic.name} located?`,
-      answer: `${clinic.name} is located in ${location}, UAE. The clinic is accessible for patients in surrounding areas and accepts walk-in and online appointments.`,
+      answer: `${clinic.name} is located in ${location}, UK. The agency supports foster carers in surrounding areas and accepts enquiries online.`,
     });
   }
 
   items.push({
-    question: `How do I book an appointment at ${clinic.name}?`,
-    answer: `You can book an appointment at ${clinic.name} online through AppointPanda. Select your preferred date and time, choose your treatment, and receive instant confirmation. No phone calls needed.`,
-    followUp: "Most clinics confirm appointments within 2 hours during business hours.",
+    question: `How do I enquire with ${clinic.name}?`,
+    answer: `You can submit an enquiry to ${clinic.name} online through Foster Connect. Fill in your details and the agency will get back to you to discuss your fostering journey. No obligation.`,
+    followUp: "Most agencies respond to enquiries within 1-2 working days.",
   });
 
   if (clinic.treatments?.length) {
-    const topTreatments = clinic.treatments.slice(0, 5).join(", ");
+    const topServices = clinic.treatments.slice(0, 5).join(", ");
     items.push({
-      question: `What dental services does ${clinic.name} offer?`,
-      answer: `${clinic.name} offers a range of dental services including ${topTreatments}. All treatments are performed by DHA/MOHAP-licensed dental professionals in the UAE.`,
+      question: `What types of fostering does ${clinic.name} offer?`,
+      answer: `${clinic.name} offers a range of fostering services including ${topServices}. All placements are overseen by Ofsted-registered professionals in the UK.`,
     });
   }
 
   items.push({
-    question: `Does ${clinic.name} accept dental insurance?`,
-    answer: `Many dental clinics in the UAE accept major insurance providers. Check ${clinic.name}'s profile on AppointPanda for their current list of accepted insurance plans, or contact the clinic directly for verification.`,
+    question: `Is ${clinic.name} Ofsted registered?`,
+    answer: `Fostering agencies in the UK must be registered and inspected by Ofsted. Check ${clinic.name}'s profile on Foster Connect for their current Ofsted rating and registration details.`,
   });
 
   return items;
@@ -62,60 +62,60 @@ export function generateCityQA(city: {
 }): QAItem[] {
   return [
     {
-      question: `How many dental clinics are in ${city.name}?`,
+      question: `How many fostering agencies are in ${city.name}?`,
       answer: city.clinicCount
-        ? `There are ${city.clinicCount}+ dental clinics listed in ${city.name} on AppointPanda. Each clinic is verified and features patient reviews, pricing information, and online booking.`
-        : `${city.name} has numerous dental clinics listed on AppointPanda with verified profiles, patient reviews, and online booking capabilities.`,
-      followUp: "Filter by treatment type, insurance, or rating to find your ideal clinic.",
+        ? `There are ${city.clinicCount}+ fostering agencies listed in ${city.name} on Foster Connect. Each agency is verified and features reviews, service information, and online enquiry forms.`
+        : `${city.name} has numerous fostering agencies listed on Foster Connect with verified profiles, reviews, and online enquiry capabilities.`,
+      followUp: "Filter by fostering type, Ofsted rating, or location to find your ideal agency.",
     },
     {
-      question: `What is the best dental clinic in ${city.name}?`,
-      answer: `The best dental clinic in ${city.name} depends on your specific needs. AppointPanda ranks clinics based on patient reviews, verification status, and service quality. Use our filters to find clinics specializing in your required treatment.`,
+      question: `What is the best fostering agency in ${city.name}?`,
+      answer: `The best fostering agency in ${city.name} depends on your specific needs and circumstances. Foster Connect ranks agencies based on reviews, Ofsted ratings, and service quality. Use our filters to find agencies specialising in your preferred fostering type.`,
     },
     {
-      question: `How much does a dentist visit cost in ${city.name}?`,
-      answer: `Dental consultation fees in ${city.name} typically range from AED 100 to AED 350 depending on the clinic and type of consultation. Specialized treatments have different pricing — check individual clinic profiles on AppointPanda for transparent AED pricing.`,
-      followUp: "Most clinics offer free initial consultations for cosmetic procedures.",
+      question: `What support do foster carers get in ${city.name}?`,
+      answer: `Foster carers in ${city.name} typically receive comprehensive training, 24/7 support, a weekly fostering allowance, regular supervision, and access to peer support groups. Specific support varies by agency — check individual agency profiles on Foster Connect for details.`,
+      followUp: "Most agencies offer an initial information event before you commit to the assessment process.",
     },
     {
-      question: `Are dentists in ${city.name} DHA licensed?`,
-      answer: `All dental practitioners in the UAE must be licensed by the relevant health authority — DHA (Dubai Health Authority) for Dubai, DOH for Abu Dhabi, or MOHAP for other emirates. AppointPanda verifies clinic credentials as part of our listing process.`,
+      question: `Are fostering agencies in ${city.name} Ofsted rated?`,
+      answer: `All fostering agencies in England must be registered with and inspected by Ofsted (Office for Standards in Education). Foster Connect displays each agency's current Ofsted rating on their profile to help you make an informed choice.`,
     },
     {
-      question: `Can I book a same-day dental appointment in ${city.name}?`,
-      answer: `Yes, many dental clinics in ${city.name} accept same-day appointments through AppointPanda. Use the "Available Today" filter to find clinics with immediate availability for consultations or emergency dental care.`,
+      question: `Can I start fostering quickly in ${city.name}?`,
+      answer: `The fostering assessment process typically takes 4-6 months, though some agencies offer fast-track assessments. Emergency and respite fostering may have shorter timelines. Use Foster Connect to find agencies in ${city.name} with current availability.`,
     },
   ];
 }
 
-// Treatment-specific Q&A
+// Fostering type-specific Q&A
 export function generateTreatmentQA(treatment: {
   name: string;
   city?: string;
 }): QAItem[] {
-  const locationSuffix = treatment.city ? ` in ${treatment.city}` : " in the UAE";
+  const locationSuffix = treatment.city ? ` in ${treatment.city}` : " in the UK";
 
   return [
     {
-      question: `How much does ${treatment.name} cost${locationSuffix}?`,
-      answer: `${treatment.name} costs${locationSuffix} vary by clinic and complexity. AppointPanda shows transparent AED pricing for each clinic so you can compare costs before booking. Most clinics offer payment plans for extensive treatments.`,
-      followUp: "Compare prices across multiple clinics to find the best value.",
+      question: `What is ${treatment.name}${locationSuffix}?`,
+      answer: `${treatment.name}${locationSuffix} provides specialised care for children and young people who need a safe and supportive home. Foster Connect lists verified agencies offering ${treatment.name.toLowerCase()} so you can compare and enquire.`,
+      followUp: "Compare agencies across multiple areas to find the best fit.",
     },
     {
-      question: `Is ${treatment.name} painful?`,
-      answer: `Modern ${treatment.name.toLowerCase()} procedures use advanced anesthesia and pain management techniques. Most patients report minimal discomfort. Discuss pain management options with your dentist during the consultation — you can book one through AppointPanda.`,
+      question: `What qualifications do I need for ${treatment.name}?`,
+      answer: `You don't need formal qualifications to become a foster carer for ${treatment.name.toLowerCase()}. Agencies look for patience, resilience, and a genuine desire to help children. Full training and support are provided. Enquire through Foster Connect to learn more.`,
     },
     {
-      question: `How long does ${treatment.name} take?`,
-      answer: `The duration of ${treatment.name.toLowerCase()} depends on the complexity and your individual case. Your dentist will provide a treatment timeline during the initial consultation. Book a consultation through AppointPanda to get a personalized assessment.`,
+      question: `How long does ${treatment.name} last?`,
+      answer: `The duration of ${treatment.name.toLowerCase()} depends on the individual child's needs and care plan. Your fostering agency will discuss placement timelines during the assessment process. Enquire through Foster Connect to get personalised information.`,
     },
     {
-      question: `Where can I get ${treatment.name}${locationSuffix}?`,
-      answer: `AppointPanda lists verified dental clinics offering ${treatment.name.toLowerCase()}${locationSuffix}. Each clinic profile includes patient reviews, pricing, and online booking. Filter by rating, location, or insurance to find the right provider.`,
+      question: `Where can I find ${treatment.name} agencies${locationSuffix}?`,
+      answer: `Foster Connect lists verified fostering agencies offering ${treatment.name.toLowerCase()}${locationSuffix}. Each agency profile includes reviews, Ofsted ratings, and online enquiry forms. Filter by location or fostering type to find the right agency.`,
     },
     {
-      question: `Does insurance cover ${treatment.name}${locationSuffix}?`,
-      answer: `Insurance coverage for ${treatment.name.toLowerCase()} varies by provider and plan. Most UAE dental insurance plans cover basic treatments, while cosmetic procedures may have limited coverage. Check with your insurance provider or ask the clinic directly through AppointPanda.`,
+      question: `What allowance do foster carers receive for ${treatment.name}${locationSuffix}?`,
+      answer: `Fostering allowances for ${treatment.name.toLowerCase()} vary by agency and local authority. Most agencies offer competitive weekly allowances plus additional support. Check with individual agencies through Foster Connect for current rates.`,
     },
   ];
 }
