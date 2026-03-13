@@ -791,9 +791,9 @@ export default function PagesTab() {
               <Select value={createForm.pageType} onValueChange={(v) => setCreateForm({ ...createForm, pageType: v })}>
                 <SelectTrigger><SelectValue placeholder="Select page type..." /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="state"><div className="flex items-center gap-2"><Map className="h-4 w-4" />Emirate Page</div></SelectItem>
+                  <SelectItem value="state"><div className="flex items-center gap-2"><Map className="h-4 w-4" />Region Page</div></SelectItem>
                   <SelectItem value="city"><div className="flex items-center gap-2"><MapPin className="h-4 w-4" />City Page</div></SelectItem>
-                  <SelectItem value="treatment"><div className="flex items-center gap-2"><Stethoscope className="h-4 w-4" />Service/Treatment Page</div></SelectItem>
+                  <SelectItem value="treatment"><div className="flex items-center gap-2"><Stethoscope className="h-4 w-4" />Fostering Type Page</div></SelectItem>
                   <SelectItem value="service-location"><div className="flex items-center gap-2"><Stethoscope className="h-4 w-4" />Service + Location Page</div></SelectItem>
                   <SelectItem value="custom"><div className="flex items-center gap-2"><FileText className="h-4 w-4" />Custom Static Page</div></SelectItem>
                 </SelectContent>
