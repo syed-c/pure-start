@@ -154,7 +154,7 @@ const DentistPage = () => {
   useEffect(() => {
     if (dentist?.id && dentist?.name) {
       trackProfileView({
-        profile_type: 'agency',
+        profile_type: 'dentist',
         profile_id: dentist.id,
         profile_name: dentist.name,
         city: dentist.clinic?.city?.name,
