@@ -67,9 +67,9 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
     enabled: !!user?.id && !isAdmin && !isSuperAdmin,
   });
 
-  // Fetch today's appointments
+  // Fetch today's enquiries
   const { data: todayAppointments = [] } = useQuery({
-    queryKey: ['dashboard-v2-today-appointments', clinic?.id],
+    queryKey: ['dashboard-v2-today-enquiries', clinic?.id],
     queryFn: async () => {
       const today = new Date().toISOString().split('T')[0];
       const { data } = await supabase
