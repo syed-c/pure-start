@@ -225,7 +225,7 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
             onClick={() => onNavigate('my-patients')}
           >
             <Send className="h-4 w-4" />
-            Send Review Request
+            Send Feedback Request
           </Button>
         </div>
       </div>
