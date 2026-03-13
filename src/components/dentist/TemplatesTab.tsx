@@ -477,7 +477,7 @@ export default function TemplatesTab() {
               Send {sendTemplate?.name}
             </DialogTitle>
             <DialogDescription>
-              Select a patient and channel to send this message
+              Select a carer and channel to send this message
             </DialogDescription>
           </DialogHeader>
 
