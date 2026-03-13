@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { SearchBox } from "@/components/SearchBox";
 import { TypewriterText } from "@/components/TypewriterText";
 import { Button } from "@/components/ui/button";
-import { Link, Navigate, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { POPULAR_CITIES, FOSTERING_CATEGORIES } from "@/lib/constants/activeRegions";
