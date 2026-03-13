@@ -736,7 +736,7 @@ export default function PatientsTab() {
             <div className="space-y-2">
               <Label>Phone Number *</Label>
               <Input
-                placeholder="+971 50 123 4567"
+                placeholder="+44 7700 900000"
                 value={newPatient.phone}
                 onChange={(e) => setNewPatient({ ...newPatient, phone: e.target.value })}
               />
