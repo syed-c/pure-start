@@ -349,8 +349,8 @@ const HomeV2 = () => {
           <div className="container px-4">
             <motion.div {...fadeUp} className="flex items-end justify-between mb-8">
               <div>
-                <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-1">Dental <span className="text-primary">Services</span></h2>
-                <p className="text-sm text-muted-foreground">Find specialists for every dental need</p>
+                 <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-1">Fostering <span className="text-primary">Categories</span></h2>
+                 <p className="text-sm text-muted-foreground">Find agencies specialising in specific types of fostering</p>
               </div>
               <Link to="/services" className="hidden md:inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
                 All Services <ArrowRight className="h-3.5 w-3.5" />
