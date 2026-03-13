@@ -289,7 +289,7 @@ const adminTabGroups = [
       { id: 'quality-identity', label: 'Quality & Identity', icon: Activity, highlight: true },
       { id: 'content-studio', label: 'Content Studio', icon: Sparkles, highlight: true },
       { id: 'faq-studio', label: 'FAQ Studio', icon: Search, highlight: true },
-      { id: 'clinic-enrichment', label: 'Clinic Enrichment', icon: Sparkles, highlight: true },
+      { id: 'clinic-enrichment', label: 'Agency Enrichment', icon: Sparkles, highlight: true },
       { id: 'blog', label: 'Blog Engine', icon: BookOpen },
       { id: 'content-strategy', label: 'Content Strategy', icon: Calendar, highlight: true },
       { id: 'static-pages', label: 'Static Pages', icon: Globe },
