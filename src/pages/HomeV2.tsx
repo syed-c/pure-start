@@ -244,15 +244,15 @@ const HomeV2 = () => {
             {/* Content */}
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}>
               <span className="inline-block text-xs font-bold uppercase tracking-widest text-primary mb-3">Why Choose Us</span>
-              <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-6">
-                Why Patients Trust <span className="text-primary">AppointPanda</span>
-              </h2>
-              <div className="space-y-4">
-                {[
-                  { icon: Shield, title: "DHA & MOHAP Verified", desc: "Every listed clinic is verified against UAE health authority standards." },
-                  { icon: Star, title: "Real Patient Reviews", desc: "Authentic, unfiltered reviews from actual patients across UAE." },
-                  { icon: Heart, title: "Transparent AED Pricing", desc: "Clear cost ranges in AED for every dental service." },
-                  { icon: Timer, title: "Book in 60 Seconds", desc: "No phone calls needed. Schedule your appointment instantly online." },
+               <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-6">
+                 Why Families Trust <span className="text-primary">Foster Connect</span>
+               </h2>
+               <div className="space-y-4">
+                 {[
+                   { icon: Shield, title: "Ofsted Verified", desc: "Every listed agency is registered and rated by Ofsted or the relevant authority." },
+                   { icon: Star, title: "Real Carer Reviews", desc: "Authentic reviews from foster carers who've worked with these agencies." },
+                   { icon: Heart, title: "All Fostering Types", desc: "Emergency, respite, long-term, therapeutic — find the right match." },
+                   { icon: Timer, title: "Free to Use", desc: "Our directory is completely free for prospective foster carers." },
                 ].map((item, i) => (
                   <motion.div 
                     key={i} 
