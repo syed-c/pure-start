@@ -116,7 +116,7 @@ export function buildServiceLocationUrl(
 export function buildInsuranceUrl(insuranceSlug: string, regionSlug?: string, citySlug?: string): string {
   if (!insuranceSlug) return "/insurance/";
   let path = `/insurance/${insuranceSlug}`;
-  if (emirateSlug) path += `/${emirateSlug}`;
+  if (regionSlug) path += `/${regionSlug}`;
   if (citySlug) path += `/${citySlug}`;
   return withTrailingSlash(path);
 }
