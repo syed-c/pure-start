@@ -111,8 +111,8 @@ export default function MyPracticePage({ onNavigate }: MyPracticePageProps) {
     return (
       <EmptyState
         icon={Building2}
-        title="No Practice Found"
-        description="Your account is not linked to any practice. Claim your profile or add a new practice."
+        title="No Agency Found"
+        description="Your account is not linked to any agency. Claim your profile or add a new agency."
         action={
           <Button onClick={() => onNavigate('claim-profile')}>Claim Profile</Button>
         }
