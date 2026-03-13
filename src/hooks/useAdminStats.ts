@@ -18,8 +18,8 @@ export interface AdminStats {
     gmbImported: number;
     manual: number;
   };
-  dentists: { total: number; active: number; featured: number };
-  patients: { total: number };
+  dentists: { total: number; active: number; featured: number }; // contacts
+  patients: { total: number }; // carers
   leads: { today: number; week: number; month: number; total: number };
   appointments: { pending: number; confirmed: number; completed: number; cancelled: number; noShow: number };
   reviews: { pending: number; approved: number; rejected: number };
