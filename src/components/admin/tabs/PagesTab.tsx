@@ -648,21 +648,21 @@ export default function PagesTab() {
               <SelectContent>
                 <SelectItem value="all">All Types ({pageCounts.all})</SelectItem>
                 <SelectItem value="static">Static Pages ({pageCounts.static})</SelectItem>
-                <SelectItem value="state">Emirates ({pageCounts.state})</SelectItem>
+                <SelectItem value="state">Regions ({pageCounts.state})</SelectItem>
                 <SelectItem value="city">City Pages ({pageCounts.city})</SelectItem>
-                <SelectItem value="treatment">Service Pages ({pageCounts.treatment})</SelectItem>
-                <SelectItem value="service-location">Service+Location ({pageCounts['service-location']})</SelectItem>
-                <SelectItem value="clinic">Clinic Pages ({pageCounts.clinic})</SelectItem>
+                <SelectItem value="treatment">Fostering Types ({pageCounts.treatment})</SelectItem>
+                <SelectItem value="service-location">Type+Location ({pageCounts['service-location']})</SelectItem>
+                <SelectItem value="clinic">Agency Pages ({pageCounts.clinic})</SelectItem>
                 <SelectItem value="blog">Blog Posts ({pageCounts.blog})</SelectItem>
               </SelectContent>
             </Select>
-            {/* State/Emirate filter */}
+            {/* Region filter */}
             <Select value={filters.stateId} onValueChange={(v) => { setFilters({ ...filters, stateId: v }); setDisplayLimit(50); }}>
               <SelectTrigger className="w-52">
-                <SelectValue placeholder="All Emirates" />
+                <SelectValue placeholder="All Regions" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Emirates</SelectItem>
+                <SelectItem value="all">All Regions</SelectItem>
                 {states?.map(state => (
                   <SelectItem key={state.id} value={state.id}>
                     {state.name}
