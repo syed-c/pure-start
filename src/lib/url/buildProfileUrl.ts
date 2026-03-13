@@ -17,6 +17,10 @@ export interface ClinicData {
   slug: string;
 }
 
+// Aliases for fostering context
+export type AgencyData = ClinicData;
+export type ContactData = DentistData;
+
 export interface CityData {
   slug: string;
   state?: { slug: string } | null;
