@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plus, Edit, Trash2, Stethoscope, Search } from 'lucide-react';
+import { Plus, Edit, Trash2, Heart, Search } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 export default function TreatmentsTab() {
@@ -22,15 +22,10 @@ export default function TreatmentsTab() {
   const [editing, setEditing] = useState<any>(null);
   const [search, setSearch] = useState('');
   const [form, setForm] = useState({
-    name: '',
-    slug: '',
-    description: '',
-    icon: '',
-    is_active: true,
-    display_order: 0,
+    name: '', slug: '', description: '', icon: '', is_active: true, display_order: 0,
   });
 
-  const filteredTreatments = treatments?.filter(t => 
+  const filteredTypes = treatments?.filter(t => 
     t.name.toLowerCase().includes(search.toLowerCase()) ||
     t.slug.toLowerCase().includes(search.toLowerCase())
   ) || [];
@@ -47,16 +42,9 @@ export default function TreatmentsTab() {
     setForm({ name: '', slug: '', description: '', icon: '', is_active: true, display_order: 0 });
   };
 
-  const openEdit = (treatment: any) => {
-    setEditing(treatment);
-    setForm({
-      name: treatment.name,
-      slug: treatment.slug,
-      description: treatment.description || '',
-      icon: treatment.icon || '',
-      is_active: treatment.is_active,
-      display_order: treatment.display_order || 0,
-    });
+  const openEdit = (item: any) => {
+    setEditing(item);
+    setForm({ name: item.name, slug: item.slug, description: item.description || '', icon: item.icon || '', is_active: item.is_active, display_order: item.display_order || 0 });
     setDialogOpen(true);
   };
 
@@ -72,32 +60,28 @@ export default function TreatmentsTab() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-display font-bold text-foreground">Treatments Management</h1>
-          <p className="text-muted-foreground mt-1">Manage dental services and procedures</p>
+          <h1 className="text-3xl font-display font-bold text-foreground">Fostering Types</h1>
+          <p className="text-muted-foreground mt-1">Manage fostering categories and placement types</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button onClick={() => { setEditing(null); setForm({ name: '', slug: '', description: '', icon: '', is_active: true, display_order: 0 }); }}>
               <Plus className="h-4 w-4 mr-2" />
-              Add Treatment
+              Add Fostering Type
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{editing ? 'Edit Treatment' : 'Add Treatment'}</DialogTitle>
+              <DialogTitle>{editing ? 'Edit Fostering Type' : 'Add Fostering Type'}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label>Name</Label>
-                <Input 
-                  value={form.name} 
-                  onChange={(e) => setForm({ ...form, name: e.target.value, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })} 
-                  placeholder="Treatment name" 
-                />
+                <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })} placeholder="e.g. Emergency Fostering" />
               </div>
               <div className="space-y-2">
                 <Label>Slug</Label>
-                <Input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} placeholder="treatment-slug" />
+                <Input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} placeholder="fostering-type-slug" />
               </div>
               <div className="space-y-2">
                 <Label>Description</Label>
@@ -112,7 +96,7 @@ export default function TreatmentsTab() {
                 <Switch checked={form.is_active} onCheckedChange={(checked) => setForm({ ...form, is_active: checked })} />
               </div>
               <Button onClick={handleSave} className="w-full" disabled={createTreatment.isPending || updateTreatment.isPending}>
-                {editing ? 'Update' : 'Create'} Treatment
+                {editing ? 'Update' : 'Create'} Fostering Type
               </Button>
             </div>
           </DialogContent>
@@ -124,18 +108,18 @@ export default function TreatmentsTab() {
         <Card className="card-modern">
           <CardContent className="p-4 flex items-center gap-4">
             <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Stethoscope className="h-6 w-6 text-primary" />
+              <Heart className="h-6 w-6 text-primary" />
             </div>
             <div>
               <p className="text-2xl font-bold">{treatments?.length || 0}</p>
-              <p className="text-sm text-muted-foreground">Total Treatments</p>
+              <p className="text-sm text-muted-foreground">Total Types</p>
             </div>
           </CardContent>
         </Card>
         <Card className="card-modern">
           <CardContent className="p-4 flex items-center gap-4">
             <div className="h-12 w-12 rounded-xl bg-blue-light flex items-center justify-center">
-              <Stethoscope className="h-6 w-6 text-blue-custom" />
+              <Heart className="h-6 w-6 text-blue-custom" />
             </div>
             <div>
               <p className="text-2xl font-bold">{treatments?.filter(t => t.is_active).length || 0}</p>
@@ -146,7 +130,7 @@ export default function TreatmentsTab() {
         <Card className="card-modern">
           <CardContent className="p-4 flex items-center gap-4">
             <div className="h-12 w-12 rounded-xl bg-coral-light flex items-center justify-center">
-              <Stethoscope className="h-6 w-6 text-coral" />
+              <Heart className="h-6 w-6 text-coral" />
             </div>
             <div>
               <p className="text-2xl font-bold">{treatments?.filter(t => !t.is_active).length || 0}</p>
@@ -159,12 +143,7 @@ export default function TreatmentsTab() {
       {/* Search */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Search treatments..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="pl-10"
-        />
+        <Input placeholder="Search fostering types..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
       </div>
 
       {/* Table */}
@@ -181,41 +160,30 @@ export default function TreatmentsTab() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredTreatments.map((treatment) => (
-                <TableRow key={treatment.id}>
-                  <TableCell className="font-medium">{treatment.name}</TableCell>
-                  <TableCell className="text-muted-foreground">{treatment.slug}</TableCell>
-                  <TableCell>{treatment.display_order}</TableCell>
+              {filteredTypes.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell className="font-medium">{item.name}</TableCell>
+                  <TableCell className="text-muted-foreground">{item.slug}</TableCell>
+                  <TableCell>{item.display_order}</TableCell>
                   <TableCell>
-                    <Badge variant={treatment.is_active ? 'default' : 'secondary'}>
-                      {treatment.is_active ? 'Active' : 'Inactive'}
+                    <Badge variant={item.is_active ? 'default' : 'secondary'}>
+                      {item.is_active ? 'Active' : 'Inactive'}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button variant="ghost" size="sm" onClick={() => openEdit(treatment)}>
-                      <Edit className="h-4 w-4" />
-                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => openEdit(item)}><Edit className="h-4 w-4" /></Button>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <Button variant="ghost" size="sm" className="text-destructive">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <Button variant="ghost" size="sm" className="text-destructive"><Trash2 className="h-4 w-4" /></Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle>Delete Treatment?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This will permanently delete "{treatment.name}". This action cannot be undone.
-                          </AlertDialogDescription>
+                          <AlertDialogTitle>Delete Fostering Type?</AlertDialogTitle>
+                          <AlertDialogDescription>This will permanently delete "{item.name}". This action cannot be undone.</AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => deleteTreatment.mutate(treatment.id)}
-                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                          >
-                            Delete
-                          </AlertDialogAction>
+                          <AlertDialogAction onClick={() => deleteTreatment.mutate(item.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
