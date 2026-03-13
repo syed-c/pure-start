@@ -139,7 +139,7 @@ const HomeV2 = () => {
           </motion.h1>
 
           <motion.p {...fadeUp} transition={{ delay: 0.2 }} className="text-base md:text-lg text-background/80 leading-relaxed mb-8 max-w-xl mx-auto">
-            Compare verified clinics, read real reviews, check AED pricing — and book in under 60 seconds.
+            Compare Ofsted-rated agencies, read carer reviews, explore fostering types — and start your journey today.
           </motion.p>
 
           {/* Trust indicators */}
