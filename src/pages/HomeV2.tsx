@@ -129,7 +129,7 @@ const HomeV2 = () => {
         <div className="relative z-10 container px-4 py-16 md:py-20 text-center">
           <motion.div {...fadeUp} className="inline-flex items-center gap-2 bg-background/15 backdrop-blur-sm border border-background/20 rounded-full px-4 py-1.5 mb-6">
             <BadgeCheck className="h-4 w-4 text-background" />
-            <span className="text-xs font-semibold text-background">UAE's Trusted Dental Directory</span>
+            <span className="text-xs font-semibold text-background">UK's Trusted Fostering Directory</span>
           </motion.div>
 
           <motion.h1 {...fadeUp} transition={{ delay: 0.1 }} className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-background leading-[1.15] mb-4 max-w-3xl mx-auto">
