@@ -106,8 +106,8 @@ const HomeV2 = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={seoContent?.meta_title || "Find the Best Dentists in UAE | Dentist in Dubai"}
-        description={seoContent?.meta_description || "Find and book appointments with top-rated dental professionals across the UAE. Compare verified clinics in Dubai, Sharjah, Abu Dhabi."}
+        title={seoContent?.meta_title || "Find Fostering Agencies in England & UK | Foster Connect"}
+        description={seoContent?.meta_description || "Find Ofsted-rated fostering agencies across England. Compare reviews, explore fostering types & connect with agencies near you."}
         canonical="/"
       />
       <Navbar />
