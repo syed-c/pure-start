@@ -4,6 +4,7 @@ export type AppRole = 'super_admin' | 'regional_manager' | 'agency_admin' | 'use
 export type ClaimStatus = 'unclaimed' | 'pending' | 'claimed';
 export type VerificationStatus = 'unverified' | 'pending' | 'verified' | 'expired';
 export type AgencySource = 'manual' | 'import' | 'ofsted';
+export type ClinicSource = AgencySource; // backward compat
 export type EnquiryStatus = 'new' | 'contacted' | 'qualified' | 'converted' | 'closed' | 'spam';
 export type ReviewStatus = 'pending' | 'approved' | 'rejected';
 export type ReviewSentiment = 'positive' | 'negative';
