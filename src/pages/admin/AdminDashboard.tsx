@@ -226,7 +226,7 @@ const adminTabGroups = [
       { id: 'clinics', label: 'Agencies', icon: Building2 },
       { id: 'users', label: 'Users', icon: Users },
       { id: 'claims', label: 'Claims', icon: Shield },
-      { id: 'treatments', label: 'Treatments', icon: Stethoscope },
+      { id: 'treatments', label: 'Fostering Categories', icon: Stethoscope },
       { id: 'locations', label: 'Locations', icon: MapPin },
       { id: 'geo-expansion', label: 'Geo Expansion', icon: Globe, highlight: true },
       { id: 'ranking-rules', label: 'Ranking Rules', icon: TrendingUp },
