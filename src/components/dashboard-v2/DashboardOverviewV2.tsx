@@ -132,7 +132,7 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
     );
   }
 
-  // No clinic state - but admins/super_admins should never see this
+  // No agency state - but admins/super_admins should never see this
   if (!clinic && !isAdmin && !isSuperAdmin) {
     return <NoPracticeLinked />;
   }
