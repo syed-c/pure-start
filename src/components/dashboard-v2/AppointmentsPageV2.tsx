@@ -282,8 +282,8 @@ export default function AppointmentsPageV2({ onNavigate }: AppointmentsPageV2Pro
           ) : filteredAppointments.length === 0 ? (
             <EmptyState
               icon={Calendar}
-              title="No appointments"
-              description={`No appointments scheduled for ${format(selectedDate, 'MMMM d, yyyy')}`}
+              title="No enquiries"
+              description={`No enquiries received for ${format(selectedDate, 'MMMM d, yyyy')}`}
               action={
                 <Button onClick={() => onNavigate('my-availability')}>Set Availability</Button>
               }
