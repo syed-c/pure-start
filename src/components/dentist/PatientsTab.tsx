@@ -26,10 +26,10 @@ import { cn } from '@/lib/utils';
 
 // Message Templates
 const MESSAGE_TEMPLATES = [
-  { id: 'review_request', name: 'Review Request', icon: Star, description: 'Ask for a review after visit' },
-  { id: 'follow_up', name: 'Follow-up', icon: MessageSquare, description: 'Check in after treatment' },
-  { id: 'appointment_reminder', name: 'Appointment Reminder', icon: Calendar, description: 'Remind about upcoming appointment' },
-  { id: 'thank_you', name: 'Thank You', icon: Sparkles, description: 'Thank patient for their visit' },
+  { id: 'review_request', name: 'Review Request', icon: Star, description: 'Ask for a review after meeting' },
+  { id: 'follow_up', name: 'Follow-up', icon: MessageSquare, description: 'Check in after assessment' },
+  { id: 'meeting_reminder', name: 'Meeting Reminder', icon: Calendar, description: 'Remind about upcoming meeting' },
+  { id: 'thank_you', name: 'Thank You', icon: Sparkles, description: 'Thank carer for choosing your agency' },
 ];
 
 interface Patient {
@@ -61,7 +61,7 @@ interface Patient {
 const SEND_TEMPLATES = [
   { id: 'review_request', name: 'Review Request', icon: Star },
   { id: 'follow_up', name: 'Follow-up', icon: MessageSquare },
-  { id: 'appointment_reminder', name: 'Appointment Reminder', icon: Calendar },
+  { id: 'meeting_reminder', name: 'Meeting Reminder', icon: Calendar },
   { id: 'thank_you', name: 'Thank You', icon: Sparkles },
   { id: 'reschedule', name: 'Reschedule Request', icon: Calendar },
 ];
@@ -157,7 +157,7 @@ export default function PatientsTab() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success('Patient added');
+      toast.success('Carer added');
       setAddDialogOpen(false);
       setNewPatient({ 
         name: '', phone: '', email: '', notes: '', 
@@ -184,7 +184,7 @@ export default function PatientsTab() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success('Patient updated');
+      toast.success('Carer updated');
       setEditPatient(null);
       setSelectedPatient(null);
       queryClient.invalidateQueries({ queryKey: ['clinic-patients'] });
@@ -205,7 +205,7 @@ export default function PatientsTab() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success('Patient removed from your list');
+      toast.success('Carer removed from your list');
       setSelectedPatient(null);
       queryClient.invalidateQueries({ queryKey: ['clinic-patients'] });
     },
@@ -348,8 +348,8 @@ export default function PatientsTab() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Patients</h1>
-          <p className="text-muted-foreground">Your patient database</p>
+          <h1 className="text-2xl font-bold text-foreground">Carers</h1>
+          <p className="text-muted-foreground">Your carer contact database</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setCsvDialogOpen(true)} className="gap-2">
@@ -358,7 +358,7 @@ export default function PatientsTab() {
           </Button>
           <Button onClick={() => setAddDialogOpen(true)} className="gap-2">
             <UserPlus className="h-4 w-4" />
-            Add Patient
+            Add Carer
           </Button>
         </div>
       </div>
@@ -373,7 +373,7 @@ export default function PatientsTab() {
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.total}</p>
-                <p className="text-xs text-slate-300">Total Patients</p>
+                <p className="text-xs text-slate-300">Total Carers</p>
               </div>
             </div>
           </CardContent>
@@ -427,7 +427,7 @@ export default function PatientsTab() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 className="pl-10 rounded-xl bg-background"
-                placeholder="Search patients by name, phone, or email..."
+                placeholder="Search carers by name, phone, or email..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -438,8 +438,8 @@ export default function PatientsTab() {
                 <SelectValue placeholder="Visits" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Patients</SelectItem>
-                <SelectItem value="new">New (1 visit)</SelectItem>
+                <SelectItem value="all">All Carers</SelectItem>
+                <SelectItem value="new">New (1 contact)</SelectItem>
                 <SelectItem value="returning">Returning</SelectItem>
                 <SelectItem value="vip">VIP (5+)</SelectItem>
               </SelectContent>
@@ -475,7 +475,7 @@ export default function PatientsTab() {
         <CardHeader className="bg-gradient-to-r from-primary/5 to-teal/5 border-b">
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5 text-primary" />
-            Patients ({filteredPatients?.length || 0})
+            Carers ({filteredPatients?.length || 0})
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
@@ -522,7 +522,7 @@ export default function PatientsTab() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <Badge variant="secondary" className="text-xs">{patient.total_visits} visits</Badge>
+                      <Badge variant="secondary" className="text-xs">{patient.total_visits} contacts</Badge>
                       {patient.is_opted_in_sms && <Badge variant="outline" className="text-xs text-primary">SMS</Badge>}
                     </div>
                     
@@ -570,8 +570,8 @@ export default function PatientsTab() {
               <div className="h-16 w-16 rounded-2xl bg-muted/50 flex items-center justify-center mb-4">
                 <Users className="h-8 w-8 text-muted-foreground" />
               </div>
-              <p className="font-medium mb-1">No patients yet</p>
-              <p className="text-sm text-muted-foreground">Patients are auto-created from bookings</p>
+               <p className="font-medium mb-1">No carers yet</p>
+               <p className="text-sm text-muted-foreground">Carers are auto-created from enquiries</p>
             </div>
           )}
         </CardContent>
@@ -581,8 +581,8 @@ export default function PatientsTab() {
       <Dialog open={!!selectedPatient} onOpenChange={() => setSelectedPatient(null)}>
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Patient Details</DialogTitle>
-            <DialogDescription>View and manage patient information</DialogDescription>
+            <DialogTitle>Carer Details</DialogTitle>
+            <DialogDescription>View and manage carer information</DialogDescription>
           </DialogHeader>
           {selectedPatient && (
             <div className="space-y-4 py-2">
@@ -609,7 +609,7 @@ export default function PatientsTab() {
               {/* Basic Info Grid */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 rounded-xl bg-muted/30">
-                  <p className="text-xs text-muted-foreground mb-1">Total Visits</p>
+                  <p className="text-xs text-muted-foreground mb-1">Total Contacts</p>
                   <p className="font-medium text-sm">{selectedPatient.total_visits}</p>
                 </div>
                 <div className="p-3 rounded-xl bg-muted/30">
@@ -617,13 +617,13 @@ export default function PatientsTab() {
                   <p className="font-medium text-sm capitalize">{selectedPatient.preferred_contact || 'Phone'}</p>
                 </div>
                 <div className="p-3 rounded-xl bg-muted/30">
-                  <p className="text-xs text-muted-foreground mb-1">First Visit</p>
+                  <p className="text-xs text-muted-foreground mb-1">First Contact</p>
                   <p className="font-medium text-sm">
                     {selectedPatient.first_visit_at ? format(new Date(selectedPatient.first_visit_at), 'MMM d, yyyy') : 'N/A'}
                   </p>
                 </div>
                 <div className="p-3 rounded-xl bg-muted/30">
-                  <p className="text-xs text-muted-foreground mb-1">Last Visit</p>
+                  <p className="text-xs text-muted-foreground mb-1">Last Contact</p>
                   <p className="font-medium text-sm">
                     {selectedPatient.last_visit_at ? format(new Date(selectedPatient.last_visit_at), 'MMM d, yyyy') : 'N/A'}
                   </p>
@@ -720,9 +720,9 @@ export default function PatientsTab() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <UserPlus className="h-5 w-5 text-primary" />
-              Add New Patient
+              Add New Carer
             </DialogTitle>
-            <DialogDescription>Add a patient to your database</DialogDescription>
+            <DialogDescription>Add a carer to your database</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
@@ -736,7 +736,7 @@ export default function PatientsTab() {
             <div className="space-y-2">
               <Label>Phone Number *</Label>
               <Input
-                placeholder="+971 50 123 4567"
+                placeholder="+44 7700 900000"
                 value={newPatient.phone}
                 onChange={(e) => setNewPatient({ ...newPatient, phone: e.target.value })}
               />
@@ -753,7 +753,7 @@ export default function PatientsTab() {
             <div className="space-y-2">
               <Label>Notes (Optional)</Label>
               <Textarea
-                placeholder="Any notes about this patient..."
+                placeholder="Any notes about this carer..."
                 value={newPatient.notes}
                 onChange={(e) => setNewPatient({ ...newPatient, notes: e.target.value })}
                 rows={2}
@@ -773,7 +773,7 @@ export default function PatientsTab() {
               onClick={() => addPatient.mutate(newPatient)}
               disabled={!newPatient.name || !newPatient.phone || addPatient.isPending}
             >
-              Add Patient
+              Add Carer
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -785,9 +785,9 @@ export default function PatientsTab() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Upload className="h-5 w-5 text-primary" />
-              Import Patients
+              Import Carers
             </DialogTitle>
-            <DialogDescription>Upload a CSV file with patient data</DialogDescription>
+            <DialogDescription>Upload a CSV file with carer data</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="border-2 border-dashed rounded-xl p-8 text-center">

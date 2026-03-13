@@ -175,7 +175,7 @@ export const DentistProfileCard = ({
           >
             <Link to={`${profileUrl}#enquire`}>
               <Calendar className="h-4 w-4 mr-2" />
-              Enquire
+              Contact
             </Link>
           </Button>
         </div>

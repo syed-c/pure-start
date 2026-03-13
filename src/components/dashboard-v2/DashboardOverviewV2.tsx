@@ -1,6 +1,7 @@
 /**
  * Premium Dashboard Overview v2
- * Widget-based command center with animated KPIs, circular progress, and AI suggestions
+ * Widget-based command centre with animated KPIs, circular progress, and AI suggestions
+ * Foster Connect — UK Fostering Agency Directory
  */
 
 import { useQuery } from '@tanstack/react-query';
@@ -49,9 +50,9 @@ interface DashboardOverviewV2Props {
 export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2Props) {
   const { user, isAdmin, isSuperAdmin } = useAuth();
 
-  // Fetch clinic - for admins/super_admins, skip the clinic requirement
+  // Fetch agency - for admins/super_admins, skip the agency requirement
   const { data: clinic, isLoading: clinicLoading } = useQuery({
-    queryKey: ['dashboard-v2-clinic', user?.id],
+    queryKey: ['dashboard-v2-agency', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clinics')
@@ -62,13 +63,13 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
       if (error && error.code !== 'PGRST116') throw error;
       return data;
     },
-    // Admins don't need a clinic to access dashboard
+    // Admins don't need an agency to access dashboard
     enabled: !!user?.id && !isAdmin && !isSuperAdmin,
   });
 
-  // Fetch today's appointments
+  // Fetch today's enquiries
   const { data: todayAppointments = [] } = useQuery({
-    queryKey: ['dashboard-v2-today-appointments', clinic?.id],
+    queryKey: ['dashboard-v2-today-enquiries', clinic?.id],
     queryFn: async () => {
       const today = new Date().toISOString().split('T')[0];
       const { data } = await supabase
@@ -98,9 +99,9 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
     enabled: !!clinic?.id,
   });
 
-  // Fetch patient stats
+  // Fetch carer stats
   const { data: patientStats } = useQuery({
-    queryKey: ['dashboard-v2-patient-stats', clinic?.id],
+    queryKey: ['dashboard-v2-carer-stats', clinic?.id],
     queryFn: async () => {
       const { count: total } = await supabase
         .from('patients')
@@ -131,7 +132,7 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
     );
   }
 
-  // No clinic state - but admins/super_admins should never see this
+  // No agency state - but admins/super_admins should never see this
   if (!clinic && !isAdmin && !isSuperAdmin) {
     return <NoPracticeLinked />;
   }
@@ -164,8 +165,8 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
     pendingAppts > 0 && {
       icon: Clock,
       type: 'urgent' as const,
-      title: `${pendingAppts} pending appointments`,
-      action: 'Review and confirm appointments',
+      title: `${pendingAppts} pending enquiries`,
+      action: 'Review and respond to enquiries',
       onClick: () => onNavigate('my-appointments'),
     },
     thumbsDown > thumbsUp && {
@@ -193,7 +194,7 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
       icon: CheckCircle,
       type: 'action' as const,
       title: 'Get verified',
-      action: 'Verified clinics get 3x more bookings',
+      action: 'Verified agencies get 3x more enquiries',
       onClick: () => onNavigate('my-profile'),
     },
   ].filter(Boolean).slice(0, 3);
@@ -224,28 +225,28 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
             onClick={() => onNavigate('my-patients')}
           >
             <Send className="h-4 w-4" />
-            Send Review Request
+            Send Feedback Request
           </Button>
         </div>
       </div>
 
       {/* Animated KPI Stats Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Today's Appointments - Circular Progress */}
+        {/* Today's Enquiries - Circular Progress */}
         <AnimatedKPICard
-          label="Today's Appointments"
+          label="Today's Enquiries"
           value={todayAppointments.length}
           icon={Calendar}
           variant="circular"
           maxValue={Math.max(10, todayAppointments.length)}
           onClick={() => onNavigate('my-appointments')}
-          action={{ label: 'View schedule', onClick: () => onNavigate('my-appointments') }}
+          action={{ label: 'View enquiries', onClick: () => onNavigate('my-appointments') }}
           delay={0}
         />
         
-        {/* Total Patients - Dark Gradient */}
+        {/* Total Carers - Dark Gradient */}
         <AnimatedKPICard
-          label="Total Patients"
+          label="Total Carers"
           value={patientStats?.total || 0}
           icon={Users}
           variant="dark"
@@ -285,7 +286,7 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Left Column - Schedule & Quick Actions */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Today's Schedule */}
+          {/* Today's Enquiries */}
           <PremiumCard padding="none" className="overflow-hidden">
             {/* Gradient top accent */}
             <div className="h-1 bg-gradient-to-r from-primary via-teal to-emerald-500" />
@@ -293,7 +294,7 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <SectionHeader
-                  title="Today's Schedule"
+                  title="Today's Enquiries"
                   description={format(new Date(), 'EEEE, MMMM d, yyyy')}
                   icon={Calendar}
                 />
@@ -311,8 +312,8 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
               {todayAppointments.length === 0 ? (
                 <EmptyState
                   icon={Calendar}
-                  title="No appointments today"
-                  description="Your schedule is clear. Set up your availability to start receiving bookings."
+                  title="No enquiries today"
+                  description="No new enquiries yet. Complete your profile to start receiving carer applications."
                   action={
                     <Button
                       variant="outline"
@@ -338,7 +339,7 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-foreground truncate">{appt.patient_name}</p>
                         <p className="text-sm text-muted-foreground">
-                          {appt.preferred_time || 'Time TBD'} • {appt.treatment?.name || 'General'}
+                          {appt.preferred_time || 'Time TBD'} • {appt.treatment?.name || 'General Enquiry'}
                         </p>
                       </div>
                       <StatusBadge
@@ -370,21 +371,21 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
               <QuickAction
                 icon={Send}
                 label="Send Request"
-                description="Review request"
+                description="Feedback request"
                 onClick={() => onNavigate('my-reputation')}
                 color="from-primary to-teal"
               />
               <QuickAction
                 icon={Plus}
-                label="Add Patient"
-                description="New patient"
+                label="Add Carer"
+                description="New carer contact"
                 onClick={() => onNavigate('my-patients')}
                 color="from-teal to-emerald-500"
               />
               <QuickAction
                 icon={Calendar}
-                label="Appointments"
-                description="View schedule"
+                label="Enquiries"
+                description="View enquiries"
                 onClick={() => onNavigate('my-appointments')}
                 color="from-purple-500 to-indigo-500"
               />
@@ -427,9 +428,9 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
                   <StatusBadge status="neutral" label="Unverified" />
                 )}
                 {clinic.google_place_id ? (
-                  <StatusBadge status="success" label="GMB Connected" />
+                  <StatusBadge status="success" label="Ofsted Connected" />
                 ) : (
-                  <StatusBadge status="neutral" label="No GMB" />
+                  <StatusBadge status="neutral" label="No Ofsted Link" />
                 )}
               </div>
               

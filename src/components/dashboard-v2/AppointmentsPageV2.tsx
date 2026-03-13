@@ -1,6 +1,6 @@
 /**
- * Appointments Page v2
- * Calendar view with appointment management
+ * Enquiries Page v2
+ * Calendar view with enquiry management
  */
 
 import { useState } from 'react';
@@ -132,10 +132,10 @@ export default function AppointmentsPageV2({ onNavigate }: AppointmentsPageV2Pro
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['appointments-v2'] });
-      toast.success('Appointment updated');
+      toast.success('Enquiry updated');
     },
     onError: () => {
-      toast.error('Failed to update appointment');
+      toast.error('Failed to update enquiry');
     },
   });
 
@@ -169,11 +169,11 @@ export default function AppointmentsPageV2({ onNavigate }: AppointmentsPageV2Pro
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Appointments"
-        subtitle="Manage your schedule and patient bookings"
+        title="Enquiries"
+        subtitle="Manage your enquiries and carer applications"
         primaryAction={
           <PremiumButton icon={Plus}>
-            Create Appointment
+            Create Enquiry
           </PremiumButton>
         }
         secondaryActions={
@@ -214,7 +214,7 @@ export default function AppointmentsPageV2({ onNavigate }: AppointmentsPageV2Pro
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search patient..."
+                placeholder="Search carer..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 w-48 rounded-xl"
@@ -282,8 +282,8 @@ export default function AppointmentsPageV2({ onNavigate }: AppointmentsPageV2Pro
           ) : filteredAppointments.length === 0 ? (
             <EmptyState
               icon={Calendar}
-              title="No appointments"
-              description={`No appointments scheduled for ${format(selectedDate, 'MMMM d, yyyy')}`}
+              title="No enquiries"
+              description={`No enquiries received for ${format(selectedDate, 'MMMM d, yyyy')}`}
               action={
                 <Button onClick={() => onNavigate('my-availability')}>Set Availability</Button>
               }
@@ -306,7 +306,7 @@ export default function AppointmentsPageV2({ onNavigate }: AppointmentsPageV2Pro
                       </span>
                     </div>
 
-                    {/* Patient Info */}
+                    {/* Carer Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <User className="h-4 w-4 text-muted-foreground" />
@@ -342,7 +342,7 @@ export default function AppointmentsPageV2({ onNavigate }: AppointmentsPageV2Pro
                         </DropdownMenuItem>
                         <DropdownMenuItem className="gap-2">
                           <MessageSquare className="h-4 w-4" />
-                          Message Patient
+                          Message Carer
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         {apt.status === 'pending' && (

@@ -44,121 +44,121 @@ const SYSTEM_TEMPLATES = [
     id: 'review_request',
     category: 'review',
     name: 'Review Request',
-    description: 'Ask patients for a review after their visit',
+    description: 'Ask carers for a review after their experience',
     icon: Star,
     color: 'from-amber-500 to-orange-500',
     channels: ['email', 'sms', 'whatsapp'],
-    subject: 'How was your visit to {clinic_name}?',
-    message: 'Hi {patient_name}! Thank you for visiting {clinic_name}. We hope you had a great experience. Would you take a moment to share your feedback? It really helps us improve and helps others find quality dental care.\n\n{review_link}',
-    variables: ['patient_name', 'clinic_name', 'review_link'],
+    subject: 'How was your experience with {agency_name}?',
+    message: 'Hi {carer_name}! Thank you for working with {agency_name}. We hope you had a great experience. Would you take a moment to share your feedback? It really helps us improve and helps others find quality fostering support.\n\n{review_link}',
+    variables: ['carer_name', 'agency_name', 'review_link'],
   },
   {
-    id: 'appointment_confirmation',
+    id: 'enquiry_confirmation',
     category: 'booking',
-    name: 'Appointment Confirmation',
-    description: 'Confirm a new booking with the patient',
+    name: 'Enquiry Confirmation',
+    description: 'Confirm a new enquiry with the carer',
     icon: CheckCircle,
     color: 'from-emerald-500 to-teal-500',
     channels: ['email', 'sms', 'whatsapp'],
-    subject: 'Your appointment is confirmed at {clinic_name}',
-    message: 'Hi {patient_name}! Your appointment at {clinic_name} is confirmed.\n\n📅 Date: {appointment_date}\n⏰ Time: {appointment_time}\n📍 Address: {clinic_address}\n\nPlease arrive 10 minutes early. If you need to reschedule, reply to this message or call us.',
-    variables: ['patient_name', 'clinic_name', 'appointment_date', 'appointment_time', 'clinic_address'],
+    subject: 'Your enquiry is confirmed at {agency_name}',
+    message: 'Hi {carer_name}! Your enquiry at {agency_name} is confirmed.\n\n📅 Date: {enquiry_date}\n⏰ Time: {enquiry_time}\n📍 Address: {agency_address}\n\nPlease arrive 10 minutes early. If you need to reschedule, reply to this message or call us.',
+    variables: ['carer_name', 'agency_name', 'enquiry_date', 'enquiry_time', 'agency_address'],
   },
   {
-    id: 'appointment_reminder_2day',
+    id: 'meeting_reminder_2day',
     category: 'reminder',
     name: 'Reminder (2 Days)',
-    description: 'Remind patients 2 days before appointment',
+    description: 'Remind carers 2 days before meeting',
     icon: Bell,
     color: 'from-blue-500 to-indigo-500',
     channels: ['email', 'sms', 'whatsapp'],
-    subject: 'Reminder: Your appointment in 2 days',
-    message: 'Hi {patient_name}! This is a friendly reminder about your upcoming appointment at {clinic_name}.\n\n📅 Date: {appointment_date}\n⏰ Time: {appointment_time}\n\nWe look forward to seeing you!',
-    variables: ['patient_name', 'clinic_name', 'appointment_date', 'appointment_time'],
+    subject: 'Reminder: Your meeting in 2 days',
+    message: 'Hi {carer_name}! This is a friendly reminder about your upcoming meeting at {agency_name}.\n\n📅 Date: {enquiry_date}\n⏰ Time: {enquiry_time}\n\nWe look forward to seeing you!',
+    variables: ['carer_name', 'agency_name', 'enquiry_date', 'enquiry_time'],
   },
   {
-    id: 'appointment_reminder_1day',
+    id: 'meeting_reminder_1day',
     category: 'reminder',
     name: 'Reminder (1 Day)',
-    description: 'Remind patients 1 day before appointment',
+    description: 'Remind carers 1 day before meeting',
     icon: Clock,
     color: 'from-purple-500 to-pink-500',
     channels: ['email', 'sms', 'whatsapp'],
-    subject: 'Tomorrow: Your appointment at {clinic_name}',
-    message: 'Hi {patient_name}! Just a quick reminder - your appointment at {clinic_name} is tomorrow!\n\n📅 Date: {appointment_date}\n⏰ Time: {appointment_time}\n\nSee you soon!',
-    variables: ['patient_name', 'clinic_name', 'appointment_date', 'appointment_time'],
+    subject: 'Tomorrow: Your meeting at {agency_name}',
+    message: 'Hi {carer_name}! Just a quick reminder - your meeting at {agency_name} is tomorrow!\n\n📅 Date: {enquiry_date}\n⏰ Time: {enquiry_time}\n\nSee you soon!',
+    variables: ['carer_name', 'agency_name', 'enquiry_date', 'enquiry_time'],
   },
   {
-    id: 'appointment_reminder_3hr',
+    id: 'meeting_reminder_3hr',
     category: 'reminder',
     name: 'Reminder (3 Hours)',
-    description: 'Final reminder 3 hours before appointment',
+    description: 'Final reminder 3 hours before meeting',
     icon: Zap,
     color: 'from-rose-500 to-red-500',
     channels: ['sms', 'whatsapp'],
-    subject: 'Your appointment is in 3 hours',
-    message: 'Hi {patient_name}! Your appointment at {clinic_name} is in 3 hours at {appointment_time}. Please arrive 10 minutes early. See you soon!',
-    variables: ['patient_name', 'clinic_name', 'appointment_time'],
+    subject: 'Your meeting is in 3 hours',
+    message: 'Hi {carer_name}! Your meeting at {agency_name} is in 3 hours at {enquiry_time}. Please arrive 10 minutes early. See you soon!',
+    variables: ['carer_name', 'agency_name', 'enquiry_time'],
   },
   {
     id: 'follow_up',
     category: 'followup',
     name: 'Follow-up Message',
-    description: 'Check in with patients after treatment',
+    description: 'Check in with carers after their assessment',
     icon: Heart,
     color: 'from-pink-500 to-rose-500',
     channels: ['email', 'sms', 'whatsapp'],
-    subject: 'How are you feeling after your visit?',
-    message: 'Hi {patient_name}! We wanted to check in and see how you\'re feeling after your recent visit to {clinic_name}.\n\nIf you have any questions or concerns about your treatment, please don\'t hesitate to reach out. We\'re here to help!\n\nWarm regards,\n{clinic_name} Team',
-    variables: ['patient_name', 'clinic_name'],
+    subject: 'How are you feeling after your meeting?',
+    message: 'Hi {carer_name}! We wanted to check in and see how you\'re feeling after your recent meeting with {agency_name}.\n\nIf you have any questions or concerns about the fostering process, please don\'t hesitate to reach out. We\'re here to help!\n\nWarm regards,\n{agency_name} Team',
+    variables: ['carer_name', 'agency_name'],
   },
   {
     id: 'thank_you',
     category: 'followup',
     name: 'Thank You',
-    description: 'Thank patients for choosing your practice',
+    description: 'Thank carers for choosing your agency',
     icon: Sparkles,
     color: 'from-teal-500 to-cyan-500',
     channels: ['email', 'sms', 'whatsapp'],
-    subject: 'Thank you for visiting {clinic_name}!',
-    message: 'Hi {patient_name}! Thank you for choosing {clinic_name} for your dental care. We truly appreciate your trust in us!\n\nIf you have any questions or need to schedule your next visit, we\'re always here to help.',
-    variables: ['patient_name', 'clinic_name'],
+    subject: 'Thank you for choosing {agency_name}!',
+    message: 'Hi {carer_name}! Thank you for choosing {agency_name} for your fostering journey. We truly appreciate your trust in us!\n\nIf you have any questions or need to schedule your next meeting, we\'re always here to help.',
+    variables: ['carer_name', 'agency_name'],
   },
   {
     id: 'reschedule',
     category: 'booking',
     name: 'Reschedule Request',
-    description: 'Ask patient to reschedule their appointment',
+    description: 'Ask carer to reschedule their meeting',
     icon: RefreshCw,
     color: 'from-slate-500 to-slate-700',
     channels: ['email', 'sms', 'whatsapp'],
-    subject: 'Need to reschedule your appointment?',
-    message: 'Hi {patient_name}! We noticed you might need to reschedule your appointment at {clinic_name}.\n\nPlease reply to this message or call us to find a new time that works better for you. We\'re flexible and happy to accommodate your schedule!',
-    variables: ['patient_name', 'clinic_name'],
+    subject: 'Need to reschedule your meeting?',
+    message: 'Hi {carer_name}! We noticed you might need to reschedule your meeting at {agency_name}.\n\nPlease reply to this message or call us to find a new time that works better for you. We\'re flexible and happy to accommodate your schedule!',
+    variables: ['carer_name', 'agency_name'],
   },
   {
-    id: 'missed_appointment',
+    id: 'missed_meeting',
     category: 'reminder',
-    name: 'Missed Appointment',
-    description: 'Follow up on missed appointments',
+    name: 'Missed Meeting',
+    description: 'Follow up on missed meetings',
     icon: Calendar,
     color: 'from-amber-500 to-yellow-500',
     channels: ['email', 'sms', 'whatsapp'],
     subject: 'We missed you today!',
-    message: 'Hi {patient_name}! We noticed you weren\'t able to make it to your appointment today at {clinic_name}.\n\nWe hope everything is okay! Please reach out to reschedule at your convenience. Your dental health is important to us.',
-    variables: ['patient_name', 'clinic_name'],
+    message: 'Hi {carer_name}! We noticed you weren\'t able to make it to your meeting today at {agency_name}.\n\nWe hope everything is okay! Please reach out to reschedule at your convenience. Your fostering journey is important to us.',
+    variables: ['carer_name', 'agency_name'],
   },
   {
     id: 'recall_reminder',
     category: 'marketing',
-    name: 'Recall/Check-up Reminder',
-    description: 'Remind patients about their regular check-up',
+    name: 'Check-in Reminder',
+    description: 'Remind carers about their regular check-in',
     icon: Users,
     color: 'from-green-500 to-emerald-600',
     channels: ['email', 'sms'],
-    subject: 'Time for your dental check-up!',
-    message: 'Hi {patient_name}! It\'s been a while since your last visit to {clinic_name}. Regular check-ups are important for maintaining your oral health.\n\nWe\'d love to see you again! Book your appointment today.\n\n{booking_link}',
-    variables: ['patient_name', 'clinic_name', 'booking_link'],
+    subject: 'Time for your fostering check-in!',
+    message: 'Hi {carer_name}! It\'s been a while since your last visit to {agency_name}. Regular check-ins are important for your fostering journey.\n\nWe\'d love to hear from you! Book your meeting today.\n\n{booking_link}',
+    variables: ['carer_name', 'agency_name', 'booking_link'],
   },
 ];
 
@@ -316,7 +316,7 @@ export default function TemplatesTab() {
             Message Templates
           </h1>
           <p className="text-white/70 mt-1">
-            Pre-built templates for all your patient communications
+            Pre-built templates for all your carer communications
           </p>
         </div>
         <Badge className="bg-primary/20 text-primary-foreground border-0">
@@ -477,17 +477,17 @@ export default function TemplatesTab() {
               Send {sendTemplate?.name}
             </DialogTitle>
             <DialogDescription>
-              Select a patient and channel to send this message
+              Select a carer and channel to send this message
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4">
-            {/* Patient Selection */}
+            {/* Carer Selection */}
             <div>
-              <Label>Select Patient</Label>
+              <Label>Select Carer</Label>
               <Select value={selectedPatientId || ''} onValueChange={setSelectedPatientId}>
                 <SelectTrigger className="mt-1">
-                  <SelectValue placeholder="Choose a patient..." />
+                  <SelectValue placeholder="Choose a carer..." />
                 </SelectTrigger>
                 <SelectContent>
                   <ScrollArea className="max-h-[200px]">
@@ -543,7 +543,7 @@ export default function TemplatesTab() {
                 className="mt-1 font-mono text-sm"
               />
               <p className="text-xs text-muted-foreground mt-1">
-                Variables like {'{patient_name}'} will be replaced automatically
+                Variables like {'{carer_name}'} will be replaced automatically
               </p>
             </div>
           </div>

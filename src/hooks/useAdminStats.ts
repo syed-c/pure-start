@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 export interface AdminStats {
   locations: { countries: number; cities: number; areas: number };
   services: { total: number; parents: number; children: number };
-  clinics: { 
+  clinics: { // agencies (DB table still named clinics)
     total: number; 
     unclaimed: number; 
     claimed: number; 
@@ -18,10 +18,10 @@ export interface AdminStats {
     gmbImported: number;
     manual: number;
   };
-  dentists: { total: number; active: number; featured: number };
-  patients: { total: number };
+  dentists: { total: number; active: number; featured: number }; // contacts
+  patients: { total: number }; // carers
   leads: { today: number; week: number; month: number; total: number };
-  appointments: { pending: number; confirmed: number; completed: number; cancelled: number; noShow: number };
+  appointments: { pending: number; confirmed: number; completed: number; cancelled: number; noShow: number }; // enquiries
   reviews: { pending: number; approved: number; rejected: number };
   revenue: { activeSubscriptions: number; monthlyRevenue: number; yearlyRevenue: number };
   claims: { pending: number; approved: number; rejected: number };
