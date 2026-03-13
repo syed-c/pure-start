@@ -362,7 +362,7 @@ const CityPage = () => {
           },
           {
             type: 'itemList',
-            name: `Dentists in ${cityName}, ${stateAbbr}`,
+            name: `Fostering Agencies in ${cityName}, ${stateAbbr}`,
             description: `Top-rated dental clinics and dentists in ${cityName}`,
             items: (profiles || []).slice(0, 10).map((p, i) => ({
               name: p.name,
