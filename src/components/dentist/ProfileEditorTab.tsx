@@ -578,7 +578,7 @@ export default function ProfileEditorTab() {
               {formData.cover_image_url ? (
                 <img 
                   src={formData.cover_image_url} 
-                  alt="Clinic" 
+                  alt="Agency" 
                   className="h-32 w-32 rounded-2xl object-cover border-2 border-border shadow-md"
                 />
               ) : (
