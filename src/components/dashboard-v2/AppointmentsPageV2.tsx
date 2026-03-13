@@ -135,7 +135,7 @@ export default function AppointmentsPageV2({ onNavigate }: AppointmentsPageV2Pro
       toast.success('Enquiry updated');
     },
     onError: () => {
-      toast.error('Failed to update appointment');
+      toast.error('Failed to update enquiry');
     },
   });
 
