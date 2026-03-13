@@ -1,11 +1,10 @@
-import { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import { useState as useStateHook, useEffect, useMemo, useRef, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { MapPin, Search, Stethoscope, Shield, X } from "lucide-react";
+import { MapPin, Search, Heart, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCitiesByStateSlug, useCities } from "@/hooks/useLocations";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { FOSTERING_CATEGORIES } from "@/lib/constants/activeRegions";
 
 interface SearchBoxProps {
   variant?: "default" | "compact" | "hero";
@@ -49,9 +48,9 @@ function levenshtein(a: string, b: string): number {
   const m = a.length, n = b.length;
   if (m === 0) return n;
   if (n === 0) return m;
-  const dp: number[][] = Array.from({ length: m + 1 }, (_, i) =>
-    Array.from({ length: n + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
-  );
+  const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
   for (let i = 1; i <= m; i++) {
     for (let j = 1; j <= n; j++) {
       dp[i][j] = a[i - 1] === b[j - 1]
@@ -79,9 +78,9 @@ function SmartSearchInput({
   icon?: React.ComponentType<{ className?: string }>;
   className?: string;
 }) {
-  const [query, setQuery] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
-  const [displayValue, setDisplayValue] = useState("");
+  const [query, setQuery] = useStateHook("");
+  const [isOpen, setIsOpen] = useStateHook(false);
+  const [displayValue, setDisplayValue] = useStateHook("");
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -185,43 +184,30 @@ function SmartSearchInput({
   );
 }
 
+// Static fostering category options
+const categoryOptions: SearchOption[] = FOSTERING_CATEGORIES.map(cat => ({
+  value: cat.slug,
+  label: cat.name,
+  slug: cat.slug,
+}));
+
 export function SearchBox({
   variant = "default",
   defaultCity,
   defaultTreatment,
   stateSlug: propStateSlug,
-  showInsurance = true,
 }: SearchBoxProps) {
   const navigate = useNavigate();
   const { stateSlug: routeStateSlug, citySlug: routeCitySlug } = useParams();
-  const [city, setCity] = useState<string>(defaultCity ?? "");
-  const [_cityLabel, setCityLabel] = useState<string>("");
-  const [treatment, setTreatment] = useState<string>(defaultTreatment ?? "");
-  const [_treatmentLabel, setTreatmentLabel] = useState<string>("");
-  const [insurance, setInsurance] = useState<string>("");
-  const [_insuranceLabel, setInsuranceLabel] = useState<string>("");
+  const [city, setCity] = useStateHook<string>(defaultCity ?? "");
+  const [_cityLabel, setCityLabel] = useStateHook<string>("");
+  const [category, setCategory] = useStateHook<string>(defaultTreatment ?? "");
+  const [_categoryLabel, setCategoryLabel] = useStateHook<string>("");
 
   const stateContext = propStateSlug || routeStateSlug;
   const { data: stateCitiesData } = useCitiesByStateSlug(stateContext || '');
   const { data: allCitiesData } = useCities();
   const citiesData = stateContext && stateCitiesData?.length ? stateCitiesData : allCitiesData;
-
-  const { data: treatmentsData } = useQuery({
-    queryKey: ['search-treatments'],
-    queryFn: async () => {
-      const { data } = await supabase.from('treatments').select('id, name, slug').eq('is_active', true).order('display_order');
-      return data || [];
-    },
-  });
-
-  const { data: insurancesData } = useQuery({
-    queryKey: ['search-insurances'],
-    queryFn: async () => {
-      const { data } = await supabase.from('insurances').select('id, name, slug').eq('is_active', true).order('name');
-      return data || [];
-    },
-    enabled: showInsurance,
-  });
 
   useEffect(() => {
     if (routeCitySlug && stateContext && citiesData?.length && !city) {
@@ -229,49 +215,31 @@ export function SearchBox({
       if (matchingCity) {
         const value = `${matchingCity.slug}|${stateContext}`;
         setCity(value);
-        setCityLabel(`${matchingCity.name}${(matchingCity as any).state?.abbreviation ? `, ${(matchingCity as any).state?.abbreviation}` : ''}`);
+        setCityLabel(`${matchingCity.name}${(matchingCity as any).state?.name ? `, ${(matchingCity as any).state?.name}` : ''}`);
       }
     }
   }, [routeCitySlug, stateContext, citiesData, city]);
 
   useEffect(() => { if (defaultCity && !city) setCity(defaultCity); }, [defaultCity, city]);
-  useEffect(() => { if (defaultTreatment && !treatment) setTreatment(defaultTreatment); }, [defaultTreatment, treatment]);
+  useEffect(() => { if (defaultTreatment && !category) setCategory(defaultTreatment); }, [defaultTreatment, category]);
 
   const cityOptions: SearchOption[] = useMemo(() =>
     citiesData?.map(c => ({
-      value: `${c.slug}|${(c as any).state?.slug || ''}`,
-      label: `${c.name}${(c as any).state?.abbreviation ? `, ${(c as any).state?.abbreviation}` : ''}`,
+      value: `${c.slug}|${(c as any).state?.slug || 'england'}`,
+      label: `${c.name}${(c as any).state?.name ? `, ${(c as any).state?.name}` : ''}`,
       slug: c.slug,
-      stateSlug: (c as any).state?.slug || '',
+      stateSlug: (c as any).state?.slug || 'england',
     })) || [],
     [citiesData]);
-
-  const treatmentOptions: SearchOption[] = useMemo(() =>
-    treatmentsData?.map(t => ({ value: t.slug, label: t.name, slug: t.slug })) || [],
-    [treatmentsData]);
-
-  const insuranceOptions: SearchOption[] = useMemo(() =>
-    insurancesData?.map(ins => ({ value: ins.slug, label: ins.name, slug: ins.slug })) || [],
-    [insurancesData]);
 
   const handleSearch = () => {
     if (city) {
       const [citySlug, targetStateSlug] = city.split('|');
-      if (insurance) {
-        const params = new URLSearchParams();
-        params.set('city', citySlug);
-        params.set('state', targetStateSlug);
-        if (treatment) params.set('treatment', treatment);
-        navigate(`/insurance/${insurance}?${params.toString()}`);
-        return;
-      }
-      if (treatment) {
-        navigate(`/${targetStateSlug}/${citySlug}/${treatment}`);
+      if (category) {
+        navigate(`/${targetStateSlug}/${citySlug}/${category}`);
       } else {
         navigate(`/${targetStateSlug}/${citySlug}`);
       }
-    } else if (insurance) {
-      navigate(`/insurance/${insurance}`);
     } else if (stateContext) {
       navigate(`/${stateContext}`);
     } else {
@@ -282,13 +250,13 @@ export function SearchBox({
   if (variant === "hero") {
     return (
       <div className="bg-card/90 backdrop-blur-xl border border-border/20 rounded-[1.75rem] p-5 md:p-7 shadow-2xl shadow-black/25">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-2.5 block px-1" style={{ fontFamily: headingFont }}>
               📍 Location
             </label>
             <SmartSearchInput
-              placeholder="Emirate, city, area..."
+              placeholder="City, town, or region..."
               options={cityOptions}
               value={city}
               onChange={(val, label) => { setCity(val); setCityLabel(label); }}
@@ -297,26 +265,14 @@ export function SearchBox({
           </div>
           <div>
             <label className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-2.5 block px-1" style={{ fontFamily: headingFont }}>
-              🦷 Service
+              🏠 Fostering Type
             </label>
             <SmartSearchInput
-              placeholder="Treatment type..."
-              options={treatmentOptions}
-              value={treatment}
-              onChange={(val, label) => { setTreatment(val); setTreatmentLabel(label); }}
-              icon={Stethoscope}
-            />
-          </div>
-          <div>
-            <label className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-2.5 block px-1" style={{ fontFamily: headingFont }}>
-              🛡️ Insurance
-            </label>
-            <SmartSearchInput
-              placeholder="Your insurance..."
-              options={insuranceOptions}
-              value={insurance}
-              onChange={(val, label) => { setInsurance(val); setInsuranceLabel(label); }}
-              icon={Shield}
+              placeholder="All fostering types..."
+              options={categoryOptions}
+              value={category}
+              onChange={(val, label) => { setCategory(val); setCategoryLabel(label); }}
+              icon={Heart}
             />
           </div>
         </div>
@@ -327,7 +283,7 @@ export function SearchBox({
           style={{ fontFamily: headingFont }}
         >
           <Search className="h-6 w-6" />
-          Find Dentists Now
+          Find Fostering Agencies
         </Button>
       </div>
     );
@@ -336,21 +292,15 @@ export function SearchBox({
   // Default/Compact variant
   return (
     <div className="bg-card border border-border rounded-2xl p-4 shadow-lg">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
         <div>
-          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 block px-1">City</label>
-          <SmartSearchInput placeholder="Search any city..." options={cityOptions} value={city} onChange={(val, label) => { setCity(val); setCityLabel(label); }} icon={MapPin} />
+          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 block px-1">Location</label>
+          <SmartSearchInput placeholder="Search city or town..." options={cityOptions} value={city} onChange={(val, label) => { setCity(val); setCityLabel(label); }} icon={MapPin} />
         </div>
         <div>
-          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 block px-1">Treatment</label>
-          <SmartSearchInput placeholder="Search treatment..." options={treatmentOptions} value={treatment} onChange={(val, label) => { setTreatment(val); setTreatmentLabel(label); }} icon={Stethoscope} />
+          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 block px-1">Fostering Type</label>
+          <SmartSearchInput placeholder="All types..." options={categoryOptions} value={category} onChange={(val, label) => { setCategory(val); setCategoryLabel(label); }} icon={Heart} />
         </div>
-        {showInsurance && (
-          <div>
-            <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 block px-1">Insurance</label>
-            <SmartSearchInput placeholder="Search insurance..." options={insuranceOptions} value={insurance} onChange={(val, label) => { setInsurance(val); setInsuranceLabel(label); }} icon={Shield} />
-          </div>
-        )}
         <div className="flex items-end">
           <Button onClick={handleSearch} size="lg" className="h-14 w-full rounded-xl font-bold gap-2">
             <Search className="h-4 w-4" /> Search

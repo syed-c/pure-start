@@ -12,9 +12,9 @@ interface FeatureFlags {
 
 const DEFAULT_FLAGS: FeatureFlags = {
   booking_engine_enabled: false,
-  booking_default_on: true,
-  gbp_appointment_sync_enabled: true,
-  insurance_filter_enabled: true,
+  booking_default_on: false,
+  gbp_appointment_sync_enabled: false,
+  insurance_filter_enabled: false,
   ai_match_enabled: false,
   review_ai_summary_enabled: false,
 };
@@ -23,26 +23,29 @@ export function useFeatureFlags() {
   const { data: flags, isLoading, error } = useQuery({
     queryKey: ['feature-flags-client'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('global_settings')
-        .select('key, value')
-        .like('key', 'feature_%');
+      try {
+        const { data, error } = await supabase
+          .from('global_settings')
+          .select('key, value')
+          .like('key', 'feature_%');
 
-      if (error) throw error;
+        if (error) return DEFAULT_FLAGS;
 
-      const result = { ...DEFAULT_FLAGS };
-
-      data?.forEach(setting => {
-        const flagKey = setting.key.replace('feature_', '') as keyof FeatureFlags;
-        if (flagKey in result && typeof setting.value === 'object' && setting.value !== null && 'enabled' in setting.value) {
-          result[flagKey] = (setting.value as { enabled: boolean }).enabled;
-        }
-      });
-
-      return result;
+        const result = { ...DEFAULT_FLAGS };
+        data?.forEach(setting => {
+          const flagKey = setting.key.replace('feature_', '') as keyof FeatureFlags;
+          if (flagKey in result && typeof setting.value === 'object' && setting.value !== null && 'enabled' in setting.value) {
+            result[flagKey] = (setting.value as { enabled: boolean }).enabled;
+          }
+        });
+        return result;
+      } catch {
+        return DEFAULT_FLAGS;
+      }
     },
-    staleTime: 60000, // Cache for 1 minute
-    gcTime: 300000, // Keep in cache for 5 minutes
+    staleTime: 60000,
+    gcTime: 300000,
+    retry: false,
   });
 
   return {
