@@ -359,7 +359,7 @@ const HomeV2 = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {popularTreatments.map((treatment, i) => (
                 <motion.div key={treatment.id} {...fadeUp} transition={{ delay: i * 0.04 }}>
-                  <Link to={`/services/${treatment.slug}`} className="group flex items-center justify-between bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-md transition-all">
+                  <Link to={`/categories/${treatment.slug}`} className="group flex items-center justify-between bg-card border border-border rounded-xl p-4 hover:border-primary/30 hover:shadow-md transition-all">
                     <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{treatment.name}</span>
                     <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
                   </Link>
