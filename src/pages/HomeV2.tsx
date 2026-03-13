@@ -414,8 +414,8 @@ const HomeV2 = () => {
         <section className="py-16 md:py-20 bg-background">
           <div className="container px-4">
             <motion.div {...fadeUp} className="text-center mb-10">
-              <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-2">Top-Rated <span className="text-primary">Dental Professionals</span></h2>
-              <p className="text-sm text-muted-foreground">Verified dentists with excellent patient reviews across UAE</p>
+               <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-2">Top-Rated <span className="text-primary">Fostering Agencies</span></h2>
+               <p className="text-sm text-muted-foreground">Verified agencies with excellent carer reviews across the UK</p>
             </motion.div>
             <AutoScrollCarousel doctors={carouselProfiles} autoScrollSpeed={25} />
             <div className="text-center mt-8">
