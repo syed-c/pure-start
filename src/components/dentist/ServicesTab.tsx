@@ -236,8 +236,8 @@ export default function ServicesTab() {
             <Stethoscope className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-white">Services & Treatments</h2>
-            <p className="text-sm text-white/60">{clinicTreatments?.length || 0} services listed</p>
+            <h2 className="text-lg font-bold text-white">Fostering Types & Services</h2>
+            <p className="text-sm text-white/60">{clinicTreatments?.length || 0} fostering types listed</p>
           </div>
         </div>
         <Dialog open={isAddingService} onOpenChange={setIsAddingService}>
