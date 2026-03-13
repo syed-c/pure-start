@@ -39,7 +39,7 @@ export const DoctorCard = forwardRef<HTMLDivElement, DoctorCardProps>(({
   price,
   variant = "compact",
   slug,
-  type = 'dentist',
+  type = 'clinic',
   nextAvailable = "Today",
   reviewCount = 0,
 }, ref) => {
