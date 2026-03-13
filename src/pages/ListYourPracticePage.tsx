@@ -33,28 +33,28 @@ import {
   Star,
   BadgeCheck,
   Loader2,
-  Stethoscope,
-  Percent,
 } from "lucide-react";
 
-// UAE Phone formatting helper
-const formatUAEPhone = (value: string) => {
+// UK Phone formatting helper
+const formatUKPhone = (value: string) => {
   const cleaned = value.replace(/\D/g, '');
-  // Handle +971 prefix
-  if (cleaned.startsWith('971')) {
-    const rest = cleaned.slice(3);
-    if (rest.length <= 2) return `+971 ${rest}`;
-    return `+971 ${rest.slice(0, 2)} ${rest.slice(2, 5)} ${rest.slice(5, 9)}`;
+  if (cleaned.startsWith('44')) {
+    const rest = cleaned.slice(2);
+    if (rest.length <= 4) return `+44 ${rest}`;
+    return `+44 ${rest.slice(0, 4)} ${rest.slice(4, 10)}`;
   }
-  if (cleaned.length <= 2) return cleaned;
-  return `${cleaned.slice(0, 2)} ${cleaned.slice(2, 5)} ${cleaned.slice(5, 9)}`.trim();
+  if (cleaned.startsWith('0')) {
+    if (cleaned.length <= 5) return cleaned;
+    return `${cleaned.slice(0, 5)} ${cleaned.slice(5, 11)}`;
+  }
+  return cleaned;
 };
 
 const formSchema = z.object({
-  clinicName: z.string().trim().min(2, "Clinic name must be at least 2 characters").max(100, "Clinic name must be less than 100 characters"),
+  clinicName: z.string().trim().min(2, "Agency name must be at least 2 characters").max(100, "Agency name must be less than 100 characters"),
   dentistName: z.string().trim().min(2, "Name must be at least 2 characters").max(100, "Name must be less than 100 characters"),
   email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
-  phone: z.string().trim().min(9, "Please enter a valid UAE phone number").max(20, "Phone number must be less than 20 characters"),
+  phone: z.string().trim().min(10, "Please enter a valid UK phone number").max(20, "Phone number must be less than 20 characters"),
   streetAddress: z.string().trim().max(500, "Address must be less than 500 characters").optional(),
   website: z.string().trim().url("Invalid website URL").max(255, "Website must be less than 255 characters").optional().or(z.literal("")),
   description: z.string().trim().max(2000, "Description must be less than 2000 characters").optional(),
@@ -90,13 +90,11 @@ const ListYourPracticePage = () => {
     agreeTerms: false,
   });
 
-  // GMB Sign-in handler
   const handleGoogleSignIn = async () => {
     setIsConnectingGoogle(true);
     try {
       localStorage.setItem('gmb_listing_flow', 'true');
-      // Always use production domain for OAuth callback
-      const redirectTo = 'https://www.appointpanda.ae/auth/callback?listing=true';
+      const redirectTo = `${window.location.origin}/auth/callback?listing=true`;
 
       const { error } = await lovable.auth.signInWithOAuth('google', {
         redirect_uri: redirectTo,
@@ -124,9 +122,8 @@ const ListYourPracticePage = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     
-    // Format phone number for UAE
     if (name === 'phone') {
-      const formatted = formatUAEPhone(value);
+      const formatted = formatUKPhone(value);
       setFormData(prev => ({ ...prev, phone: formatted }));
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
@@ -152,7 +149,6 @@ const ListYourPracticePage = () => {
       3: [],
     };
 
-    // For step 1, also validate location
     if (currentStep === 1 && !selectedLocation) {
       setErrors(prev => ({ ...prev, location: "Please select a city" }));
       return false;
@@ -232,15 +228,14 @@ const ListYourPracticePage = () => {
         .filter((t: any) => selectedServices.includes(t.id))
         .map((t: any) => t.name);
 
-      // Create lead for follow-up
       const { error } = await supabase.from("leads").insert({
         patient_name: formData.dentistName,
         patient_email: formData.email,
         patient_phone: formData.phone,
         message: JSON.stringify({
-          type: 'practice_listing',
-          clinicName: formData.clinicName,
-          dentistName: formData.dentistName,
+          type: 'agency_listing',
+          agencyName: formData.clinicName,
+          contactName: formData.dentistName,
           state: selectedLocation?.stateName || '',
           stateId: selectedLocation?.stateId || '',
           city: selectedLocation?.cityName || '',
@@ -252,13 +247,12 @@ const ListYourPracticePage = () => {
           serviceIds: selectedServices,
           description: formData.description,
         }),
-        source: "list-your-practice",
+        source: "list-your-agency",
         status: "new",
       });
 
       if (error) throw error;
 
-      // Send confirmation email
       try {
         await supabase.functions.invoke('send-listing-confirmation', {
           body: {
@@ -289,38 +283,37 @@ const ListYourPracticePage = () => {
   };
 
   const benefits = [
-    { icon: Shield, title: "Free Listing", description: "List your practice for free and reach thousands of patients" },
-    { icon: BadgeCheck, title: "Get Verified", description: "Verify your profile to stand out and build trust" },
-    { icon: TrendingUp, title: "Grow Your Practice", description: "Attract new patients actively searching for dental care" },
+    { icon: Shield, title: "Free Listing", description: "List your agency for free and reach prospective foster carers" },
+    { icon: BadgeCheck, title: "Get Verified", description: "Verify your Ofsted registration to stand out and build trust" },
+    { icon: TrendingUp, title: "Grow Your Agency", description: "Attract new foster carers actively searching for agencies" },
     { icon: Star, title: "Build Reputation", description: "Collect reviews and showcase your expertise" },
   ];
 
   return (
     <PageLayout>
       <SEOHead
-        title="List Your Dental Practice | Join AppointPanda Directory"
-        description="List your dental practice for free on AppointPanda. Reach thousands of patients, get verified, collect reviews, and grow your practice with our dental directory."
-        canonical="/list-your-practice/"
-        keywords={['list dental practice', 'dental directory listing', 'dentist marketing', 'dental practice growth']}
+        title="List Your Fostering Agency | Join Foster Connect Directory"
+        description="List your fostering agency for free on Foster Connect. Reach prospective foster carers, get verified, collect reviews, and grow your agency."
+        canonical="/list-your-agency/"
+        keywords={['list fostering agency', 'fostering directory listing', 'agency marketing', 'fostering agency growth']}
       />
-      {/* Compact Hero Section */}
+      {/* Hero */}
       <div className="bg-gradient-to-br from-primary/10 via-background to-teal/5 border-b">
         <div className="container py-12 md:py-16">
           <div className="max-w-2xl mx-auto text-center">
-            {/* Promotion Banner */}
             <div className="mb-6">
               <PromotionBanner variant="inline" />
             </div>
             
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-4">
               <Building2 className="h-4 w-4" />
-              For Dental Professionals
+              For Fostering Agencies
             </div>
             <h1 className="text-3xl md:text-4xl font-display font-bold mb-4">
-              List Your <span className="text-primary">Practice</span>
+              List Your <span className="text-primary">Agency</span>
             </h1>
             <p className="text-lg text-muted-foreground">
-              Join the UAE's leading dental directory. Connect with patients actively searching for dental care in your area.
+              Join the UK's leading fostering directory. Connect with prospective foster carers actively searching for agencies in your area.
             </p>
           </div>
         </div>
@@ -329,10 +322,8 @@ const ListYourPracticePage = () => {
       <Section size="lg">
         <div className="max-w-5xl mx-auto">
           <div className="grid lg:grid-cols-5 gap-8">
-            {/* Form - 3 columns */}
             <div className="lg:col-span-3">
               <div className="card-modern p-6 md:p-8">
-                {/* Method Selection */}
                 {!listingMethod && (
                   <div className="space-y-6">
                     <div className="text-center">
@@ -340,7 +331,6 @@ const ListYourPracticePage = () => {
                       <p className="text-muted-foreground">Choose the fastest way to get started</p>
                     </div>
 
-                    {/* GMB Option */}
                     <Card 
                       className="border-2 border-primary/30 bg-gradient-to-br from-primary/5 to-teal/5 cursor-pointer hover:border-primary/50 transition-all"
                       onClick={handleGoogleSignIn}
@@ -366,11 +356,6 @@ const ListYourPracticePage = () => {
                             <p className="text-sm text-muted-foreground mb-3">
                               Import your business info, photos, and reviews from Google Business Profile
                             </p>
-                            <div className="flex flex-wrap gap-2">
-                              <span className="text-xs px-2 py-1 rounded-full bg-muted">Auto-fill</span>
-                              <span className="text-xs px-2 py-1 rounded-full bg-muted">Sync reviews</span>
-                              <span className="text-xs px-2 py-1 rounded-full bg-muted">Verified</span>
-                            </div>
                           </div>
                           <ArrowRight className="h-5 w-5 text-muted-foreground" />
                         </div>
@@ -386,7 +371,6 @@ const ListYourPracticePage = () => {
                       </div>
                     </div>
 
-                    {/* Manual Option */}
                     <Card 
                       className="border border-border cursor-pointer hover:border-primary/30 transition-all"
                       onClick={() => setListingMethod('manual')}
@@ -399,7 +383,7 @@ const ListYourPracticePage = () => {
                           <div className="flex-1">
                             <h3 className="font-bold text-lg mb-1">Fill Out Manually</h3>
                             <p className="text-sm text-muted-foreground">
-                              Enter your practice details manually. Connect Google later.
+                              Enter your agency details manually. Connect Google later.
                             </p>
                           </div>
                           <ArrowRight className="h-5 w-5 text-muted-foreground" />
@@ -413,7 +397,6 @@ const ListYourPracticePage = () => {
                   </div>
                 )}
 
-                {/* Manual Form */}
                 {listingMethod === 'manual' && (
                   <>
                     <button
@@ -424,7 +407,6 @@ const ListYourPracticePage = () => {
                       ← Back to options
                     </button>
 
-                    {/* Progress */}
                     <div className="flex items-center gap-2 mb-8">
                       {[1, 2, 3].map((s) => (
                         <div key={s} className="flex items-center gap-2 flex-1">
@@ -441,224 +423,119 @@ const ListYourPracticePage = () => {
                     </div>
 
                     <form onSubmit={handleSubmit}>
-                      {/* Step 1: Basic Info */}
                       {step === 1 && (
                         <div className="space-y-6">
-                          <div>
-                            <h2 className="font-display text-2xl font-bold">Practice Information</h2>
-                            <p className="text-muted-foreground">Tell us about your practice</p>
+                          <h3 className="font-display text-xl font-bold">Agency Details</h3>
+                          <div className="space-y-2">
+                            <Label htmlFor="clinicName">Agency Name *</Label>
+                            <div className="relative">
+                              <Building2 className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                              <Input id="clinicName" name="clinicName" value={formData.clinicName} onChange={handleChange} placeholder="e.g. ABC Fostering Services" className="pl-10" />
+                            </div>
+                            {errors.clinicName && <p className="text-sm text-destructive">{errors.clinicName}</p>}
                           </div>
-
-                          <div className="space-y-4">
-                            <div>
-                              <Label htmlFor="clinicName" className="font-bold">Clinic Name *</Label>
-                              <div className="relative mt-2">
-                                <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                                <Input
-                                  id="clinicName"
-                                  name="clinicName"
-                                  placeholder="Enter clinic name"
-                                  value={formData.clinicName}
-                                  onChange={handleChange}
-                                  className={`pl-12 h-12 rounded-xl ${errors.clinicName ? "border-destructive" : ""}`}
-                                />
-                              </div>
-                              {errors.clinicName && <p className="text-sm text-destructive mt-1">{errors.clinicName}</p>}
+                          <div className="space-y-2">
+                            <Label htmlFor="dentistName">Your Name *</Label>
+                            <div className="relative">
+                              <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                              <Input id="dentistName" name="dentistName" value={formData.dentistName} onChange={handleChange} placeholder="Full name" className="pl-10" />
                             </div>
-
-                            <div>
-                              <Label htmlFor="dentistName" className="font-bold">Your Name *</Label>
-                              <div className="relative mt-2">
-                                <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                                <Input
-                                  id="dentistName"
-                                  name="dentistName"
-                                  placeholder="Dr. First Last"
-                                  value={formData.dentistName}
-                                  onChange={handleChange}
-                                  className={`pl-12 h-12 rounded-xl ${errors.dentistName ? "border-destructive" : ""}`}
-                                />
-                              </div>
-                              {errors.dentistName && <p className="text-sm text-destructive mt-1">{errors.dentistName}</p>}
-                            </div>
-
-                            {/* Smart City Search - replaces state/city dropdowns */}
-                            <SmartCitySearch
-                              value={selectedLocation}
-                              onChange={(location) => {
-                                setSelectedLocation(location);
-                                if (errors.location) setErrors(prev => ({ ...prev, location: '' }));
-                              }}
-                              error={errors.location}
-                              placeholder="Type area name, e.g. 'Deira, Dubai'"
-                            />
-
-                            <div>
-                              <Label htmlFor="streetAddress" className="font-bold">Street Address (Optional)</Label>
-                              <div className="relative mt-2">
-                                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                                <Input
-                                  id="streetAddress"
-                                  name="streetAddress"
-                                  placeholder="Building 5, Al Maktoum Road"
-                                  value={formData.streetAddress}
-                                  onChange={handleChange}
-                                  className="pl-12 h-12 rounded-xl"
-                                />
-                              </div>
+                            {errors.dentistName && <p className="text-sm text-destructive">{errors.dentistName}</p>}
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Location *</Label>
+                            <SmartCitySearch value={selectedLocation} onChange={setSelectedLocation} />
+                            {errors.location && <p className="text-sm text-destructive">{errors.location}</p>}
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="streetAddress">Street Address</Label>
+                            <div className="relative">
+                              <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                              <Input id="streetAddress" name="streetAddress" value={formData.streetAddress} onChange={handleChange} placeholder="Street address" className="pl-10" />
                             </div>
                           </div>
-
-                          <Button type="button" onClick={handleNext} className="w-full rounded-xl font-bold">
-                            Continue
-                            <ArrowRight className="ml-2 h-4 w-4" />
+                          <Button type="button" className="w-full rounded-xl font-bold" onClick={handleNext}>
+                            Continue <ArrowRight className="ml-2 h-4 w-4" />
                           </Button>
                         </div>
                       )}
 
-                      {/* Step 2: Contact Info */}
                       {step === 2 && (
                         <div className="space-y-6">
-                          <div>
-                            <h2 className="font-display text-2xl font-bold">Contact Information</h2>
-                            <p className="text-muted-foreground">How can patients reach you?</p>
+                          <h3 className="font-display text-xl font-bold">Contact Information</h3>
+                          <div className="space-y-2">
+                            <Label htmlFor="email">Email Address *</Label>
+                            <div className="relative">
+                              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                              <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} placeholder="agency@example.co.uk" className="pl-10" />
+                            </div>
+                            {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
                           </div>
-
-                          <div className="space-y-4">
-                            <div>
-                              <Label htmlFor="email" className="font-bold">Business Email *</Label>
-                              <div className="relative mt-2">
-                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                                <Input
-                                  id="email"
-                                  name="email"
-                                  type="email"
-                                  placeholder="clinic@example.com"
-                                  value={formData.email}
-                                  onChange={handleChange}
-                                  className={`pl-12 h-12 rounded-xl ${errors.email ? "border-destructive" : ""}`}
-                                />
-                              </div>
-                              {errors.email && <p className="text-sm text-destructive mt-1">{errors.email}</p>}
+                          <div className="space-y-2">
+                            <Label htmlFor="phone">Phone Number *</Label>
+                            <div className="relative">
+                              <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                              <Input id="phone" name="phone" value={formData.phone} onChange={handleChange} placeholder="01234 567890" className="pl-10" />
                             </div>
-
-                            <div>
-                              <Label htmlFor="phone" className="font-bold">Phone Number *</Label>
-                              <div className="relative mt-2">
-                                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                                <Input
-                                  id="phone"
-                                  name="phone"
-                                  type="tel"
-                                  placeholder="+971 50 123 4567"
-                                  value={formData.phone}
-                                  onChange={handleChange}
-                                  className={`pl-12 h-12 rounded-xl ${errors.phone ? "border-destructive" : ""}`}
-                                />
-                              </div>
-                              <p className="text-xs text-muted-foreground mt-1">UAE format: +971 XX XXX XXXX</p>
-                              {errors.phone && <p className="text-sm text-destructive mt-1">{errors.phone}</p>}
-                            </div>
-
-                            <div>
-                              <Label htmlFor="website" className="font-bold">Website (Optional)</Label>
-                              <div className="relative mt-2">
-                                <Globe className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                                <Input
-                                  id="website"
-                                  name="website"
-                                  type="url"
-                                  placeholder="https://www.yourclinic.com"
-                                  value={formData.website}
-                                  onChange={handleChange}
-                                  className="pl-12 h-12 rounded-xl"
-                                />
-                              </div>
-                            </div>
+                            {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
                           </div>
-
+                          <div className="space-y-2">
+                            <Label htmlFor="website">Website (Optional)</Label>
+                            <div className="relative">
+                              <Globe className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                              <Input id="website" name="website" value={formData.website} onChange={handleChange} placeholder="https://www.example.co.uk" className="pl-10" />
+                            </div>
+                            {errors.website && <p className="text-sm text-destructive">{errors.website}</p>}
+                          </div>
                           <div className="flex gap-3">
-                            <Button type="button" variant="outline" onClick={() => setStep(1)} className="flex-1 rounded-xl font-bold">
-                              Back
-                            </Button>
-                            <Button type="button" onClick={handleNext} className="flex-1 rounded-xl font-bold">
-                              Continue
-                              <ArrowRight className="ml-2 h-4 w-4" />
+                            <Button type="button" variant="outline" className="flex-1 rounded-xl font-bold" onClick={() => setStep(1)}>Back</Button>
+                            <Button type="button" className="flex-1 rounded-xl font-bold" onClick={handleNext}>
+                              Continue <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
                           </div>
                         </div>
                       )}
 
-                      {/* Step 3: Services & Submit */}
                       {step === 3 && (
                         <div className="space-y-6">
-                          <div>
-                            <h2 className="font-display text-2xl font-bold">Services Offered</h2>
-                            <p className="text-muted-foreground">Select the services you provide</p>
-                          </div>
-
-                          <div className="space-y-4">
-                            {/* Services Grid */}
-                            <div>
-                              <Label className="font-bold flex items-center gap-2 mb-3">
-                                <Stethoscope className="h-4 w-4" />
-                                Select Your Services
-                              </Label>
-                              <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto p-1">
-                                {treatments.map((treatment: any) => (
-                                  <label
-                                    key={treatment.id}
-                                    className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
-                                      selectedServices.includes(treatment.id)
-                                        ? 'border-primary bg-primary/5'
-                                        : 'border-border hover:border-primary/30'
-                                    }`}
-                                  >
-                                    <Checkbox
-                                      checked={selectedServices.includes(treatment.id)}
-                                      onCheckedChange={() => handleServiceToggle(treatment.id)}
-                                    />
-                                    <span className="text-sm font-medium">{treatment.name}</span>
-                                  </label>
-                                ))}
-                              </div>
-                              {selectedServices.length > 0 && (
-                                <p className="text-xs text-muted-foreground mt-2">
-                                  {selectedServices.length} service{selectedServices.length > 1 ? 's' : ''} selected
-                                </p>
-                              )}
-                            </div>
-
-                            <div>
-                              <Label htmlFor="description" className="font-bold">About Your Practice (Optional)</Label>
-                              <Textarea
-                                id="description"
-                                name="description"
-                                placeholder="Tell patients about your clinic, experience, and what makes you unique..."
-                                value={formData.description}
-                                onChange={handleChange}
-                                className="mt-2 rounded-xl min-h-[100px]"
-                              />
-                            </div>
-
-                            <div className="flex items-start gap-3 p-4 rounded-xl bg-muted/50">
-                              <Checkbox
-                                id="agreeTerms"
-                                checked={formData.agreeTerms}
-                                onCheckedChange={(checked) => setFormData(prev => ({ ...prev, agreeTerms: checked === true }))}
-                              />
-                              <Label htmlFor="agreeTerms" className="text-sm leading-relaxed cursor-pointer">
-                                I agree to the <Link to="/terms" className="text-primary hover:underline">Terms & Conditions</Link> and <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>. I confirm that I am authorized to list this practice.
-                              </Label>
+                          <h3 className="font-display text-xl font-bold">Fostering Services</h3>
+                          <div className="space-y-2">
+                            <Label>Select the fostering types you offer</Label>
+                            <div className="grid grid-cols-2 gap-2">
+                              {treatments.map((t: any) => (
+                                <label
+                                  key={t.id}
+                                  className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-all ${
+                                    selectedServices.includes(t.id) ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/30'
+                                  }`}
+                                >
+                                  <Checkbox
+                                    checked={selectedServices.includes(t.id)}
+                                    onCheckedChange={() => handleServiceToggle(t.id)}
+                                  />
+                                  <span className="text-sm font-medium">{t.name}</span>
+                                </label>
+                              ))}
                             </div>
                           </div>
-
+                          <div className="space-y-2">
+                            <Label htmlFor="description">About Your Agency (Optional)</Label>
+                            <Textarea id="description" name="description" value={formData.description} onChange={handleChange} placeholder="Tell us about your agency, experience, and approach to fostering..." rows={4} />
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <Checkbox
+                              id="agreeTerms"
+                              checked={formData.agreeTerms}
+                              onCheckedChange={(checked) => setFormData(prev => ({ ...prev, agreeTerms: !!checked }))}
+                            />
+                            <Label htmlFor="agreeTerms" className="text-sm text-muted-foreground leading-tight">
+                              I agree to the <Link to="/terms" className="text-primary hover:underline">Terms of Service</Link> and <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
+                            </Label>
+                          </div>
                           <div className="flex gap-3">
-                            <Button type="button" variant="outline" onClick={() => setStep(2)} className="flex-1 rounded-xl font-bold">
-                              Back
-                            </Button>
-                            <Button type="submit" disabled={isSubmitting} className="flex-1 rounded-xl font-bold">
-                              {isSubmitting ? "Submitting..." : "Submit Listing"}
+                            <Button type="button" variant="outline" className="flex-1 rounded-xl font-bold" onClick={() => setStep(2)}>Back</Button>
+                            <Button type="submit" className="flex-1 rounded-xl font-bold" disabled={isSubmitting}>
+                              {isSubmitting ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Submitting...</> : 'Submit Listing'}
                             </Button>
                           </div>
                         </div>
@@ -669,34 +546,23 @@ const ListYourPracticePage = () => {
               </div>
             </div>
 
-            {/* Benefits - 2 columns */}
+            {/* Benefits Sidebar */}
             <div className="lg:col-span-2">
-              <h2 className="font-display text-xl font-bold mb-4">Why List With Us?</h2>
-              <div className="space-y-3">
-                {benefits.map((benefit, i) => (
-                  <div key={i} className="card-modern p-4 flex gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <benefit.icon className="h-5 w-5 text-primary" />
+              <div className="card-modern p-6 sticky top-24">
+                <h3 className="font-display text-lg font-bold mb-6">Why List on Foster Connect?</h3>
+                <div className="space-y-5">
+                  {benefits.map((benefit, i) => (
+                    <div key={i} className="flex gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <benefit.icon className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold">{benefit.title}</h4>
+                        <p className="text-sm text-muted-foreground">{benefit.description}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-bold text-sm">{benefit.title}</h3>
-                      <p className="text-xs text-muted-foreground">{benefit.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-6 p-4 rounded-xl bg-muted/50">
-                <h3 className="font-bold text-sm mb-2">Already have a profile?</h3>
-                <p className="text-xs text-muted-foreground mb-3">
-                  If your clinic is already listed, claim and verify it instead.
-                </p>
-                <Button asChild variant="outline" size="sm" className="rounded-xl font-bold w-full">
-                  <Link to="/claim-profile">
-                    Claim Existing Profile
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

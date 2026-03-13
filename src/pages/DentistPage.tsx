@@ -31,7 +31,7 @@ import {
   Check,
   Copy
 } from "lucide-react";
-import { TrustSignalStrip, AEDPricingDisplay, CredentialsBadge } from "@/components/healthcare";
+import { TrustSignalStrip, CredentialsBadge } from "@/components/healthcare";
 
 const DentistPage = () => {
   const { dentistSlug } = useParams();
@@ -46,23 +46,23 @@ const DentistPage = () => {
   const { trackProfileView } = useAnalytics();
   const { data: seoContent } = useSeoPageContent(`dentist/${slug}`);
 
-  // Fetch dentist data - only exact slug match
+  // Fetch agency data - only exact slug match
   const { data: dentist, isLoading, error } = useQuery({
     queryKey: ["dentist", slug],
     queryFn: async () => {
-      if (!slug || slug.includes('/')) return null; // Prevent path traversal
+      if (!slug || slug.includes('/')) return null;
       const { data, error } = await supabase
         .from("dentists")
         .select("*, clinic:clinics(id, name, slug, address, phone, latitude, longitude, city:cities(name, slug, state:states(name, abbreviation, slug)))")
         .eq("slug", slug)
-        .maybeSingle(); // Use maybeSingle to return null instead of error for no match
+        .maybeSingle();
       if (error) throw error;
       return data;
     },
     enabled: !!slug && !slug.includes('/'),
   });
 
-  // Fetch treatments via clinic_treatments if dentist has a clinic
+  // Fetch services via clinic_treatments if agency has a clinic
   const { data: treatments } = useQuery({
     queryKey: ["dentist-clinic-treatments", dentist?.clinic_id],
     queryFn: async () => {
@@ -76,7 +76,7 @@ const DentistPage = () => {
     enabled: !!dentist?.clinic_id,
   });
 
-  // Fetch reviews from review_funnel_events via clinic
+  // Fetch reviews
   const { data: reviews } = useQuery({
     queryKey: ["dentist-reviews", dentist?.clinic_id],
     queryFn: async () => {
@@ -99,17 +99,15 @@ const DentistPage = () => {
     enabled: !!dentist?.clinic_id,
   });
 
-  // Handle share functionality
   const handleShare = async () => {
     const url = window.location.href;
-    const title = `${dentist?.name || 'Dentist'} - AppointPanda`;
+    const title = `${dentist?.name || 'Agency'} - Foster Connect`;
     
     if (navigator.share) {
       try {
         await navigator.share({ title, url });
         toast({ title: "Shared successfully!" });
       } catch (err) {
-        // User cancelled or share failed
         if ((err as Error).name !== 'AbortError') {
           fallbackCopyToClipboard(url);
         }
@@ -130,33 +128,29 @@ const DentistPage = () => {
     }
   };
 
-  // Handle like functionality
   const handleLike = () => {
     setIsLiked(!isLiked);
     setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
     
-    // Store in localStorage for persistence
-    const likedDentists = JSON.parse(localStorage.getItem('likedDentists') || '[]');
+    const likedAgencies = JSON.parse(localStorage.getItem('likedAgencies') || '[]');
     if (isLiked) {
-      const updated = likedDentists.filter((id: string) => id !== dentist?.id);
-      localStorage.setItem('likedDentists', JSON.stringify(updated));
-      toast({ title: "Removed from favorites" });
+      const updated = likedAgencies.filter((id: string) => id !== dentist?.id);
+      localStorage.setItem('likedAgencies', JSON.stringify(updated));
+      toast({ title: "Removed from favourites" });
     } else {
-      likedDentists.push(dentist?.id);
-      localStorage.setItem('likedDentists', JSON.stringify(likedDentists));
-      toast({ title: "Added to favorites!", description: "Find your favorites in your profile" });
+      likedAgencies.push(dentist?.id);
+      localStorage.setItem('likedAgencies', JSON.stringify(likedAgencies));
+      toast({ title: "Added to favourites!", description: "Find your favourites in your profile" });
     }
   };
 
-  // Check if already liked on mount
   useEffect(() => {
     if (dentist?.id) {
-      const likedDentists = JSON.parse(localStorage.getItem('likedDentists') || '[]');
-      setIsLiked(likedDentists.includes(dentist.id));
+      const likedAgencies = JSON.parse(localStorage.getItem('likedAgencies') || '[]');
+      setIsLiked(likedAgencies.includes(dentist.id));
     }
   }, [dentist?.id]);
 
-  // Track profile view in GA4 when dentist data is available
   useEffect(() => {
     if (dentist?.id && dentist?.name) {
       trackProfileView({
@@ -169,7 +163,6 @@ const DentistPage = () => {
     }
   }, [dentist?.id, dentist?.name, dentist?.clinic?.city?.name, dentist?.clinic?.city?.state?.abbreviation, trackProfileView]);
 
-  // Signal prerender when data is ready
   const isDataReady = !isLoading && !!dentist;
   usePrerenderReady(isDataReady);
 
@@ -195,12 +188,12 @@ const DentistPage = () => {
       <PageLayout>
         <Section>
           <div className="text-center py-20">
-            <h1 className="font-display text-3xl font-bold mb-4">Dentist Not Found</h1>
+            <h1 className="font-display text-3xl font-bold mb-4">Agency Not Found</h1>
             <p className="text-muted-foreground mb-8">
-              The dentist profile you're looking for doesn't exist.
+              The fostering agency profile you're looking for doesn't exist.
             </p>
             <Button asChild className="rounded-xl font-bold">
-              <Link to="/search">Find Dentists</Link>
+              <Link to="/search">Find Agencies</Link>
             </Button>
           </div>
         </Section>
@@ -215,7 +208,7 @@ const DentistPage = () => {
   const locationDisplay = dentist.clinic?.city?.state?.name ? `${cityName}, ${dentist.clinic?.city?.state?.name}` : cityName;
 
   const breadcrumbs = [
-    { label: "Dentists", href: "/search" },
+    { label: "Agencies", href: "/search" },
     ...(stateSlug ? [{ label: dentist.clinic?.city?.state?.name || '', href: `/${stateSlug}` }] : []),
     ...(citySlug && stateSlug ? [{ label: cityName, href: `/${stateSlug}/${citySlug}` }] : []),
     { label: dentist.name },
@@ -224,17 +217,17 @@ const DentistPage = () => {
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || `${dentist.name}${dentist.title ? `, ${dentist.title}` : ''} - Dentist in ${locationDisplay}`}
-        description={seoContent?.meta_description || dentist.bio || `Book an appointment with ${dentist.name}. ${dentist.years_experience ? `${dentist.years_experience}+ years of experience.` : ''} Verified dental professional in ${locationDisplay}.`}
+        title={seoContent?.meta_title || `${dentist.name}${dentist.title ? `, ${dentist.title}` : ''} - Fostering Agency in ${locationDisplay}`}
+        description={seoContent?.meta_description || dentist.bio || `Learn more about ${dentist.name}. ${dentist.years_experience ? `${dentist.years_experience}+ years of experience.` : ''} Verified fostering professional in ${locationDisplay}.`}
         canonical={`/dentist/${dentist.slug}/`}
-        keywords={[dentist.name, `dentist ${cityName}`, dentist.title || 'dental specialist']}
+        keywords={[dentist.name, `fostering agency ${cityName}`, dentist.title || 'fostering specialist']}
         ogType="profile"
       />
       <StructuredData
         type="person"
         name={dentist.name}
-        jobTitle={dentist.title || 'Dental Professional'}
-        description={dentist.bio || `${dentist.name} is a verified dental professional in ${locationDisplay}.`}
+        jobTitle={dentist.title || 'Fostering Professional'}
+        description={dentist.bio || `${dentist.name} is a verified fostering professional in ${locationDisplay}.`}
         image={dentist.image_url || undefined}
         url={`/dentist/${dentist.slug}/`}
         worksFor={dentist.clinic ? { name: dentist.clinic.name, url: `/clinic/${dentist.clinic.slug}/` } : undefined}
@@ -335,7 +328,7 @@ const DentistPage = () => {
               <div className="flex md:flex-col gap-3">
                 <Button size="lg" className="rounded-xl font-bold flex-1 md:flex-none" onClick={() => setBookingOpen(true)}>
                   <Calendar className="h-4 w-4 mr-2" />
-                  Book Appointment
+                  Make Enquiry
                 </Button>
                 <div className="flex gap-2">
                   <Button 
@@ -370,7 +363,7 @@ const DentistPage = () => {
             <div className="card-modern p-6">
               <h2 className="font-display text-xl font-bold mb-4">About</h2>
               <p className="text-muted-foreground leading-relaxed">
-                {dentist.bio || `${dentist.name} is a dedicated dental professional committed to providing exceptional patient care. With expertise in various dental procedures and a patient-centered approach, they ensure comfortable and effective treatments.`}
+                {dentist.bio || `${dentist.name} is a dedicated fostering professional committed to providing exceptional care and support. With expertise in various fostering types and a child-centred approach, they ensure safe and nurturing placements.`}
               </p>
             </div>
 
@@ -382,22 +375,23 @@ const DentistPage = () => {
               languages={dentist.languages}
             />
 
-            {/* Services with AED Pricing */}
+            {/* Services */}
             {treatments && treatments.length > 0 && (
               <div className="card-modern p-6">
-                <AEDPricingDisplay
-                  treatments={treatments.map((dt) => ({
-                    name: dt.treatment?.name || '',
-                    slug: dt.treatment?.slug || '',
-                    priceAed: dt.price_aed || null,
-                  }))}
-                />
+                <h3 className="font-display text-base font-bold mb-4">Fostering Services Offered</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {treatments.map((dt) => (
+                    <div key={dt.treatment?.slug} className="flex items-center justify-between p-3 rounded-xl bg-muted/50 border border-border/50">
+                      <p className="text-sm font-semibold truncate">{dt.treatment?.name || ''}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
             {/* Reviews */}
             <div className="card-modern p-6">
-              <h2 className="font-display text-xl font-bold mb-4">Patient Reviews</h2>
+              <h2 className="font-display text-xl font-bold mb-4">Reviews</h2>
               {reviews && reviews.length > 0 ? (
                 <div className="space-y-4">
                   {reviews.map((review) => (
@@ -431,12 +425,12 @@ const DentistPage = () => {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Clinic Card */}
+            {/* Agency Card */}
             {dentist.clinic && (
               <div className="card-modern p-6">
                 <h3 className="font-display font-bold mb-4 flex items-center gap-2">
                   <Briefcase className="h-5 w-5 text-primary" />
-                  Works At
+                  Agency
                 </h3>
                 <Link 
                   to={`/clinic/${dentist.clinic.slug}`}

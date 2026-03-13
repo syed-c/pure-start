@@ -22,7 +22,6 @@ export default function InsuranceChecker() {
   const [treatmentId, setTreatmentId] = useState('');
   const [citySearch, setCitySearch] = useState('');
 
-  // Fetch insurances
   const { data: insurances } = useQuery({
     queryKey: ['tool-insurances'],
     queryFn: async () => {
@@ -31,7 +30,6 @@ export default function InsuranceChecker() {
     },
   });
 
-  // Fetch treatments
   const { data: treatments } = useQuery({
     queryKey: ['tool-treatments'],
     queryFn: async () => {
@@ -40,7 +38,6 @@ export default function InsuranceChecker() {
     },
   });
 
-  // Fetch states
   const { data: states } = useQuery({
     queryKey: ['tool-states'],
     queryFn: async () => {
@@ -49,7 +46,6 @@ export default function InsuranceChecker() {
     },
   });
 
-  // Fetch cities
   const { data: cities } = useQuery({
     queryKey: ['tool-cities', stateId],
     queryFn: async () => {
@@ -60,13 +56,11 @@ export default function InsuranceChecker() {
     },
   });
 
-  // Find clinics accepting the selected insurance
   const { data: matchingClinics } = useQuery({
     queryKey: ['insurance-clinics', insuranceId, stateId, cityId, treatmentId],
     queryFn: async () => {
       if (!insuranceId) return null;
 
-      // Get clinic IDs that accept this insurance
       const { data: ciData } = await supabase
         .from('clinic_insurances')
         .select('clinic_id')
@@ -90,7 +84,6 @@ export default function InsuranceChecker() {
 
       const { data: clinics } = await query.limit(20);
 
-      // If treatment selected, filter to clinics offering it
       let filtered = clinics || [];
       if (treatmentId && filtered.length > 0) {
         const { data: ctData } = await supabase
@@ -124,40 +117,37 @@ export default function InsuranceChecker() {
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || "Insurance Coverage Checker | Find In-Network Dentists | AppointPanda"}
-        description={seoContent?.meta_description || "Check which dentists accept your insurance. Find in-network dental offices near you with real-time coverage data."}
+        title={seoContent?.meta_title || "Support Services Checker | Foster Connect"}
+        description={seoContent?.meta_description || "Check which fostering agencies offer the support services you need. Find agencies near you with the right expertise."}
         canonical="/tools/insurance-checker/"
       />
 
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        {/* Hero */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
             <Shield className="h-8 w-8 text-primary" />
           </div>
-          <h1 className="text-4xl font-bold mb-4">Insurance Coverage Checker</h1>
+          <h1 className="text-4xl font-bold mb-4">Support Services Checker</h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Find dentists who accept your insurance. See real in-network dental offices near you.
+            Find fostering agencies that offer the support services you need. Select your requirements to see matching agencies.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Form */}
           <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Shield className="h-5 w-5" />
-                Check Your Coverage
+                Check Services
               </CardTitle>
-              <CardDescription>Select your insurance and location to find in-network dentists</CardDescription>
+              <CardDescription>Select your requirements and location to find matching agencies</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Insurance */}
               <div className="space-y-2">
-                <Label>Insurance Provider</Label>
+                <Label>Support Type</Label>
                 <Select value={insuranceId} onValueChange={setInsuranceId}>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select your insurance" />
+                    <SelectValue placeholder="Select support type" />
                   </SelectTrigger>
                   <SelectContent>
                     {insurances?.map(ins => (
@@ -167,13 +157,12 @@ export default function InsuranceChecker() {
                 </Select>
               </div>
 
-              {/* Location */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>State</Label>
+                  <Label>Region</Label>
                   <Select value={stateId} onValueChange={(v) => { setStateId(v); setCityId(''); }}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select state" />
+                      <SelectValue placeholder="Select region" />
                     </SelectTrigger>
                     <SelectContent>
                       {states?.map(s => (
@@ -200,12 +189,11 @@ export default function InsuranceChecker() {
                 </div>
               </div>
 
-              {/* Treatment Filter */}
               <div className="space-y-2">
-                <Label>Treatment Needed (Optional)</Label>
+                <Label>Fostering Type (Optional)</Label>
                 <Select value={treatmentId} onValueChange={setTreatmentId}>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Any treatment" />
+                    <SelectValue placeholder="Any type" />
                   </SelectTrigger>
                   <SelectContent>
                     {treatments?.map(t => (
@@ -217,7 +205,6 @@ export default function InsuranceChecker() {
             </CardContent>
           </Card>
 
-          {/* Summary */}
           <Card>
             <CardHeader>
               <CardTitle>Results</CardTitle>
@@ -228,10 +215,10 @@ export default function InsuranceChecker() {
                   <div className="text-center p-6 bg-primary/5 rounded-lg">
                     <CheckCircle className="h-8 w-8 text-primary mx-auto mb-2" />
                     <p className="text-sm text-muted-foreground mb-1">
-                      {selectedInsurance?.name} Accepted By
+                      {selectedInsurance?.name} Available At
                     </p>
                     <p className="text-4xl font-bold text-primary">{matchingClinics.count}</p>
-                    <p className="text-sm text-muted-foreground">dental offices on our platform</p>
+                    <p className="text-sm text-muted-foreground">agencies on our platform</p>
                   </div>
 
                   {matchingClinics.clinics.length > 0 && (
@@ -243,27 +230,26 @@ export default function InsuranceChecker() {
                   <Button className="w-full" asChild>
                     <Link to={`/search?insurance=${selectedInsurance?.name || ''}&state=${selectedState?.abbreviation || ''}`}>
                       <Search className="h-4 w-4 mr-2" />
-                      Browse All In-Network Dentists
+                      Browse All Matching Agencies
                     </Link>
                   </Button>
                 </div>
               ) : (
                 <div className="text-center py-8 text-muted-foreground">
                   <Shield className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                  <p>Select your insurance to find in-network dentists</p>
+                  <p>Select your requirements to find matching agencies</p>
                 </div>
               )}
             </CardContent>
           </Card>
         </div>
 
-        {/* Matching Clinics */}
         {matchingClinics?.clinics && matchingClinics.clinics.length > 0 && (
           <Card className="mt-8">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <MapPin className="h-5 w-5" />
-                Dentists Accepting {selectedInsurance?.name}
+                Agencies Offering {selectedInsurance?.name}
               </CardTitle>
               <CardDescription>
                 {selectedTreatment ? `Offering ${selectedTreatment.name} • ` : ''}
@@ -274,9 +260,8 @@ export default function InsuranceChecker() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Dental Office</TableHead>
+                    <TableHead>Agency</TableHead>
                     <TableHead>Location</TableHead>
-                    {treatmentId && <TableHead className="text-right">Price</TableHead>}
                     <TableHead className="text-right">Rating</TableHead>
                     <TableHead></TableHead>
                   </TableRow>
@@ -288,13 +273,6 @@ export default function InsuranceChecker() {
                       <TableCell className="text-muted-foreground">
                         {clinic.cities?.name}, {clinic.cities?.states?.abbreviation}
                       </TableCell>
-                      {treatmentId && (
-                        <TableCell className="text-right">
-                          {clinic.pricing ? (
-                            <span>${clinic.pricing.price_from}{clinic.pricing.price_to ? ` – $${clinic.pricing.price_to}` : ''}</span>
-                          ) : '—'}
-                        </TableCell>
-                      )}
                       <TableCell className="text-right">
                         {clinic.rating ? (
                           <div className="flex items-center justify-end gap-1">
@@ -318,28 +296,27 @@ export default function InsuranceChecker() {
           </Card>
         )}
 
-        {/* FAQ */}
         <Card className="mt-8">
           <CardHeader>
             <CardTitle>Frequently Asked Questions</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
-              <h3 className="font-semibold mb-2">How do I know if a dentist accepts my insurance?</h3>
+              <h3 className="font-semibold mb-2">How do I know if an agency offers the support I need?</h3>
               <p className="text-muted-foreground">
-                Dentists on our platform specify which insurance plans they accept. Select your provider above to see verified in-network offices.
+                Agencies on our platform specify their support services and fostering types. Select your requirements above to see verified agencies that match your needs.
               </p>
             </div>
             <div>
-              <h3 className="font-semibold mb-2">What's the difference between PPO and HMO dental plans?</h3>
+              <h3 className="font-semibold mb-2">What types of support do fostering agencies provide?</h3>
               <p className="text-muted-foreground">
-                PPO plans offer more flexibility in choosing dentists but often cost more. HMO plans require in-network dentists but typically have lower premiums.
+                Most agencies provide 24/7 support, training, supervision, peer groups, and therapeutic services. Some also offer specialist support for complex needs, disability, and therapeutic fostering.
               </p>
             </div>
             <div>
-              <h3 className="font-semibold mb-2">How can I verify my exact coverage?</h3>
+              <h3 className="font-semibold mb-2">How can I verify an agency's credentials?</h3>
               <p className="text-muted-foreground">
-                Contact your insurance company directly or ask your dentist's office to verify benefits before treatment.
+                All agencies listed on Foster Connect are Ofsted-registered. You can verify their Ofsted rating on their profile page or directly on the Ofsted website.
               </p>
             </div>
           </CardContent>

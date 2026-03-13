@@ -29,11 +29,8 @@ import {
   Star,
   Shield,
   MapPin,
-  Stethoscope,
-  DollarSign,
-  BarChart3,
+  Building2,
   ArrowRight,
-  TrendingUp,
 } from "lucide-react";
 
 const MIN_PROFILE_COUNT = 2;
@@ -72,9 +69,6 @@ const ServicePage = () => {
     },
   });
 
-  // Price intelligence data
-  const { data: priceRanges } = useServicePriceRanges(serviceSlug);
-
   const treatmentName = treatment?.name || serviceSlug.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
 
   const parsedContent = seoContent?.content ? parseMarkdownContent(seoContent.content) : null;
@@ -86,35 +80,28 @@ const ServicePage = () => {
   usePrerenderReady(isDataReady);
   const shouldNoIndex = !profilesLoading && (!profiles || profiles.length < MIN_PROFILE_COUNT);
 
-  // Price stats
-  const uaeMin = priceRanges?.length ? Math.min(...priceRanges.map(r => r.price_min)) : 0;
-  const uaeMax = priceRanges?.length ? Math.max(...priceRanges.map(r => r.price_max)) : 0;
-  const sortedByPrice = [...(priceRanges || [])].sort((a, b) => a.price_min - b.price_min);
-
   const breadcrumbs = [
     { label: "Home", href: "/" },
-    { label: "Dental Services", href: "/services" },
+    { label: "Fostering Types", href: "/categories" },
     { label: treatmentName },
   ];
 
   const faqs = seoFaqs.length > 0 ? seoFaqs.map(f => ({ q: f.question, a: f.answer })) : [
     {
-      q: `How much does ${treatmentName} cost in the UAE?`,
-      a: uaeMin > 0
-        ? `${treatmentName} costs between AED ${uaeMin.toLocaleString()} and AED ${uaeMax.toLocaleString()} across the UAE. Prices vary by emirate, with ${sortedByPrice[0]?.state?.name || 'northern emirates'} offering the most affordable options. Visit our detailed cost guide for emirate-by-emirate pricing.`
-        : `Costs vary by clinic and treatment needs. We recommend booking a consultation. Many clinics accept insurance and offer payment plans.`,
-    },
-    {
       q: `What is ${treatmentName}?`,
-      a: treatment?.description || `${treatmentName} is a professional dental procedure designed to improve your oral health and smile. Our qualified dentists across all 7 UAE emirates use the latest techniques.`,
+      a: treatment?.description || `${treatmentName} is a specialised type of fostering that provides care for children and young people with specific needs. Browse verified agencies on Foster Connect to learn more.`,
     },
     {
-      q: `How do I find the best ${treatmentName} specialist in the UAE?`,
-      a: `Use our directory to compare ${profiles?.length || 0}+ verified specialists across Dubai, Abu Dhabi, Sharjah and all emirates. Filter by rating, location, insurance acceptance, and budget to find your ideal match.`,
+      q: `How do I find ${treatmentName} agencies in the UK?`,
+      a: `Use our directory to compare ${profiles?.length || 0}+ verified agencies across England, Scotland, Wales and Northern Ireland. Filter by rating, location, and Ofsted rating to find your ideal match.`,
     },
     {
-      q: `Does insurance cover ${treatmentName}?`,
-      a: `Coverage depends on your insurance provider and plan. DHA-mandated basic plans typically cover preventive procedures, while enhanced plans may cover major treatments. Check with your provider or use our Insurance Checker tool.`,
+      q: `What qualifications do I need for ${treatmentName}?`,
+      a: `You don't need formal qualifications. Agencies provide comprehensive training specific to ${treatmentName.toLowerCase()}. Key qualities include patience, resilience, and a genuine desire to support children.`,
+    },
+    {
+      q: `What support is available for ${treatmentName} carers?`,
+      a: `Agencies provide 24/7 support, specialist training, supervision, peer groups, and competitive fostering allowances. Check individual agency profiles on Foster Connect for specific support packages.`,
     },
   ];
 
@@ -123,19 +110,19 @@ const ServicePage = () => {
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || `${treatmentName} in UAE — Find Specialists & Compare Prices`}
-        description={seoContent?.meta_description || `Find the best ${treatmentName.toLowerCase()} specialists across the UAE. Compare prices from AED ${uaeMin.toLocaleString()}–${uaeMax.toLocaleString()}, check insurance coverage, and book verified clinics.`}
+        title={seoContent?.meta_title || `${treatmentName} in the UK — Find Agencies & Compare`}
+        description={seoContent?.meta_description || `Find the best ${treatmentName.toLowerCase()} agencies across the UK. Compare Ofsted ratings, read reviews, and enquire with verified agencies.`}
         canonical={`/services/${serviceSlug}/`}
-        keywords={[`${treatmentName} UAE`, `${treatmentName} cost`, `${treatmentName} Dubai`, `best ${treatmentName} clinic UAE`]}
+        keywords={[`${treatmentName} UK`, `${treatmentName} agencies`, `${treatmentName} fostering`, `best ${treatmentName} agency UK`]}
         noindex={shouldNoIndex}
       />
       <StructuredData
         type="service"
-        name={`${treatmentName} in UAE`}
-        description={treatment?.description || `Professional ${treatmentName} services across the UAE`}
+        name={`${treatmentName} in the UK`}
+        description={treatment?.description || `Professional ${treatmentName} services across the UK`}
         url={`/services/${serviceSlug}/`}
-        provider="AppointPanda Partner Clinics"
-        areaServed="United Arab Emirates"
+        provider="Foster Connect Partner Agencies"
+        areaServed="United Kingdom"
       />
       <StructuredData type="faq" questions={faqs.map(f => ({ question: f.q, answer: f.a }))} />
       
@@ -166,8 +153,8 @@ const ServicePage = () => {
               animate={{ opacity: 1, y: 0 }}
               className="inline-flex items-center gap-2 bg-foreground/5 backdrop-blur-sm border border-foreground/10 rounded-full px-4 py-2 mb-4"
             >
-              <Stethoscope className="h-4 w-4 text-emerald" />
-              <span className="text-xs md:text-sm font-bold text-foreground/80">UAE Dental Service</span>
+              <Building2 className="h-4 w-4 text-emerald" />
+              <span className="text-xs md:text-sm font-bold text-foreground/80">UK Fostering Service</span>
             </motion.div>
             
             <motion.h1 
@@ -176,7 +163,7 @@ const ServicePage = () => {
               transition={{ delay: 0.1 }}
               className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-3 px-2"
             >
-              {treatmentName} in <span className="text-primary">UAE</span>
+              {treatmentName} in the <span className="text-primary">UK</span>
             </motion.h1>
             
             <motion.p 
@@ -185,7 +172,7 @@ const ServicePage = () => {
               transition={{ delay: 0.2 }}
               className="text-base md:text-lg text-muted-foreground mb-6 max-w-2xl mx-auto px-2"
             >
-              {treatment?.description || `Find the best ${treatmentName.toLowerCase()} specialists across all 7 UAE emirates. Compare prices, check insurance coverage, and book verified clinics.`}
+              {treatment?.description || `Find the best ${treatmentName.toLowerCase()} agencies across the UK. Compare Ofsted ratings, read reviews, and start your fostering journey.`}
             </motion.p>
 
             <motion.div 
@@ -206,98 +193,32 @@ const ServicePage = () => {
             >
               <div className="flex items-center gap-1.5 bg-card/80 backdrop-blur-sm border border-border rounded-xl px-3 py-2 shadow-sm">
                 <Users className="h-4 w-4 text-primary" />
-                <span className="font-bold text-sm">{profiles?.length || 0}+ Specialists</span>
+                <span className="font-bold text-sm">{profiles?.length || 0}+ Agencies</span>
               </div>
-              {uaeMin > 0 && (
-                <div className="flex items-center gap-1.5 bg-card/80 backdrop-blur-sm border border-border rounded-xl px-3 py-2 shadow-sm">
-                  <DollarSign className="h-4 w-4 text-primary" />
-                  <span className="font-bold text-sm">From AED {uaeMin.toLocaleString()}</span>
-                </div>
-              )}
               <div className="flex items-center gap-1.5 bg-card/80 backdrop-blur-sm border border-border rounded-xl px-3 py-2 shadow-sm">
                 <Star className="h-4 w-4 text-gold fill-gold" />
                 <span className="font-bold text-sm">4.8 Avg. Rating</span>
               </div>
               <div className="flex items-center gap-1.5 bg-card/80 backdrop-blur-sm border border-border rounded-xl px-3 py-2 shadow-sm">
                 <Shield className="h-4 w-4 text-emerald" />
-                <span className="font-bold text-sm">Verified</span>
+                <span className="font-bold text-sm">Ofsted Registered</span>
               </div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Related Services Quick Links - Text Based */}
+      {/* Related Services Quick Links */}
       {relatedServices.length > 0 && (
         <section className="py-4 bg-muted/30 border-y border-border">
           <div className="container px-4">
             <LocationQuickLinks
               variant="services"
               items={relatedServices}
-              title="Related Dental Treatments"
+              title="Related Fostering Types"
             />
           </div>
         </section>
-      )}
-
-      {/* Price by Emirate Section */}
-      {sortedByPrice.length > 0 && (
-        <Section size="lg" className="bg-muted/30">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-6">
-              <span className="inline-block text-xs font-bold text-primary uppercase tracking-widest mb-2">Price Intelligence</span>
-              <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground">
-                {treatmentName} Cost <span className="text-primary">by Emirate</span>
-              </h2>
-              <p className="text-muted-foreground mt-2">
-                UAE-wide prices range from <strong className="text-primary">AED {uaeMin.toLocaleString()}</strong> to <strong className="text-primary">AED {uaeMax.toLocaleString()}</strong>
-              </p>
-            </div>
-            
-            <div className="space-y-3 mb-6">
-              {sortedByPrice.map((range, i) => {
-                const barWidth = uaeMax > 0 ? ((range.price_max - range.price_min) / uaeMax) * 100 : 50;
-                const barLeft = uaeMax > 0 ? (range.price_min / uaeMax) * 100 : 0;
-                return (
-                  <motion.div
-                    key={range.id}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                    className="bg-card border border-border rounded-2xl p-4 hover:border-primary/30 transition-all"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <Link to={`/${range.state?.slug}`} className="flex items-center gap-2 hover:text-primary transition-colors">
-                        <MapPin className="h-4 w-4 text-primary" />
-                        <span className="font-bold text-foreground">{range.state?.name}</span>
-                      </Link>
-                      <span className="font-bold text-primary">
-                        AED {range.price_min.toLocaleString()} – {range.price_max.toLocaleString()}
-                      </span>
-                    </div>
-                    <div className="relative h-2 bg-muted rounded-full overflow-hidden">
-                      <div
-                        className="absolute h-full bg-gradient-to-r from-primary/60 to-primary rounded-full"
-                        style={{ left: `${barLeft}%`, width: `${Math.max(barWidth, 5)}%` }}
-                      />
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-
-            <div className="text-center">
-              <Link
-                to={`/cost/${serviceSlug}`}
-                className="inline-flex items-center gap-2 text-primary font-bold hover:underline"
-              >
-                <BarChart3 className="h-4 w-4" />
-                View detailed price guide & comparison
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </Section>
       )}
 
       {/* Main Content */}
@@ -307,15 +228,15 @@ const ServicePage = () => {
             <DentistListFrame
               profiles={profiles || []}
               isLoading={profilesLoading}
-              locationName="UAE"
-              emptyMessage="We're still adding specialists for this service."
+              locationName="the UK"
+              emptyMessage="We're still adding agencies for this fostering type."
               maxHeight={700}
               initialCount={10}
             />
 
             <SEOContentBlock
               variant="service"
-              locationName="UAE"
+              locationName="the UK"
               treatmentName={treatmentName}
               clinicCount={profiles?.length || 0}
               parsedContent={parsedContent}
@@ -325,21 +246,20 @@ const ServicePage = () => {
         </div>
       </Section>
 
-      {/* Find by Emirate — Text-based internal links */}
+      {/* Find by Region */}
       {states && states.length > 0 && (
         <Section size="lg" className="bg-muted/30">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-6">
               <span className="inline-block text-xs font-bold text-emerald uppercase tracking-widest mb-2">By Location</span>
               <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground">
-                {treatmentName} Specialists <span className="text-primary">Across the UAE</span>
+                {treatmentName} Agencies <span className="text-primary">Across the UK</span>
               </h2>
             </div>
 
-            {/* Text-based paragraph with embedded links */}
             <div className="text-center text-muted-foreground leading-relaxed mb-6">
               <p>
-                Looking for {treatmentName.toLowerCase()} specialists? Browse verified clinics across all 7 emirates: {states.map((state, i) => (
+                Looking for {treatmentName.toLowerCase()} agencies? Browse Ofsted-registered agencies across the UK: {states.map((state, i) => (
                   <span key={state.id}>
                     {i > 0 && (i === states.length - 1 ? ', and ' : ', ')}
                     <Link
@@ -349,33 +269,9 @@ const ServicePage = () => {
                       {treatmentName} in {state.name}
                     </Link>
                   </span>
-                ))}. Each emirate has licensed DHA, DOH, or MOHAP-certified practitioners offering quality dental care at competitive prices.
+                ))}. Each region has Ofsted-registered agencies offering quality fostering services.
               </p>
             </div>
-
-            {/* Emirate Comparison Links */}
-            {sortedByPrice.length > 1 && (
-              <div className="text-center">
-                <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3 block">Compare Prices</span>
-                <div className="leading-loose">
-                  {sortedByPrice.slice(0, -1).map((range, i) => {
-                    const nextRange = sortedByPrice[i + 1];
-                    if (!nextRange) return null;
-                    return (
-                      <span key={range.id}>
-                        {i > 0 && <span className="text-muted-foreground mx-2">·</span>}
-                        <Link
-                          to={`/compare/${serviceSlug}/${range.state?.slug}-vs-${nextRange.state?.slug}`}
-                          className="text-primary font-bold hover:underline text-sm"
-                        >
-                          {range.state?.name} vs {nextRange.state?.name}
-                        </Link>
-                      </span>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
           </div>
         </Section>
       )}
