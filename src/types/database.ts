@@ -284,19 +284,38 @@ export interface AuditLog {
 
 // Dashboard statistics types
 export interface DashboardStats {
-  agencies: {
+  // New naming
+  agencies?: {
     total: number;
     unclaimed: number;
     claimed: number;
     verified: number;
     duplicates: number;
   };
-  enquiries: {
+  // Legacy naming (backward compat)
+  clinics?: {
+    total: number;
+    unclaimed: number;
+    claimed: number;
+    verified: number;
+    duplicates: number;
+  };
+  enquiries?: {
     today: number;
     week: number;
     month: number;
   };
-  introCalls: {
+  leads?: {
+    today: number;
+    week: number;
+    month: number;
+  };
+  introCalls?: {
+    pending: number;
+    confirmed: number;
+    noShow: number;
+  };
+  appointments?: {
     pending: number;
     confirmed: number;
     noShow: number;
