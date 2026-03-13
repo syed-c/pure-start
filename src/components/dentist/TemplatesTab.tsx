@@ -487,7 +487,7 @@ export default function TemplatesTab() {
               <Label>Select Carer</Label>
               <Select value={selectedPatientId || ''} onValueChange={setSelectedPatientId}>
                 <SelectTrigger className="mt-1">
-                  <SelectValue placeholder="Choose a patient..." />
+                  <SelectValue placeholder="Choose a carer..." />
                 </SelectTrigger>
                 <SelectContent>
                   <ScrollArea className="max-h-[200px]">
