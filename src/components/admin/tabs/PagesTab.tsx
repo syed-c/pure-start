@@ -603,11 +603,11 @@ export default function PagesTab() {
         {[
           { key: 'all', label: 'All', icon: Globe, color: 'bg-primary/10 text-primary' },
           { key: 'static', label: 'Static', icon: FileText, color: 'bg-muted text-muted-foreground' },
-          { key: 'state', label: 'Emirates', icon: Map, color: 'bg-orange-100 text-orange-600' },
+          { key: 'state', label: 'Regions', icon: Map, color: 'bg-orange-100 text-orange-600' },
           { key: 'city', label: 'Cities', icon: MapPin, color: 'bg-blue-100 text-blue-600' },
-          { key: 'treatment', label: 'Services', icon: Stethoscope, color: 'bg-purple-100 text-purple-600' },
-          { key: 'service-location', label: 'Svc+Loc', icon: Stethoscope, color: 'bg-indigo-100 text-indigo-600' },
-          { key: 'clinic', label: 'Clinics', icon: Building2, color: 'bg-teal-100 text-teal-600' },
+          { key: 'treatment', label: 'Fostering Types', icon: Stethoscope, color: 'bg-purple-100 text-purple-600' },
+          { key: 'service-location', label: 'Type+Loc', icon: Stethoscope, color: 'bg-indigo-100 text-indigo-600' },
+          { key: 'clinic', label: 'Agencies', icon: Building2, color: 'bg-teal-100 text-teal-600' },
           { key: 'blog', label: 'Blog', icon: BookOpen, color: 'bg-amber-100 text-amber-600' },
         ].map(item => (
           <Card 
