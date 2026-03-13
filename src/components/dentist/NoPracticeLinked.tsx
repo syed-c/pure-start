@@ -16,9 +16,9 @@ export function NoPracticeLinked({ compact = false }: NoPracticeLinkedProps) {
       <>
         <div className="text-center py-12">
           <Building2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <h2 className="text-xl font-bold mb-2">No Practice Linked</h2>
+          <h2 className="text-xl font-bold mb-2">No Agency Linked</h2>
           <p className="text-muted-foreground mb-6">
-            Please claim or add your practice profile first.
+            Please claim or add your agency profile first.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button asChild>
@@ -29,7 +29,7 @@ export function NoPracticeLinked({ compact = false }: NoPracticeLinkedProps) {
             </Button>
             <Button variant="outline" onClick={() => setShowAddPracticeModal(true)}>
               <Plus className="h-4 w-4 mr-2" />
-              Add Practice
+              Add Agency
             </Button>
           </div>
         </div>
@@ -48,9 +48,9 @@ export function NoPracticeLinked({ compact = false }: NoPracticeLinkedProps) {
         <div className="h-24 w-24 rounded-3xl bg-gradient-to-br from-primary/20 to-teal/20 flex items-center justify-center mb-8 animate-bounce-gentle">
           <Building2 className="h-12 w-12 text-primary" />
         </div>
-        <h2 className="text-3xl font-extrabold mb-3">No Practice Linked</h2>
+        <h2 className="text-3xl font-extrabold mb-3">No Agency Linked</h2>
         <p className="text-muted-foreground mb-8 max-w-md">
-          Your account is not linked to any clinic yet. You can claim an existing profile or add your practice to the directory.
+          Your account is not linked to any fostering agency yet. You can claim an existing profile or add your agency to the directory.
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
           <Button asChild size="lg" className="rounded-2xl px-8 bg-gradient-to-r from-primary to-teal hover:from-primary/90 hover:to-teal/90">
@@ -66,7 +66,7 @@ export function NoPracticeLinked({ compact = false }: NoPracticeLinkedProps) {
             onClick={() => setShowAddPracticeModal(true)}
           >
             <Plus className="h-5 w-5 mr-2" />
-            Add Your Practice
+            Add Your Agency
           </Button>
         </div>
       </div>

@@ -342,7 +342,7 @@ export default function AppointmentsPageV2({ onNavigate }: AppointmentsPageV2Pro
                         </DropdownMenuItem>
                         <DropdownMenuItem className="gap-2">
                           <MessageSquare className="h-4 w-4" />
-                          Message Patient
+                          Message Carer
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         {apt.status === 'pending' && (

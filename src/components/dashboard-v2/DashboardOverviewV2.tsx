@@ -428,9 +428,9 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
                   <StatusBadge status="neutral" label="Unverified" />
                 )}
                 {clinic.google_place_id ? (
-                  <StatusBadge status="success" label="GMB Connected" />
+                  <StatusBadge status="success" label="Ofsted Connected" />
                 ) : (
-                  <StatusBadge status="neutral" label="No GMB" />
+                  <StatusBadge status="neutral" label="No Ofsted Link" />
                 )}
               </div>
               

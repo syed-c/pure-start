@@ -303,13 +303,13 @@ export default function MyPracticePage({ onNavigate }: MyPracticePageProps) {
             <PremiumCard hover onClick={() => onNavigate('my-services')} className="text-center">
               <Zap className="h-8 w-8 text-teal mx-auto mb-2" />
               <p className="text-2xl font-bold text-foreground">{servicesCount}</p>
-              <p className="text-sm text-muted-foreground">Services</p>
+              <p className="text-sm text-muted-foreground">Fostering Types</p>
             </PremiumCard>
             
             <PremiumCard hover onClick={() => onNavigate('my-insurance')} className="text-center">
               <Shield className="h-8 w-8 text-amber-500 mx-auto mb-2" />
               <p className="text-2xl font-bold text-foreground">{clinic.clinic_insurances?.length || 0}</p>
-              <p className="text-sm text-muted-foreground">Insurances</p>
+              <p className="text-sm text-muted-foreground">Regulations</p>
             </PremiumCard>
           </div>
         </div>
