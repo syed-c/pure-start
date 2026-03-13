@@ -237,7 +237,7 @@ const HomeV2 = () => {
             >
               <div className="relative">
                 <div className="absolute -inset-4 bg-gradient-to-br from-primary/10 to-primary/5 rounded-3xl -z-10" />
-                <img src={pandaMascot} alt="AppointPanda mascot" className="w-64 md:w-80 h-auto rounded-2xl" loading="lazy" />
+                <img src={pandaMascot} alt="Foster Connect" className="w-64 md:w-80 h-auto rounded-2xl" loading="lazy" />
               </div>
             </motion.div>
             
