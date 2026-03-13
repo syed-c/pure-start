@@ -1,6 +1,6 @@
 /**
- * My Practice Page v2
- * Clinic identity, performance snapshot, and integrations status
+ * My Agency Page v2
+ * Agency identity, performance snapshot, and integrations status
  */
 
 import { useQuery } from '@tanstack/react-query';
