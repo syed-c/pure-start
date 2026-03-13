@@ -291,7 +291,7 @@ const ClinicPage = () => {
             address: clinic.address || '',
             city: clinic.city?.name || '',
             state: clinic.city?.state?.abbreviation || '',
-            country: 'United Arab Emirates',
+            country: 'United Kingdom',
             phone: clinic.phone || '',
             url: `/clinic/${clinic.slug}/`,
             geo: clinic.latitude && clinic.longitude ? { lat: Number(clinic.latitude), lng: Number(clinic.longitude) } : undefined,
