@@ -156,15 +156,15 @@ import { useNotificationSubscription } from '@/hooks/useNotifications';
 import { useTabVisibility } from '@/hooks/useTabVisibility';
 import { useUserTabAccess } from '@/hooks/useUserTabAccess';
 
-// Lazy load the V2 dashboard for dentists
+// Lazy load the V2 dashboard for agency users
 const DentistDashboardV2 = lazyRetry(() => import('@/components/dashboard-v2/DentistDashboardV2'));
 
-// Define tabs for dentists (comprehensive view)
+// Define tabs for agency users (comprehensive view)
 const dentistTabGroups = [
   {
     label: 'Dashboard',
     tabs: [
-      { id: 'my-dashboard', label: 'My Practice', icon: LayoutDashboard },
+      { id: 'my-dashboard', label: 'My Agency', icon: LayoutDashboard },
     ],
   },
   {
@@ -184,8 +184,7 @@ const dentistTabGroups = [
     tabs: [
       { id: 'my-profile', label: 'Edit Profile', icon: Building2 },
       { id: 'my-team', label: 'Team', icon: Users },
-      { id: 'my-services', label: 'Services', icon: Stethoscope },
-      { id: 'my-insurance', label: 'Insurance', icon: Shield },
+      { id: 'my-services', label: 'Fostering Types', icon: Stethoscope },
     ],
   },
   {
@@ -216,17 +215,17 @@ const adminTabGroups = [
       { id: 'overview', label: 'Dashboard Overview', icon: LayoutDashboard },
       { id: 'weekly', label: 'Weekly Report', icon: TrendingUp },
       { id: 'visitor-analytics', label: 'Visitor Analytics', icon: Activity, highlight: true },
-      { id: 'top-dentists', label: 'Top Dentists', icon: Star },
+      { id: 'top-dentists', label: 'Top Agencies', icon: Star },
       { id: 'pinned-profiles', label: 'Pinned Profiles', icon: Star },
     ],
   },
   {
     label: 'Marketplace',
     tabs: [
-      { id: 'clinics', label: 'Dental Offices', icon: Building2 },
+      { id: 'clinics', label: 'Agencies', icon: Building2 },
       { id: 'users', label: 'Users', icon: Users },
       { id: 'claims', label: 'Claims', icon: Shield },
-      { id: 'treatments', label: 'Treatments', icon: Stethoscope },
+      { id: 'treatments', label: 'Fostering Categories', icon: Stethoscope },
       { id: 'locations', label: 'Locations', icon: MapPin },
       { id: 'geo-expansion', label: 'Geo Expansion', icon: Globe, highlight: true },
       { id: 'ranking-rules', label: 'Ranking Rules', icon: TrendingUp },
@@ -257,7 +256,7 @@ const adminTabGroups = [
     ],
   },
   {
-    label: 'Patient & Bookings',
+    label: 'Enquiries & Bookings',
     tabs: [
       { id: 'booking-system', label: 'Booking System', icon: CalendarDays, highlight: true },
       { id: 'appointments', label: 'Appointments', icon: Calendar },
@@ -289,7 +288,7 @@ const adminTabGroups = [
       { id: 'quality-identity', label: 'Quality & Identity', icon: Activity, highlight: true },
       { id: 'content-studio', label: 'Content Studio', icon: Sparkles, highlight: true },
       { id: 'faq-studio', label: 'FAQ Studio', icon: Search, highlight: true },
-      { id: 'clinic-enrichment', label: 'Clinic Enrichment', icon: Sparkles, highlight: true },
+      { id: 'clinic-enrichment', label: 'Agency Enrichment', icon: Sparkles, highlight: true },
       { id: 'blog', label: 'Blog Engine', icon: BookOpen },
       { id: 'content-strategy', label: 'Content Strategy', icon: Calendar, highlight: true },
       { id: 'static-pages', label: 'Static Pages', icon: Globe },
