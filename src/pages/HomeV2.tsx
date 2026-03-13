@@ -145,10 +145,10 @@ const HomeV2 = () => {
           {/* Trust indicators */}
           <motion.div {...fadeUp} transition={{ delay: 0.25 }} className="flex flex-wrap items-center justify-center gap-4 md:gap-6 mb-8">
             {[
-              { icon: Shield, text: "DHA Verified" },
-              { icon: Star, text: "4.9 Rating" },
-              { icon: Building2, text: `${realCounts?.clinics?.toLocaleString() || '500+'} Clinics` },
-              { icon: Timer, text: "60s Booking" },
+              { icon: Shield, text: "Ofsted Rated" },
+              { icon: Star, text: "4.8 Rating" },
+              { icon: Building2, text: `${realCounts?.clinics?.toLocaleString() || '500+'} Agencies` },
+              { icon: Timer, text: "Free to Use" },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-1.5 text-background/70">
                 <item.icon className="h-4 w-4 text-primary" />
