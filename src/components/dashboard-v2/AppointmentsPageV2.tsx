@@ -214,7 +214,7 @@ export default function AppointmentsPageV2({ onNavigate }: AppointmentsPageV2Pro
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search patient..."
+                placeholder="Search carer..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 w-48 rounded-xl"
