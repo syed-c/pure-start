@@ -438,8 +438,8 @@ export default function PatientsTab() {
                 <SelectValue placeholder="Visits" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Patients</SelectItem>
-                <SelectItem value="new">New (1 visit)</SelectItem>
+                <SelectItem value="all">All Carers</SelectItem>
+                <SelectItem value="new">New (1 contact)</SelectItem>
                 <SelectItem value="returning">Returning</SelectItem>
                 <SelectItem value="vip">VIP (5+)</SelectItem>
               </SelectContent>
