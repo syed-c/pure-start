@@ -148,7 +148,7 @@ const App = () => (
                 
                 {/* Search */}
                 <Route path="/search" element={<SearchPage />} />
-                <Route path="/find-dentist" element={<SearchPage />} />
+                <Route path="/find-agency" element={<SearchPage />} />
                 
                 {/* Directory - Services */}
                 <Route path="/services" element={<ServicesPage />} />
