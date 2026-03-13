@@ -116,7 +116,7 @@ export default function InsuranceManagementTab() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['clinic-insurances'] });
-      toast.success('Insurance preferences saved successfully');
+      toast.success('Regulatory preferences saved successfully');
     },
     onError: (e: any) => toast.error(e.message || 'Failed to save'),
   });
