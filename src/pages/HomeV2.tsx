@@ -471,31 +471,31 @@ const HomeV2 = () => {
         <div className="container px-4">
           <div className="max-w-3xl mx-auto">
             <motion.div {...fadeUp} className="text-center mb-8">
-              <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-3">
-                About <span className="text-primary">AppointPanda</span>
-              </h2>
-            </motion.div>
-            <div className="prose prose-sm max-w-none text-muted-foreground space-y-3">
-              <p>
-                AppointPanda is the UAE's leading dental directory platform, built to help patients across Dubai, Sharjah, Abu Dhabi, Ajman, Ras Al Khaimah, Fujairah, and Umm Al Quwain find trusted dental professionals. Whether you need teeth cleaning, implants, Invisalign, or emergency care, we connect you with verified clinics — all with transparent AED pricing and real patient reviews.
-              </p>
-              <p>
-                Every clinic listed is verified against DHA, DoH, and MOHAP standards. Our platform covers {realCounts?.clinics?.toLocaleString() || '500'}+ dental practices offering {treatments?.length || '15'}+ services including cosmetic dentistry, orthodontics, pediatric care, and oral surgery.
-              </p>
-            </div>
-            <div className="mt-6 grid sm:grid-cols-3 gap-3">
-              {[
-                { to: "/about/", icon: Heart, label: "Our Mission" },
-                { to: "/insurance/", icon: Shield, label: "Insurance Guide" },
-                { to: "/how-it-works/", icon: Search, label: "How It Works" },
-              ].map((link) => (
-                <Link key={link.to} to={link.to} className="flex items-center gap-2 bg-card border border-border rounded-xl p-3.5 hover:border-primary/30 transition-all group">
-                  <link.icon className="h-4 w-4 text-primary" />
-                  <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{link.label}</span>
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground ml-auto" />
-                </Link>
-              ))}
-            </div>
+               <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-3">
+                 About <span className="text-primary">Foster Connect</span>
+               </h2>
+             </motion.div>
+             <div className="prose prose-sm max-w-none text-muted-foreground space-y-3">
+               <p>
+                 Foster Connect is the UK's leading fostering agency directory, helping prospective foster carers across England, Scotland, Wales, and Northern Ireland find trusted, Ofsted-rated agencies. Whether you're interested in emergency fostering, long-term care, therapeutic placements, or respite fostering, we connect you with verified agencies — all with real carer reviews.
+               </p>
+               <p>
+                 Every agency listed is registered with Ofsted or the relevant regulatory body. Our directory covers {realCounts?.clinics?.toLocaleString() || '500'}+ fostering agencies offering {treatments?.length || '9'}+ types of fostering placements.
+               </p>
+             </div>
+             <div className="mt-6 grid sm:grid-cols-3 gap-3">
+               {[
+                 { to: "/about/", icon: Heart, label: "Our Mission" },
+                 { to: "/how-it-works/", icon: Search, label: "How It Works" },
+                 { to: "/faq/", icon: Search, label: "FAQs" },
+               ].map((link) => (
+                 <Link key={link.to} to={link.to} className="flex items-center gap-2 bg-card border border-border rounded-xl p-3.5 hover:border-primary/30 transition-all group">
+                   <link.icon className="h-4 w-4 text-primary" />
+                   <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{link.label}</span>
+                   <ChevronRight className="h-3.5 w-3.5 text-muted-foreground ml-auto" />
+                 </Link>
+               ))}
+             </div>
           </div>
         </div>
       </section>
