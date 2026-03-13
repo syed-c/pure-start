@@ -153,6 +153,8 @@ const App = () => (
                 {/* Directory - Categories (formerly Services) */}
                 <Route path="/categories" element={<ServicesPage />} />
                 <Route path="/categories/:serviceSlug" element={<ServicePage />} />
+                <Route path="/services" element={<Navigate to="/categories" replace />} />
+                <Route path="/services/:serviceSlug" element={<ServicePage />} />
 
                 {/* Directory - Agency Profiles */}
                 <Route path="/clinic/:clinicSlug" element={<ClinicPage />} />
