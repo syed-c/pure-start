@@ -342,7 +342,7 @@ const CityPage = () => {
         title={pageTitle}
         description={pageDescription}
         canonical={`/${normalizedStateSlug}/${citySlug}/`}
-        keywords={[`dentists ${cityName}`, `dental clinics ${cityName} ${stateAbbr}`, `best dentist ${cityName}`]}
+        keywords={[`fostering agencies ${cityName}`, `foster care ${cityName} ${stateAbbr}`, `best fostering agency ${cityName}`]}
         noindex={shouldNoIndex}
       />
       {/* Synchronous JSON-LD structured data for SEO */}
