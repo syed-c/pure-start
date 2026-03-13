@@ -99,9 +99,9 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
     enabled: !!clinic?.id,
   });
 
-  // Fetch patient stats
+  // Fetch carer stats
   const { data: patientStats } = useQuery({
-    queryKey: ['dashboard-v2-patient-stats', clinic?.id],
+    queryKey: ['dashboard-v2-carer-stats', clinic?.id],
     queryFn: async () => {
       const { count: total } = await supabase
         .from('patients')
