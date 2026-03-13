@@ -316,7 +316,7 @@ export default function TemplatesTab() {
             Message Templates
           </h1>
           <p className="text-white/70 mt-1">
-            Pre-built templates for all your patient communications
+            Pre-built templates for all your carer communications
           </p>
         </div>
         <Badge className="bg-primary/20 text-primary-foreground border-0">
