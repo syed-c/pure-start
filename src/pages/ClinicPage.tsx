@@ -287,7 +287,7 @@ const ClinicPage = () => {
           {
             type: 'localBusiness',
             name: clinic.name,
-            description: clinic.description || `Professional dental clinic in ${clinic.city?.name || 'UAE'}`,
+            description: clinic.description || `Fostering agency in ${clinic.city?.name || 'UK'}`,
             address: clinic.address || '',
             city: clinic.city?.name || '',
             state: clinic.city?.state?.abbreviation || '',
