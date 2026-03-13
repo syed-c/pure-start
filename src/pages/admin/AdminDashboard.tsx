@@ -496,24 +496,25 @@ export default function AdminDashboard() {
           <div className="h-16 w-16 rounded-full bg-yellow-100 flex items-center justify-center mx-auto mb-4">
             <Lock className="h-8 w-8 text-yellow-600" />
           </div>
-          <h1 className="text-2xl font-bold text-foreground mb-2">Setting Up Your Account</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-2">Access Restricted</h1>
           <p className="text-muted-foreground mb-4">
-            We're finalizing your account setup. This should only take a moment.
+            Your account doesn't have admin access. If you believe this is an error, please contact an administrator.
           </p>
           <div className="mt-6 flex gap-2 justify-center">
             <Button 
               variant="default" 
-              onClick={() => window.location.reload()}
+              onClick={() => {
+                refreshRoles();
+                setRoleCheckAttempts(0);
+              }}
             >
-              Refresh Page
+              <RotateCcw className="h-4 w-4 mr-2" />
+              Retry
             </Button>
             <Button variant="outline" onClick={signOut}>
               Sign Out
             </Button>
           </div>
-          <p className="text-xs text-muted-foreground mt-4">
-            If this persists, try signing out and signing in again.
-          </p>
         </div>
       </div>
     );
