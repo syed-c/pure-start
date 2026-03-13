@@ -374,7 +374,7 @@ const CityPage = () => {
           {
             type: 'place' as const,
             name: cityName,
-            description: `Find the best dentists and dental clinics in ${cityName}, ${stateName}`,
+            description: `Find the best fostering agencies in ${cityName}, ${stateName}`,
             url: `/${normalizedStateSlug}/${citySlug}/`,
             containedInPlace: stateName,
           },
