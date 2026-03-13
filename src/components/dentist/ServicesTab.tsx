@@ -397,9 +397,9 @@ export default function ServicesTab() {
                     {(ct.price_from || ct.price_to) ? (
                       <Badge className="bg-teal/20 text-teal border-0 text-xs mt-1">
                         <DollarSign className="h-3 w-3 mr-0.5" />
-                        {ct.price_from && `${ct.price_from} AED`}
+                        {ct.price_from && `£${ct.price_from}`}
                         {ct.price_from && ct.price_to && ' - '}
-                        {ct.price_to && `${ct.price_to} AED`}
+                        {ct.price_to && `£${ct.price_to}`}
                       </Badge>
                     ) : (
                       <Badge className="bg-slate-700/50 text-white/50 border-0 text-xs mt-1 hover:bg-slate-600/50">
