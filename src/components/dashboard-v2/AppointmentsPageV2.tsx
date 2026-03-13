@@ -1,6 +1,6 @@
 /**
- * Appointments Page v2
- * Calendar view with appointment management
+ * Enquiries Page v2
+ * Calendar view with enquiry management
  */
 
 import { useState } from 'react';
