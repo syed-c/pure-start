@@ -343,7 +343,7 @@ const StatePage = () => {
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 bg-primary/15 backdrop-blur-md border border-primary/30 rounded-full px-4 py-2 mb-6">
               <Shield className="h-4 w-4 text-primary" />
-              <span className="text-sm font-bold text-primary">Licensed Dental Professionals</span>
+              <span className="text-sm font-bold text-primary">Ofsted Rated Fostering Agencies</span>
             </div>
             
             <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 px-2" style={{ fontFamily: "'Varela Round', system-ui, sans-serif" }}>
