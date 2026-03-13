@@ -379,7 +379,7 @@ const HomeV2 = () => {
       <section className="py-16 md:py-20 bg-muted/30">
         <div className="container px-4">
           <motion.div {...fadeUp} className="text-center mb-10">
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-2">What <span className="text-primary">Patients</span> Say</h2>
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-2">What <span className="text-primary">Carers</span> Say</h2>
           </motion.div>
 
           <div className="max-w-2xl mx-auto">
