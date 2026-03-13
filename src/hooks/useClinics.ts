@@ -72,7 +72,7 @@ export function useClinics(filters: ClinicsFilters = {}) {
         query = query.eq('verification_status', filters.verificationStatus);
       }
       if (filters.source) {
-        query = query.eq('source', filters.source);
+        query = query.eq('source', filters.source as any);
       }
       if (filters.search) {
         query = query.ilike('name', `%${filters.search}%`);
