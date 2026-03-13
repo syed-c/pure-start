@@ -157,7 +157,7 @@ export default function InsuranceManagementTab() {
   );
 
   // Group insurances by type (government vs private)
-  const governmentSlugs = ['dha', 'haad', 'moh', 'seha', 'thiqa', 'saada'];
+  const governmentSlugs = ['ofsted', 'dfe', 'local-authority', 'hmrc', 'dbs'];
   const governmentInsurances = filteredInsurances?.filter(i => 
     governmentSlugs.some(s => i.slug.toLowerCase().includes(s))
   );
