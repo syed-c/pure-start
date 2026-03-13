@@ -61,10 +61,10 @@ export function InsuranceTab({ clinicId, isClaimed }: InsuranceTabProps) {
     return (
       <div className="text-center py-12 bg-muted/30 rounded-2xl">
         <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <h3 className="text-lg font-bold text-foreground mb-2">Insurance Information</h3>
+        <h3 className="text-lg font-bold text-foreground mb-2">Regulatory Information</h3>
         <p className="text-muted-foreground max-w-md mx-auto">
-          Insurance details will be available once this clinic claims their profile.
-          Contact the clinic directly to verify insurance acceptance.
+          Regulatory details will be available once this agency claims their profile.
+          Contact the agency directly to verify accreditations.
         </p>
       </div>
     );
