@@ -86,9 +86,9 @@ const MessagingControlTab = lazyRetry(() => import('@/components/admin/tabs/Mess
 const PlansTab = lazyRetry(() => import('@/components/admin/tabs/PlansTab'));
 const PromotionsTab = lazyRetry(() => import('@/components/admin/tabs/PromotionsTab'));
 const FounderWeeklyTab = lazyRetry(() => import('@/components/admin/tabs/FounderWeeklyTab'));
-const TopDentistsTab = lazyRetry(() => import('@/components/admin/tabs/TopDentistsTab'));
+const TopAgenciesTab = lazyRetry(() => import('@/components/admin/tabs/TopDentistsTab'));
 const PinnedProfilesTab = lazyRetry(() => import('@/components/admin/tabs/PinnedProfilesTab'));
-const DentistDashboardTab = lazyRetry(() => import('@/components/admin/tabs/DentistDashboardTab'));
+const AgencyDashboardTab = lazyRetry(() => import('@/components/admin/tabs/DentistDashboardTab'));
 const ProfileEditorTab = lazyRetry(() => import('@/components/dentist/ProfileEditorTab'));
 const ServicesTab = lazyRetry(() => import('@/components/dentist/ServicesTab'));
 const DentistReviewsTab = lazyRetry(() => import('@/components/dentist/DentistReviewsTab'));
@@ -157,7 +157,7 @@ import { useTabVisibility } from '@/hooks/useTabVisibility';
 import { useUserTabAccess } from '@/hooks/useUserTabAccess';
 
 // Lazy load the V2 dashboard for agency users
-const DentistDashboardV2 = lazyRetry(() => import('@/components/dashboard-v2/DentistDashboardV2'));
+const AgencyDashboardV2 = lazyRetry(() => import('@/components/dashboard-v2/DentistDashboardV2'));
 
 // Define tabs for agency users (comprehensive view)
 const dentistTabGroups = [
@@ -533,11 +533,11 @@ export default function AdminDashboard() {
     );
   }
 
-  // Check if this is a dentist accessing their dashboard - redirect to V2
-  const isDentistRoute = location.pathname.startsWith('/dashboard') && isDentist && !isAdmin;
+  // Check if this is an agency user accessing their dashboard - redirect to V2
+  const isAgencyRoute = location.pathname.startsWith('/dashboard') && isDentist && !isAdmin;
   
-  // For dentists, use the redesigned V2 dashboard
-  if (isDentistRoute) {
+  // For agency users, use the redesigned V2 dashboard
+  if (isAgencyRoute) {
     return (
       <Suspense fallback={
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-primary/10">
@@ -547,14 +547,14 @@ export default function AdminDashboard() {
           </div>
         </div>
       }>
-        <DentistDashboardV2 />
+        <AgencyDashboardV2 />
       </Suspense>
     );
   }
 
   const renderTab = () => {
     switch (activeTab) {
-      case 'my-dashboard': return <DentistDashboardTab />;
+      case 'my-dashboard': return <AgencyDashboardTab />;
       case 'my-appointments': return <DentistAppointmentsTab />;
       case 'my-availability': return <AvailabilityManagementTab />;
       case 'my-appointment-types': return <AppointmentTypesTab />;
@@ -579,7 +579,7 @@ export default function AdminDashboard() {
       case 'outreach': return <OutreachTab />;
       case 'ranking-rules': return <RankingRulesTab />;
       case 'pinned-profiles': return <PinnedProfilesTab />;
-      case 'top-dentists': return <TopDentistsTab />;
+      case 'top-dentists': return <TopAgenciesTab />;
       case 'promotions': return <PromotionsTab />;
       case 'locations': return <LocationsTab />;
       case 'treatments': return <TreatmentsTab />;
@@ -646,11 +646,10 @@ export default function AdminDashboard() {
       case 'geo-expansion': return <GeoExpansionTab />;
       // Default to Overview for admin route, DentistDashboard only for dentist route
       default: 
-        // If on admin route, always show OverviewTab as fallback
         if (location.pathname.startsWith('/admin')) {
           return <OverviewTab />;
         }
-        return <DentistDashboardTab />;
+        return <AgencyDashboardTab />;
     }
   };
 
@@ -679,9 +678,9 @@ export default function AdminDashboard() {
           {sidebarOpen && (
             <div className="flex items-center gap-2">
               <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center shadow-lg shadow-primary/30">
-                <span className="text-white font-extrabold text-sm">AP</span>
+                <span className="text-white font-extrabold text-sm">FC</span>
               </div>
-              <span className="font-display font-bold text-lg text-white">Appoint Panda</span>
+              <span className="font-display font-bold text-lg text-white">Foster Connect</span>
             </div>
           )}
           <Button

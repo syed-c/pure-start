@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 const PrivacyPage = () => {
   const { data: siteSettings } = useSiteSettings();
   const { data: seoContent } = useSeoPageContent("privacy");
-  const supportEmail = siteSettings?.contactDetails?.support_email || 'support@appointpanda.ae';
+  const supportEmail = siteSettings?.contactDetails?.support_email || 'support@fosterconnect.co.uk';
 
   const sections = [
     {
@@ -20,8 +20,8 @@ const PrivacyPage = () => {
 
 • Name and contact information (email, phone number)
 • Account credentials
-• Profile information for dentists and clinics
-• Appointment requests and booking details
+• Profile information for fostering agencies
+• Enquiry details and correspondence
 • Reviews and feedback you submit
 • Communications with us
 
@@ -38,31 +38,31 @@ We also automatically collect certain information when you use our platform, inc
       content: `We use the information we collect to:
 
 • Provide, maintain, and improve our services
-• Process appointment requests and facilitate bookings
-• Send you notifications about your appointments
+• Process enquiries and facilitate connections with agencies
+• Send you notifications about your enquiries
 • Respond to your comments, questions, and requests
 • Send you marketing communications (with your consent)
-• Monitor and analyze trends, usage, and activities
+• Monitor and analyse trends, usage, and activities
 • Detect, investigate, and prevent fraudulent transactions
-• Personalize your experience on our platform
+• Personalise your experience on our platform
 • Comply with legal obligations`
     },
     {
       title: "3. Information Sharing",
       content: `We do not sell your personal information. We may share your information in the following circumstances:
 
-• With dental clinics when you request an appointment
+• With fostering agencies when you submit an enquiry
 • With service providers who assist in our operations
 • To comply with legal obligations
 • To protect our rights and prevent fraud
 • With your consent or at your direction
 
-When you submit an appointment request, your contact information will be shared with the relevant clinic to facilitate the booking.`
+When you submit an enquiry, your contact information will be shared with the relevant agency to facilitate the connection.`
     },
     {
       icon: Lock,
       title: "4. Data Security",
-      content: `We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. These measures include:
+      content: `We implement appropriate technical and organisational measures to protect your personal information against unauthorised access, alteration, disclosure, or destruction. These measures include:
 
 • Encryption of data in transit and at rest
 • Regular security assessments
@@ -72,18 +72,19 @@ When you submit an appointment request, your contact information will be shared 
 However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security.`
     },
     {
-      title: "5. Your Rights Under UAE PDPL",
-      content: `Under the UAE Personal Data Protection Law (Federal Decree-Law No. 45/2021), you have the following rights regarding your personal information:
+      title: "5. Your Rights Under UK GDPR",
+      content: `Under the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018, you have the following rights regarding your personal information:
 
 • Access: Request a copy of the personal data we hold about you
-• Correction: Request correction of inaccurate or incomplete data
-• Deletion: Request deletion of your personal data (subject to legal retention requirements)
+• Rectification: Request correction of inaccurate or incomplete data
+• Erasure: Request deletion of your personal data (subject to legal retention requirements)
 • Objection: Object to processing of your personal data
 • Portability: Request transfer of your data in a machine-readable format
 • Withdrawal: Withdraw consent at any time without affecting prior lawful processing
 • Restriction: Request restriction of data processing in certain circumstances
+• Complaint: Lodge a complaint with the Information Commissioner's Office (ICO)
 
-To exercise these rights, please contact our Data Protection team at ${supportEmail}. We will respond within 30 days as required by UAE law.`
+To exercise these rights, please contact our Data Protection team at ${supportEmail}. We will respond within 30 days as required by UK law.`
     },
     {
       title: "6. Cookies",
@@ -95,31 +96,31 @@ To exercise these rights, please contact our Data Protection team at ${supportEm
     },
     {
       title: "8. Children's Privacy",
-      content: `Our services are not directed to children under 18 without parental consent, in accordance with UAE child protection regulations. We do not knowingly collect personal information from minors. If you believe we have collected information from a child without proper consent, please contact us immediately.`
+      content: `Our services are not directed to children under 16 without parental consent, in accordance with UK data protection regulations. We do not knowingly collect personal information from minors. If you believe we have collected information from a child without proper consent, please contact us immediately.`
     },
     {
       title: "9. Changes to This Policy",
       content: `We may update this Privacy Policy from time to time. We will notify you of any material changes by posting the new policy on this page and updating the "Last Updated" date. We encourage you to review this policy periodically.`
     },
     {
-      title: "10. UAE Regulatory Compliance",
+      title: "10. UK Regulatory Compliance",
       content: `This policy is governed by:
 
-• UAE Federal Decree-Law No. 45 of 2021 (Personal Data Protection Law / PDPL)
-• Dubai Health Authority (DHA) data handling guidelines
-• Department of Health Abu Dhabi (DoH) patient data regulations
-• MOHAP health information privacy standards
+• UK General Data Protection Regulation (UK GDPR)
+• Data Protection Act 2018
+• Privacy and Electronic Communications Regulations (PECR)
+• Information Commissioner's Office (ICO) guidance
 
-Data processed through our platform is stored within UAE-compliant infrastructure.`
+Data processed through our platform is stored within UK/EEA-compliant infrastructure.`
     },
     {
       title: "11. Contact Us",
-      content: `If you have any questions about this Privacy Policy or wish to exercise your data rights under UAE law, please contact us at:
+      content: `If you have any questions about this Privacy Policy or wish to exercise your data rights under UK law, please contact us at:
 
-AppointPanda
-Dubai, United Arab Emirates
+Foster Connect
+London, United Kingdom
 Email: ${supportEmail}
-Data Protection Inquiries: privacy@appointpanda.ae`
+Data Protection Inquiries: privacy@fosterconnect.co.uk`
     }
   ];
 
@@ -132,10 +133,10 @@ Data Protection Inquiries: privacy@appointpanda.ae`
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || "Privacy Policy | AppointPanda Data Protection"}
-        description={seoContent?.meta_description || "Learn how AppointPanda collects, uses, and protects your personal information. Read our comprehensive privacy policy for patients and dental professionals."}
+        title={seoContent?.meta_title || "Privacy Policy | Foster Connect Data Protection"}
+        description={seoContent?.meta_description || "Learn how Foster Connect collects, uses, and protects your personal information. Read our comprehensive privacy policy compliant with UK GDPR."}
         canonical="/privacy/"
-        keywords={['privacy policy', 'data protection', 'dental privacy', 'appointpanda privacy']}
+        keywords={['privacy policy', 'data protection', 'foster connect privacy', 'UK GDPR']}
       />
 
       {/* Dark Hero Section */}
@@ -189,7 +190,7 @@ Data Protection Inquiries: privacy@appointpanda.ae`
             </div>
 
             <p className="text-muted-foreground mb-8 leading-relaxed p-4 rounded-xl bg-muted/50">
-              AppointPanda ("we", "us", or "our") is committed to protecting your privacy in accordance with the UAE Federal Decree-Law No. 45 of 2021 on the Protection of Personal Data (PDPL) and applicable regulations of Dubai Health Authority (DHA), Department of Health Abu Dhabi (DoH), and MOHAP. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our website and services within the United Arab Emirates.
+              Foster Connect ("we", "us", or "our") is committed to protecting your privacy in accordance with the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our website and services within the United Kingdom.
             </p>
 
             <div className="space-y-8">

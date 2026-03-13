@@ -26,8 +26,8 @@ export function ProfileCard({ profile, variant = "list" }: ProfileCardProps) {
   const [bookingOpen, setBookingOpen] = useState(false);
   
   const profileLink = profile.type === 'clinic' 
-    ? `/clinic/${profile.slug}` 
-    : `/dentist/${profile.slug}`;
+    ? `/agency/${profile.slug}` 
+    : `/agency/${profile.slug}`;
 
   // Use letter avatar if no image available - shows first letter of name
   const displayImage = profile.image || getLetterAvatar(profile.name);

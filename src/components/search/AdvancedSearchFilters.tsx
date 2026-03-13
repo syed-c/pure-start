@@ -342,7 +342,7 @@ export default function AdvancedSearchFilters({
                 <div>
                   <Label className="text-sm flex items-center gap-2 mb-2">
                     <Users className="h-3 w-3" />
-                    Dentist Gender
+                    Contact Preference
                   </Label>
                   <div className="flex gap-2">
                     {(['any', 'male', 'female'] as const).map((gender) => (

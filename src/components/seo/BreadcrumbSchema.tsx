@@ -2,10 +2,7 @@
  * BreadcrumbSchema - JSON-LD Breadcrumb structured data
  * 
  * Implements BreadcrumbList schema for full hierarchy:
- * Home > State > City > Service > Profile
- * 
- * This component works alongside the visual Breadcrumbs component
- * to provide machine-readable navigation structure for search engines.
+ * Home > Region > City > Category > Agency Profile
  * 
  * CANONICAL: All URLs use trailing slash format (except root /).
  */
@@ -22,7 +19,6 @@ interface BreadcrumbSchemaProps {
   baseUrl?: string;
 }
 
-// Helper to ensure trailing slash (except root)
 const ensureTrailingSlash = (url: string): string => {
   if (url === '/' || url === '') return '/';
   return url.endsWith('/') ? url : `${url}/`;
@@ -30,7 +26,7 @@ const ensureTrailingSlash = (url: string): string => {
 
 export const BreadcrumbSchema = ({ 
   items, 
-  baseUrl = "https://www.appointpanda.ae" 
+  baseUrl = "https://www.fosterconnect.co.uk" 
 }: BreadcrumbSchemaProps) => {
   const schemaItems = items.map((item, index) => {
     const url = item.url.startsWith("http") 
@@ -61,95 +57,76 @@ export const BreadcrumbSchema = ({
 
 /**
  * Helper functions to generate breadcrumb items for different page types
- * All URLs use trailing slash (canonical format)
  */
 
 export const generateStateBreadcrumbs = (
-  stateName: string,
-  stateSlug: string
+  regionName: string,
+  regionSlug: string
 ): BreadcrumbItem[] => [
   { name: "Home", url: "/" },
-  { name: stateName, url: `/${stateSlug}/` },
+  { name: regionName, url: `/${regionSlug}/` },
 ];
 
 export const generateCityBreadcrumbs = (
-  stateName: string,
-  stateSlug: string,
+  regionName: string,
+  regionSlug: string,
   cityName: string,
   citySlug: string
 ): BreadcrumbItem[] => [
   { name: "Home", url: "/" },
-  { name: stateName, url: `/${stateSlug}/` },
-  { name: cityName, url: `/${stateSlug}/${citySlug}/` },
+  { name: regionName, url: `/${regionSlug}/` },
+  { name: cityName, url: `/${regionSlug}/${citySlug}/` },
 ];
 
 export const generateServiceBreadcrumbs = (
-  serviceName: string,
-  serviceSlug: string
+  categoryName: string,
+  categorySlug: string
 ): BreadcrumbItem[] => [
   { name: "Home", url: "/" },
-  { name: "Services", url: "/services/" },
-  { name: serviceName, url: `/services/${serviceSlug}/` },
+  { name: "Categories", url: "/categories/" },
+  { name: categoryName, url: `/categories/${categorySlug}/` },
 ];
 
 export const generateServiceLocationBreadcrumbs = (
-  stateName: string,
-  stateSlug: string,
+  regionName: string,
+  regionSlug: string,
   cityName: string,
   citySlug: string,
-  serviceName: string,
-  serviceSlug: string
+  categoryName: string,
+  categorySlug: string
 ): BreadcrumbItem[] => [
   { name: "Home", url: "/" },
-  { name: stateName, url: `/${stateSlug}/` },
-  { name: cityName, url: `/${stateSlug}/${citySlug}/` },
-  { name: serviceName, url: `/${stateSlug}/${citySlug}/${serviceSlug}/` },
+  { name: regionName, url: `/${regionSlug}/` },
+  { name: cityName, url: `/${regionSlug}/${citySlug}/` },
+  { name: categoryName, url: `/${regionSlug}/${citySlug}/${categorySlug}/` },
 ];
 
 export const generateClinicBreadcrumbs = (
-  clinicName: string,
-  clinicSlug: string,
-  stateName?: string,
-  stateSlug?: string,
+  agencyName: string,
+  agencySlug: string,
+  regionName?: string,
+  regionSlug?: string,
   cityName?: string,
   citySlug?: string
 ): BreadcrumbItem[] => {
   const crumbs: BreadcrumbItem[] = [{ name: "Home", url: "/" }];
   
-  if (stateName && stateSlug) {
-    crumbs.push({ name: stateName, url: `/${stateSlug}/` });
+  if (regionName && regionSlug) {
+    crumbs.push({ name: regionName, url: `/${regionSlug}/` });
   }
   
-  if (cityName && citySlug && stateSlug) {
-    crumbs.push({ name: cityName, url: `/${stateSlug}/${citySlug}/` });
+  if (cityName && citySlug && regionSlug) {
+    crumbs.push({ name: cityName, url: `/${regionSlug}/${citySlug}/` });
   }
   
-  crumbs.push({ name: clinicName, url: `/clinic/${clinicSlug}/` });
+  crumbs.push({ name: agencyName, url: `/agency/${agencySlug}/` });
   
   return crumbs;
 };
 
-export const generateDentistBreadcrumbs = (
-  dentistName: string,
-  dentistSlug: string,
-  stateName?: string,
-  stateSlug?: string,
-  cityName?: string,
-  citySlug?: string
-): BreadcrumbItem[] => {
-  const crumbs: BreadcrumbItem[] = [{ name: "Home", url: "/" }];
-  
-  if (stateName && stateSlug) {
-    crumbs.push({ name: stateName, url: `/${stateSlug}/` });
-  }
-  
-  if (cityName && citySlug && stateSlug) {
-    crumbs.push({ name: cityName, url: `/${stateSlug}/${citySlug}/` });
-  }
-  
-  crumbs.push({ name: dentistName, url: `/dentist/${dentistSlug}/` });
-  
-  return crumbs;
-};
+// Alias for backward compatibility
+export const generateDentistBreadcrumbs = generateClinicBreadcrumbs;
+
+export const generateAgencyBreadcrumbs = generateClinicBreadcrumbs;
 
 export default BreadcrumbSchema;

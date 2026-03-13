@@ -33,26 +33,23 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { CheckCircle } from "lucide-react";
 
-// Common dental services for "Not sure" option
-const commonDentalServices = [
-  "General Checkup & Cleaning",
-  "Teeth Whitening",
-  "Dental Implants",
-  "Veneers",
-  "Invisalign / Clear Aligners",
-  "Braces / Orthodontics",
-  "Root Canal Treatment",
-  "Tooth Extraction",
-  "Dental Crowns & Bridges",
-  "Fillings",
-  "Gum Treatment / Periodontics",
-  "Pediatric Dentistry",
-  "Wisdom Tooth Removal",
-  "Smile Makeover",
-  "Emergency Dental Care",
-  "Dentures",
-  "Dental X-Rays",
-  "Teeth Grinding / TMJ Treatment",
+// Common fostering enquiry types
+const commonFosteringServices = [
+  "General Enquiry",
+  "Emergency Fostering",
+  "Short-Term Fostering",
+  "Long-Term Fostering",
+  "Respite Care",
+  "Parent & Child Placement",
+  "Therapeutic Fostering",
+  "Sibling Group Placement",
+  "Teenager Fostering",
+  "Disability & Complex Needs",
+  "Becoming a Foster Carer",
+  "Foster Carer Training",
+  "Transfer from Another Agency",
+  "Supported Lodgings",
+  "Staying Put Arrangements",
 ];
 
 // Sanitize text input to prevent XSS
@@ -311,9 +308,9 @@ export function BookingModal({
             {/* Show common services when "Not sure" is selected */}
             {showNotSureList && (
               <div className="bg-muted/50 rounded-xl p-4 space-y-2">
-                <p className="text-sm font-medium text-foreground">Common dental services we offer:</p>
+                <p className="text-sm font-medium text-foreground">Common fostering services we support:</p>
                 <div className="flex flex-wrap gap-2">
-                  {commonDentalServices.map((service, i) => (
+                  {commonFosteringServices.map((service, i) => (
                     <span 
                       key={i} 
                       className="text-xs bg-background px-2.5 py-1 rounded-full border border-border text-muted-foreground"
@@ -323,7 +320,7 @@ export function BookingModal({
                   ))}
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">
-                  Don't worry! The clinic will help you determine the best treatment during your consultation.
+                  Don't worry! The agency will help you find the right fostering pathway during your initial conversation.
                 </p>
               </div>
             )}
