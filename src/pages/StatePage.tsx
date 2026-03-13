@@ -277,9 +277,9 @@ const StatePage = () => {
     : seoContent?.content ? parseFaqFromContent(seoContent.content) : [];
 
   // Use SEO content if optimized, otherwise use defaults
-  const pageTitle = seoContent?.meta_title || `Find Dentists in ${stateName} - Top Dental Clinics in ${stateName}`;
-  const pageDescription = seoContent?.meta_description || `Find and book appointments with top-rated dental professionals in ${stateName}. Compare verified clinics across ${cities?.length || 0}+ areas.`;
-  const pageH1 = seoContent?.h1 || `Find Dentists in ${stateName}`;
+  const pageTitle = seoContent?.meta_title || `Find Fostering Agencies in ${stateName} - Trusted Agencies`;
+  const pageDescription = seoContent?.meta_description || `Find Ofsted-rated fostering agencies in ${stateName}. Compare agencies across ${cities?.length || 0}+ cities.`;
+  const pageH1 = seoContent?.h1 || `Fostering Agencies in ${stateName}`;
 
   // Use SEO FAQs if available, otherwise use defaults
   const faqs = seoFaqs.length > 0 ? seoFaqs.map(f => ({ q: f.question, a: f.answer })) : [
