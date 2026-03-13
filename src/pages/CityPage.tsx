@@ -405,7 +405,7 @@ const CityPage = () => {
               className="inline-flex items-center gap-2 bg-primary/15 backdrop-blur-md border border-primary/30 rounded-full px-4 py-2 mb-4"
             >
               <Stethoscope className="h-4 w-4 text-primary" />
-              <span className="text-xs md:text-sm font-bold text-primary">Licensed Dental Specialists</span>
+              <span className="text-xs md:text-sm font-bold text-primary">Ofsted Rated Agencies</span>
             </motion.div>
             
             <motion.h1 

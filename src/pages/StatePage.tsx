@@ -400,8 +400,8 @@ const StatePage = () => {
 
       {/* Page Intro Section - CMS Content */}
       <PageIntroSection
-        title={parsedContent?.sections?.[0]?.heading || `About Dental Care in ${stateName}`}
-        content={(seoContent as any)?.page_intro || parsedContent?.intro || parsedContent?.sections?.[0]?.content || `Discover top-rated dental professionals across ${stateName}. Browse by city, compare reviews, and book your appointment online.`}
+        title={parsedContent?.sections?.[0]?.heading || `About Fostering in ${stateName}`}
+        content={(seoContent as any)?.page_intro || parsedContent?.intro || parsedContent?.sections?.[0]?.content || `Discover trusted fostering agencies across ${stateName}. Browse by city, compare reviews, and start your fostering journey.`}
         isLoading={isSeoContentPending}
       />
 
