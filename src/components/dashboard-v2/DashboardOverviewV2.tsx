@@ -50,9 +50,9 @@ interface DashboardOverviewV2Props {
 export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2Props) {
   const { user, isAdmin, isSuperAdmin } = useAuth();
 
-  // Fetch clinic - for admins/super_admins, skip the clinic requirement
+  // Fetch agency - for admins/super_admins, skip the agency requirement
   const { data: clinic, isLoading: clinicLoading } = useQuery({
-    queryKey: ['dashboard-v2-clinic', user?.id],
+    queryKey: ['dashboard-v2-agency', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clinics')
@@ -63,7 +63,7 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
       if (error && error.code !== 'PGRST116') throw error;
       return data;
     },
-    // Admins don't need a clinic to access dashboard
+    // Admins don't need an agency to access dashboard
     enabled: !!user?.id && !isAdmin && !isSuperAdmin,
   });
 
