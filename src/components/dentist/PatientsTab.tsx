@@ -785,9 +785,9 @@ export default function PatientsTab() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Upload className="h-5 w-5 text-primary" />
-              Import Patients
+              Import Carers
             </DialogTitle>
-            <DialogDescription>Upload a CSV file with patient data</DialogDescription>
+            <DialogDescription>Upload a CSV file with carer data</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="border-2 border-dashed rounded-xl p-8 text-center">
