@@ -182,9 +182,9 @@ export default function InsuranceManagementTab() {
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h2 className="text-2xl font-display font-bold">Accepted Insurances</h2>
+          <h2 className="text-2xl font-display font-bold">Regulatory Bodies & Accreditations</h2>
           <p className="text-muted-foreground">
-            Select the insurance providers your clinic accepts
+            Select the regulatory bodies and accreditations your agency holds
           </p>
         </div>
         <Button onClick={handleSave} disabled={isSaving}>
