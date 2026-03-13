@@ -510,12 +510,12 @@ const HomeV2 = () => {
               </h2>
             </motion.div>
             <div className="space-y-3">
-              {[
-                { q: "How do I find a dentist near me in Dubai?", a: "Use AppointPanda's search to select your emirate and area. Browse verified clinic profiles with real patient reviews, AED pricing, and available services." },
-                { q: "Is AppointPanda free for patients?", a: "Yes, AppointPanda is completely free for patients. Search, compare, and book appointments across all seven UAE Emirates at no cost." },
-                { q: "Are the dentists on AppointPanda verified?", a: "All clinics are verified against DHA, DoH, and MOHAP standards. Look for the verified badge on clinic profiles." },
-                { q: "Can I search by dental insurance provider?", a: "Yes. Use our insurance search to find dentists who accept your plan — including Daman, Oman Insurance, AXA, and MetLife." },
-                { q: "How accurate are the prices shown?", a: "Prices shown are estimated ranges in AED. Final costs require an in-person consultation. We encourage confirming pricing directly with your chosen clinic." },
+               {[
+                 { q: "How do I find a fostering agency near me?", a: "Use Foster Connect's search to select your region and city. Browse verified agency profiles with Ofsted ratings, carer reviews, and fostering types." },
+                 { q: "Is Foster Connect free to use?", a: "Yes, Foster Connect is completely free for prospective foster carers. Search, compare, and enquire with agencies at no cost." },
+                 { q: "Are the agencies on Foster Connect verified?", a: "All agencies are registered with Ofsted or the relevant regulatory body. Look for the verified badge on agency profiles." },
+                 { q: "What types of fostering are available?", a: "Our directory covers emergency, respite, long-term, short-term, therapeutic, parent & child fostering, and specialist placements." },
+                 { q: "How long does it take to become a foster carer?", a: "The assessment process typically takes 4-6 months. Agencies provide training, home visits, and ongoing support throughout." },
               ].map((faq, i) => (
                 <motion.div key={i} {...fadeUp} transition={{ delay: i * 0.04 }} className="bg-card border border-border rounded-xl p-5 hover:border-primary/20 transition-all">
                   <h3 className="font-display text-sm font-bold text-foreground mb-1.5">{faq.q}</h3>
