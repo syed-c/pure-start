@@ -713,7 +713,7 @@ export default function ProfileEditorTab() {
                   className="pl-10"
                   value={formData.email || ''}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="contact@yourclinic.com"
+                  placeholder="contact@youragency.co.uk"
                 />
               </div>
             </div>
