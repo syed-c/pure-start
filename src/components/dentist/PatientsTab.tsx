@@ -348,8 +348,8 @@ export default function PatientsTab() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Patients</h1>
-          <p className="text-muted-foreground">Your patient database</p>
+          <h1 className="text-2xl font-bold text-foreground">Carers</h1>
+          <p className="text-muted-foreground">Your carer contact database</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setCsvDialogOpen(true)} className="gap-2">
@@ -358,7 +358,7 @@ export default function PatientsTab() {
           </Button>
           <Button onClick={() => setAddDialogOpen(true)} className="gap-2">
             <UserPlus className="h-4 w-4" />
-            Add Patient
+            Add Carer
           </Button>
         </div>
       </div>
