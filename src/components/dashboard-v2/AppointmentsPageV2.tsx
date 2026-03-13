@@ -169,11 +169,11 @@ export default function AppointmentsPageV2({ onNavigate }: AppointmentsPageV2Pro
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Appointments"
-        subtitle="Manage your schedule and patient bookings"
+        title="Enquiries"
+        subtitle="Manage your enquiries and carer applications"
         primaryAction={
           <PremiumButton icon={Plus}>
-            Create Appointment
+            Create Enquiry
           </PremiumButton>
         }
         secondaryActions={
