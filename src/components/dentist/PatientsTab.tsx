@@ -773,7 +773,7 @@ export default function PatientsTab() {
               onClick={() => addPatient.mutate(newPatient)}
               disabled={!newPatient.name || !newPatient.phone || addPatient.isPending}
             >
-              Add Patient
+              Add Carer
             </Button>
           </DialogFooter>
         </DialogContent>
