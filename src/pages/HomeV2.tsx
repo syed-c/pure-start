@@ -96,7 +96,7 @@ const HomeV2 = () => {
   const carouselProfiles = profiles?.map(p => ({
     name: p.name,
     specialty: p.specialty || 'Fostering Agency',
-    location: p.location || 'UAE',
+    location: p.location || 'UK',
     rating: p.rating,
     image: p.image || 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400',
     slug: p.slug,
