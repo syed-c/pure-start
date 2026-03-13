@@ -308,9 +308,9 @@ export function BookingModal({
             {/* Show common services when "Not sure" is selected */}
             {showNotSureList && (
               <div className="bg-muted/50 rounded-xl p-4 space-y-2">
-                <p className="text-sm font-medium text-foreground">Common dental services we offer:</p>
+                <p className="text-sm font-medium text-foreground">Common fostering services we support:</p>
                 <div className="flex flex-wrap gap-2">
-                  {commonDentalServices.map((service, i) => (
+                  {commonFosteringServices.map((service, i) => (
                     <span 
                       key={i} 
                       className="text-xs bg-background px-2.5 py-1 rounded-full border border-border text-muted-foreground"
@@ -320,7 +320,7 @@ export function BookingModal({
                   ))}
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">
-                  Don't worry! The clinic will help you determine the best treatment during your consultation.
+                  Don't worry! The agency will help you find the right fostering pathway during your initial conversation.
                 </p>
               </div>
             )}
