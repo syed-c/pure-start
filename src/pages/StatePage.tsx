@@ -364,7 +364,7 @@ const StatePage = () => {
             <div className="flex flex-wrap justify-center gap-3 mb-8">
               <Link to="/search">
                 <Button size="lg" className="h-12 px-6 font-bold rounded-2xl">
-                  Find a Dentist <ArrowRight className="ml-2 h-4 w-4" />
+                  Find an Agency <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>
