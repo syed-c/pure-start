@@ -33,26 +33,23 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { CheckCircle } from "lucide-react";
 
-// Common dental services for "Not sure" option
-const commonDentalServices = [
-  "General Checkup & Cleaning",
-  "Teeth Whitening",
-  "Dental Implants",
-  "Veneers",
-  "Invisalign / Clear Aligners",
-  "Braces / Orthodontics",
-  "Root Canal Treatment",
-  "Tooth Extraction",
-  "Dental Crowns & Bridges",
-  "Fillings",
-  "Gum Treatment / Periodontics",
-  "Pediatric Dentistry",
-  "Wisdom Tooth Removal",
-  "Smile Makeover",
-  "Emergency Dental Care",
-  "Dentures",
-  "Dental X-Rays",
-  "Teeth Grinding / TMJ Treatment",
+// Common fostering enquiry types
+const commonFosteringServices = [
+  "General Enquiry",
+  "Emergency Fostering",
+  "Short-Term Fostering",
+  "Long-Term Fostering",
+  "Respite Care",
+  "Parent & Child Placement",
+  "Therapeutic Fostering",
+  "Sibling Group Placement",
+  "Teenager Fostering",
+  "Disability & Complex Needs",
+  "Becoming a Foster Carer",
+  "Foster Carer Training",
+  "Transfer from Another Agency",
+  "Supported Lodgings",
+  "Staying Put Arrangements",
 ];
 
 // Sanitize text input to prevent XSS
