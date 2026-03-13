@@ -165,8 +165,8 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
     pendingAppts > 0 && {
       icon: Clock,
       type: 'urgent' as const,
-      title: `${pendingAppts} pending appointments`,
-      action: 'Review and confirm appointments',
+      title: `${pendingAppts} pending enquiries`,
+      action: 'Review and respond to enquiries',
       onClick: () => onNavigate('my-appointments'),
     },
     thumbsDown > thumbsUp && {
@@ -194,7 +194,7 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
       icon: CheckCircle,
       type: 'action' as const,
       title: 'Get verified',
-      action: 'Verified clinics get 3x more bookings',
+      action: 'Verified agencies get 3x more enquiries',
       onClick: () => onNavigate('my-profile'),
     },
   ].filter(Boolean).slice(0, 3);
