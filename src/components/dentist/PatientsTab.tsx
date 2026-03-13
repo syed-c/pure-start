@@ -205,7 +205,7 @@ export default function PatientsTab() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success('Patient removed from your list');
+      toast.success('Carer removed from your list');
       setSelectedPatient(null);
       queryClient.invalidateQueries({ queryKey: ['clinic-patients'] });
     },
