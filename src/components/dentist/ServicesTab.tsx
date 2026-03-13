@@ -169,9 +169,9 @@ export default function ServicesTab() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['clinic-treatments'] });
-      toast.success('Treatment removed');
+      toast.success('Fostering type removed');
     },
-    onError: (e: any) => toast.error(e.message || 'Failed to remove treatment'),
+    onError: (e: any) => toast.error(e.message || 'Failed to remove fostering type'),
   });
 
   // Update pricing mutation
