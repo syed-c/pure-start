@@ -661,11 +661,11 @@ export default function ProfileEditorTab() {
         <CardContent className="space-y-4">
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Clinic Name</Label>
+              <Label>Agency Name</Label>
               <Input
                 value={formData.name || ''}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Your clinic name"
+                placeholder="Your agency name"
               />
             </div>
             <div className="space-y-2">
