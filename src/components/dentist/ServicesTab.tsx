@@ -424,8 +424,8 @@ export default function ServicesTab() {
         <Card className="bg-slate-800/90 border border-slate-700/50">
           <CardContent className="py-12 text-center">
             <Stethoscope className="h-12 w-12 mx-auto text-white/20 mb-4" />
-            <p className="text-white/60 mb-2">No services added yet</p>
-            <p className="text-sm text-white/40 mb-4">Add treatments to show patients what you offer</p>
+            <p className="text-white/60 mb-2">No fostering types added yet</p>
+            <p className="text-sm text-white/40 mb-4">Add fostering types to show carers what you offer</p>
             <Button onClick={() => setIsAddingService(true)} size="sm" className="bg-primary hover:bg-primary/90">
               <Plus className="h-4 w-4 mr-2" />
               Add Your First Service

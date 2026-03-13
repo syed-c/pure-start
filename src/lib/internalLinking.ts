@@ -14,7 +14,7 @@ export interface InternalLinkingResult {
 
 /**
  * Generate internal links for a city page
- * Links to: parent state, nearby cities, service pages
+ * Links to: parent region, nearby cities, fostering type pages
  */
 export async function generateCityInternalLinks(
   cityId: string,
@@ -23,7 +23,6 @@ export async function generateCityInternalLinks(
   const { maxNearbyCities = 5, includeServices = true } = options;
 
   try {
-    // Get city with state info
     const { data: city, error: cityError } = await supabase
       .from("cities")
       .select(`
@@ -39,14 +38,14 @@ export async function generateCityInternalLinks(
 
     const links: InternalLink[] = [];
 
-    // 1. Link to parent state
+    // 1. Link to parent region
     links.push({
-      text: `More dentists in ${city.state.name}`,
+      text: `More agencies in ${city.state.name}`,
       href: `/state/${city.state.slug}/`,
       type: "parent",
     });
 
-    // 2. Find nearby cities (if coordinates available)
+    // 2. Find nearby cities
     if (city.latitude && city.longitude) {
       const { data: nearbyCities } = await (supabase as any)
         .from("cities")
@@ -60,7 +59,7 @@ export async function generateCityInternalLinks(
       if (nearbyCities && nearbyCities.length > 0) {
         for (const nearby of nearbyCities) {
           links.push({
-            text: `Dentists in ${nearby.name}`,
+            text: `Fostering agencies in ${nearby.name}`,
             href: `/state/${city.state.slug}/${nearby.slug}/`,
             type: "sibling",
           });
@@ -68,7 +67,7 @@ export async function generateCityInternalLinks(
       }
     }
 
-    // 3. Link to service pages
+    // 3. Link to fostering type pages
     if (includeServices) {
       const { data: services } = await supabase
         .from("treatments")
@@ -94,8 +93,8 @@ export async function generateCityInternalLinks(
 }
 
 /**
- * Generate internal links for a state page
- * Links to: top cities, service pages
+ * Generate internal links for a region page
+ * Links to: top cities, fostering type pages
  */
 export async function generateStateInternalLinks(
   stateId: string,
@@ -104,7 +103,6 @@ export async function generateStateInternalLinks(
   const { maxCities = 10, includeServices = true } = options;
 
   try {
-    // Get state info
     const { data: state, error: stateError } = await supabase
       .from("states")
       .select("id, name, slug, abbreviation")
@@ -112,12 +110,12 @@ export async function generateStateInternalLinks(
       .single();
 
     if (stateError || !state) {
-      return { success: false, links: [], error: "State not found" };
+      return { success: false, links: [], error: "Region not found" };
     }
 
     const links: InternalLink[] = [];
 
-    // 1. Link to top cities in state (by population or dentist count)
+    // 1. Link to top cities in region
     const { data: cities } = await (supabase as any)
       .from("cities")
       .select("id, name, slug, dentist_count")
@@ -130,14 +128,14 @@ export async function generateStateInternalLinks(
     if (cities && cities.length > 0) {
       for (const city of cities) {
         links.push({
-          text: `Dentists in ${city.name}`,
+          text: `Fostering agencies in ${city.name}`,
           href: `/state/${state.slug}/${city.slug}/`,
           type: "child",
         });
       }
     }
 
-    // 2. Link to service pages
+    // 2. Link to fostering type pages
     if (includeServices) {
       const { data: services } = await supabase
         .from("treatments")
@@ -156,9 +154,9 @@ export async function generateStateInternalLinks(
       }
     }
 
-    // 3. Link to all states page (if exists)
+    // 3. Link to all regions page
     links.push({
-      text: "Browse all states",
+      text: "Browse all regions",
       href: "/locations/",
       type: "parent",
     });
@@ -170,8 +168,8 @@ export async function generateStateInternalLinks(
 }
 
 /**
- * Generate internal links for a service page
- * Links to: related treatments, top locations offering this service
+ * Generate internal links for a fostering type page
+ * Links to: related fostering types, top locations
  */
 export async function generateServiceInternalLinks(
   serviceSlug: string,
@@ -180,7 +178,6 @@ export async function generateServiceInternalLinks(
   const { maxLocations = 5, maxRelated = 3 } = options;
 
   try {
-    // Get service info
     const { data: service, error: serviceError } = await supabase
       .from("treatments")
       .select("id, name, slug")
@@ -188,12 +185,12 @@ export async function generateServiceInternalLinks(
       .single();
 
     if (serviceError || !service) {
-      return { success: false, links: [], error: "Service not found" };
+      return { success: false, links: [], error: "Fostering type not found" };
     }
 
     const links: InternalLink[] = [];
 
-    // 1. Link to related services
+    // 1. Link to related fostering types
     const { data: relatedServices } = await supabase
       .from("treatments")
       .select("id, name, slug")
@@ -211,7 +208,7 @@ export async function generateServiceInternalLinks(
       }
     }
 
-    // 2. Link to top states
+    // 2. Link to top regions
     const { data: states } = await supabase
       .from("states")
       .select("id, name, slug")
@@ -229,9 +226,9 @@ export async function generateServiceInternalLinks(
       }
     }
 
-    // 3. Link to all services
+    // 3. Link to all fostering types
     links.push({
-      text: "View all dental services",
+      text: "View all fostering types",
       href: "/services/",
       type: "parent",
     });
@@ -267,7 +264,6 @@ export async function updateSeoPageInternalLinks(
       content = {};
     }
 
-    // Update internal links in content
     content.internal_links = links.map((link) => ({
       text: link.text,
       href: link.href,
@@ -299,7 +295,6 @@ export async function bulkUpdateInternalLinks(
   let errors = 0;
 
   try {
-    // Get all pages of this type
     const { data: pages } = await supabase
       .from("seo_pages")
       .select("id, slug")
@@ -315,7 +310,6 @@ export async function bulkUpdateInternalLinks(
         let links: InternalLink[] = [];
 
         if (pageType === "state") {
-          // Get state ID from slug
           const { data: state } = await supabase
             .from("states")
             .select("id")
@@ -329,7 +323,6 @@ export async function bulkUpdateInternalLinks(
             }
           }
         } else if (pageType === "city") {
-          // Get city from slug (format: state-slug/city-slug)
           const parts = page.slug.split("/");
           if (parts.length === 2) {
             const { data: city } = await supabase
