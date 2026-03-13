@@ -339,7 +339,7 @@ export default function DashboardOverviewV2({ onNavigate }: DashboardOverviewV2P
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-foreground truncate">{appt.patient_name}</p>
                         <p className="text-sm text-muted-foreground">
-                          {appt.preferred_time || 'Time TBD'} • {appt.treatment?.name || 'General'}
+                          {appt.preferred_time || 'Time TBD'} • {appt.treatment?.name || 'General Enquiry'}
                         </p>
                       </div>
                       <StatusBadge
