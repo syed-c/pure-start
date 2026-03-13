@@ -579,7 +579,7 @@ export default function AdminDashboard() {
       case 'outreach': return <OutreachTab />;
       case 'ranking-rules': return <RankingRulesTab />;
       case 'pinned-profiles': return <PinnedProfilesTab />;
-      case 'top-dentists': return <TopDentistsTab />;
+      case 'top-dentists': return <TopAgenciesTab />;
       case 'promotions': return <PromotionsTab />;
       case 'locations': return <LocationsTab />;
       case 'treatments': return <TreatmentsTab />;
