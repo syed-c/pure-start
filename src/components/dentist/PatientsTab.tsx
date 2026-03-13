@@ -581,8 +581,8 @@ export default function PatientsTab() {
       <Dialog open={!!selectedPatient} onOpenChange={() => setSelectedPatient(null)}>
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Patient Details</DialogTitle>
-            <DialogDescription>View and manage patient information</DialogDescription>
+            <DialogTitle>Carer Details</DialogTitle>
+            <DialogDescription>View and manage carer information</DialogDescription>
           </DialogHeader>
           {selectedPatient && (
             <div className="space-y-4 py-2">
