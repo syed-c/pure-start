@@ -236,12 +236,12 @@ const ClinicPage = () => {
       <PageLayout>
         <Section>
           <div className="text-center py-20">
-            <h1 className="font-display text-3xl font-bold mb-4">Clinic Not Found</h1>
+            <h1 className="font-display text-3xl font-bold mb-4">Agency Not Found</h1>
             <p className="text-muted-foreground mb-8">
-              The clinic you're looking for doesn't exist or has been removed.
+              The fostering agency you're looking for doesn't exist or has been removed.
             </p>
             <Button asChild className="rounded-xl font-bold">
-              <Link to="/search">Browse Clinics</Link>
+              <Link to="/search">Browse Agencies</Link>
             </Button>
           </div>
         </Section>
