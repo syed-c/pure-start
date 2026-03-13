@@ -533,11 +533,11 @@ export default function AdminDashboard() {
     );
   }
 
-  // Check if this is a dentist accessing their dashboard - redirect to V2
-  const isDentistRoute = location.pathname.startsWith('/dashboard') && isDentist && !isAdmin;
+  // Check if this is an agency user accessing their dashboard - redirect to V2
+  const isAgencyRoute = location.pathname.startsWith('/dashboard') && isDentist && !isAdmin;
   
-  // For dentists, use the redesigned V2 dashboard
-  if (isDentistRoute) {
+  // For agency users, use the redesigned V2 dashboard
+  if (isAgencyRoute) {
     return (
       <Suspense fallback={
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-primary/10">
@@ -547,7 +547,7 @@ export default function AdminDashboard() {
           </div>
         </div>
       }>
-        <DentistDashboardV2 />
+        <AgencyDashboardV2 />
       </Suspense>
     );
   }
