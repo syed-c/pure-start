@@ -284,20 +284,20 @@ const StatePage = () => {
   // Use SEO FAQs if available, otherwise use defaults
   const faqs = seoFaqs.length > 0 ? seoFaqs.map(f => ({ q: f.question, a: f.answer })) : [
     {
-      q: `How do I find a dentist in ${stateName}?`,
-      a: `Browse our verified list of dentists across ${stateName}. Select your city, then filter by specialty, rating, and insurance to find the perfect match.`,
+      q: `How do I find a fostering agency in ${stateName}?`,
+      a: `Browse our verified list of agencies across ${stateName}. Select your city, then filter by fostering type and rating to find the perfect match.`,
     },
     {
-      q: `Are dentists in ${stateName} verified?`,
-      a: `All dentists on our platform are licensed professionals. Profiles with the "Verified" badge have completed our additional verification process.`,
+      q: `Are agencies in ${stateName} Ofsted registered?`,
+      a: `All agencies listed are Ofsted-registered. Agencies with the "Verified" badge have completed our additional verification process.`,
     },
     {
       q: `What cities in ${stateName} do you cover?`,
       a: `We cover major cities across ${stateName} including ${cities?.slice(0, 5).map(c => c.name).join(', ') || 'multiple locations'}. More cities are being added regularly.`,
     },
     {
-      q: `Can I book same-day appointments?`,
-      a: `Many dental offices in ${stateName} offer same-day or next-day appointments. Use our search filters to find clinics with immediate availability.`,
+      q: `How do I become a foster carer?`,
+      a: `Contact agencies in ${stateName} through our directory. They will guide you through the assessment process which typically takes 4-6 months.`,
     },
   ];
 
