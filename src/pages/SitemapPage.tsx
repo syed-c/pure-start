@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { 
   MapPin, Home, Building2, FileText, ChevronRight,
   Info, HelpCircle, Shield, FileCheck, BookOpen, Phone, UserPlus, CheckCircle,
-  Sparkles, Users, Globe, ArrowRight, Search, Star
+  Sparkles, Globe, ArrowRight, Search, Star
 } from "lucide-react";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { PageHero } from "@/components/layout/PageHero";

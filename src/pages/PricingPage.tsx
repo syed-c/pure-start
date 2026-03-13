@@ -1,26 +1,16 @@
 import { useState, useEffect } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Progress } from '@/components/ui/progress';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { PromotionBanner, getDiscountedPrice } from '@/components/subscription/PromotionBanner';
 import {
-  Check, X, Crown, Star, Zap, Shield, ArrowRight, Building2, Calendar,
-  BarChart3, Phone, Mail, BadgeCheck, Users, TrendingUp, Globe, Sparkles,
-  Search, ChevronRight, HelpCircle, MessageSquare, Loader2, Target, Eye,
-  Lock, XCircle, AlertTriangle, Percent
+  Check, X, Crown, Star, Zap, Shield, ArrowRight, BadgeCheck,
+  HelpCircle, Loader2, Percent
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
