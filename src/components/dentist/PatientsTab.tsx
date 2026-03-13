@@ -373,7 +373,7 @@ export default function PatientsTab() {
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.total}</p>
-                <p className="text-xs text-slate-300">Total Patients</p>
+                <p className="text-xs text-slate-300">Total Carers</p>
               </div>
             </div>
           </CardContent>
