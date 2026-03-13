@@ -353,7 +353,7 @@ export default function GmbBridgeTab() {
         toast.success(`Imported batch ${i + 1}/${batches.length}`);
       }
 
-      toast.success(`Imported ${importedTotal} clinics. ${duplicateTotal} duplicates skipped.`);
+      toast.success(`Imported ${importedTotal} agencies. ${duplicateTotal} duplicates skipped.`);
 
       // Refresh results to update imported status
       setResults((prev) =>
