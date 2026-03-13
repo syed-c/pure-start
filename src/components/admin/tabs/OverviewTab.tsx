@@ -86,7 +86,7 @@ export default function OverviewTab() {
         const dayStart = startOfDay(subDays(new Date(), i));
         const dayEnd = endOfDay(subDays(new Date(), i));
         
-        const [leadsResult, appointmentsResult, viewsResult] = await Promise.all([
+        const [leadsResult, enquiriesResult, viewsResult] = await Promise.all([
           supabase.from('leads').select('id', { count: 'exact', head: true })
             .gte('created_at', dayStart.toISOString())
             .lte('created_at', dayEnd.toISOString()),
@@ -102,7 +102,7 @@ export default function OverviewTab() {
           date: format(dayStart, 'MMM dd'),
           shortDate: format(dayStart, 'dd'),
           leads: leadsResult.count || 0,
-          appointments: appointmentsResult.count || 0,
+          enquiries: enquiriesResult.count || 0,
           views: viewsResult.count || 0,
         });
       }
@@ -115,7 +115,7 @@ export default function OverviewTab() {
   const weeklyChartData = trendData.slice(-7).map((d, i) => ({
     label: ['S', 'M', 'T', 'W', 'T', 'F', 'S'][new Date(subDays(new Date(), 6 - i)).getDay()],
     leads: d.leads,
-    appointments: d.appointments,
+    enquiries: d.enquiries,
     views: d.views,
   }));
 
@@ -132,14 +132,14 @@ export default function OverviewTab() {
     },
   });
 
-  // Fetch GMB connected count
-  const { data: gmbConnectedCount = 0 } = useQuery({
-    queryKey: ['gmb-connected-count'],
+  // Fetch Ofsted verified count
+  const { data: verifiedAgencyCount = 0 } = useQuery({
+    queryKey: ['verified-agency-count'],
     queryFn: async () => {
       const { count } = await supabase
         .from('clinics')
         .select('*', { count: 'exact', head: true })
-        .eq('gmb_connected', true);
+        .eq('verification_status', 'verified');
       return count || 0;
     },
   });
@@ -175,7 +175,7 @@ export default function OverviewTab() {
   const { data: recentActivity = [] } = useQuery({
     queryKey: ['platform-activity'],
     queryFn: async () => {
-      const [appointments, claims, leads] = await Promise.all([
+      const [enquiries, claims, leads] = await Promise.all([
         supabase.from('appointments').select('id, patient_name, created_at, status')
           .order('created_at', { ascending: false }).limit(3),
         supabase.from('claim_requests').select('id, created_at, status, clinic:clinics(name)')
@@ -185,11 +185,11 @@ export default function OverviewTab() {
       ]);
 
       return [
-        ...(appointments.data || []).map(a => ({
+        ...(enquiries.data || []).map(a => ({
           id: a.id,
           icon: Calendar,
           iconColor: 'blue',
-          title: `New appointment`,
+          title: `New enquiry`,
           subtitle: a.patient_name,
         })),
         ...(claims.data || []).map(c => ({
@@ -197,7 +197,7 @@ export default function OverviewTab() {
           icon: Shield,
           iconColor: 'gold',
           title: `Claim request`,
-          subtitle: (c.clinic as any)?.name || 'Unknown clinic',
+          subtitle: (c.clinic as any)?.name || 'Unknown agency',
         })),
         ...(leads.data || []).map(l => ({
           id: l.id,
@@ -215,8 +215,7 @@ export default function OverviewTab() {
   const { data: systemMetrics } = useQuery({
     queryKey: ['system-uptime'],
     queryFn: async () => {
-      // Get last activity timestamps
-      const [lastAppointment, lastLead, lastSession] = await Promise.all([
+      const [lastEnquiry, lastLead, lastSession] = await Promise.all([
         supabase.from('appointments').select('created_at').order('created_at', { ascending: false }).limit(1),
         supabase.from('leads').select('created_at').order('created_at', { ascending: false }).limit(1),
         supabase.from('visitor_sessions').select('created_at').order('created_at', { ascending: false }).limit(1),
@@ -225,19 +224,19 @@ export default function OverviewTab() {
       const now = new Date();
       const lastActivityTime = new Date(
         lastSession.data?.[0]?.created_at || 
-        lastAppointment.data?.[0]?.created_at || 
+        lastEnquiry.data?.[0]?.created_at || 
         lastLead.data?.[0]?.created_at ||
         now.toISOString()
       );
       
       const secondsSinceActivity = differenceInSeconds(now, lastActivityTime);
-      const isActive = secondsSinceActivity < 300; // Active if activity within 5 mins
+      const isActive = secondsSinceActivity < 300;
 
       return {
         isActive,
         lastActivity: lastActivityTime,
         secondsSinceActivity,
-        uptime: '99.9%', // Placeholder - would need actual monitoring
+        uptime: '99.9%',
       };
     },
     refetchInterval: 60000,
@@ -261,17 +260,17 @@ export default function OverviewTab() {
 
   // Quick actions
   const quickActions = [
-    { icon: Building2, label: 'Clinics', onClick: () => navigateTo('clinics'), color: 'primary' as const },
-    { icon: Calendar, label: 'Appointments', onClick: () => navigateTo('appointments'), color: 'teal' as const, badge: String(stats?.appointments?.pending || 0) },
+    { icon: Building2, label: 'Agencies', onClick: () => navigateTo('clinics'), color: 'primary' as const },
+    { icon: Calendar, label: 'Enquiries', onClick: () => navigateTo('appointments'), color: 'teal' as const, badge: String(stats?.appointments?.pending || 0) },
     { icon: UserPlus, label: 'Leads', onClick: () => navigateTo('leads'), color: 'gold' as const },
     { icon: Shield, label: 'Claims', onClick: () => navigateTo('claims'), color: 'coral' as const },
     { icon: MessageSquare, label: 'Reviews', onClick: () => navigateTo('review-insights'), color: 'purple' as const },
-    { icon: Globe, label: 'GMB Status', onClick: () => navigateTo('gmb-connections'), color: 'teal' as const },
+    { icon: Globe, label: 'Ofsted Status', onClick: () => navigateTo('gmb-connections'), color: 'teal' as const },
     { icon: Users, label: 'Users', onClick: () => navigateTo('users'), color: 'primary' as const },
     { icon: Bot, label: 'AI Controls', onClick: () => navigateTo('ai-controls'), color: 'purple' as const },
   ];
 
-  // Pie chart data for clinic distribution
+  // Pie chart data for agency distribution
   const pieData = [
     { name: 'Verified', value: stats?.clinics?.verified || 0 },
     { name: 'Claimed', value: (stats?.clinics?.claimed || 0) - (stats?.clinics?.verified || 0) },
@@ -281,7 +280,7 @@ export default function OverviewTab() {
   // Task items for project list
   const taskItems = [
     { id: '1', icon: Zap, iconColor: 'purple', title: 'Review pending claims', subtitle: `${stats?.claims?.pending || 0} awaiting review` },
-    { id: '2', icon: Target, iconColor: 'teal', title: 'SEO optimization', subtitle: 'Improve page rankings' },
+    { id: '2', icon: Target, iconColor: 'teal', title: 'SEO optimisation', subtitle: 'Improve page rankings' },
     { id: '3', icon: BarChart3, iconColor: 'gold', title: 'Monthly report', subtitle: 'Due in 3 days' },
     { id: '4', icon: Mail, iconColor: 'blue', title: 'Outreach campaign', subtitle: 'Follow up with leads' },
   ];
@@ -299,7 +298,7 @@ export default function OverviewTab() {
             <div className="flex items-center gap-2 mb-2">
               <Badge className="bg-primary/20 text-primary border-0 text-xs">
                 <Sparkles className="h-3 w-3 mr-1" />
-                Command Center
+                Command Centre
               </Badge>
               {systemMetrics?.isActive && (
                 <Badge className="bg-teal/20 text-teal border-0 text-xs">
@@ -309,12 +308,12 @@ export default function OverviewTab() {
               )}
             </div>
             <h1 className="text-3xl font-extrabold text-white tracking-tight">Dashboard</h1>
-            <p className="text-white/60 mt-1">Plan, prioritize, and accomplish your tasks with ease.</p>
+            <p className="text-white/60 mt-1">Foster Connect — UK Fostering Agency Directory</p>
           </div>
           <div className="flex items-center gap-3">
             <Button className="bg-primary hover:bg-primary/90 text-white rounded-xl shadow-lg shadow-primary/30">
               <UserPlus className="h-4 w-4 mr-2" />
-              Add Clinic
+              Add Agency
             </Button>
             <Button 
               variant="outline" 
@@ -341,8 +340,8 @@ export default function OverviewTab() {
             <span className="text-sm text-white/80">{recentSignups} signups today</span>
           </div>
           <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2">
-            <Globe className="h-4 w-4 text-teal" />
-            <span className="text-sm text-white/80">{gmbConnectedCount} GMB connected</span>
+            <Shield className="h-4 w-4 text-teal" />
+            <span className="text-sm text-white/80">{verifiedAgencyCount} verified agencies</span>
           </div>
           <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2">
             <Eye className="h-4 w-4 text-gold" />
@@ -351,10 +350,10 @@ export default function OverviewTab() {
         </div>
       </div>
 
-      {/* Primary Stats Row - First card is colored */}
+      {/* Primary Stats Row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <ModernStatCard
-          title="Total Clinics"
+          title="Total Agencies"
           value={stats?.clinics?.total || 0}
           icon={Building2}
           variant="filled"
@@ -449,7 +448,7 @@ export default function OverviewTab() {
                   />
                   <Area 
                     type="monotone" 
-                    dataKey="appointments" 
+                    dataKey="enquiries" 
                     stroke="hsl(var(--gold))" 
                     fill="transparent"
                     strokeWidth={2}
@@ -469,7 +468,7 @@ export default function OverviewTab() {
               </div>
               <div className="flex items-center gap-2">
                 <div className="h-3 w-3 rounded-full bg-gold" />
-                <span className="text-sm font-medium text-muted-foreground">Appointments</span>
+                <span className="text-sm font-medium text-muted-foreground">Enquiries</span>
               </div>
             </div>
           </ModernCard>
@@ -514,7 +513,7 @@ export default function OverviewTab() {
                   <Calendar className="h-5 w-5 text-gold" />
                 </div>
                 <div>
-                  <p className="font-semibold text-foreground">Bookings</p>
+                  <p className="font-semibold text-foreground">Enquiries</p>
                   <p className="text-xs text-muted-foreground">This week</p>
                 </div>
               </div>
@@ -550,9 +549,9 @@ export default function OverviewTab() {
           }}
         />
 
-        {/* Progress Circle with enhanced visuals */}
+        {/* Progress Circle */}
         <div className="bg-card rounded-2xl border border-border/50 p-6 shadow-sm">
-          <h3 className="font-bold text-foreground mb-4">Clinic Progress</h3>
+          <h3 className="font-bold text-foreground mb-4">Agency Progress</h3>
           <div className="flex flex-col items-center">
             <CircularProgress value={claimRate} size="lg" label="Claimed" />
             <div className="flex items-center justify-center gap-4 mt-6 flex-wrap">
@@ -607,8 +606,8 @@ export default function OverviewTab() {
                 <p className="text-xs text-white/50">Verified</p>
               </div>
               <div className="text-center">
-                <p className="text-3xl font-extrabold text-teal font-mono">{gmbConnectedCount}</p>
-                <p className="text-xs text-white/50">GMB</p>
+                <p className="text-3xl font-extrabold text-teal font-mono">{verifiedAgencyCount}</p>
+                <p className="text-xs text-white/50">Ofsted</p>
               </div>
               <div className="text-center">
                 <p className="text-3xl font-extrabold text-gold font-mono">{recentSignups}</p>
@@ -643,9 +642,9 @@ export default function OverviewTab() {
           </div>
         </div>
 
-        {/* Clinic Distribution Pie Chart */}
+        {/* Agency Distribution Pie Chart */}
         <div className="bg-card rounded-2xl border border-border/50 p-6 shadow-sm">
-          <h3 className="font-bold text-foreground mb-4">Clinic Distribution</h3>
+          <h3 className="font-bold text-foreground mb-4">Agency Distribution</h3>
           <div className="h-44">
             <ResponsiveContainer width="100%" height="100%">
               <RechartsPie>
@@ -707,10 +706,10 @@ export default function OverviewTab() {
             </div>
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-foreground">GMB Connected</span>
-                <span className="text-sm font-bold text-gold">{Math.round((gmbConnectedCount / (stats?.clinics?.total || 1)) * 100)}%</span>
+                <span className="text-sm font-medium text-foreground">Ofsted Verified</span>
+                <span className="text-sm font-bold text-gold">{Math.round((verifiedAgencyCount / (stats?.clinics?.total || 1)) * 100)}%</span>
               </div>
-              <Progress value={Math.round((gmbConnectedCount / (stats?.clinics?.total || 1)) * 100)} className="h-2 [&>div]:bg-gold" />
+              <Progress value={Math.round((verifiedAgencyCount / (stats?.clinics?.total || 1)) * 100)} className="h-2 [&>div]:bg-gold" />
             </div>
             <Button variant="outline" className="w-full rounded-xl mt-2" onClick={() => navigateTo('weekly')}>
               <FileText className="h-4 w-4 mr-2" />
@@ -720,7 +719,7 @@ export default function OverviewTab() {
         </div>
       </div>
 
-      {/* AI Insights with enhanced header */}
+      {/* AI Insights */}
       <div className="bg-card rounded-2xl border border-border/50 overflow-hidden shadow-sm">
         <div className="flex items-center justify-between px-6 py-4 border-b border-border/50 bg-gradient-to-r from-purple/5 to-primary/5">
           <div className="flex items-center gap-3">
