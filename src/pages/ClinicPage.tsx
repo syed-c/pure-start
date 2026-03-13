@@ -258,7 +258,7 @@ const ClinicPage = () => {
   const stateSlug = clinic.city?.state?.slug || '';
   
   const breadcrumbs = [
-    { label: "Clinics", href: "/search" },
+    { label: "Agencies", href: "/search" },
     ...(clinic.city?.state ? [{ label: clinic.city.state.name, href: `/${clinic.city.state.slug}` }] : []),
     ...(clinic.city ? [{ label: clinic.city.name, href: `/${stateSlug}/${clinic.city.slug}` }] : []),
     { label: clinic.name },
