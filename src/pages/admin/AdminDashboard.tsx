@@ -216,7 +216,7 @@ const adminTabGroups = [
       { id: 'overview', label: 'Dashboard Overview', icon: LayoutDashboard },
       { id: 'weekly', label: 'Weekly Report', icon: TrendingUp },
       { id: 'visitor-analytics', label: 'Visitor Analytics', icon: Activity, highlight: true },
-      { id: 'top-dentists', label: 'Top Dentists', icon: Star },
+      { id: 'top-dentists', label: 'Top Agencies', icon: Star },
       { id: 'pinned-profiles', label: 'Pinned Profiles', icon: Star },
     ],
   },
