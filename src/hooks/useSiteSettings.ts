@@ -56,38 +56,33 @@ export interface SiteSettings {
   branding: Branding;
 }
 
-// Default settings are only used when database values are not available
-// These should match the values stored in global_settings table
 const DEFAULT_SITE_SETTINGS: SiteSettings = {
-  siteName: 'AppointPanda',
-    siteUrl: 'https://www.appointpanda.ae/',
-    siteTagline: 'UAE Dental Directory',
-    contactDetails: {
-      support_email: 'support@appointpanda.ae',
-      booking_email: 'bookings@appointpanda.ae',
-      sales_email: 'sales@appointpanda.ae',
-      partnerships_email: 'partners@appointpanda.ae',
-      support_phone: '+971 4 123 4567',
-      booking_phone: '+971 4 123 4567',
-      sales_phone: '+971 4 123 4567',
+  siteName: 'Foster Connect',
+  siteUrl: 'https://www.fosterconnect.co.uk/',
+  siteTagline: 'UK Fostering Agency Directory',
+  contactDetails: {
+    support_email: 'support@fosterconnect.co.uk',
+    sales_email: 'agencies@fosterconnect.co.uk',
+    partnerships_email: 'partners@fosterconnect.co.uk',
+    support_phone: '+44 20 7946 0958',
     address_line1: '',
     address_line2: '',
-    city: '',
-    state: '',
+    city: 'London',
+    state: 'England',
     zip_code: '',
-    country: 'United Arab Emirates',
+    country: 'United Kingdom',
   },
   socialLinks: {
-    facebook: 'https://facebook.com/appointpanda',
-    instagram: 'https://instagram.com/appointpanda',
-    twitter: 'https://twitter.com/appointpanda',
-    linkedin: 'https://linkedin.com/company/appointpanda',
+    facebook: '',
+    instagram: '',
+    twitter: '',
+    linkedin: '',
     youtube: '',
     tiktok: '',
   },
   footerSections: [],
-  legalText: 'Licensed Dental Professionals Only.',
-  copyrightText: '© 2026 AppointPanda. All rights reserved by Quick Commerce LLC FZ.',
+  legalText: 'Connecting families with trusted fostering agencies across the UK.',
+  copyrightText: '© 2026 Foster Connect. All rights reserved.',
   branding: {
     logo_url: '',
     logo_dark_url: '',
@@ -95,85 +90,77 @@ const DEFAULT_SITE_SETTINGS: SiteSettings = {
   },
 };
 
-/**
- * Hook to fetch site-wide settings for header/footer/contact info
- * This data is cached and available across the entire site
- */
 export function useSiteSettings() {
   return useQuery({
     queryKey: ['site-settings'],
     queryFn: async (): Promise<SiteSettings> => {
-      // Fetch multiple settings keys in parallel
-      const { data, error } = await supabase
-        .from('global_settings')
-        .select('key, value')
-        .in('key', ['platform', 'contact_details', 'social_links', 'footer_config', 'legal', 'header_nav', 'branding']);
+      try {
+        const { data, error } = await supabase
+          .from('global_settings')
+          .select('key, value')
+          .in('key', ['platform', 'contact_details', 'social_links', 'footer_config', 'legal', 'header_nav', 'branding']);
 
-      if (error) {
-        console.error('Error fetching site settings:', error);
+        if (error) {
+          // Table doesn't exist yet — return defaults
+          return DEFAULT_SITE_SETTINGS;
+        }
+
+        const settingsMap: Record<string, Record<string, unknown>> = {};
+        data?.forEach(s => {
+          settingsMap[s.key] = s.value as Record<string, unknown>;
+        });
+
+        const platform = settingsMap['platform'] || {};
+        const contacts = settingsMap['contact_details'] || {};
+        const social = settingsMap['social_links'] || {};
+        const footerConfig = settingsMap['footer_config'] || {};
+        const legal = settingsMap['legal'] || {};
+        const branding = settingsMap['branding'] || {};
+
+        return {
+          siteName: (platform.site_name as string) || DEFAULT_SITE_SETTINGS.siteName,
+          siteUrl: (platform.site_url as string) || DEFAULT_SITE_SETTINGS.siteUrl,
+          siteTagline: (platform.tagline as string) || DEFAULT_SITE_SETTINGS.siteTagline,
+          contactDetails: {
+            support_email: (contacts.support_email as string) || DEFAULT_SITE_SETTINGS.contactDetails.support_email,
+            booking_email: (contacts.booking_email as string) || '',
+            sales_email: (contacts.sales_email as string) || DEFAULT_SITE_SETTINGS.contactDetails.sales_email,
+            partnerships_email: (contacts.partnerships_email as string) || DEFAULT_SITE_SETTINGS.contactDetails.partnerships_email,
+            support_phone: (contacts.support_phone as string) || DEFAULT_SITE_SETTINGS.contactDetails.support_phone,
+            booking_phone: (contacts.booking_phone as string) || '',
+            sales_phone: (contacts.sales_phone as string) || '',
+            whatsapp: (contacts.whatsapp as string) || '',
+            address_line1: (contacts.address_line1 as string) || '',
+            address_line2: (contacts.address_line2 as string) || '',
+            city: (contacts.city as string) || 'London',
+            state: (contacts.state as string) || 'England',
+            zip_code: (contacts.zip_code as string) || '',
+            country: (contacts.country as string) || 'United Kingdom',
+          },
+          socialLinks: {
+            facebook: (social.facebook as string) || '',
+            instagram: (social.instagram as string) || '',
+            twitter: (social.twitter as string) || '',
+            linkedin: (social.linkedin as string) || '',
+            youtube: (social.youtube as string) || '',
+            tiktok: (social.tiktok as string) || '',
+          },
+          footerSections: (footerConfig.sections as FooterSection[]) || [],
+          legalText: (legal.footer_text as string) || DEFAULT_SITE_SETTINGS.legalText,
+          copyrightText: (legal.copyright_text as string) || DEFAULT_SITE_SETTINGS.copyrightText,
+          branding: {
+            logo_url: (branding.logo_url as string) || '',
+            logo_dark_url: (branding.logo_dark_url as string) || '',
+            favicon_url: (branding.favicon_url as string) || '',
+          },
+        };
+      } catch {
         return DEFAULT_SITE_SETTINGS;
       }
-
-      // Parse settings into a map
-      const settingsMap: Record<string, Record<string, unknown>> = {};
-      data?.forEach(s => {
-        settingsMap[s.key] = s.value as Record<string, unknown>;
-      });
-
-      // Build site settings from database values with fallbacks
-      // IMPORTANT: Database values take priority over defaults
-      const platform = settingsMap['platform'] || {};
-      const contacts = settingsMap['contact_details'] || {};
-      const social = settingsMap['social_links'] || {};
-      const footerConfig = settingsMap['footer_config'] || {};
-      const legal = settingsMap['legal'] || {};
-      const branding = settingsMap['branding'] || {};
-
-      return {
-        siteName: (platform.site_name as string) || DEFAULT_SITE_SETTINGS.siteName,
-        siteUrl: (platform.site_url as string) || DEFAULT_SITE_SETTINGS.siteUrl,
-        siteTagline: (platform.tagline as string) || DEFAULT_SITE_SETTINGS.siteTagline,
-        contactDetails: {
-          // Prioritize contact_details table values over platform defaults
-          support_email: (contacts.support_email as string) || (platform.support_email as string) || DEFAULT_SITE_SETTINGS.contactDetails.support_email,
-          booking_email: (contacts.booking_email as string) || '',
-          sales_email: (contacts.sales_email as string) || '',
-          partnerships_email: (contacts.partnerships_email as string) || '',
-          support_phone: (contacts.support_phone as string) || DEFAULT_SITE_SETTINGS.contactDetails.support_phone,
-          booking_phone: (contacts.booking_phone as string) || '',
-          sales_phone: (contacts.sales_phone as string) || '',
-          whatsapp: (contacts.whatsapp as string) || '',
-          address_line1: (contacts.address_line1 as string) || '',
-          address_line2: (contacts.address_line2 as string) || '',
-          city: (contacts.city as string) || '',
-          state: (contacts.state as string) || '',
-          zip_code: (contacts.zip_code as string) || '',
-          country: (contacts.country as string) || 'United Arab Emirates',
-        },
-        socialLinks: {
-          facebook: (social.facebook as string) || '',
-          instagram: (social.instagram as string) || '',
-          twitter: (social.twitter as string) || '',
-          linkedin: (social.linkedin as string) || '',
-          youtube: (social.youtube as string) || '',
-          tiktok: (social.tiktok as string) || '',
-        },
-        footerSections: (footerConfig.sections as FooterSection[]) || [],
-        // Legal text from database takes priority
-        legalText: (legal.footer_text as string) || DEFAULT_SITE_SETTINGS.legalText,
-        copyrightText: (legal.copyright_text as string) || DEFAULT_SITE_SETTINGS.copyrightText,
-        // Branding - logo and favicon from settings
-        branding: {
-          logo_url: (branding.logo_url as string) || '',
-          logo_dark_url: (branding.logo_dark_url as string) || '',
-          favicon_url: (branding.favicon_url as string) || '',
-        },
-      };
     },
-    staleTime: 0, // Always consider data stale to force refetch
-    gcTime: 5 * 60 * 1000, // Keep in cache for 5 minutes
-    refetchOnMount: 'always', // Always refetch when component mounts
-    refetchOnWindowFocus: true, // Refetch when window gains focus
-    refetchInterval: 30 * 1000, // Refetch every 30 seconds in background
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    retry: false,
   });
 }

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { FOSTERING_CATEGORIES } from '@/lib/constants/activeRegions';
 
 export interface Treatment {
   id: string;
@@ -15,34 +15,46 @@ export interface Treatment {
   children?: Treatment[];
 }
 
+// Now returns static fostering categories instead of querying treatments table
 export function useTreatments() {
   return useQuery({
-    queryKey: ['treatments'],
+    queryKey: ['fostering-categories'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('treatments')
-        .select('*')
-        .eq('is_active', true)
-        .order('display_order');
-      
-      if (error) throw error;
-      return (data || []) as Treatment[];
+      return FOSTERING_CATEGORIES.map((cat, i) => ({
+        id: cat.slug,
+        name: cat.name,
+        slug: cat.slug,
+        description: null,
+        icon: null,
+        image_url: null,
+        display_order: i,
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })) as Treatment[];
     },
+    staleTime: Infinity,
   });
 }
 
 export function useTreatment(id: string) {
   return useQuery({
-    queryKey: ['treatment', id],
+    queryKey: ['fostering-category', id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('treatments')
-        .select('*')
-        .eq('id', id)
-        .single();
-      
-      if (error) throw error;
-      return data as unknown as Treatment;
+      const cat = FOSTERING_CATEGORIES.find(c => c.slug === id);
+      if (!cat) return null;
+      return {
+        id: cat.slug,
+        name: cat.name,
+        slug: cat.slug,
+        description: null,
+        icon: null,
+        image_url: null,
+        display_order: 0,
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      } as Treatment;
     },
     enabled: !!id,
   });

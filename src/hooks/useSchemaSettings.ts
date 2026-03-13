@@ -33,20 +33,19 @@ export interface SchemaSettings {
   sitewide: SitewideSettings;
 }
 
-// Default settings as fallback
 const defaultOrganization: OrganizationSettings = {
-  name: 'AppointPanda',
-  url: 'https://www.appointpanda.ae',
-  logo: 'https://www.appointpanda.ae/logo.png',
-  description: 'Find and book appointments with top-rated dental professionals across the UAE.',
-  email: '',
+  name: 'Foster Connect',
+  url: 'https://www.fosterconnect.co.uk',
+  logo: 'https://www.fosterconnect.co.uk/logo.png',
+  description: 'Find trusted fostering agencies across England and the UK. Compare services, read reviews, and take the first step towards fostering.',
+  email: 'support@fosterconnect.co.uk',
   phone: '',
   address: {
     streetAddress: '',
-    addressLocality: '',
-    addressRegion: '',
+    addressLocality: 'London',
+    addressRegion: 'England',
     postalCode: '',
-    addressCountry: 'US',
+    addressCountry: 'GB',
   },
   socialProfiles: [],
   foundingDate: '',
@@ -65,36 +64,33 @@ export function useSchemaSettings() {
   return useQuery({
     queryKey: ['schema-settings-public'],
     queryFn: async (): Promise<SchemaSettings> => {
-      const { data, error } = await supabase
-        .from('schema_settings')
-        .select('setting_key, setting_value');
-      
-      if (error) {
-        console.warn('Failed to load schema settings, using defaults:', error);
+      try {
+        const { data, error } = await supabase
+          .from('schema_settings')
+          .select('setting_key, setting_value');
+        
+        if (error) {
+          return { organization: defaultOrganization, sitewide: defaultSitewide };
+        }
+        
+        const settings: Record<string, any> = {};
+        data?.forEach(row => {
+          settings[row.setting_key] = row.setting_value;
+        });
+        
         return {
-          organization: defaultOrganization,
-          sitewide: defaultSitewide,
+          organization: settings.organization || defaultOrganization,
+          sitewide: settings.sitewide || defaultSitewide,
         };
+      } catch {
+        return { organization: defaultOrganization, sitewide: defaultSitewide };
       }
-      
-      const settings: Record<string, any> = {};
-      data?.forEach(row => {
-        settings[row.setting_key] = row.setting_value;
-      });
-      
-      return {
-        organization: settings.organization || defaultOrganization,
-        sitewide: settings.sitewide || defaultSitewide,
-      };
     },
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    staleTime: 5 * 60 * 1000,
+    retry: false,
   });
 }
 
-// For SSR/static generation, provide defaults
 export function getDefaultSchemaSettings(): SchemaSettings {
-  return {
-    organization: defaultOrganization,
-    sitewide: defaultSitewide,
-  };
+  return { organization: defaultOrganization, sitewide: defaultSitewide };
 }
