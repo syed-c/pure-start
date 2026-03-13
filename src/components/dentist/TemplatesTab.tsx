@@ -482,9 +482,9 @@ export default function TemplatesTab() {
           </DialogHeader>
 
           <div className="space-y-4">
-            {/* Patient Selection */}
+            {/* Carer Selection */}
             <div>
-              <Label>Select Patient</Label>
+              <Label>Select Carer</Label>
               <Select value={selectedPatientId || ''} onValueChange={setSelectedPatientId}>
                 <SelectTrigger className="mt-1">
                   <SelectValue placeholder="Choose a patient..." />
