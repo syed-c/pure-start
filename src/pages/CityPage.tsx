@@ -303,9 +303,9 @@ const CityPage = () => {
     ? seoContent.faqs
     : seoContent?.content ? parseFaqFromContent(seoContent.content) : [];
 
-  const pageTitle = seoContent?.meta_title || `Best Dentists in ${cityName}, ${stateAbbr} - Find Dental Clinics`;
-  const pageDescription = seoContent?.meta_description || `Find and book appointments with top-rated dental professionals in ${cityName}, ${stateName}. Compare ${profiles?.length || 0}+ verified clinics.`;
-  const pageH1 = seoContent?.h1 || `Best Dentists in ${locationDisplay}`;
+  const pageTitle = seoContent?.meta_title || `Best Fostering Agencies in ${cityName}, ${stateAbbr} - Find Agencies`;
+  const pageDescription = seoContent?.meta_description || `Find trusted fostering agencies in ${cityName}, ${stateName}. Compare ${profiles?.length || 0}+ Ofsted-rated agencies.`;
+  const pageH1 = seoContent?.h1 || `Fostering Agencies in ${locationDisplay}`;
   
   const faqs = seoFaqs.length > 0 ? seoFaqs.map(f => ({ q: f.question, a: f.answer })) : [
     {
