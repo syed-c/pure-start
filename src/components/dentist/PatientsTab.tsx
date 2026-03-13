@@ -475,7 +475,7 @@ export default function PatientsTab() {
         <CardHeader className="bg-gradient-to-r from-primary/5 to-teal/5 border-b">
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5 text-primary" />
-            Patients ({filteredPatients?.length || 0})
+            Carers ({filteredPatients?.length || 0})
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
