@@ -307,10 +307,10 @@ export default function InsuranceManagementTab() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
-            Private Insurance Providers
+            Accreditations & Memberships
           </CardTitle>
           <CardDescription>
-            Select all insurance providers your clinic accepts
+            Select all accreditations and memberships your agency holds
           </CardDescription>
         </CardHeader>
         <CardContent>
