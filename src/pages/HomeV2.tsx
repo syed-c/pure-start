@@ -536,23 +536,23 @@ const HomeV2 = () => {
       <section className="py-16 md:py-20 bg-primary/5 border-t border-primary/10">
         <div className="container px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4">
-              Ready to Find Your <span className="text-primary">Perfect Dentist?</span>
-            </h2>
-            <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
-              Join thousands of patients across Dubai, Sharjah, and Abu Dhabi who've found exceptional dental care through our platform.
-            </p>
-            <div className="flex flex-wrap justify-center gap-3">
-              <Button size="lg" className="rounded-xl font-semibold h-12 px-8" asChild>
-                <Link to="/search">
-                  Find a Dentist <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="rounded-xl font-semibold h-12 px-8 border-border" asChild>
-                <Link to="/list-your-practice">
-                  <Stethoscope className="mr-2 h-4 w-4" /> I'm a Dentist
-                </Link>
-              </Button>
+             <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4">
+               Ready to Start Your <span className="text-primary">Fostering Journey?</span>
+             </h2>
+             <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
+               Join hundreds of families across the UK who've found their ideal fostering agency through our platform.
+             </p>
+             <div className="flex flex-wrap justify-center gap-3">
+               <Button size="lg" className="rounded-xl font-semibold h-12 px-8" asChild>
+                 <Link to="/search">
+                   Find an Agency <ArrowRight className="ml-2 h-4 w-4" />
+                 </Link>
+               </Button>
+               <Button size="lg" variant="outline" className="rounded-xl font-semibold h-12 px-8 border-border" asChild>
+                 <Link to="/list-your-practice">
+                   <Stethoscope className="mr-2 h-4 w-4" /> I'm an Agency
+                 </Link>
+               </Button>
             </div>
           </div>
         </div>
