@@ -617,7 +617,7 @@ export default function PatientsTab() {
                   <p className="font-medium text-sm capitalize">{selectedPatient.preferred_contact || 'Phone'}</p>
                 </div>
                 <div className="p-3 rounded-xl bg-muted/30">
-                  <p className="text-xs text-muted-foreground mb-1">First Visit</p>
+                  <p className="text-xs text-muted-foreground mb-1">First Contact</p>
                   <p className="font-medium text-sm">
                     {selectedPatient.first_visit_at ? format(new Date(selectedPatient.first_visit_at), 'MMM d, yyyy') : 'N/A'}
                   </p>
