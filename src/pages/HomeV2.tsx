@@ -367,9 +367,9 @@ const HomeV2 = () => {
               ))}
             </div>
             <div className="md:hidden text-center mt-6">
-              <Link to="/services" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
-                View All Services <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
+               <Link to="/categories" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+                 View All Categories <ArrowRight className="h-3.5 w-3.5" />
+               </Link>
             </div>
           </div>
         </section>
