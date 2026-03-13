@@ -262,14 +262,14 @@ export default function InsuranceManagementTab() {
       {/* Info Banner */}
       <Card className="border-blue-200 bg-blue-50">
         <CardContent className="p-4">
-          <div className="flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5" />
-            <div className="text-sm text-blue-800">
-              <p className="font-medium">Why add insurance information?</p>
-              <p className="text-blue-700">
-                Patients often search for dentists that accept their insurance. By listing accepted insurances, 
-                your clinic will appear in relevant search results and insurance-specific pages.
-              </p>
+            <div className="flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5" />
+              <div className="text-sm text-blue-800">
+                <p className="font-medium">Why add regulatory information?</p>
+                <p className="text-blue-700">
+                  Prospective carers search for agencies with proper accreditations. By listing your regulatory bodies, 
+                  your agency will appear in relevant search results and gain trust with potential foster carers.
+                </p>
             </div>
           </div>
         </CardContent>
