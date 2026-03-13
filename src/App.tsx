@@ -207,9 +207,10 @@ const App = () => (
                 <Route path="/insurance/:insuranceSlug/:emirateSlug" element={<InsuranceDetailPage />} />
                 <Route path="/insurance/:insuranceSlug/:emirateSlug/:citySlug" element={<InsuranceDetailPage />} />
                 
-                {/* Business */}
+                {/* Business - Agency listing */}
                 <Route path="/claim-profile" element={<ClaimProfilePage />} />
-                <Route path="/list-your-practice" element={<ListYourPracticePage />} />
+                <Route path="/list-your-agency" element={<ListYourPracticePage />} />
+                <Route path="/list-your-practice" element={<Navigate to="/list-your-agency" replace />} />
                 <Route path="/list-your-practice/success" element={<ListYourPracticeSuccessPage />} />
                 <Route path="/review/:clinicId" element={<ReviewFunnelPage />} />
                 <Route path="/rq/:requestCode" element={<ReviewRequestPage />} />
