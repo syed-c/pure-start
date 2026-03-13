@@ -118,7 +118,7 @@ const HomeV2 = () => {
         <div className="absolute inset-0">
           <img 
             src={heroDentalFamily} 
-            alt="Happy family at dental clinic" 
+            alt="Happy foster family" 
             className="w-full h-full object-cover"
             loading="eager"
           />
