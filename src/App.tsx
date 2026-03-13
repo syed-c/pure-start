@@ -150,9 +150,9 @@ const App = () => (
                 <Route path="/search" element={<SearchPage />} />
                 <Route path="/find-agency" element={<SearchPage />} />
                 
-                {/* Directory - Services */}
-                <Route path="/services" element={<ServicesPage />} />
-                <Route path="/services/:serviceSlug" element={<ServicePage />} />
+                {/* Directory - Categories (formerly Services) */}
+                <Route path="/categories" element={<ServicesPage />} />
+                <Route path="/categories/:serviceSlug" element={<ServicePage />} />
 
                 {/* Directory - Profiles - Exact slug match only, extra paths = 404 */}
                 <Route path="/clinic/:clinicSlug" element={<ClinicPage />} />
