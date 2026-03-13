@@ -141,7 +141,7 @@ export default function ServicesTab() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['clinic-treatments'] });
-      toast.success('Treatment added');
+      toast.success('Fostering type added');
       setIsAddingService(false);
       setSelectedTreatment(null);
       setPriceFrom('');
