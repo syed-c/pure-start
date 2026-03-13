@@ -154,11 +154,11 @@ const App = () => (
                 <Route path="/categories" element={<ServicesPage />} />
                 <Route path="/categories/:serviceSlug" element={<ServicePage />} />
 
-                {/* Directory - Profiles - Exact slug match only, extra paths = 404 */}
+                {/* Directory - Agency Profiles */}
                 <Route path="/clinic/:clinicSlug" element={<ClinicPage />} />
                 <Route path="/clinic/:clinicSlug/*" element={<NotFound />} />
-                <Route path="/dentist/:dentistSlug" element={<DentistPage />} />
-                <Route path="/dentist/:dentistSlug/*" element={<NotFound />} />
+                <Route path="/agency/:clinicSlug" element={<ClinicPage />} />
+                <Route path="/agency/:clinicSlug/*" element={<NotFound />} />
 
                 {/* Directory - State Pages (e.g., /california, /massachusetts) */}
                 <Route path="/:stateSlug" element={<StatePage />} />
