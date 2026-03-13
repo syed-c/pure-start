@@ -300,9 +300,9 @@ export default function ServicesTab() {
               {/* Pricing */}
               <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-700/50">
                 <div className="space-y-1">
-                  <Label className="text-xs text-white/60">Price From (USD)</Label>
+                  <Label className="text-xs text-white/60">Price From (£)</Label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40">$</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40">£</span>
                     <Input
                       type="number"
                       value={priceFrom}
