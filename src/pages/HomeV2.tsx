@@ -433,35 +433,35 @@ const HomeV2 = () => {
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-center">
             <motion.div {...fadeUp}>
               <div className="rounded-2xl overflow-hidden shadow-lg">
-                <img src={dentalPracticeGrowth} alt="Grow your dental practice" className="w-full h-auto object-cover aspect-[4/3]" loading="lazy" />
-              </div>
-            </motion.div>
-            <motion.div {...fadeUp} transition={{ delay: 0.1 }}>
-              <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-3">
-                Grow Your Practice with <span className="text-primary">AppointPanda</span>
-              </h2>
-              <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
-                Join dental professionals across the UAE who trust our platform to reach patients, manage bookings, and build their reputation.
-              </p>
-              <div className="space-y-3 mb-6">
-                {[
-                  "Reach patients across all 7 Emirates",
-                  "Smart scheduling reduces no-shows",
-                  "Collect & showcase patient reviews",
-                  "Free listing to get started",
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-2.5">
-                    <CheckCircle className="h-4 w-4 text-primary shrink-0" />
-                    <span className="text-sm text-foreground">{item}</span>
-                  </div>
-                ))}
-              </div>
-              <Button className="rounded-xl font-semibold" asChild>
-                <Link to="/list-your-practice">
-                  List Your Practice Free <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </motion.div>
+                 <img src={dentalPracticeGrowth} alt="Grow your fostering agency" className="w-full h-auto object-cover aspect-[4/3]" loading="lazy" />
+               </div>
+             </motion.div>
+             <motion.div {...fadeUp} transition={{ delay: 0.1 }}>
+               <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-3">
+                 Grow Your Agency with <span className="text-primary">Foster Connect</span>
+               </h2>
+               <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
+                 Join fostering agencies across the UK who trust our platform to connect with prospective carers and build their reputation.
+               </p>
+               <div className="space-y-3 mb-6">
+                 {[
+                   "Reach carers across all UK nations",
+                   "Showcase your Ofsted rating and reviews",
+                   "Manage enquiries from prospective carers",
+                   "Free listing to get started",
+                 ].map((item, i) => (
+                   <div key={i} className="flex items-center gap-2.5">
+                     <CheckCircle className="h-4 w-4 text-primary shrink-0" />
+                     <span className="text-sm text-foreground">{item}</span>
+                   </div>
+                 ))}
+               </div>
+               <Button className="rounded-xl font-semibold" asChild>
+                 <Link to="/list-your-practice">
+                   List Your Agency Free <ArrowRight className="ml-2 h-4 w-4" />
+                 </Link>
+               </Button>
+             </motion.div>
           </div>
         </div>
       </section>
