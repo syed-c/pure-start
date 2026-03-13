@@ -72,21 +72,21 @@ const HomeV2 = () => {
 
   const testimonials = [
     {
-      name: "Fatima A.",
-      location: "Dubai Marina, Dubai",
-      text: "Found an amazing cosmetic dentist in JLT within my budget. The whole process took less than 5 minutes!",
+      name: "Sarah T.",
+      location: "London, England",
+      text: "Foster Connect helped us find the perfect agency. The whole process was straightforward and we felt supported throughout.",
       rating: 5,
     },
     {
-      name: "Ahmed R.",
-      location: "Al Majaz, Sharjah",
-      text: "I was nervous about finding a new dentist after moving to Sharjah. AppointPanda made it so easy to compare clinics.",
+      name: "James R.",
+      location: "Birmingham, England",
+      text: "We were nervous about fostering but the agency we found through Foster Connect provided amazing training and support.",
       rating: 5,
     },
     {
-      name: "Sarah K.",
-      location: "Khalifa City, Abu Dhabi",
-      text: "The reviews and AED pricing were super helpful. Found a great pediatric dentist for my kids!",
+      name: "Maria K.",
+      location: "Manchester, England",
+      text: "The reviews and agency profiles were super helpful. Found a great therapeutic fostering agency near us!",
       rating: 5,
     },
   ];
