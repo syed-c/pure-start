@@ -281,10 +281,10 @@ const HomeV2 = () => {
       <section className="py-16 md:py-20 bg-muted/30">
         <div className="container px-4">
           <motion.div {...fadeUp} className="text-center mb-10">
-            <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-2">
-              Browse by <span className="text-primary">Emirate</span>
-            </h2>
-            <p className="text-sm text-muted-foreground">Find dental clinics across all seven UAE Emirates</p>
+             <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-2">
+               Browse by <span className="text-primary">Region</span>
+             </h2>
+             <p className="text-sm text-muted-foreground">Find fostering agencies across all UK nations</p>
           </motion.div>
 
           <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto">
