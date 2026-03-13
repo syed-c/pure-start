@@ -223,7 +223,7 @@ const adminTabGroups = [
   {
     label: 'Marketplace',
     tabs: [
-      { id: 'clinics', label: 'Dental Offices', icon: Building2 },
+      { id: 'clinics', label: 'Agencies', icon: Building2 },
       { id: 'users', label: 'Users', icon: Users },
       { id: 'claims', label: 'Claims', icon: Shield },
       { id: 'treatments', label: 'Treatments', icon: Stethoscope },
