@@ -358,7 +358,7 @@ const StatePage = () => {
             </h1>
             
             <p className="text-lg md:text-xl text-white/40 mb-8 max-w-2xl mx-auto">
-              Discover top-rated dental professionals across {stateName}. Browse by city, compare reviews, and book your appointment online.
+              Discover trusted fostering agencies across {stateName}. Browse by city, compare reviews, and start your fostering journey.
             </p>
 
             <div className="flex flex-wrap justify-center gap-3 mb-8">
