@@ -309,20 +309,20 @@ const CityPage = () => {
   
   const faqs = seoFaqs.length > 0 ? seoFaqs.map(f => ({ q: f.question, a: f.answer })) : [
     {
-      q: `How do I find a good dentist in ${cityName}?`,
-      a: `Browse our verified list of dentists in ${cityName}. Look for verified badges, patient reviews, and specializations that match your needs.`,
+      q: `How do I find a fostering agency in ${cityName}?`,
+      a: `Browse our verified list of fostering agencies in ${cityName}. Look for Ofsted ratings, carer reviews, and fostering types that match your needs.`,
     },
     {
-      q: `Are the dentists in ${cityName} verified?`,
-      a: `All dentists on our platform are licensed professionals. Profiles with the "Verified" badge have claimed and completed our verification process.`,
+      q: `Are the agencies in ${cityName} Ofsted registered?`,
+      a: `All agencies listed are Ofsted-registered or regulated by the relevant authority. Agencies with the "Verified" badge have completed our additional verification process.`,
     },
     {
-      q: `How much does dental treatment cost in ${cityName}?`,
-      a: `Dental costs vary by treatment. A basic checkup typically ranges from 150-400 AED, while specialized treatments can range from 2,500-6,000 AED.`,
+      q: `What types of fostering are available in ${cityName}?`,
+      a: `Agencies in ${cityName} offer various fostering types including emergency, respite, long-term, short-term, therapeutic, and parent & child fostering.`,
     },
     {
-      q: `Can I book emergency dental appointments in ${cityName}?`,
-      a: `Yes, many clinics in ${cityName} offer same-day emergency appointments. Use our search to find clinics with emergency availability.`,
+      q: `How do I become a foster carer in ${cityName}?`,
+      a: `Contact agencies in ${cityName} through our directory. The process typically takes 4-6 months and includes training, home visits, and assessments.`,
     },
   ];
 
