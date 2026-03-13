@@ -79,8 +79,8 @@ export function BeforeAfterGallery({ clinicId, isClaimed }: BeforeAfterGalleryPr
         </div>
         <h3 className="text-lg font-bold text-foreground mb-2">No Cases Yet</h3>
         <p className="text-muted-foreground text-sm max-w-md mx-auto">
-          This clinic hasn't added any before & after cases yet.
-          Check back later to see their amazing transformations!
+          This agency hasn't added any case studies yet.
+          Check back later to see their success stories!
         </p>
       </div>
     );

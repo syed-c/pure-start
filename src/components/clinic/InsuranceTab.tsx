@@ -75,10 +75,10 @@ export function InsuranceTab({ clinicId, isClaimed }: InsuranceTabProps) {
       <div className="space-y-6">
         <div className="text-center py-8 bg-muted/30 rounded-2xl">
           <Shield className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
-          <h3 className="text-lg font-bold text-foreground mb-2">Insurance Not Listed Yet</h3>
+          <h3 className="text-lg font-bold text-foreground mb-2">Accreditations Not Listed Yet</h3>
           <p className="text-muted-foreground text-sm">
-            This clinic hasn't added their accepted insurances yet.
-            Please contact them directly to verify coverage.
+            This agency hasn't added their accreditations yet.
+            Please contact them directly to verify.
           </p>
         </div>
 

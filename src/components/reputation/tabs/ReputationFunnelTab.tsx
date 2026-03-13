@@ -236,7 +236,7 @@ export default function ReputationFunnelTab({ clinicId, isAdmin }: Props) {
               <div>
                 <Label>Enable Review Funnel</Label>
                 <p className="text-sm text-muted-foreground">
-                  Route patients through satisfaction check
+                  Route carers through satisfaction check
                 </p>
               </div>
               <Switch
