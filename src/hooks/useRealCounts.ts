@@ -70,6 +70,7 @@ export function useRealCounts() {
 
       return {
         clinics: clinicCount,
+        agencies: clinicCount,
         states: activeStateIds.length,
         cities: citiesCount,
         dentists: dentistCount,
