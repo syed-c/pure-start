@@ -28,37 +28,36 @@ const AboutPage = () => {
   const { data: seoContent } = useSeoPageContent("about");
 
   const values = [
-    { icon: Heart, title: "Patient First", description: "Every decision we make prioritizes patient welfare and satisfaction.", color: "from-coral/20 to-pink/10" },
-    { icon: Shield, title: "Trust & Transparency", description: "We verify every dental professional to ensure quality and reliability.", color: "from-primary/20 to-teal/10" },
-    { icon: Target, title: "Excellence", description: "We partner only with clinics that meet our high standards of care.", color: "from-gold/20 to-amber-500/10" },
-    { icon: Users, title: "Community", description: "Building connections between patients and the right dental providers.", color: "from-purple/20 to-indigo-500/10" },
+    { icon: Heart, title: "Children First", description: "Every decision we make prioritises the welfare and safety of children in care.", color: "from-coral/20 to-pink/10" },
+    { icon: Shield, title: "Trust & Transparency", description: "We verify every fostering agency to ensure quality and Ofsted compliance.", color: "from-primary/20 to-teal/10" },
+    { icon: Target, title: "Excellence", description: "We partner only with agencies that meet the highest standards of foster care.", color: "from-gold/20 to-amber-500/10" },
+    { icon: Users, title: "Community", description: "Building connections between prospective foster carers and trusted agencies.", color: "from-purple/20 to-indigo-500/10" },
   ];
 
   const stats = [
-    { value: counts?.clinics?.toLocaleString() || "6,600+", label: "Dental Practices", icon: Building2 },
-    { value: counts?.cities?.toLocaleString() || "60+", label: "Areas Covered", icon: Globe },
-    { value: "7", label: "Emirates", icon: Star },
-    { value: "4.9", label: "Average Rating", icon: Star },
+    { value: counts?.clinics?.toLocaleString() || "500+", label: "Fostering Agencies", icon: Building2 },
+    { value: counts?.cities?.toLocaleString() || "100+", label: "Cities Covered", icon: Globe },
+    { value: "4", label: "UK Nations", icon: Star },
+    { value: "4.8", label: "Average Rating", icon: Star },
   ];
 
   const milestones = [
-    { year: "2024", title: "Founded", description: "AppointPanda was launched to connect patients with verified dental professionals across the UAE." },
-    { year: "2025", title: "UAE Coverage", description: "Expanded to cover all 7 Emirates with deep area mapping in Dubai and Sharjah." },
-    { year: "2026", title: "Market Leader", description: "Becoming the UAE's most trusted dental directory with DHA-aligned verification standards." },
+    { year: "2025", title: "Founded", description: "Foster Connect was launched to help prospective foster carers find trusted agencies across England and the UK." },
+    { year: "2025", title: "England Coverage", description: "Expanded to cover all major cities across England with Ofsted-rated agency listings." },
+    { year: "2026", title: "UK Leader", description: "Becoming the UK's most trusted fostering agency directory with comprehensive coverage." },
   ];
 
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || "About AppointPanda | UAE's Trusted Dental Directory"}
-        description={seoContent?.meta_description || "Learn about AppointPanda, the UAE's trusted platform connecting patients with verified dental professionals across all Emirates."}
+        title={seoContent?.meta_title || "About Foster Connect | UK's Trusted Fostering Agency Directory"}
+        description={seoContent?.meta_description || "Learn about Foster Connect, the UK's trusted platform connecting prospective foster carers with verified fostering agencies across England."}
         canonical="/about/"
-        keywords={['about appointpanda', 'dental directory', 'find dentist', 'dental care platform']}
+        keywords={['about foster connect', 'fostering directory', 'find fostering agency', 'foster care platform']}
       />
 
       {/* Dark Hero Section */}
       <section className="relative bg-dark-section text-dark-section-foreground overflow-hidden">
-        {/* Background Effects */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.15),transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(139,92,246,0.1),transparent_50%)]" />
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
@@ -72,23 +71,23 @@ const AboutPage = () => {
             </div>
             
             <h1 className="font-display text-4xl md:text-6xl font-bold mb-6">
-              Making Quality Dental Care{" "}
+              Making Fostering{" "}
               <span className="text-gradient">Accessible</span>
             </h1>
             
             <p className="text-xl md:text-2xl text-dark-section-foreground/70 max-w-2xl mx-auto mb-8">
-              The UAE's trusted platform connecting patients with verified dental professionals. Your smile, our mission.
+              The UK's trusted platform connecting prospective foster carers with verified fostering agencies. Every child deserves a safe home.
             </p>
 
             <div className="flex flex-wrap justify-center gap-4">
               <Button asChild size="lg" className="rounded-2xl font-bold shadow-glow">
                 <Link to="/search">
-                  Find a Dentist
+                  Find an Agency
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="rounded-2xl font-bold border-white/40 text-white bg-white/10 hover:bg-white/20">
-                <Link to="/list-your-practice">List Your Practice</Link>
+                <Link to="/list-your-practice">List Your Agency</Link>
               </Button>
             </div>
           </div>
@@ -116,18 +115,18 @@ const AboutPage = () => {
           <div>
             <span className="text-primary text-sm font-bold uppercase tracking-wider">Our Mission</span>
             <h2 className="font-display text-3xl md:text-4xl font-bold mt-2 mb-6">
-              Connecting Patients with <span className="text-primary">Trusted Dentists</span>
+              Connecting Carers with <span className="text-primary">Trusted Agencies</span>
             </h2>
             <p className="text-muted-foreground text-lg leading-relaxed mb-6">
-              We believe everyone deserves access to quality dental care. AppointPanda was founded with a simple mission: 
-              to connect patients across the UAE with trusted, verified dental professionals aligned with DHA and MOHAP standards.
+              We believe every child deserves a safe and loving home. Foster Connect was founded with a simple mission: 
+              to connect prospective foster carers across the UK with trusted, Ofsted-verified fostering agencies.
             </p>
             <p className="text-muted-foreground leading-relaxed mb-6">
-              Through our platform, patients can easily find, compare, and book appointments with dentists who meet 
-              our rigorous verification standards. We're not just a directory—we're a trusted partner in your dental health journey.
+              Through our platform, prospective carers can easily find, compare, and enquire with agencies that meet 
+              our rigorous standards. We're not just a directory — we're a trusted partner in your fostering journey.
             </p>
             <div className="grid sm:grid-cols-2 gap-3">
-              {["Licensed Professionals Only", "Verified Clinic Information", "Real Patient Reviews", "Easy Online Booking"].map((item, i) => (
+              {["Ofsted Registered Agencies", "Verified Agency Information", "Real Carer Reviews", "Free to Use"].map((item, i) => (
                 <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-muted/50">
                   <CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
                   <span className="font-medium">{item}</span>
@@ -138,23 +137,22 @@ const AboutPage = () => {
           <div className="relative">
             <div className="aspect-square rounded-3xl overflow-hidden shadow-elevated">
               <img
-                src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800"
-                alt="Professional team connecting patients with dental care"
+                src="https://images.unsplash.com/photo-1536640712-4d4c36ff0e4e?auto=format&fit=crop&q=80&w=800"
+                alt="Foster family spending time together"
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="absolute -bottom-6 -left-6 w-48 h-48 bg-primary/10 rounded-3xl blur-2xl" />
             <div className="absolute -top-6 -right-6 w-32 h-32 bg-purple/10 rounded-3xl blur-2xl" />
             
-            {/* Floating stat card */}
             <div className="absolute -bottom-4 -right-4 card-modern p-4 shadow-elevated">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
                   <TrendingUp className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{counts?.clinics?.toLocaleString() || "6,600+"}</p>
-                  <p className="text-sm text-muted-foreground">Practices Listed</p>
+                  <p className="text-2xl font-bold">{counts?.clinics?.toLocaleString() || "500+"}</p>
+                  <p className="text-sm text-muted-foreground">Agencies Listed</p>
                 </div>
               </div>
             </div>
@@ -186,8 +184,8 @@ const AboutPage = () => {
       <Section size="lg">
         <SectionHeader
           label="Our Journey"
-          title="Building the UAE's"
-          highlight="Dental Directory"
+          title="Building the UK's"
+          highlight="Fostering Directory"
         />
         <div className="max-w-3xl mx-auto">
           <div className="space-y-8">
@@ -213,20 +211,20 @@ const AboutPage = () => {
       <Section variant="dark" size="lg">
         <div className="text-center">
           <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 text-dark-section-foreground">
-            Ready to find your dentist?
+            Ready to start your fostering journey?
           </h2>
           <p className="text-dark-section-foreground/70 mb-8 max-w-xl mx-auto">
-            Join thousands of patients who've found their perfect dental care provider through AppointPanda.
+            Join hundreds of families who've found their ideal fostering agency through Foster Connect.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button asChild size="lg" className="rounded-2xl font-bold shadow-glow">
               <Link to="/search">
-                Find a Dentist
+                Find an Agency
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="rounded-2xl font-bold border-white/40 text-white bg-white/10 hover:bg-white/20">
-              <Link to="/list-your-practice">List Your Practice</Link>
+              <Link to="/list-your-practice">List Your Agency</Link>
             </Button>
           </div>
         </div>
