@@ -133,9 +133,9 @@ const HomeV2 = () => {
           </motion.div>
 
           <motion.h1 {...fadeUp} transition={{ delay: 0.1 }} className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-background leading-[1.15] mb-4 max-w-3xl mx-auto">
-            Find Your Perfect{" "}
-            <span className="text-primary">Dentist</span>{" "}
-            in the UAE
+            Find Your Trusted{" "}
+            <span className="text-primary">Fostering Agency</span>{" "}
+            in the UK
           </motion.h1>
 
           <motion.p {...fadeUp} transition={{ delay: 0.2 }} className="text-base md:text-lg text-background/80 leading-relaxed mb-8 max-w-xl mx-auto">
