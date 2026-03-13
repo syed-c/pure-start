@@ -178,7 +178,7 @@ const CityPage = () => {
         name: c.name,
         slug: c.slug,
         type: 'clinic' as const,
-        specialty: 'Dental Clinic',
+        specialty: 'Fostering Agency',
         location: c.city ? `${c.city.name}, ${c.city.state?.abbreviation || ''}` : '',
         rating: c.rating || 0,
         reviewCount: c.review_count || 0,
