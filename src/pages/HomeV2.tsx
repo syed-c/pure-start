@@ -195,9 +195,9 @@ const HomeV2 = () => {
 
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {[
-              { step: "01", title: "Search", description: "Select your emirate, area, and the dental service you need.", icon: Search, gradient: "from-primary/15 to-primary/5" },
-              { step: "02", title: "Compare", description: "Browse verified clinic profiles, real reviews, and AED pricing.", icon: Star, gradient: "from-gold/15 to-gold/5" },
-              { step: "03", title: "Book", description: "Schedule your appointment online in under 60 seconds.", icon: Calendar, gradient: "from-primary/15 to-teal/5" },
+              { step: "01", title: "Search", description: "Select your region, city, and the type of fostering you're interested in.", icon: Search, gradient: "from-primary/15 to-primary/5" },
+              { step: "02", title: "Compare", description: "Browse agency profiles, Ofsted ratings, and real carer reviews.", icon: Star, gradient: "from-gold/15 to-gold/5" },
+              { step: "03", title: "Enquire", description: "Contact your chosen agency and start your fostering journey.", icon: Calendar, gradient: "from-primary/15 to-teal/5" },
             ].map((item, i) => (
               <motion.div 
                 key={i} 
