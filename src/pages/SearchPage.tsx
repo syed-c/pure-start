@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import {
   Search, MapPin, Star, Shield, ChevronRight,
-  Filter, X, Building2, User, Loader2, Stethoscope,
+  Filter, X, Building2, User, Loader2, Home,
 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -22,11 +22,10 @@ import { getLetterAvatarUrl } from "@/hooks/useProfiles";
 // ── Types ──────────────────────────────────────────────────
 interface SearchFilters {
   query: string;
-  emirateId: string;
-  areaId: string;
-  treatmentId: string;
-  insuranceId: string;
-  gender: string;
+  regionId: string;
+  cityId: string;
+  fosteringTypeId: string;
+  agencyType: string;
   minRating: number;
   verifiedOnly: boolean;
   sortBy: string;
@@ -36,27 +35,25 @@ interface SearchResultItem {
   id: string;
   name: string;
   slug: string;
-  type: "dentist" | "clinic";
+  type: "agency";
   title?: string;
   rating: number;
   reviewCount: number;
   image?: string;
   isVerified: boolean;
-  clinicName?: string;
-  clinicSlug?: string;
-  emirateName?: string;
-  areaName?: string;
-  languages?: string[];
-  gender?: string;
-  specializations?: string[];
+  agencyName?: string;
+  agencySlug?: string;
+  regionName?: string;
+  cityName?: string;
+  fosteringTypes?: string[];
 }
 
 const ITEMS_PER_PAGE = 24;
 
-const GENDER_OPTIONS = [
+const AGENCY_TYPE_OPTIONS = [
   { label: "All", value: "" },
-  { label: "Male", value: "male" },
-  { label: "Female", value: "female" },
+  { label: "Independent", value: "independent" },
+  { label: "Local Authority", value: "local-authority" },
 ];
 
 const RATING_OPTIONS = [
@@ -73,9 +70,9 @@ const SORT_OPTIONS = [
 ];
 
 // ── Data hooks ─────────────────────────────────────────────
-function useEmirates() {
+function useRegions() {
   return useQuery({
-    queryKey: ["search-emirates"],
+    queryKey: ["search-regions"],
     queryFn: async () => {
       const { data } = await supabase
         .from("states")
@@ -88,47 +85,31 @@ function useEmirates() {
   });
 }
 
-function useAreas(emirateId: string) {
+function useCities(regionId: string) {
   return useQuery({
-    queryKey: ["search-areas", emirateId],
+    queryKey: ["search-cities", regionId],
     queryFn: async () => {
-      if (!emirateId) return [];
-      // Get city IDs for this emirate
+      if (!regionId) return [];
       const { data: cities } = await supabase
         .from("cities")
         .select("id, name, slug")
-        .eq("state_id", emirateId)
+        .eq("state_id", regionId)
         .eq("is_active", true)
         .order("name");
       return cities || [];
     },
-    enabled: !!emirateId,
+    enabled: !!regionId,
     staleTime: 1000 * 60 * 30,
   });
 }
 
-function useTreatments() {
+function useFosteringTypes() {
   return useQuery({
-    queryKey: ["search-treatments"],
+    queryKey: ["search-fostering-types"],
     queryFn: async () => {
       const { data } = await supabase
         .from("treatments")
         .select("id, name, slug")
-        .eq("is_active", true)
-        .order("name");
-      return data || [];
-    },
-    staleTime: 1000 * 60 * 30,
-  });
-}
-
-function useInsurances() {
-  return useQuery({
-    queryKey: ["search-insurances"],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("insurances")
-        .select("id, name")
         .eq("is_active", true)
         .order("name");
       return data || [];
@@ -144,144 +125,55 @@ function useSearchResults(filters: SearchFilters, page: number) {
     queryFn: async () => {
       const results: SearchResultItem[] = [];
 
-      // Build eligible clinic IDs based on filters
-      let eligibleClinicIds: Set<string> | null = null;
+      let eligibleAgencyIds: Set<string> | null = null;
 
-      // Filter by area (city) 
-      if (filters.areaId) {
-        const { data: clinics } = await supabase
+      // Filter by city
+      if (filters.cityId) {
+        const { data: agencies } = await supabase
           .from("clinics")
           .select("id")
-          .eq("city_id", filters.areaId)
+          .eq("city_id", filters.cityId)
           .eq("is_active", true);
-        eligibleClinicIds = new Set((clinics || []).map((c) => c.id));
-        if (eligibleClinicIds.size === 0) return { results: [], total: 0 };
-      } else if (filters.emirateId) {
-        // Get all cities in this emirate
+        eligibleAgencyIds = new Set((agencies || []).map((c) => c.id));
+        if (eligibleAgencyIds.size === 0) return { results: [], total: 0 };
+      } else if (filters.regionId) {
         const { data: cities } = await supabase
           .from("cities")
           .select("id")
-          .eq("state_id", filters.emirateId)
+          .eq("state_id", filters.regionId)
           .eq("is_active", true);
         const cityIds = (cities || []).map((c) => c.id);
         if (cityIds.length === 0) return { results: [], total: 0 };
 
-        const { data: clinics } = await supabase
+        const { data: agencies } = await supabase
           .from("clinics")
           .select("id")
           .in("city_id", cityIds)
           .eq("is_active", true);
-        eligibleClinicIds = new Set((clinics || []).map((c) => c.id));
-        if (eligibleClinicIds.size === 0) return { results: [], total: 0 };
+        eligibleAgencyIds = new Set((agencies || []).map((c) => c.id));
+        if (eligibleAgencyIds.size === 0) return { results: [], total: 0 };
       }
 
-      // Filter by treatment
-      if (filters.treatmentId) {
+      // Filter by fostering type
+      if (filters.fosteringTypeId) {
         const { data: ct } = await supabase
           .from("clinic_treatments")
           .select("clinic_id")
-          .eq("treatment_id", filters.treatmentId);
-        const treatmentClinicIds = new Set((ct || []).map((c) => c.clinic_id));
-        if (treatmentClinicIds.size > 0) {
-          if (eligibleClinicIds) {
-            eligibleClinicIds = new Set([...eligibleClinicIds].filter((id) => treatmentClinicIds.has(id)));
+          .eq("treatment_id", filters.fosteringTypeId);
+        const typeAgencyIds = new Set((ct || []).map((c) => c.clinic_id));
+        if (typeAgencyIds.size > 0) {
+          if (eligibleAgencyIds) {
+            eligibleAgencyIds = new Set([...eligibleAgencyIds].filter((id) => typeAgencyIds.has(id)));
           } else {
-            eligibleClinicIds = treatmentClinicIds;
+            eligibleAgencyIds = typeAgencyIds;
           }
         }
       }
 
-      // Filter by insurance
-      if (filters.insuranceId) {
-        const { data: ci } = await supabase
-          .from("clinic_insurances")
-          .select("clinic_id")
-          .eq("insurance_id", filters.insuranceId);
-        const insuranceClinicIds = new Set((ci || []).map((c) => c.clinic_id));
-        if (insuranceClinicIds.size > 0) {
-          if (eligibleClinicIds) {
-            eligibleClinicIds = new Set([...eligibleClinicIds].filter((id) => insuranceClinicIds.has(id)));
-          } else {
-            eligibleClinicIds = insuranceClinicIds;
-          }
-        }
-        if (eligibleClinicIds && eligibleClinicIds.size === 0) return { results: [], total: 0 };
-      }
+      const agencyIdArray = eligibleAgencyIds ? [...eligibleAgencyIds] : null;
 
-      const clinicIdArray = eligibleClinicIds ? [...eligibleClinicIds] : null;
-
-      // Fetch dentists
-      let dentistQuery = supabase
-        .from("dentists")
-        .select(`
-          id, name, slug, title, image_url, rating, review_count, languages, gender, specializations,
-          clinic:clinics(
-            id, name, slug, verification_status, claim_status, cover_image_url,
-            city:cities(name, slug, state_id, state:states(name, slug)),
-            area:areas(name, slug)
-          )
-        `)
-        .eq("is_active", true);
-
-      if (clinicIdArray && clinicIdArray.length > 0) {
-        dentistQuery = dentistQuery.in("clinic_id", clinicIdArray);
-      } else if (clinicIdArray && clinicIdArray.length === 0) {
-        dentistQuery = dentistQuery.eq("id", "impossible-match");
-      }
-
-      if (filters.gender) {
-        dentistQuery = dentistQuery.eq("gender", filters.gender);
-      }
-      if (filters.minRating > 0) {
-        dentistQuery = dentistQuery.gte("rating", filters.minRating);
-      }
-      if (filters.query) {
-        dentistQuery = dentistQuery.ilike("name", `%${filters.query}%`);
-      }
-
-      // Sort
-      if (filters.sortBy === "reviews") {
-        dentistQuery = dentistQuery.order("review_count", { ascending: false });
-      } else if (filters.sortBy === "name") {
-        dentistQuery = dentistQuery.order("name", { ascending: true });
-      } else {
-        dentistQuery = dentistQuery.order("rating", { ascending: false });
-      }
-
-      const { data: dentists } = await dentistQuery;
-
-      const clinicsWithDentists = new Set<string>();
-
-      if (dentists) {
-        for (const d of dentists) {
-          const clinic = d.clinic as any;
-          if (clinic?.id) clinicsWithDentists.add(clinic.id);
-          const isVerified = clinic?.claim_status === "claimed" && clinic?.verification_status === "verified";
-          if (filters.verifiedOnly && !isVerified) continue;
-
-          results.push({
-            id: d.id,
-            name: d.name,
-            slug: d.slug,
-            type: "dentist",
-            title: d.title || "General Dentist",
-            rating: Number(d.rating) || 0,
-            reviewCount: d.review_count || 0,
-            image: d.image_url || clinic?.cover_image_url || undefined,
-            isVerified,
-            clinicName: clinic?.name,
-            clinicSlug: clinic?.slug,
-            emirateName: clinic?.city?.state?.name,
-            areaName: clinic?.area?.name || clinic?.city?.name,
-            languages: d.languages || [],
-            gender: d.gender || undefined,
-            specializations: d.specializations || [],
-          });
-        }
-      }
-
-      // Fetch clinics without dentists
-      let clinicQuery = supabase
+      // Fetch agencies
+      let agencyQuery = supabase
         .from("clinics")
         .select(`
           id, name, slug, cover_image_url, rating, review_count, verification_status, claim_status,
@@ -290,48 +182,49 @@ function useSearchResults(filters: SearchFilters, page: number) {
         `)
         .eq("is_active", true);
 
-      if (clinicIdArray && clinicIdArray.length > 0) {
-        clinicQuery = clinicQuery.in("id", clinicIdArray);
-      } else if (filters.areaId) {
-        clinicQuery = clinicQuery.eq("city_id", filters.areaId);
+      if (agencyIdArray && agencyIdArray.length > 0) {
+        agencyQuery = agencyQuery.in("id", agencyIdArray);
+      } else if (agencyIdArray && agencyIdArray.length === 0) {
+        agencyQuery = agencyQuery.eq("id", "impossible-match");
       }
 
       if (filters.minRating > 0) {
-        clinicQuery = clinicQuery.gte("rating", filters.minRating);
+        agencyQuery = agencyQuery.gte("rating", filters.minRating);
       }
       if (filters.query) {
-        clinicQuery = clinicQuery.ilike("name", `%${filters.query}%`);
+        agencyQuery = agencyQuery.ilike("name", `%${filters.query}%`);
       }
+
+      // Sort
       if (filters.sortBy === "reviews") {
-        clinicQuery = clinicQuery.order("review_count", { ascending: false });
+        agencyQuery = agencyQuery.order("review_count", { ascending: false });
       } else if (filters.sortBy === "name") {
-        clinicQuery = clinicQuery.order("name", { ascending: true });
+        agencyQuery = agencyQuery.order("name", { ascending: true });
       } else {
-        clinicQuery = clinicQuery.order("rating", { ascending: false });
+        agencyQuery = agencyQuery.order("rating", { ascending: false });
       }
 
-      const { data: clinics } = await clinicQuery;
+      const { data: agencies } = await agencyQuery;
 
-      if (clinics) {
-        for (const c of clinics) {
-          if (clinicsWithDentists.has(c.id)) continue;
-          const isVerified = c.claim_status === "claimed" && c.verification_status === "verified";
+      if (agencies) {
+        for (const a of agencies) {
+          const isVerified = a.claim_status === "claimed" && a.verification_status === "verified";
           if (filters.verifiedOnly && !isVerified) continue;
 
           results.push({
-            id: c.id,
-            name: c.name,
-            slug: c.slug,
-            type: "clinic",
-            title: "Dental Clinic",
-            rating: Number(c.rating) || 0,
-            reviewCount: c.review_count || 0,
-            image: c.cover_image_url || undefined,
+            id: a.id,
+            name: a.name,
+            slug: a.slug,
+            type: "agency",
+            title: "Fostering Agency",
+            rating: Number(a.rating) || 0,
+            reviewCount: a.review_count || 0,
+            image: a.cover_image_url || undefined,
             isVerified,
-            clinicName: c.name,
-            clinicSlug: c.slug,
-            emirateName: (c.city as any)?.state?.name,
-            areaName: (c.area as any)?.name || (c.city as any)?.name,
+            agencyName: a.name,
+            agencySlug: a.slug,
+            regionName: (a.city as any)?.state?.name,
+            cityName: (a.area as any)?.name || (a.city as any)?.name,
           });
         }
       }
@@ -360,26 +253,24 @@ export default function SearchPage() {
 
   const [filters, setFilters] = useState<SearchFilters>({
     query: searchParams.get("q") || "",
-    emirateId: searchParams.get("emirate") || "",
-    areaId: searchParams.get("area") || "",
-    treatmentId: searchParams.get("treatment") || "",
-    insuranceId: searchParams.get("insurance") || "",
-    gender: searchParams.get("gender") || "",
+    regionId: searchParams.get("region") || "",
+    cityId: searchParams.get("city") || "",
+    fosteringTypeId: searchParams.get("type") || "",
+    agencyType: searchParams.get("agencyType") || "",
     minRating: Number(searchParams.get("rating")) || 0,
     verifiedOnly: searchParams.get("verified") === "true",
     sortBy: searchParams.get("sort") || "rating",
   });
 
-  const { data: emirates } = useEmirates();
-  const { data: areas } = useAreas(filters.emirateId);
-  const { data: treatments } = useTreatments();
-  const { data: insurances } = useInsurances();
+  const { data: regions } = useRegions();
+  const { data: cities } = useCities(filters.regionId);
+  const { data: fosteringTypes } = useFosteringTypes();
   const { data: searchData, isLoading } = useSearchResults(filters, page);
 
-  // Reset area when emirate changes
+  // Reset city when region changes
   useEffect(() => {
-    setFilters((prev) => ({ ...prev, areaId: "" }));
-  }, [filters.emirateId]);
+    setFilters((prev) => ({ ...prev, cityId: "" }));
+  }, [filters.regionId]);
 
   // Reset page on filter change
   useEffect(() => {
@@ -393,11 +284,10 @@ export default function SearchPage() {
   const clearFilters = useCallback(() => {
     setFilters({
       query: "",
-      emirateId: "",
-      areaId: "",
-      treatmentId: "",
-      insuranceId: "",
-      gender: "",
+      regionId: "",
+      cityId: "",
+      fosteringTypeId: "",
+      agencyType: "",
       minRating: 0,
       verifiedOnly: false,
       sortBy: "rating",
@@ -406,11 +296,10 @@ export default function SearchPage() {
 
   const activeFilterCount = useMemo(() => {
     let count = 0;
-    if (filters.emirateId) count++;
-    if (filters.areaId) count++;
-    if (filters.treatmentId) count++;
-    if (filters.insuranceId) count++;
-    if (filters.gender) count++;
+    if (filters.regionId) count++;
+    if (filters.cityId) count++;
+    if (filters.fosteringTypeId) count++;
+    if (filters.agencyType) count++;
     if (filters.minRating > 0) count++;
     if (filters.verifiedOnly) count++;
     return count;
@@ -421,69 +310,56 @@ export default function SearchPage() {
   // ── Filter sidebar content ──────────────────────────────
   const FilterSidebar = () => (
     <div className="space-y-6">
-      {/* Emirate */}
-      <FilterSection title="Emirate" icon={<MapPin className="h-4 w-4" />}>
-        <Select value={filters.emirateId} onValueChange={(v) => updateFilter("emirateId", v === "all" ? "" : v)}>
-          <SelectTrigger className="w-full"><SelectValue placeholder="All Emirates" /></SelectTrigger>
+      {/* Region */}
+      <FilterSection title="Region" icon={<MapPin className="h-4 w-4" />}>
+        <Select value={filters.regionId} onValueChange={(v) => updateFilter("regionId", v === "all" ? "" : v)}>
+          <SelectTrigger className="w-full"><SelectValue placeholder="All Regions" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Emirates</SelectItem>
-            {emirates?.map((e) => (
-              <SelectItem key={e.id} value={e.id}>{e.name}</SelectItem>
+            <SelectItem value="all">All Regions</SelectItem>
+            {regions?.map((r) => (
+              <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>
             ))}
           </SelectContent>
         </Select>
       </FilterSection>
 
-      {/* Area */}
-      {filters.emirateId && areas && areas.length > 0 && (
-        <FilterSection title="Area" icon={<MapPin className="h-4 w-4" />}>
-          <Select value={filters.areaId} onValueChange={(v) => updateFilter("areaId", v === "all" ? "" : v)}>
-            <SelectTrigger className="w-full"><SelectValue placeholder="All Areas" /></SelectTrigger>
+      {/* City */}
+      {filters.regionId && cities && cities.length > 0 && (
+        <FilterSection title="City" icon={<MapPin className="h-4 w-4" />}>
+          <Select value={filters.cityId} onValueChange={(v) => updateFilter("cityId", v === "all" ? "" : v)}>
+            <SelectTrigger className="w-full"><SelectValue placeholder="All Cities" /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Areas</SelectItem>
-              {areas.map((a) => (
-                <SelectItem key={a.id} value={a.id}>{a.name}</SelectItem>
+              <SelectItem value="all">All Cities</SelectItem>
+              {cities.map((c) => (
+                <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
               ))}
             </SelectContent>
           </Select>
         </FilterSection>
       )}
 
-      {/* Treatment / Specialty */}
-      <FilterSection title="Treatment" icon={<Stethoscope className="h-4 w-4" />}>
-        <Select value={filters.treatmentId} onValueChange={(v) => updateFilter("treatmentId", v === "all" ? "" : v)}>
-          <SelectTrigger className="w-full"><SelectValue placeholder="All Treatments" /></SelectTrigger>
+      {/* Fostering Type */}
+      <FilterSection title="Fostering Type" icon={<Home className="h-4 w-4" />}>
+        <Select value={filters.fosteringTypeId} onValueChange={(v) => updateFilter("fosteringTypeId", v === "all" ? "" : v)}>
+          <SelectTrigger className="w-full"><SelectValue placeholder="All Types" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Treatments</SelectItem>
-            {treatments?.map((t) => (
+            <SelectItem value="all">All Types</SelectItem>
+            {fosteringTypes?.map((t) => (
               <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
             ))}
           </SelectContent>
         </Select>
       </FilterSection>
 
-      {/* Insurance */}
-      <FilterSection title="Insurance" icon={<Shield className="h-4 w-4" />}>
-        <Select value={filters.insuranceId} onValueChange={(v) => updateFilter("insuranceId", v === "all" ? "" : v)}>
-          <SelectTrigger className="w-full"><SelectValue placeholder="All Insurances" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Insurances</SelectItem>
-            {insurances?.map((ins) => (
-              <SelectItem key={ins.id} value={ins.id}>{ins.name}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </FilterSection>
-
-      {/* Gender */}
-      <FilterSection title="Gender Preference" icon={<User className="h-4 w-4" />}>
+      {/* Agency Type */}
+      <FilterSection title="Agency Type" icon={<Building2 className="h-4 w-4" />}>
         <div className="flex flex-wrap gap-2">
-          {GENDER_OPTIONS.map((opt) => (
+          {AGENCY_TYPE_OPTIONS.map((opt) => (
             <Button
               key={opt.value}
-              variant={filters.gender === opt.value ? "default" : "outline"}
+              variant={filters.agencyType === opt.value ? "default" : "outline"}
               size="sm"
-              onClick={() => updateFilter("gender", opt.value)}
+              onClick={() => updateFilter("agencyType", opt.value)}
               className="rounded-full text-xs"
             >
               {opt.label}
@@ -519,7 +395,7 @@ export default function SearchPage() {
         />
         <label htmlFor="verified-only" className="text-sm font-medium cursor-pointer flex items-center gap-1.5">
           <Shield className="h-3.5 w-3.5 text-primary" />
-          Verified Practices Only
+          Verified Agencies Only
         </label>
       </div>
 
@@ -535,16 +411,16 @@ export default function SearchPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <SEOHead
-        title="Find Dentists & Clinics in UAE | AppointPanda"
-        description="Search and compare dentists and dental clinics across all 7 Emirates. Filter by location, treatment, insurance, rating and more."
+        title="Find Fostering Agencies in England & UK | Foster Connect"
+        description="Search and compare Ofsted-rated fostering agencies across England. Filter by region, city, fostering type, and agency rating."
         canonical="/search/"
-        keywords={["find dentist UAE", "dental clinic Dubai", "dentist near me", "dental search"]}
+        keywords={["fostering agencies UK", "find fostering agency", "foster care agencies England", "Ofsted rated agencies"]}
       />
       <StructuredData
         type="breadcrumb"
         items={[
           { name: "Home", url: "/" },
-          { name: "Search Dentists", url: "/search/" },
+          { name: "Search Agencies", url: "/search/" },
         ]}
       />
       <Navbar />
@@ -553,7 +429,7 @@ export default function SearchPage() {
       <div className="bg-primary/5 border-b">
         <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
           <h1 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-4">
-            Find a Dentist in UAE
+            Find a Fostering Agency
           </h1>
           <div className="flex gap-3">
             <div className="relative flex-1">
@@ -561,7 +437,7 @@ export default function SearchPage() {
               <Input
                 value={filters.query}
                 onChange={(e) => updateFilter("query", e.target.value)}
-                placeholder="Search by name, clinic, or specialty..."
+                placeholder="Search by agency name, city, or fostering type..."
                 className="pl-10 h-12 rounded-xl bg-background"
               />
             </div>
@@ -616,7 +492,7 @@ export default function SearchPage() {
                 {isLoading ? (
                   "Searching..."
                 ) : (
-                  <>{searchData?.total || 0} results found</>
+                  <>{searchData?.total || 0} agencies found</>
                 )}
               </p>
               <Select value={filters.sortBy} onValueChange={(v) => updateFilter("sortBy", v)}>
@@ -642,7 +518,7 @@ export default function SearchPage() {
             {!isLoading && searchData?.results.length === 0 && (
               <div className="text-center py-20">
                 <Search className="h-12 w-12 mx-auto text-muted-foreground/30 mb-4" />
-                <h3 className="text-lg font-bold text-foreground mb-2">No results found</h3>
+                <h3 className="text-lg font-bold text-foreground mb-2">No agencies found</h3>
                 <p className="text-sm text-muted-foreground mb-4">Try adjusting your filters or search query.</p>
                 <Button variant="outline" onClick={clearFilters}>Clear All Filters</Button>
               </div>
@@ -706,10 +582,7 @@ function FilterSection({ title, icon, children }: { title: string; icon: React.R
 
 // ── Result Card ────────────────────────────────────────────
 function ResultCard({ item }: { item: SearchResultItem }) {
-  const linkTo = item.type === "dentist"
-    ? `/dentist/${item.slug}`
-    : `/clinic/${item.slug}`;
-
+  const linkTo = `/agency/${item.slug}`;
   const avatarUrl = item.image || getLetterAvatarUrl(item.name);
 
   return (
@@ -736,8 +609,8 @@ function ResultCard({ item }: { item: SearchResultItem }) {
             </Badge>
           )}
           <Badge variant="secondary" className="text-[10px] rounded-full capitalize">
-            {item.type === "dentist" ? <User className="h-3 w-3 mr-0.5" /> : <Building2 className="h-3 w-3 mr-0.5" />}
-            {item.type}
+            <Building2 className="h-3 w-3 mr-0.5" />
+            Agency
           </Badge>
         </div>
         {/* Rating */}
@@ -757,15 +630,10 @@ function ResultCard({ item }: { item: SearchResultItem }) {
         {item.title && (
           <p className="text-xs text-muted-foreground mt-0.5 truncate">{item.title}</p>
         )}
-        {item.clinicName && item.type === "dentist" && (
-          <p className="text-xs text-muted-foreground truncate flex items-center gap-1 mt-1">
-            <Building2 className="h-3 w-3 shrink-0" /> {item.clinicName}
-          </p>
-        )}
         <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
           <MapPin className="h-3 w-3 shrink-0" />
           <span className="truncate">
-            {[item.areaName, item.emirateName].filter(Boolean).join(", ") || "UAE"}
+            {[item.cityName, item.regionName].filter(Boolean).join(", ") || "England"}
           </span>
         </div>
 
