@@ -214,6 +214,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isAdmin = roles.includes('super_admin') || roles.includes('district_manager');
   const isSuperAdmin = roles.includes('super_admin');
   const isDentist = roles.includes('dentist');
+  const isAgency = roles.includes('dentist'); // alias for fostering context
 
   return (
     <AuthContext.Provider
@@ -226,6 +227,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAdmin,
         isSuperAdmin,
         isDentist,
+        isAgency,
         signIn,
         signUp,
         signOut,

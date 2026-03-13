@@ -188,7 +188,7 @@ export default function PagesTab() {
     { id: 'home', type: 'static' as const, name: 'Home Page', url: '/', published: true, indexed: true },
     { id: 'about', type: 'static' as const, name: 'About Us', url: '/about', published: true, indexed: true },
     { id: 'contact', type: 'static' as const, name: 'Contact Us', url: '/contact', published: true, indexed: true },
-    { id: 'search', type: 'static' as const, name: 'Search / Find Dentists', url: '/search', published: true, indexed: true },
+    { id: 'search', type: 'static' as const, name: 'Search / Find Agencies', url: '/search', published: true, indexed: true },
     { id: 'services', type: 'static' as const, name: 'All Services', url: '/services', published: true, indexed: true },
     { id: 'faq', type: 'static' as const, name: 'FAQ', url: '/faq', published: true, indexed: true },
     { id: 'privacy', type: 'static' as const, name: 'Privacy Policy', url: '/privacy', published: true, indexed: true },
