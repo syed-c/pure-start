@@ -2,7 +2,7 @@ import { forwardRef } from "react";
 import { Link } from "react-router-dom";
 import { 
   Facebook, Instagram, Twitter, Linkedin,
-  Mail, Phone, MapPin, Heart, ChevronRight, Shield, CheckCircle, Lock, Home,
+  MapPin, Heart, ChevronRight, Shield, CheckCircle, Lock, Home,
 } from "lucide-react";
 import { ACTIVE_REGIONS, POPULAR_CITIES, FOSTERING_CATEGORIES } from "@/lib/constants/activeRegions";
 

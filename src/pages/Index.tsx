@@ -98,7 +98,6 @@ const staggerItem = {
 };
 
 const Index = () => {
-  const location = useLocation();
   const { data: seoContent } = useSeoPageContent("/");
 
   const headingFont = "'Varela Round', 'Quicksand', system-ui, sans-serif";
