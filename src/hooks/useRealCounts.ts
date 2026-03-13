@@ -5,6 +5,7 @@ export interface RealCounts {
   clinics: number;
   states: number;
   cities: number;
+  agencies: number;
   dentists: number;
   treatments: number;
 }
@@ -69,6 +70,7 @@ export function useRealCounts() {
 
       return {
         clinics: clinicCount,
+        agencies: clinicCount,
         states: activeStateIds.length,
         cities: citiesCount,
         dentists: dentistCount,

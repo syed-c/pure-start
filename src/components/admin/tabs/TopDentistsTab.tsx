@@ -209,8 +209,8 @@ export default function TopDentistsTab() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-display font-bold text-foreground">Top Dentists Selection</h1>
-          <p className="text-muted-foreground mt-1">Manually select Top 10 clinics per city or area</p>
+          <h1 className="text-3xl font-display font-bold text-foreground">Top Agencies Selection</h1>
+          <p className="text-muted-foreground mt-1">Manually select Top 10 agencies per city or area</p>
         </div>
         <div className="flex gap-2">
           <Select value={selectedCity} onValueChange={handleCityChange}>

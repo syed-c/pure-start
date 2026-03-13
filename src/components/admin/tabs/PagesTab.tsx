@@ -188,7 +188,7 @@ export default function PagesTab() {
     { id: 'home', type: 'static' as const, name: 'Home Page', url: '/', published: true, indexed: true },
     { id: 'about', type: 'static' as const, name: 'About Us', url: '/about', published: true, indexed: true },
     { id: 'contact', type: 'static' as const, name: 'Contact Us', url: '/contact', published: true, indexed: true },
-    { id: 'search', type: 'static' as const, name: 'Search / Find Dentists', url: '/search', published: true, indexed: true },
+    { id: 'search', type: 'static' as const, name: 'Search / Find Agencies', url: '/search', published: true, indexed: true },
     { id: 'services', type: 'static' as const, name: 'All Services', url: '/services', published: true, indexed: true },
     { id: 'faq', type: 'static' as const, name: 'FAQ', url: '/faq', published: true, indexed: true },
     { id: 'privacy', type: 'static' as const, name: 'Privacy Policy', url: '/privacy', published: true, indexed: true },
@@ -462,7 +462,7 @@ export default function PagesTab() {
     switch (createForm.pageType) {
       case 'state': {
         const state = states?.find(s => s.id === createForm.stateId);
-        if (!state) { toast.error('Please select an emirate'); return; }
+        if (!state) { toast.error('Please select a region'); return; }
         pageUrl = `/${state.slug}`;
         pageName = state.name;
         break;
@@ -603,11 +603,11 @@ export default function PagesTab() {
         {[
           { key: 'all', label: 'All', icon: Globe, color: 'bg-primary/10 text-primary' },
           { key: 'static', label: 'Static', icon: FileText, color: 'bg-muted text-muted-foreground' },
-          { key: 'state', label: 'Emirates', icon: Map, color: 'bg-orange-100 text-orange-600' },
+          { key: 'state', label: 'Regions', icon: Map, color: 'bg-orange-100 text-orange-600' },
           { key: 'city', label: 'Cities', icon: MapPin, color: 'bg-blue-100 text-blue-600' },
-          { key: 'treatment', label: 'Services', icon: Stethoscope, color: 'bg-purple-100 text-purple-600' },
-          { key: 'service-location', label: 'Svc+Loc', icon: Stethoscope, color: 'bg-indigo-100 text-indigo-600' },
-          { key: 'clinic', label: 'Clinics', icon: Building2, color: 'bg-teal-100 text-teal-600' },
+          { key: 'treatment', label: 'Fostering Types', icon: Stethoscope, color: 'bg-purple-100 text-purple-600' },
+          { key: 'service-location', label: 'Type+Loc', icon: Stethoscope, color: 'bg-indigo-100 text-indigo-600' },
+          { key: 'clinic', label: 'Agencies', icon: Building2, color: 'bg-teal-100 text-teal-600' },
           { key: 'blog', label: 'Blog', icon: BookOpen, color: 'bg-amber-100 text-amber-600' },
         ].map(item => (
           <Card 
@@ -648,21 +648,21 @@ export default function PagesTab() {
               <SelectContent>
                 <SelectItem value="all">All Types ({pageCounts.all})</SelectItem>
                 <SelectItem value="static">Static Pages ({pageCounts.static})</SelectItem>
-                <SelectItem value="state">Emirates ({pageCounts.state})</SelectItem>
+                <SelectItem value="state">Regions ({pageCounts.state})</SelectItem>
                 <SelectItem value="city">City Pages ({pageCounts.city})</SelectItem>
-                <SelectItem value="treatment">Service Pages ({pageCounts.treatment})</SelectItem>
-                <SelectItem value="service-location">Service+Location ({pageCounts['service-location']})</SelectItem>
-                <SelectItem value="clinic">Clinic Pages ({pageCounts.clinic})</SelectItem>
+                <SelectItem value="treatment">Fostering Types ({pageCounts.treatment})</SelectItem>
+                <SelectItem value="service-location">Type+Location ({pageCounts['service-location']})</SelectItem>
+                <SelectItem value="clinic">Agency Pages ({pageCounts.clinic})</SelectItem>
                 <SelectItem value="blog">Blog Posts ({pageCounts.blog})</SelectItem>
               </SelectContent>
             </Select>
-            {/* State/Emirate filter */}
+            {/* Region filter */}
             <Select value={filters.stateId} onValueChange={(v) => { setFilters({ ...filters, stateId: v }); setDisplayLimit(50); }}>
               <SelectTrigger className="w-52">
-                <SelectValue placeholder="All Emirates" />
+                <SelectValue placeholder="All Regions" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Emirates</SelectItem>
+                <SelectItem value="all">All Regions</SelectItem>
                 {states?.map(state => (
                   <SelectItem key={state.id} value={state.id}>
                     {state.name}
@@ -791,9 +791,9 @@ export default function PagesTab() {
               <Select value={createForm.pageType} onValueChange={(v) => setCreateForm({ ...createForm, pageType: v })}>
                 <SelectTrigger><SelectValue placeholder="Select page type..." /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="state"><div className="flex items-center gap-2"><Map className="h-4 w-4" />Emirate Page</div></SelectItem>
+                  <SelectItem value="state"><div className="flex items-center gap-2"><Map className="h-4 w-4" />Region Page</div></SelectItem>
                   <SelectItem value="city"><div className="flex items-center gap-2"><MapPin className="h-4 w-4" />City Page</div></SelectItem>
-                  <SelectItem value="treatment"><div className="flex items-center gap-2"><Stethoscope className="h-4 w-4" />Service/Treatment Page</div></SelectItem>
+                  <SelectItem value="treatment"><div className="flex items-center gap-2"><Stethoscope className="h-4 w-4" />Fostering Type Page</div></SelectItem>
                   <SelectItem value="service-location"><div className="flex items-center gap-2"><Stethoscope className="h-4 w-4" />Service + Location Page</div></SelectItem>
                   <SelectItem value="custom"><div className="flex items-center gap-2"><FileText className="h-4 w-4" />Custom Static Page</div></SelectItem>
                 </SelectContent>
@@ -802,9 +802,9 @@ export default function PagesTab() {
 
             {createForm.pageType === 'state' && (
               <div className="space-y-2">
-                <Label>Select Emirate</Label>
+                <Label>Select Region</Label>
                 <Select value={createForm.stateId} onValueChange={(v) => setCreateForm({ ...createForm, stateId: v })}>
-                  <SelectTrigger><SelectValue placeholder="Choose an emirate..." /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="Choose a region..." /></SelectTrigger>
                   <SelectContent>
                     {states?.map(state => (
                       <SelectItem key={state.id} value={state.id}>{state.name} ({state.abbreviation})</SelectItem>
