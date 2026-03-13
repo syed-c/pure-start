@@ -6,7 +6,6 @@ interface TabVisibility {
   dentistTabs: Record<string, boolean>;
 }
 
-// Default: all tabs visible
 const DEFAULT_VISIBILITY: TabVisibility = {
   adminTabs: {},
   dentistTabs: {},
@@ -16,26 +15,27 @@ export function useTabVisibility() {
   const { data, isLoading } = useQuery({
     queryKey: ['tab-visibility-settings'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('global_settings')
-        .select('*')
-        .eq('key', 'tab_visibility')
-        .maybeSingle();
-      if (error) throw error;
-      return data?.value as unknown as TabVisibility | null;
+      try {
+        const { data, error } = await supabase
+          .from('global_settings')
+          .select('*')
+          .eq('key', 'tab_visibility')
+          .maybeSingle();
+        if (error) return null;
+        return data?.value as unknown as TabVisibility | null;
+      } catch {
+        return null;
+      }
     },
-    staleTime: 60000, // Cache for 1 minute
-    gcTime: 300000, // Keep in cache for 5 minutes
+    staleTime: 60000,
+    gcTime: 300000,
+    retry: false,
   });
 
   const isTabVisible = (tabId: string, dashboardType: 'admin' | 'dentist'): boolean => {
-    if (!data) return true; // Default to visible if no settings
-
+    if (!data) return true;
     const visibilityMap = dashboardType === 'admin' ? data.adminTabs : data.dentistTabs;
-    
-    // If the tab is not in the map, default to visible
     if (visibilityMap[tabId] === undefined) return true;
-    
     return visibilityMap[tabId];
   };
 
