@@ -727,7 +727,7 @@ export default function ProfileEditorTab() {
                 className="pl-10"
                 value={formData.address || ''}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                placeholder="Full clinic address"
+                placeholder="Full agency address"
                 rows={2}
               />
             </div>
