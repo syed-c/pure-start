@@ -753,7 +753,7 @@ export default function PatientsTab() {
             <div className="space-y-2">
               <Label>Notes (Optional)</Label>
               <Textarea
-                placeholder="Any notes about this patient..."
+                placeholder="Any notes about this carer..."
                 value={newPatient.notes}
                 onChange={(e) => setNewPatient({ ...newPatient, notes: e.target.value })}
                 rows={2}
