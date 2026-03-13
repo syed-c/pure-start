@@ -141,14 +141,14 @@ export default function ServicesTab() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['clinic-treatments'] });
-      toast.success('Treatment added');
+      toast.success('Fostering type added');
       setIsAddingService(false);
       setSelectedTreatment(null);
       setPriceFrom('');
       setPriceTo('');
       setSearchTerm('');
     },
-    onError: (e: any) => toast.error(e.message || 'Failed to add treatment'),
+    onError: (e: any) => toast.error(e.message || 'Failed to add fostering type'),
   });
 
   // Remove treatment mutation
@@ -169,9 +169,9 @@ export default function ServicesTab() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['clinic-treatments'] });
-      toast.success('Treatment removed');
+      toast.success('Fostering type removed');
     },
-    onError: (e: any) => toast.error(e.message || 'Failed to remove treatment'),
+    onError: (e: any) => toast.error(e.message || 'Failed to remove fostering type'),
   });
 
   // Update pricing mutation
@@ -236,8 +236,8 @@ export default function ServicesTab() {
             <Stethoscope className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-white">Services & Treatments</h2>
-            <p className="text-sm text-white/60">{clinicTreatments?.length || 0} services listed</p>
+            <h2 className="text-lg font-bold text-white">Fostering Types & Services</h2>
+            <p className="text-sm text-white/60">{clinicTreatments?.length || 0} fostering types listed</p>
           </div>
         </div>
         <Dialog open={isAddingService} onOpenChange={setIsAddingService}>
@@ -259,7 +259,7 @@ export default function ServicesTab() {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
                 <Input
-                  placeholder="Search treatments..."
+                  placeholder="Search fostering types..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-9 bg-slate-800 border-slate-600/50 text-white"
@@ -292,7 +292,7 @@ export default function ServicesTab() {
                 </div>
                 {filteredAvailable?.length === 0 && (
                   <p className="text-white/50 text-sm text-center py-4">
-                    {searchTerm ? 'No matches found' : 'All treatments added'}
+                    {searchTerm ? 'No matches found' : 'All fostering types added'}
                   </p>
                 )}
               </ScrollArea>
@@ -300,9 +300,9 @@ export default function ServicesTab() {
               {/* Pricing */}
               <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-700/50">
                 <div className="space-y-1">
-                  <Label className="text-xs text-white/60">Price From (USD)</Label>
+                  <Label className="text-xs text-white/60">Price From (£)</Label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40">$</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40">£</span>
                     <Input
                       type="number"
                       value={priceFrom}
@@ -313,9 +313,9 @@ export default function ServicesTab() {
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <Label className="text-xs text-white/60">Price To (USD)</Label>
+                  <Label className="text-xs text-white/60">Price To (£)</Label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40">$</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40">£</span>
                     <Input
                       type="number"
                       value={priceTo}
@@ -397,9 +397,9 @@ export default function ServicesTab() {
                     {(ct.price_from || ct.price_to) ? (
                       <Badge className="bg-teal/20 text-teal border-0 text-xs mt-1">
                         <DollarSign className="h-3 w-3 mr-0.5" />
-                        {ct.price_from && `${ct.price_from} AED`}
+                        {ct.price_from && `£${ct.price_from}`}
                         {ct.price_from && ct.price_to && ' - '}
-                        {ct.price_to && `${ct.price_to} AED`}
+                        {ct.price_to && `£${ct.price_to}`}
                       </Badge>
                     ) : (
                       <Badge className="bg-slate-700/50 text-white/50 border-0 text-xs mt-1 hover:bg-slate-600/50">
@@ -424,8 +424,8 @@ export default function ServicesTab() {
         <Card className="bg-slate-800/90 border border-slate-700/50">
           <CardContent className="py-12 text-center">
             <Stethoscope className="h-12 w-12 mx-auto text-white/20 mb-4" />
-            <p className="text-white/60 mb-2">No services added yet</p>
-            <p className="text-sm text-white/40 mb-4">Add treatments to show patients what you offer</p>
+            <p className="text-white/60 mb-2">No fostering types added yet</p>
+            <p className="text-sm text-white/40 mb-4">Add fostering types to show carers what you offer</p>
             <Button onClick={() => setIsAddingService(true)} size="sm" className="bg-primary hover:bg-primary/90">
               <Plus className="h-4 w-4 mr-2" />
               Add Your First Service

@@ -216,7 +216,7 @@ export default function EmergencyFosteringFinder() {
                             </Button>
                           )}
                           <Button size="sm" className="rounded-lg flex-1" asChild>
-                            <Link to={`/clinic/${clinic.slug || clinic.id}`}>
+                            <Link to={`/agency/${clinic.slug || clinic.id}`}>
                               View Profile <ArrowRight className="h-3.5 w-3.5 ml-1" />
                             </Link>
                           </Button>

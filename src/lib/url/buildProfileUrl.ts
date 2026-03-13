@@ -17,6 +17,10 @@ export interface ClinicData {
   slug: string;
 }
 
+// Aliases for fostering context
+export type AgencyData = ClinicData;
+export type ContactData = DentistData;
+
 export interface CityData {
   slug: string;
   state?: { slug: string } | null;
@@ -105,14 +109,14 @@ export function buildServiceLocationUrl(
 }
 
 /**
- * Build insurance page URL
- * Format: /insurance/{insuranceSlug}/
- * With optional emirate/city: /insurance/{insuranceSlug}/{emirateSlug}/{citySlug}/
+ * Build regulatory/accreditation page URL
+ * Format: /insurance/{slug}/
+ * With optional region/city: /insurance/{slug}/{regionSlug}/{citySlug}/
  */
-export function buildInsuranceUrl(insuranceSlug: string, emirateSlug?: string, citySlug?: string): string {
+export function buildInsuranceUrl(insuranceSlug: string, regionSlug?: string, citySlug?: string): string {
   if (!insuranceSlug) return "/insurance/";
   let path = `/insurance/${insuranceSlug}`;
-  if (emirateSlug) path += `/${emirateSlug}`;
+  if (regionSlug) path += `/${regionSlug}`;
   if (citySlug) path += `/${citySlug}`;
   return withTrailingSlash(path);
 }

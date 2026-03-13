@@ -441,7 +441,7 @@ export default function ProfileEditorTab() {
       localStorage.setItem('gmb_restore_session', 'true');
 
       // Always use production domain for OAuth callback
-      const redirectTo = 'https://www.appointpanda.ae/auth/callback?gmb=true';
+      const redirectTo = 'https://www.fosterconnect.co.uk/auth/callback?gmb=true';
 
       // Use signInWithOAuth to get the GMB token
       // The callback handler will capture the token and restore the original user session
@@ -536,9 +536,9 @@ export default function ProfileEditorTab() {
     return (
       <div className="text-center py-12">
         <Building2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-        <h2 className="text-xl font-bold mb-2">No Practice Linked</h2>
+        <h2 className="text-xl font-bold mb-2">No Agency Linked</h2>
         <p className="text-muted-foreground mb-6">
-          Please claim your practice profile first to edit it.
+          Please claim your agency profile first to edit it.
         </p>
         <Button asChild>
           <Link to="/claim-profile">Claim Your Profile</Link>
@@ -552,7 +552,7 @@ export default function ProfileEditorTab() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-display font-bold">Edit Profile</h2>
-          <p className="text-muted-foreground">Customize your clinic information</p>
+          <p className="text-muted-foreground">Customise your agency information</p>
         </div>
         <Button onClick={handleSave} disabled={isSaving} className="gap-2">
           {isSaving ? (
@@ -578,7 +578,7 @@ export default function ProfileEditorTab() {
               {formData.cover_image_url ? (
                 <img 
                   src={formData.cover_image_url} 
-                  alt="Clinic" 
+                  alt="Agency" 
                   className="h-32 w-32 rounded-2xl object-cover border-2 border-border shadow-md"
                 />
               ) : (
@@ -661,11 +661,11 @@ export default function ProfileEditorTab() {
         <CardContent className="space-y-4">
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Clinic Name</Label>
+              <Label>Agency Name</Label>
               <Input
                 value={formData.name || ''}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Your clinic name"
+                placeholder="Your agency name"
               />
             </div>
             <div className="space-y-2">
@@ -687,7 +687,7 @@ export default function ProfileEditorTab() {
             <Textarea
               value={formData.description || ''}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Tell patients about your clinic, services, and expertise..."
+              placeholder="Tell prospective carers about your agency, services, and expertise..."
               rows={4}
             />
           </div>
@@ -701,7 +701,7 @@ export default function ProfileEditorTab() {
                   className="pl-10"
                   value={formData.phone || ''}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  placeholder="+971 4 XXX XXXX"
+                  placeholder="+44 20 XXXX XXXX"
                 />
               </div>
             </div>
@@ -713,7 +713,7 @@ export default function ProfileEditorTab() {
                   className="pl-10"
                   value={formData.email || ''}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="contact@yourclinic.com"
+                  placeholder="contact@youragency.co.uk"
                 />
               </div>
             </div>
@@ -727,7 +727,7 @@ export default function ProfileEditorTab() {
                 className="pl-10"
                 value={formData.address || ''}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                placeholder="Full clinic address"
+                placeholder="Full agency address"
                 rows={2}
               />
             </div>

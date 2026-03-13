@@ -116,7 +116,7 @@ export default function InsuranceManagementTab() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['clinic-insurances'] });
-      toast.success('Insurance preferences saved successfully');
+      toast.success('Regulatory preferences saved successfully');
     },
     onError: (e: any) => toast.error(e.message || 'Failed to save'),
   });
@@ -157,7 +157,7 @@ export default function InsuranceManagementTab() {
   );
 
   // Group insurances by type (government vs private)
-  const governmentSlugs = ['dha', 'haad', 'moh', 'seha', 'thiqa', 'saada'];
+  const governmentSlugs = ['ofsted', 'dfe', 'local-authority', 'hmrc', 'dbs'];
   const governmentInsurances = filteredInsurances?.filter(i => 
     governmentSlugs.some(s => i.slug.toLowerCase().includes(s))
   );
@@ -182,9 +182,9 @@ export default function InsuranceManagementTab() {
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h2 className="text-2xl font-display font-bold">Accepted Insurances</h2>
+          <h2 className="text-2xl font-display font-bold">Regulatory Bodies & Accreditations</h2>
           <p className="text-muted-foreground">
-            Select the insurance providers your clinic accepts
+            Select the regulatory bodies and accreditations your agency holds
           </p>
         </div>
         <Button onClick={handleSave} disabled={isSaving}>
@@ -244,7 +244,7 @@ export default function InsuranceManagementTab() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             className="pl-10"
-            placeholder="Search insurances..."
+            placeholder="Search regulatory bodies..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -262,14 +262,14 @@ export default function InsuranceManagementTab() {
       {/* Info Banner */}
       <Card className="border-blue-200 bg-blue-50">
         <CardContent className="p-4">
-          <div className="flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5" />
-            <div className="text-sm text-blue-800">
-              <p className="font-medium">Why add insurance information?</p>
-              <p className="text-blue-700">
-                Patients often search for dentists that accept their insurance. By listing accepted insurances, 
-                your clinic will appear in relevant search results and insurance-specific pages.
-              </p>
+            <div className="flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5" />
+              <div className="text-sm text-blue-800">
+                <p className="font-medium">Why add regulatory information?</p>
+                <p className="text-blue-700">
+                  Prospective carers search for agencies with proper accreditations. By listing your regulatory bodies, 
+                  your agency will appear in relevant search results and gain trust with potential foster carers.
+                </p>
             </div>
           </div>
         </CardContent>
@@ -281,10 +281,10 @@ export default function InsuranceManagementTab() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Building2 className="h-5 w-5" />
-              Government Programs
+              Government & Regulatory Bodies
             </CardTitle>
             <CardDescription>
-              Government-sponsored insurance programs
+              Official regulatory and oversight bodies
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -307,10 +307,10 @@ export default function InsuranceManagementTab() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
-            Private Insurance Providers
+            Accreditations & Memberships
           </CardTitle>
           <CardDescription>
-            Select all insurance providers your clinic accepts
+            Select all accreditations and memberships your agency holds
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -334,7 +334,7 @@ export default function InsuranceManagementTab() {
           ) : (
             <div className="text-center py-8 text-muted-foreground">
               <Shield className="h-12 w-12 mx-auto mb-3 opacity-50" />
-              <p>No insurances found matching your search</p>
+              <p>No accreditations found matching your search</p>
             </div>
           )}
         </CardContent>

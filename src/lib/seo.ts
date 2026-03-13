@@ -1,11 +1,11 @@
-// SEO utility functions and constants
+// SEO utility functions and constants — Foster Connect UK Fostering Agency Directory
 
 export const SITE_CONFIG = {
-  name: 'AppointPanda',
-  domain: 'appointpanda.ae',
-  baseUrl: 'https://www.appointpanda.ae',
-  defaultCountry: 'ae',
-  defaultCity: 'dubai',
+  name: 'Foster Connect',
+  domain: 'fosterconnect.co.uk',
+  baseUrl: 'https://www.fosterconnect.co.uk',
+  defaultCountry: 'gb',
+  defaultCity: 'london',
 };
 
 // URL helper functions
@@ -28,10 +28,10 @@ export const getAreaServiceUrl = (citySlug: string, areaSlug: string, serviceSlu
   `/${countryCode}/${citySlug}/${areaSlug}/${serviceSlug}`;
 
 export const getClinicUrl = (clinicSlug: string, countryCode: string = SITE_CONFIG.defaultCountry) => 
-  `/${countryCode}/clinic/${clinicSlug}`;
+  `/${countryCode}/agency/${clinicSlug}`;
 
 export const getDentistUrl = (dentistSlug: string, countryCode: string = SITE_CONFIG.defaultCountry) => 
-  `/${countryCode}/dentist/${dentistSlug}`;
+  `/${countryCode}/contact/${dentistSlug}`;
 
 export const getBlogUrl = (countryCode: string = SITE_CONFIG.defaultCountry) => 
   `/${countryCode}/blog`;
@@ -44,65 +44,65 @@ export const generatePageTitle = (parts: string[]) =>
   [...parts, SITE_CONFIG.name].join(' | ');
 
 export const generateLocationMeta = (locationName: string, type: 'city' | 'area') => ({
-  title: `Best Dentists in ${locationName} - Book Appointments Online`,
-  description: `Find and book appointments with top-rated dental professionals in ${locationName}. Compare verified clinics, read patient reviews, and get the care you deserve.`,
+  title: `Fostering Agencies in ${locationName} | Find Local Support`,
+  description: `Discover fostering agencies in ${locationName}. Compare verified agencies, read carer reviews, and find the right fostering support for your family.`,
   keywords: [
-    `dentists in ${locationName}`,
-    `dental clinics ${locationName}`,
-    `best dentist ${locationName}`,
-    `teeth cleaning ${locationName}`,
-    `dental care ${locationName}`,
+    `fostering agencies in ${locationName}`,
+    `foster care ${locationName}`,
+    `fostering support ${locationName}`,
+    `become a foster carer ${locationName}`,
+    `fostering services ${locationName}`,
   ],
 });
 
 export const generateServiceMeta = (serviceName: string, locationName?: string) => ({
   title: locationName 
-    ? `${serviceName} in ${locationName} - Find Specialists & Book Online`
-    : `${serviceName} in UAE - Find Specialists & Book Online`,
+    ? `${serviceName} in ${locationName} | Find Fostering Agencies`
+    : `${serviceName} in the UK | Find Fostering Agencies`,
   description: locationName
-    ? `Find the best ${serviceName.toLowerCase()} specialists in ${locationName}. Compare verified clinics, read reviews, and book your appointment today.`
-    : `Find the best ${serviceName.toLowerCase()} specialists in the UAE. Compare verified clinics, read reviews, and book your appointment today.`,
+    ? `Find the best ${serviceName.toLowerCase()} agencies in ${locationName}. Compare verified agencies, read reviews, and start your fostering journey today.`
+    : `Find the best ${serviceName.toLowerCase()} agencies in the UK. Compare verified agencies, read reviews, and start your fostering journey today.`,
   keywords: [
     serviceName.toLowerCase(),
-    locationName ? `${serviceName.toLowerCase()} ${locationName}` : `${serviceName.toLowerCase()} UAE`,
-    `${serviceName.toLowerCase()} dentist`,
-    `${serviceName.toLowerCase()} cost`,
-    `${serviceName.toLowerCase()} clinic`,
+    locationName ? `${serviceName.toLowerCase()} ${locationName}` : `${serviceName.toLowerCase()} UK`,
+    `${serviceName.toLowerCase()} agency`,
+    `${serviceName.toLowerCase()} support`,
+    `fostering agency`,
   ],
 });
 
-export const generateClinicMeta = (clinicName: string, locationName?: string) => ({
-  title: `${clinicName}${locationName ? ` - ${locationName}` : ''} - Reviews & Appointments`,
-  description: `${clinicName} is a verified dental clinic${locationName ? ` in ${locationName}` : ''}. Read patient reviews, view services offered, and book your appointment online.`,
+export const generateClinicMeta = (agencyName: string, locationName?: string) => ({
+  title: `${agencyName}${locationName ? ` - ${locationName}` : ''} | Reviews & Fostering Support`,
+  description: `${agencyName} is a verified fostering agency${locationName ? ` in ${locationName}` : ''}. Read carer reviews, view services offered, and contact them to start your fostering journey.`,
   keywords: [
-    clinicName.toLowerCase(),
-    `${clinicName.toLowerCase()} reviews`,
-    locationName ? `dental clinic ${locationName}` : 'dental clinic UAE',
-    'dentist appointment',
-    'dental care',
+    agencyName.toLowerCase(),
+    `${agencyName.toLowerCase()} reviews`,
+    locationName ? `fostering agency ${locationName}` : 'fostering agency UK',
+    'fostering support',
+    'foster care',
   ],
 });
 
-export const generateDentistMeta = (dentistName: string, specialty?: string, clinicName?: string) => ({
-  title: `${dentistName}${specialty ? ` - ${specialty}` : ''} - Book Appointment`,
-  description: `Book an appointment with ${dentistName}${specialty ? `, a ${specialty.toLowerCase()} specialist` : ''}${clinicName ? ` at ${clinicName}` : ''}. Read patient reviews and get quality dental care.`,
+export const generateDentistMeta = (contactName: string, specialty?: string, agencyName?: string) => ({
+  title: `${contactName}${specialty ? ` - ${specialty}` : ''} | Contact`,
+  description: `Get in touch with ${contactName}${specialty ? `, a ${specialty.toLowerCase()} specialist` : ''}${agencyName ? ` at ${agencyName}` : ''}. Learn about fostering support and services available.`,
   keywords: [
-    dentistName.toLowerCase(),
-    specialty ? specialty.toLowerCase() : 'dentist',
-    'dental appointment',
-    'book dentist',
-    'dental care',
+    contactName.toLowerCase(),
+    specialty ? specialty.toLowerCase() : 'fostering',
+    'fostering agency contact',
+    'foster care support',
+    'fostering services',
   ],
 });
 
 export const generateBlogPostMeta = (title: string, excerpt?: string) => ({
   title,
-  description: excerpt || `Read ${title} on AppointPanda's dental health blog. Expert advice and tips from Dubai's top dental professionals.`,
+  description: excerpt || `Read ${title} on Foster Connect's fostering blog. Expert advice and guidance for foster carers and families across the UK.`,
   keywords: [
-    'dental health',
-    'oral hygiene',
-    'dental tips',
-    'dental care',
+    'fostering',
+    'foster care',
+    'fostering advice',
+    'foster carer support',
   ],
 });
 
@@ -145,7 +145,7 @@ export const generateServiceBreadcrumbs = (
 ): BreadcrumbItem[] => {
   const crumbs: BreadcrumbItem[] = [
     { label: 'Home', href: `/${countryCode}` },
-    { label: 'Services', href: `/${countryCode}/services` },
+    { label: 'Fostering Types', href: `/${countryCode}/services` },
   ];
   
   if (cityName && citySlug) {
@@ -161,25 +161,25 @@ export const generateServiceBreadcrumbs = (
 };
 
 export const generateClinicBreadcrumbs = (
-  clinicName: string,
+  agencyName: string,
   cityName?: string,
   citySlug?: string,
   countryCode: string = SITE_CONFIG.defaultCountry
 ): BreadcrumbItem[] => [
   { label: 'Home', href: `/${countryCode}` },
   ...(cityName && citySlug ? [{ label: cityName, href: getCityUrl(citySlug, countryCode) }] : []),
-  { label: clinicName },
+  { label: agencyName },
 ];
 
 export const generateDentistBreadcrumbs = (
-  dentistName: string,
+  contactName: string,
   cityName?: string,
   citySlug?: string,
   countryCode: string = SITE_CONFIG.defaultCountry
 ): BreadcrumbItem[] => [
   { label: 'Home', href: `/${countryCode}` },
   ...(cityName && citySlug ? [{ label: cityName, href: getCityUrl(citySlug, countryCode) }] : []),
-  { label: dentistName },
+  { label: contactName },
 ];
 
 export const generateBlogBreadcrumbs = (
