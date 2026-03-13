@@ -9,7 +9,7 @@ interface MultiStepBookingModalProps {
   onOpenChange: (open: boolean) => void;
   profileId: string;
   profileName: string;
-  profileType: "dentist" | "clinic";
+  profileType: "dentist" | "clinic"; // legacy types - maps to agency
   clinicId?: string;
   clinicLatitude?: number;
   clinicLongitude?: number;

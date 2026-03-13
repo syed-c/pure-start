@@ -21,7 +21,7 @@ export interface AdminStats {
   dentists: { total: number; active: number; featured: number }; // contacts
   patients: { total: number }; // carers
   leads: { today: number; week: number; month: number; total: number };
-  appointments: { pending: number; confirmed: number; completed: number; cancelled: number; noShow: number };
+  appointments: { pending: number; confirmed: number; completed: number; cancelled: number; noShow: number }; // enquiries
   reviews: { pending: number; approved: number; rejected: number };
   revenue: { activeSubscriptions: number; monthlyRevenue: number; yearlyRevenue: number };
   claims: { pending: number; approved: number; rejected: number };
