@@ -802,9 +802,9 @@ export default function PagesTab() {
 
             {createForm.pageType === 'state' && (
               <div className="space-y-2">
-                <Label>Select Emirate</Label>
+                <Label>Select Region</Label>
                 <Select value={createForm.stateId} onValueChange={(v) => setCreateForm({ ...createForm, stateId: v })}>
-                  <SelectTrigger><SelectValue placeholder="Choose an emirate..." /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="Choose a region..." /></SelectTrigger>
                   <SelectContent>
                     {states?.map(state => (
                       <SelectItem key={state.id} value={state.id}>{state.name} ({state.abbreviation})</SelectItem>
