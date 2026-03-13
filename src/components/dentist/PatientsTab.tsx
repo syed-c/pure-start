@@ -570,8 +570,8 @@ export default function PatientsTab() {
               <div className="h-16 w-16 rounded-2xl bg-muted/50 flex items-center justify-center mb-4">
                 <Users className="h-8 w-8 text-muted-foreground" />
               </div>
-              <p className="font-medium mb-1">No patients yet</p>
-              <p className="text-sm text-muted-foreground">Patients are auto-created from bookings</p>
+               <p className="font-medium mb-1">No carers yet</p>
+               <p className="text-sm text-muted-foreground">Carers are auto-created from enquiries</p>
             </div>
           )}
         </CardContent>
