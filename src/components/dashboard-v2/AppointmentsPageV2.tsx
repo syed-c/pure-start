@@ -132,7 +132,7 @@ export default function AppointmentsPageV2({ onNavigate }: AppointmentsPageV2Pro
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['appointments-v2'] });
-      toast.success('Appointment updated');
+      toast.success('Enquiry updated');
     },
     onError: () => {
       toast.error('Failed to update appointment');
