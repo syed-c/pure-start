@@ -310,7 +310,7 @@ const StatePage = () => {
         title={pageTitle}
         description={pageDescription}
         canonical={`/${normalizedStateSlug}/`}
-        keywords={[`dentists ${stateName}`, `dental clinics ${stateName}`, `find dentist ${stateName}`, 'book dental appointment']}
+        keywords={[`fostering agencies ${stateName}`, `foster care ${stateName}`, `find fostering agency ${stateName}`, 'become a foster carer']}
       />
       <StructuredData
         type="breadcrumb"
