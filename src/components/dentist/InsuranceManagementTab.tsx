@@ -281,10 +281,10 @@ export default function InsuranceManagementTab() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Building2 className="h-5 w-5" />
-              Government Programs
+              Government & Regulatory Bodies
             </CardTitle>
             <CardDescription>
-              Government-sponsored insurance programs
+              Official regulatory and oversight bodies
             </CardDescription>
           </CardHeader>
           <CardContent>
