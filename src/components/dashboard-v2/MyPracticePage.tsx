@@ -157,8 +157,8 @@ export default function MyPracticePage({ onNavigate }: MyPracticePageProps) {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="My Practice"
-        subtitle="Clinic details and performance snapshot"
+        title="My Agency"
+        subtitle="Agency details and performance snapshot"
         primaryAction={
           <Button className="rounded-xl gap-2" onClick={() => onNavigate('my-profile')}>
             <Edit className="h-4 w-4" />
