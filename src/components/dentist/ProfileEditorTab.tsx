@@ -536,9 +536,9 @@ export default function ProfileEditorTab() {
     return (
       <div className="text-center py-12">
         <Building2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-        <h2 className="text-xl font-bold mb-2">No Practice Linked</h2>
+        <h2 className="text-xl font-bold mb-2">No Agency Linked</h2>
         <p className="text-muted-foreground mb-6">
-          Please claim your practice profile first to edit it.
+          Please claim your agency profile first to edit it.
         </p>
         <Button asChild>
           <Link to="/claim-profile">Claim Your Profile</Link>
