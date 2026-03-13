@@ -1,22 +1,21 @@
-# AppointPanda.ae — SEO Content Writing Guidelines
+# Foster Connect — SEO Content Writing Guidelines
 
-## About AppointPanda
-- 6,600+ DHA, DOH, and MOHAP verified dental clinics across all 7 UAE Emirates
-- 35+ dental treatment categories with real AED pricing
-- Insurance filters: Daman, AXA, Cigna, MetLife, ADNIC, Noor Takaful
-- Multilingual dentists: English, Arabic, Hindi, Tagalog, Russian, French
-- Online appointment booking
-- URL structure: /[emirate]/[area]/[service]/
+## About Foster Connect
+- UK-wide fostering agency directory covering all 4 nations
+- Primary focus on England with county and city-level pages
+- Fostering categories: Independent, Local Authority, Emergency, Respite, Therapeutic, and more
+- Ofsted-rated agency profiles with verified information
+- Enquiry system connecting prospective foster carers with agencies
 
 ## Tone
-Trusted local UAE expert. Warm, practical, factual. Transparent about AED pricing. Always cite DHA/DOH/MOHAP. Culturally aware of UAE's expat population.
+Trusted, warm, supportive UK guide. People-first, practical, factual. Culturally sensitive to the fostering community. Always cite Ofsted/regulatory bodies. Written for prospective foster carers, families, and support seekers.
 
 ---
 
 ## 10 MANDATORY SEO RULES
 
 ### RULE 1 — TITLE TAG & H1
-Format: `[Primary Keyword] in [Location] — [Benefit] | AppointPanda`
+Format: `[Primary Keyword] in [Location] — [Benefit] | Foster Connect`
 - Primary keyword in first 60 characters
 - One clear keyword focus per page — never stuff
 
@@ -29,127 +28,112 @@ Format: `[Primary Keyword] in [Location] — [Benefit] | AppointPanda`
 - H2: Each major section uses semantic keyword variations
 - H3: FAQ-style sub-questions under each H2
 
-### RULE 4 — UAE-SPECIFIC LANGUAGE (ALWAYS)
-- Use AED not $
-- Use Emirates not states
-- Use DHA / DOH / MOHAP not FDA / NHS
-- Reference WhatsApp booking
-- Reference "near Metro station" where relevant
-- Reference actual UAE landmarks
+### RULE 4 — UK-SPECIFIC LANGUAGE (ALWAYS)
+- Use £ (GBP) not $ or AED
+- Use regions/counties not states/emirates
+- Use Ofsted / regulatory bodies not DHA / MOHAP
+- Reference local authority services
+- Reference UK landmarks and geography
+- Reference children's services and safeguarding terminology
 
-### RULE 5 — AED PRICING TABLE (MANDATORY on all commercial content)
-- Price range table: Low AED / Mid AED / High AED
-- Factors affecting price variation
-- Insurance coverage options
-- Disclaimer: "Prices indicative as of [year] — confirm with clinic"
+### RULE 5 — AGENCY INFORMATION (MANDATORY on all commercial content)
+- Agency types comparison: Independent vs Local Authority
+- Ofsted rating information
+- Fostering types available
+- Age groups supported
+- Disclaimer: "Information verified as of [year] — confirm directly with agency"
 
 ### RULE 6 — INTERNAL LINKING (3–5 links per piece)
 Always link to:
-- Emirate hub: /dubai/
-- Area page: /dubai/marina/
-- Service hub: /services/dental-implants/
+- Region hub: /england/
+- City page: /england/london/
+- Category hub: /categories/independent-fostering-agency/
 - Related blog post
-- Clinic listing CTA page
+- Agency listing CTA page
 
 ### RULE 7 — SCHEMA MARKUP
 - Blog posts: Article + FAQPage + BreadcrumbList
-- Location pages: LocalBusiness + Dentist + AggregateRating + GeoCoordinates
-- Service pages: MedicalProcedure + FAQPage + BreadcrumbList
-- Homepage: MedicalOrganization + SiteLinksSearchBox
+- Location pages: LocalBusiness + Organization + BreadcrumbList
+- Category pages: FAQPage + BreadcrumbList + ItemList
+- Homepage: Organization + SiteLinksSearchBox
 
 ### RULE 8 — FAQ SECTION (minimum 5 FAQs per page)
 Format:
 - Q: [Exact question users type into Google or ChatGPT]
 - A: [Direct answer in 2–4 sentences. Start with the direct answer.]
 
-### RULE 9 — E-E-A-T HEALTH SIGNALS
-- Cite DHA, DOH, or MOHAP as regulatory references
-- Include "prices last verified [month, year]"
-- Reference real UAE landmarks
-- End with: "Consult a DHA-licensed dentist for a personalised treatment plan."
+### RULE 9 — E-E-A-T TRUST SIGNALS
+- Cite Ofsted as regulatory reference
+- Include "information last verified [month, year]"
+- Reference real UK locations and landmarks
+- End with: "Contact agencies directly for the most current information about their fostering services."
 
 ### RULE 10 — AI SEARCH OPTIMIZATION
 - Direct answer in FIRST paragraph
-- Numbered lists and comparison tables with AED data
-- Statements tied to official UAE bodies
-- Unique data referencing AppointPanda clinic counts
+- Numbered lists and comparison tables
+- Statements tied to official UK bodies
+- Unique data referencing Foster Connect directory counts
 - Well-structured headers as standalone answers
 
 ---
 
 ## CONTENT TEMPLATES
 
-### TEMPLATE A: LOCATION + SERVICE PAGE
-URL pattern: /[emirate]/[area]/[service]/
+### TEMPLATE A: LOCATION + CATEGORY PAGE
+URL pattern: /[region]/[city]/[category]/
 
 Sections:
-1. H1: [Service] in [Location] — DHA Clinics, Prices & Online Booking
-2. Opening (60–80 words): Direct answer, clinic count, AED price range
-3. H2: Cost section with AED price table
-4. H2: DHA-Licensed specialists section
-5. H2: Types/variants of the service
-6. H2: Languages available
-7. H2: Insurance accepted
-8. H2: FAQs (6 minimum)
-9. Closing CTA with internal links
+1. H1: [Category] in [Location] — Ofsted-Rated Agencies & Support
+2. Opening (60–80 words): Direct answer, agency count, types available
+3. H2: Types of fostering available
+4. H2: Ofsted-rated agencies in the area
+5. H2: How to become a foster carer
+6. H2: Support services available
+7. H2: FAQs (6 minimum)
+8. Closing CTA with internal links
 
-### TEMPLATE B: BLOG — COST/PRICE GUIDE
+### TEMPLATE B: BLOG — FOSTERING GUIDE
 Sections:
-1. H1: [Service] Cost in [Location] [Year] — Complete AED Price Guide
-2. Opening: Price range in sentence one, cite AppointPanda data
-3. H2: Average prices by area (comparison table)
-4. H2: What's included and what's not
-5. H2: Cross-emirate comparison
-6. H2: Insurance coverage breakdown
-7. H2: How to save money
-8. H2: FAQs (8 questions)
-9. CTA with booking links
+1. H1: [Topic] — Complete UK Guide [Year]
+2. Opening: Key facts in sentence one, cite Foster Connect data
+3. H2: Overview of the fostering process
+4. H2: Types of fostering explained
+5. H2: Regional comparison
+6. H2: Support and training available
+7. H2: FAQs (8 questions)
+8. CTA with agency search links
 
 ### TEMPLATE C: BLOG — LOCATION GUIDE
 Sections:
-1. H1: Best Dentists in [Location] [Year] — DHA Clinics, Reviews & Prices
-2. Opening: Dental landscape overview, clinic count, price tier
-3. H2: Services available (linking to service+area pages)
-4. H2: Cost comparison vs other areas
-5. H2: Insurance-accepted clinics
-6. H2: Languages spoken
-7. H2: Getting there (Metro, parking, landmarks)
-8. H2: FAQs (6 questions)
-9. CTA to listing page
+1. H1: Fostering Agencies in [Location] [Year] — Ofsted-Rated Directory
+2. Opening: Fostering landscape overview, agency count
+3. H2: Types of agencies available
+4. H2: Fostering categories supported
+5. H2: Support networks in the area
+6. H2: How to get started
+7. H2: FAQs (6 questions)
+8. CTA to listing page
 
 ---
 
 ## DATABASE VARIABLES
-- {{LOCATION}} — e.g. Dubai Marina
-- {{AREA}} — e.g. Marina
-- {{EMIRATE}} — e.g. Dubai
-- {{SERVICE}} — e.g. Dental Implants
-- {{REGULATORY_BODY}} — e.g. DHA
-- {{PRICE_LOW}} — e.g. AED 3,000
-- {{PRICE_HIGH}} — e.g. AED 12,000
-- {{CLINIC_COUNT}} — pull from live database
-- {{INSURANCE_LIST}} — e.g. Daman, AXA, Cigna, MetLife
-- {{LANGUAGES}} — e.g. English, Arabic, Hindi, Russian, Tagalog
+- {{LOCATION}} — e.g. Greater London
+- {{CITY}} — e.g. London
+- {{REGION}} — e.g. England
+- {{CATEGORY}} — e.g. Independent Fostering Agency
+- {{REGULATORY_BODY}} — e.g. Ofsted
+- {{AGENCY_COUNT}} — pull from live database
 
 ---
 
 ## PRE-PUBLISH CHECKLIST
 - [ ] Title has primary keyword + location
 - [ ] Opening paragraph gives direct answer
-- [ ] AED price range table is present
-- [ ] DHA/DOH/MOHAP is referenced
+- [ ] Agency type comparison is present
+- [ ] Ofsted is referenced
 - [ ] 3–5 internal links with descriptive anchor text
 - [ ] FAQ section has minimum 5 questions
-- [ ] CTA links to AppointPanda booking/listing page
-- [ ] No specific clinic names unless from verified database
+- [ ] CTA links to Foster Connect search/listing page
+- [ ] No specific agency names unless from verified database
 - [ ] Word count minimum 800 (1500+ for commercial pages)
 - [ ] Schema markup type flagged
-
----
-
-## ARABIC CONTENT RULES
-- Modern Standard Arabic for headers, Gulf Arabic conversational tone for body
-- Key Arabic keywords: طبيب أسنان دبي / زراعة أسنان / تبييض الأسنان / تقويم الأسنان / فينير أسنان / عيادة أسنان الشارقة / تكلفة زراعة الأسنان بالدرهم
-- hreflang: ar-AE
-- Meta descriptions: 140–160 characters
-- Mirror all FAQs in Arabic using exact UAE Arabic search phrases
