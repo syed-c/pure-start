@@ -161,12 +161,12 @@ const HomeV2 = () => {
           <motion.div {...fadeUp} transition={{ delay: 0.3 }} className="flex flex-wrap justify-center gap-3">
             <Button size="lg" className="rounded-xl font-semibold h-12 px-8 shadow-lg" onClick={() => navigate("/search")}>
               <Search className="mr-2 h-4 w-4" />
-              Find a Dentist
+              Find an Agency
             </Button>
             <Button size="lg" variant="outline" className="rounded-xl font-semibold h-12 px-8 bg-background/10 border-background/30 text-background hover:bg-background/20 hover:text-background" asChild>
               <Link to="/list-your-practice">
                 <Stethoscope className="mr-2 h-4 w-4" />
-                I'm a Dentist
+                I'm an Agency
               </Link>
             </Button>
           </motion.div>
