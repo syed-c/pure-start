@@ -184,8 +184,7 @@ const dentistTabGroups = [
     tabs: [
       { id: 'my-profile', label: 'Edit Profile', icon: Building2 },
       { id: 'my-team', label: 'Team', icon: Users },
-      { id: 'my-services', label: 'Services', icon: Stethoscope },
-      { id: 'my-insurance', label: 'Insurance', icon: Shield },
+      { id: 'my-services', label: 'Fostering Types', icon: Stethoscope },
     ],
   },
   {

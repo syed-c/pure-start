@@ -179,10 +179,10 @@ export default function Auth() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-coral bg-clip-text text-transparent">
-            Appoint Panda
+            Foster Connect
           </CardTitle>
           <CardDescription>
-            Sign in to manage your dental practice or find the best dentists
+            Sign in to manage your fostering agency or find trusted foster carers
           </CardDescription>
         </CardHeader>
         <CardContent>
