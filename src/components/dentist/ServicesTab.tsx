@@ -292,7 +292,7 @@ export default function ServicesTab() {
                 </div>
                 {filteredAvailable?.length === 0 && (
                   <p className="text-white/50 text-sm text-center py-4">
-                    {searchTerm ? 'No matches found' : 'All treatments added'}
+                    {searchTerm ? 'No matches found' : 'All fostering types added'}
                   </p>
                 )}
               </ScrollArea>
