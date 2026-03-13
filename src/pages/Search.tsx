@@ -56,9 +56,9 @@ const Search = () => {
     queryFn: async () => {
       let query = supabase
         .from("cities")
-        .select(`id, name, slug, agency_count, state:states(id, name, slug, abbreviation)`)
+        .select(`id, name, slug, dentist_count, state:states(id, name, slug, abbreviation)`)
         .eq("is_active", true)
-        .order("agency_count", { ascending: false });
+        .order("dentist_count", { ascending: false });
 
       if (selectedState) {
         query = query.eq("state_id", selectedState);
