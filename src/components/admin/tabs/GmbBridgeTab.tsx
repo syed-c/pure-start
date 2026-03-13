@@ -47,7 +47,7 @@ export default function GmbBridgeTab() {
   const { data: areas } = useAdminAreas(selectedCity || undefined);
   const [selectedArea, setSelectedArea] = useState<string>('');
 
-  const [category, setCategory] = useState('dentist');
+  const [category, setCategory] = useState('fostering agency');
   const [isSearching, setIsSearching] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [results, setResults] = useState<SearchResult[]>([]);
@@ -72,30 +72,25 @@ export default function GmbBridgeTab() {
     [areas, selectedArea]
   );
 
-  // All dental-related categories for comprehensive search
+  // All fostering-related categories for comprehensive search
   const allCategories = [
-    'dentist',
-    'dental clinic',
-    'orthodontist',
-    'dental surgeon',
-    'pediatric dentist',
-    'cosmetic dentist',
-    'endodontist',
-    'periodontist',
-    'prosthodontist',
-    'oral surgeon',
-    'dental office',
-    'family dentist',
-    'emergency dentist',
+    'fostering agency',
+    'foster care agency',
+    'independent fostering agency',
+    'fostering service',
+    'children\'s home',
+    'foster carer support',
+    'therapeutic fostering',
+    'emergency fostering',
   ];
 
   const categories = [
-    { value: 'dentist', label: 'Dentist' },
-    { value: 'dental clinic', label: 'Dental Clinic' },
-    { value: 'orthodontist', label: 'Orthodontist' },
-    { value: 'dental surgeon', label: 'Dental Surgeon' },
-    { value: 'pediatric dentist', label: 'Pediatric Dentist' },
-    { value: 'cosmetic dentist', label: 'Cosmetic Dentist' },
+    { value: 'fostering agency', label: 'Fostering Agency' },
+    { value: 'foster care agency', label: 'Foster Care Agency' },
+    { value: 'independent fostering agency', label: 'Independent Fostering Agency' },
+    { value: 'fostering service', label: 'Fostering Service' },
+    { value: 'children\'s home', label: 'Children\'s Home' },
+    { value: 'therapeutic fostering', label: 'Therapeutic Fostering' },
   ];
 
   const mergeUniqueByPlaceId = (prev: SearchResult[], next: SearchResult[]) => {
