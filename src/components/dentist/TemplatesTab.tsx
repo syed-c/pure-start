@@ -543,7 +543,7 @@ export default function TemplatesTab() {
                 className="mt-1 font-mono text-sm"
               />
               <p className="text-xs text-muted-foreground mt-1">
-                Variables like {'{patient_name}'} will be replaced automatically
+                Variables like {'{carer_name}'} will be replaced automatically
               </p>
             </div>
           </div>

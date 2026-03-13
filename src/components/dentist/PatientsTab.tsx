@@ -184,7 +184,7 @@ export default function PatientsTab() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success('Patient updated');
+      toast.success('Carer updated');
       setEditPatient(null);
       setSelectedPatient(null);
       queryClient.invalidateQueries({ queryKey: ['clinic-patients'] });
