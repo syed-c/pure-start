@@ -609,7 +609,7 @@ export default function PatientsTab() {
               {/* Basic Info Grid */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 rounded-xl bg-muted/30">
-                  <p className="text-xs text-muted-foreground mb-1">Total Visits</p>
+                  <p className="text-xs text-muted-foreground mb-1">Total Contacts</p>
                   <p className="font-medium text-sm">{selectedPatient.total_visits}</p>
                 </div>
                 <div className="p-3 rounded-xl bg-muted/30">
