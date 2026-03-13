@@ -156,15 +156,15 @@ import { useNotificationSubscription } from '@/hooks/useNotifications';
 import { useTabVisibility } from '@/hooks/useTabVisibility';
 import { useUserTabAccess } from '@/hooks/useUserTabAccess';
 
-// Lazy load the V2 dashboard for dentists
+// Lazy load the V2 dashboard for agency users
 const DentistDashboardV2 = lazyRetry(() => import('@/components/dashboard-v2/DentistDashboardV2'));
 
-// Define tabs for dentists (comprehensive view)
+// Define tabs for agency users (comprehensive view)
 const dentistTabGroups = [
   {
     label: 'Dashboard',
     tabs: [
-      { id: 'my-dashboard', label: 'My Practice', icon: LayoutDashboard },
+      { id: 'my-dashboard', label: 'My Agency', icon: LayoutDashboard },
     ],
   },
   {
