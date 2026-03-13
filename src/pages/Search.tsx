@@ -278,7 +278,7 @@ const Search = () => {
                           {city.name}
                         </h3>
                         <p className="text-xs text-muted-foreground mt-0.5">
-                          {(city.state as any)?.name} • {city.agency_count || 0} Agencies
+                          {(city.state as any)?.name} • {(city as any).dentist_count || 0} Agencies
                         </p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0 ml-2">
