@@ -257,7 +257,7 @@ const adminTabGroups = [
     ],
   },
   {
-    label: 'Patient & Bookings',
+    label: 'Enquiries & Bookings',
     tabs: [
       { id: 'booking-system', label: 'Booking System', icon: CalendarDays, highlight: true },
       { id: 'appointments', label: 'Appointments', icon: Calendar },
