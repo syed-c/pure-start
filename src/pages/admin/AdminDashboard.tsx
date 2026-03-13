@@ -554,7 +554,7 @@ export default function AdminDashboard() {
 
   const renderTab = () => {
     switch (activeTab) {
-      case 'my-dashboard': return <DentistDashboardTab />;
+      case 'my-dashboard': return <AgencyDashboardTab />;
       case 'my-appointments': return <DentistAppointmentsTab />;
       case 'my-availability': return <AvailabilityManagementTab />;
       case 'my-appointment-types': return <AppointmentTypesTab />;
