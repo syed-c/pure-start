@@ -1,6 +1,6 @@
 // Database types for the Foster Connect Platform - UK Edition
 
-export type AppRole = 'super_admin' | 'regional_manager' | 'agency_admin' | 'user';
+export type AppRole = 'super_admin' | 'regional_manager' | 'agency_admin' | 'user' | 'district_manager' | 'dentist' | 'patient';
 export type ClaimStatus = 'unclaimed' | 'pending' | 'claimed';
 export type VerificationStatus = 'unverified' | 'pending' | 'verified' | 'expired';
 export type AgencySource = 'manual' | 'import' | 'ofsted';
