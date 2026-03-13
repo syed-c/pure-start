@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 export interface AdminStats {
   locations: { countries: number; cities: number; areas: number };
   services: { total: number; parents: number; children: number };
-  clinics: { 
+  clinics: { // agencies (DB table still named clinics)
     total: number; 
     unclaimed: number; 
     claimed: number; 
