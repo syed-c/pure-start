@@ -720,9 +720,9 @@ export default function PatientsTab() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <UserPlus className="h-5 w-5 text-primary" />
-              Add New Patient
+              Add New Carer
             </DialogTitle>
-            <DialogDescription>Add a patient to your database</DialogDescription>
+            <DialogDescription>Add a carer to your database</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
