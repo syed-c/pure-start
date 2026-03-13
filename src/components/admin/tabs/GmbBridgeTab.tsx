@@ -398,7 +398,7 @@ export default function GmbBridgeTab() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-display font-bold text-foreground">Google Bridge</h1>
-          <p className="text-muted-foreground mt-1">Import clinics from Google Business Profiles</p>
+          <p className="text-muted-foreground mt-1">Import agencies from Google Business Profiles</p>
         </div>
       </div>
 
