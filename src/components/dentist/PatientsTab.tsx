@@ -522,7 +522,7 @@ export default function PatientsTab() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <Badge variant="secondary" className="text-xs">{patient.total_visits} visits</Badge>
+                      <Badge variant="secondary" className="text-xs">{patient.total_visits} contacts</Badge>
                       {patient.is_opted_in_sms && <Badge variant="outline" className="text-xs text-primary">SMS</Badge>}
                     </div>
                     
