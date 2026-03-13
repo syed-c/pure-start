@@ -444,7 +444,7 @@ const ListYourPracticePage = () => {
                           </div>
                           <div className="space-y-2">
                             <Label>Location *</Label>
-                            <SmartCitySearch onSelect={setSelectedLocation} error={errors.location} />
+                            <SmartCitySearch value={selectedLocation} onChange={setSelectedLocation} />
                             {errors.location && <p className="text-sm text-destructive">{errors.location}</p>}
                           </div>
                           <div className="space-y-2">
