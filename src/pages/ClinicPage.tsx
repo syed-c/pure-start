@@ -267,10 +267,10 @@ const ClinicPage = () => {
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || `${clinic.name} - Dental Clinic in ${clinic.city?.name || 'UAE'}`}
-        description={seoContent?.meta_description || clinic.description || `Book an appointment at ${clinic.name}. ${isVerified ? 'Verified' : ''} dental clinic in ${clinic.city?.name || 'UAE'} with ${dentists?.length || 0} specialists.`}
+        title={seoContent?.meta_title || `${clinic.name} - Fostering Agency in ${clinic.city?.name || 'UK'}`}
+        description={seoContent?.meta_description || clinic.description || `Learn about ${clinic.name}. ${isVerified ? 'Verified' : ''} fostering agency in ${clinic.city?.name || 'UK'}.`}
         canonical={`/clinic/${clinic.slug}/`}
-        keywords={[clinic.name, `dental clinic ${clinic.city?.name}`, `dentist ${clinic.city?.state?.abbreviation || 'US'}`]}
+        keywords={[clinic.name, `fostering agency ${clinic.city?.name}`, `foster care ${clinic.city?.state?.abbreviation || 'UK'}`]}
       />
       {/* Synchronous JSON-LD structured data for SEO */}
       <SyncStructuredData
