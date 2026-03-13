@@ -552,7 +552,7 @@ export default function ProfileEditorTab() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-display font-bold">Edit Profile</h2>
-          <p className="text-muted-foreground">Customize your clinic information</p>
+          <p className="text-muted-foreground">Customise your agency information</p>
         </div>
         <Button onClick={handleSave} disabled={isSaving} className="gap-2">
           {isSaving ? (
