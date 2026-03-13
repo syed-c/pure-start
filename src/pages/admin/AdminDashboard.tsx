@@ -646,11 +646,10 @@ export default function AdminDashboard() {
       case 'geo-expansion': return <GeoExpansionTab />;
       // Default to Overview for admin route, DentistDashboard only for dentist route
       default: 
-        // If on admin route, always show OverviewTab as fallback
         if (location.pathname.startsWith('/admin')) {
           return <OverviewTab />;
         }
-        return <DentistDashboardTab />;
+        return <AgencyDashboardTab />;
     }
   };
 
