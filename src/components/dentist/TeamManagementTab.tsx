@@ -239,7 +239,7 @@ export default function TeamManagementTab() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-display font-bold">Team Management</h2>
-          <p className="text-muted-foreground">Manage your clinic's doctors and staff</p>
+          <p className="text-muted-foreground">Manage your agency's team members and staff</p>
         </div>
         <Button onClick={() => { setFormData(INITIAL_FORM_DATA); setIsAddDialogOpen(true); }}>
           <Plus className="h-4 w-4 mr-2" />
