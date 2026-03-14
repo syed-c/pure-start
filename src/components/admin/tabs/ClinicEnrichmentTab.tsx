@@ -960,9 +960,9 @@ export default function ClinicEnrichmentTab() {
                           }}
                         />
                       </TableHead>
-                      <TableHead className="font-bold">Clinic Name</TableHead>
+                      <TableHead className="font-bold">Agency Name</TableHead>
                       <TableHead className="font-bold">Location</TableHead>
-                      <TableHead className="font-bold">Rating</TableHead>
+                      <TableHead className="font-bold">Address</TableHead>
                       <TableHead className="font-bold">Status</TableHead>
                       <TableHead className="text-right font-bold">Actions</TableHead>
                     </TableRow>
