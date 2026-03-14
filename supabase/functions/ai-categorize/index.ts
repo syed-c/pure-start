@@ -105,7 +105,7 @@ Return ONLY valid JSON, no markdown or explanation.`;
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gemini-2.0-flash",
+        model: "gemini-2.5-flash",
         messages: [
           { role: "user", content: prompt }
         ],

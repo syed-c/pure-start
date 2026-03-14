@@ -93,7 +93,7 @@ serve(async (req) => {
               'Authorization': `Bearer ${AIMLAPI_KEY}`
             },
             body: JSON.stringify({
-              model: 'gemini-2.0-flash',
+              model: 'gemini-2.5-flash',
               messages: [{ role: 'user', content: 'Say OK' }],
               max_tokens: 10,
             }),

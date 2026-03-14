@@ -344,7 +344,7 @@ Return a JSON object with a "tasks" array containing 5-10 high-impact SEO tasks.
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "gemini-2.0-flash",
+          model: "gemini-2.5-flash",
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: `Audit Data:\n${JSON.stringify(promptPayload)}` },

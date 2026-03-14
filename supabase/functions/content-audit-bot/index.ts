@@ -239,7 +239,7 @@ Evaluate and respond in JSON format only:
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gemini-2.0-flash',
+        model: 'gemini-2.5-flash',
         messages: [
           { role: 'system', content: 'You are an SEO expert analyzing dental website content. Respond only in valid JSON.' },
           { role: 'user', content: prompt }

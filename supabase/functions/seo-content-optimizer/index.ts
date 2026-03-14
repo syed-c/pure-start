@@ -289,7 +289,7 @@ DO NOT: Mention prompts or instructions, explain your process, copy content betw
       systemContent += "\n\nReturn ONLY valid JSON, no markdown.";
       
       const requestBody = {
-        model: "gemini-2.0-flash",
+        model: "gemini-2.5-flash",
         messages: [
           { role: "system", content: systemContent },
           { role: "user", content: prompt }

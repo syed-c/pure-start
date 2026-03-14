@@ -317,7 +317,7 @@ Generate ${faqCount} FAQs as a JSON array. Each FAQ must:
 Return ONLY a valid JSON array like: [{"question":"...","answer":"..."},...]`;
 
       const requestBody = {
-        model: "gemini-2.0-flash",
+        model: "gemini-2.5-flash",
         messages: [
           { role: "system", content: FAQ_SYSTEM_PROMPT },
           { role: "user", content: userPrompt }
