@@ -146,7 +146,7 @@ Return ONLY the description text, no quotes or formatting.`;
           body: JSON.stringify({
             model: "gemini-2.5-flash",
             messages: [
-              { role: "system", content: "You are a professional medical copywriter specializing in dental practice descriptions. Write authentic, human-sounding content that builds trust with potential patients." },
+              { role: "system", content: "You are a professional copywriter specialising in UK fostering agency descriptions. Write authentic, human-sounding content that builds trust with prospective foster carers." },
               { role: "user", content: prompt }
             ],
             temperature: 0.7,
