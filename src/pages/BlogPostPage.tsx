@@ -590,7 +590,7 @@ const BlogPostPage = () => {
         canonical={`/blog/${post.slug}/`}
         ogType="article"
         ogImage={post.featured_image_url || undefined}
-        author={post.author_name || 'AppointPanda Team'}
+        author={post.author_name || 'Foster Connect Team'}
         publishedAt={post.published_at || undefined}
         modifiedAt={post.updated_at || undefined}
         keywords={post.tags || ['dental health', 'oral care']}
