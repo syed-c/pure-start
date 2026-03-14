@@ -356,10 +356,22 @@ export default function ContentGenerationStudioTab() {
   });
 
   const availablePageTypes = useMemo(() => {
-    const types = Array.from(new Set((seoPages || []).map((page) => page.page_type).filter(Boolean)));
-    const known = Object.keys(PAGE_TYPE_LABELS).filter((type) => types.includes(type));
-    const unknown = types.filter((type) => !PAGE_TYPE_LABELS[type]).sort();
-    return [...known, ...unknown];
+    const dataTypes = Array.from(new Set((seoPages || []).map((page) => page.page_type).filter(Boolean)));
+    const merged = Array.from(new Set([
+      ...PAGE_TYPE_FILTER_FALLBACK,
+      ...Object.keys(PAGE_TYPE_LABELS),
+      ...dataTypes,
+    ]));
+
+    return merged.sort((a, b) => {
+      const aIndex = PAGE_TYPE_FILTER_FALLBACK.indexOf(a);
+      const bIndex = PAGE_TYPE_FILTER_FALLBACK.indexOf(b);
+
+      if (aIndex === -1 && bIndex === -1) return a.localeCompare(b);
+      if (aIndex === -1) return 1;
+      if (bIndex === -1) return -1;
+      return aIndex - bIndex;
+    });
   }, [seoPages]);
 
   // Fetch content versions for history
