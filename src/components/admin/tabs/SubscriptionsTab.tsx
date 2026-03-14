@@ -521,7 +521,7 @@ export default function SubscriptionsTab() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <span className="font-semibold">{sub.plan?.price_monthly || sub.amount_paid || 0} AED/mo</span>
+                          <span className="font-semibold">£{sub.plan?.price_monthly || sub.amount_paid || 0}/mo</span>
                         </TableCell>
                         <TableCell>{getStatusBadge(sub.status || 'pending')}</TableCell>
                         <TableCell>
