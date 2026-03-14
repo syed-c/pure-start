@@ -732,7 +732,7 @@ export default function ClinicEnrichmentTab() {
                 <Wand2 className="h-5 w-5 text-primary" />
                 Batch Enrichment Actions
               </CardTitle>
-              <CardDescription>Generate content for multiple clinics at once using AI</CardDescription>
+              <CardDescription>Generate content for multiple agencies at once using AI</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
