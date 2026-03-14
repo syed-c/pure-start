@@ -920,7 +920,7 @@ export default function ClinicEnrichmentTab() {
                     className="gap-2"
                   >
                     <Building2 className="h-4 w-4" />
-                    {showAllClinics ? 'Show Missing Only' : 'Show All Clinics'}
+                    {showAllClinics ? 'Show Missing Only' : 'Show All Agencies'}
                   </Button>
                   <Button 
                     variant="outline" 
