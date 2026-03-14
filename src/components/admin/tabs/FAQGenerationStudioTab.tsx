@@ -316,7 +316,7 @@ export default function FAQGenerationStudioTab() {
       
       return true;
     });
-  }, [seoPages, pageTypeFilter, stateFilter, faqStatusFilter, searchQuery, states]);
+  }, [seoPages, pageTypeFilter, stateFilter, serviceFilter, faqStatusFilter, searchQuery, states, treatments]);
 
   // Select all filtered
   const selectAllFiltered = () => {
