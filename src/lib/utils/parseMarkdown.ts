@@ -43,7 +43,7 @@ function normalizeHref(rawHref: string): string | null {
     try {
       const url = new URL(href);
       // if it's our domain, convert to internal path (keeps SPA routing + canonical)
-      if (url.hostname.includes("appointpanda.ae")) {
+      if (url.hostname.includes("fosterconnect.co.uk")) {
         return withTrailingSlash(url.pathname + url.search + url.hash);
       }
       return url.toString();

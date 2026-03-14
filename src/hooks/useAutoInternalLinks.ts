@@ -166,13 +166,13 @@ export function useAutoInternalLinks({
 
       // Always add insurance and services directory links
       links.push({
-        label: "Dental Insurance Plans",
+        label: "Partner Organisations",
         href: "/insurance/",
         type: "lateral",
       });
       links.push({
-        label: "All Dental Services",
-        href: "/services/",
+        label: "All Fostering Types",
+        href: "/categories/",
         type: "lateral",
       });
 
