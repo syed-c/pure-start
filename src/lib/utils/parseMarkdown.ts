@@ -24,7 +24,7 @@ function escapeHtml(input: string): string {
 }
 
 function isInternalHref(href: string): boolean {
-  return href.startsWith("/") || href.includes("appointpanda.ae");
+  return href.startsWith("/") || href.includes("fosterconnect.co.uk");
 }
 
 function normalizeHref(rawHref: string): string | null {
