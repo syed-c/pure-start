@@ -279,26 +279,26 @@ End with calm, helpful CTA encouraging users to:
       
       // Opening style variations
       const openingStyles = [
-        "Start with a compelling question that addresses the reader's immediate concern.",
-        "Open with a local statistic or fact about this specific area.",
-        "Begin with a patient scenario that resonates with local residents.",
-        "Start by describing what makes this location/service unique.",
-        "Open with a brief history or context about dental care in this area.",
-        "Begin with a direct statement addressing the primary patient need.",
-        "Start with a comparison or contrast that highlights key differences.",
-        "Open with an engaging anecdote about dental care experiences."
+        "Start with a compelling question that addresses the reader's immediate concern about fostering.",
+        "Open with a local statistic or fact about fostering in this specific area.",
+        "Begin with a prospective carer scenario that resonates with local residents.",
+        "Start by describing what makes fostering in this location/through this agency unique.",
+        "Open with a brief context about the need for foster carers in this area.",
+        "Begin with a direct statement addressing the primary motivation for fostering.",
+        "Start with a comparison or contrast that highlights key differences between agencies.",
+        "Open with an engaging story about the impact fostering has on communities."
       ];
       
       // Structure variations
       const structureStyles = [
         "Use a problem-solution framework throughout.",
-        "Organize around patient journey stages.",
+        "Organise around the fostering journey stages (enquiry, assessment, approval, placement).",
         "Structure as a comprehensive guide with numbered steps.",
         "Use a Q&A conversational format within sections.",
-        "Organize by patient type (families, seniors, busy professionals).",
-        "Structure around common concerns and how to address them.",
-        "Use a comparison framework highlighting options.",
-        "Organize chronologically from initial visit to ongoing care."
+        "Organise by carer type (single carers, couples, families, retirees).",
+        "Structure around common concerns and how fostering agencies address them.",
+        "Use a comparison framework highlighting different fostering types.",
+        "Organise chronologically from initial interest to ongoing support."
       ];
       
       const selectedOpening = openingStyles[timestamp % openingStyles.length];
@@ -313,8 +313,8 @@ STRUCTURE APPROACH: ${selectedStructure}
 UNIQUE IDENTIFIER: ${slug.toUpperCase()}-${randomId}
 
 MANDATORY DIFFERENTIATION:
-- Do NOT use generic dental industry phrases
-- Invent specific local context (neighborhood references, regional characteristics)
+- Do NOT use generic fostering industry phrases
+- Include specific local context (borough references, regional characteristics)
 - Use varied sentence structures (mix short punchy sentences with longer explanatory ones)
 - Include at least 3 unique examples or scenarios not used elsewhere
 - Vary paragraph lengths dramatically (some 2-3 sentences, some 5-6)
