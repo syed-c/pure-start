@@ -382,101 +382,53 @@ const CityPage = () => {
         id="city-page-schema"
       />
       
-      {/* Hero Section — Dark theme matching homepage */}
-      <section className="relative overflow-hidden min-h-[45vh] flex items-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-primary/15 rounded-full blur-[120px]" />
-          <div className="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-teal/10 rounded-full blur-[100px]" />
-          <div className="absolute inset-0 opacity-[0.03]" style={{
-            backgroundImage: 'linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)',
-            backgroundSize: '60px 60px',
-          }} />
-        </div>
-        
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-primary/[0.04] to-background">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)/0.06),transparent_60%)]" />
         <div className="container relative z-10 py-14 md:py-18 px-4">
           <div className="flex justify-center mb-4">
-            <Breadcrumbs items={breadcrumbs} className="[&_a]:text-white/60 [&_span]:text-white/40 [&_svg]:text-white/30" />
+            <Breadcrumbs items={breadcrumbs} />
           </div>
-          
           <div className="max-w-3xl mx-auto text-center">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 bg-primary/15 backdrop-blur-md border border-primary/30 rounded-full px-4 py-2 mb-4"
-            >
-              <Stethoscope className="h-4 w-4 text-primary" />
-              <span className="text-xs md:text-sm font-bold text-primary">Ofsted Rated Agencies</span>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              className="inline-flex items-center gap-2 bg-primary/10 border border-primary/15 rounded-full px-4 py-1.5 mb-4">
+              <Shield className="h-3.5 w-3.5 text-primary" />
+              <span className="text-xs font-bold text-primary uppercase tracking-wider">Ofsted Rated Agencies</span>
             </motion.div>
-            
-            <motion.h1 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-3 px-2" 
-              style={{ fontFamily: "'Varela Round', system-ui, sans-serif" }}
-            >
+            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tight mb-3 text-foreground" style={{ fontFamily: "'Outfit', sans-serif" }}>
               {pageH1.includes(cityName) ? (
-                <>
-                  <span className="text-white">{pageH1.split(cityName)[0]}</span>
-                  <span className="text-primary">{cityName}</span>
-                  <span className="text-white">{pageH1.split(cityName)[1] || ''}</span>
-                </>
+                <>{pageH1.split(cityName)[0]}<span className="text-primary">{cityName}</span>{pageH1.split(cityName)[1] || ''}</>
               ) : (
-                <span className="text-white">{pageH1}</span>
+                pageH1
               )}
             </motion.h1>
-            
-            <motion.p 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="text-sm md:text-base lg:text-lg text-white/40 mb-6 max-w-2xl mx-auto px-2"
-            >
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
+              className="text-sm md:text-base lg:text-lg text-muted-foreground mb-6 max-w-2xl mx-auto px-2">
               {areaLocalContent.hasLocalContext
-                ? `Discover dental clinics serving ${areaLocalContent.demographics} in this ${areaLocalContent.character} community.`
-                : `Find and book appointments with top-rated dental professionals in ${cityName}. Compare verified clinics and read patient reviews.`
+                ? `Discover fostering agencies serving ${areaLocalContent.demographics} in this ${areaLocalContent.character} community.`
+                : `Find trusted fostering agencies in ${cityName}. Compare Ofsted-rated agencies and read carer reviews.`
               }
             </motion.p>
-
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="max-w-xl md:max-w-2xl mx-auto mb-6"
-            >
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+              className="max-w-xl md:max-w-2xl mx-auto mb-6">
               <SearchBox variant="hero" stateSlug={stateSlug} defaultCity={`${citySlug}|${stateSlug}`} />
             </motion.div>
-
-            {/* Stats */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="flex flex-wrap justify-center gap-2 md:gap-3"
-            >
-              <div className="flex items-center gap-1.5 bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-xl px-3 py-2">
-                <Users className="h-4 w-4 text-primary" />
-                <span className="font-bold text-sm text-white">{profiles?.length || 0}+</span>
-                <span className="text-xs text-white/50 hidden sm:inline">Specialists</span>
-              </div>
-              <div className="flex items-center gap-1.5 bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-xl px-3 py-2">
-                <Star className="h-4 w-4 text-gold fill-gold" />
-                <span className="font-bold text-sm text-white">4.8</span>
-                <span className="text-xs text-white/50 hidden sm:inline">Avg. Rating</span>
-              </div>
-              <div className="flex items-center gap-1.5 bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-xl px-3 py-2">
-                <Clock className="h-4 w-4 text-primary" />
-                <span className="font-bold text-sm text-white">60s</span>
-                <span className="text-xs text-white/50 hidden sm:inline">to Book</span>
-              </div>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
+              className="flex flex-wrap justify-center gap-2 md:gap-3">
+              {[
+                { icon: Users, value: `${profiles?.length || 0}+`, label: "Agencies" },
+                { icon: Star, value: "4.8", label: "Avg. Rating" },
+                { icon: Clock, value: "Quick", label: "Enquiry" },
+              ].map((s, i) => (
+                <div key={i} className="flex items-center gap-1.5 bg-muted/50 border border-border/50 rounded-xl px-3 py-2">
+                  <s.icon className="h-4 w-4 text-primary" />
+                  <span className="font-bold text-sm">{s.value}</span>
+                  <span className="text-xs text-muted-foreground hidden sm:inline">{s.label}</span>
+                </div>
+              ))}
             </motion.div>
           </div>
-        </div>
-
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 80" fill="none" className="w-full h-12 md:h-16" preserveAspectRatio="none">
-            <path d="M0 80V40C240 10 480 0 720 20C960 40 1200 50 1440 30V80H0Z" className="fill-background" />
-          </svg>
         </div>
       </section>
 
