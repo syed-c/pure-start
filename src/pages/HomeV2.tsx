@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { 
   ArrowRight, Shield, Star, MapPin, 
-  Heart, Search, Building2, Stethoscope, Calendar,
+  Heart, Search, Building2, Home, Calendar,
   ChevronRight, BadgeCheck, Timer,
   Quote, CheckCircle
 } from "lucide-react";
@@ -11,8 +11,6 @@ import { Footer } from "@/components/Footer";
 import { SearchBox } from "@/components/SearchBox";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import { useStatesWithClinics } from "@/hooks/useLocations";
@@ -21,9 +19,6 @@ import { useTreatments } from "@/hooks/useTreatments";
 import { useTopDentistsPerLocation } from "@/hooks/useProfiles";
 import { AutoScrollCarousel } from "@/components/AutoScrollCarousel";
 import { ACTIVE_STATES } from "@/lib/constants/activeStates";
-import heroDentalFamily from "@/assets/hero-dental-family.jpg";
-import dentalPracticeGrowth from "@/assets/dental-practice-growth.jpg";
-import pandaMascot from "@/assets/panda-mascot.jpg";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -39,36 +34,6 @@ const HomeV2 = () => {
   const { data: profiles } = useTopDentistsPerLocation(30);
   const { data: seoContent } = useSeoPageContent("/");
   const [activeTestimonial, setActiveTestimonial] = useState(0);
-
-  const { data: dubaiAreas } = useQuery({
-    queryKey: ['dubai-areas-homepage'],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('cities')
-        .select('id, name, slug, dentist_count, states!inner(slug)')
-        .eq('is_active', true)
-        .eq('states.slug', 'dubai')
-        .order('name')
-        .limit(15);
-      return data || [];
-    },
-    staleTime: 1000 * 60 * 30,
-  });
-
-  const { data: sharjahAreas } = useQuery({
-    queryKey: ['sharjah-areas-homepage'],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('cities')
-        .select('id, name, slug, dentist_count, states!inner(slug)')
-        .eq('is_active', true)
-        .eq('states.slug', 'sharjah')
-        .order('name')
-        .limit(10);
-      return data || [];
-    },
-    staleTime: 1000 * 60 * 30,
-  });
 
   const testimonials = [
     {
@@ -112,37 +77,29 @@ const HomeV2 = () => {
       />
       <Navbar />
 
-      {/* ══════════ HERO — Full-width background, centered content ══════════ */}
-      <section className="relative min-h-[520px] md:min-h-[580px] flex items-center justify-center overflow-hidden">
-        {/* Background image */}
-        <div className="absolute inset-0">
-          <img 
-            src={heroDentalFamily} 
-            alt="Happy foster family" 
-            className="w-full h-full object-cover"
-            loading="eager"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-foreground/70 via-foreground/55 to-foreground/75" />
+      {/* ══════════ HERO ══════════ */}
+      <section className="relative min-h-[520px] md:min-h-[580px] flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px]" />
+          <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-gold/15 rounded-full blur-[100px]" />
         </div>
 
-        {/* Centered content */}
         <div className="relative z-10 container px-4 py-16 md:py-20 text-center">
-          <motion.div {...fadeUp} className="inline-flex items-center gap-2 bg-background/15 backdrop-blur-sm border border-background/20 rounded-full px-4 py-1.5 mb-6">
-            <BadgeCheck className="h-4 w-4 text-background" />
-            <span className="text-xs font-semibold text-background">UK's Trusted Fostering Directory</span>
+          <motion.div {...fadeUp} className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 rounded-full px-4 py-1.5 mb-6">
+            <BadgeCheck className="h-4 w-4 text-primary" />
+            <span className="text-xs font-semibold text-white/90">UK's Trusted Fostering Directory</span>
           </motion.div>
 
-          <motion.h1 {...fadeUp} transition={{ delay: 0.1 }} className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-background leading-[1.15] mb-4 max-w-3xl mx-auto">
+          <motion.h1 {...fadeUp} transition={{ delay: 0.1 }} className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.15] mb-4 max-w-3xl mx-auto">
             Find Your Trusted{" "}
             <span className="text-primary">Fostering Agency</span>{" "}
             in the UK
           </motion.h1>
 
-          <motion.p {...fadeUp} transition={{ delay: 0.2 }} className="text-base md:text-lg text-background/80 leading-relaxed mb-8 max-w-xl mx-auto">
+          <motion.p {...fadeUp} transition={{ delay: 0.2 }} className="text-base md:text-lg text-white/60 leading-relaxed mb-8 max-w-xl mx-auto">
             Compare Ofsted-rated agencies, read carer reviews, explore fostering types — and start your journey today.
           </motion.p>
 
-          {/* Trust indicators */}
           <motion.div {...fadeUp} transition={{ delay: 0.25 }} className="flex flex-wrap items-center justify-center gap-4 md:gap-6 mb-8">
             {[
               { icon: Shield, text: "Ofsted Rated" },
@@ -150,22 +107,21 @@ const HomeV2 = () => {
               { icon: Building2, text: `${realCounts?.clinics?.toLocaleString() || '500+'} Agencies` },
               { icon: Timer, text: "Free to Use" },
             ].map((item, i) => (
-              <div key={i} className="flex items-center gap-1.5 text-background/70">
+              <div key={i} className="flex items-center gap-1.5 text-white/50">
                 <item.icon className="h-4 w-4 text-primary" />
                 <span className="text-xs font-medium">{item.text}</span>
               </div>
             ))}
           </motion.div>
 
-          {/* CTA Buttons */}
           <motion.div {...fadeUp} transition={{ delay: 0.3 }} className="flex flex-wrap justify-center gap-3">
             <Button size="lg" className="rounded-xl font-semibold h-12 px-8 shadow-lg" onClick={() => navigate("/search")}>
               <Search className="mr-2 h-4 w-4" />
               Find an Agency
             </Button>
-            <Button size="lg" variant="outline" className="rounded-xl font-semibold h-12 px-8 bg-background/10 border-background/30 text-background hover:bg-background/20 hover:text-background" asChild>
+            <Button size="lg" variant="outline" className="rounded-xl font-semibold h-12 px-8 bg-white/5 border-white/20 text-white hover:bg-white/15 hover:text-white" asChild>
               <Link to="/list-your-practice">
-                <Stethoscope className="mr-2 h-4 w-4" />
+                <Building2 className="mr-2 h-4 w-4" />
                 I'm an Agency
               </Link>
             </Button>
@@ -188,7 +144,7 @@ const HomeV2 = () => {
           <motion.div {...fadeUp} className="text-center mb-12">
             <span className="inline-block text-xs font-bold uppercase tracking-widest text-primary mb-3">How It Works</span>
             <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3">
-              Book in <span className="text-primary">3 Simple Steps</span>
+              Find Your Agency in <span className="text-primary">3 Simple Steps</span>
             </h2>
             <p className="text-muted-foreground max-w-md mx-auto text-sm">Finding the right fostering agency shouldn't be complicated.</p>
           </motion.div>
@@ -197,7 +153,7 @@ const HomeV2 = () => {
             {[
               { step: "01", title: "Search", description: "Select your region, city, and the type of fostering you're interested in.", icon: Search, gradient: "from-primary/15 to-primary/5" },
               { step: "02", title: "Compare", description: "Browse agency profiles, Ofsted ratings, and real carer reviews.", icon: Star, gradient: "from-gold/15 to-gold/5" },
-              { step: "03", title: "Enquire", description: "Contact your chosen agency and start your fostering journey.", icon: Calendar, gradient: "from-primary/15 to-teal/5" },
+              { step: "03", title: "Enquire", description: "Contact your chosen agency and start your fostering journey.", icon: Calendar, gradient: "from-primary/15 to-indigo/5" },
             ].map((item, i) => (
               <motion.div 
                 key={i} 
@@ -227,7 +183,6 @@ const HomeV2 = () => {
       <section className="py-16 md:py-20 bg-background">
         <div className="container px-4">
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center max-w-6xl mx-auto">
-            {/* Image — Panda mascot */}
             <motion.div 
               initial={{ opacity: 0, x: -30 }} 
               whileInView={{ opacity: 1, x: 0 }} 
@@ -235,13 +190,28 @@ const HomeV2 = () => {
               transition={{ duration: 0.6 }}
               className="flex justify-center"
             >
-              <div className="relative">
-                <div className="absolute -inset-4 bg-gradient-to-br from-primary/10 to-primary/5 rounded-3xl -z-10" />
-                <img src={pandaMascot} alt="Foster Connect" className="w-64 md:w-80 h-auto rounded-2xl" loading="lazy" />
+              <div className="relative w-full max-w-sm">
+                <div className="absolute -inset-4 bg-gradient-to-br from-primary/10 to-gold/5 rounded-3xl -z-10" />
+                <div className="bg-card border border-border rounded-2xl p-8 text-center">
+                  <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                    <Home className="h-10 w-10 text-primary" />
+                  </div>
+                  <h3 className="font-display text-2xl font-bold mb-2">Foster Connect</h3>
+                  <p className="text-muted-foreground text-sm">UK's #1 Fostering Directory</p>
+                  <div className="grid grid-cols-2 gap-3 mt-6">
+                    <div className="bg-muted/50 rounded-xl p-3 text-center">
+                      <p className="font-bold text-lg">{realCounts?.clinics?.toLocaleString() || '500'}+</p>
+                      <p className="text-xs text-muted-foreground">Agencies</p>
+                    </div>
+                    <div className="bg-muted/50 rounded-xl p-3 text-center">
+                      <p className="font-bold text-lg">{realCounts?.cities?.toLocaleString() || '100'}+</p>
+                      <p className="text-xs text-muted-foreground">Cities</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </motion.div>
             
-            {/* Content */}
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}>
               <span className="inline-block text-xs font-bold uppercase tracking-widest text-primary mb-3">Why Choose Us</span>
                <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-6">
@@ -262,7 +232,7 @@ const HomeV2 = () => {
                     transition={{ delay: 0.2 + i * 0.1 }}
                     className="flex items-start gap-3.5 group"
                   >
-                    <div className="h-10 w-10 rounded-xl bg-primary/8 border border-primary/15 flex items-center justify-center shrink-0 group-hover:bg-primary/15 group-hover:scale-110 transition-all duration-300">
+                    <div className="h-10 w-10 rounded-xl bg-primary/10 border border-primary/15 flex items-center justify-center shrink-0 group-hover:bg-primary/15 group-hover:scale-110 transition-all duration-300">
                       <item.icon className="h-5 w-5 text-primary" />
                     </div>
                     <div>
@@ -277,7 +247,7 @@ const HomeV2 = () => {
         </div>
       </section>
 
-      {/* ══════════ BROWSE BY EMIRATE ══════════ */}
+      {/* ══════════ BROWSE BY REGION ══════════ */}
       <section className="py-16 md:py-20 bg-muted/30">
         <div className="container px-4">
           <motion.div {...fadeUp} className="text-center mb-10">
@@ -288,62 +258,21 @@ const HomeV2 = () => {
           </motion.div>
 
           <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto">
-            {ACTIVE_STATES.map((emirate) => (
+            {ACTIVE_STATES.map((region) => (
               <Link
-                key={emirate.slug}
-                to={`/${emirate.slug}`}
+                key={region.slug}
+                to={`/${region.slug}`}
                 className="bg-card border border-border rounded-xl px-5 py-3 text-sm font-medium text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all shadow-sm hover:shadow-md"
               >
                 <MapPin className="inline h-3.5 w-3.5 mr-1.5 opacity-50" />
-                {emirate.name}
+                {region.name}
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ══════════ TOP AREAS ══════════ */}
-      {dubaiAreas && dubaiAreas.length > 0 && (
-        <section className="py-12 bg-background">
-          <div className="container px-4">
-            <motion.div {...fadeUp} className="mb-6">
-              <h2 className="font-display text-xl md:text-2xl font-bold text-foreground">
-                Popular Areas in <span className="text-primary">Dubai</span>
-              </h2>
-            </motion.div>
-            <div className="flex flex-wrap gap-2">
-              {dubaiAreas.map((area) => (
-                <Link key={area.id} to={`/dubai/${area.slug}`} className="inline-flex items-center gap-1.5 bg-muted/60 border border-border/50 rounded-lg px-3.5 py-2 text-sm font-medium text-foreground hover:border-primary/40 hover:text-primary transition-all">
-                  <MapPin className="h-3 w-3 text-primary/60" />
-                  {area.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {sharjahAreas && sharjahAreas.length > 0 && (
-        <section className="py-12 bg-muted/30">
-          <div className="container px-4">
-            <motion.div {...fadeUp} className="mb-6">
-              <h2 className="font-display text-xl md:text-2xl font-bold text-foreground">
-                Popular Areas in <span className="text-primary">Sharjah</span>
-              </h2>
-            </motion.div>
-            <div className="flex flex-wrap gap-2">
-              {sharjahAreas.map((area) => (
-                <Link key={area.id} to={`/sharjah/${area.slug}`} className="inline-flex items-center gap-1.5 bg-background border border-border/50 rounded-lg px-3.5 py-2 text-sm font-medium text-foreground hover:border-primary/40 hover:text-primary transition-all">
-                  <MapPin className="h-3 w-3 text-primary/60" />
-                  {area.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ══════════ TREATMENTS ══════════ */}
+      {/* ══════════ FOSTERING CATEGORIES ══════════ */}
       {popularTreatments.length > 0 && (
         <section className="py-16 md:py-20 bg-background">
           <div className="container px-4">
@@ -409,7 +338,7 @@ const HomeV2 = () => {
         </div>
       </section>
 
-      {/* ══════════ DENTIST CAROUSEL ══════════ */}
+      {/* ══════════ AGENCY CAROUSEL ══════════ */}
       {carouselProfiles.length > 0 && (
         <section className="py-16 md:py-20 bg-background">
           <div className="container px-4">
@@ -427,15 +356,29 @@ const HomeV2 = () => {
         </section>
       )}
 
-      {/* ══════════ FOR DENTISTS ══════════ */}
+      {/* ══════════ FOR AGENCIES ══════════ */}
       <section className="py-16 md:py-20 bg-muted/30">
         <div className="container px-4">
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-center">
             <motion.div {...fadeUp}>
-              <div className="rounded-2xl overflow-hidden shadow-lg">
-                 <img src={dentalPracticeGrowth} alt="Grow your fostering agency" className="w-full h-auto object-cover aspect-[4/3]" loading="lazy" />
-               </div>
-             </motion.div>
+              <div className="bg-card border border-border rounded-2xl p-8">
+                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
+                  <Building2 className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="font-display text-xl font-bold mb-3">For Fostering Agencies</h3>
+                <div className="space-y-2 text-sm text-muted-foreground">
+                  <p>Join the UK's leading fostering directory and connect with prospective carers.</p>
+                  <ul className="space-y-2 mt-4">
+                    {["Free agency listing", "Showcase Ofsted rating", "Manage enquiries", "Build your reputation"].map((item, i) => (
+                      <li key={i} className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-primary shrink-0" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </motion.div>
              <motion.div {...fadeUp} transition={{ delay: 0.1 }}>
                <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-3">
                  Grow Your Agency with <span className="text-primary">Foster Connect</span>
@@ -550,7 +493,7 @@ const HomeV2 = () => {
                </Button>
                <Button size="lg" variant="outline" className="rounded-xl font-semibold h-12 px-8 border-border" asChild>
                  <Link to="/list-your-practice">
-                   <Stethoscope className="mr-2 h-4 w-4" /> I'm an Agency
+                   <Building2 className="mr-2 h-4 w-4" /> I'm an Agency
                  </Link>
                </Button>
             </div>

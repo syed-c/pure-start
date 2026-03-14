@@ -1,9 +1,8 @@
 import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import { DollarSign, Star, Shield, Sparkles, Filter, ChevronDown, ChevronUp, X, Stethoscope, MapPin } from "lucide-react";
+import { PoundSterling, Star, Shield, Sparkles, Filter, ChevronDown, ChevronUp, X, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 
 export interface BudgetFilters {
@@ -24,11 +23,11 @@ interface BudgetFilterSidebarProps {
 }
 
 const BUDGET_PRESETS = [
-  { label: "Under 100 AED", value: 100, icon: "💵" },
-  { label: "Under 500 AED", value: 500, icon: "💰" },
-  { label: "Under 1,000 AED", value: 1000, icon: "💎" },
-  { label: "Under 2,500 AED", value: 2500, icon: "🏆" },
-  { label: "Under 5,000 AED", value: 5000, icon: "⭐" },
+  { label: "Under £100/wk", value: 100, icon: "💷" },
+  { label: "Under £200/wk", value: 200, icon: "💷" },
+  { label: "Under £500/wk", value: 500, icon: "💰" },
+  { label: "Under £1,000/wk", value: 1000, icon: "💎" },
+  { label: "Under £2,000/wk", value: 2000, icon: "🏆" },
   { label: "Any Budget", value: null, icon: "🎯" },
 ];
 
@@ -48,7 +47,6 @@ export function BudgetFilterSidebar({
   totalResults = 0,
   className,
 }: BudgetFilterSidebarProps) {
-  const [isExpanded, setIsExpanded] = useState(true);
   const [showAllServices, setShowAllServices] = useState(false);
 
   const activeFilterCount = 
@@ -105,7 +103,7 @@ export function BudgetFilterSidebar({
             </div>
             <div>
               <h3 className="font-bold text-foreground text-sm">Smart Filters</h3>
-              <p className="text-xs text-muted-foreground">AI-Powered Matching</p>
+              <p className="text-xs text-muted-foreground">Refine your search</p>
             </div>
           </div>
           {activeFilterCount > 0 && (
@@ -119,7 +117,7 @@ export function BudgetFilterSidebar({
         <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
           <Sparkles className="h-3 w-3 text-primary" />
           <span>
-            <strong className="text-foreground">{totalResults}</strong> clinics
+            <strong className="text-foreground">{totalResults}</strong> agencies
             {locationName && <> in <strong className="text-foreground">{locationName}</strong></>}
             {treatmentName && <> for <strong className="text-primary">{treatmentName}</strong></>}
           </span>
@@ -127,11 +125,11 @@ export function BudgetFilterSidebar({
       </div>
 
       <div className="p-5 space-y-6">
-        {/* Budget Filter - Primary Focus */}
+        {/* Budget Filter */}
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <DollarSign className="h-4 w-4 text-primary" />
-            <h4 className="font-bold text-sm text-foreground">Budget Range</h4>
+            <PoundSterling className="h-4 w-4 text-primary" />
+            <h4 className="font-bold text-sm text-foreground">Allowance Range</h4>
           </div>
           <div className="grid grid-cols-2 gap-2">
             {BUDGET_PRESETS.map((preset) => (
@@ -189,7 +187,7 @@ export function BudgetFilterSidebar({
           >
             <div className="flex items-center gap-2">
               <Shield className="h-4 w-4" />
-              <span className="font-bold text-sm">Verified Only</span>
+              <span className="font-bold text-sm">Ofsted Verified Only</span>
             </div>
             <div className={cn(
               "h-5 w-9 rounded-full transition-colors relative",
@@ -207,8 +205,8 @@ export function BudgetFilterSidebar({
         {availableServices.length > 0 && (
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Stethoscope className="h-4 w-4 text-primary" />
-              <h4 className="font-bold text-sm text-foreground">Services</h4>
+              <Heart className="h-4 w-4 text-primary" />
+              <h4 className="font-bold text-sm text-foreground">Fostering Types</h4>
             </div>
             <div className="flex flex-wrap gap-2">
               {displayedServices.map((service) => (
@@ -270,15 +268,12 @@ export function useBudgetFilters(initialFilters?: Partial<BudgetFilters>) {
   const applyFilters = useCallback(
     <T extends { rating?: number; isVerified?: boolean; price_from?: number; price_to?: number }>(items: T[]): T[] => {
       return items.filter((item) => {
-        // Budget filter
         if (filters.maxBudget !== null && item.price_from && item.price_from > filters.maxBudget) {
           return false;
         }
-        // Rating filter
         if (filters.minRating > 0 && (item.rating || 0) < filters.minRating) {
           return false;
         }
-        // Verified filter
         if (filters.verifiedOnly && !item.isVerified) {
           return false;
         }

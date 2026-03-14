@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { useRealCounts } from "@/hooks/useRealCounts";
-import { Calendar, User, ArrowRight, Clock, Tag, MapPin, Search, Star, Sparkles, BookOpen, TrendingUp } from "lucide-react";
+import { Calendar, User, ArrowRight, Clock, Tag, MapPin, Search, Star, Sparkles, BookOpen, TrendingUp, Heart } from "lucide-react";
 import { format } from "date-fns";
 
 const BlogPage = () => {
@@ -68,7 +68,7 @@ const BlogPage = () => {
     },
   });
 
-  const categories = ["Dental Health", "Cosmetic Dentistry", "Oral Hygiene", "Treatments", "Industry News"];
+  const categories = ["Foster Care", "Carer Stories", "Agency News", "Advice & Tips", "Regulations"];
 
   const breadcrumbs = [
     { label: "Home", href: "/" },
@@ -78,20 +78,20 @@ const BlogPage = () => {
   return (
     <PageLayout>
       <SEOHead
-        title="Dental Health Blog - Tips, Advice & News"
-        description="Expert dental health advice, tips, and the latest news from top dental professionals. Learn about oral hygiene, treatments, cosmetic dentistry, and more."
+        title="Fostering Blog — Tips, Carer Stories & Agency News | Foster Connect"
+        description="Expert fostering advice, carer stories, and the latest news from fostering agencies across the UK. Learn about becoming a foster carer, regulations, and more."
         canonical="/blog/"
-        keywords={['dental health blog', 'oral hygiene tips', 'dental advice', 'dentist blog', 'dental care tips']}
+        keywords={['fostering blog', 'foster carer advice', 'fostering tips', 'foster care stories', 'UK fostering news']}
       />
       <StructuredData
         type="breadcrumb"
         items={breadcrumbs.map(b => ({ name: b.label, url: b.href }))}
       />
 
-      {/* Dark Hero Section */}
+      {/* Hero */}
       <section className="relative bg-dark-section text-dark-section-foreground overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.15),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(234,179,8,0.1),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(235_55%_50%/0.15),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,hsl(38_85%_55%/0.1),transparent_50%)]" />
         <div className="absolute top-20 right-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
         <div className="absolute bottom-10 left-10 w-96 h-96 bg-gold/10 rounded-full blur-3xl" />
         
@@ -99,16 +99,16 @@ const BlogPage = () => {
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
               <BookOpen className="h-4 w-4 text-primary" />
-              <span className="text-sm font-bold text-primary">Dental Insights</span>
+              <span className="text-sm font-bold text-primary">Fostering Insights</span>
             </div>
             
             <h1 className="font-display text-4xl md:text-5xl font-bold mb-6">
-              Dental Health{" "}
+              Fostering{" "}
               <span className="text-gradient">Blog</span>
             </h1>
             
             <p className="text-lg text-dark-section-foreground/70 max-w-xl mx-auto mb-8">
-              Expert advice, dental tips, and the latest news from top dental professionals across the United States.
+              Expert advice, carer stories, and the latest fostering news from across the United Kingdom.
             </p>
 
             <div className="flex flex-wrap justify-center gap-4 text-sm">
@@ -117,8 +117,8 @@ const BlogPage = () => {
                 <span>{posts?.length || 0} Articles</span>
               </div>
               <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
-                <Star className="h-4 w-4 text-gold" />
-                <span>Expert Authors</span>
+                <Heart className="h-4 w-4 text-gold" />
+                <span>Carer Stories</span>
               </div>
               <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
                 <Clock className="h-4 w-4 text-coral" />
@@ -133,7 +133,7 @@ const BlogPage = () => {
       {featuredPosts && featuredPosts.length > 0 && (
         <Section size="md" className="-mt-8 relative z-10">
           <div className="grid md:grid-cols-3 gap-6">
-            {featuredPosts.map((post, i) => (
+            {featuredPosts.map((post: any, i: number) => (
               <Link
                 key={post.id}
                 to={`/blog/${post.slug}`}
@@ -158,7 +158,7 @@ const BlogPage = () => {
                   </div>
                   <div className="absolute inset-0 p-6 flex flex-col justify-end">
                     <Badge className="w-fit bg-white/20 backdrop-blur-sm text-white rounded-full mb-3">
-                      {post.category || "Dental Health"}
+                      {post.category || "Fostering"}
                     </Badge>
                     <h3 className={`font-display font-bold text-white group-hover:text-primary transition-colors ${i === 0 ? "text-2xl md:text-3xl" : "text-lg"}`}>
                       {post.title}
@@ -217,7 +217,7 @@ const BlogPage = () => {
               <div className="grid md:grid-cols-2 gap-6">
                 {[...Array(6)].map((_, i) => (
                   <div key={i} className="card-modern p-0">
-                    <Skeleton className="h-48 rounded-t-3xl" />
+                    <Skeleton className="h-48 rounded-t-xl" />
                     <div className="p-5 space-y-3">
                       <Skeleton className="h-4 w-24" />
                       <Skeleton className="h-6 w-full" />
@@ -283,7 +283,7 @@ const BlogPage = () => {
                 <BookOpen className="h-16 w-16 text-muted-foreground/50 mx-auto mb-4" />
                 <h3 className="font-display text-xl font-bold mb-2">No posts yet</h3>
                 <p className="text-muted-foreground">
-                  We're working on bringing you great dental content. Check back soon!
+                  We're working on bringing you great fostering content. Check back soon!
                 </p>
               </div>
             )}
@@ -306,12 +306,12 @@ const BlogPage = () => {
                   <Search className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg">Find a Dentist</h3>
-                  <p className="text-sm text-muted-foreground">In your city</p>
+                  <h3 className="font-bold text-lg">Find an Agency</h3>
+                  <p className="text-sm text-muted-foreground">In your area</p>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mb-4">
-                Browse {counts?.clinics?.toLocaleString() || "6,600+"}+ verified dental professionals and book your appointment today.
+                Browse {counts?.clinics?.toLocaleString() || "500+"}+ verified fostering agencies and start your journey today.
               </p>
               <Button asChild className="w-full rounded-xl font-bold">
                 <Link to="/search">
@@ -321,11 +321,11 @@ const BlogPage = () => {
               </Button>
             </div>
 
-            {/* Browse by State */}
+            {/* Browse by Region */}
             <div className="card-modern p-6">
               <div className="flex items-center gap-2 mb-4">
                 <MapPin className="h-5 w-5 text-primary" />
-                <h3 className="font-bold">Find by Location</h3>
+                <h3 className="font-bold">Find by Region</h3>
               </div>
               <div className="space-y-2">
                 {popularStates?.map((state) => (
@@ -342,22 +342,22 @@ const BlogPage = () => {
                   to="/search"
                   className="flex items-center justify-center p-3 rounded-xl border border-dashed border-border hover:border-primary hover:text-primary transition-colors text-sm font-medium"
                 >
-                  View All Locations
+                  View All Regions
                 </Link>
               </div>
             </div>
 
-            {/* Popular Services */}
+            {/* Popular Fostering Types */}
             <div className="card-modern p-6">
               <div className="flex items-center gap-2 mb-4">
                 <Star className="h-5 w-5 text-gold" />
-                <h3 className="font-bold">Popular Services</h3>
+                <h3 className="font-bold">Fostering Types</h3>
               </div>
               <div className="flex flex-wrap gap-2">
                 {popularTreatments?.map((treatment) => (
                   <Link
                     key={treatment.slug}
-                    to={`/services/${treatment.slug}`}
+                    to={`/categories/${treatment.slug}`}
                     className="px-3 py-1.5 text-sm rounded-full bg-muted hover:bg-primary/10 hover:text-primary transition-colors"
                   >
                     {treatment.name}
@@ -370,7 +370,7 @@ const BlogPage = () => {
             <div className="card-modern p-6 bg-gradient-to-br from-gold/10 to-gold/5 border-gold/20">
               <h3 className="font-bold text-lg mb-2">Stay Updated</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Get the latest dental health tips and news delivered to your inbox.
+                Get the latest fostering tips and news delivered to your inbox.
               </p>
               <Button asChild variant="outline" className="w-full rounded-xl font-bold border-gold/30 hover:bg-gold/10">
                 <Link to="/contact">Subscribe</Link>
@@ -384,14 +384,14 @@ const BlogPage = () => {
       <Section variant="primary" size="md">
         <div className="text-center">
           <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
-            Ready to Find Your Dentist?
+            Ready to Find Your Agency?
           </h2>
           <p className="text-primary-foreground/80 mb-8 max-w-xl mx-auto">
-            Browse our directory of verified dental professionals across the United States.
+            Browse our directory of verified fostering agencies across the United Kingdom.
           </p>
           <Button asChild size="lg" variant="secondary" className="rounded-2xl font-bold">
             <Link to="/search">
-              Find a Dentist
+              Find an Agency
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </Button>
