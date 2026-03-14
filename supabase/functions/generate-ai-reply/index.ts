@@ -47,13 +47,13 @@ serve(async (req) => {
     // Build the prompt based on review sentiment
     const sentiment = rating >= 4 ? "positive" : rating >= 3 ? "neutral" : "negative";
     
-    const systemPrompt = `You are a professional dental clinic customer service representative for ${clinic_name || "a dental clinic"}. 
+    const systemPrompt = `You are a professional fostering agency customer service representative for ${clinic_name || "a fostering agency"}. 
 Your task is to generate thoughtful, professional, and empathetic review responses.
 
 Guidelines:
 - Be warm, professional, and genuine
-- For positive reviews: Thank the patient sincerely and invite them back
-- For negative reviews: Apologize, acknowledge concerns, offer to resolve issues offline
+- For positive reviews: Thank the carer sincerely and acknowledge their contribution
+- For negative reviews: Apologise, acknowledge concerns, offer to resolve issues offline
 - Keep responses concise (2-4 sentences)
 - Never be defensive or dismissive
 - Don't use excessive emojis or exclamation marks

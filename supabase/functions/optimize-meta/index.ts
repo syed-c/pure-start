@@ -38,7 +38,7 @@ function delay(ms: number): Promise<void> {
 }
 
 // Google-compliant meta tag guidelines
-const SYSTEM_PROMPT = `You are an SEO expert specializing in dental and healthcare websites. Your task is to generate Google-compliant meta titles and descriptions.
+const SYSTEM_PROMPT = `You are an SEO expert specialising in UK fostering and social care websites. Your task is to generate Google-compliant meta titles and descriptions.
 
 STRICT RULES:
 1. Meta Title: MUST be under 60 characters (aim for 50-58). Include primary keyword naturally.
@@ -46,8 +46,9 @@ STRICT RULES:
 3. Use natural language - no keyword stuffing
 4. Follow Google E-E-A-T guidelines
 5. Be specific and relevant to the page content
-6. Include location for local pages
-7. For AppointPanda: We are a dental directory helping patients find dentists
+6. Include location for local pages (UK cities/regions)
+7. For Foster Connect: We are a fostering agency directory helping prospective carers find agencies
+8. Use British English spelling throughout
 
 OUTPUT FORMAT (JSON only, no markdown):
 {

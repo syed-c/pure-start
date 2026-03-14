@@ -141,46 +141,46 @@ serve(async (req) => {
     }
 
     // FAQ System Prompt
-    const FAQ_SYSTEM_PROMPT = `You are an expert FAQ generator for dental pages in the UAE. Generate FAQs that:
+    const FAQ_SYSTEM_PROMPT = `You are an expert FAQ generator for fostering agency pages in the UK. Generate FAQs that:
 
 === STYLE: GOOGLE "PEOPLE ALSO ASK" ===
-- Questions should mirror actual search queries people type into Google
-- Focus on practical, actionable questions patients actually ask
-- Include question variations: "How much does...", "What is...", "Where can I...", "Is it safe to...", "How long does..."
-- Prioritize high search-volume question patterns
+- Questions should mirror actual search queries people type into Google about fostering
+- Focus on practical, actionable questions prospective foster carers actually ask
+- Include question variations: "How much does...", "What is...", "Where can I...", "Can I...", "How long does..."
+- Prioritise high search-volume question patterns
 
 === UNIQUENESS REQUIREMENTS (CRITICAL) ===
 - Each FAQ set MUST be completely unique - no duplicate questions across pages
-- Questions must include location/service-specific context (Dubai, Abu Dhabi, Sharjah, etc.)
+- Questions must include location/service-specific context (London, Manchester, Birmingham, etc.)
 - Never use generic questions that could apply to any page
-- Customize every answer with specific details about the location or service
-- Reference AED pricing, DHA/DOH/MOHAP licensing when relevant
+- Customise every answer with specific details about the location or fostering type
+- Reference Ofsted ratings, local authority areas, and UK regulations when relevant
 
 === CONTENT QUALITY ===
 - Answers should be 40-80 words - comprehensive but scannable
 - Use natural language, avoid jargon
-- Include helpful details: AED cost ranges, time estimates, what to expect
-- Be accurate and trustworthy (UAE dental context)
+- Include helpful details: weekly allowance ranges in £, timeline estimates, what to expect
+- Be accurate and trustworthy (UK fostering context)
 - No promotional language or exaggeration
 
-=== LOCAL SEO OPTIMIZATION (UAE) ===
-- Include city/emirate names in questions naturally
-- Reference local context (neighborhoods, emirates, healthcare authorities)
-- Mention UAE insurance considerations (Daman, AXA, Cigna, MetLife)
+=== LOCAL SEO OPTIMISATION (UK) ===
+- Include city/region names in questions naturally
+- Reference local context (boroughs, counties, local authorities)
+- Mention UK fostering regulations (Ofsted, DBS checks, Form F assessments)
 - Add regional context when appropriate
 
 === QUESTION CATEGORIES TO INCLUDE ===
-1. Cost/pricing questions (in AED)
-2. Process/procedure questions  
+1. Fostering allowance/financial questions (in £)
+2. Assessment process questions
 3. Timing/duration questions
-4. Qualification/eligibility questions
-5. Comparison questions (vs alternatives)
-6. Safety/risk questions
-7. Recovery/aftercare questions
-8. Insurance/payment questions
+4. Eligibility/qualification questions
+5. Comparison questions (types of fostering)
+6. Support/training questions
+7. Placement type questions
+8. Agency-specific questions
 
 IMPORTANT: Return your response as a valid JSON array of objects with "question" and "answer" keys. Example:
-[{"question": "How much does teeth whitening cost in Dubai?", "answer": "Teeth whitening in Dubai typically costs between AED 500 and AED 2,000..."}]
+[{"question": "How much do foster carers get paid in London?", "answer": "Foster carers in London typically receive a weekly fostering allowance of £150-£450..."}]
 
 Return ONLY the JSON array, no other text.`;
 
@@ -191,24 +191,24 @@ Return ONLY the JSON array, no other text.`;
       
       const questionStyles = [
         "Focus on 'How' and 'What' questions primarily",
-        "Lead with cost and pricing questions in AED",
-        "Start with patient experience questions",
-        "Emphasize safety and recovery questions",
+        "Lead with allowance and financial questions in £",
+        "Start with carer experience questions",
+        "Emphasise support and training questions",
         "Begin with eligibility and qualification questions",
-        "Focus on comparison and alternatives questions",
-        "Lead with timeline and process questions",
-        "Start with insurance and payment questions"
+        "Focus on comparison questions between fostering types",
+        "Lead with timeline and assessment process questions",
+        "Start with placement type and matching questions"
       ];
       
       const answerStyles = [
         "Use conversational, friendly tone throughout",
-        "Include specific AED numbers and ranges where possible",
+        "Include specific £ amounts and ranges where possible",
         "Start answers with direct statements, then elaborate",
         "Use 'you' and 'your' to address the reader directly",
         "Include practical tips in each answer",
-        "Reference UAE local context in most answers",
-        "Use reassuring language about safety and DHA licensing",
-        "Mention cost-saving options where relevant"
+        "Reference UK local context in most answers",
+        "Use reassuring language about Ofsted standards and support",
+        "Mention different agency options where relevant"
       ];
       
       const selectedQuestion = questionStyles[timestamp % questionStyles.length];
@@ -218,7 +218,7 @@ Return ONLY the JSON array, no other text.`;
 UNIQUENESS DIRECTIVE (ID: ${randomId}):
 - QUESTION STYLE: ${selectedQuestion}
 - ANSWER STYLE: ${selectedAnswer}
-- Each question MUST include the specific city/emirate/service name`;
+- Each question MUST include the specific city/region/fostering type name`;
     }
 
     // Parse page context from slug and data
@@ -230,62 +230,62 @@ UNIQUENESS DIRECTIVE (ID: ${randomId}):
       
       switch (page_type) {
         case "state":
-          const stateName = title || parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "this emirate";
-          context = `EMIRATE DIRECTORY PAGE: ${stateName}
+          const stateName = title || parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "this region";
+          context = `REGION DIRECTORY PAGE: ${stateName} (UK)
 Focus FAQs on:
-- Finding dentists across ${stateName}
-- DHA/DOH/MOHAP licensing in ${stateName}
-- Dental costs in AED specific to ${stateName}
-- Insurance acceptance in ${stateName}
-- General dental care access in ${stateName}`;
+- Finding fostering agencies across ${stateName}
+- Ofsted ratings and regulatory standards in ${stateName}
+- Fostering allowances specific to ${stateName}
+- Types of fostering available in ${stateName}
+- General fostering access and support in ${stateName}`;
           break;
           
         case "city":
           const cityName = title || parts[1]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "this city";
-          const emirateName = parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "";
-          context = `CITY/AREA DIRECTORY PAGE: ${cityName}, ${emirateName}
+          const regionName = parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "";
+          context = `CITY/AREA DIRECTORY PAGE: ${cityName}, ${regionName} (UK)
 Focus FAQs on:
-- Finding local dentists in ${cityName}
-- Dental costs in AED specific to ${cityName}
-- Emergency dental care availability in ${cityName}
-- Insurance acceptance in the area
-- What to expect at ${cityName} dental offices
-- Pediatric and family dentistry options in ${cityName}`;
+- Finding local fostering agencies in ${cityName}
+- Fostering allowances in £ specific to ${cityName}
+- Types of fostering available in ${cityName}
+- Assessment process and timelines
+- What to expect when fostering in ${cityName}
+- Support groups and training in ${cityName}`;
           break;
           
         case "service_location":
         case "city_treatment":
-          const treatmentName = parts[parts.length - 1]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "dental treatment";
+          const fosteringType = parts[parts.length - 1]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "fostering";
           const locationCity = parts[1]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "this city";
-          const locationEmirate = parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "";
-          context = `SERVICE + LOCATION PAGE: ${treatmentName} in ${locationCity}, ${locationEmirate}
+          const locationRegion = parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "";
+          context = `FOSTERING TYPE + LOCATION PAGE: ${fosteringType} in ${locationCity}, ${locationRegion}
 Focus FAQs on:
-- ${treatmentName} costs in AED in ${locationCity}
-- How ${treatmentName} works and what to expect
-- Finding ${treatmentName} specialists in ${locationCity}
-- Recovery and aftercare for ${treatmentName}
-- Insurance coverage for ${treatmentName}
-- ${treatmentName} alternatives available in ${locationCity}
-- Duration and number of visits for ${treatmentName}`;
+- ${fosteringType} requirements and eligibility in ${locationCity}
+- How ${fosteringType} works and what to expect
+- Finding ${fosteringType} agencies in ${locationCity}
+- Support and training for ${fosteringType}
+- Fostering allowances for ${fosteringType}
+- ${fosteringType} alternatives available in ${locationCity}
+- Assessment timeline for ${fosteringType}`;
           break;
           
         case "treatment":
         case "service":
           const serviceName = title || slug.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase());
-          context = `SERVICE PAGE: ${serviceName} in UAE
+          context = `FOSTERING TYPE PAGE: ${serviceName} in the UK
 Focus FAQs on:
-- What ${serviceName} involves in UAE clinics
-- Who needs ${serviceName}
-- ${serviceName} costs in AED and financing
-- ${serviceName} process and timeline
-- ${serviceName} recovery and results
+- What ${serviceName} involves
+- Who can apply for ${serviceName}
+- ${serviceName} allowances in £ and support
+- ${serviceName} assessment process and timeline
+- ${serviceName} placement expectations
 - Alternatives to ${serviceName}
-- Insurance and payment for ${serviceName} in UAE`;
+- Training and support for ${serviceName}`;
           break;
           
         default:
           context = `PAGE: ${title || slug}
-Generate relevant dental FAQs for this page with UAE context.`;
+Generate relevant fostering FAQs for this page with UK context.`;
       }
       
       return context;
@@ -296,7 +296,7 @@ Generate relevant dental FAQs for this page with UAE context.`;
       const pageContext = getPageContext(pageData);
       const uniqueSeed = generateFAQUniqueSeed(pageData.slug);
       
-      const userPrompt = `Generate exactly ${faqCount} unique FAQs for this dental page:
+      const userPrompt = `Generate exactly ${faqCount} unique FAQs for this fostering page:
 
 ${pageContext}
 
@@ -309,10 +309,10 @@ ${pageData.content.slice(0, 800)}...` : ""}
 ${uniqueSeed}
 
 Generate ${faqCount} FAQs as a JSON array. Each FAQ must:
-1. Be unique to this specific page (include the specific location/service name)
+1. Be unique to this specific page (include the specific location/fostering type name)
 2. Be written in "People Also Ask" style (real Google search queries)
 3. Have comprehensive but scannable answers (40-80 words)
-4. Be locally relevant with UAE-specific details and AED pricing
+4. Be locally relevant with UK-specific details and £ pricing
 
 Return ONLY a valid JSON array like: [{"question":"...","answer":"..."},...]`;
 

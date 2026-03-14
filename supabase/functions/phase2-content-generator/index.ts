@@ -27,215 +27,202 @@ interface Phase2Request {
 // SERVICE PAGE TEMPLATE (Sprint 2.1)
 // 14 sections, 3,500-5,000 words
 // ========================================
-const SERVICE_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE service page for AppointPanda dental directory.
+const SERVICE_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE fostering type page for Foster Connect, the UK fostering agency directory.
 
 === TEMPLATE STRUCTURE (3,500-5,000 words) ===
 
-1. H1: "[Service Name]: Complete Guide, Costs & Best Dentists [2026]"
+1. H1: "[Fostering Type]: Complete Guide, Support & Agencies [2026]"
 
 2. INTRODUCTION (200 words)
-   - What is this service
-   - Why patients need it
+   - What is this type of fostering
+   - Why it matters and who it helps
    - What to expect overview
    - Hook the reader immediately
 
-3. H2: What is [Service Name]? (400 words)
-   - Detailed medical explanation
-   - Types/variations of the procedure
-   - Materials used (titanium, ceramic, composite, etc.)
-   - Technology involved (CAD/CAM, 3D imaging, etc.)
+3. H2: What is [Fostering Type]? (400 words)
+   - Detailed explanation of this fostering type
+   - Types/variations of placements
+   - Who benefits from this type of fostering
+   - How it differs from other fostering types
 
-4. H2: When Do You Need [Service]? (300 words)
-   - Symptoms that indicate need
-   - Medical conditions requiring treatment
-   - Warning signs to watch for
-   - Preventive vs. restorative context
+4. H2: Who Can Become a [Fostering Type] Carer? (300 words)
+   - Eligibility requirements
+   - Personal qualities agencies look for
+   - Common misconceptions about eligibility
+   - Why diverse backgrounds are welcomed
 
-5. H2: The [Service] Procedure: Step-by-Step (500 words)
-   - Initial consultation and assessment
-   - Preparation phase
-   - During the procedure (detailed)
-   - Recovery timeline expectations
-   - Technology and equipment used
-   - Duration and number of visits
+5. H2: The Assessment Process: Step-by-Step (500 words)
+   - Initial enquiry and information events
+   - Skills to Foster training
+   - Form F assessment (detailed)
+   - Fostering panel and approval
+   - Timeline and what to expect at each stage
+   - DBS checks and references
 
-6. H2: Cost of [Service] in [2026] (600 words)
-   - National average cost range
-   - COST TABLE BY STATE (use markdown table):
-     | State | Average Cost | Range |
-     |-------|--------------|-------|
-     | California | $X,XXX | $X,XXX-$X,XXX |
-     | Massachusetts | $X,XXX | $X,XXX-$X,XXX |
-     | Connecticut | $X,XXX | $X,XXX-$X,XXX |
-     | New Jersey | $X,XXX | $X,XXX-$X,XXX |
-   - COST TABLE BY TOP CITIES (10 cities)
-   - Factors affecting cost (complexity, materials, location, dentist experience)
-   - Payment options and financing
+6. H2: Fostering Allowances for [Fostering Type] (600 words)
+   - National minimum allowance rates
+   - ALLOWANCE TABLE BY REGION (use markdown table):
+     | Region | Weekly Allowance | Age Range |
+     |--------|-----------------|-----------|
+     | London | £XXX-£XXX | 0-17 |
+     | South East | £XXX-£XXX | 0-17 |
+     | North West | £XXX-£XXX | 0-17 |
+     | Midlands | £XXX-£XXX | 0-17 |
+   - Factors affecting allowances (age, needs, agency type)
+   - Additional financial support available
+   - Tax implications for foster carers
 
-7. H2: Does Insurance Cover [Service]? (400 words)
-   - General coverage overview
-   - What major insurers typically cover (percentage breakdown)
-   - Pre-authorization requirements
-   - What's usually included/excluded
-   - How to verify your coverage
-   - FSA/HSA applicability
-   - CTA: "Check dentists accepting your insurance on AppointPanda"
+7. H2: Training & Support for [Fostering Type] Carers (400 words)
+   - Pre-approval training overview
+   - Ongoing professional development
+   - 24/7 support from supervising social workers
+   - Peer support groups and networks
+   - Specialist training for complex needs
+   - CTA: "Find agencies with comprehensive training on Foster Connect"
 
-8. H2: Recovery & Aftercare (400 words)
-   - Immediate post-procedure expectations
-   - Day-by-day recovery timeline
-   - Care instructions (dos and don'ts)
-   - When to call your dentist
-   - Potential complications and warning signs
-   - Long-term maintenance
+8. H2: Day-to-Day Life as a [Fostering Type] Carer (400 words)
+   - What a typical day looks like
+   - Working with social workers and birth families
+   - Education and school support
+   - Managing challenging behaviours
+   - Self-care and respite options
+   - Building meaningful relationships
 
-9. H2: Benefits of [Service] (300 words)
-   - Functional benefits (chewing, speaking, etc.)
-   - Aesthetic benefits
-   - Long-term oral health benefits
-   - Psychological/confidence benefits
-   - Longevity and durability
+9. H2: Benefits of [Fostering Type] (300 words)
+   - Making a difference to children's lives
+   - Personal growth and development
+   - Professional skills development
+   - Community and belonging
+   - Financial security
 
-10. H2: [Service] vs [Alternative] (400 words)
-    - Detailed comparison with main alternative
+10. H2: [Fostering Type] vs [Alternative Type] (400 words)
+    - Detailed comparison with alternative
     - COMPARISON TABLE:
-      | Factor | [Service] | [Alternative] |
-      |--------|-----------|---------------|
-      | Cost | | |
+      | Factor | [Type] | [Alternative] |
+      |--------|--------|---------------|
       | Duration | | |
-      | Longevity | | |
-      | Invasiveness | | |
-    - Pros and cons of each
-    - Which is right for different patient profiles
+      | Support Level | | |
+      | Allowance | | |
+      | Training | | |
+    - Which is right for different circumstances
 
-11. H2: How to Choose a Dentist for [Service] (350 words)
-    - Qualifications and certifications to look for
-    - Questions to ask during consultation
+11. H2: How to Choose a Fostering Agency for [Type] (350 words)
+    - Ofsted ratings and what they mean
+    - Questions to ask during information events
     - Red flags to avoid
-    - What to expect in your first visit
-    - Importance of before/after photos and reviews
+    - What to look for in agency support
+    - Importance of carer reviews
 
-12. H2: Find Top [Service] Dentists Near You (200 words)
-    - CTA to search AppointPanda directory
-    - Featured cities links
-    - "Book your consultation today"
-    - Trust signals (verified dentists, reviews)
+12. H2: Find [Fostering Type] Agencies Near You (200 words)
+    - CTA to search Foster Connect directory
+    - Featured cities/regions links
+    - "Submit your enquiry today"
+    - Trust signals (verified agencies, Ofsted-registered, carer reviews)
 
 13. H2: Frequently Asked Questions (500 words)
     - 10-15 common questions with detailed answers
-    - Include cost, pain, duration, alternatives questions
+    - Include allowances, eligibility, duration, alternatives questions
     - Format for FAQ schema markup
 
-14. H2: Patient Success Stories (200 words)
-    - General patient satisfaction insights
-    - What patients typically report
+14. H2: Carer Stories & Experiences (200 words)
+    - General carer satisfaction insights
+    - What carers typically report
     - Link to verified reviews
 
 === CONTENT REQUIREMENTS ===
-- Write in AppointPanda's first-party voice
-- No medical claims or diagnoses
-- Cite approximate costs with ranges
+- Write in Foster Connect's first-party voice
+- No false promises or guarantees
+- Cite approximate allowances with ranges in £
 - Include multiple CTAs throughout
 - Mobile-friendly formatting
 - Natural keyword usage (no stuffing)
+- British English spelling
 - E-E-A-T compliant`;
 
 // ========================================
 // CITY PAGE TEMPLATE (Sprint 2.2)
 // 11 sections, 2,500-3,500 words
 // ========================================
-const CITY_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE city directory page for AppointPanda.
+const CITY_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE city directory page for Foster Connect.
 
 === TEMPLATE STRUCTURE (2,500-3,500 words) ===
 
-1. H1: "Best Dentists in [City], [State] | [#] Verified Clinics [2026]"
+1. H1: "Fostering Agencies in [City], [Region] | [#] Verified Agencies [2026]"
 
 2. INTRODUCTION (200 words)
-   - Overview of dental care in this city
-   - Number of clinics/dentists available
-   - What makes this city's dental scene unique
-   - Local context (neighborhoods, demographics)
+   - Overview of fostering in this city
+   - Number of agencies available
+   - What makes this city's fostering landscape unique
+   - Local context (boroughs, demographics, local authority)
 
-3. H2: Top-Rated Dentists in [City] (300 words)
-   - Preview of what patients can find
-   - Types of practices available
-   - How ratings work on AppointPanda
-   - CTA: "View all dentists in [City]"
+3. H2: Top-Rated Fostering Agencies in [City] (300 words)
+   - Preview of what prospective carers can find
+   - Types of agencies available (IFA vs local authority)
+   - How Ofsted ratings work
+   - CTA: "View all agencies in [City]"
 
-4. H2: Dental Services Available in [City] (400 words)
-   - List of all major services offered
-   - Most popular procedures in this city
-   - Specialty services (orthodontics, oral surgery, etc.)
-   - Pediatric and family dentistry
-   - Links to service-specific pages
+4. H2: Types of Fostering Available in [City] (400 words)
+   - List of all fostering types offered
+   - Most needed placement types in this city
+   - Specialist fostering (therapeutic, UASC, parent & child)
+   - Emergency and respite fostering
+   - Links to fostering-type-specific pages
 
-5. H2: Average Dental Costs in [City] (500 words)
-   - COST COMPARISON TABLE (15 procedures):
-     | Procedure | [City] Avg | [State] Avg | National Avg |
-     |-----------|------------|-------------|--------------|
-     | Cleaning | $XX | $XX | $XX |
-     | Filling | $XXX | $XXX | $XXX |
-     | Crown | $X,XXX | $X,XXX | $X,XXX |
-     | Root Canal | $X,XXX | $X,XXX | $X,XXX |
-     | Implant | $X,XXX | $X,XXX | $X,XXX |
-     | Invisalign | $X,XXX | $X,XXX | $X,XXX |
-     | Extraction | $XXX | $XXX | $XXX |
-     | Deep Cleaning | $XXX | $XXX | $XXX |
-     | Veneer (per tooth) | $X,XXX | $X,XXX | $X,XXX |
-     | Dentures | $X,XXX | $X,XXX | $X,XXX |
-   - Why costs vary in [City]
-   - Tips for affordable dental care
+5. H2: Fostering Allowances in [City] (500 words)
+   - ALLOWANCE TABLE (by fostering type):
+     | Fostering Type | Weekly Allowance | Additional Support |
+     |----------------|-----------------|-------------------|
+     | Short-term | £XXX-£XXX | Training, supervision |
+     | Long-term | £XXX-£XXX | Education support |
+     | Emergency | £XXX-£XXX | 24/7 on-call |
+     | Therapeutic | £XXX-£XXX | Specialist training |
+     | Respite | £XXX-£XXX | Flexible scheduling |
+   - Why allowances vary between agencies
+   - Additional financial support and benefits
 
-6. H2: Dental Insurance Accepted in [City] (300 words)
-   - Most commonly accepted insurance providers
-   - Percentage of dentists accepting major insurers
-   - Medicaid/Medicare acceptance
-   - How to find dentists with your insurance on AppointPanda
+6. H2: The Fostering Assessment Process (300 words)
+   - Overview of Form F assessment
+   - Timeline expectations (typically 4-6 months)
+   - What to expect at fostering panel
+   - How Foster Connect helps you compare agencies
 
-7. H2: Dentists by Neighborhood (400 words)
-   - List 6-10 major neighborhoods
-   - Number of clinics per area
-   - Character of each neighborhood's dental options
-   - Links to neighborhood-specific searches
-   
-   Example neighborhoods to cover:
-   - Downtown [City]
-   - [Major Neighborhood 1]
-   - [Major Neighborhood 2]
-   - [Suburb/Area]
+7. H2: Fostering by Area in [City] (400 words)
+   - List 6-10 major boroughs/areas
+   - Number of agencies per area
+   - Character of each area's fostering options
+   - Links to area-specific searches
 
-8. H2: Emergency Dental Care in [City] (300 words)
-   - 24/7 emergency dentist availability
-   - Weekend and evening availability
-   - Walk-in clinics
-   - What constitutes a dental emergency
-   - Average emergency visit costs
-   - CTA: "Find emergency dentists in [City]"
+8. H2: Emergency Fostering in [City] (300 words)
+   - Emergency placement availability
+   - How emergency fostering works
+   - What constitutes an emergency placement
+   - CTA: "Find emergency fostering agencies in [City]"
 
-9. H2: Finding a Dentist in [City]: What to Know (350 words)
-   - State licensing requirements
-   - How to verify credentials
-   - Patient rights in [State]
-   - What to expect at first visit
-   - Choosing between private practice vs. group practice
+9. H2: Starting Your Fostering Journey in [City] (350 words)
+   - Ofsted registration requirements
+   - How to verify an agency's credentials
+   - Carer rights and responsibilities
+   - What to expect during your first enquiry
+   - Choosing between IFAs and local authority
 
-10. H2: [City] Dental Care Statistics (250 words)
-    - Number of practicing dentists
-    - Dentist to population ratio
-    - Most common dental issues in area
-    - Community dental health programs
-    - Dental schools or teaching clinics nearby
+10. H2: [City] Fostering Statistics (250 words)
+    - Number of looked-after children in the area
+    - Agency availability
+    - Most common fostering needs
+    - Community fostering programmes
+    - Local authority partnerships
 
 11. H2: Frequently Asked Questions (400 words)
     - 8-10 city-specific FAQs
-    - Questions about insurance, costs, availability
+    - Questions about eligibility, allowances, assessment
     - Format for FAQ schema markup
 
 === LOCAL CONTEXT REQUIREMENTS ===
-- Mention specific neighborhoods by name
+- Mention specific boroughs/areas by name
 - Reference local landmarks or areas
-- Include regional cost context
-- Note any unique local factors (university towns, tech hubs, etc.)`;
+- Include regional allowance context
+- Note any unique local factors (urban, diverse community, etc.)
+- British English spelling throughout`;
 
 // ========================================
 // BLOG POST TEMPLATES (Sprint 2.3)

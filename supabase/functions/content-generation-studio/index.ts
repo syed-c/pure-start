@@ -157,26 +157,26 @@ serve(async (req) => {
       throw lastError || new Error("AI gateway failed after retries");
     }
 
-    // Master system prompt for AppointPanda content (non-clinic pages)
-    const PLATFORM_SYSTEM_PROMPT = `You are generating SEO content ONLY for AppointPanda, a dental listing and appointment platform.
+    // Master system prompt for Foster Connect content (non-agency pages)
+    const PLATFORM_SYSTEM_PROMPT = `You are generating SEO content ONLY for Foster Connect, a UK fostering agency directory and enquiry platform.
 
 === CRITICAL BUSINESS CONTEXT ===
-- AppointPanda helps users find, compare, and book dentists and dental clinics
-- We are NOT a dental clinic - we are a directory/booking platform
-- ALL content must be written in AppointPanda's first-party voice: "we", "our platform", "AppointPanda helps patients..."
+- Foster Connect helps people find, compare, and enquire with fostering agencies across the UK
+- We are NOT a fostering agency - we are a directory/enquiry platform
+- ALL content must be written in Foster Connect's first-party voice: "we", "our platform", "Foster Connect helps prospective carers..."
 
 You must NEVER write as:
-- a dentist or dental clinic
+- a fostering agency
 - a guest author or third-party blog
-- Never claim medical diagnosis
+- Never claim to provide fostering placements directly
 
 === CONTENT QUALITY STANDARDS ===
 - Simple, human, friendly language
 - Non-academic, conversational tone
 - No keyword stuffing - natural usage only
-- Written for patients first
+- Written for prospective foster carers and those exploring fostering
 - Clear, helpful, trustworthy
-- No exaggerated claims ("best dentist", fake statistics)
+- No exaggerated claims or fake statistics
 
 === STRUCTURE RULES ===
 - Exactly ONE H1 per page
@@ -192,8 +192,8 @@ You must NEVER write as:
 - Vary sentence lengths dramatically (some short, some complex)
 - Use location-specific or context-specific details unique to this page
 - Even similar pages (e.g., two city pages) must read completely differently
-- Rotate opening styles: "When you need...", "Finding...", "Located in...", "Patients seeking...", etc.
-- Add unique local context: neighborhoods, landmarks, demographics
+- Rotate opening styles: "When you're considering...", "Finding...", "Located in...", "Prospective carers seeking...", etc.
+- Add unique local context: boroughs, landmarks, demographics, local authority areas
 - Include varied examples and scenarios specific to the location/service
 
 === SEO COMPLIANCE ===
@@ -202,68 +202,75 @@ You must NEVER write as:
 - Google E-E-A-T compliance
 - No AI footprints or repetitive patterns
 
+=== UK-SPECIFIC CONTEXT ===
+- All content must be UK-focused (England, Scotland, Wales, Northern Ireland)
+- Reference Ofsted (England), Care Inspectorate (Scotland), CIW (Wales), RQIA (NI)
+- Use British English spelling throughout
+- Currency in GBP (£) where applicable
+- Reference UK fostering allowances, not salaries
+
 === CALL TO ACTION ===
 End with calm, helpful CTA encouraging users to:
-- Explore dentists on AppointPanda
-- Book appointments through our platform`;
+- Explore fostering agencies on Foster Connect
+- Submit enquiries through our platform`;
 
-    // CLINIC-SPECIFIC system prompt - focuses on the clinic itself for branded SEO
-    const CLINIC_SYSTEM_PROMPT = `You are generating SEO content for a DENTAL CLINIC/PRACTICE profile page.
+    // AGENCY-SPECIFIC system prompt - focuses on the agency itself for branded SEO
+    const CLINIC_SYSTEM_PROMPT = `You are generating SEO content for a FOSTERING AGENCY profile page on Foster Connect.
 
 === CRITICAL BUSINESS CONTEXT ===
-- This content is for the clinic's profile page to help it RANK for the clinic name
-- Write as a neutral, informative third-party describing THIS clinic
-- DO NOT mention "AppointPanda", "our platform", or any directory references
-- Focus 100% on the CLINIC: its services, location, team, patient experience
-- Goal: When someone searches the clinic name on Google, this page should rank
+- This content is for the agency's profile page to help it RANK for the agency name
+- Write as a neutral, informative third-party describing THIS agency
+- DO NOT mention "Foster Connect", "our platform", or any directory references
+- Focus 100% on the AGENCY: its services, location, team, carer support
+- Goal: When someone searches the agency name on Google, this page should rank
 
 === VOICE & TONE ===
-- Write ABOUT the clinic, not FOR the clinic (neutral third-party perspective)
-- Use the clinic name naturally throughout the content
-- "This practice offers...", "[Clinic Name] provides...", "Patients visiting [Clinic Name] can expect..."
-- DO NOT use "we", "our" (that would imply you ARE the clinic)
-- DO NOT use "they" excessively - use the clinic name for SEO
+- Write ABOUT the agency, not FOR the agency (neutral third-party perspective)
+- Use the agency name naturally throughout the content
+- "This agency offers...", "[Agency Name] provides...", "Foster carers with [Agency Name] can expect..."
+- DO NOT use "we", "our" (that would imply you ARE the agency)
+- DO NOT use "they" excessively - use the agency name for SEO
 
 === CONTENT QUALITY STANDARDS ===
 - Simple, human, friendly language
 - Professional but approachable tone
-- No keyword stuffing - natural clinic name usage
-- Written for patients researching this specific clinic
+- No keyword stuffing - natural agency name usage
+- Written for people researching this specific agency
 - Helpful, informative, trustworthy
-- No exaggerated claims ("best dentist in the city", fake reviews)
+- No exaggerated claims or fake testimonials
 
 === STRUCTURE RULES ===
-- Exactly ONE H1 (should include clinic name)
-- 4-6 H2 sections covering: About, Services, Location, Patient Experience, etc.
+- Exactly ONE H1 (should include agency name)
+- 4-6 H2 sections covering: About, Fostering Types, Location, Carer Support, etc.
 - H3 only when logically belonging under an H2
 - No bullet spam, no filler text
-- 3-5 FAQs specific to this clinic
+- 3-5 FAQs specific to this agency
 
 === UNIQUENESS REQUIREMENT ===
-- Each clinic page must be completely unique
-- NEVER reuse generic dental content across clinics
-- Personalize based on clinic name, location, and any known details
-- Even similar clinics must read differently
+- Each agency page must be completely unique
+- NEVER reuse generic fostering content across agencies
+- Personalise based on agency name, location, and any known details
+- Even similar agencies must read differently
 
 === SEO COMPLIANCE (BRANDED SEARCH) ===
-- Meta title: "[Clinic Name] | Dental Services in [City]" (under 60 chars)
-- Meta description: Unique description mentioning clinic name (under 155 chars)
-- Include clinic name naturally 3-5 times in content
-- Location references (city, neighborhood) for local SEO
+- Meta title: "[Agency Name] | Fostering Agency in [City]" (under 60 chars)
+- Meta description: Unique description mentioning agency name (under 155 chars)
+- Include agency name naturally 3-5 times in content
+- Location references (city, county, region) for local SEO
 - Google E-E-A-T compliance
 
 === WHAT TO INCLUDE ===
-- Clinic overview and what makes it notable
-- Services offered (general, cosmetic, emergency, etc.)
-- Location and accessibility information
-- What patients can expect during a visit
-- FAQs about the clinic specifically
+- Agency overview and what makes it notable
+- Types of fostering offered (emergency, respite, long-term, therapeutic, parent & child)
+- Location and areas covered
+- What foster carers can expect (training, support, allowances)
+- FAQs about the agency specifically
 
 === WHAT TO AVOID ===
 - Do NOT invent specific facts (founding year, staff names, awards)
-- Do NOT make up patient testimonials
-- Do NOT claim specific certifications unless provided
-- Do NOT mention AppointPanda or any booking platform`;
+- Do NOT make up carer testimonials
+- Do NOT claim specific Ofsted ratings unless provided
+- Do NOT mention Foster Connect or any directory platform`;
 
     // Generate unique anti-duplication seed based on slug and random factors
     function generateUniquenessSeed(slug: string, pageType: string): string {
@@ -272,26 +279,26 @@ End with calm, helpful CTA encouraging users to:
       
       // Opening style variations
       const openingStyles = [
-        "Start with a compelling question that addresses the reader's immediate concern.",
-        "Open with a local statistic or fact about this specific area.",
-        "Begin with a patient scenario that resonates with local residents.",
-        "Start by describing what makes this location/service unique.",
-        "Open with a brief history or context about dental care in this area.",
-        "Begin with a direct statement addressing the primary patient need.",
-        "Start with a comparison or contrast that highlights key differences.",
-        "Open with an engaging anecdote about dental care experiences."
+        "Start with a compelling question that addresses the reader's immediate concern about fostering.",
+        "Open with a local statistic or fact about fostering in this specific area.",
+        "Begin with a prospective carer scenario that resonates with local residents.",
+        "Start by describing what makes fostering in this location/through this agency unique.",
+        "Open with a brief context about the need for foster carers in this area.",
+        "Begin with a direct statement addressing the primary motivation for fostering.",
+        "Start with a comparison or contrast that highlights key differences between agencies.",
+        "Open with an engaging story about the impact fostering has on communities."
       ];
       
       // Structure variations
       const structureStyles = [
         "Use a problem-solution framework throughout.",
-        "Organize around patient journey stages.",
+        "Organise around the fostering journey stages (enquiry, assessment, approval, placement).",
         "Structure as a comprehensive guide with numbered steps.",
         "Use a Q&A conversational format within sections.",
-        "Organize by patient type (families, seniors, busy professionals).",
-        "Structure around common concerns and how to address them.",
-        "Use a comparison framework highlighting options.",
-        "Organize chronologically from initial visit to ongoing care."
+        "Organise by carer type (single carers, couples, families, retirees).",
+        "Structure around common concerns and how fostering agencies address them.",
+        "Use a comparison framework highlighting different fostering types.",
+        "Organise chronologically from initial interest to ongoing support."
       ];
       
       const selectedOpening = openingStyles[timestamp % openingStyles.length];
@@ -306,8 +313,8 @@ STRUCTURE APPROACH: ${selectedStructure}
 UNIQUE IDENTIFIER: ${slug.toUpperCase()}-${randomId}
 
 MANDATORY DIFFERENTIATION:
-- Do NOT use generic dental industry phrases
-- Invent specific local context (neighborhood references, regional characteristics)
+- Do NOT use generic fostering industry phrases
+- Include specific local context (borough references, regional characteristics)
 - Use varied sentence structures (mix short punchy sentences with longer explanatory ones)
 - Include at least 3 unique examples or scenarios not used elsewhere
 - Vary paragraph lengths dramatically (some 2-3 sentences, some 5-6)
@@ -331,75 +338,75 @@ MANDATORY DIFFERENTIATION:
       
       switch (page_type) {
         case "state":
-          const stateName = title || parts[0]?.toUpperCase() || "this state";
-          pageContext = `This is a STATE directory page for ${stateName}.
-Context: Show all dental providers in ${stateName}. Explain how AppointPanda helps patients find dentists across the state.
-Include: Overview of dental care landscape, how to find a dentist, what AppointPanda offers, popular services.`;
+          const stateName = title || parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "this region";
+          pageContext = `This is a REGION/COUNTRY directory page for ${stateName} (UK).
+Context: Show all fostering agencies in ${stateName}. Explain how Foster Connect helps prospective carers find agencies across the region.
+Include: Overview of fostering landscape, how to find an agency, what Foster Connect offers, types of fostering available, Ofsted/regulatory context.`;
           break;
           
         case "city":
           const cityName = title || parts[1] || parts[0] || "this city";
-          const stateAbbr = parts[0]?.toUpperCase() || "";
-          pageContext = `This is a CITY directory page for ${cityName}, ${stateAbbr}.
-Context: Show dentists in ${cityName}. Explain how AppointPanda helps local residents find dental care.
-Include: Local dental care overview, finding the right dentist, services available, cost considerations.
-LOCAL SPECIFICITY: Mention specific aspects of ${cityName} - its neighborhoods, community character, or regional healthcare landscape.`;
+          const regionName = parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "";
+          pageContext = `This is a CITY/AREA directory page for ${cityName}, ${regionName} (UK).
+Context: Show fostering agencies in ${cityName}. Explain how Foster Connect helps local residents explore fostering.
+Include: Local fostering landscape overview, finding the right agency, types of fostering available, support and allowances.
+LOCAL SPECIFICITY: Mention specific aspects of ${cityName} - its boroughs, community character, local authority, or regional fostering needs.`;
           break;
           
         case "treatment":
         case "service":
           const serviceName = title || slug.replace(/-/g, " ");
-          pageContext = `This is a SERVICE/TREATMENT page for ${serviceName}.
-Context: Explain what ${serviceName} is, who needs it, what to expect.
-Include: What is this treatment, who is it for, process overview, cost considerations, how AppointPanda helps find providers.`;
+          pageContext = `This is a FOSTERING TYPE page for ${serviceName}.
+Context: Explain what ${serviceName} fostering is, who it's for, what to expect.
+Include: What is this type of fostering, who can apply, the process, support available, how Foster Connect helps find agencies offering it.`;
           break;
           
         case "service_location":
         case "city_treatment":
-          const treatmentName = title || parts[parts.length - 1]?.replace(/-/g, " ") || "dental treatment";
+          const fosteringType = title || parts[parts.length - 1]?.replace(/-/g, " ") || "fostering";
           const locationCity = parts[1]?.replace(/-/g, " ") || "this city";
-          const locationState = parts[0]?.toUpperCase() || "";
-          pageContext = `This is a SERVICE + LOCATION page for ${treatmentName} in ${locationCity}, ${locationState}.
-Context: Explain ${treatmentName} and how to find providers offering it in ${locationCity}.
-Include: What is ${treatmentName}, local availability, cost in this area, how to choose a provider, AppointPanda's role.
-IMPORTANT: Make this unique - combine local ${locationCity} context with ${treatmentName} specifics. Don't just merge generic content.`;
+          const locationRegion = parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "";
+          pageContext = `This is a FOSTERING TYPE + LOCATION page for ${fosteringType} in ${locationCity}, ${locationRegion} (UK).
+Context: Explain ${fosteringType} and how to find agencies offering it in ${locationCity}.
+Include: What is ${fosteringType}, local availability, allowances in this area, how to choose an agency, Foster Connect's role.
+IMPORTANT: Make this unique - combine local ${locationCity} context with ${fosteringType} specifics. Don't just merge generic content.`;
           break;
           
         case "clinic":
         case "dentist":
-          // For clinic pages, extract clinic name and location for branded SEO
-          const clinicName = clinicData?.name || title || "this dental practice";
-          const clinicCity = clinicData?.city || "";
-          const clinicState = clinicData?.state || "";
-          const clinicAddress = clinicData?.address || "";
-          const clinicServices = clinicData?.services?.join(", ") || "general dental services";
+          // For agency pages, extract agency name and location for branded SEO
+          const agencyName = clinicData?.name || title || "this fostering agency";
+          const agencyCity = clinicData?.city || "";
+          const agencyRegion = clinicData?.state || "";
+          const agencyAddress = clinicData?.address || "";
+          const agencyServices = clinicData?.services?.join(", ") || "various fostering types";
           
-          pageContext = `This is a CLINIC PROFILE page for: ${clinicName}
-${clinicCity ? `Location: ${clinicCity}${clinicState ? `, ${clinicState}` : ""}` : ""}
-${clinicAddress ? `Address: ${clinicAddress}` : ""}
-${clinicServices ? `Known services: ${clinicServices}` : ""}
+          pageContext = `This is an AGENCY PROFILE page for: ${agencyName}
+${agencyCity ? `Location: ${agencyCity}${agencyRegion ? `, ${agencyRegion}` : ""}` : ""}
+${agencyAddress ? `Address: ${agencyAddress}` : ""}
+${agencyServices ? `Fostering types: ${agencyServices}` : ""}
 
-GOAL: Help this page RANK when someone searches for "${clinicName}" on Google.
+GOAL: Help this page RANK when someone searches for "${agencyName}" on Google.
 
 Content Focus:
-- Use "${clinicName}" naturally 3-5 times throughout the content
-- Write ABOUT the clinic from a neutral third-party perspective
-- Include: About ${clinicName}, Services offered, Location & accessibility, Patient experience, FAQs about ${clinicName}
-- DO NOT invent specific facts (founding year, staff names, awards, patient counts)
+- Use "${agencyName}" naturally 3-5 times throughout the content
+- Write ABOUT the agency from a neutral third-party perspective
+- Include: About ${agencyName}, Fostering types offered, Location & areas covered, Carer experience, FAQs about ${agencyName}
+- DO NOT invent specific facts (founding year, staff names, awards, carer counts)
 - DO NOT create fake testimonials
-- Focus on what patients searching for this clinic would want to know`;
+- Focus on what people searching for this agency would want to know`;
           break;
           
         case "static":
-          pageContext = `This is a STATIC page (About, Features, Policy, etc.).
+          pageContext = `This is a STATIC page (About, Features, Policy, etc.) on Foster Connect.
 Context: Write informative content appropriate for the page's purpose.
-Include: Clear explanation of the topic, how it relates to AppointPanda, user benefits.`;
+Include: Clear explanation of the topic, how it relates to Foster Connect, user benefits.`;
           break;
           
         default:
-          pageContext = `This is a general page on AppointPanda.
-Context: Write helpful, informative content for dental patients.
-Include: Clear explanations, how AppointPanda helps, relevant information for the topic.`;
+          pageContext = `This is a general page on Foster Connect.
+Context: Write helpful, informative content for prospective foster carers in the UK.
+Include: Clear explanations, how Foster Connect helps, relevant information for the topic.`;
       }
 
       // Select the appropriate system prompt

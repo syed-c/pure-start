@@ -117,21 +117,22 @@ serve(async (req) => {
       }
 
       const targetWords = wordCount || 150;
-      const prompt = `Write a professional, unique description for a dental clinic:
+      const prompt = `Write a professional, unique description for a fostering agency:
 
-Clinic Name: ${clinicName}
-Location: ${clinicCity || "Unknown City"}, ${clinicState || "Unknown State"}
+Agency Name: ${clinicName}
+Location: ${clinicCity || "Unknown City"}, ${clinicState || "Unknown Region"}
 Address: ${clinicAddress || "Not specified"}
 
 Requirements:
 - Write naturally as if a human wrote it, avoiding generic AI phrases
-- Mention the specific location (city, state)
-- Highlight what patients can expect (comprehensive care, modern techniques, patient comfort)
+- Mention the specific location (city, region)
+- Highlight what foster carers can expect (comprehensive support, training, allowances)
 - Include a welcoming tone that builds trust
 - Keep it approximately ${targetWords} words (can be ${targetWords - 20} to ${targetWords + 20} words)
 - Do NOT include any placeholder text or brackets
 - Do NOT mention specific services unless you're certain about them
-- Focus on professionalism, patient care, and community presence
+- Focus on professionalism, carer support, and community presence
+- Use British English spelling
 
 Return ONLY the description text, no quotes or formatting.`;
 
@@ -145,7 +146,7 @@ Return ONLY the description text, no quotes or formatting.`;
           body: JSON.stringify({
             model: "gemini-2.5-flash",
             messages: [
-              { role: "system", content: "You are a professional medical copywriter specializing in dental practice descriptions. Write authentic, human-sounding content that builds trust with potential patients." },
+              { role: "system", content: "You are a professional copywriter specialising in UK fostering agency descriptions. Write authentic, human-sounding content that builds trust with prospective foster carers." },
               { role: "user", content: prompt }
             ],
             temperature: 0.7,
@@ -228,22 +229,23 @@ Return ONLY the description text, no quotes or formatting.`;
           const stateName = (clinic.city as any)?.state?.name || "Unknown State";
           const stateAbbr = (clinic.city as any)?.state?.abbreviation || "";
 
-          const prompt = `Write a professional, unique description for a dental clinic:
+          const prompt = `Write a professional, unique description for a fostering agency:
 
-Clinic Name: ${clinic.name}
+Agency Name: ${clinic.name}
 Location: ${cityName}, ${stateName} ${stateAbbr}
 Address: ${clinic.address || "Not specified"}
 Rating: ${clinic.rating || "Not rated"} stars (${clinic.review_count || 0} reviews)
 
 Requirements:
 - Write naturally as if a human wrote it, avoiding generic AI phrases
-- Mention the specific location (city, state)
-- Highlight what patients can expect (comprehensive care, modern techniques, patient comfort)
+- Mention the specific location (city, region)
+- Highlight what foster carers can expect (comprehensive support, training, allowances)
 - Include a welcoming tone that builds trust
 - Keep it approximately ${targetWords} words (can be ${targetWords - 20} to ${targetWords + 20} words)
 - Do NOT include any placeholder text or brackets
 - Do NOT mention specific services unless you're certain about them
-- Focus on professionalism, patient care, and community presence
+- Focus on professionalism, carer support, and community presence
+- Use British English spelling
 
 Return ONLY the description text, no quotes or formatting.`;
 
@@ -256,7 +258,7 @@ Return ONLY the description text, no quotes or formatting.`;
             body: JSON.stringify({
               model: "gemini-2.5-flash",
               messages: [
-                { role: "system", content: "You are a professional medical copywriter specializing in dental practice descriptions. Write authentic, human-sounding content that builds trust with potential patients." },
+                { role: "system", content: "You are a professional copywriter specialising in UK fostering agency descriptions. Write authentic, human-sounding content that builds trust with prospective foster carers." },
                 { role: "user", content: prompt }
               ],
               temperature: 0.7,
@@ -350,22 +352,23 @@ Return ONLY the description text, no quotes or formatting.`;
           const stateName = (clinic.city as any)?.state?.name || "Unknown State";
           const stateAbbr = (clinic.city as any)?.state?.abbreviation || "";
 
-          const prompt = `Write a professional, unique 2-3 paragraph description for a dental clinic:
+          const prompt = `Write a professional, unique 2-3 paragraph description for a fostering agency:
 
-Clinic Name: ${clinic.name}
+Agency Name: ${clinic.name}
 Location: ${cityName}, ${stateName} ${stateAbbr}
 Address: ${clinic.address || "Not specified"}
 Rating: ${clinic.rating || "Not rated"} stars (${clinic.review_count || 0} reviews)
 
 Requirements:
 - Write naturally as if a human wrote it, avoiding generic AI phrases
-- Mention the specific location (city, state)
-- Highlight what patients can expect (comprehensive care, modern techniques, patient comfort)
+- Mention the specific location (city, region)
+- Highlight what foster carers can expect (comprehensive support, training, allowances)
 - Include a welcoming tone that builds trust
 - Keep it between 100-150 words
 - Do NOT include any placeholder text or brackets
 - Do NOT mention specific services unless you're certain about them
-- Focus on professionalism, patient care, and community presence
+- Focus on professionalism, carer support, and community presence
+- Use British English spelling
 
 Return ONLY the description text, no quotes or formatting.`;
 
@@ -378,7 +381,7 @@ Return ONLY the description text, no quotes or formatting.`;
             body: JSON.stringify({
               model: "gemini-2.5-flash",
               messages: [
-                { role: "system", content: "You are a professional medical copywriter specializing in dental practice descriptions. Write authentic, human-sounding content that builds trust with potential patients." },
+                { role: "system", content: "You are a professional copywriter specialising in UK fostering agency descriptions. Write authentic, human-sounding content that builds trust with prospective foster carers." },
                 { role: "user", content: prompt }
               ],
               temperature: 0.7,

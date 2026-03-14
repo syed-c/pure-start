@@ -25,215 +25,205 @@ interface Phase3Request {
 // BLOG TEMPLATES BY CATEGORY
 // ========================================
 
-const INFORMATIONAL_TEMPLATE = `You are writing an INFORMATIONAL DEEP DIVE blog post for AppointPanda dental directory.
+const INFORMATIONAL_TEMPLATE = `You are writing an INFORMATIONAL DEEP DIVE blog post for Foster Connect, the UK fostering agency directory.
 
-=== TEMPLATE: "What to Expect During Your First [Specialty] Visit" ===
+=== TEMPLATE: "What to Expect During Your Fostering Assessment" ===
 Target: 1,800-2,200 words
 
-H1: What to Expect During Your First [Specialty] Visit: Complete Guide [2026]
+H1: What to Expect During Your Fostering Assessment: Complete Guide [2026]
 
 1. INTRODUCTION (200 words)
-   - The importance of this first visit
-   - Common patient concerns
+   - The importance of the assessment process
+   - Common prospective carer concerns
    - What this guide covers
 
-2. H2: Before Your Appointment (300 words)
-   - What to bring (ID, insurance, records)
-   - How to prepare
+2. H2: Before Your Assessment Begins (300 words)
+   - What to prepare (documents, references, DBS check)
+   - How to get ready
    - Questions to have ready
-   - What to eat/not eat
+   - What your home needs
 
-3. H2: What Happens During the Visit (400 words)
-   - Check-in process
-   - Initial examination steps
-   - Diagnostic procedures (X-rays, scans)
-   - Consultation with the dentist
-   - Treatment planning discussion
+3. H2: What Happens During the Assessment (400 words)
+   - Initial home visit
+   - Form F assessment stages
+   - Working with your assessing social worker
+   - Training requirements (Skills to Foster)
+   - Panel preparation
 
-4. H2: Common Procedures at First Visit (300 words)
-   - Cleaning and examination
-   - X-rays and imaging
-   - Oral health assessment
-   - Treatment recommendations
+4. H2: Key Areas Covered in Assessment (300 words)
+   - Personal history and motivation
+   - Parenting capacity assessment
+   - Health and safety checks
+   - Support network evaluation
 
-5. H2: Questions to Ask Your Dentist (250 words)
-   - About your specific condition
-   - About treatment options
-   - About costs and insurance
-   - About follow-up care
+5. H2: Questions Your Social Worker Will Ask (250 words)
+   - About your motivations for fostering
+   - About your parenting experience
+   - About your support network
+   - About managing challenging behaviours
 
-6. H2: After Your Appointment (200 words)
-   - What to expect
-   - Follow-up steps
-   - Scheduling next visit
+6. H2: After Your Assessment (200 words)
+   - What to expect at panel
+   - Approval process
+   - Matching and placement
 
-7. H2: Cost Expectations (250 words)
-   - Typical first visit costs
-   - What insurance covers
-   - Payment options
+7. H2: Timeline & Expectations (250 words)
+   - Typical assessment timeline (4-6 months)
+   - What agencies provide during this period
+   - Financial considerations
 
-8. H2: Find a [Specialty] Near You (150 words)
-   - CTA to AppointPanda
+8. H2: Find an Agency on Foster Connect (150 words)
+   - CTA to Foster Connect
    - Benefits of using directory
 
 9. H2: FAQs (200 words)
-   - 5-6 common first-visit questions`;
+   - 5-6 common assessment questions`;
 
-const PROBLEM_SOLVING_TEMPLATE = `You are writing a PROBLEM-SOLVING blog post for AppointPanda.
+const PROBLEM_SOLVING_TEMPLATE = `You are writing a PROBLEM-SOLVING blog post for Foster Connect.
 
-=== TEMPLATE: Emergency/Problem-Solving Content ===
+=== TEMPLATE: Challenging Situations in Fostering ===
 Target: 1,200-1,800 words
 
-H1: [Problem]: Causes, Treatment & When to See a Dentist [2026]
+H1: [Challenge]: Understanding, Managing & Getting Support [2026]
 
 1. INTRODUCTION (150 words)
-   - Acknowledge the urgency
-   - Quick summary of what to do
-   - When this is an emergency
+   - Acknowledge the challenge
+   - Quick summary of how to approach it
+   - When to seek additional support
 
-2. H2: Understanding [Problem] (250 words)
+2. H2: Understanding [Challenge] (250 words)
    - What causes it
-   - Common symptoms
-   - Risk factors
+   - Common signs and behaviours
+   - Context and background
 
-3. H2: Immediate Relief: What to Do Right Now (300 words)
-   - Step-by-step first aid
-   - Safe home remedies
-   - What NOT to do
-   - Over-the-counter options
+3. H2: Practical Strategies: What You Can Do (300 words)
+   - Step-by-step approaches
+   - Evidence-based techniques
+   - What works and what doesn't
 
-4. H2: When to See a Dentist Immediately (200 words)
-   - Warning signs of emergency
-   - Symptoms requiring urgent care
-   - What can wait vs. what can't
+4. H2: When to Seek Additional Support (200 words)
+   - Warning signs that more help is needed
+   - Emergency situations
+   - What support is available
 
-5. H2: Professional Treatment Options (300 words)
-   - What the dentist will do
-   - Treatment procedures
-   - Recovery expectations
-   - Prevention going forward
+5. H2: How Agencies Support Carers (300 words)
+   - What your agency can provide
+   - Specialist training available
+   - Therapeutic support options
+   - Respite and breaks
 
-6. H2: Cost of Treatment (200 words)
-   - Typical cost range
-   - Emergency visit costs
-   - Insurance considerations
+6. H2: Financial and Practical Support (200 words)
+   - Additional allowances available
+   - Equipment and resources
+   - Local authority support
 
-7. H2: Find Emergency Dental Care Now (150 words)
-   - CTA to emergency finder
-   - 24/7 availability
-   - Walk-in options
+7. H2: Find Supportive Agencies on Foster Connect (150 words)
+   - CTA to find agencies with specialist support
+   - Compare agency support packages
 
 8. H2: FAQs (150 words)
-   - 5 urgent questions`;
+   - 5 practical questions`;
 
 const INSURANCE_TEMPLATE = `You are writing an INSURANCE & FINANCIAL blog post for AppointPanda.
 
-=== TEMPLATE: "Does [Insurance] Cover [Procedure]?" ===
+=== TEMPLATE: "Fostering Allowances: What You Need to Know" ===
 Target: 1,800-2,200 words
 
-H1: Does [Insurance Company] Cover [Procedure]? [2026 Coverage Guide]
+H1: Fostering Allowances in [Region]: Complete Guide [2026]
 
 1. INTRODUCTION (200 words)
-   - Quick answer to the main question
-   - Why coverage varies
-   - How to verify your specific coverage
+   - Quick overview of fostering allowances
+   - Why rates vary
+   - How to find out your potential allowance
 
-2. H2: [Insurance] Dental Coverage Overview (300 words)
-   - Types of plans offered
-   - General coverage levels
-   - Network considerations
+2. H2: How Fostering Allowances Work (300 words)
+   - National minimum allowance explained
+   - How IFAs vs local authorities differ
+   - What's included in the allowance
 
-3. H2: [Procedure] Coverage Details (400 words)
-   - What's typically covered
-   - Coverage percentages (50%, 80%, etc.)
-   - Waiting periods
-   - Annual maximums
-   - Pre-authorization requirements
+3. H2: Allowance Rates by Region (400 words)
+   - TABLE: Regions with typical rates
+   - Age-related adjustments
+   - Additional payments available
 
-4. H2: What [Insurance] Covers vs. Excludes (300 words)
-   - TABLE: Covered vs. Not Covered
-   - Common exclusions
-   - Age restrictions
-   - Frequency limitations
+4. H2: What's Covered vs What's Extra (300 words)
+   - TABLE: Covered vs. Additional costs
+   - Holiday and birthday allowances
+   - Equipment and bedroom costs
 
-5. H2: How to Verify Your Coverage (250 words)
-   - Contacting [Insurance]
-   - Questions to ask
-   - Getting pre-authorization
-   - Understanding your EOB
+5. H2: Tax Implications for Foster Carers (250 words)
+   - Qualifying care relief explained
+   - Tax-free thresholds
+   - Record-keeping requirements
 
-6. H2: Out-of-Pocket Costs to Expect (250 words)
-   - Deductibles
-   - Copays vs. coinsurance
-   - Maximum out-of-pocket
-   - In-network vs. out-of-network
+6. H2: Additional Financial Support (250 words)
+   - Skills-based fees
+   - Retainer fees between placements
+   - Travel expenses
 
-7. H2: How to Save Money on [Procedure] (200 words)
-   - Finding in-network providers
-   - Dental savings plans
-   - Payment plans
-   - FSA/HSA usage
+7. H2: How to Compare Agency Allowances (200 words)
+   - Using Foster Connect to compare
+   - Questions to ask agencies
 
-8. H2: Find [Insurance] Dentists Near You (150 words)
-   - CTA to AppointPanda
-   - Filter by insurance
+8. H2: Find Agencies with Competitive Allowances (150 words)
+   - CTA to Foster Connect
 
 9. H2: FAQs (150 words)
-   - 5 insurance-specific questions`;
+   - 5 financial questions`;
 
-const NEIGHBORHOOD_TEMPLATE = `You are generating a NEIGHBORHOOD landing page for AppointPanda.
+const NEIGHBORHOOD_TEMPLATE = `You are generating a NEIGHBOURHOOD/AREA landing page for Foster Connect.
 
-=== TEMPLATE: Best Dentists in [Neighborhood], [City] ===
+=== TEMPLATE: Fostering Agencies in [Area], [City] ===
 Target: 1,500-2,000 words
 
-H1: Best Dentists in [Neighborhood], [City] | [#] Local Clinics [2026]
+H1: Fostering Agencies in [Area], [City] | Local Agencies [2026]
 
 1. INTRODUCTION (150 words)
-   - Overview of dental care in [Neighborhood]
+   - Overview of fostering in [Area]
    - What makes this area unique
-   - Number of dentists available
+   - Number of agencies available
 
-2. H2: Top Dentists in [Neighborhood] (250 words)
+2. H2: Top Fostering Agencies in [Area] (250 words)
    - What to look for
-   - Types of practices in the area
-   - CTA: View all dentists
+   - Types of agencies in the area
+   - CTA: View all agencies
 
-3. H2: Why Choose a Dentist in [Neighborhood]? (200 words)
-   - Convenience factors
-   - Local character
-   - Accessibility (parking, transit)
+3. H2: Why Choose an Agency in [Area]? (200 words)
+   - Local support benefits
+   - Community character
+   - Accessibility
 
-4. H2: Services Available in [Neighborhood] (250 words)
-   - Common services offered
-   - Specialty services
-   - Emergency care availability
+4. H2: Types of Fostering in [Area] (250 words)
+   - Fostering types offered
+   - Specialist placements
+   - Emergency availability
 
-5. H2: Average Dental Costs in [Neighborhood] (300 words)
-   - COST TABLE: 10 common procedures
-   - How [Neighborhood] compares to [City] average
-   - Factors affecting local pricing
+5. H2: Fostering Allowances in [Area] (300 words)
+   - ALLOWANCE TABLE: by fostering type
+   - How [Area] compares to [City] average
+   - Factors affecting local rates
 
-6. H2: Insurance Accepted (150 words)
-   - Common insurers in the area
-   - Finding in-network dentists
+6. H2: Assessment & Training (150 words)
+   - Local training availability
+   - Assessment timeline
 
-7. H2: Nearby Neighborhoods (200 words)
+7. H2: Nearby Areas (200 words)
    - Links to adjacent areas
-   - Why patients travel between neighborhoods
 
-8. H2: Find Your Perfect Dentist in [Neighborhood] (100 words)
+8. H2: Start Your Fostering Journey in [Area] (100 words)
    - CTA to filtered search
-   - Book appointment
+   - Submit enquiry
 
 9. H2: FAQs (200 words)
-   - 5 neighborhood-specific questions
+   - 5 area-specific questions
 
 === REQUIREMENTS ===
-- Mention specific [Neighborhood] landmarks, streets, or character
-- Reference nearby transit or parking
-- Local cost context
+- Mention specific [Area] landmarks or character
+- Reference nearby transport or community facilities
+- Local allowance context
 - Natural internal links
-- Schema-ready FAQ format`;
+- Schema-ready FAQ format
+- British English spelling`;
 
 // AI generation function
 async function generateContent(
@@ -241,20 +231,21 @@ async function generateContent(
   targetWordCount: number,
   aimlApiKey: string
 ): Promise<{ content: string; word_count: number }> {
-  const systemPrompt = `You are an expert dental content writer for AppointPanda, a leading dental directory platform.
+  const systemPrompt = `You are an expert UK fostering content writer for Foster Connect, a leading fostering agency directory.
 
-VOICE: Write in AppointPanda's first-party platform voice ("we", "our directory", "on AppointPanda").
-STYLE: Professional yet accessible, patient-focused, medically accurate but not clinical.
+VOICE: Write in Foster Connect's first-party platform voice ("we", "our directory", "on Foster Connect").
+STYLE: Professional yet accessible, carer-focused, factually accurate but not bureaucratic.
 FORMAT: Use markdown with proper heading hierarchy (H1, H2, H3).
-TABLES: Use markdown tables for cost comparisons and structured data.
+TABLES: Use markdown tables for allowance comparisons and structured data.
 LENGTH: Target ${targetWordCount} words minimum. Be comprehensive.
 E-E-A-T: Demonstrate expertise, experience, authoritativeness, trustworthiness.
-CTAs: Include natural calls-to-action to AppointPanda directory throughout.
+CTAs: Include natural calls-to-action to Foster Connect directory throughout.
+LANGUAGE: British English spelling throughout.
 
 CRITICAL RULES:
-- NO medical advice or diagnoses
-- Use cost RANGES, not exact prices
-- Include "consult your dentist" disclaimers
+- NO false promises or guarantees about placements
+- Use allowance RANGES in £, not exact figures
+- Include "speak to your agency" disclaimers where appropriate
 - Format FAQs for schema markup
 - Natural keyword usage (no stuffing)`;
 

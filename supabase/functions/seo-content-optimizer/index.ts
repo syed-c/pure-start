@@ -139,23 +139,23 @@ serve(async (req) => {
       throw lastError || new Error("AI gateway failed after retries");
     }
 
-    // AppointPanda Master SEO Prompt - First-party platform voice
-    const APPOINTPANDA_SYSTEM_PROMPT = `You are generating SEO content ONLY for AppointPanda, a dental listing and appointment platform.
+    // Foster Connect Master SEO Prompt - First-party platform voice
+    const APPOINTPANDA_SYSTEM_PROMPT = `You are generating SEO content ONLY for Foster Connect, a UK fostering agency directory and enquiry platform.
 
 === CRITICAL BUSINESS CONTEXT (NON-NEGOTIABLE) ===
-- AppointPanda helps users find, compare, and book dentists and dental clinics
-- We are NOT a dental clinic - we are a directory/booking platform
+- Foster Connect helps people find, compare, and enquire with fostering agencies across the UK
+- We are NOT a fostering agency - we are a directory/enquiry platform
 - We are NOT writing content for third parties
-- ALL content must be written in AppointPanda's first-party voice: "we", "our platform", "AppointPanda helps patients..."
+- ALL content must be written in Foster Connect's first-party voice: "we", "our platform", "Foster Connect helps prospective carers..."
 
 You must NEVER write as:
-- a dentist or dental clinic
+- a fostering agency
 - a guest author
 - a third-party blog
 
 === STRUCTURE-AWARE WRITING ===
 For EVERY page you MUST:
-1. Understand the page type (location / service / service+location / other)
+1. Understand the page type (location / fostering type / type+location / other)
 2. Create proper heading hierarchy: One H1 only, multiple H2s, H3s only when logically belonging under an H2
 3. Do NOT flatten the hierarchy or dump all content into one block
 4. Do NOT repeat the same structure across different pages
@@ -166,10 +166,10 @@ For EACH page generated:
 - NEVER reuse paragraphs, headings, or phrasing from other pages
 - Vary structure, examples, phrasing, and flow
 - Avoid templated writing patterns
-- Even if pages share the same service or are in nearby cities, they MUST read differently
+- Even if pages share the same fostering type or are in nearby cities, they MUST read differently
 
 === HEADING & STRUCTURE RULES (STRICT) ===
-- One H1 only - must reflect page intent + location/service when relevant
+- One H1 only - must reflect page intent + location/fostering type when relevant
 - Use multiple H2 sections (4-6 recommended)
 - Use H3 only when they logically belong under an H2
 - Headings must describe what follows (no filler headings)
@@ -178,10 +178,10 @@ For EACH page generated:
 - Do NOT force keywords into every heading
 
 === GOOGLE E-E-A-T COMPLIANCE (CRITICAL) ===
-Experience: Reflect real patient questions and concerns
-Expertise: Correct dental terminology, clear explanations without medical instructions
-Authoritativeness: Align with common dental standards, no random or fake sources
-Trustworthiness: No exaggerated claims, no "best dentist" language, no guarantees, no fake awards/statistics
+Experience: Reflect real prospective carer questions and concerns
+Expertise: Correct fostering terminology, clear explanations without overpromising
+Authoritativeness: Align with Ofsted standards, UK fostering regulations
+Trustworthiness: No exaggerated claims, no "best agency" language, no guarantees, no fake statistics
 
 === SEO BEST PRACTICES (MANDATORY) ===
 - Natural keyword usage only - NO keyword stuffing
@@ -189,18 +189,19 @@ Trustworthiness: No exaggerated claims, no "best dentist" language, no guarantee
 - Meta title under 60 characters with primary keyword near beginning
 - Meta description under 155 characters with clear call-to-action
 - Strong internal consistency between title, H1, and content
+- British English spelling throughout
 
 === PLATFORM POSITIONING (VERY IMPORTANT) ===
-Because this content is for AppointPanda:
-- Explain how our platform helps users: find dentists, compare clinics, explore services, book appointments
-- Mention AppointPanda naturally
+Because this content is for Foster Connect:
+- Explain how our platform helps users: find agencies, compare Ofsted ratings, explore fostering types, submit enquiries
+- Mention Foster Connect naturally
 - Keep tone helpful, not promotional
 - Never sound like an advertisement
 
 === CALL TO ACTION ===
 End with a calm, helpful CTA such as:
-- Encouraging users to explore dentists on AppointPanda
-- Inviting users to book appointments through our platform
+- Encouraging users to explore fostering agencies on Foster Connect
+- Inviting users to submit enquiries through our platform
 
 === OUTPUT FORMAT ===
 - Meta title (under 60 chars)
@@ -208,7 +209,7 @@ End with a calm, helpful CTA such as:
 - H1 (clear page intent)
 - Structured content using H2/H3
 - FAQ section (3-5 questions)
-- Soft closing paragraph mentioning AppointPanda
+- Soft closing paragraph mentioning Foster Connect
 
 DO NOT: Mention prompts or instructions, explain your process, copy content between pages.`;
 
@@ -237,18 +238,18 @@ DO NOT: Mention prompts or instructions, explain your process, copy content betw
 === FOCUS: META TITLES ===
 - Keep under 60 characters
 - Include primary keyword at the beginning
-- Add location for local pages
-- Use format: [Primary Keyword] in [Location] | AppointPanda
+- Add location for local pages (UK cities/regions)
+- Use format: [Primary Keyword] in [Location] | Foster Connect
 - Make titles compelling and click-worthy
-- Write from AppointPanda's perspective (e.g., "Find Dentists in..." not "Best Dentist...")`,
+- Write from Foster Connect's perspective (e.g., "Find Fostering Agencies in..." not "Best Agency...")`,
           meta_description: `
 
 === FOCUS: META DESCRIPTIONS ===
 - Keep under 155 characters
-- Start with an action verb (Discover, Find, Book, Compare)
-- Include clear value proposition from AppointPanda's perspective
-- Add call-to-action (book now, compare clinics, read reviews)
-- Include location for local pages`,
+- Start with an action verb (Discover, Find, Explore, Compare)
+- Include clear value proposition from Foster Connect's perspective
+- Add call-to-action (enquire now, compare agencies, read reviews)
+- Include location for local pages (UK)`,
           h1: `
 
 === FOCUS: H1 HEADINGS ===
@@ -257,25 +258,25 @@ DO NOT: Mention prompts or instructions, explain your process, copy content betw
 - Keep between 20-70 characters
 - Make it descriptive and specific
 - Different from but related to meta title
-- Write from platform perspective (e.g., "Find [Service] Dentists in [City]")`,
+- Write from platform perspective (e.g., "Find [Fostering Type] Agencies in [City]")`,
           h2: `
 
 === FOCUS: H2 STRUCTURE ===
 - Create 4-6 meaningful H2 sections
 - H2s should organize content logically
 - Include keywords naturally in H2s
-- Suggested H2s: About [Service/Location], What to Expect, How AppointPanda Helps, Cost Considerations, FAQs
+- Suggested H2s: About [Fostering Type/Location], What to Expect, How Foster Connect Helps, Support & Allowances, FAQs
 - VARY H2 headings between pages - no templated repetition`,
           content: `
 
 === FOCUS: RICH CONTENT (Fix Thin Content) ===
 - Minimum 400-600 words
-- Include compelling introduction mentioning AppointPanda's role
-- Add service/treatment descriptions
-- Include location-specific information
+- Include compelling introduction mentioning Foster Connect's role
+- Add fostering type/service descriptions
+- Include location-specific information (UK)
 - Add 3-5 FAQs with detailed answers
 - Use proper formatting (headings, paragraphs, lists)
-- Include how AppointPanda helps patients in this area
+- Include how Foster Connect helps prospective carers in this area
 - End with platform CTA`,
         };
         systemContent += issueInstructions[pageData.issueType] || "";
@@ -412,101 +413,101 @@ DO NOT: Mention prompts or instructions, explain your process, copy content betw
       
       switch (page_type) {
         case "state":
-          context = `Generate unique SEO content for AppointPanda's ${name} state directory page.
+          context = `Generate unique SEO content for Foster Connect's ${name} region directory page.
 
 PAGE CONTEXT:
-- This is a STATE-level page showing all dental providers in ${name}
-- Users land here to explore dentists across ${name}
+- This is a REGION-level page showing all fostering agencies in ${name} (UK)
+- Users land here to explore fostering agencies across ${name}
 
 CONTENT DIRECTION:
-- Explain how AppointPanda helps patients find dentists across ${name}
-- Mention major cities in ${name} where we list providers
-- Discuss dental care landscape in ${name} (licensing, common needs)
+- Explain how Foster Connect helps prospective carers find agencies across ${name}
+- Mention major cities in ${name} where we list agencies
+- Discuss the fostering landscape in ${name} (Ofsted standards, local authority support)
 - Include ${name}-specific details to make content unique
-- H2 sections should cover: Overview of Dental Care in ${name}, How to Find a Dentist in ${name}, What AppointPanda Offers, Popular Dental Services, FAQs`;
+- H2 sections should cover: Overview of Fostering in ${name}, How to Find an Agency, What Foster Connect Offers, Types of Fostering, FAQs`;
           break;
           
         case "city":
-          context = `Generate unique SEO content for AppointPanda's ${name}, ${stateAbbr || stateName || ""} city directory page.
+          context = `Generate unique SEO content for Foster Connect's ${name}, ${stateAbbr || stateName || ""} city directory page.
 
 PAGE CONTEXT:
-- This is a CITY-level page showing dentists in ${name}
-- Users are looking for local dental care options
+- This is a CITY-level page showing fostering agencies in ${name}
+- Users are looking for local fostering options
 
 CONTENT DIRECTION:
-- Explain how AppointPanda helps ${name} residents find dentists
-- Reference ${name} neighborhoods, landmarks, or local context when helpful
-- Discuss how residents typically approach dental care locally
-- Include what makes dental care in ${name} accessible through our platform
-- H2 sections should cover: Dental Care in ${name}, Finding the Right Dentist, Services Available, Cost & Insurance, FAQs
+- Explain how Foster Connect helps ${name} residents find fostering agencies
+- Reference ${name} boroughs, landmarks, or local context when helpful
+- Discuss how residents typically approach fostering locally
+- Include what makes fostering in ${name} accessible through our platform
+- H2 sections should cover: Fostering in ${name}, Finding the Right Agency, Types Available, Support & Allowances, FAQs
 - NEVER invent statistics or claims about ${name}`;
           break;
           
         case "treatment":
-          context = `Generate unique SEO content for AppointPanda's ${name} service page.
+          context = `Generate unique SEO content for Foster Connect's ${name} fostering type page.
 
 PAGE CONTEXT:
-- This is a TREATMENT/SERVICE page about ${name}
-- Users want to understand this dental service and find providers
+- This is a FOSTERING TYPE page about ${name}
+- Users want to understand this type of fostering and find agencies offering it
 
 CONTENT DIRECTION:
-- Explain ${name} clearly - what it is, why patients may need it, general benefits
-- Describe what patients can expect during the procedure
-- Mention cost and insurance considerations carefully (use "may", "can", "often", "depends")
-- Explain how AppointPanda helps patients find ${name} specialists
-- H2 sections should cover: About ${name}, What to Expect, Benefits, Cost Considerations, How AppointPanda Helps, FAQs
+- Explain ${name} clearly - what it is, who can apply, general benefits
+- Describe what carers can expect during the assessment and placement process
+- Mention allowances and support carefully (use "may", "can", "often", "depends")
+- Explain how Foster Connect helps find ${name} agencies
+- H2 sections should cover: About ${name}, What to Expect, Benefits, Support & Allowances, How Foster Connect Helps, FAQs
 - Use cautious language - no guarantees or promises`;
           break;
           
         case "city_treatment":
-          context = `Generate unique SEO content for AppointPanda's ${name} providers in ${cityName}, ${stateAbbr || ""} page.
+          context = `Generate unique SEO content for Foster Connect's ${name} agencies in ${cityName}, ${stateAbbr || ""} page.
 
 PAGE CONTEXT:
-- This is a SERVICE + LOCATION page combining treatment info with local context
+- This is a FOSTERING TYPE + LOCATION page combining fostering info with local context
 - Users want ${name} specifically in ${cityName}
 
 CONTENT DIRECTION:
 - Explain ${name} clearly and specifically for ${cityName} residents
 - Reference ${cityName} naturally - don't force location keywords
-- Explain how AppointPanda helps ${cityName} patients find ${name} providers
-- Include local considerations for this treatment
-- H2 sections should cover: ${name} in ${cityName}, What to Know, Finding Specialists, Cost in ${cityName} Area, FAQs
+- Explain how Foster Connect helps ${cityName} people find ${name} agencies
+- Include local considerations for this fostering type
+- H2 sections should cover: ${name} in ${cityName}, What to Know, Finding Agencies, Support in ${cityName} Area, FAQs
 - NEVER invent statistics about ${cityName}`;
           break;
           
         case "clinic":
-          context = `Generate unique SEO content for a dental clinic profile on AppointPanda: ${name}.
+          context = `Generate unique SEO content for a fostering agency profile on Foster Connect: ${name}.
 
 PAGE CONTEXT:
-- This is a CLINIC PROFILE page
-- Users want to learn about this specific practice
+- This is an AGENCY PROFILE page
+- Users want to learn about this specific agency
 
 CONTENT DIRECTION:
-- Write from AppointPanda's perspective as the directory hosting this profile
-- Describe the practice overview based on available information
-- Explain what patients can expect
-- Mention how AppointPanda helps patients book with this clinic
-- Keep tone informative, not promotional for the clinic`;
+- Write from Foster Connect's perspective as the directory hosting this profile
+- Describe the agency overview based on available information
+- Explain what carers can expect
+- Mention how Foster Connect helps people enquire with this agency
+- Keep tone informative, not promotional for the agency`;
           break;
           
         case "blog":
-          context = `Generate unique SEO content for AppointPanda's dental health blog post: "${name}".
+          context = `Generate unique SEO content for Foster Connect's fostering blog post: "${name}".
 
 PAGE CONTEXT:
-- This is a BLOG POST on AppointPanda's dental health blog
-- Educational content for patients
+- This is a BLOG POST on Foster Connect's fostering blog
+- Educational content for prospective carers
 
 CONTENT DIRECTION:
-- Write from AppointPanda's first-party voice
-- Provide educational value and practical tips
-- Demonstrate dental expertise without giving medical instructions
-- Include how AppointPanda can help readers find appropriate dental care
-- End with a soft CTA to explore dentists on our platform`;
+- Write from Foster Connect's first-party voice
+- Provide educational value and practical tips about fostering
+- Demonstrate fostering expertise without making promises
+- Include how Foster Connect can help readers find appropriate agencies
+- End with a soft CTA to explore agencies on our platform`;
           break;
           
         default:
-          context = `Generate unique SEO content for AppointPanda's page about ${name}.
-Page type: ${page_type}. Write from AppointPanda's first-party platform voice.`;
+          context = `Generate unique SEO content for Foster Connect's page about ${name}.
+Page type: ${page_type}. Write from Foster Connect's first-party platform voice.`;
       }
       
       return `${context}
@@ -516,10 +517,10 @@ ${existingContent ? `\nEXISTING CONTENT TO IMPROVE (rewrite completely, do not c
 
 REQUIREMENTS:
 1. 100% unique content - will NOT be flagged as duplicate by search engines
-2. Location/service-specific information woven naturally throughout
+2. Location/fostering-type-specific information woven naturally throughout
 3. Proper H1 > H2 > H3 hierarchy (one H1, 4-6 H2s, H3s only where logical)
-4. Include 3-5 FAQs that match real user search intent
-5. Mention AppointPanda naturally in the content
+4. Include 3-5 FAQs that match real user search intent about fostering
+5. Mention Foster Connect naturally in the content
 6. End with a soft, helpful CTA encouraging platform use`;
     }
 

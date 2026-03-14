@@ -37,14 +37,15 @@ async function generateContent(prompt: string, apiKey: string): Promise<string> 
       messages: [
         {
           role: "system",
-          content: `You are an expert dental SEO content writer. Write professional, informative, and engaging content that:
+          content: `You are an expert UK fostering SEO content writer. Write professional, informative, and engaging content that:
 - Is written in a natural, human tone (not robotic or AI-sounding)
-- Includes relevant dental terminology and expertise
-- Focuses on patient benefits and care quality
-- Is optimized for search engines without keyword stuffing
+- Includes relevant fostering terminology and expertise
+- Focuses on prospective carer benefits and agency support quality
+- Is optimised for search engines without keyword stuffing
 - Uses proper headings, paragraphs, and formatting in markdown
 - Is between 400-800 words for page content
-- Is between 100-200 words for clinic descriptions`
+- Is between 100-200 words for agency descriptions
+- Uses British English spelling throughout`
         },
         { role: "user", content: prompt }
       ],
@@ -61,116 +62,113 @@ async function generateContent(prompt: string, apiKey: string): Promise<string> 
 }
 
 function generateCityTreatmentContent(treatment: string, city: string, state: string): string {
-  return `## ${treatment} Services in ${city}, ${state}
+  return `## ${treatment} Fostering in ${city}, ${state}
 
-Finding quality ${treatment.toLowerCase()} care in ${city} doesn't have to be difficult. Our network of verified dental professionals offers comprehensive ${treatment.toLowerCase()} services tailored to your specific needs.
+Finding quality ${treatment.toLowerCase()} fostering agencies in ${city} doesn't have to be difficult. Foster Connect lists verified fostering agencies offering ${treatment.toLowerCase()} placements tailored to your circumstances.
 
-### What to Expect from ${treatment} in ${city}
+### What to Expect from ${treatment} Fostering in ${city}
 
-When you visit a dental professional for ${treatment.toLowerCase()} in ${city}, ${state}, you'll receive personalized care from experienced practitioners. The treatment process typically begins with a thorough consultation to assess your dental health and discuss your goals.
+When you enquire with a fostering agency for ${treatment.toLowerCase()} in ${city}, ${state}, you'll receive personalised guidance from experienced social workers. The process typically begins with an initial conversation to understand your situation and discuss the fostering journey ahead.
 
-Modern dental offices in ${city} utilize advanced technology and techniques to ensure comfortable, effective treatments. Whether you're dealing with a specific dental concern or seeking preventive care, local dentists are equipped to provide the highest standard of service.
+Fostering agencies in ${city} provide comprehensive training and support to ensure foster carers feel confident and prepared. Whether you're new to fostering or experienced, local agencies are equipped to provide the highest standard of support.
 
-### Benefits of Choosing Local ${treatment} Providers
+### Benefits of Choosing a Local ${treatment} Agency
 
-Working with dental professionals in ${city} offers several advantages:
+Working with fostering agencies in ${city} offers several advantages:
 
-- **Convenient location** - Easy access to follow-up appointments
-- **Community reputation** - Established practices with local patient reviews
-- **Personalized care** - Dentists who understand the community's needs
-- **Insurance coordination** - Familiarity with local insurance networks
+- **Local support** - Easy access to your supervising social worker
+- **Community reputation** - Established agencies with Ofsted ratings and carer reviews
+- **Personalised care** - Agencies who understand the local community's needs
+- **Comprehensive training** - Full preparation for your fostering role
 
-### Preparing for Your ${treatment} Appointment
+### Starting Your ${treatment} Fostering Journey
 
-Before your appointment, consider preparing any questions about the procedure, costs, and recovery expectations. Bring your dental insurance information and a list of any medications you're currently taking.
+Before making an enquiry, consider what type of fostering suits your household, your availability, and any questions about the assessment process. You don't need formal qualifications - agencies look for patience, resilience, and a genuine desire to help children.
 
-Most ${treatment.toLowerCase()} procedures in ${city} are performed with patient comfort as a top priority. Discuss any concerns about anxiety or discomfort with your dental team—they can offer various options to help you feel at ease.
-
-### Schedule Your Consultation Today
-
-Ready to take the next step toward better dental health? Browse our verified ${treatment.toLowerCase()} providers in ${city}, ${state}, read patient reviews, and book an appointment online. Quality dental care is just a click away.`;
+Most ${treatment.toLowerCase()} fostering agencies in ${city} offer an initial no-obligation chat to help you understand what's involved. Foster Connect makes it easy to compare agencies and submit enquiries online.`;
 }
 
 function generateCityContent(city: string, state: string, stateAbbr: string): string {
-  return `## Find Your Perfect Dentist in ${city}, ${stateAbbr}
+  return `## Find Fostering Agencies in ${city}, ${stateAbbr}
 
-${city}, ${state} is home to a diverse community of dental professionals dedicated to providing exceptional oral healthcare. Whether you need routine cleanings, cosmetic procedures, or specialized treatments, you'll find qualified dentists ready to serve you.
+${city}, ${state} is home to a diverse community of fostering agencies dedicated to providing exceptional support for children and young people in care. Whether you're considering fostering for the first time or looking for a new agency, you'll find Ofsted-registered agencies ready to guide you.
 
-### Dental Services Available in ${city}
+### Fostering Types Available in ${city}
 
-Local dental practices in ${city} offer a comprehensive range of services including:
+Local fostering agencies in ${city} offer a comprehensive range of placements including:
 
-- **General Dentistry** - Cleanings, exams, fillings, and preventive care
-- **Cosmetic Dentistry** - Teeth whitening, veneers, and smile makeovers
-- **Restorative Dentistry** - Crowns, bridges, and dental implants
-- **Orthodontics** - Braces and clear aligners for all ages
-- **Emergency Dental Care** - Same-day treatment for urgent issues
+- **Emergency Fostering** - Short-notice placements for children who need immediate care
+- **Short-term Fostering** - Temporary care while long-term plans are made
+- **Long-term Fostering** - Providing a stable home for children until adulthood
+- **Respite Fostering** - Giving regular foster carers a well-earned break
+- **Parent and Child Fostering** - Supporting parents alongside their children
 
-### Why Choose a ${city} Dentist?
+### Why Choose a ${city} Agency?
 
-Selecting a local dentist means building a long-term relationship with a healthcare provider who understands your needs. ${city} dental practices pride themselves on:
+Selecting a local agency means building a long-term relationship with a support team who understands your community. ${city} fostering agencies pride themselves on:
 
-- State-of-the-art facilities and equipment
-- Experienced, licensed dental professionals
-- Patient-centered approach to care
-- Flexible scheduling and payment options
-- Accepting most major dental insurance plans
+- Comprehensive training programmes
+- 24/7 support from experienced social workers
+- Competitive weekly fostering allowances
+- Regular supervision and peer support groups
+- Accepting carers from all backgrounds
 
-### Tips for Finding the Right Dentist
+### Tips for Finding the Right Agency
 
-When searching for a dentist in ${city}, consider reading patient reviews, checking credentials, and scheduling a consultation. Many practices offer free initial consultations or new patient specials.
+When searching for a fostering agency in ${city}, consider reading carer reviews, checking Ofsted ratings, and attending an information event. Many agencies offer free, no-obligation initial chats.
 
-Look for dentists who take time to explain procedures, answer questions, and make you feel comfortable. A good dental relationship is built on trust and communication.
+Look for agencies that provide thorough training, ongoing support, and make you feel valued. A good fostering relationship is built on trust and open communication.
 
-### Book Your Appointment Today
+### Start Your Fostering Journey Today
 
-Browse verified dental professionals in ${city}, ${state}, compare services and reviews, and schedule your appointment online. Your healthier smile starts here.`;
+Browse verified fostering agencies in ${city}, ${state}, compare services and reviews, and submit your enquiry online. Your fostering journey starts here.`;
 }
 
 function generateTreatmentContent(treatment: string): string {
   return `## Understanding ${treatment}: A Complete Guide
 
-${treatment} is an essential dental service that helps patients achieve and maintain optimal oral health. Whether you're exploring this treatment for the first time or seeking a new provider, understanding what to expect can help you make informed decisions about your dental care.
+${treatment} is an important type of fostering that helps children and young people in the UK who need safe, supportive homes. Whether you're exploring this option for the first time or seeking a new agency, understanding what's involved can help you make informed decisions.
 
 ### What Is ${treatment}?
 
-${treatment} encompasses a range of procedures designed to address specific dental needs. Modern dental technology has made these treatments more comfortable, effective, and accessible than ever before.
+${treatment} encompasses a specific approach to foster care designed to address particular needs. Modern fostering agencies have developed comprehensive support programmes to ensure both carers and children thrive.
 
-### Who Can Benefit from ${treatment}?
+### Who Can Become a ${treatment} Carer?
 
-Patients of all ages may benefit from ${treatment} services. Common reasons people seek this treatment include:
+People from all backgrounds may be eligible for ${treatment}. Common qualities agencies look for include:
 
-- Addressing dental pain or discomfort
-- Improving the appearance of teeth
-- Restoring dental function
-- Preventing future dental problems
-- Maintaining overall oral health
+- A genuine desire to help children and young people
+- Patience, resilience, and empathy
+- A spare bedroom and a stable home environment
+- The ability to work as part of a team with social workers
+- Willingness to complete training and ongoing development
 
 ### The ${treatment} Process
 
-When you visit a dental professional for ${treatment}, you can expect:
+When you enquire about ${treatment} with a fostering agency, you can expect:
 
-1. **Initial Consultation** - Assessment of your dental health and treatment goals
-2. **Treatment Planning** - Development of a personalized care plan
-3. **Procedure** - The treatment itself, performed with patient comfort in mind
-4. **Follow-up Care** - Instructions and appointments to ensure optimal results
+1. **Initial Conversation** - A friendly chat about your interest and circumstances
+2. **Information Event** - Learning more about what ${treatment} involves
+3. **Assessment (Form F)** - A thorough assessment of your suitability, typically 4-6 months
+4. **Fostering Panel** - Your application is considered by an independent panel
+5. **Approval & Matching** - You're matched with a child who suits your skills
 
-### Finding the Right Provider
+### Finding the Right Agency
 
-Choosing a qualified dental professional for ${treatment} is crucial. Look for providers who:
+Choosing a qualified fostering agency for ${treatment} is crucial. Look for agencies that:
 
-- Have relevant experience and credentials
-- Use modern equipment and techniques
-- Prioritize patient comfort and communication
-- Have positive patient reviews and testimonials
+- Are registered and inspected by Ofsted (or equivalent)
+- Provide comprehensive training and ongoing support
+- Offer competitive fostering allowances
+- Have positive reviews from existing foster carers
 
 ### Ready to Get Started?
 
-Browse our network of verified dental professionals offering ${treatment} services. Read reviews, compare providers, and book your appointment online today.`;
+Browse our directory of verified fostering agencies offering ${treatment} across the UK. Read reviews, compare agencies, and submit your enquiry online today.`;
 }
 
 function generateClinicDescription(name: string, city: string, state: string): string {
-  return `${name} provides comprehensive dental care services to patients in ${city}, ${state}, and surrounding communities. Our practice is committed to delivering high-quality dental treatments in a comfortable, welcoming environment. From routine cleanings and preventive care to advanced restorative and cosmetic procedures, our experienced team utilizes modern technology and techniques to help you achieve optimal oral health. We accept most major dental insurance plans and offer flexible scheduling to accommodate your busy lifestyle. Schedule your appointment today and experience the difference of personalized dental care.`;
+  return \`\${name} is a fostering agency supporting foster carers in \${city}, \${state}, and surrounding areas. The agency is committed to providing high-quality placements and comprehensive support for children and young people in care. From initial training through to ongoing supervision and 24/7 support, their experienced team helps foster carers build confidence and make a real difference. They offer competitive fostering allowances and accept enquiries from people of all backgrounds. Get in touch today to learn more about fostering with \${name}.\`;
 }
 
 serve(async (req) => {
@@ -228,12 +226,10 @@ serve(async (req) => {
           const state = slugParts[0].toUpperCase();
           content = generateCityContent(state, state, state);
         } else if (page.page_type === "clinic") {
-          // For clinics, generate a shorter description
-          const clinicName = page.title || "This dental practice";
-          content = `## About ${clinicName}\n\n${generateClinicDescription(clinicName, "your area", "")}\n\n### Our Services\n\nWe offer a comprehensive range of dental services including general dentistry, cosmetic procedures, restorative treatments, and emergency care. Our experienced team is dedicated to providing personalized care in a comfortable environment.\n\n### Why Choose Us\n\n- Modern dental technology and techniques\n- Experienced, compassionate dental team\n- Convenient scheduling options\n- Most insurance plans accepted\n- Patient-focused approach to care`;
+          const agencyName = page.title || "This fostering agency";
+          content = `## About ${agencyName}\n\n${generateClinicDescription(agencyName, "your area", "")}\n\n### Our Services\n\nWe offer a comprehensive range of fostering placements including emergency, short-term, long-term, respite, and parent & child fostering. Our experienced team is dedicated to providing personalised support throughout your fostering journey.\n\n### Why Choose Us\n\n- Ofsted-registered and inspected\n- Experienced, compassionate support team\n- Comprehensive training programme\n- Competitive fostering allowances\n- 24/7 support for all foster carers`;
         } else {
-          // Generic content for other page types
-          content = `## Welcome\n\nThank you for visiting. We're dedicated to helping you find the best dental care. Browse our network of verified dental professionals and book your appointment online today.`;
+          content = `## Welcome\n\nThank you for visiting Foster Connect. We're dedicated to helping you find the best fostering agencies across the UK. Browse our directory of verified agencies and submit your enquiry online today.`;
         }
 
         const wordCount = content.split(/\s+/).length;

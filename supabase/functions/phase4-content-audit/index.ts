@@ -181,7 +181,7 @@ serve(async (req) => {
       const targetWords = page.page_type === 'service' ? 1500 : 
                          page.page_type === 'service_location' ? 1200 : 800;
 
-      const prompt = `You are an SEO content expert enhancing dental directory pages.
+      const prompt = `You are an SEO content expert enhancing UK fostering directory pages.
 
 Current page: ${page.url_path}
 Page type: ${page.page_type}
@@ -192,11 +192,11 @@ Current content:
 ${currentContent.slice(0, 2000)}
 
 Enhancement requirements:
-1. Add 500-1000 more words of unique, valuable content
-2. Include more specific details, statistics, and examples
-3. Add comparison tables where relevant
-4. Expand with local context and specific recommendations
-5. Ensure natural keyword usage
+1. Add 500-1000 more words of unique, valuable content about fostering
+2. Include more specific details about fostering types, support, and allowances
+3. Add comparison tables where relevant (e.g., fostering types comparison)
+4. Expand with local context and specific recommendations for the UK
+5. Ensure natural keyword usage with British English spelling
 6. Add internal linking opportunities
 
 Generate ONLY the additional content sections to add (not the full page). Format as HTML with proper H2/H3 headings.`;
@@ -210,7 +210,7 @@ Generate ONLY the additional content sections to add (not the full page). Format
         body: JSON.stringify({
           model: "gemini-2.5-flash",
           messages: [
-            { role: "system", content: "You are an expert SEO content writer for dental directories. Write engaging, informative content that helps users find dental care." },
+            { role: "system", content: "You are an expert SEO content writer for UK fostering directories. Write engaging, informative content that helps people explore fostering opportunities." },
             { role: "user", content: prompt }
           ],
           max_tokens: 2000,

@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 // Active states filter
-const ACTIVE_STATE_SLUGS = ['ca', 'ct', 'ma', 'nj'];
+const ACTIVE_STATE_SLUGS = ['england', 'scotland', 'wales', 'northern-ireland', 'london', 'north-west', 'south-east', 'west-midlands', 'east-midlands', 'yorkshire', 'north-east', 'south-west', 'east-of-england'];
 
 // Google E-E-A-T content quality guidelines
 const CONTENT_QUALITY_CRITERIA = {
@@ -106,7 +106,7 @@ function calculateQualityScore(content: string | null, wordCount: number): numbe
   else score += 5;
   
   // Check for location/service specific keywords (10 points)
-  const hasSpecificKeywords = /dentist|dental|clinic|teeth|oral|care|treatment|service/i.test(content);
+  const hasSpecificKeywords = /foster|fostering|agency|carer|placement|child|care|support/i.test(content);
   if (hasSpecificKeywords) score += 10;
   
   return Math.min(score, 100);
@@ -126,7 +126,7 @@ function isActiveStateSlug(slug: string): boolean {
   const normalized = slug.toLowerCase().replace(/^\//, '');
   
   // Non-location pages are always valid
-  if (normalized.startsWith('clinic/') || normalized.startsWith('dentist/') ||
+  if (normalized.startsWith('agency/') || normalized.startsWith('clinic/') || normalized.startsWith('dentist/') ||
       normalized.startsWith('services') || normalized.startsWith('blog')) {
     return true;
   }
@@ -155,7 +155,7 @@ function analyzeContent(
   // Word count issues
   if (wordCount === 0) {
     issues.push('No content found on page');
-    recommendations.push('Generate comprehensive content with 800+ words covering location-specific dental information');
+    recommendations.push('Generate comprehensive content with 800+ words covering location-specific fostering information');
     eeatCompliance = false;
   } else if (wordCount < 300) {
     issues.push(`Very thin content (${wordCount} words)`);
@@ -215,7 +215,7 @@ async function analyzeWithAI(
   }
   
   try {
-    const prompt = `Analyze this dental website content for SEO quality and E-E-A-T compliance.
+    const prompt = `Analyze this fostering directory website content for SEO quality and E-E-A-T compliance.
 
 Page Type: ${pageType}
 URL Slug: ${slug}
@@ -229,7 +229,7 @@ Evaluate and respond in JSON format only:
   "issues": ["list of specific problems found"],
   "recommendations": ["actionable suggestions to improve"],
   "is_unique": <true/false - does this seem like original content?>,
-  "is_helpful": <true/false - would this help a user find a dentist?>
+  "is_helpful": <true/false - would this help someone exploring fostering?>
 }`;
 
     const response = await fetch('https://api.aimlapi.com/v1/chat/completions', {
@@ -241,7 +241,7 @@ Evaluate and respond in JSON format only:
       body: JSON.stringify({
         model: 'gemini-2.5-flash',
         messages: [
-          { role: 'system', content: 'You are an SEO expert analyzing dental website content. Respond only in valid JSON.' },
+          { role: 'system', content: 'You are an SEO expert analysing UK fostering directory website content. Respond only in valid JSON.' },
           { role: 'user', content: prompt }
         ],
         temperature: 0.3,
