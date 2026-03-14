@@ -147,13 +147,20 @@ const PAGE_TYPE_LABELS: Record<string, string> = {
   state: 'Region Pages',
   city: 'City Pages',
   treatment: 'Fostering Type Pages',
+  service: 'Fostering Type Pages',
   service_location: 'Fostering Type + Location',
+  'service-location': 'Fostering Type + Location',
   city_treatment: 'City + Fostering Type',
   clinic: 'Agency Profiles',
   dentist: 'Agency Profiles',
   blog: 'Blog Posts',
+  'blog-index': 'Blog Index',
+  'blog-post': 'Blog Posts',
   agency: 'Agency Pages',
   category: 'Category Pages',
+  insurance: 'Insurance Pages',
+  'insurance-index': 'Insurance Index',
+  'insurance-detail': 'Insurance Details',
 };
 
 const PAGE_TYPE_ICONS: Record<string, any> = {
@@ -161,11 +168,27 @@ const PAGE_TYPE_ICONS: Record<string, any> = {
   state: Globe,
   city: MapPin,
   treatment: Stethoscope,
+  service: Stethoscope,
   service_location: Layers,
+  'service-location': Layers,
   city_treatment: Layers,
   clinic: Building2,
   dentist: Users,
   blog: BookOpen,
+  'blog-index': BookOpen,
+  'blog-post': BookOpen,
+  insurance: FileText,
+  'insurance-index': FileText,
+  'insurance-detail': FileText,
+};
+
+const formatPageTypeLabel = (pageType: string): string => {
+  return (
+    PAGE_TYPE_LABELS[pageType] ||
+    pageType
+      .replace(/[_-]+/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase())
+  );
 };
 
 export default function ContentGenerationStudioTab() {
@@ -309,6 +332,13 @@ export default function ContentGenerationStudioTab() {
     },
   });
 
+  const availablePageTypes = useMemo(() => {
+    const types = Array.from(new Set((seoPages || []).map((page) => page.page_type).filter(Boolean)));
+    const known = Object.keys(PAGE_TYPE_LABELS).filter((type) => types.includes(type));
+    const unknown = types.filter((type) => !PAGE_TYPE_LABELS[type]).sort();
+    return [...known, ...unknown];
+  }, [seoPages]);
+
   // Fetch content versions for history
   const { data: contentVersions } = useQuery({
     queryKey: ['content-versions', previewPage?.id],
@@ -335,16 +365,18 @@ export default function ContentGenerationStudioTab() {
       noContent: seoPages.filter(p => !p.content || (p.word_count || 0) < 50).length,
       thinContent: seoPages.filter(p => p.content && (p.word_count || 0) >= 50 && (p.word_count || 0) < 800).length,
       optimized: seoPages.filter(p => p.is_optimized).length,
-      byType: Object.entries(PAGE_TYPE_LABELS).map(([type, label]) => ({
-        type,
-        label,
-        count: seoPages.filter(p => p.page_type === type).length,
-        withContent: seoPages.filter(p => p.page_type === type && p.content && (p.word_count || 0) >= 800).length,
-        empty: seoPages.filter(p => p.page_type === type && (!p.content || (p.word_count || 0) < 50)).length,
-        thin: seoPages.filter(p => p.page_type === type && p.content && (p.word_count || 0) >= 50 && (p.word_count || 0) < 800).length,
-      })).filter(t => t.count > 0),
+      byType: availablePageTypes
+        .map((type) => ({
+          type,
+          label: formatPageTypeLabel(type),
+          count: seoPages.filter(p => p.page_type === type).length,
+          withContent: seoPages.filter(p => p.page_type === type && p.content && (p.word_count || 0) >= 800).length,
+          empty: seoPages.filter(p => p.page_type === type && (!p.content || (p.word_count || 0) < 50)).length,
+          thin: seoPages.filter(p => p.page_type === type && p.content && (p.word_count || 0) >= 50 && (p.word_count || 0) < 800).length,
+        }))
+        .filter(t => t.count > 0),
     };
-  }, [seoPages]);
+  }, [seoPages, availablePageTypes]);
 
   // Filter pages based on all criteria
   const filteredPages = useMemo(() => {
@@ -928,8 +960,8 @@ export default function ContentGenerationStudioTab() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="__all__">All Types</SelectItem>
-                      {Object.entries(PAGE_TYPE_LABELS).map(([type, label]) => (
-                        <SelectItem key={type} value={type}>{label}</SelectItem>
+                      {availablePageTypes.map((type) => (
+                        <SelectItem key={type} value={type}>{formatPageTypeLabel(type)}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -1325,7 +1357,7 @@ export default function ContentGenerationStudioTab() {
                           <TableCell>
                             <Badge variant="outline" className="flex items-center gap-1 w-fit">
                               <Icon className="h-3 w-3" />
-                              {PAGE_TYPE_LABELS[page.page_type] || page.page_type}
+                              {formatPageTypeLabel(page.page_type)}
                             </Badge>
                           </TableCell>
                           <TableCell>

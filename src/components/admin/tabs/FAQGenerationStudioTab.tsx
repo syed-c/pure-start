@@ -45,7 +45,10 @@ import {
   FileQuestion,
   AlertTriangle,
   TrendingUp,
-  Zap
+  Zap,
+  FileText,
+  BookOpen,
+  Users,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
@@ -92,27 +95,54 @@ interface FAQAudit {
 }
 
 const PAGE_TYPE_LABELS: Record<string, string> = {
+  static: 'Static Pages',
   state: 'Region Pages',
   city: 'City Pages',
   treatment: 'Fostering Type Pages',
+  service: 'Fostering Type Pages',
   service_location: 'Fostering Type + Location',
+  'service-location': 'Fostering Type + Location',
   city_treatment: 'City + Fostering Type',
   clinic: 'Agency Profiles',
   dentist: 'Agency Profiles',
+  blog: 'Blog Posts',
+  'blog-index': 'Blog Index',
+  'blog-post': 'Blog Posts',
   agency: 'Agency Pages',
   category: 'Category Pages',
+  insurance: 'Insurance Pages',
+  'insurance-index': 'Insurance Index',
+  'insurance-detail': 'Insurance Details',
 };
 
 const PAGE_TYPE_ICONS: Record<string, any> = {
+  static: FileText,
   state: Globe,
   city: MapPin,
   treatment: Stethoscope,
+  service: Stethoscope,
   service_location: Layers,
+  'service-location': Layers,
   city_treatment: Layers,
   clinic: Building2,
-  dentist: Building2,
+  dentist: Users,
+  blog: BookOpen,
+  'blog-index': BookOpen,
+  'blog-post': BookOpen,
   agency: Building2,
   category: Layers,
+  insurance: FileText,
+  'insurance-index': FileText,
+  'insurance-detail': FileText,
+};
+
+const formatPageTypeLabel = (pageType: string): string => {
+  return (
+    PAGE_TYPE_LABELS[pageType] ||
+    pageType
+      .replace(/[_-]+/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase())
+  );
 };
 
 export default function FAQGenerationStudioTab() {
@@ -209,7 +239,14 @@ export default function FAQGenerationStudioTab() {
   });
 
   // Audit FAQs
-  const { data: faqAudit, refetch: refetchAudit } = useQuery({
+  const availablePageTypes = useMemo(() => {
+    const types = Array.from(new Set((seoPages || []).map((page) => page.page_type).filter(Boolean)));
+    const known = Object.keys(PAGE_TYPE_LABELS).filter((type) => types.includes(type));
+    const unknown = types.filter((type) => !PAGE_TYPE_LABELS[type]).sort();
+    return [...known, ...unknown];
+  }, [seoPages]);
+
+  const { data: faqAudit } = useQuery({
     queryKey: ['faq-audit'],
     queryFn: async (): Promise<FAQAudit> => {
       if (!seoPages) return { totalPages: 0, pagesWithFAQs: 0, pagesWithoutFAQs: 0, avgFAQCount: 0, duplicateIssues: 0 };
@@ -255,21 +292,23 @@ export default function FAQGenerationStudioTab() {
   // Calculate stats by page type
   const statsByType = useMemo(() => {
     if (!seoPages) return [];
-    
-    return Object.entries(PAGE_TYPE_LABELS).map(([type, label]) => {
-      const pages = seoPages.filter(p => p.page_type === type);
-      const withFAQs = pages.filter(p => p.faqs && Array.isArray(p.faqs) && p.faqs.length > 0);
-      
-      return {
-        type,
-        label,
-        total: pages.length,
-        withFAQs: withFAQs.length,
-        withoutFAQs: pages.length - withFAQs.length,
-        coverage: pages.length > 0 ? Math.round((withFAQs.length / pages.length) * 100) : 0
-      };
-    }).filter(t => t.total > 0);
-  }, [seoPages]);
+
+    return availablePageTypes
+      .map((type) => {
+        const pages = seoPages.filter(p => p.page_type === type);
+        const withFAQs = pages.filter(p => p.faqs && Array.isArray(p.faqs) && p.faqs.length > 0);
+
+        return {
+          type,
+          label: formatPageTypeLabel(type),
+          total: pages.length,
+          withFAQs: withFAQs.length,
+          withoutFAQs: pages.length - withFAQs.length,
+          coverage: pages.length > 0 ? Math.round((withFAQs.length / pages.length) * 100) : 0
+        };
+      })
+      .filter(t => t.total > 0);
+  }, [seoPages, availablePageTypes]);
 
   // Filter pages based on criteria
   const filteredPages = useMemo(() => {
@@ -690,8 +729,8 @@ export default function FAQGenerationStudioTab() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="__all__">All Types</SelectItem>
-                      {Object.entries(PAGE_TYPE_LABELS).map(([type, label]) => (
-                        <SelectItem key={type} value={type}>{label}</SelectItem>
+                      {availablePageTypes.map((type) => (
+                        <SelectItem key={type} value={type}>{formatPageTypeLabel(type)}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -879,7 +918,7 @@ export default function FAQGenerationStudioTab() {
                           <TableCell>
                             <Badge variant="outline" className="flex items-center gap-1 w-fit">
                               <Icon className="h-3 w-3" />
-                              {PAGE_TYPE_LABELS[page.page_type] || page.page_type}
+                              {formatPageTypeLabel(page.page_type)}
                             </Badge>
                           </TableCell>
                           <TableCell className="text-center">
