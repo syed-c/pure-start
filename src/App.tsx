@@ -66,7 +66,7 @@ const GMBBusinessSelection = lazyRetry(() => import("./pages/GMBBusinessSelectio
 const AppointmentManagePage = lazyRetry(() => import("./pages/AppointmentManagePage"));
 const PatientFormPage = lazyRetry(() => import("./pages/PatientFormPage"));
 const BookDirectPage = lazyRetry(() => import("./pages/BookDirectPage"));
-const HomeV2 = lazyRetry(() => import("./pages/HomeV2"));
+const Index = lazyRetry(() => import("./pages/Index"));
 
 // Free Tools - Phase 3
 const DentalCostCalculator = lazyRetry(() => import("./pages/tools/DentalCostCalculator"));
