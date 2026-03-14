@@ -244,13 +244,13 @@ const AISearchPage = () => {
             {conversation.length === 0 && !results.length && !isSearching && (
               <div className="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-6">
                 <p className="text-white font-medium mb-4 text-center text-sm md:text-base">
-                  💡 Try searching by service, budget, and location:
+                  💡 Try searching by fostering type and location:
                 </p>
                 <div className="flex flex-wrap justify-center gap-2">
                   {[
-                    "Cleaning under $80 in Boston",
-                    "Implants under $1500 near me",
-                    "Affordable whitening in LA",
+                    "Emergency fostering in London",
+                    "Therapeutic fostering near me",
+                    "Respite care in Birmingham",
                   ].map((example, i) => (
                     <button
                       key={i}
