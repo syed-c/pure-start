@@ -98,23 +98,23 @@ STRICT RULES:
 EXISTING CONTENT TO AVOID DUPLICATING:
 ${existingContent.slice(0, 1500)}`;
 
-  const userPrompt = `Create SEO-optimized content for a dental directory state page for ${state.name} (${state.abbreviation}).
+  const userPrompt = `Create SEO-optimized content for a fostering agency directory page for ${state.name} (${state.abbreviation}).
 
 Generate JSON with EXACTLY this structure:
 {
-  "h1": "Find Dentists in ${state.name}",
-  "meta_title": "Dentists in ${state.name} | Find Local Dental Care | AppointPanda",
-  "meta_description": "Looking for a dentist in ${state.name}? Browse verified dental professionals, read patient reviews, and book appointments online.",
-  "intro": "Two paragraphs introducing dental care options in ${state.name}. Be specific about the state's healthcare landscape without making false claims.",
-  "service_overview": "A paragraph about general dental services available in the state.",
+  "h1": "Find Fostering Agencies in ${state.name}",
+  "meta_title": "Fostering Agencies in ${state.name} | Find Local Foster Care | Foster Connect",
+  "meta_description": "Looking for a fostering agency in ${state.name}? Browse verified agencies, read carer reviews, and submit enquiries online.",
+  "intro": "Two paragraphs introducing fostering options in ${state.name}. Be specific about the region's fostering landscape without making false claims.",
+  "service_overview": "A paragraph about fostering services available in the region.",
   "faq": [
-    {"question": "How do I find a dentist in ${state.name}?", "answer": "..."},
+    {"question": "How do I find a fostering agency in ${state.name}?", "answer": "..."},
     {"question": "...", "answer": "..."},
     {"question": "...", "answer": "..."}
   ],
   "internal_links": [
     {"text": "Browse cities in ${state.name}", "href": "/state/${state.slug}/"},
-    {"text": "View dental services", "href": "/services/"}
+    {"text": "View fostering types", "href": "/services/"}
   ],
   "schema_type": "LocalBusiness"
 }

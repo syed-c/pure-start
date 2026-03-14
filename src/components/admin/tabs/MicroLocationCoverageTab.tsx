@@ -17,139 +17,73 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
-// ─── UAE Area Local Context Database ───
-// Unique neighborhood characteristics for content differentiation
+// ─── UK Region Local Context Database ───
+// Unique area characteristics for content differentiation
 const AREA_LOCAL_CONTEXT: Record<string, {
   character: string;
   demographics: string;
   landmarks: string[];
   narrative: string;
 }> = {
-  'jumeirah': {
-    character: 'upscale beachfront residential',
-    demographics: 'affluent families and expat professionals',
-    landmarks: ['Jumeirah Mosque', 'Kite Beach', 'La Mer'],
-    narrative: 'family-focused wellness',
+  'central-london': {
+    character: 'premium urban core',
+    demographics: 'professionals, families and international residents',
+    landmarks: ['Westminster', 'City of London', 'South Bank'],
+    narrative: 'metropolitan fostering services',
   },
-  'dubai-marina': {
-    character: 'cosmopolitan waterfront towers',
-    demographics: 'young professionals and international residents',
-    landmarks: ['Marina Walk', 'Dubai Marina Mall', 'Ain Dubai'],
-    narrative: 'modern lifestyle convenience',
+  'north-london': {
+    character: 'diverse residential suburbs',
+    demographics: 'families, young professionals and diverse communities',
+    landmarks: ['Hampstead Heath', 'Alexandra Palace', 'Finsbury Park'],
+    narrative: 'community-focused fostering',
   },
-  'deira': {
-    character: 'historic commercial district',
-    demographics: 'diverse multicultural community',
-    landmarks: ['Gold Souk', 'Deira City Centre', 'Creek'],
-    narrative: 'heritage-meets-accessibility',
+  'south-london': {
+    character: 'vibrant multicultural neighbourhoods',
+    demographics: 'diverse families and growing communities',
+    landmarks: ['Brixton', 'Crystal Palace', 'Greenwich'],
+    narrative: 'inclusive family support',
   },
-  'business-bay': {
-    character: 'modern commercial hub',
-    demographics: 'corporate professionals and urban residents',
-    landmarks: ['Dubai Canal', 'Bay Avenue', 'Marasi Drive'],
-    narrative: 'efficiency-first corporate care',
+  'east-london': {
+    character: 'dynamic regeneration area',
+    demographics: 'young families and diverse communities',
+    landmarks: ['Olympic Park', 'Canary Wharf', 'Brick Lane'],
+    narrative: 'growing community care',
   },
-  'downtown-dubai': {
-    character: 'premium urban landmark district',
-    demographics: 'tourists, luxury residents and business travelers',
-    landmarks: ['Burj Khalifa', 'Dubai Mall', 'Dubai Fountain'],
-    narrative: 'world-class premium dental',
+  'west-london': {
+    character: 'affluent residential area',
+    demographics: 'established families and professionals',
+    landmarks: ['Kew Gardens', 'Richmond Park', 'Chiswick'],
+    narrative: 'family-centred fostering',
   },
-  'al-barsha': {
-    character: 'established residential and retail hub',
-    demographics: 'families, students and mid-range professionals',
-    landmarks: ['Mall of the Emirates', 'Barsha Park'],
-    narrative: 'value-driven family dentistry',
+  'birmingham': {
+    character: 'major UK city with diverse communities',
+    demographics: 'multicultural families and young professionals',
+    landmarks: ['Bullring', 'Cadbury World', 'Symphony Hall'],
+    narrative: 'diverse community fostering',
   },
-  'healthcare-city': {
-    character: 'medical free zone and health hub',
-    demographics: 'medical tourists and specialist-seekers',
-    landmarks: ['DHCC', 'Mediclinic', 'Al Jalila Foundation'],
-    narrative: 'specialist medical destination',
+  'manchester': {
+    character: 'vibrant northern city',
+    demographics: 'young professionals and growing families',
+    landmarks: ['Old Trafford', 'Northern Quarter', 'MediaCityUK'],
+    narrative: 'northern fostering excellence',
   },
-  'jbr': {
-    character: 'beachfront leisure and tourism strip',
-    demographics: 'tourists, hotel residents and coastal lifestyle',
-    landmarks: ['The Walk', 'Bluewaters Island', 'JBR Beach'],
-    narrative: 'resort-style dental experience',
+  'leeds': {
+    character: 'thriving Yorkshire city',
+    demographics: 'families, students and professionals',
+    landmarks: ['Royal Armouries', 'Roundhay Park', 'Leeds Dock'],
+    narrative: 'Yorkshire fostering services',
   },
-  'jlt': {
-    character: 'mid-range lakeside towers',
-    demographics: 'young professionals and small families',
-    landmarks: ['JLT Park', 'Cluster towers', 'Dubai Metro'],
-    narrative: 'affordable professional care',
+  'bristol': {
+    character: 'creative south-west hub',
+    demographics: 'diverse families and creative professionals',
+    landmarks: ['Clifton Suspension Bridge', 'Harbourside', 'Cabot Circus'],
+    narrative: 'south-west fostering care',
   },
-  'al-safa': {
-    character: 'leafy residential enclave near Jumeirah',
-    demographics: 'established families and villa residents',
-    landmarks: ['Safa Park', 'City Walk nearby'],
-    narrative: 'quiet neighborhood dentistry',
-  },
-  'bur-dubai': {
-    character: 'vibrant old-town cultural melting pot',
-    demographics: 'diverse residents, workers and heritage visitors',
-    landmarks: ['Dubai Museum', 'Meena Bazaar', 'Textile Souk'],
-    narrative: 'accessible multilingual care',
-  },
-  'international-city': {
-    character: 'affordable multicultural township',
-    demographics: 'budget-conscious residents and new immigrants',
-    landmarks: ['Dragon Mart', 'Central Park'],
-    narrative: 'budget-friendly community dental',
-  },
-  'difc': {
-    character: 'premium financial free zone',
-    demographics: 'executives, finance professionals and diplomats',
-    landmarks: ['Gate Building', 'DIFC Art Nights', 'Gate Avenue'],
-    narrative: 'executive concierge dentistry',
-  },
-  'discovery-gardens': {
-    character: 'affordable garden-themed community',
-    demographics: 'families and mid-income residents',
-    landmarks: ['Ibn Battuta Mall nearby', 'Gardens community'],
-    narrative: 'community-centered family care',
-  },
-  'jvc': {
-    character: 'emerging family-friendly community',
-    demographics: 'young families and first-time homeowners',
-    landmarks: ['JVC Park', 'Circle Mall'],
-    narrative: 'growing community wellness',
-  },
-  'al-nahda-dubai': {
-    character: 'border community shared with Sharjah',
-    demographics: 'cross-border commuters and mixed residents',
-    landmarks: ['Al Nahda Park', 'Sahara Centre nearby'],
-    narrative: 'convenient cross-emirate care',
-  },
-  'al-quoz': {
-    character: 'industrial-turned-creative district',
-    demographics: 'artists, gallery-goers and workers',
-    landmarks: ['Alserkal Avenue', 'Al Quoz Industrial'],
-    narrative: 'creative district healthcare',
-  },
-  'al-rashidiya': {
-    character: 'established residential near airport',
-    demographics: 'families, airport workers and long-term residents',
-    landmarks: ['Rashidiya Metro', 'near Dubai International Airport'],
-    narrative: 'airport-accessible dental care',
-  },
-  'dubai-hills': {
-    character: 'premium master-planned community',
-    demographics: 'affluent families and villa owners',
-    landmarks: ['Dubai Hills Mall', 'Dubai Hills Park', 'Golf Club'],
-    narrative: 'premium suburban wellness',
-  },
-  'al-mamzar': {
-    character: 'coastal residential near Sharjah border',
-    demographics: 'mixed-income families and beachgoers',
-    landmarks: ['Al Mamzar Beach Park', 'Mamzar Corniche'],
-    narrative: 'seaside community care',
-  },
-  'al-warqa': {
-    character: 'quiet suburban residential area',
-    demographics: 'local Emirati families and long-term residents',
-    landmarks: ['Al Warqa Park', 'Warqa City Mall'],
-    narrative: 'trusted neighborhood dentistry',
+  'liverpool': {
+    character: 'historic maritime city',
+    demographics: 'established communities and families',
+    landmarks: ['Albert Dock', 'Anfield', 'Liverpool ONE'],
+    narrative: 'community-rooted fostering',
   },
 };
 

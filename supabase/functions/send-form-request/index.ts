@@ -34,8 +34,8 @@ async function getEmailSettings(supabase: any): Promise<EmailSettings> {
   }
   
   return {
-    from_email: 'no-reply@appointpanda.ae',
-    from_name: 'AppointPanda'
+    from_email: 'no-reply@fosterconnect.co.uk',
+    from_name: 'Foster Connect'
   };
 }
 

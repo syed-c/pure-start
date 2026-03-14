@@ -821,7 +821,7 @@ const BlogPostPage = () => {
                   <div className="h-5 w-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                     <span className="text-emerald-500 text-xs">✓</span>
                   </div>
-                  <span>{clinicCount}+ verified dental clinics</span>
+                  <span>{clinicCount}+ verified fostering agencies</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <div className="h-5 w-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
