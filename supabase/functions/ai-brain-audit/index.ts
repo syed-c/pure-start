@@ -439,7 +439,7 @@ async function handleFixLinks(supabase: any, scope: string) {
             method: "POST",
             headers: { Authorization: `Bearer ${AIML_KEY}`, "Content-Type": "application/json" },
             body: JSON.stringify({
-              model: "gemini-2.0-flash",
+              model: "gemini-2.5-flash",
               messages: [{
                 role: "user",
                 content: `Generate a short "Related Pages" paragraph (2-3 sentences max) that naturally includes these internal links for a dental directory page about "${page.page_slug}". Use the exact URLs provided. Links: ${JSON.stringify(relatedLinks.slice(0, 5))}. Return ONLY markdown with proper [text](url) links. No headings.`

@@ -208,7 +208,7 @@ Generate ONLY the additional content sections to add (not the full page). Format
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "gemini-2.0-flash",
+          model: "gemini-2.5-flash",
           messages: [
             { role: "system", content: "You are an expert SEO content writer for dental directories. Write engaging, informative content that helps users find dental care." },
             { role: "user", content: prompt }

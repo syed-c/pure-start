@@ -184,7 +184,7 @@ Support: ${contact.support_email || "support@appointpanda.ae"}`;
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gemini-2.0-flash",
+        model: "gemini-2.5-flash",
         messages: [
           { role: "system", content: systemPrompt },
           ...messages.slice(-10),
