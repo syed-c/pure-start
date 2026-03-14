@@ -903,12 +903,12 @@ export default function ClinicEnrichmentTab() {
                 <div>
                   <CardTitle className="flex items-center gap-2">
                     <FileText className="h-5 w-5 text-primary" />
-                    {showAllClinics ? 'All Clinics' : 'Clinics Needing Descriptions'}
+                    {showAllClinics ? 'All Agencies' : 'Agencies Needing Descriptions'}
                   </CardTitle>
                   <CardDescription>
                     {showAllClinics 
-                      ? `${allClinics.length.toLocaleString()} total clinics`
-                      : `${clinicsNeedingDescription.length.toLocaleString()} clinics without descriptions`
+                      ? `${allClinics.length.toLocaleString()} total agencies`
+                      : `${clinicsNeedingDescription.length.toLocaleString()} agencies without descriptions`
                     }
                   </CardDescription>
                 </div>
