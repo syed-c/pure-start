@@ -147,13 +147,20 @@ const PAGE_TYPE_LABELS: Record<string, string> = {
   state: 'Region Pages',
   city: 'City Pages',
   treatment: 'Fostering Type Pages',
+  service: 'Fostering Type Pages',
   service_location: 'Fostering Type + Location',
+  'service-location': 'Fostering Type + Location',
   city_treatment: 'City + Fostering Type',
   clinic: 'Agency Profiles',
   dentist: 'Agency Profiles',
   blog: 'Blog Posts',
+  'blog-index': 'Blog Index',
+  'blog-post': 'Blog Posts',
   agency: 'Agency Pages',
   category: 'Category Pages',
+  insurance: 'Insurance Pages',
+  'insurance-index': 'Insurance Index',
+  'insurance-detail': 'Insurance Details',
 };
 
 const PAGE_TYPE_ICONS: Record<string, any> = {
@@ -161,11 +168,27 @@ const PAGE_TYPE_ICONS: Record<string, any> = {
   state: Globe,
   city: MapPin,
   treatment: Stethoscope,
+  service: Stethoscope,
   service_location: Layers,
+  'service-location': Layers,
   city_treatment: Layers,
   clinic: Building2,
   dentist: Users,
   blog: BookOpen,
+  'blog-index': BookOpen,
+  'blog-post': BookOpen,
+  insurance: FileText,
+  'insurance-index': FileText,
+  'insurance-detail': FileText,
+};
+
+const formatPageTypeLabel = (pageType: string): string => {
+  return (
+    PAGE_TYPE_LABELS[pageType] ||
+    pageType
+      .replace(/[_-]+/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase())
+  );
 };
 
 export default function ContentGenerationStudioTab() {

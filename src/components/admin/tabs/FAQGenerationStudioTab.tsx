@@ -45,74 +45,65 @@ import {
   FileQuestion,
   AlertTriangle,
   TrendingUp,
-  Zap
+  Zap,
+  FileText,
+  BookOpen,
+  Users,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 
 // Types
-interface SeoPage {
-  id: string;
-  slug: string;
-  page_type: string;
-  title: string | null;
-  h1: string | null;
-  content: string | null;
-  faqs: Array<{ question: string; answer: string }> | null;
-  word_count: number | null;
-  updated_at: string;
-}
-
-interface GenerationJob {
-  id: string;
-  status: 'running' | 'completed' | 'stopped' | 'error';
-  total: number;
-  processed: number;
-  success: number;
-  errors: number;
-  currentPage?: string;
-  logs: GenerationLog[];
-  startedAt: Date;
-}
-
-interface GenerationLog {
-  timestamp: Date;
-  page: string;
-  action: 'started' | 'completed' | 'error' | 'skipped';
-  message: string;
-  details?: any;
-}
-
-interface FAQAudit {
-  totalPages: number;
-  pagesWithFAQs: number;
-  pagesWithoutFAQs: number;
-  avgFAQCount: number;
-  duplicateIssues: number;
-}
-
+...
 const PAGE_TYPE_LABELS: Record<string, string> = {
+  static: 'Static Pages',
   state: 'Region Pages',
   city: 'City Pages',
   treatment: 'Fostering Type Pages',
+  service: 'Fostering Type Pages',
   service_location: 'Fostering Type + Location',
+  'service-location': 'Fostering Type + Location',
   city_treatment: 'City + Fostering Type',
   clinic: 'Agency Profiles',
   dentist: 'Agency Profiles',
+  blog: 'Blog Posts',
+  'blog-index': 'Blog Index',
+  'blog-post': 'Blog Posts',
   agency: 'Agency Pages',
   category: 'Category Pages',
+  insurance: 'Insurance Pages',
+  'insurance-index': 'Insurance Index',
+  'insurance-detail': 'Insurance Details',
 };
 
 const PAGE_TYPE_ICONS: Record<string, any> = {
+  static: FileText,
   state: Globe,
   city: MapPin,
   treatment: Stethoscope,
+  service: Stethoscope,
   service_location: Layers,
+  'service-location': Layers,
   city_treatment: Layers,
   clinic: Building2,
-  dentist: Building2,
+  dentist: Users,
+  blog: BookOpen,
+  'blog-index': BookOpen,
+  'blog-post': BookOpen,
   agency: Building2,
   category: Layers,
+  insurance: FileText,
+  'insurance-index': FileText,
+  'insurance-detail': FileText,
+};
+
+const formatPageTypeLabel = (pageType: string): string => {
+  return (
+    PAGE_TYPE_LABELS[pageType] ||
+    pageType
+      .replace(/[_-]+/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase())
+  );
 };
 
 export default function FAQGenerationStudioTab() {
