@@ -193,7 +193,7 @@ export default function DentistSettingsTab() {
       localStorage.setItem('gmb_restore_session', 'true');
 
       // Always use production domain for OAuth callback
-      const redirectTo = 'https://www.appointpanda.ae/auth/callback?relink=true';
+      const redirectTo = `${window.location.origin}/auth/callback?relink=true`;
 
       // IMPORTANT: Use signInWithOAuth to get the GMB token from the Google account
       // The callback will capture the token and then restore the original user session
