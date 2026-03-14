@@ -117,21 +117,22 @@ serve(async (req) => {
       }
 
       const targetWords = wordCount || 150;
-      const prompt = `Write a professional, unique description for a dental clinic:
+      const prompt = `Write a professional, unique description for a fostering agency:
 
-Clinic Name: ${clinicName}
-Location: ${clinicCity || "Unknown City"}, ${clinicState || "Unknown State"}
+Agency Name: ${clinicName}
+Location: ${clinicCity || "Unknown City"}, ${clinicState || "Unknown Region"}
 Address: ${clinicAddress || "Not specified"}
 
 Requirements:
 - Write naturally as if a human wrote it, avoiding generic AI phrases
-- Mention the specific location (city, state)
-- Highlight what patients can expect (comprehensive care, modern techniques, patient comfort)
+- Mention the specific location (city, region)
+- Highlight what foster carers can expect (comprehensive support, training, allowances)
 - Include a welcoming tone that builds trust
 - Keep it approximately ${targetWords} words (can be ${targetWords - 20} to ${targetWords + 20} words)
 - Do NOT include any placeholder text or brackets
 - Do NOT mention specific services unless you're certain about them
-- Focus on professionalism, patient care, and community presence
+- Focus on professionalism, carer support, and community presence
+- Use British English spelling
 
 Return ONLY the description text, no quotes or formatting.`;
 
