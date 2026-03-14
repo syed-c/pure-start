@@ -1,81 +1,107 @@
+import { Link } from "react-router-dom";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
-import { Stethoscope, CheckCircle, Users, FileCheck, RefreshCw, ShieldCheck } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Shield, CheckCircle, Users, FileCheck, RefreshCw, ShieldCheck, BookOpen, ArrowRight } from "lucide-react";
 
 const MedicalReviewPolicyPage = () => {
   const breadcrumbs = [
     { label: "Home", href: "/" },
-    { label: "Medical Review Policy" },
+    { label: "Content Review Policy" },
   ];
 
   const reviewSteps = [
-    { step: "1", title: "Content Drafting", desc: "Qualified health writers create content using peer-reviewed sources, UAE health authority (DHA, DoH, MOHAP) guidelines, and clinical evidence." },
-    { step: "2", title: "Clinical Review", desc: "A licensed dental professional reviews the content for clinical accuracy, appropriate terminology, and alignment with current best practices in the UAE." },
-    { step: "3", title: "Compliance Check", desc: "Content is checked against UAE advertising regulations and health information standards to ensure full regulatory compliance." },
-    { step: "4", title: "Publication & Monitoring", desc: "Approved content is published with clear attribution. All medical content is scheduled for periodic review to maintain accuracy." },
+    { step: "1", title: "Content Drafting", desc: "Qualified writers create content using peer-reviewed sources, UK Government and Ofsted guidelines, and current fostering regulations." },
+    { step: "2", title: "Expert Review", desc: "A qualified fostering professional reviews the content for accuracy, appropriate terminology, and alignment with current UK best practices." },
+    { step: "3", title: "Compliance Check", desc: "Content is checked against UK advertising regulations, Ofsted standards, and fostering information guidelines to ensure full compliance." },
+    { step: "4", title: "Publication & Monitoring", desc: "Approved content is published with clear attribution. All content is scheduled for periodic review to maintain accuracy." },
   ];
+
+  const keyPoints = ["Expert reviewed", "Ofsted compliant", "Regular updates", "Transparent sourcing"];
 
   return (
     <PageLayout>
       <SEOHead
-        title="Medical Review Policy - Clinical Content Standards"
-        description="Understand how AppointPanda's dental health content is reviewed by licensed professionals to ensure clinical accuracy and compliance with UAE health standards."
+        title="Content Review Policy — Quality Standards | Foster Connect"
+        description="Understand how Foster Connect's fostering content is reviewed by qualified professionals to ensure accuracy and compliance with UK fostering standards."
         canonical="/medical-review-policy/"
       />
 
-      <section className="bg-gradient-to-b from-background via-primary/5 to-background pt-6 pb-12">
-        <div className="container">
-          <div className="flex justify-center mb-6">
-            <Breadcrumbs items={breadcrumbs} />
-          </div>
+      {/* Hero */}
+      <section className="relative bg-foreground text-background overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.15),transparent_50%)]" />
+        <div className="container relative py-16 md:py-24">
           <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-4 py-2 mb-4">
-              <Stethoscope className="h-4 w-4 text-primary" />
-              <span className="text-sm font-bold text-primary">Clinical Standards</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
+              <ShieldCheck className="h-4 w-4 text-primary" />
+              <span className="text-sm font-bold text-primary">Quality Standards</span>
             </div>
-            <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">Medical Review Policy</h1>
-            <p className="text-lg text-muted-foreground">How we ensure clinical accuracy in all dental health content.</p>
+            <h1 className="text-4xl md:text-5xl font-extrabold mb-6">
+              Content Review <span className="text-primary">Policy</span>
+            </h1>
+            <p className="text-lg text-background/60 max-w-xl mx-auto mb-8">
+              How we ensure accuracy and quality in all fostering-related content.
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              {keyPoints.map((point, i) => (
+                <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full bg-background/5 border border-background/10">
+                  <CheckCircle className="h-4 w-4 text-primary" />
+                  <span className="text-sm">{point}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       <Section size="lg">
-        <div className="max-w-3xl mx-auto space-y-10">
-          <div>
-            <h2 className="text-2xl font-bold text-foreground mb-4">Our Review Process</h2>
-            <p className="text-muted-foreground mb-8">
-              Every piece of health-related content on AppointPanda undergoes a rigorous multi-step medical review process to ensure patients receive accurate, trustworthy information.
-            </p>
+        <div className="max-w-3xl mx-auto">
+          <div className="card-modern p-8 md:p-12">
+            <div className="space-y-10">
+              <div>
+                <h2 className="text-2xl font-extrabold text-foreground mb-4">Our Review Process</h2>
+                <p className="text-muted-foreground mb-8 leading-relaxed">
+                  Every piece of fostering-related content on Foster Connect undergoes a rigorous multi-step review process to ensure families receive accurate, trustworthy information.
+                </p>
 
-            <div className="space-y-6">
-              {reviewSteps.map((step) => (
-                <div key={step.step} className="flex gap-4">
-                  <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary text-primary-foreground font-black text-lg flex items-center justify-center">
-                    {step.step}
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-foreground mb-1">{step.title}</h3>
-                    <p className="text-muted-foreground text-sm">{step.desc}</p>
-                  </div>
+                <div className="space-y-5">
+                  {reviewSteps.map((step) => (
+                    <div key={step.step} className="flex gap-4 bg-muted/30 rounded-xl p-5 border border-border">
+                      <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary text-primary-foreground font-extrabold text-lg flex items-center justify-center">
+                        {step.step}
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-foreground mb-1">{step.title}</h3>
+                        <p className="text-muted-foreground text-sm leading-relaxed">{step.desc}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <ReviewCard icon={Users} title="Reviewer Qualifications" desc="All content reviewers are qualified fostering professionals with current UK experience, including social workers and agency managers." />
+                <ReviewCard icon={ShieldCheck} title="Conflict of Interest" desc="Reviewers must disclose any financial or professional relationships. Content is never influenced by advertisers or agency partnerships." />
+                <ReviewCard icon={RefreshCw} title="Annual Re-Review" desc="All fostering content is re-reviewed at minimum annually, or sooner when new regulations or Ofsted changes warrant updates." />
+                <ReviewCard icon={FileCheck} title="Transparent Attribution" desc="Each reviewed article displays the reviewer's name, credentials, and review date so users can verify the information source." />
+              </div>
+
+              <div className="bg-muted/50 rounded-2xl p-6 border border-border">
+                <h3 className="font-bold text-foreground mb-2">Important Notice</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Content on Foster Connect is reviewed for general accuracy but does not replace professional advice. Individual fostering decisions should always be made in consultation with a qualified social worker or fostering agency who can evaluate your specific circumstances.
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <ReviewCard icon={Users} title="Reviewer Qualifications" desc="All medical reviewers are licensed dental professionals with active practice in the UAE, holding valid DHA, DoH, or MOHAP licenses." />
-            <ReviewCard icon={ShieldCheck} title="Conflict of Interest" desc="Reviewers must disclose any financial or professional relationships that could influence their review. Content is never influenced by advertisers." />
-            <ReviewCard icon={RefreshCw} title="Annual Re-Review" desc="All medical content is re-reviewed at minimum annually, or sooner when new clinical evidence or regulatory changes warrant updates." />
-            <ReviewCard icon={FileCheck} title="Transparent Attribution" desc="Each reviewed article displays the reviewer's name, credentials, and review date so patients can verify the information source." />
-          </div>
-
-          <div className="bg-muted/50 rounded-2xl p-6 border border-border">
-            <h3 className="font-bold text-foreground mb-2">Important Notice</h3>
-            <p className="text-sm text-muted-foreground">
-              Medical content on AppointPanda is reviewed for general accuracy but does not replace professional dental advice. Individual treatment decisions should always be made in consultation with a qualified dentist who can evaluate your specific situation.
-            </p>
+            <div className="mt-12 pt-8 border-t text-center">
+              <p className="text-muted-foreground mb-4">Have questions about our review standards?</p>
+              <Button asChild variant="outline" className="rounded-xl font-bold">
+                <Link to="/contact">Contact Us <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              </Button>
+            </div>
           </div>
         </div>
       </Section>
@@ -85,12 +111,12 @@ const MedicalReviewPolicyPage = () => {
 
 function ReviewCard({ icon: Icon, title, desc }: { icon: any; title: string; desc: string }) {
   return (
-    <div className="bg-card border border-border rounded-2xl p-5">
-      <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+    <div className="bg-card border border-border rounded-2xl p-5 hover:border-primary/20 transition-colors">
+      <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
         <Icon className="h-5 w-5 text-primary" />
       </div>
       <h3 className="font-bold text-foreground mb-1">{title}</h3>
-      <p className="text-sm text-muted-foreground">{desc}</p>
+      <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
     </div>
   );
 }
