@@ -106,7 +106,7 @@ function calculateQualityScore(content: string | null, wordCount: number): numbe
   else score += 5;
   
   // Check for location/service specific keywords (10 points)
-  const hasSpecificKeywords = /dentist|dental|clinic|teeth|oral|care|treatment|service/i.test(content);
+  const hasSpecificKeywords = /foster|fostering|agency|carer|placement|child|care|support/i.test(content);
   if (hasSpecificKeywords) score += 10;
   
   return Math.min(score, 100);
