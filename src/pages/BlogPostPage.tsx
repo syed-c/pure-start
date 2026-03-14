@@ -593,7 +593,7 @@ const BlogPostPage = () => {
         author={post.author_name || 'Foster Connect Team'}
         publishedAt={post.published_at || undefined}
         modifiedAt={post.updated_at || undefined}
-        keywords={post.tags || ['dental health', 'oral care']}
+        keywords={post.tags || ['fostering', 'foster care']}
       />
       <StructuredData
         type="article"
