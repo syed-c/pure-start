@@ -158,10 +158,13 @@ export function isPageInActiveRegion(pageSlug: string, pageType?: string): boole
   // Location-based pages must belong to one of the active regions.
   const locationScopedTypes = new Set([
     'state',
+    'region',
     'city',
     'service_location',
     'service-location',
     'city_treatment',
+    'city_category',
+    'city-category',
   ]);
 
   if (locationScopedTypes.has(type) || !type) {
