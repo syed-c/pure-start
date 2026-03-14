@@ -103,9 +103,9 @@ const DEFAULT_PLANS: PlanConfig[] = [
     id: 'enterprise',
     name: 'Enterprise',
     slug: 'enterprise',
-    price_aed: 999,
-    billing_period: 'year',
-    description: 'Full suite for multi-location practices',
+    price_gbp: 349,
+    billing_period: 'month',
+    description: 'Full suite for multi-location agencies',
     color: 'gold',
     expected_patients: 11,
     features: {
