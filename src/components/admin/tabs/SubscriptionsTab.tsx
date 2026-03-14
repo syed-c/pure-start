@@ -654,7 +654,7 @@ export default function SubscriptionsTab() {
                 <div className="pt-4 border-t mt-4">
                   <div className="flex justify-between">
                     <span className="font-semibold">Total Annual Revenue</span>
-                    <span className="font-bold text-lg">{yearlyRevenue.toLocaleString()} AED</span>
+                    <span className="font-bold text-lg">£{yearlyRevenue.toLocaleString()}</span>
                   </div>
                 </div>
               </CardContent>
