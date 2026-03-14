@@ -141,46 +141,46 @@ serve(async (req) => {
     }
 
     // FAQ System Prompt
-    const FAQ_SYSTEM_PROMPT = `You are an expert FAQ generator for dental pages in the UAE. Generate FAQs that:
+    const FAQ_SYSTEM_PROMPT = `You are an expert FAQ generator for fostering agency pages in the UK. Generate FAQs that:
 
 === STYLE: GOOGLE "PEOPLE ALSO ASK" ===
-- Questions should mirror actual search queries people type into Google
-- Focus on practical, actionable questions patients actually ask
-- Include question variations: "How much does...", "What is...", "Where can I...", "Is it safe to...", "How long does..."
-- Prioritize high search-volume question patterns
+- Questions should mirror actual search queries people type into Google about fostering
+- Focus on practical, actionable questions prospective foster carers actually ask
+- Include question variations: "How much does...", "What is...", "Where can I...", "Can I...", "How long does..."
+- Prioritise high search-volume question patterns
 
 === UNIQUENESS REQUIREMENTS (CRITICAL) ===
 - Each FAQ set MUST be completely unique - no duplicate questions across pages
-- Questions must include location/service-specific context (Dubai, Abu Dhabi, Sharjah, etc.)
+- Questions must include location/service-specific context (London, Manchester, Birmingham, etc.)
 - Never use generic questions that could apply to any page
-- Customize every answer with specific details about the location or service
-- Reference AED pricing, DHA/DOH/MOHAP licensing when relevant
+- Customise every answer with specific details about the location or fostering type
+- Reference Ofsted ratings, local authority areas, and UK regulations when relevant
 
 === CONTENT QUALITY ===
 - Answers should be 40-80 words - comprehensive but scannable
 - Use natural language, avoid jargon
-- Include helpful details: AED cost ranges, time estimates, what to expect
-- Be accurate and trustworthy (UAE dental context)
+- Include helpful details: weekly allowance ranges in £, timeline estimates, what to expect
+- Be accurate and trustworthy (UK fostering context)
 - No promotional language or exaggeration
 
-=== LOCAL SEO OPTIMIZATION (UAE) ===
-- Include city/emirate names in questions naturally
-- Reference local context (neighborhoods, emirates, healthcare authorities)
-- Mention UAE insurance considerations (Daman, AXA, Cigna, MetLife)
+=== LOCAL SEO OPTIMISATION (UK) ===
+- Include city/region names in questions naturally
+- Reference local context (boroughs, counties, local authorities)
+- Mention UK fostering regulations (Ofsted, DBS checks, Form F assessments)
 - Add regional context when appropriate
 
 === QUESTION CATEGORIES TO INCLUDE ===
-1. Cost/pricing questions (in AED)
-2. Process/procedure questions  
+1. Fostering allowance/financial questions (in £)
+2. Assessment process questions
 3. Timing/duration questions
-4. Qualification/eligibility questions
-5. Comparison questions (vs alternatives)
-6. Safety/risk questions
-7. Recovery/aftercare questions
-8. Insurance/payment questions
+4. Eligibility/qualification questions
+5. Comparison questions (types of fostering)
+6. Support/training questions
+7. Placement type questions
+8. Agency-specific questions
 
 IMPORTANT: Return your response as a valid JSON array of objects with "question" and "answer" keys. Example:
-[{"question": "How much does teeth whitening cost in Dubai?", "answer": "Teeth whitening in Dubai typically costs between AED 500 and AED 2,000..."}]
+[{"question": "How much do foster carers get paid in London?", "answer": "Foster carers in London typically receive a weekly fostering allowance of £150-£450..."}]
 
 Return ONLY the JSON array, no other text.`;
 
@@ -191,24 +191,24 @@ Return ONLY the JSON array, no other text.`;
       
       const questionStyles = [
         "Focus on 'How' and 'What' questions primarily",
-        "Lead with cost and pricing questions in AED",
-        "Start with patient experience questions",
-        "Emphasize safety and recovery questions",
+        "Lead with allowance and financial questions in £",
+        "Start with carer experience questions",
+        "Emphasise support and training questions",
         "Begin with eligibility and qualification questions",
-        "Focus on comparison and alternatives questions",
-        "Lead with timeline and process questions",
-        "Start with insurance and payment questions"
+        "Focus on comparison questions between fostering types",
+        "Lead with timeline and assessment process questions",
+        "Start with placement type and matching questions"
       ];
       
       const answerStyles = [
         "Use conversational, friendly tone throughout",
-        "Include specific AED numbers and ranges where possible",
+        "Include specific £ amounts and ranges where possible",
         "Start answers with direct statements, then elaborate",
         "Use 'you' and 'your' to address the reader directly",
         "Include practical tips in each answer",
-        "Reference UAE local context in most answers",
-        "Use reassuring language about safety and DHA licensing",
-        "Mention cost-saving options where relevant"
+        "Reference UK local context in most answers",
+        "Use reassuring language about Ofsted standards and support",
+        "Mention different agency options where relevant"
       ];
       
       const selectedQuestion = questionStyles[timestamp % questionStyles.length];
@@ -218,7 +218,7 @@ Return ONLY the JSON array, no other text.`;
 UNIQUENESS DIRECTIVE (ID: ${randomId}):
 - QUESTION STYLE: ${selectedQuestion}
 - ANSWER STYLE: ${selectedAnswer}
-- Each question MUST include the specific city/emirate/service name`;
+- Each question MUST include the specific city/region/fostering type name`;
     }
 
     // Parse page context from slug and data
