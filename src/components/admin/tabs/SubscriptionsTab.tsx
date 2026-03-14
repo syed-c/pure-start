@@ -200,7 +200,7 @@ export default function SubscriptionsTab() {
     });
     
     setDialogOpen(false);
-    setForm({ clinic_id: '', plan_name: 'basic', price_aed: 99, status: 'active', months: 12 });
+    setForm({ clinic_id: '', plan_name: 'basic', price_gbp: 79, status: 'active', months: 12 });
     toast({ title: 'Subscription created successfully' });
   };
 
