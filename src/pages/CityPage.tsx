@@ -320,7 +320,7 @@ const CityPage = () => {
     },
   ];
 
-  const shouldNoIndex = !profilesLoading && (!profiles || profiles.length < MIN_DENTIST_COUNT);
+  const shouldNoIndex = !profilesLoading && (!profiles || profiles.length < MIN_AGENCY_COUNT);
 
   const popularTreatments = (treatments || []).map(t => ({ name: t.name, slug: t.slug }));
   const nearbyLocations = (nearbyCities || [])

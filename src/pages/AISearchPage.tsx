@@ -18,27 +18,27 @@ import { cn } from "@/lib/utils";
 
 // Service suggestions for quick selection
 const SERVICE_SUGGESTIONS = [
-  { label: "Cleaning", value: "cleaning" },
-  { label: "Implants", value: "dental implants" },
-  { label: "Whitening", value: "teeth whitening" },
-  { label: "Braces", value: "braces" },
-  { label: "Root Canal", value: "root canal" },
-  { label: "Veneers", value: "veneers" },
+  { label: "Emergency", value: "emergency fostering" },
+  { label: "Respite", value: "respite care" },
+  { label: "Long-term", value: "long-term fostering" },
+  { label: "Therapeutic", value: "therapeutic fostering" },
+  { label: "Parent & Child", value: "parent and child" },
+  { label: "Short-term", value: "short-term fostering" },
 ];
 
 // Location suggestions
 const LOCATION_SUGGESTIONS = [
-  { label: "Los Angeles, CA", value: "Los Angeles" },
-  { label: "Boston, MA", value: "Boston" },
-  { label: "Hartford, CT", value: "Hartford" },
-  { label: "San Francisco, CA", value: "San Francisco" },
+  { label: "London", value: "London" },
+  { label: "Birmingham", value: "Birmingham" },
+  { label: "Manchester", value: "Manchester" },
+  { label: "Leeds", value: "Leeds" },
   { label: "Near Me", value: "near me", isNearMe: true },
 ];
 
 const SEARCH_STEPS = [
   { label: "Understanding your needs", icon: Sparkles },
-  { label: "Matching budget & service", icon: DollarSign },
-  { label: "Finding dentists", icon: Search },
+  { label: "Matching your preferences", icon: DollarSign },
+  { label: "Finding agencies", icon: Search },
   { label: "Ranking by relevance", icon: Star },
 ];
 
