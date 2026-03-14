@@ -25,59 +25,59 @@ interface Phase3Request {
 // BLOG TEMPLATES BY CATEGORY
 // ========================================
 
-const INFORMATIONAL_TEMPLATE = `You are writing an INFORMATIONAL DEEP DIVE blog post for AppointPanda dental directory.
+const INFORMATIONAL_TEMPLATE = `You are writing an INFORMATIONAL DEEP DIVE blog post for Foster Connect, the UK fostering agency directory.
 
-=== TEMPLATE: "What to Expect During Your First [Specialty] Visit" ===
+=== TEMPLATE: "What to Expect During Your Fostering Assessment" ===
 Target: 1,800-2,200 words
 
-H1: What to Expect During Your First [Specialty] Visit: Complete Guide [2026]
+H1: What to Expect During Your Fostering Assessment: Complete Guide [2026]
 
 1. INTRODUCTION (200 words)
-   - The importance of this first visit
-   - Common patient concerns
+   - The importance of the assessment process
+   - Common prospective carer concerns
    - What this guide covers
 
-2. H2: Before Your Appointment (300 words)
-   - What to bring (ID, insurance, records)
-   - How to prepare
+2. H2: Before Your Assessment Begins (300 words)
+   - What to prepare (documents, references, DBS check)
+   - How to get ready
    - Questions to have ready
-   - What to eat/not eat
+   - What your home needs
 
-3. H2: What Happens During the Visit (400 words)
-   - Check-in process
-   - Initial examination steps
-   - Diagnostic procedures (X-rays, scans)
-   - Consultation with the dentist
-   - Treatment planning discussion
+3. H2: What Happens During the Assessment (400 words)
+   - Initial home visit
+   - Form F assessment stages
+   - Working with your assessing social worker
+   - Training requirements (Skills to Foster)
+   - Panel preparation
 
-4. H2: Common Procedures at First Visit (300 words)
-   - Cleaning and examination
-   - X-rays and imaging
-   - Oral health assessment
-   - Treatment recommendations
+4. H2: Key Areas Covered in Assessment (300 words)
+   - Personal history and motivation
+   - Parenting capacity assessment
+   - Health and safety checks
+   - Support network evaluation
 
-5. H2: Questions to Ask Your Dentist (250 words)
-   - About your specific condition
-   - About treatment options
-   - About costs and insurance
-   - About follow-up care
+5. H2: Questions Your Social Worker Will Ask (250 words)
+   - About your motivations for fostering
+   - About your parenting experience
+   - About your support network
+   - About managing challenging behaviours
 
-6. H2: After Your Appointment (200 words)
-   - What to expect
-   - Follow-up steps
-   - Scheduling next visit
+6. H2: After Your Assessment (200 words)
+   - What to expect at panel
+   - Approval process
+   - Matching and placement
 
-7. H2: Cost Expectations (250 words)
-   - Typical first visit costs
-   - What insurance covers
-   - Payment options
+7. H2: Timeline & Expectations (250 words)
+   - Typical assessment timeline (4-6 months)
+   - What agencies provide during this period
+   - Financial considerations
 
-8. H2: Find a [Specialty] Near You (150 words)
-   - CTA to AppointPanda
+8. H2: Find an Agency on Foster Connect (150 words)
+   - CTA to Foster Connect
    - Benefits of using directory
 
 9. H2: FAQs (200 words)
-   - 5-6 common first-visit questions`;
+   - 5-6 common assessment questions`;
 
 const PROBLEM_SOLVING_TEMPLATE = `You are writing a PROBLEM-SOLVING blog post for AppointPanda.
 
