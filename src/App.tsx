@@ -220,16 +220,18 @@ const App = () => (
                 <Route path="/form/:submissionId" element={<PatientFormPage />} />
                 <Route path="/book/:clinicId" element={<BookDirectPage />} />
 
-                {/* Free Tools - Phase 3 */}
-                <Route path="/tools/dental-cost-calculator" element={<DentalCostCalculator />} />
+                {/* Free Tools */}
+                <Route path="/tools/fostering-allowance-calculator" element={<FosteringAllowanceCalculator />} />
+                <Route path="/tools/dental-cost-calculator" element={<Navigate to="/tools/fostering-allowance-calculator" replace />} />
                 <Route path="/tools/insurance-checker" element={<InsuranceChecker />} />
-                <Route path="/emergency-dentist" element={<EmergencyDentist />} />
+                <Route path="/emergency-fostering" element={<EmergencyFostering />} />
+                <Route path="/emergency-dentist" element={<Navigate to="/emergency-fostering" replace />} />
 
-                {/* Price Intelligence Pages */}
+                {/* Service Comparison Pages */}
                 <Route path="/cost/:serviceSlug" element={<ServicePricePage />} />
-                <Route path="/compare/:serviceSlug/:emirate1-vs-:emirate2" element={<EmirateComparisonPage />} />
+                <Route path="/compare/:serviceSlug/:region1-vs-:region2" element={<RegionComparisonPage />} />
 
-                {/* Legacy redirects - UAE routes to new US structure */}
+                {/* Legacy redirects */}
                 <Route path="/ae/clinic/:clinicSlug" element={<LegacyClinicRedirect />} />
                 <Route path="/ae/dentist/:dentistSlug" element={<LegacyDentistRedirect />} />
                 <Route path="/ae" element={<Navigate to="/" replace />} />
