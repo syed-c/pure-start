@@ -258,7 +258,7 @@ DO NOT: Mention prompts or instructions, explain your process, copy content betw
 - Keep between 20-70 characters
 - Make it descriptive and specific
 - Different from but related to meta title
-- Write from platform perspective (e.g., "Find [Service] Dentists in [City]")`,
+- Write from platform perspective (e.g., "Find [Fostering Type] Agencies in [City]")`,
           h2: `
 
 === FOCUS: H2 STRUCTURE ===
