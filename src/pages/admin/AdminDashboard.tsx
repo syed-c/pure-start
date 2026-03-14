@@ -170,12 +170,12 @@ const dentistTabGroups = [
   {
     label: 'Operations',
     tabs: [
-      { id: 'my-appointments', label: 'Appointments', icon: Calendar, highlight: true },
+      { id: 'my-appointments', label: 'Enquiries', icon: Calendar, highlight: true },
       { id: 'my-availability', label: 'Availability', icon: Clock },
-      { id: 'my-appointment-types', label: 'Appointment Types', icon: Stethoscope },
-      { id: 'my-patients', label: 'Patients', icon: Users },
+      { id: 'my-appointment-types', label: 'Enquiry Types', icon: Stethoscope },
+      { id: 'my-patients', label: 'Carers', icon: Users },
       { id: 'my-messages', label: 'Messages', icon: Inbox },
-      { id: 'my-intake-forms', label: 'Intake Forms', icon: ClipboardList },
+      { id: 'my-intake-forms', label: 'Application Forms', icon: ClipboardList },
       { id: 'my-operations', label: 'Automation', icon: Zap },
     ],
   },
