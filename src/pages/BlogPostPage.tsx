@@ -603,7 +603,7 @@ const BlogPostPage = () => {
         url={`/blog/${post.slug}/`}
         datePublished={post.published_at || ''}
         dateModified={post.updated_at || post.published_at || ''}
-        author={post.author_name || 'AppointPanda Team'}
+        author={post.author_name || 'Foster Connect Team'}
       />
       <StructuredData
         type="breadcrumb"
