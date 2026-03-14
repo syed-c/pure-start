@@ -365,16 +365,18 @@ export default function ContentGenerationStudioTab() {
       noContent: seoPages.filter(p => !p.content || (p.word_count || 0) < 50).length,
       thinContent: seoPages.filter(p => p.content && (p.word_count || 0) >= 50 && (p.word_count || 0) < 800).length,
       optimized: seoPages.filter(p => p.is_optimized).length,
-      byType: Object.entries(PAGE_TYPE_LABELS).map(([type, label]) => ({
-        type,
-        label,
-        count: seoPages.filter(p => p.page_type === type).length,
-        withContent: seoPages.filter(p => p.page_type === type && p.content && (p.word_count || 0) >= 800).length,
-        empty: seoPages.filter(p => p.page_type === type && (!p.content || (p.word_count || 0) < 50)).length,
-        thin: seoPages.filter(p => p.page_type === type && p.content && (p.word_count || 0) >= 50 && (p.word_count || 0) < 800).length,
-      })).filter(t => t.count > 0),
+      byType: availablePageTypes
+        .map((type) => ({
+          type,
+          label: formatPageTypeLabel(type),
+          count: seoPages.filter(p => p.page_type === type).length,
+          withContent: seoPages.filter(p => p.page_type === type && p.content && (p.word_count || 0) >= 800).length,
+          empty: seoPages.filter(p => p.page_type === type && (!p.content || (p.word_count || 0) < 50)).length,
+          thin: seoPages.filter(p => p.page_type === type && p.content && (p.word_count || 0) >= 50 && (p.word_count || 0) < 800).length,
+        }))
+        .filter(t => t.count > 0),
     };
-  }, [seoPages]);
+  }, [seoPages, availablePageTypes]);
 
   // Filter pages based on all criteria
   const filteredPages = useMemo(() => {
