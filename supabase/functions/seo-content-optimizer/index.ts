@@ -246,10 +246,10 @@ DO NOT: Mention prompts or instructions, explain your process, copy content betw
 
 === FOCUS: META DESCRIPTIONS ===
 - Keep under 155 characters
-- Start with an action verb (Discover, Find, Book, Compare)
-- Include clear value proposition from AppointPanda's perspective
-- Add call-to-action (book now, compare clinics, read reviews)
-- Include location for local pages`,
+- Start with an action verb (Discover, Find, Explore, Compare)
+- Include clear value proposition from Foster Connect's perspective
+- Add call-to-action (enquire now, compare agencies, read reviews)
+- Include location for local pages (UK)`,
           h1: `
 
 === FOCUS: H1 HEADINGS ===
