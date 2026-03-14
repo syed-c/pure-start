@@ -351,7 +351,7 @@ export default function AdminDashboard() {
   const isAdmin = roles.some(role => ADMIN_ROLES.includes(role));
   const isSuperAdmin = roles.includes('super_admin') || roles.includes('district_manager');
   const isDentist = roles.includes('dentist');
-  const primaryRole = roles[0] || 'patient';
+  const primaryRole = roles[0] || 'user';
 
   const [activeTab, setActiveTab] = useState<string>(() => {
     const tabFromUrl = searchParams.get('tab');
