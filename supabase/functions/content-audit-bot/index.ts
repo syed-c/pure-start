@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 // Active states filter
-const ACTIVE_STATE_SLUGS = ['ca', 'ct', 'ma', 'nj'];
+const ACTIVE_STATE_SLUGS = ['england', 'scotland', 'wales', 'northern-ireland', 'london', 'north-west', 'south-east', 'west-midlands', 'east-midlands', 'yorkshire', 'north-east', 'south-west', 'east-of-england'];
 
 // Google E-E-A-T content quality guidelines
 const CONTENT_QUALITY_CRITERIA = {
