@@ -127,47 +127,48 @@ Browse verified fostering agencies in ${city}, ${state}, compare services and re
 function generateTreatmentContent(treatment: string): string {
   return `## Understanding ${treatment}: A Complete Guide
 
-${treatment} is an essential dental service that helps patients achieve and maintain optimal oral health. Whether you're exploring this treatment for the first time or seeking a new provider, understanding what to expect can help you make informed decisions about your dental care.
+${treatment} is an important type of fostering that helps children and young people in the UK who need safe, supportive homes. Whether you're exploring this option for the first time or seeking a new agency, understanding what's involved can help you make informed decisions.
 
 ### What Is ${treatment}?
 
-${treatment} encompasses a range of procedures designed to address specific dental needs. Modern dental technology has made these treatments more comfortable, effective, and accessible than ever before.
+${treatment} encompasses a specific approach to foster care designed to address particular needs. Modern fostering agencies have developed comprehensive support programmes to ensure both carers and children thrive.
 
-### Who Can Benefit from ${treatment}?
+### Who Can Become a ${treatment} Carer?
 
-Patients of all ages may benefit from ${treatment} services. Common reasons people seek this treatment include:
+People from all backgrounds may be eligible for ${treatment}. Common qualities agencies look for include:
 
-- Addressing dental pain or discomfort
-- Improving the appearance of teeth
-- Restoring dental function
-- Preventing future dental problems
-- Maintaining overall oral health
+- A genuine desire to help children and young people
+- Patience, resilience, and empathy
+- A spare bedroom and a stable home environment
+- The ability to work as part of a team with social workers
+- Willingness to complete training and ongoing development
 
 ### The ${treatment} Process
 
-When you visit a dental professional for ${treatment}, you can expect:
+When you enquire about ${treatment} with a fostering agency, you can expect:
 
-1. **Initial Consultation** - Assessment of your dental health and treatment goals
-2. **Treatment Planning** - Development of a personalized care plan
-3. **Procedure** - The treatment itself, performed with patient comfort in mind
-4. **Follow-up Care** - Instructions and appointments to ensure optimal results
+1. **Initial Conversation** - A friendly chat about your interest and circumstances
+2. **Information Event** - Learning more about what ${treatment} involves
+3. **Assessment (Form F)** - A thorough assessment of your suitability, typically 4-6 months
+4. **Fostering Panel** - Your application is considered by an independent panel
+5. **Approval & Matching** - You're matched with a child who suits your skills
 
-### Finding the Right Provider
+### Finding the Right Agency
 
-Choosing a qualified dental professional for ${treatment} is crucial. Look for providers who:
+Choosing a qualified fostering agency for ${treatment} is crucial. Look for agencies that:
 
-- Have relevant experience and credentials
-- Use modern equipment and techniques
-- Prioritize patient comfort and communication
-- Have positive patient reviews and testimonials
+- Are registered and inspected by Ofsted (or equivalent)
+- Provide comprehensive training and ongoing support
+- Offer competitive fostering allowances
+- Have positive reviews from existing foster carers
 
 ### Ready to Get Started?
 
-Browse our network of verified dental professionals offering ${treatment} services. Read reviews, compare providers, and book your appointment online today.`;
+Browse our directory of verified fostering agencies offering ${treatment} across the UK. Read reviews, compare agencies, and submit your enquiry online today.`;
 }
 
 function generateClinicDescription(name: string, city: string, state: string): string {
-  return `${name} provides comprehensive dental care services to patients in ${city}, ${state}, and surrounding communities. Our practice is committed to delivering high-quality dental treatments in a comfortable, welcoming environment. From routine cleanings and preventive care to advanced restorative and cosmetic procedures, our experienced team utilizes modern technology and techniques to help you achieve optimal oral health. We accept most major dental insurance plans and offer flexible scheduling to accommodate your busy lifestyle. Schedule your appointment today and experience the difference of personalized dental care.`;
+  return \`\${name} is a fostering agency supporting foster carers in \${city}, \${state}, and surrounding areas. The agency is committed to providing high-quality placements and comprehensive support for children and young people in care. From initial training through to ongoing supervision and 24/7 support, their experienced team helps foster carers build confidence and make a real difference. They offer competitive fostering allowances and accept enquiries from people of all backgrounds. Get in touch today to learn more about fostering with \${name}.\`;
 }
 
 serve(async (req) => {
