@@ -321,9 +321,9 @@ export default function SearchPage() {
       <Navbar />
 
       {/* Search Header */}
-      <div className="bg-gradient-to-b from-primary/[0.04] to-background border-b border-border/50">
+      <div className="bg-muted/30 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 py-8 md:py-10">
-          <h1 className="text-2xl md:text-3xl font-black text-foreground mb-5" style={{ fontFamily: "'Outfit', sans-serif" }}>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-foreground mb-5">
             Find a Fostering Agency
           </h1>
           <div className="flex gap-3">
