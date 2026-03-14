@@ -438,7 +438,7 @@ export default function SubscriptionsTab() {
                   </div>
                   <div>
                     <h3 className="font-semibold">{plan.name}</h3>
-                    <p className="text-xs text-muted-foreground">{plan.price_aed} AED/year</p>
+                    <p className="text-xs text-muted-foreground">£{plan.price_gbp}/month</p>
                   </div>
                 </div>
                 {plan.popular && (
