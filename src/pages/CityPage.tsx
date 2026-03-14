@@ -576,16 +576,16 @@ const CityPage = () => {
       {/* AI Discovery Meta */}
       <AIDiscoveryMeta
         pageTitle={pageTitle}
-        aiSummary={`Find ${profiles?.length || 0}+ verified dental clinics in ${cityName}, ${stateName}, UAE. Compare ratings, read patient reviews, and book appointments online through AppointPanda.`}
+        aiSummary={`Find ${profiles?.length || 0}+ verified fostering agencies in ${cityName}, ${stateName}, UK. Compare ratings, read carer reviews, and submit enquiries online through Foster Connect.`}
         entityType="location"
-        location={{ city: cityName, country: "UAE" }}
+        location={{ city: cityName, country: "UK" }}
         url={`/${normalizedStateSlug}/${citySlug}/`}
         faqs={faqs.map(f => ({ question: f.q, answer: f.a }))}
         keyFacts={[
-          `${profiles?.length || 0}+ dental clinics listed in ${cityName}`,
-          "All clinics verified with DHA/MOHAP licensing",
-          "Online booking with instant confirmation",
-          "Patient reviews and transparent AED pricing",
+          `${profiles?.length || 0}+ fostering agencies listed in ${cityName}`,
+          "All agencies verified with Ofsted registration",
+          "Online enquiry with quick response",
+          "Carer reviews and transparent information",
         ]}
       />
     </PageLayout>
