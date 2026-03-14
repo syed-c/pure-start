@@ -127,25 +127,55 @@ export function getActiveRegionBySlug(slug: string): ActiveRegion | undefined {
  */
 export function isPageInActiveRegion(pageSlug: string, pageType?: string): boolean {
   const normalized = pageSlug.replace(/^\/+/, '').toLowerCase();
-  
-  if (pageType === 'static' || pageType === 'blog' || pageType === 'agency' || 
-      pageType === 'category') {
+  const type = (pageType || '').toLowerCase();
+
+  // Non-location page types should always be visible in admin studios
+  // so editors can generate content/FAQs for all global pages.
+  const alwaysAllowedTypes = new Set([
+    'static',
+    'blog',
+    'blog-index',
+    'blog-post',
+    'agency',
+    'category',
+    'treatment',
+    'service',
+    'clinic',
+    'dentist',
+    'insurance',
+    'insurance-index',
+    'insurance-detail',
+  ]);
+
+  if (alwaysAllowedTypes.has(type)) {
     return true;
   }
-  
+
   if (!normalized || normalized === '/') {
     return true;
   }
-  
-  for (const regionSlug of ACTIVE_REGION_SLUGS) {
-    if (normalized === regionSlug || normalized.startsWith(`${regionSlug}/`)) {
-      return true;
+
+  // Location-based pages must belong to one of the active regions.
+  const locationScopedTypes = new Set([
+    'state',
+    'city',
+    'service_location',
+    'service-location',
+    'city_treatment',
+  ]);
+
+  if (locationScopedTypes.has(type) || !type) {
+    for (const regionSlug of ACTIVE_REGION_SLUGS) {
+      if (normalized === regionSlug || normalized.startsWith(`${regionSlug}/`)) {
+        return true;
+      }
     }
   }
-  
+
   if (normalized.startsWith('categories/') || normalized === 'categories') {
     return true;
   }
-  
-  return false;
+
+  // For unknown/custom page types, keep them visible if they are not tied to a region pattern.
+  return !normalized.includes('/');
 }
