@@ -354,11 +354,11 @@ export default function SubscriptionsTab() {
               </Badge>
             </div>
             <p className="text-slate-400 text-sm mb-1">Annual Recurring Revenue</p>
-            <p className="text-4xl font-bold mb-4">{yearlyRevenue.toLocaleString()} AED</p>
+             <p className="text-4xl font-bold mb-4">£{yearlyRevenue.toLocaleString()}</p>
             <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
               <div>
                 <p className="text-slate-400 text-xs">Monthly Avg</p>
-                <p className="text-lg font-semibold">{monthlyRevenue.toLocaleString()} AED</p>
+                <p className="text-lg font-semibold">£{monthlyRevenue.toLocaleString()}</p>
               </div>
               <div>
                 <p className="text-slate-400 text-xs">Active Subscriptions</p>
