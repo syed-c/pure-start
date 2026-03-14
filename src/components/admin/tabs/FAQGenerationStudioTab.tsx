@@ -729,8 +729,8 @@ export default function FAQGenerationStudioTab() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="__all__">All Types</SelectItem>
-                      {Object.entries(PAGE_TYPE_LABELS).map(([type, label]) => (
-                        <SelectItem key={type} value={type}>{label}</SelectItem>
+                      {availablePageTypes.map((type) => (
+                        <SelectItem key={type} value={type}>{formatPageTypeLabel(type)}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
