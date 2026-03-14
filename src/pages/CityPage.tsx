@@ -376,18 +376,23 @@ const CityPage = () => {
         id="city-page-schema"
       />
       
-      {/* Hero */}
-      <section className="py-12 md:py-18 bg-muted/30">
-        <div className="container px-4">
+      {/* Hero - Dark Gradient */}
+      <section className="relative py-14 md:py-22 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/3 w-80 h-80 bg-primary/10 rounded-full blur-[120px]" />
+          <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-teal/10 rounded-full blur-[100px]" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
+        </div>
+        <div className="container px-4 relative z-10">
           <div className="flex justify-center mb-4">
-            <Breadcrumbs items={breadcrumbs} />
+            <Breadcrumbs items={breadcrumbs} className="text-white/60 [&_a]:text-white/80 [&_a:hover]:text-primary" />
           </div>
           <div className="max-w-3xl mx-auto text-center">
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">
               Ofsted Rated Agencies
             </motion.p>
             <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight mb-3 text-foreground">
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight mb-3 text-white">
               {pageH1.includes(cityName) ? (
                 <>{pageH1.split(cityName)[0]}<span className="text-primary">{cityName}</span>{pageH1.split(cityName)[1] || ''}</>
               ) : (
@@ -395,14 +400,14 @@ const CityPage = () => {
               )}
             </motion.h1>
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}
-              className="text-sm md:text-base lg:text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
+              className="text-sm md:text-base lg:text-lg text-white/60 mb-6 max-w-2xl mx-auto">
               {areaLocalContent.hasLocalContext
                 ? `Discover fostering agencies serving ${areaLocalContent.demographics} in this ${areaLocalContent.character} community.`
                 : `Find trusted fostering agencies in ${cityName}. Compare Ofsted-rated agencies and read carer reviews.`
               }
             </motion.p>
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-              className="max-w-xl md:max-w-2xl mx-auto mb-5">
+              className="max-w-xl md:max-w-2xl mx-auto mb-6">
               <SearchBox variant="hero" stateSlug={stateSlug} defaultCity={`${citySlug}|${stateSlug}`} />
             </motion.div>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
@@ -412,10 +417,10 @@ const CityPage = () => {
                 { icon: Star, value: "4.8", label: "Rating" },
                 { icon: Shield, value: "Ofsted", label: "Verified" },
               ].map((s, i) => (
-                <div key={i} className="flex items-center gap-1.5 bg-card border border-border rounded-lg px-3 py-2">
+                <div key={i} className="flex items-center gap-1.5 bg-white/10 border border-white/10 rounded-xl px-3 py-2 backdrop-blur-sm">
                   <s.icon className="h-3.5 w-3.5 text-primary" />
-                  <span className="font-semibold text-sm">{s.value}</span>
-                  <span className="text-xs text-muted-foreground">{s.label}</span>
+                  <span className="font-bold text-sm text-white">{s.value}</span>
+                  <span className="text-xs text-white/50">{s.label}</span>
                 </div>
               ))}
             </motion.div>
