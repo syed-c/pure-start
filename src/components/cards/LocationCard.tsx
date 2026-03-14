@@ -92,7 +92,7 @@ export const LocationCard = ({
         </div>
 
         <div className="flex items-center gap-1 mt-4 text-primary font-bold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-          {type === "state" ? "Explore State" : "Explore Area"}
+          {type === "state" ? "Explore Region" : "Explore Area"}
           <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
         </div>
       </div>

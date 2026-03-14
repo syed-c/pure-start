@@ -124,8 +124,8 @@ export const ClinicCard = ({
         {/* Actions */}
         <div className="flex gap-2 mt-5">
           <Button asChild className="flex-1 rounded-xl font-bold">
-            <Link to={`/clinic/${slug}`}>
-              View Clinic
+            <Link to={`/agency/${slug}`}>
+              View Agency
               <ExternalLink className="ml-2 h-4 w-4" />
             </Link>
           </Button>
