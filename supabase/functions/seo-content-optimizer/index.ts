@@ -265,7 +265,7 @@ DO NOT: Mention prompts or instructions, explain your process, copy content betw
 - Create 4-6 meaningful H2 sections
 - H2s should organize content logically
 - Include keywords naturally in H2s
-- Suggested H2s: About [Service/Location], What to Expect, How AppointPanda Helps, Cost Considerations, FAQs
+- Suggested H2s: About [Fostering Type/Location], What to Expect, How Foster Connect Helps, Support & Allowances, FAQs
 - VARY H2 headings between pages - no templated repetition`,
           content: `
 
