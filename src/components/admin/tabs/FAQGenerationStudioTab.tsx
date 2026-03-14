@@ -918,7 +918,7 @@ export default function FAQGenerationStudioTab() {
                           <TableCell>
                             <Badge variant="outline" className="flex items-center gap-1 w-fit">
                               <Icon className="h-3 w-3" />
-                              {PAGE_TYPE_LABELS[page.page_type] || page.page_type}
+                              {formatPageTypeLabel(page.page_type)}
                             </Badge>
                           </TableCell>
                           <TableCell className="text-center">
