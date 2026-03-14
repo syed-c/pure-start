@@ -981,10 +981,8 @@ export default function ClinicEnrichmentTab() {
                           {clinic.city?.name}{clinic.city?.state?.abbreviation ? `, ${clinic.city.state.abbreviation}` : ''}
                         </TableCell>
                         <TableCell>
-                          {clinic.rating ? (
-                            <span className="flex items-center gap-1">
-                              {clinic.rating} <span className="text-gold">★</span>
-                            </span>
+                          {clinic.address ? (
+                            <span className="text-sm">{clinic.address.substring(0, 30)}...</span>
                           ) : (
                             <span className="text-muted-foreground">-</span>
                           )}
