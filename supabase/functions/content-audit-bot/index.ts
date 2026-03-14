@@ -215,7 +215,7 @@ async function analyzeWithAI(
   }
   
   try {
-    const prompt = `Analyze this dental website content for SEO quality and E-E-A-T compliance.
+    const prompt = `Analyze this fostering directory website content for SEO quality and E-E-A-T compliance.
 
 Page Type: ${pageType}
 URL Slug: ${slug}
