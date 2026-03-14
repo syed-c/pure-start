@@ -433,7 +433,7 @@ const DentistPage = () => {
                   Agency
                 </h3>
                 <Link 
-                  to={`/clinic/${dentist.clinic.slug}`}
+                  to={`/agency/${dentist.clinic.slug}`}
                   className="block p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors"
                 >
                   <p className="font-bold text-lg">{dentist.clinic.name}</p>

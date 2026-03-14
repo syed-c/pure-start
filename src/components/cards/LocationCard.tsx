@@ -81,18 +81,18 @@ export const LocationCard = ({
           {dentistCount !== undefined && (
             <div className="flex items-center gap-1.5 text-card/90 text-sm">
               <Users className="h-4 w-4" />
-              <span className="font-medium">{dentistCount} Dentists</span>
+              <span className="font-medium">{dentistCount} Agencies</span>
             </div>
           )}
           {clinicCount !== undefined && (
             <div className="text-card/90 text-sm font-medium">
-              {clinicCount} Clinics
+              {clinicCount} Offices
             </div>
           )}
         </div>
 
         <div className="flex items-center gap-1 mt-4 text-primary font-bold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-          {type === "state" ? "Explore State" : "Explore Area"}
+          {type === "state" ? "Explore Region" : "Explore Area"}
           <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
         </div>
       </div>

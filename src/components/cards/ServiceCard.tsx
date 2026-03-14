@@ -58,7 +58,7 @@ export const ServiceCard = ({
       
       {clinicCount !== undefined && (
         <p className="mt-3 text-sm font-medium text-primary">
-          {clinicCount} clinics offering this service
+          {clinicCount} agencies offering this service
         </p>
       )}
       

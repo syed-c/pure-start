@@ -26,17 +26,17 @@ interface OutreachRequest {
 // Email templates
 const EMAIL_TEMPLATES = {
   claim: {
-    subject: "You're Listed on AppointPanda - Claim Your Free Profile",
-    body: `Hi Dr. {{last_name}},
+    subject: "You're Listed on Foster Connect - Claim Your Free Profile",
+    body: `Hi {{last_name}},
 
-I'm reaching out because {{practice_name}} is currently listed on AppointPanda with basic information, but you haven't claimed your profile yet.
+I'm reaching out because {{practice_name}} is currently listed on Foster Connect with basic information, but you haven't claimed your profile yet.
 
 When you claim and complete your profile (takes 5 minutes), you'll receive:
 
 ✓ Do-follow backlink to your website (boosts SEO)
-✓ Enhanced listing with photos, services, hours
-✓ Patient review management tools
-✓ Online appointment booking
+✓ Enhanced listing with photos, services, Ofsted rating
+✓ Carer review management tools
+✓ Online enquiry management
 ✓ Priority placement in local searches
 
 Your profile: {{profile_url}}
@@ -44,24 +44,24 @@ Your profile: {{profile_url}}
 Claim it here: {{claim_url}}
 
 Best,
-The AppointPanda Team
+The Foster Connect Team
 
 ---
-AppointPanda - Connecting Patients with Great Dentists
+Foster Connect - Connecting Carers with Great Agencies
 Unsubscribe: {{unsubscribe_url}}`,
   },
   followup: {
-    subject: "{{practice_name}} - Get More Patients From AppointPanda",
-    body: `Dr. {{last_name}},
+    subject: "{{practice_name}} - Get More Carer Enquiries From Foster Connect",
+    body: `{{last_name}},
 
-I wanted to follow up about your AppointPanda profile.
+I wanted to follow up about your Foster Connect profile.
 
-Last month, {{monthly_searches}} patients in {{city}} used AppointPanda to find dentists for dental care.
+Last month, {{monthly_searches}} prospective carers in {{city}} used Foster Connect to find fostering agencies.
 
-Here's what dentists with claimed profiles get:
+Here's what agencies with claimed profiles get:
 - 5x more profile views
-- Direct appointment requests
-- Patient reviews & testimonials
+- Direct carer enquiries
+- Carer reviews & testimonials
 - Backlink to boost your Google ranking
 
 Complete your profile: {{claim_url}}
@@ -69,21 +69,21 @@ Complete your profile: {{claim_url}}
 Takes 5 minutes, no credit card needed.
 
 Best,
-The AppointPanda Team
+The Foster Connect Team
 
 ---
 Unsubscribe: {{unsubscribe_url}}`,
   },
   final: {
-    subject: "Final reminder: Claim your AppointPanda profile",
-    body: `Dr. {{last_name}},
+    subject: "Final reminder: Claim your Foster Connect profile",
+    body: `{{last_name}},
 
-This is my final reminder about claiming your free AppointPanda profile for {{practice_name}}.
+This is my final reminder about claiming your free Foster Connect profile for {{practice_name}}.
 
 Your profile is currently showing basic information only. Claimed profiles receive:
 
 ✓ 5x more visibility in search results
-✓ Direct patient booking requests
+✓ Direct carer enquiry requests
 ✓ Free SEO backlink to your website
 ✓ Review management tools
 
@@ -92,7 +92,7 @@ Claim your profile now: {{claim_url}}
 If you have questions, just reply to this email.
 
 Best,
-The AppointPanda Team
+The Foster Connect Team
 
 ---
 Unsubscribe: {{unsubscribe_url}}`,

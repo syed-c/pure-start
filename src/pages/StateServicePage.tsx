@@ -162,7 +162,7 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
             name: `${treatmentName} in ${stateName}`,
             description: pageDescription,
             url: `/${normalizedStateSlug}/${serviceSlug}/`,
-            provider: 'AppointPanda',
+            provider: 'Foster Connect',
             areaServed: stateName,
           },
         ]}

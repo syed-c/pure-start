@@ -11,7 +11,6 @@ const NotFound = () => {
   useEffect(() => {
     console.error("404 Error: User attempted to access non-existent route:", location.pathname);
     
-    // CRITICAL: Set noindex for 404 pages to prevent soft 404 issues in GSC
     let meta = document.querySelector('meta[name="robots"]');
     if (!meta) {
       meta = document.createElement('meta');
@@ -20,8 +19,7 @@ const NotFound = () => {
     }
     meta.setAttribute('content', 'noindex, nofollow');
     
-    // Update title for 404
-    document.title = 'Page Not Found | AppointPanda';
+    document.title = 'Page Not Found | Foster Connect';
     
     return;
   }, [location.pathname, navigate]);
@@ -29,7 +27,6 @@ const NotFound = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-background to-muted/30">
       <div className="text-center px-4 max-w-md">
-        {/* 404 Visual */}
         <div className="mb-6">
           <span className="text-8xl font-black bg-gradient-to-r from-primary to-teal bg-clip-text text-transparent">
             404
@@ -44,7 +41,6 @@ const NotFound = () => {
           The page you're looking for doesn't exist or has been moved.
         </p>
         
-        {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Button asChild variant="default" className="gap-2">
             <Link to="/">
@@ -56,7 +52,7 @@ const NotFound = () => {
           <Button asChild variant="outline" className="gap-2">
             <Link to="/search/">
               <Search className="h-4 w-4" />
-              Find a Dentist
+              Find an Agency
             </Link>
           </Button>
           
@@ -70,23 +66,22 @@ const NotFound = () => {
           </Button>
         </div>
         
-        {/* Helpful Links */}
         <div className="mt-8 pt-6 border-t border-border/50">
-          <p className="text-xs text-muted-foreground mb-3">Browse by Emirate:</p>
+          <p className="text-xs text-muted-foreground mb-3">Browse by Region:</p>
           <div className="flex flex-wrap justify-center gap-2">
-            <Link to="/dubai/" className="text-xs text-primary hover:underline">Dubai</Link>
+            <Link to="/london/" className="text-xs text-primary hover:underline">London</Link>
             <span className="text-muted-foreground/30">•</span>
-            <Link to="/abu-dhabi/" className="text-xs text-primary hover:underline">Abu Dhabi</Link>
+            <Link to="/south-east/" className="text-xs text-primary hover:underline">South East</Link>
             <span className="text-muted-foreground/30">•</span>
-            <Link to="/sharjah/" className="text-xs text-primary hover:underline">Sharjah</Link>
+            <Link to="/north-west/" className="text-xs text-primary hover:underline">North West</Link>
             <span className="text-muted-foreground/30">•</span>
-            <Link to="/ajman/" className="text-xs text-primary hover:underline">Ajman</Link>
+            <Link to="/west-midlands/" className="text-xs text-primary hover:underline">West Midlands</Link>
             <span className="text-muted-foreground/30">•</span>
-            <Link to="/ras-al-khaimah/" className="text-xs text-primary hover:underline">Ras Al Khaimah</Link>
+            <Link to="/yorkshire/" className="text-xs text-primary hover:underline">Yorkshire</Link>
             <span className="text-muted-foreground/30">•</span>
-            <Link to="/fujairah/" className="text-xs text-primary hover:underline">Fujairah</Link>
+            <Link to="/scotland/" className="text-xs text-primary hover:underline">Scotland</Link>
             <span className="text-muted-foreground/30">•</span>
-            <Link to="/umm-al-quwain/" className="text-xs text-primary hover:underline">Umm Al Quwain</Link>
+            <Link to="/wales/" className="text-xs text-primary hover:underline">Wales</Link>
           </div>
         </div>
       </div>

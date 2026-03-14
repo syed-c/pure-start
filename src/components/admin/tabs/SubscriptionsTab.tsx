@@ -56,12 +56,12 @@ interface PlanConfig {
   id: string;
   name: string;
   slug?: string;
-  price_aed: number;
+  price_gbp: number;
   billing_period: string;
   description: string;
   color: string;
   popular?: boolean;
-  expected_patients: number;
+  expected_carers: number;
   features: Record<string, PlanFeature>;
 }
 
@@ -71,15 +71,15 @@ const DEFAULT_PLANS: PlanConfig[] = [
     id: 'basic',
     name: 'Basic',
     slug: 'basic',
-    price_aed: 99,
-    billing_period: 'year',
+    price_gbp: 79,
+    billing_period: 'month',
     description: 'Essential features for getting started',
     color: 'slate',
-    expected_patients: 2,
+    expected_carers: 2,
     features: {
-      claim_profile: { enabled: true, limit: null, name: 'Claim & Customize Profile' },
+      claim_profile: { enabled: true, limit: null, name: 'Claim & Customise Profile' },
       profile_listing: { enabled: true, limit: 1, name: 'Profile Listing' },
-      appointment_booking: { enabled: true, limit: null, name: 'Appointment Booking' },
+      enquiry_management: { enabled: true, limit: null, name: 'Enquiry Management' },
       email_support: { enabled: true, limit: null, name: 'Email Support' },
     }
   },
@@ -87,12 +87,12 @@ const DEFAULT_PLANS: PlanConfig[] = [
     id: 'professional',
     name: 'Professional',
     slug: 'professional',
-    price_aed: 499,
-    billing_period: 'year',
-    description: 'Advanced tools for growing practices',
+    price_gbp: 199,
+    billing_period: 'month',
+    description: 'Advanced tools for growing agencies',
     color: 'primary',
     popular: true,
-    expected_patients: 6,
+    expected_carers: 6,
     features: {
       claim_profile: { enabled: true, limit: null, name: 'Claim & Customize Profile' },
       verification_badge: { enabled: true, limit: null, name: 'Verification Badge' },
@@ -103,11 +103,11 @@ const DEFAULT_PLANS: PlanConfig[] = [
     id: 'enterprise',
     name: 'Enterprise',
     slug: 'enterprise',
-    price_aed: 999,
-    billing_period: 'year',
-    description: 'Full suite for multi-location practices',
+    price_gbp: 349,
+    billing_period: 'month',
+    description: 'Full suite for multi-location agencies',
     color: 'gold',
-    expected_patients: 11,
+    expected_carers: 11,
     features: {
       claim_profile: { enabled: true, limit: null, name: 'Everything in Professional' },
       dedicated_manager: { enabled: true, limit: null, name: 'Dedicated Account Manager' },
@@ -128,7 +128,7 @@ export default function SubscriptionsTab() {
   const [form, setForm] = useState({
     clinic_id: '',
     plan_name: 'basic',
-    price_aed: 99,
+    price_gbp: 79,
     status: 'active' as 'active' | 'pending' | 'expired' | 'cancelled',
     months: 12,
   });
@@ -186,7 +186,7 @@ export default function SubscriptionsTab() {
     const count = subscriptions?.filter(s => 
       s.plan_id === plan.id || s.plan?.slug === plan.slug
     ).length || 0;
-    const revenue = count * (plan.price_aed || 0);
+    const revenue = count * (plan.price_gbp || 0);
     return { ...plan, count, revenue };
   });
 
@@ -200,7 +200,7 @@ export default function SubscriptionsTab() {
     });
     
     setDialogOpen(false);
-    setForm({ clinic_id: '', plan_name: 'basic', price_aed: 99, status: 'active', months: 12 });
+    setForm({ clinic_id: '', plan_name: 'basic', price_gbp: 79, status: 'active', months: 12 });
     toast({ title: 'Subscription created successfully' });
   };
 
@@ -263,14 +263,14 @@ export default function SubscriptionsTab() {
             <DialogContent className="max-w-md">
               <DialogHeader>
                 <DialogTitle>Create Subscription</DialogTitle>
-                <DialogDescription>Assign a plan to a clinic</DialogDescription>
+                <DialogDescription>Assign a plan to an agency</DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <Label>Clinic</Label>
+                  <Label>Agency</Label>
                   <Select value={form.clinic_id} onValueChange={(v) => setForm({ ...form, clinic_id: v })}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select clinic" />
+                      <SelectValue placeholder="Select agency" />
                     </SelectTrigger>
                     <SelectContent className="max-h-60">
                       {clinics.map(c => (
@@ -286,7 +286,7 @@ export default function SubscriptionsTab() {
                     {plans.map(plan => (
                       <button
                         key={plan.id}
-                        onClick={() => setForm({ ...form, plan_name: plan.id, price_aed: plan.price_aed })}
+                        onClick={() => setForm({ ...form, plan_name: plan.id, price_gbp: plan.price_gbp })}
                         className={`p-3 rounded-xl border-2 text-center transition-all ${
                           form.plan_name === plan.id 
                             ? 'border-primary bg-primary/5' 
@@ -295,7 +295,7 @@ export default function SubscriptionsTab() {
                       >
                         <div className="flex justify-center mb-1">{getPlanIcon(plan.id)}</div>
                         <p className="text-sm font-medium">{plan.name}</p>
-                        <p className="text-xs text-muted-foreground">{plan.price_aed} AED/yr</p>
+                        <p className="text-xs text-muted-foreground">£{plan.price_gbp}/mo</p>
                       </button>
                     ))}
                   </div>
@@ -354,11 +354,11 @@ export default function SubscriptionsTab() {
               </Badge>
             </div>
             <p className="text-slate-400 text-sm mb-1">Annual Recurring Revenue</p>
-            <p className="text-4xl font-bold mb-4">{yearlyRevenue.toLocaleString()} AED</p>
+             <p className="text-4xl font-bold mb-4">£{yearlyRevenue.toLocaleString()}</p>
             <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
               <div>
                 <p className="text-slate-400 text-xs">Monthly Avg</p>
-                <p className="text-lg font-semibold">{monthlyRevenue.toLocaleString()} AED</p>
+                <p className="text-lg font-semibold">£{monthlyRevenue.toLocaleString()}</p>
               </div>
               <div>
                 <p className="text-slate-400 text-xs">Active Subscriptions</p>
@@ -438,7 +438,7 @@ export default function SubscriptionsTab() {
                   </div>
                   <div>
                     <h3 className="font-semibold">{plan.name}</h3>
-                    <p className="text-xs text-muted-foreground">{plan.price_aed} AED/year</p>
+                    <p className="text-xs text-muted-foreground">£{plan.price_gbp}/month</p>
                   </div>
                 </div>
                 {plan.popular && (
@@ -452,7 +452,7 @@ export default function SubscriptionsTab() {
                   <p className="text-xs text-muted-foreground">Subscribers</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{plan.revenue.toLocaleString()} AED</p>
+                  <p className="text-2xl font-bold">£{plan.revenue.toLocaleString()}</p>
                   <p className="text-xs text-muted-foreground">Revenue</p>
                 </div>
               </div>
@@ -491,7 +491,7 @@ export default function SubscriptionsTab() {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-slate-50 dark:bg-slate-800/50">
-                    <TableHead className="font-semibold">Clinic</TableHead>
+                    <TableHead className="font-semibold">Agency</TableHead>
                     <TableHead className="font-semibold">Plan</TableHead>
                     <TableHead className="font-semibold">Price</TableHead>
                     <TableHead className="font-semibold">Status</TableHead>
@@ -521,7 +521,7 @@ export default function SubscriptionsTab() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <span className="font-semibold">{sub.plan?.price_monthly || sub.amount_paid || 0} AED/mo</span>
+                          <span className="font-semibold">£{sub.plan?.price_monthly || sub.amount_paid || 0}/mo</span>
                         </TableCell>
                         <TableCell>{getStatusBadge(sub.status || 'pending')}</TableCell>
                         <TableCell>
@@ -644,7 +644,7 @@ export default function SubscriptionsTab() {
                           {getPlanIcon(plan.id)}
                           {plan.name}
                         </span>
-                        <span className="text-muted-foreground">{plan.revenue.toLocaleString()} AED ({percent.toFixed(0)}%)</span>
+                        <span className="text-muted-foreground">£{plan.revenue.toLocaleString()} ({percent.toFixed(0)}%)</span>
                       </div>
                       <Progress value={percent} className="h-2" />
                     </div>
@@ -654,7 +654,7 @@ export default function SubscriptionsTab() {
                 <div className="pt-4 border-t mt-4">
                   <div className="flex justify-between">
                     <span className="font-semibold">Total Annual Revenue</span>
-                    <span className="font-bold text-lg">{yearlyRevenue.toLocaleString()} AED</span>
+                    <span className="font-bold text-lg">£{yearlyRevenue.toLocaleString()}</span>
                   </div>
                 </div>
               </CardContent>
@@ -676,7 +676,7 @@ export default function SubscriptionsTab() {
                   </div>
                   <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-center">
                     <p className="text-3xl font-bold text-teal">
-                      {activeCount > 0 ? Math.round(yearlyRevenue / activeCount) : 0} AED
+                      {activeCount > 0 ? Math.round(yearlyRevenue / activeCount) : 0} GBP
                     </p>
                     <p className="text-sm text-muted-foreground">Avg Revenue/Customer</p>
                   </div>

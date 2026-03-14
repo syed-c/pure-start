@@ -532,7 +532,7 @@ export default function StaticPagesTab() {
                   <TableRow key={page.id}>
                     <TableCell className="font-mono text-sm">
                       <a
-                        href={`https://www.appointpanda.ae${page.path}`}
+                        href={`https://fosterconnect.co.uk${page.path}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-primary hover:underline"

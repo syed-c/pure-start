@@ -22,7 +22,7 @@ import { TeamMemberFormDialog, TeamMemberFormData } from './TeamMemberFormDialog
 const INITIAL_FORM_DATA: TeamMemberFormData = {
   name: '',
   title: '',
-  professional_type: 'dentist',
+  professional_type: 'social_worker',
   is_primary: false,
   license_number: '',
   department: '',
@@ -212,12 +212,12 @@ export default function TeamManagementTab() {
   };
 
   // Group team by role category
-  const dentists = team?.filter(m => 
-    ['dentist', 'orthodontist', 'endodontist', 'periodontist', 'prosthodontist', 'oral_surgeon', 'pediatric_dentist'].includes(m.professional_type)
+  const specialists = team?.filter(m => 
+    ['social_worker', 'supervising_social_worker', 'therapist', 'panel_member', 'dentist', 'orthodontist', 'endodontist', 'periodontist', 'prosthodontist', 'oral_surgeon', 'pediatric_dentist'].includes(m.professional_type)
   ) || [];
   
   const support = team?.filter(m => 
-    ['hygienist', 'assistant', 'receptionist', 'practice_manager'].includes(m.professional_type)
+    ['hygienist', 'assistant', 'receptionist', 'practice_manager', 'support_worker', 'care_assistant'].includes(m.professional_type)
   ) || [];
 
   if (clinicLoading) {
@@ -239,7 +239,7 @@ export default function TeamManagementTab() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-display font-bold">Team Management</h2>
-          <p className="text-muted-foreground">Manage your clinic's doctors and staff</p>
+          <p className="text-muted-foreground">Manage your agency's team members and staff</p>
         </div>
         <Button onClick={() => { setFormData(INITIAL_FORM_DATA); setIsAddDialogOpen(true); }}>
           <Plus className="h-4 w-4 mr-2" />
@@ -255,8 +255,8 @@ export default function TeamManagementTab() {
               <Stethoscope className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <p className="text-2xl font-bold">{dentists.length}</p>
-              <p className="text-sm text-muted-foreground">Dentists</p>
+              <p className="text-2xl font-bold">{specialists.length}</p>
+              <p className="text-sm text-muted-foreground">Specialists</p>
             </div>
           </CardContent>
         </Card>
@@ -305,15 +305,15 @@ export default function TeamManagementTab() {
         </Card>
       </div>
 
-      {/* Dentists & Specialists */}
-      {dentists.length > 0 && (
+      {/* Specialists */}
+      {specialists.length > 0 && (
         <div className="space-y-4">
           <h3 className="text-lg font-semibold flex items-center gap-2">
             <Stethoscope className="h-5 w-5 text-primary" />
-            Dentists & Specialists
+            Specialists & Key Workers
           </h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {dentists.map((member) => (
+            {specialists.map((member) => (
               <TeamMemberCard 
                 key={member.id} 
                 member={member} 
