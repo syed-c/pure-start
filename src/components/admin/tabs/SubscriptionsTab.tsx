@@ -452,7 +452,7 @@ export default function SubscriptionsTab() {
                   <p className="text-xs text-muted-foreground">Subscribers</p>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{plan.revenue.toLocaleString()} AED</p>
+                  <p className="text-2xl font-bold">£{plan.revenue.toLocaleString()}</p>
                   <p className="text-xs text-muted-foreground">Revenue</p>
                 </div>
               </div>
