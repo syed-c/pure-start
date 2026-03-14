@@ -286,7 +286,7 @@ export default function SubscriptionsTab() {
                     {plans.map(plan => (
                       <button
                         key={plan.id}
-                        onClick={() => setForm({ ...form, plan_name: plan.id, price_aed: plan.price_aed })}
+                        onClick={() => setForm({ ...form, plan_name: plan.id, price_gbp: plan.price_gbp })}
                         className={`p-3 rounded-xl border-2 text-center transition-all ${
                           form.plan_name === plan.id 
                             ? 'border-primary bg-primary/5' 
