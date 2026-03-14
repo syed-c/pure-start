@@ -21,24 +21,24 @@ export const SectionHeader = ({
 }: SectionHeaderProps) => {
   return (
     <div className={cn(
-      "mb-12",
+      "mb-14",
       align === "center" && "text-center",
       className
     )}>
       {label && (
-        <span className="text-primary text-sm font-bold uppercase tracking-wider">
+        <span className="text-primary text-xs font-bold uppercase tracking-wider">
           {label}
         </span>
       )}
       <h2 className={cn(
-        "font-display text-3xl md:text-4xl lg:text-5xl font-black mt-2",
-        dark && "text-dark-section-foreground"
-      )} style={{ fontFamily: "'Quicksand', sans-serif" }}>
+        "text-3xl md:text-4xl lg:text-5xl font-black mt-3",
+        dark ? "text-background" : "text-foreground"
+      )} style={{ fontFamily: "'Outfit', sans-serif" }}>
         {title} {highlight && <span className="text-primary">{highlight}</span>}
       </h2>
       {description && (
         <p className={cn(
-          "mt-4 max-w-2xl text-muted-foreground",
+          "mt-5 max-w-2xl text-muted-foreground leading-relaxed",
           align === "center" && "mx-auto"
         )}>
           {description}
