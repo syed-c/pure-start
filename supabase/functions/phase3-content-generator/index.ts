@@ -79,52 +79,50 @@ H1: What to Expect During Your Fostering Assessment: Complete Guide [2026]
 9. H2: FAQs (200 words)
    - 5-6 common assessment questions`;
 
-const PROBLEM_SOLVING_TEMPLATE = `You are writing a PROBLEM-SOLVING blog post for AppointPanda.
+const PROBLEM_SOLVING_TEMPLATE = `You are writing a PROBLEM-SOLVING blog post for Foster Connect.
 
-=== TEMPLATE: Emergency/Problem-Solving Content ===
+=== TEMPLATE: Challenging Situations in Fostering ===
 Target: 1,200-1,800 words
 
-H1: [Problem]: Causes, Treatment & When to See a Dentist [2026]
+H1: [Challenge]: Understanding, Managing & Getting Support [2026]
 
 1. INTRODUCTION (150 words)
-   - Acknowledge the urgency
-   - Quick summary of what to do
-   - When this is an emergency
+   - Acknowledge the challenge
+   - Quick summary of how to approach it
+   - When to seek additional support
 
-2. H2: Understanding [Problem] (250 words)
+2. H2: Understanding [Challenge] (250 words)
    - What causes it
-   - Common symptoms
-   - Risk factors
+   - Common signs and behaviours
+   - Context and background
 
-3. H2: Immediate Relief: What to Do Right Now (300 words)
-   - Step-by-step first aid
-   - Safe home remedies
-   - What NOT to do
-   - Over-the-counter options
+3. H2: Practical Strategies: What You Can Do (300 words)
+   - Step-by-step approaches
+   - Evidence-based techniques
+   - What works and what doesn't
 
-4. H2: When to See a Dentist Immediately (200 words)
-   - Warning signs of emergency
-   - Symptoms requiring urgent care
-   - What can wait vs. what can't
+4. H2: When to Seek Additional Support (200 words)
+   - Warning signs that more help is needed
+   - Emergency situations
+   - What support is available
 
-5. H2: Professional Treatment Options (300 words)
-   - What the dentist will do
-   - Treatment procedures
-   - Recovery expectations
-   - Prevention going forward
+5. H2: How Agencies Support Carers (300 words)
+   - What your agency can provide
+   - Specialist training available
+   - Therapeutic support options
+   - Respite and breaks
 
-6. H2: Cost of Treatment (200 words)
-   - Typical cost range
-   - Emergency visit costs
-   - Insurance considerations
+6. H2: Financial and Practical Support (200 words)
+   - Additional allowances available
+   - Equipment and resources
+   - Local authority support
 
-7. H2: Find Emergency Dental Care Now (150 words)
-   - CTA to emergency finder
-   - 24/7 availability
-   - Walk-in options
+7. H2: Find Supportive Agencies on Foster Connect (150 words)
+   - CTA to find agencies with specialist support
+   - Compare agency support packages
 
 8. H2: FAQs (150 words)
-   - 5 urgent questions`;
+   - 5 practical questions`;
 
 const INSURANCE_TEMPLATE = `You are writing an INSURANCE & FINANCIAL blog post for AppointPanda.
 
