@@ -155,7 +155,7 @@ function analyzeContent(
   // Word count issues
   if (wordCount === 0) {
     issues.push('No content found on page');
-    recommendations.push('Generate comprehensive content with 800+ words covering location-specific dental information');
+    recommendations.push('Generate comprehensive content with 800+ words covering location-specific fostering information');
     eeatCompliance = false;
   } else if (wordCount < 300) {
     issues.push(`Very thin content (${wordCount} words)`);
