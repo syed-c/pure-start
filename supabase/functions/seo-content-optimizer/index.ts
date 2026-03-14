@@ -271,12 +271,12 @@ DO NOT: Mention prompts or instructions, explain your process, copy content betw
 
 === FOCUS: RICH CONTENT (Fix Thin Content) ===
 - Minimum 400-600 words
-- Include compelling introduction mentioning AppointPanda's role
-- Add service/treatment descriptions
-- Include location-specific information
+- Include compelling introduction mentioning Foster Connect's role
+- Add fostering type/service descriptions
+- Include location-specific information (UK)
 - Add 3-5 FAQs with detailed answers
 - Use proper formatting (headings, paragraphs, lists)
-- Include how AppointPanda helps patients in this area
+- Include how Foster Connect helps prospective carers in this area
 - End with platform CTA`,
         };
         systemContent += issueInstructions[pageData.issueType] || "";
