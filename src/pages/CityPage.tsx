@@ -518,7 +518,7 @@ const CityPage = () => {
 
               {/* SEO Internal Links - 8-15 contextual links for crawlability */}
               <InternalLinkBlock
-                title="Explore Dental Care Options"
+                title="Explore Fostering Options"
                 links={generateCityInternalLinks(
                   normalizedStateSlug || '',
                   citySlug || '',
