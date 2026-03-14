@@ -296,7 +296,7 @@ Generate relevant fostering FAQs for this page with UK context.`;
       const pageContext = getPageContext(pageData);
       const uniqueSeed = generateFAQUniqueSeed(pageData.slug);
       
-      const userPrompt = `Generate exactly ${faqCount} unique FAQs for this dental page:
+      const userPrompt = `Generate exactly ${faqCount} unique FAQs for this fostering page:
 
 ${pageContext}
 
@@ -309,10 +309,10 @@ ${pageData.content.slice(0, 800)}...` : ""}
 ${uniqueSeed}
 
 Generate ${faqCount} FAQs as a JSON array. Each FAQ must:
-1. Be unique to this specific page (include the specific location/service name)
+1. Be unique to this specific page (include the specific location/fostering type name)
 2. Be written in "People Also Ask" style (real Google search queries)
 3. Have comprehensive but scannable answers (40-80 words)
-4. Be locally relevant with UAE-specific details and AED pricing
+4. Be locally relevant with UK-specific details and £ pricing
 
 Return ONLY a valid JSON array like: [{"question":"...","answer":"..."},...]`;
 

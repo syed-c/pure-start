@@ -241,7 +241,7 @@ Evaluate and respond in JSON format only:
       body: JSON.stringify({
         model: 'gemini-2.5-flash',
         messages: [
-          { role: 'system', content: 'You are an SEO expert analyzing dental website content. Respond only in valid JSON.' },
+          { role: 'system', content: 'You are an SEO expert analysing UK fostering directory website content. Respond only in valid JSON.' },
           { role: 'user', content: prompt }
         ],
         temperature: 0.3,
