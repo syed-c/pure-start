@@ -86,7 +86,7 @@ export const LocationCard = ({
           )}
           {clinicCount !== undefined && (
             <div className="text-card/90 text-sm font-medium">
-              {clinicCount} Clinics
+              {clinicCount} Offices
             </div>
           )}
         </div>
