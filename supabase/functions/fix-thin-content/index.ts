@@ -62,34 +62,30 @@ async function generateContent(prompt: string, apiKey: string): Promise<string> 
 }
 
 function generateCityTreatmentContent(treatment: string, city: string, state: string): string {
-  return `## ${treatment} Services in ${city}, ${state}
+  return `## ${treatment} Fostering in ${city}, ${state}
 
-Finding quality ${treatment.toLowerCase()} care in ${city} doesn't have to be difficult. Our network of verified dental professionals offers comprehensive ${treatment.toLowerCase()} services tailored to your specific needs.
+Finding quality ${treatment.toLowerCase()} fostering agencies in ${city} doesn't have to be difficult. Foster Connect lists verified fostering agencies offering ${treatment.toLowerCase()} placements tailored to your circumstances.
 
-### What to Expect from ${treatment} in ${city}
+### What to Expect from ${treatment} Fostering in ${city}
 
-When you visit a dental professional for ${treatment.toLowerCase()} in ${city}, ${state}, you'll receive personalized care from experienced practitioners. The treatment process typically begins with a thorough consultation to assess your dental health and discuss your goals.
+When you enquire with a fostering agency for ${treatment.toLowerCase()} in ${city}, ${state}, you'll receive personalised guidance from experienced social workers. The process typically begins with an initial conversation to understand your situation and discuss the fostering journey ahead.
 
-Modern dental offices in ${city} utilize advanced technology and techniques to ensure comfortable, effective treatments. Whether you're dealing with a specific dental concern or seeking preventive care, local dentists are equipped to provide the highest standard of service.
+Fostering agencies in ${city} provide comprehensive training and support to ensure foster carers feel confident and prepared. Whether you're new to fostering or experienced, local agencies are equipped to provide the highest standard of support.
 
-### Benefits of Choosing Local ${treatment} Providers
+### Benefits of Choosing a Local ${treatment} Agency
 
-Working with dental professionals in ${city} offers several advantages:
+Working with fostering agencies in ${city} offers several advantages:
 
-- **Convenient location** - Easy access to follow-up appointments
-- **Community reputation** - Established practices with local patient reviews
-- **Personalized care** - Dentists who understand the community's needs
-- **Insurance coordination** - Familiarity with local insurance networks
+- **Local support** - Easy access to your supervising social worker
+- **Community reputation** - Established agencies with Ofsted ratings and carer reviews
+- **Personalised care** - Agencies who understand the local community's needs
+- **Comprehensive training** - Full preparation for your fostering role
 
-### Preparing for Your ${treatment} Appointment
+### Starting Your ${treatment} Fostering Journey
 
-Before your appointment, consider preparing any questions about the procedure, costs, and recovery expectations. Bring your dental insurance information and a list of any medications you're currently taking.
+Before making an enquiry, consider what type of fostering suits your household, your availability, and any questions about the assessment process. You don't need formal qualifications - agencies look for patience, resilience, and a genuine desire to help children.
 
-Most ${treatment.toLowerCase()} procedures in ${city} are performed with patient comfort as a top priority. Discuss any concerns about anxiety or discomfort with your dental team—they can offer various options to help you feel at ease.
-
-### Schedule Your Consultation Today
-
-Ready to take the next step toward better dental health? Browse our verified ${treatment.toLowerCase()} providers in ${city}, ${state}, read patient reviews, and book an appointment online. Quality dental care is just a click away.`;
+Most ${treatment.toLowerCase()} fostering agencies in ${city} offer an initial no-obligation chat to help you understand what's involved. Foster Connect makes it easy to compare agencies and submit enquiries online.`;
 }
 
 function generateCityContent(city: string, state: string, stateAbbr: string): string {
