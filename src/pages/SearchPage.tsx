@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import {
   Search, MapPin, Star, Shield, ChevronRight,
-  Filter, X, Building2, User, Loader2, Home,
+  Filter, X, Building2, Loader2, Home,
 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
