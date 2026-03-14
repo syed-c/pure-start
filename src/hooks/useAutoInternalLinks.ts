@@ -32,8 +32,8 @@ const ANCHOR_VARIATIONS: Record<string, string[]> = {
   clinic: [
     "{name}",
     "Visit {name}",
-    "{name} dental clinic",
-    "Book at {name}",
+    "{name} fostering agency",
+    "Enquire at {name}",
   ],
 };
 
