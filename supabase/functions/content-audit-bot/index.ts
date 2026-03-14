@@ -229,7 +229,7 @@ Evaluate and respond in JSON format only:
   "issues": ["list of specific problems found"],
   "recommendations": ["actionable suggestions to improve"],
   "is_unique": <true/false - does this seem like original content?>,
-  "is_helpful": <true/false - would this help a user find a dentist?>
+  "is_helpful": <true/false - would this help someone exploring fostering?>
 }`;
 
     const response = await fetch('https://api.aimlapi.com/v1/chat/completions', {
