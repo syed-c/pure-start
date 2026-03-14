@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['"DM Sans"', '"Plus Jakarta Sans"', "system-ui", "sans-serif"],
-        display: ['"Quicksand"', '"DM Sans"', "system-ui", "sans-serif"],
+        sans: ['"Inter"', '"DM Sans"', "system-ui", "sans-serif"],
+        display: ['"Outfit"', '"Inter"', "system-ui", "sans-serif"],
       },
       fontWeight: {
         normal: "400",
@@ -100,6 +100,11 @@ export default {
         "dark-section": {
           DEFAULT: "hsl(var(--dark-section))",
           foreground: "hsl(var(--dark-section-foreground))",
+        },
+        indigo: {
+          DEFAULT: "hsl(var(--indigo))",
+          light: "hsl(var(--indigo-light))",
+          foreground: "hsl(var(--indigo-foreground))",
         },
       },
       borderRadius: {

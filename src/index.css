@@ -5,186 +5,186 @@
 @layer base {
   :root {
     /* ============================================
-       HEALTHCARE DESIGN SYSTEM
-       Calm · Clean · Trustworthy · Professional
+       FOSTER CONNECT DESIGN SYSTEM
+       Warm · Trustworthy · Bold · Caring
        ============================================ */
     
     /* Background & Surface */
-    --background: 210 20% 98%;
-    --foreground: 210 40% 14%;
+    --background: 40 25% 97%;
+    --foreground: 225 30% 14%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 40% 14%;
+    --card-foreground: 225 30% 14%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 40% 14%;
+    --popover-foreground: 225 30% 14%;
 
-    /* Primary — Calm dental teal-blue */
-    --primary: 186 50% 42%;
+    /* Primary — Warm deep blue-indigo */
+    --primary: 235 55% 50%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary — Warm neutral */
-    --secondary: 210 18% 95%;
-    --secondary-foreground: 210 40% 14%;
+    /* Secondary — Soft warm */
+    --secondary: 35 25% 94%;
+    --secondary-foreground: 225 30% 14%;
 
-    /* Muted — Soft grey */
-    --muted: 210 14% 93%;
-    --muted-foreground: 210 12% 50%;
+    /* Muted — Warm grey */
+    --muted: 35 15% 92%;
+    --muted-foreground: 225 10% 48%;
 
-    /* Accent — Soft sky */
-    --accent: 196 40% 94%;
-    --accent-foreground: 186 50% 32%;
+    /* Accent — Warm amber */
+    --accent: 35 60% 92%;
+    --accent-foreground: 25 60% 30%;
 
     /* Destructive */
     --destructive: 0 65% 55%;
     --destructive-foreground: 0 0% 100%;
 
     /* Borders & Inputs */
-    --border: 210 18% 88%;
-    --input: 210 18% 91%;
-    --ring: 186 50% 42%;
+    --border: 30 15% 87%;
+    --input: 30 15% 90%;
+    --ring: 235 55% 50%;
 
-    /* Radius — Rounded but not bubbly */
-    --radius: 0.625rem;
+    /* Radius */
+    --radius: 0.75rem;
 
     /* ============================================
        ACCENT PALETTE
        ============================================ */
     
-    /* Teal - Primary family */
-    --teal: 186 50% 42%;
-    --teal-light: 186 40% 95%;
-    --teal-dark: 186 55% 32%;
+    /* Teal — Secondary accent */
+    --teal: 170 50% 40%;
+    --teal-light: 170 40% 95%;
+    --teal-dark: 170 55% 30%;
 
-    /* Gold - Warm trust */
-    --gold: 40 75% 52%;
+    /* Gold — Warm highlight */
+    --gold: 38 85% 55%;
     --gold-foreground: 30 80% 14%;
-    --gold-light: 44 80% 94%;
-    --gold-dark: 36 70% 42%;
+    --gold-light: 42 85% 94%;
+    --gold-dark: 34 75% 42%;
 
-    /* Coral - Gentle alert */
-    --coral: 4 60% 58%;
-    --coral-light: 4 60% 95%;
-    --coral-dark: 4 55% 46%;
+    /* Coral — Accent / alert */
+    --coral: 12 70% 58%;
+    --coral-light: 12 65% 95%;
+    --coral-dark: 12 60% 46%;
 
-    /* Blue - Informational */
-    --blue: 210 65% 52%;
+    /* Blue */
+    --blue: 215 70% 52%;
     --blue-foreground: 0 0% 100%;
-    --blue-light: 210 65% 95%;
-    --blue-dark: 210 60% 42%;
-    --blue-custom: 210 65% 52%;
+    --blue-light: 215 65% 95%;
+    --blue-dark: 215 65% 40%;
+    --blue-custom: 215 70% 52%;
 
-    /* Emerald - Success */
-    --emerald: 152 55% 42%;
-    --emerald-light: 152 50% 95%;
+    /* Emerald — Success */
+    --emerald: 155 55% 40%;
+    --emerald-light: 155 50% 95%;
     --emerald-foreground: 0 0% 100%;
-    --emerald-dark: 152 55% 32%;
+    --emerald-dark: 155 55% 30%;
 
-    /* Purple - Used sparingly */
-    --purple: 256 45% 55%;
+    /* Purple */
+    --purple: 265 50% 55%;
     --purple-foreground: 0 0% 100%;
-    --purple-light: 256 45% 95%;
-    --purple-dark: 256 40% 42%;
+    --purple-light: 265 45% 95%;
+    --purple-dark: 265 45% 42%;
 
     /* Pink */
-    --pink: 340 50% 55%;
-    --pink-light: 340 50% 95%;
+    --pink: 345 55% 55%;
+    --pink-light: 345 50% 95%;
     --pink-foreground: 0 0% 100%;
 
     /* Cyan */
-    --cyan: 190 60% 46%;
-    --cyan-light: 190 60% 95%;
+    --cyan: 195 65% 46%;
+    --cyan-light: 195 60% 95%;
     --cyan-foreground: 0 0% 100%;
 
     /* Amber */
-    --amber: 38 80% 52%;
-    --amber-500: 38 80% 52%;
-    --amber-600: 32 85% 44%;
+    --amber: 38 85% 55%;
+    --amber-500: 38 85% 55%;
+    --amber-600: 32 90% 44%;
 
     /* Indigo */
-    --indigo: 234 50% 55%;
-    --indigo-light: 234 50% 95%;
+    --indigo: 235 55% 55%;
+    --indigo-light: 235 50% 95%;
     --indigo-foreground: 0 0% 100%;
 
     /* Brand scales */
-    --brand-50: 186 40% 97%;
-    --brand-100: 186 45% 90%;
-    --brand-200: 186 45% 80%;
-    --brand-300: 186 48% 66%;
-    --brand-400: 186 50% 52%;
-    --brand-500: 186 50% 42%;
-    --brand-600: 186 55% 36%;
-    --brand-700: 186 55% 28%;
-    --brand-800: 186 50% 22%;
-    --brand-900: 186 45% 16%;
+    --brand-50: 235 45% 97%;
+    --brand-100: 235 48% 92%;
+    --brand-200: 235 48% 82%;
+    --brand-300: 235 50% 68%;
+    --brand-400: 235 55% 56%;
+    --brand-500: 235 55% 50%;
+    --brand-600: 235 58% 42%;
+    --brand-700: 235 58% 34%;
+    --brand-800: 235 52% 26%;
+    --brand-900: 235 48% 18%;
 
     /* Slate family */
-    --slate-50: 210 20% 98%;
-    --slate-100: 210 18% 96%;
-    --slate-200: 210 16% 91%;
-    --slate-300: 210 14% 83%;
-    --slate-400: 210 12% 62%;
-    --slate-500: 210 12% 47%;
-    --slate-600: 210 14% 35%;
-    --slate-700: 210 18% 25%;
-    --slate-800: 210 25% 17%;
-    --slate-900: 210 35% 11%;
-    --slate-950: 210 40% 7%;
+    --slate-50: 40 25% 98%;
+    --slate-100: 35 20% 96%;
+    --slate-200: 35 16% 91%;
+    --slate-300: 30 14% 83%;
+    --slate-400: 225 10% 60%;
+    --slate-500: 225 12% 46%;
+    --slate-600: 225 14% 34%;
+    --slate-700: 225 18% 24%;
+    --slate-800: 225 25% 16%;
+    --slate-900: 225 35% 10%;
+    --slate-950: 225 40% 6%;
 
     /* ============================================
        DASHBOARD / ADMIN
        ============================================ */
-    --dark-section: 210 35% 11%;
+    --dark-section: 225 35% 10%;
     --dark-section-foreground: 0 0% 100%;
-    --dashboard-bg: 210 20% 96%;
-    --dashboard-sidebar: 210 35% 11%;
-    --dashboard-sidebar-foreground: 210 20% 98%;
+    --dashboard-bg: 35 20% 96%;
+    --dashboard-sidebar: 225 35% 10%;
+    --dashboard-sidebar-foreground: 40 25% 98%;
 
     /* ============================================
-       SHADOWS — Subtle medical UI
+       SHADOWS
        ============================================ */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.04);
-    --shadow-md: 0 4px 8px -2px rgb(0 0 0 / 0.06);
-    --shadow-lg: 0 8px 20px -4px rgb(0 0 0 / 0.08);
-    --shadow-xl: 0 16px 36px -8px rgb(0 0 0 / 0.1);
-    --shadow-glow: 0 0 20px -5px hsl(var(--primary) / 0.3);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.04);
+    --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.07);
+    --shadow-lg: 0 10px 24px -4px rgb(0 0 0 / 0.09);
+    --shadow-xl: 0 20px 40px -8px rgb(0 0 0 / 0.12);
+    --shadow-glow: 0 0 24px -5px hsl(var(--primary) / 0.35);
 
     /* ============================================
-       SIDEBAR — Clean professional
+       SIDEBAR
        ============================================ */
-    --sidebar-background: 210 35% 11%;
-    --sidebar-foreground: 210 20% 98%;
-    --sidebar-primary: 186 50% 48%;
-    --sidebar-primary-foreground: 210 35% 11%;
-    --sidebar-accent: 210 30% 18%;
-    --sidebar-accent-foreground: 210 20% 98%;
-    --sidebar-border: 210 25% 18%;
-    --sidebar-ring: 186 50% 48%;
+    --sidebar-background: 225 35% 10%;
+    --sidebar-foreground: 40 25% 98%;
+    --sidebar-primary: 235 55% 56%;
+    --sidebar-primary-foreground: 225 35% 10%;
+    --sidebar-accent: 225 30% 18%;
+    --sidebar-accent-foreground: 40 25% 98%;
+    --sidebar-border: 225 25% 18%;
+    --sidebar-ring: 235 55% 56%;
   }
 
   .dark {
-    --background: 210 30% 8%;
-    --foreground: 210 18% 96%;
-    --card: 210 30% 12%;
-    --card-foreground: 210 18% 96%;
-    --popover: 210 30% 12%;
-    --popover-foreground: 210 18% 96%;
-    --primary: 186 45% 48%;
-    --primary-foreground: 210 30% 8%;
-    --secondary: 210 20% 18%;
-    --secondary-foreground: 210 18% 96%;
-    --muted: 210 18% 16%;
-    --muted-foreground: 210 12% 58%;
-    --accent: 210 20% 18%;
-    --accent-foreground: 210 18% 96%;
+    --background: 225 30% 7%;
+    --foreground: 35 20% 96%;
+    --card: 225 30% 11%;
+    --card-foreground: 35 20% 96%;
+    --popover: 225 30% 11%;
+    --popover-foreground: 35 20% 96%;
+    --primary: 235 50% 56%;
+    --primary-foreground: 225 30% 7%;
+    --secondary: 225 20% 16%;
+    --secondary-foreground: 35 20% 96%;
+    --muted: 225 18% 15%;
+    --muted-foreground: 225 12% 56%;
+    --accent: 225 20% 16%;
+    --accent-foreground: 35 20% 96%;
     --destructive: 0 55% 40%;
-    --destructive-foreground: 210 18% 96%;
-    --border: 210 18% 18%;
-    --input: 210 18% 18%;
-    --ring: 186 45% 48%;
-    --dark-section: 210 30% 12%;
+    --destructive-foreground: 35 20% 96%;
+    --border: 225 18% 17%;
+    --input: 225 18% 17%;
+    --ring: 235 50% 56%;
+    --dark-section: 225 30% 11%;
     --dark-section-foreground: 0 0% 100%;
-    --dashboard-bg: 210 30% 8%;
+    --dashboard-bg: 225 30% 7%;
   }
 }
 
@@ -200,14 +200,14 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'DM Sans', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-family: 'Inter', 'DM Sans', system-ui, sans-serif;
     font-weight: 400;
     overflow-x: hidden;
     letter-spacing: -0.01em;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Quicksand', 'DM Sans', system-ui, sans-serif;
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
     @apply tracking-tight font-bold;
   }
 
@@ -219,74 +219,74 @@
 @layer components {
   /* ========================================
      TYPOGRAPHY SYSTEM
-     Nunito for headings (round, friendly, professional)
-     DM Sans for body (clean, readable)
+     Outfit for headings (geometric, modern, bold)
+     Inter for body (ultra clean, readable)
      ======================================== */
   
   .text-hero {
-    font-family: 'Quicksand', system-ui, sans-serif;
+    font-family: 'Outfit', system-ui, sans-serif;
     @apply font-bold tracking-tight leading-tight;
   }
 
   .text-section {
-    font-family: 'Quicksand', system-ui, sans-serif;
+    font-family: 'Outfit', system-ui, sans-serif;
     @apply font-bold tracking-tight;
   }
 
   .text-micro {
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-size: 11px;
     @apply uppercase font-semibold tracking-wider text-muted-foreground;
   }
 
   .text-interface {
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-size: 12px;
     letter-spacing: 0.08em;
     @apply uppercase font-bold;
   }
 
   .text-data {
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     @apply font-bold tabular-nums;
   }
 
   .text-body {
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     @apply font-normal leading-relaxed;
   }
 
   /* ========================================
-     CARD STYLES — Clean, minimal elevation
+     CARD STYLES
      ======================================== */
   
   .card-luxury {
     @apply bg-card border border-border/60 overflow-hidden relative;
-    border-radius: 1rem;
+    border-radius: 1.25rem;
     box-shadow: var(--shadow-sm);
   }
 
   .card-luxury-xl {
     @apply bg-card border border-border/60 overflow-hidden relative;
-    border-radius: 1.25rem;
+    border-radius: 1.5rem;
     box-shadow: var(--shadow-md);
   }
 
   .card-modern {
     @apply bg-card border border-border/50 overflow-hidden relative;
-    border-radius: 0.75rem;
+    border-radius: 1rem;
     box-shadow: var(--shadow-sm);
-    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
   }
 
   .card-modern:hover {
     box-shadow: var(--shadow-md);
-    border-color: hsl(var(--primary) / 0.2);
+    border-color: hsl(var(--primary) / 0.15);
   }
 
   .card-stat {
     @apply bg-card border border-border/40 overflow-hidden relative;
-    border-radius: 0.75rem;
+    border-radius: 1rem;
     box-shadow: var(--shadow-sm);
     transition: box-shadow 0.2s ease;
   }
@@ -297,16 +297,16 @@
 
   .card-glass {
     @apply border border-border/30 overflow-hidden relative backdrop-blur-md;
-    background: hsl(0 0% 100% / 0.85);
-    border-radius: 0.75rem;
+    background: hsl(0 0% 100% / 0.88);
+    border-radius: 1rem;
     box-shadow: var(--shadow-md);
   }
 
   .card-dark {
     @apply overflow-hidden relative;
-    background: hsl(210 35% 13%);
-    border: 1px solid hsl(210 20% 20%);
-    border-radius: 0.75rem;
+    background: hsl(225 35% 12%);
+    border: 1px solid hsl(225 20% 18%);
+    border-radius: 1rem;
     box-shadow: var(--shadow-md);
   }
 
@@ -316,12 +316,12 @@
 
   .card-hover:hover {
     box-shadow: var(--shadow-lg);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
   }
 
   .card-clean {
     @apply bg-card border border-border/40 overflow-hidden;
-    border-radius: 0.75rem;
+    border-radius: 1rem;
     box-shadow: var(--shadow-sm);
   }
 
@@ -347,7 +347,7 @@
   }
 
   .text-gradient {
-    @apply bg-gradient-to-r from-primary to-teal bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary via-indigo to-primary bg-clip-text text-transparent;
   }
 
   .text-gradient-warm {
@@ -388,12 +388,12 @@
 
   .hero-display {
     @apply text-7xl font-bold text-primary;
-    font-family: 'Quicksand', system-ui, sans-serif;
+    font-family: 'Outfit', system-ui, sans-serif;
   }
 
   .hero-display-sm {
     @apply text-5xl font-bold text-primary;
-    font-family: 'Quicksand', system-ui, sans-serif;
+    font-family: 'Outfit', system-ui, sans-serif;
   }
 
   .glow-container {
@@ -407,7 +407,7 @@
   }
 
   /* ========================================
-     BADGE STYLES — Clean pills
+     BADGE STYLES
      ======================================== */
   
   .badge-brand {
@@ -419,9 +419,9 @@
 
   .badge-amber {
     @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold;
-    background: hsl(44 80% 94%);
+    background: hsl(42 85% 94%);
     color: hsl(var(--amber-600));
-    border: 1px solid hsl(44 70% 85%);
+    border: 1px solid hsl(42 70% 85%);
   }
 
   .badge-success {
@@ -446,11 +446,11 @@
   }
 
   /* ========================================
-     BUTTON STYLES — Calm, visible, professional
+     BUTTON STYLES
      ======================================== */
   
   .btn-primary {
-    @apply px-5 py-2.5 bg-primary text-primary-foreground font-semibold rounded-lg transition-colors;
+    @apply px-5 py-2.5 bg-primary text-primary-foreground font-semibold rounded-xl transition-colors;
     box-shadow: var(--shadow-sm);
   }
 
@@ -460,7 +460,7 @@
   }
 
   .btn-dark {
-    @apply px-5 py-3 bg-foreground text-background font-semibold rounded-lg transition-colors;
+    @apply px-5 py-3 bg-foreground text-background font-semibold rounded-xl transition-colors;
     box-shadow: var(--shadow-md);
   }
 
@@ -473,7 +473,7 @@
      ======================================== */
   
   .section-dark {
-    background: hsl(210 35% 11%);
+    background: hsl(225 35% 10%);
   }
 
   .gradient-hero {
@@ -490,14 +490,14 @@
   
   .search-box {
     @apply bg-card;
-    border-radius: 0.75rem;
+    border-radius: 1rem;
     box-shadow: var(--shadow-lg);
     border: 1px solid hsl(var(--border));
   }
 
   .treatment-pill {
     @apply px-4 py-2.5 bg-muted font-semibold transition-colors cursor-pointer;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     border: 1px solid hsl(var(--border));
   }
 
@@ -508,7 +508,7 @@
 
   .insurance-card {
     @apply h-12 px-5 bg-card flex items-center justify-center font-semibold transition-colors cursor-pointer;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     border: 1px solid hsl(var(--border));
   }
 
@@ -524,7 +524,7 @@
   .doctor-list-card {
     @apply bg-card p-5 flex flex-col md:flex-row md:items-center gap-5 transition-all duration-200;
     border: 1px solid hsl(var(--border));
-    border-radius: 0.75rem;
+    border-radius: 1rem;
   }
 
   .doctor-list-card:hover {
@@ -533,7 +533,7 @@
   }
 
   /* ========================================
-     ANIMATIONS — Subtle, calm
+     ANIMATIONS
      ======================================== */
   
   @keyframes fadeInUp {
@@ -576,13 +576,13 @@
   }
 
   .bg-grid-brand {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' width='40' height='40' fill='none' stroke='rgb(15 118 110 / 0.06)'%3E%3Cpath d='M0 .5H39.5V40'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' width='40' height='40' fill='none' stroke='rgb(67 56 202 / 0.04)'%3E%3Cpath d='M0 .5H39.5V40'/%3E%3C/svg%3E");
   }
 }
 
 @layer utilities {
   .font-display {
-    font-family: 'Nunito', 'DM Sans', system-ui, sans-serif;
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
   }
 
   .bg-dark-section {
@@ -613,13 +613,13 @@
   }
 
   .glass-dark {
-    background: hsl(210 35% 13% / 0.95);
+    background: hsl(225 35% 12% / 0.95);
     backdrop-filter: blur(12px);
-    border: 1px solid hsl(210 20% 20%);
+    border: 1px solid hsl(225 20% 18%);
   }
 
   .gradient-vibrant {
-    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--teal)) 100%);
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--indigo)) 100%);
   }
 
   .gradient-warm {
@@ -698,477 +698,14 @@
       hsl(var(--muted)) 100%
     );
     background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
+    animation: shimmer 2s linear infinite;
   }
 
-  @keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
-
-  .float-gentle {
-    animation: float-gentle 5s ease-in-out infinite;
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
-
-  @keyframes float-gentle {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-4px); }
-  }
-
-  .progress-gradient {
-    background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--teal)));
-  }
-
-  .progress-gradient-danger {
-    background: linear-gradient(90deg, hsl(var(--coral)), hsl(var(--gold)));
-  }
-
-  .progress-gradient-success {
-    background: linear-gradient(90deg, hsl(var(--emerald)), hsl(var(--teal)));
-  }
-
-  .progress-gradient-cool {
-    background: linear-gradient(90deg, hsl(var(--blue)), hsl(var(--purple)));
-  }
-
-  .sidebar-item-hover {
-    position: relative;
-    transition: all 0.15s ease;
-  }
-
-  .sidebar-item-hover::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 3px;
-    height: 0%;
-    background: hsl(var(--primary));
-    border-radius: 0 3px 3px 0;
-    transition: height 0.15s ease;
-  }
-
-  .sidebar-item-hover:hover::before,
-  .sidebar-item-hover.active::before {
-    height: 60%;
-  }
-
-  .chart-tooltip {
-    background: hsl(var(--card)) !important;
-    border: 1px solid hsl(var(--border)) !important;
-    border-radius: 0.5rem !important;
-    box-shadow: var(--shadow-md) !important;
-  }
-
-  .animate-bounce-gentle {
-    animation: bounce-gentle 3s ease-in-out infinite;
-  }
-
-  @keyframes bounce-gentle {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-3px); }
-  }
-
-  .animate-count-up {
-    animation: count-up 0.4s ease-out forwards;
-  }
-
-  @keyframes count-up {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-}
-
-/* ============================================
-   BLOG CONTENT STYLES
-   ============================================ */
-.blog-content {
-  line-height: 1.8;
-  color: hsl(var(--foreground));
-}
-
-.blog-content h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  color: hsl(var(--foreground));
-  line-height: 1.3;
-  font-family: 'Nunito', system-ui, sans-serif;
-}
-
-.blog-content h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
-  color: hsl(var(--foreground));
-  line-height: 1.4;
-  border-bottom: 1px solid hsl(var(--border));
-  padding-bottom: 0.5rem;
-  font-family: 'Nunito', system-ui, sans-serif;
-}
-
-.blog-content h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-  color: hsl(var(--foreground));
-  font-family: 'Nunito', system-ui, sans-serif;
-}
-
-.blog-content h4 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-top: 1.25rem;
-  margin-bottom: 0.5rem;
-  color: hsl(var(--foreground));
-}
-
-.blog-content p {
-  margin-bottom: 1.25rem;
-  line-height: 1.8;
-}
-
-.blog-content strong,
-.blog-content b {
-  font-weight: 600;
-  color: hsl(var(--foreground));
-}
-
-.blog-content em,
-.blog-content i {
-  font-style: italic;
-}
-
-.blog-content ul {
-  list-style-type: disc;
-  margin-left: 1.5rem;
-  margin-bottom: 1.25rem;
-}
-
-.blog-content ol {
-  list-style-type: decimal;
-  margin-left: 1.5rem;
-  margin-bottom: 1.25rem;
-}
-
-.blog-content li {
-  margin-bottom: 0.5rem;
-  line-height: 1.7;
-}
-
-.blog-content a {
-  color: hsl(var(--primary));
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  transition: color 0.15s ease;
-}
-
-.blog-content a:hover {
-  color: hsl(var(--primary) / 0.75);
-}
-
-.blog-content blockquote {
-  border-left: 3px solid hsl(var(--primary));
-  padding-left: 1rem;
-  margin: 1.5rem 0;
-  font-style: italic;
-  background: hsl(var(--muted) / 0.4);
-  padding: 1rem 1rem 1rem 1.5rem;
-  border-radius: 0 0.375rem 0.375rem 0;
-}
-
-.blog-content code {
-  background: hsl(var(--muted));
-  padding: 0.15rem 0.35rem;
-  border-radius: 0.25rem;
-  font-size: 0.9em;
-}
-
-.blog-content pre {
-  background: hsl(var(--slate-900));
-  color: hsl(var(--slate-100));
-  padding: 1rem;
-  border-radius: 0.5rem;
-  overflow-x: auto;
-  margin: 1.5rem 0;
-}
-
-.blog-content hr {
-  border: none;
-  border-top: 1px solid hsl(var(--border));
-  margin: 2rem 0;
-}
-
-.blog-content table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 1.5rem 0;
-}
-
-.blog-content th,
-.blog-content td {
-  border: 1px solid hsl(var(--border));
-  padding: 0.75rem;
-  text-align: left;
-}
-
-.blog-content th {
-  background: hsl(var(--muted));
-  font-weight: 600;
-}
-
-.blog-content > *:first-child {
-  margin-top: 0;
-}
-
-/* ============================================
-   MOBILE-FIRST OPTIMIZATION
-   ============================================ */
-
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
-.touch-manipulation {
-  touch-action: manipulation;
-}
-
-.safe-area-inset {
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-.line-clamp-1 {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.select-none-touch {
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-touch-callout: none;
-}
-
-.scroll-smooth-ios {
-  -webkit-overflow-scrolling: touch;
-}
-
-@media (max-width: 640px) {
-  .mobile-full-bleed {
-    margin-left: -1rem;
-    margin-right: -1rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  
-  .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  
-  .card-modern {
-    padding: 1rem;
-  }
-  
-  .text-responsive {
-    font-size: 0.875rem;
-  }
-}
-
-.touch-target {
-  min-height: 44px;
-  min-width: 44px;
-}
-
-.safe-area-padding {
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-.section-curved {
-  border-radius: 1.5rem 1.5rem 0 0;
-}
-
-@media (min-width: 768px) {
-  .section-curved {
-    border-radius: 2rem 2rem 0 0;
-  }
-}
-
-.pb-safe {
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem);
-}
-
-.mobile-card-stack {
-  @apply rounded-xl border border-border bg-card shadow-sm transition-all;
-}
-
-.mobile-card-stack:active {
-  @apply scale-[0.99];
-}
-
-.fab {
-  @apply fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center transition-transform;
-}
-
-.fab:active {
-  @apply scale-95;
-}
-
-@keyframes float-up-down {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-
-@keyframes float-side-to-side {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(6px); }
-}
-
-.animate-float {
-  animation: float-up-down 5s ease-in-out infinite;
-}
-
-.animate-float-x {
-  animation: float-side-to-side 6s ease-in-out infinite;
-}
-
-.float-slow {
-  animation: float-up-down 8s ease-in-out infinite;
-}
-
-.animate-slide-in-right {
-  animation: slide-in-right 0.4s ease-out forwards;
-}
-
-@keyframes slide-in-right {
-  0% { transform: translateX(100%); opacity: 0; }
-  100% { transform: translateX(0); opacity: 1; }
-}
-
-.animate-slide-in-left {
-  animation: slide-in-left 0.4s ease-out forwards;
-}
-
-@keyframes slide-in-left {
-  0% { transform: translateX(-100%); opacity: 0; }
-  100% { transform: translateX(0); opacity: 1; }
-}
-
-/* CLS Prevention */
-.aspect-auto { aspect-ratio: auto; }
-.aspect-square { aspect-ratio: 1 / 1; }
-.aspect-video { aspect-ratio: 16 / 9; }
-.aspect-portrait { aspect-ratio: 3 / 4; }
-.aspect-wide { aspect-ratio: 21 / 9; }
-
-.img-hero { aspect-ratio: 16 / 9; width: 100%; object-fit: cover; }
-.img-card { aspect-ratio: 4 / 3; width: 100%; object-fit: cover; }
-.img-avatar { aspect-ratio: 1 / 1; width: 100%; object-fit: cover; border-radius: 50%; }
-
-.skeleton-text { @apply animate-pulse bg-muted rounded; height: 1em; }
-.skeleton-heading { @apply animate-pulse bg-muted rounded; height: 1.5em; }
-.skeleton-image { @apply animate-pulse bg-muted; }
-.skeleton-button { @apply animate-pulse bg-muted rounded-md; height: 2.5rem; min-width: 6rem; }
-
-.content-auto { content-visibility: auto; contain-intrinsic-size: 0 500px; }
-.will-transform { will-change: transform; }
-.will-opacity { will-change: opacity; }
-
-.font-loading-fallback { font-family: 'DM Sans Fallback', system-ui, -apple-system, sans-serif; }
-.font-loaded { font-family: 'DM Sans', system-ui, -apple-system, sans-serif; }
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-.container-query { container-type: inline-size; }
-
-.text-optimize {
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.gpu-accelerate {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* Typing cursor for typewriter */
-.typing-cursor {
-  animation: typing-blink 1s ease-in-out infinite;
-}
-
-@keyframes typing-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.animate-blob {
-  animation: blob-luxury 20s ease-in-out infinite;
-}
-
-@keyframes blob-luxury {
-  0% { transform: translate(0px, 0px) scale(1); }
-  33% { transform: translate(20px, -30px) scale(1.05); }
-  66% { transform: translate(-15px, 15px) scale(0.95); }
-  100% { transform: translate(0px, 0px) scale(1); }
-}
-
-@keyframes gradient-border {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-.border-gradient-animated {
-  position: relative;
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--teal)));
-  background-size: 200% 200%;
-  animation: gradient-border 4s ease infinite;
-  padding: 1px;
-  border-radius: inherit;
-}
-
-.border-gradient-animated > * {
-  background: hsl(var(--card));
-  border-radius: inherit;
 }
