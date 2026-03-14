@@ -437,7 +437,7 @@ ${uniquenessSeed}
 CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures, or patterns from other pages. Generate fresh, original content following the uniqueness directive above.`;
 
       const requestBody = {
-        model: "gemini-2.0-flash",
+        model: "gemini-2.5-flash",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt }

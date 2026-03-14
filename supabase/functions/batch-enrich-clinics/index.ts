@@ -376,7 +376,7 @@ Return ONLY the description text, no quotes or formatting.`;
               "Authorization": `Bearer ${aimlapiKey}`,
             },
             body: JSON.stringify({
-              model: "gemini-2.0-flash",
+              model: "gemini-2.5-flash",
               messages: [
                 { role: "system", content: "You are a professional medical copywriter specializing in dental practice descriptions. Write authentic, human-sounding content that builds trust with potential patients." },
                 { role: "user", content: prompt }
