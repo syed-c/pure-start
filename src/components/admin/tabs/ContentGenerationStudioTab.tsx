@@ -741,7 +741,26 @@ export default function ContentGenerationStudioTab() {
       return data;
     },
     onSuccess: (data) => {
-      toast.success(data.message || 'State SEO pages created successfully!');
+      toast.success(data.message || 'Region SEO pages created successfully!');
+      queryClient.invalidateQueries({ queryKey: ['content-studio-pages'] });
+      refetchPages();
+    },
+    onError: (err) => {
+      toast.error(`Setup failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
+    },
+  });
+
+  // Setup ALL pages mutation
+  const setupAllMutation = useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.functions.invoke('setup-state-seo-pages', {
+        body: { action: 'setup_all' },
+      });
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      toast.success(data.message || 'All SEO pages created successfully!');
       queryClient.invalidateQueries({ queryKey: ['content-studio-pages'] });
       refetchPages();
     },
@@ -771,19 +790,37 @@ export default function ContentGenerationStudioTab() {
         </div>
       </div>
 
-      {/* Quick Actions: State Setup */}
+      {/* Quick Actions: Page Setup */}
       <Card className="border-dashed border-2 border-primary/30 bg-primary/5">
         <CardHeader className="pb-3">
           <CardTitle className="text-lg flex items-center gap-2">
             <Zap className="h-5 w-5 text-primary" />
-            Quick Actions: State Setup
+            Quick Actions: Page Setup
           </CardTitle>
           <CardDescription>
-            Create all city + service pages for a state with one click
+            Create SEO page entries for all regions, cities, and fostering types. You must set up pages before generating content.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-3">
+            <Button
+              variant="default"
+              size="sm"
+              onClick={() => {
+                if (confirm('Create ALL SEO pages (static, region, city, fostering type, and service+location pages)? This may create hundreds of pages.')) {
+                  setupAllMutation.mutate();
+                }
+              }}
+              disabled={setupAllMutation.isPending || setupStateMutation.isPending}
+            >
+              {setupAllMutation.isPending ? (
+                <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+              ) : (
+                <Zap className="h-4 w-4 mr-1" />
+              )}
+              Setup All Pages
+            </Button>
+            <div className="w-px h-8 bg-border mx-1" />
             {states?.map(state => (
               <Button
                 key={state.id}
@@ -794,7 +831,7 @@ export default function ContentGenerationStudioTab() {
                     setupStateMutation.mutate(state.id);
                   }
                 }}
-                disabled={setupStateMutation.isPending}
+                disabled={setupStateMutation.isPending || setupAllMutation.isPending}
               >
                 {setupStateMutation.isPending ? (
                   <Loader2 className="h-4 w-4 mr-1 animate-spin" />
@@ -806,8 +843,9 @@ export default function ContentGenerationStudioTab() {
             ))}
           </div>
           <p className="text-xs text-muted-foreground mt-3">
-            Each state setup creates city pages + service+city pages for all services.
-            After setup, select pages above and generate content.
+            <strong>Setup All Pages</strong> creates static, region, city, fostering type, and service+location pages.
+            Individual region buttons create city + service pages for that region only.
+            After setup, select pages and generate content.
           </p>
         </CardContent>
       </Card>
