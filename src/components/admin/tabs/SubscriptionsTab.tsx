@@ -56,12 +56,12 @@ interface PlanConfig {
   id: string;
   name: string;
   slug?: string;
-  price_aed: number;
+  price_gbp: number;
   billing_period: string;
   description: string;
   color: string;
   popular?: boolean;
-  expected_patients: number;
+  expected_carers: number;
   features: Record<string, PlanFeature>;
 }
 
