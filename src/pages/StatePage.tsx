@@ -128,7 +128,7 @@ const StatePage = () => {
         clinics = data || [];
       }
       
-      // Fallback: if fewer than MIN_PROFILES, fill from UAE-wide clinics
+      // Fallback: if fewer than MIN_PROFILES, fill from UK-wide agencies
       if (clinics.length < MIN_PROFILES) {
         const existingIds = clinics.map(c => c.id);
         const needed = MIN_PROFILES - clinics.length;
@@ -408,7 +408,7 @@ const StatePage = () => {
                 profiles={filteredStateProfiles}
                 isLoading={profilesLoading}
                 locationName={stateName}
-                emptyMessage={`We're adding dentists in ${stateName}. Check back soon!`}
+                emptyMessage={`We're adding fostering agencies in ${stateName}. Check back soon!`}
                 hasActiveFilters={hasActiveStateFilters}
                 onClearFilters={() => setStateFilters({ maxBudget: null, minRating: 0, verifiedOnly: false, selectedServices: [] })}
                 maxHeight={700}
@@ -519,7 +519,7 @@ const StatePage = () => {
         <Section size="md">
           <div className="max-w-4xl mx-auto">
             <span className="inline-block text-xs font-bold text-primary uppercase tracking-widest mb-2">Browse Services</span>
-            <h2 className="text-2xl md:text-3xl font-black text-foreground mb-6" style={{ fontFamily: "'Outfit', sans-serif" }}>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-foreground mb-6">
               Fostering Types in <span className="text-primary">{stateName}</span>
             </h2>
             <div className="flex flex-wrap gap-x-2 gap-y-2">

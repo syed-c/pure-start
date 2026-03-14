@@ -91,7 +91,6 @@ export function useUpsertPageContent() {
   
   return useMutation({
     mutationFn: async (content: Partial<PageContent> & { page_slug: string; page_type: string }) => {
-      // Check if exists
       const { data: existing } = await supabase
         .from('page_content')
         .select('id')
@@ -99,7 +98,6 @@ export function useUpsertPageContent() {
         .maybeSingle();
       
       if (existing) {
-        // Update
         const { error } = await supabase
           .from('page_content')
           .update({
@@ -119,7 +117,6 @@ export function useUpsertPageContent() {
         
         return existing.id;
       } else {
-        // Insert
         const { data, error } = await supabase
           .from('page_content')
           .insert([content as never])
@@ -183,27 +180,24 @@ export function getDefaultPageContent(
   entityData: Record<string, unknown> | null,
   pageUrl: string
 ): Partial<PageContent> {
-  const baseFaqs: Array<{ question: string; answer: string }> = [];
-  
   switch (pageType) {
     case 'state': {
-      const stateName = (entityData?.name as string) || 'This State';
-      const stateAbbr = (entityData?.abbreviation as string) || '';
+      const stateName = (entityData?.name as string) || 'This Region';
       return {
         page_slug: pageUrl,
         page_type: 'state',
-        h1: `Find Dentists in ${stateName}`,
-        hero_subtitle: `Discover top-rated dental professionals across ${stateName}. Browse by city, compare reviews, and book your appointment online.`,
+        h1: `Fostering Agencies in ${stateName}`,
+        hero_subtitle: `Discover Ofsted-rated fostering agencies across ${stateName}. Browse by city, compare reviews, and start your fostering journey.`,
         hero_intro: '',
         section_1_title: 'Browse by City',
-        section_1_content: `Explore cities in ${stateName} to find dental clinics near you.`,
-        section_2_title: 'Available Services',
-        section_2_content: `Find dental treatments and services available in ${stateName}.`,
-        body_content: `${stateName} is home to thousands of dental professionals offering comprehensive care from routine cleanings to advanced cosmetic procedures.`,
+        section_1_content: `Explore cities in ${stateName} to find fostering agencies near you.`,
+        section_2_title: 'Fostering Types',
+        section_2_content: `Find agencies offering different types of fostering placements in ${stateName}.`,
+        body_content: `${stateName} is home to many trusted fostering agencies offering comprehensive support for foster carers. Whether you're interested in emergency, respite, long-term, or therapeutic fostering, our verified network of agencies is here to help you start your journey.`,
         faqs: [
-          { question: `How do I find a dentist in ${stateName}?`, answer: `Browse our verified list of dentists across ${stateName}. Select your city, then filter by specialty, rating, and insurance to find the perfect match.` },
-          { question: `Are dentists in ${stateName} verified?`, answer: `All dentists on our platform are licensed professionals. Profiles with the "Verified" badge have completed our additional verification process.` },
-          { question: `Can I book same-day appointments?`, answer: `Many dental offices in ${stateName} offer same-day or next-day appointments. Use our search filters to find clinics with immediate availability.` },
+          { question: `How do I find a fostering agency in ${stateName}?`, answer: `Browse our verified list of agencies across ${stateName}. Select your city, then filter by fostering type and rating to find the perfect match.` },
+          { question: `Are agencies in ${stateName} Ofsted registered?`, answer: `All agencies on our platform are Ofsted-registered. Profiles with the "Verified" badge have completed our additional verification process.` },
+          { question: `How do I become a foster carer in ${stateName}?`, answer: `Contact agencies in ${stateName} through our directory. They will guide you through the assessment process which typically takes 4-6 months.` },
         ],
         is_published: true,
       };
@@ -218,38 +212,38 @@ export function getDefaultPageContent(
       return {
         page_slug: pageUrl,
         page_type: 'city',
-        h1: `Best Dentists in ${locationDisplay}`,
-        hero_subtitle: `Find and book appointments with top-rated dental professionals in ${cityName}. Compare verified clinics and read patient reviews.`,
+        h1: `Fostering Agencies in ${locationDisplay}`,
+        hero_subtitle: `Find trusted fostering agencies in ${cityName}. Compare Ofsted-rated agencies, read carer reviews, and start your fostering journey.`,
         hero_intro: '',
-        section_1_title: 'Available Now',
-        section_1_content: `Dentists & Clinics in ${cityName}`,
+        section_1_title: 'Agencies Available',
+        section_1_content: `Fostering agencies in ${cityName}`,
         section_2_title: 'About This Area',
-        section_2_content: `Dental Care in ${cityName}`,
-        body_content: `${cityName} is home to many exceptional dental clinics and specialists. Whether you need a routine checkup, cosmetic dentistry, or specialized treatment, our verified network of dental professionals is here to provide exceptional care.`,
+        section_2_content: `Fostering in ${cityName}`,
+        body_content: `${cityName} is home to many excellent fostering agencies offering a range of placement types. Whether you're interested in emergency fostering, long-term care, or specialist placements, our verified network of agencies in ${cityName} is here to help you find the right fit for your family.`,
         faqs: [
-          { question: `How do I find a good dentist in ${cityName}?`, answer: `Browse our verified list of dentists in ${cityName}. Look for verified badges, patient reviews, and specializations that match your needs.` },
-          { question: `Are the dentists in ${cityName} verified?`, answer: `All dentists on our platform are licensed professionals. Profiles with the "Verified" badge have claimed their profile and completed our additional verification process.` },
-          { question: `How much does dental treatment cost in ${cityName}?`, answer: `Dental costs vary by treatment type. A basic checkup typically ranges from $75-200, while specialized treatments can range from $3,000-6,000.` },
-          { question: `Can I book emergency dental appointments in ${cityName}?`, answer: `Yes, many clinics in ${cityName} offer same-day emergency appointments. Use our search to find clinics with emergency availability.` },
+          { question: `How do I find a fostering agency in ${cityName}?`, answer: `Browse our verified list of agencies in ${cityName}. Look for Ofsted ratings, carer reviews, and fostering types that match your interests.` },
+          { question: `Are agencies in ${cityName} Ofsted registered?`, answer: `All agencies on our platform are Ofsted-registered. Profiles with the "Verified" badge have completed our additional verification process.` },
+          { question: `What fostering allowance can I expect in ${cityName}?`, answer: `Fostering allowances vary by agency and local authority. The national minimum ranges from £132-£187 per week depending on the child's age. Many independent agencies offer enhanced rates.` },
+          { question: `How do I become a foster carer in ${cityName}?`, answer: `Contact agencies in ${cityName} through our directory. The assessment process typically takes 4-6 months and includes training, home visits, and panel review.` },
         ],
         is_published: true,
       };
     }
     
     case 'treatment': {
-      const treatmentName = (entityData?.name as string) || 'This Treatment';
+      const treatmentName = (entityData?.name as string) || 'This Fostering Type';
       return {
         page_slug: pageUrl,
         page_type: 'treatment',
         h1: treatmentName,
-        hero_subtitle: `Learn about ${treatmentName.toLowerCase()} and find qualified dental professionals near you.`,
+        hero_subtitle: `Learn about ${treatmentName.toLowerCase()} and find qualified agencies near you.`,
         section_1_title: 'What is it?',
         section_1_content: (entityData?.description as string) || `Information about ${treatmentName.toLowerCase()}.`,
-        section_2_title: 'Find a Specialist',
-        section_2_content: `Find dentists who specialize in ${treatmentName.toLowerCase()}.`,
+        section_2_title: 'Find an Agency',
+        section_2_content: `Find agencies that specialise in ${treatmentName.toLowerCase()}.`,
         faqs: [
-          { question: `What is ${treatmentName}?`, answer: `${treatmentName} is a dental procedure designed to improve your oral health and smile.` },
-          { question: `How much does ${treatmentName} cost?`, answer: `Costs vary depending on your location and specific needs. Contact a dentist for a personalized quote.` },
+          { question: `What is ${treatmentName}?`, answer: `${treatmentName} is a type of fostering placement designed to provide specific care and support for children with particular needs.` },
+          { question: `What support do ${treatmentName} carers receive?`, answer: `Carers receive comprehensive training, 24/7 support, and competitive fostering allowances. Specific support varies by agency.` },
         ],
         is_published: true,
       };
