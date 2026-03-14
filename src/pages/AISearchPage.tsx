@@ -213,7 +213,7 @@ const AISearchPage = () => {
               Just Tell Us What You Need
             </h1>
             <p className="text-sm md:text-base text-white/60 max-w-xl mx-auto">
-              Describe your dental needs naturally — we'll find the perfect match.
+              Describe your fostering needs naturally — we'll find the perfect agency match.
             </p>
             
             {/* Stats - Compact on mobile */}
@@ -221,7 +221,7 @@ const AISearchPage = () => {
               <div className="flex items-center gap-1.5 bg-white/10 rounded-lg px-2.5 py-1.5 md:px-3 md:py-2">
                 <Building2 className="h-3.5 w-3.5 md:h-4 md:w-4 text-primary" />
                 <span className="text-white font-bold text-xs md:text-sm">{realCounts?.clinics?.toLocaleString() || 0}+</span>
-                <span className="text-white/60 text-xs hidden md:inline">Clinics</span>
+                <span className="text-white/60 text-xs hidden md:inline">Agencies</span>
               </div>
               <div className="flex items-center gap-1.5 bg-white/10 rounded-lg px-2.5 py-1.5 md:px-3 md:py-2">
                 <MapPin className="h-3.5 w-3.5 md:h-4 md:w-4 text-primary" />
