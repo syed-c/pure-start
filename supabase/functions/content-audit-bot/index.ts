@@ -126,7 +126,7 @@ function isActiveStateSlug(slug: string): boolean {
   const normalized = slug.toLowerCase().replace(/^\//, '');
   
   // Non-location pages are always valid
-  if (normalized.startsWith('clinic/') || normalized.startsWith('dentist/') ||
+  if (normalized.startsWith('agency/') || normalized.startsWith('clinic/') || normalized.startsWith('dentist/') ||
       normalized.startsWith('services') || normalized.startsWith('blog')) {
     return true;
   }
