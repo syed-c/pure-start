@@ -186,7 +186,7 @@ export default function SubscriptionsTab() {
     const count = subscriptions?.filter(s => 
       s.plan_id === plan.id || s.plan?.slug === plan.slug
     ).length || 0;
-    const revenue = count * (plan.price_aed || 0);
+    const revenue = count * (plan.price_gbp || 0);
     return { ...plan, count, revenue };
   });
 
