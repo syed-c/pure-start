@@ -30,12 +30,12 @@ const PROFESSIONAL_TYPES_CONFIG = [
   { value: 'endodontist', label: 'Endodontist', icon: Award, color: 'bg-coral-light text-coral' },
   { value: 'periodontist', label: 'Periodontist', icon: Award, color: 'bg-blue-light text-blue-custom' },
   { value: 'prosthodontist', label: 'Prosthodontist', icon: Award, color: 'bg-gold-light text-gold' },
-  { value: 'oral_surgeon', label: 'Oral Surgeon', icon: Award, color: 'bg-teal-light text-teal' },
-  { value: 'pediatric_dentist', label: 'Pediatric Dentist', icon: Award, color: 'bg-pink-100 text-pink-600' },
-  { value: 'hygienist', label: 'Dental Hygienist', icon: UserCheck, color: 'bg-teal-light text-teal' },
-  { value: 'assistant', label: 'Dental Assistant', icon: Users, color: 'bg-blue-light text-blue-custom' },
+  { value: 'oral_surgeon', label: 'Specialist', icon: Award, color: 'bg-teal-light text-teal' },
+  { value: 'pediatric_dentist', label: 'Children\'s Specialist', icon: Award, color: 'bg-pink-100 text-pink-600' },
+  { value: 'hygienist', label: 'Support Worker', icon: UserCheck, color: 'bg-teal-light text-teal' },
+  { value: 'assistant', label: 'Care Assistant', icon: Users, color: 'bg-blue-light text-blue-custom' },
   { value: 'receptionist', label: 'Receptionist', icon: Phone, color: 'bg-gold-light text-gold' },
-  { value: 'practice_manager', label: 'Practice Manager', icon: Building2, color: 'bg-purple-light text-purple' },
+  { value: 'practice_manager', label: 'Agency Manager', icon: Building2, color: 'bg-purple-light text-purple' },
 ];
 
 export interface TeamMember {

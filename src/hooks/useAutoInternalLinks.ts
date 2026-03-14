@@ -16,11 +16,11 @@ interface LinkItem {
 // Anchor text variations to avoid repetitive link patterns
 const ANCHOR_VARIATIONS: Record<string, string[]> = {
   city: [
-    "Dentists in {name}",
-    "Find a dentist in {name}",
-    "{name} dental clinics",
-    "Top-rated dentists in {name}",
-    "Book a dentist in {name}",
+    "Agencies in {name}",
+    "Find an agency in {name}",
+    "{name} fostering agencies",
+    "Top-rated agencies in {name}",
+    "Find a fostering agency in {name}",
   ],
   treatment: [
     "{name}",
@@ -32,8 +32,8 @@ const ANCHOR_VARIATIONS: Record<string, string[]> = {
   clinic: [
     "{name}",
     "Visit {name}",
-    "{name} dental clinic",
-    "Book at {name}",
+    "{name} fostering agency",
+    "Enquire at {name}",
   ],
 };
 
@@ -166,13 +166,13 @@ export function useAutoInternalLinks({
 
       // Always add insurance and services directory links
       links.push({
-        label: "Dental Insurance Plans",
+        label: "Partner Organisations",
         href: "/insurance/",
         type: "lateral",
       });
       links.push({
-        label: "All Dental Services",
-        href: "/services/",
+        label: "All Fostering Types",
+        href: "/categories/",
         type: "lateral",
       });
 

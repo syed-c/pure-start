@@ -319,15 +319,15 @@ export function PandaBot({ className, iconUrl = '/favicon.png' }: PandaBotProps)
                     }}
                   />
                 </div>
-                <p className="text-sm font-medium text-foreground mb-1">Hi! I'm your dental assistant 🦷</p>
+                <p className="text-sm font-medium text-foreground mb-1">Hi! I'm your fostering assistant 🏠</p>
                 <p className="text-xs text-muted-foreground mb-3">
-                  Tell me what you're looking for and I'll help you find the perfect dentist.
+                  Tell me what you're looking for and I'll help you find the right agency.
                 </p>
                 <div className="space-y-1.5">
                   {[
-                    "Find a dentist in Dubai for cleaning",
-                    "What dental clinics accept insurance in Abu Dhabi?",
-                    "I need emergency dental care in Sharjah"
+                    "Find a fostering agency in London",
+                    "What agencies offer emergency placements?",
+                    "I need respite fostering support in Manchester"
                   ].map((q, i) => (
                     <button
                       key={i}
