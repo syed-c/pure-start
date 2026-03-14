@@ -135,7 +135,7 @@ export default function ClinicEnrichmentTab() {
       let query = supabase
         .from('clinics')
         .select(`
-          id, name, slug, description, address, rating, review_count, cover_image_url,
+          id, name, slug, description, address, cover_image_url,
           city:cities(name, state:states(abbreviation))
         `)
         .eq('is_active', true)
