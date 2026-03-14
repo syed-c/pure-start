@@ -71,8 +71,6 @@ interface ClinicForEnrichment {
   slug: string;
   description: string | null;
   address: string | null;
-  rating: number | null;
-  review_count: number | null;
   cover_image_url: string | null;
   city: { name: string; state?: { abbreviation: string } } | null;
 }
