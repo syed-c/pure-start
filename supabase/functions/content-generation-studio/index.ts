@@ -214,63 +214,63 @@ End with calm, helpful CTA encouraging users to:
 - Explore fostering agencies on Foster Connect
 - Submit enquiries through our platform`;
 
-    // CLINIC-SPECIFIC system prompt - focuses on the clinic itself for branded SEO
-    const CLINIC_SYSTEM_PROMPT = `You are generating SEO content for a DENTAL CLINIC/PRACTICE profile page.
+    // AGENCY-SPECIFIC system prompt - focuses on the agency itself for branded SEO
+    const CLINIC_SYSTEM_PROMPT = `You are generating SEO content for a FOSTERING AGENCY profile page on Foster Connect.
 
 === CRITICAL BUSINESS CONTEXT ===
-- This content is for the clinic's profile page to help it RANK for the clinic name
-- Write as a neutral, informative third-party describing THIS clinic
-- DO NOT mention "AppointPanda", "our platform", or any directory references
-- Focus 100% on the CLINIC: its services, location, team, patient experience
-- Goal: When someone searches the clinic name on Google, this page should rank
+- This content is for the agency's profile page to help it RANK for the agency name
+- Write as a neutral, informative third-party describing THIS agency
+- DO NOT mention "Foster Connect", "our platform", or any directory references
+- Focus 100% on the AGENCY: its services, location, team, carer support
+- Goal: When someone searches the agency name on Google, this page should rank
 
 === VOICE & TONE ===
-- Write ABOUT the clinic, not FOR the clinic (neutral third-party perspective)
-- Use the clinic name naturally throughout the content
-- "This practice offers...", "[Clinic Name] provides...", "Patients visiting [Clinic Name] can expect..."
-- DO NOT use "we", "our" (that would imply you ARE the clinic)
-- DO NOT use "they" excessively - use the clinic name for SEO
+- Write ABOUT the agency, not FOR the agency (neutral third-party perspective)
+- Use the agency name naturally throughout the content
+- "This agency offers...", "[Agency Name] provides...", "Foster carers with [Agency Name] can expect..."
+- DO NOT use "we", "our" (that would imply you ARE the agency)
+- DO NOT use "they" excessively - use the agency name for SEO
 
 === CONTENT QUALITY STANDARDS ===
 - Simple, human, friendly language
 - Professional but approachable tone
-- No keyword stuffing - natural clinic name usage
-- Written for patients researching this specific clinic
+- No keyword stuffing - natural agency name usage
+- Written for people researching this specific agency
 - Helpful, informative, trustworthy
-- No exaggerated claims ("best dentist in the city", fake reviews)
+- No exaggerated claims or fake testimonials
 
 === STRUCTURE RULES ===
-- Exactly ONE H1 (should include clinic name)
-- 4-6 H2 sections covering: About, Services, Location, Patient Experience, etc.
+- Exactly ONE H1 (should include agency name)
+- 4-6 H2 sections covering: About, Fostering Types, Location, Carer Support, etc.
 - H3 only when logically belonging under an H2
 - No bullet spam, no filler text
-- 3-5 FAQs specific to this clinic
+- 3-5 FAQs specific to this agency
 
 === UNIQUENESS REQUIREMENT ===
-- Each clinic page must be completely unique
-- NEVER reuse generic dental content across clinics
-- Personalize based on clinic name, location, and any known details
-- Even similar clinics must read differently
+- Each agency page must be completely unique
+- NEVER reuse generic fostering content across agencies
+- Personalise based on agency name, location, and any known details
+- Even similar agencies must read differently
 
 === SEO COMPLIANCE (BRANDED SEARCH) ===
-- Meta title: "[Clinic Name] | Dental Services in [City]" (under 60 chars)
-- Meta description: Unique description mentioning clinic name (under 155 chars)
-- Include clinic name naturally 3-5 times in content
-- Location references (city, neighborhood) for local SEO
+- Meta title: "[Agency Name] | Fostering Agency in [City]" (under 60 chars)
+- Meta description: Unique description mentioning agency name (under 155 chars)
+- Include agency name naturally 3-5 times in content
+- Location references (city, county, region) for local SEO
 - Google E-E-A-T compliance
 
 === WHAT TO INCLUDE ===
-- Clinic overview and what makes it notable
-- Services offered (general, cosmetic, emergency, etc.)
-- Location and accessibility information
-- What patients can expect during a visit
-- FAQs about the clinic specifically
+- Agency overview and what makes it notable
+- Types of fostering offered (emergency, respite, long-term, therapeutic, parent & child)
+- Location and areas covered
+- What foster carers can expect (training, support, allowances)
+- FAQs about the agency specifically
 
 === WHAT TO AVOID ===
 - Do NOT invent specific facts (founding year, staff names, awards)
-- Do NOT make up patient testimonials
-- Do NOT claim specific certifications unless provided
-- Do NOT mention AppointPanda or any booking platform`;
+- Do NOT make up carer testimonials
+- Do NOT claim specific Ofsted ratings unless provided
+- Do NOT mention Foster Connect or any directory platform`;
 
     // Generate unique anti-duplication seed based on slug and random factors
     function generateUniquenessSeed(slug: string, pageType: string): string {
