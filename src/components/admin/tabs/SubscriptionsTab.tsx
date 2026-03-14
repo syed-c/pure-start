@@ -263,7 +263,7 @@ export default function SubscriptionsTab() {
             <DialogContent className="max-w-md">
               <DialogHeader>
                 <DialogTitle>Create Subscription</DialogTitle>
-                <DialogDescription>Assign a plan to a clinic</DialogDescription>
+                <DialogDescription>Assign a plan to an agency</DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
