@@ -645,13 +645,13 @@ export default function FAQGenerationStudioTab() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Emirate</Label>
+                  <Label>Region</Label>
                   <Select value={stateFilter} onValueChange={setStateFilter}>
                     <SelectTrigger>
-                      <SelectValue placeholder="All Emirates" />
+                      <SelectValue placeholder="All Regions" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="__all__">All Emirates</SelectItem>
+                      <SelectItem value="__all__">All Regions</SelectItem>
                       {states?.map(state => (
                         <SelectItem key={state.id} value={state.id}>
                           {state.name}

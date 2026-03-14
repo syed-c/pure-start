@@ -785,11 +785,11 @@ export default function ClinicEnrichmentTab() {
                     </div>
                     <div>
                       <h3 className="font-bold text-lg">Add Placeholder Images</h3>
-                      <p className="text-sm text-muted-foreground">{clinicStats?.noImage?.toLocaleString() || 0} clinics need images</p>
+                      <p className="text-sm text-muted-foreground">{clinicStats?.noImage?.toLocaleString() || 0} agencies need images</p>
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Add professional dental clinic placeholder images to all clinics without cover photos.
+                    Add professional fostering agency placeholder images to all agencies without cover photos.
                   </p>
                   <Button 
                     onClick={addPlaceholderImages} 

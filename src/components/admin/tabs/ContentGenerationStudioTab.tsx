@@ -939,13 +939,13 @@ export default function ContentGenerationStudioTab() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Service/Treatment</Label>
+                  <Label>Fostering Type</Label>
                   <Select value={serviceFilter} onValueChange={setServiceFilter}>
                     <SelectTrigger>
-                      <SelectValue placeholder="All Services" />
+                      <SelectValue placeholder="All Fostering Types" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="__all__">All Services</SelectItem>
+                      <SelectItem value="__all__">All Fostering Types</SelectItem>
                       {treatments?.map(t => (
                         <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
                       ))}
