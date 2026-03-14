@@ -17,15 +17,12 @@ import { RelatedClinicsBlock } from "@/components/seo/RelatedClinicsBlock";
 import { MultiStepBookingModal } from "@/components/MultiStepBookingModal";
 import { useSeoPageContent, parseMarkdownContent, parseFaqFromContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
-import { PromotionBanner } from "@/components/subscription/PromotionBanner";
 import {
   ClinicStickyBooking,
   ClinicTeamSection,
   ClaimProfileCTA,
   ClinicGallery,
   ClinicReviewsSection,
-  InsuranceTab,
-  BeforeAfterGallery,
 } from "@/components/clinic";
 import {
   Star,
@@ -33,23 +30,18 @@ import {
   Calendar,
   Share2,
   Heart,
-  Shield,
   Award,
   Users,
   MapPin,
   Phone,
   Globe,
-  Clock,
   AlertTriangle,
-  Sparkles,
   Percent
 } from "lucide-react";
 import { AIMatchBadge } from "@/components/ai";
 import { TrustSignalStrip, AEDPricingDisplay } from "@/components/healthcare";
 import { ConversationalQABlock, AIDiscoveryMeta } from "@/components/ai-seo";
 import { generateClinicQA } from "@/lib/ai-seo/generateQAContent";
-import { formatDistanceToNow } from "date-fns";
-import { cn } from "@/lib/utils";
 
 const ClinicPage = () => {
   const { clinicSlug } = useParams();
