@@ -89,39 +89,39 @@ Most ${treatment.toLowerCase()} fostering agencies in ${city} offer an initial n
 }
 
 function generateCityContent(city: string, state: string, stateAbbr: string): string {
-  return `## Find Your Perfect Dentist in ${city}, ${stateAbbr}
+  return `## Find Fostering Agencies in ${city}, ${stateAbbr}
 
-${city}, ${state} is home to a diverse community of dental professionals dedicated to providing exceptional oral healthcare. Whether you need routine cleanings, cosmetic procedures, or specialized treatments, you'll find qualified dentists ready to serve you.
+${city}, ${state} is home to a diverse community of fostering agencies dedicated to providing exceptional support for children and young people in care. Whether you're considering fostering for the first time or looking for a new agency, you'll find Ofsted-registered agencies ready to guide you.
 
-### Dental Services Available in ${city}
+### Fostering Types Available in ${city}
 
-Local dental practices in ${city} offer a comprehensive range of services including:
+Local fostering agencies in ${city} offer a comprehensive range of placements including:
 
-- **General Dentistry** - Cleanings, exams, fillings, and preventive care
-- **Cosmetic Dentistry** - Teeth whitening, veneers, and smile makeovers
-- **Restorative Dentistry** - Crowns, bridges, and dental implants
-- **Orthodontics** - Braces and clear aligners for all ages
-- **Emergency Dental Care** - Same-day treatment for urgent issues
+- **Emergency Fostering** - Short-notice placements for children who need immediate care
+- **Short-term Fostering** - Temporary care while long-term plans are made
+- **Long-term Fostering** - Providing a stable home for children until adulthood
+- **Respite Fostering** - Giving regular foster carers a well-earned break
+- **Parent and Child Fostering** - Supporting parents alongside their children
 
-### Why Choose a ${city} Dentist?
+### Why Choose a ${city} Agency?
 
-Selecting a local dentist means building a long-term relationship with a healthcare provider who understands your needs. ${city} dental practices pride themselves on:
+Selecting a local agency means building a long-term relationship with a support team who understands your community. ${city} fostering agencies pride themselves on:
 
-- State-of-the-art facilities and equipment
-- Experienced, licensed dental professionals
-- Patient-centered approach to care
-- Flexible scheduling and payment options
-- Accepting most major dental insurance plans
+- Comprehensive training programmes
+- 24/7 support from experienced social workers
+- Competitive weekly fostering allowances
+- Regular supervision and peer support groups
+- Accepting carers from all backgrounds
 
-### Tips for Finding the Right Dentist
+### Tips for Finding the Right Agency
 
-When searching for a dentist in ${city}, consider reading patient reviews, checking credentials, and scheduling a consultation. Many practices offer free initial consultations or new patient specials.
+When searching for a fostering agency in ${city}, consider reading carer reviews, checking Ofsted ratings, and attending an information event. Many agencies offer free, no-obligation initial chats.
 
-Look for dentists who take time to explain procedures, answer questions, and make you feel comfortable. A good dental relationship is built on trust and communication.
+Look for agencies that provide thorough training, ongoing support, and make you feel valued. A good fostering relationship is built on trust and open communication.
 
-### Book Your Appointment Today
+### Start Your Fostering Journey Today
 
-Browse verified dental professionals in ${city}, ${state}, compare services and reviews, and schedule your appointment online. Your healthier smile starts here.`;
+Browse verified fostering agencies in ${city}, ${state}, compare services and reviews, and submit your enquiry online. Your fostering journey starts here.`;
 }
 
 function generateTreatmentContent(treatment: string): string {
