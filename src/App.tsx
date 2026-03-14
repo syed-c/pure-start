@@ -17,7 +17,7 @@ import { MetaTagInjector } from "@/components/analytics/MetaTagInjector";
 import { CriticalResourceLoader } from "@/components/common/CriticalResourceLoader";
 
 // Critical pages - load immediately for fast FCP
-import Index from "./pages/Index";
+import HomeV2 from "./pages/HomeV2";
 import SearchPage from "./pages/SearchPage";
 import NotFound from "./pages/NotFound";
 
