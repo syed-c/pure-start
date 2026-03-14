@@ -519,7 +519,7 @@ const StatePage = () => {
         <Section size="md">
           <div className="max-w-4xl mx-auto">
             <span className="inline-block text-xs font-bold text-primary uppercase tracking-widest mb-2">Browse Services</span>
-            <h2 className="text-2xl md:text-3xl font-black text-foreground mb-6" style={{ fontFamily: "'Outfit', sans-serif" }}>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-foreground mb-6">
               Fostering Types in <span className="text-primary">{stateName}</span>
             </h2>
             <div className="flex flex-wrap gap-x-2 gap-y-2">
