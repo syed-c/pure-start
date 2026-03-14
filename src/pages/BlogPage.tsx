@@ -89,40 +89,28 @@ const BlogPage = () => {
       />
 
       {/* Hero */}
-      <section className="relative bg-dark-section text-dark-section-foreground overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(235_55%_50%/0.15),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,hsl(38_85%_55%/0.1),transparent_50%)]" />
-        <div className="absolute top-20 right-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 left-10 w-96 h-96 bg-gold/10 rounded-full blur-3xl" />
-        
-        <div className="container relative py-16 md:py-24">
+      <section className="py-16 md:py-24 bg-muted/30">
+        <div className="container">
           <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
-              <BookOpen className="h-4 w-4 text-primary" />
-              <span className="text-sm font-bold text-primary">Fostering Insights</span>
-            </div>
-            
-            <h1 className="font-display text-4xl md:text-5xl font-bold mb-6">
-              Fostering{" "}
-              <span className="text-gradient">Blog</span>
+            <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">Fostering Insights</p>
+            <h1 className="text-4xl md:text-5xl font-extrabold text-foreground mb-6">
+              Fostering <span className="text-primary">Blog</span>
             </h1>
-            
-            <p className="text-lg text-dark-section-foreground/70 max-w-xl mx-auto mb-8">
+            <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-8">
               Expert advice, carer stories, and the latest fostering news from across the United Kingdom.
             </p>
-
-            <div className="flex flex-wrap justify-center gap-4 text-sm">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
+            <div className="flex flex-wrap justify-center gap-3 text-sm">
+              <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-4 py-2">
                 <TrendingUp className="h-4 w-4 text-primary" />
-                <span>{posts?.length || 0} Articles</span>
+                <span className="font-medium">{posts?.length || 0} Articles</span>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
-                <Heart className="h-4 w-4 text-gold" />
-                <span>Carer Stories</span>
+              <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-4 py-2">
+                <Heart className="h-4 w-4 text-coral" />
+                <span className="font-medium">Carer Stories</span>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
-                <Clock className="h-4 w-4 text-coral" />
-                <span>Updated Weekly</span>
+              <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-4 py-2">
+                <Clock className="h-4 w-4 text-gold" />
+                <span className="font-medium">Updated Weekly</span>
               </div>
             </div>
           </div>

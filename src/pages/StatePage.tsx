@@ -325,47 +325,28 @@ const StatePage = () => {
       />
       
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-primary/[0.04] to-background">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)/0.06),transparent_60%)]" />
-        <div className="container relative z-10 py-14 md:py-20 px-5 md:px-8">
-          <div className="flex justify-center mb-6">
+      <section className="py-14 md:py-20 bg-muted/30">
+        <div className="container px-4">
+          <div className="flex justify-center mb-4">
             <Breadcrumbs items={breadcrumbs} />
           </div>
           <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/15 rounded-full px-4 py-1.5 mb-6">
-              <Shield className="h-3.5 w-3.5 text-primary" />
-              <span className="text-xs font-bold text-primary uppercase tracking-wider">Ofsted Rated Agencies</span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-4 text-foreground" style={{ fontFamily: "'Outfit', sans-serif" }}>
+            <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">Ofsted Rated Agencies</p>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-foreground">
               {pageH1.includes(stateName) ? (
                 <>{pageH1.split(stateName)[0]}<span className="text-primary">{stateName}</span></>
               ) : (
                 pageH1
               )}
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
               Discover trusted fostering agencies across {stateName}. Browse by city, compare reviews, and start your fostering journey.
             </p>
-            <div className="flex flex-wrap justify-center gap-3 mb-8">
-              <Link to="/search">
-                <Button size="lg" className="h-12 px-6 font-bold rounded-xl shadow-md shadow-primary/20">
-                  Find an Agency <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-            <div className="flex flex-wrap justify-center gap-3">
-              {[
-                { icon: Building2, value: cities?.length || 0, label: "Areas" },
-                { icon: Star, value: "4.8", label: "Avg. Rating" },
-                { icon: Clock, value: "Quick", label: "Enquiry" },
-              ].map((s, i) => (
-                <div key={i} className="flex items-center gap-2 bg-muted/50 border border-border/50 rounded-xl px-4 py-2.5">
-                  <s.icon className="h-4 w-4 text-primary" />
-                  <span className="font-bold text-sm">{s.value}</span>
-                  <span className="text-xs text-muted-foreground">{s.label}</span>
-                </div>
-              ))}
-            </div>
+            <Link to="/search">
+              <Button size="lg" className="h-11 px-6 font-semibold rounded-lg">
+                Find an Agency <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

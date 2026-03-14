@@ -321,9 +321,9 @@ export default function SearchPage() {
       <Navbar />
 
       {/* Search Header */}
-      <div className="bg-gradient-to-b from-primary/[0.04] to-background border-b border-border/50">
+      <div className="bg-muted/30 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 py-8 md:py-10">
-          <h1 className="text-2xl md:text-3xl font-black text-foreground mb-5" style={{ fontFamily: "'Outfit', sans-serif" }}>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-foreground mb-5">
             Find a Fostering Agency
           </h1>
           <div className="flex gap-3">
@@ -430,7 +430,7 @@ function ResultCard({ item }: { item: SearchResultItem }) {
   const avatarUrl = item.image || getLetterAvatarUrl(item.name);
 
   return (
-    <Link to={linkTo} className="group block bg-card border border-border/50 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300">
+    <Link to={linkTo} className="group block bg-card border border-border rounded-xl overflow-hidden hover:shadow-md hover:border-primary/20 transition-all duration-200">
       <div className="aspect-[16/10] bg-muted relative overflow-hidden">
         <img src={avatarUrl} alt={item.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
