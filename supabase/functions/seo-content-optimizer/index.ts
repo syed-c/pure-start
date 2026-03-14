@@ -517,10 +517,10 @@ ${existingContent ? `\nEXISTING CONTENT TO IMPROVE (rewrite completely, do not c
 
 REQUIREMENTS:
 1. 100% unique content - will NOT be flagged as duplicate by search engines
-2. Location/service-specific information woven naturally throughout
+2. Location/fostering-type-specific information woven naturally throughout
 3. Proper H1 > H2 > H3 hierarchy (one H1, 4-6 H2s, H3s only where logical)
-4. Include 3-5 FAQs that match real user search intent
-5. Mention AppointPanda naturally in the content
+4. Include 3-5 FAQs that match real user search intent about fostering
+5. Mention Foster Connect naturally in the content
 6. End with a soft, helpful CTA encouraging platform use`;
     }
 
