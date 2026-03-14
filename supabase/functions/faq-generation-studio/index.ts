@@ -230,62 +230,62 @@ UNIQUENESS DIRECTIVE (ID: ${randomId}):
       
       switch (page_type) {
         case "state":
-          const stateName = title || parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "this emirate";
-          context = `EMIRATE DIRECTORY PAGE: ${stateName}
+          const stateName = title || parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "this region";
+          context = `REGION DIRECTORY PAGE: ${stateName} (UK)
 Focus FAQs on:
-- Finding dentists across ${stateName}
-- DHA/DOH/MOHAP licensing in ${stateName}
-- Dental costs in AED specific to ${stateName}
-- Insurance acceptance in ${stateName}
-- General dental care access in ${stateName}`;
+- Finding fostering agencies across ${stateName}
+- Ofsted ratings and regulatory standards in ${stateName}
+- Fostering allowances specific to ${stateName}
+- Types of fostering available in ${stateName}
+- General fostering access and support in ${stateName}`;
           break;
           
         case "city":
           const cityName = title || parts[1]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "this city";
-          const emirateName = parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "";
-          context = `CITY/AREA DIRECTORY PAGE: ${cityName}, ${emirateName}
+          const regionName = parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "";
+          context = `CITY/AREA DIRECTORY PAGE: ${cityName}, ${regionName} (UK)
 Focus FAQs on:
-- Finding local dentists in ${cityName}
-- Dental costs in AED specific to ${cityName}
-- Emergency dental care availability in ${cityName}
-- Insurance acceptance in the area
-- What to expect at ${cityName} dental offices
-- Pediatric and family dentistry options in ${cityName}`;
+- Finding local fostering agencies in ${cityName}
+- Fostering allowances in £ specific to ${cityName}
+- Types of fostering available in ${cityName}
+- Assessment process and timelines
+- What to expect when fostering in ${cityName}
+- Support groups and training in ${cityName}`;
           break;
           
         case "service_location":
         case "city_treatment":
-          const treatmentName = parts[parts.length - 1]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "dental treatment";
+          const fosteringType = parts[parts.length - 1]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "fostering";
           const locationCity = parts[1]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "this city";
-          const locationEmirate = parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "";
-          context = `SERVICE + LOCATION PAGE: ${treatmentName} in ${locationCity}, ${locationEmirate}
+          const locationRegion = parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "";
+          context = `FOSTERING TYPE + LOCATION PAGE: ${fosteringType} in ${locationCity}, ${locationRegion}
 Focus FAQs on:
-- ${treatmentName} costs in AED in ${locationCity}
-- How ${treatmentName} works and what to expect
-- Finding ${treatmentName} specialists in ${locationCity}
-- Recovery and aftercare for ${treatmentName}
-- Insurance coverage for ${treatmentName}
-- ${treatmentName} alternatives available in ${locationCity}
-- Duration and number of visits for ${treatmentName}`;
+- ${fosteringType} requirements and eligibility in ${locationCity}
+- How ${fosteringType} works and what to expect
+- Finding ${fosteringType} agencies in ${locationCity}
+- Support and training for ${fosteringType}
+- Fostering allowances for ${fosteringType}
+- ${fosteringType} alternatives available in ${locationCity}
+- Assessment timeline for ${fosteringType}`;
           break;
           
         case "treatment":
         case "service":
           const serviceName = title || slug.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase());
-          context = `SERVICE PAGE: ${serviceName} in UAE
+          context = `FOSTERING TYPE PAGE: ${serviceName} in the UK
 Focus FAQs on:
-- What ${serviceName} involves in UAE clinics
-- Who needs ${serviceName}
-- ${serviceName} costs in AED and financing
-- ${serviceName} process and timeline
-- ${serviceName} recovery and results
+- What ${serviceName} involves
+- Who can apply for ${serviceName}
+- ${serviceName} allowances in £ and support
+- ${serviceName} assessment process and timeline
+- ${serviceName} placement expectations
 - Alternatives to ${serviceName}
-- Insurance and payment for ${serviceName} in UAE`;
+- Training and support for ${serviceName}`;
           break;
           
         default:
           context = `PAGE: ${title || slug}
-Generate relevant dental FAQs for this page with UAE context.`;
+Generate relevant fostering FAQs for this page with UK context.`;
       }
       
       return context;
