@@ -676,7 +676,7 @@ export default function SubscriptionsTab() {
                   </div>
                   <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-center">
                     <p className="text-3xl font-bold text-teal">
-                      {activeCount > 0 ? Math.round(yearlyRevenue / activeCount) : 0} AED
+                      {activeCount > 0 ? Math.round(yearlyRevenue / activeCount) : 0} GBP
                     </p>
                     <p className="text-sm text-muted-foreground">Avg Revenue/Customer</p>
                   </div>
