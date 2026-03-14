@@ -292,21 +292,23 @@ export default function FAQGenerationStudioTab() {
   // Calculate stats by page type
   const statsByType = useMemo(() => {
     if (!seoPages) return [];
-    
-    return Object.entries(PAGE_TYPE_LABELS).map(([type, label]) => {
-      const pages = seoPages.filter(p => p.page_type === type);
-      const withFAQs = pages.filter(p => p.faqs && Array.isArray(p.faqs) && p.faqs.length > 0);
-      
-      return {
-        type,
-        label,
-        total: pages.length,
-        withFAQs: withFAQs.length,
-        withoutFAQs: pages.length - withFAQs.length,
-        coverage: pages.length > 0 ? Math.round((withFAQs.length / pages.length) * 100) : 0
-      };
-    }).filter(t => t.total > 0);
-  }, [seoPages]);
+
+    return availablePageTypes
+      .map((type) => {
+        const pages = seoPages.filter(p => p.page_type === type);
+        const withFAQs = pages.filter(p => p.faqs && Array.isArray(p.faqs) && p.faqs.length > 0);
+
+        return {
+          type,
+          label: formatPageTypeLabel(type),
+          total: pages.length,
+          withFAQs: withFAQs.length,
+          withoutFAQs: pages.length - withFAQs.length,
+          coverage: pages.length > 0 ? Math.round((withFAQs.length / pages.length) * 100) : 0
+        };
+      })
+      .filter(t => t.total > 0);
+  }, [seoPages, availablePageTypes]);
 
   // Filter pages based on criteria
   const filteredPages = useMemo(() => {
