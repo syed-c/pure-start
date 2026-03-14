@@ -338,75 +338,75 @@ MANDATORY DIFFERENTIATION:
       
       switch (page_type) {
         case "state":
-          const stateName = title || parts[0]?.toUpperCase() || "this state";
-          pageContext = `This is a STATE directory page for ${stateName}.
-Context: Show all dental providers in ${stateName}. Explain how AppointPanda helps patients find dentists across the state.
-Include: Overview of dental care landscape, how to find a dentist, what AppointPanda offers, popular services.`;
+          const stateName = title || parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "this region";
+          pageContext = `This is a REGION/COUNTRY directory page for ${stateName} (UK).
+Context: Show all fostering agencies in ${stateName}. Explain how Foster Connect helps prospective carers find agencies across the region.
+Include: Overview of fostering landscape, how to find an agency, what Foster Connect offers, types of fostering available, Ofsted/regulatory context.`;
           break;
           
         case "city":
           const cityName = title || parts[1] || parts[0] || "this city";
-          const stateAbbr = parts[0]?.toUpperCase() || "";
-          pageContext = `This is a CITY directory page for ${cityName}, ${stateAbbr}.
-Context: Show dentists in ${cityName}. Explain how AppointPanda helps local residents find dental care.
-Include: Local dental care overview, finding the right dentist, services available, cost considerations.
-LOCAL SPECIFICITY: Mention specific aspects of ${cityName} - its neighborhoods, community character, or regional healthcare landscape.`;
+          const regionName = parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "";
+          pageContext = `This is a CITY/AREA directory page for ${cityName}, ${regionName} (UK).
+Context: Show fostering agencies in ${cityName}. Explain how Foster Connect helps local residents explore fostering.
+Include: Local fostering landscape overview, finding the right agency, types of fostering available, support and allowances.
+LOCAL SPECIFICITY: Mention specific aspects of ${cityName} - its boroughs, community character, local authority, or regional fostering needs.`;
           break;
           
         case "treatment":
         case "service":
           const serviceName = title || slug.replace(/-/g, " ");
-          pageContext = `This is a SERVICE/TREATMENT page for ${serviceName}.
-Context: Explain what ${serviceName} is, who needs it, what to expect.
-Include: What is this treatment, who is it for, process overview, cost considerations, how AppointPanda helps find providers.`;
+          pageContext = `This is a FOSTERING TYPE page for ${serviceName}.
+Context: Explain what ${serviceName} fostering is, who it's for, what to expect.
+Include: What is this type of fostering, who can apply, the process, support available, how Foster Connect helps find agencies offering it.`;
           break;
           
         case "service_location":
         case "city_treatment":
-          const treatmentName = title || parts[parts.length - 1]?.replace(/-/g, " ") || "dental treatment";
+          const fosteringType = title || parts[parts.length - 1]?.replace(/-/g, " ") || "fostering";
           const locationCity = parts[1]?.replace(/-/g, " ") || "this city";
-          const locationState = parts[0]?.toUpperCase() || "";
-          pageContext = `This is a SERVICE + LOCATION page for ${treatmentName} in ${locationCity}, ${locationState}.
-Context: Explain ${treatmentName} and how to find providers offering it in ${locationCity}.
-Include: What is ${treatmentName}, local availability, cost in this area, how to choose a provider, AppointPanda's role.
-IMPORTANT: Make this unique - combine local ${locationCity} context with ${treatmentName} specifics. Don't just merge generic content.`;
+          const locationRegion = parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "";
+          pageContext = `This is a FOSTERING TYPE + LOCATION page for ${fosteringType} in ${locationCity}, ${locationRegion} (UK).
+Context: Explain ${fosteringType} and how to find agencies offering it in ${locationCity}.
+Include: What is ${fosteringType}, local availability, allowances in this area, how to choose an agency, Foster Connect's role.
+IMPORTANT: Make this unique - combine local ${locationCity} context with ${fosteringType} specifics. Don't just merge generic content.`;
           break;
           
         case "clinic":
         case "dentist":
-          // For clinic pages, extract clinic name and location for branded SEO
-          const clinicName = clinicData?.name || title || "this dental practice";
-          const clinicCity = clinicData?.city || "";
-          const clinicState = clinicData?.state || "";
-          const clinicAddress = clinicData?.address || "";
-          const clinicServices = clinicData?.services?.join(", ") || "general dental services";
+          // For agency pages, extract agency name and location for branded SEO
+          const agencyName = clinicData?.name || title || "this fostering agency";
+          const agencyCity = clinicData?.city || "";
+          const agencyRegion = clinicData?.state || "";
+          const agencyAddress = clinicData?.address || "";
+          const agencyServices = clinicData?.services?.join(", ") || "various fostering types";
           
-          pageContext = `This is a CLINIC PROFILE page for: ${clinicName}
-${clinicCity ? `Location: ${clinicCity}${clinicState ? `, ${clinicState}` : ""}` : ""}
-${clinicAddress ? `Address: ${clinicAddress}` : ""}
-${clinicServices ? `Known services: ${clinicServices}` : ""}
+          pageContext = `This is an AGENCY PROFILE page for: ${agencyName}
+${agencyCity ? `Location: ${agencyCity}${agencyRegion ? `, ${agencyRegion}` : ""}` : ""}
+${agencyAddress ? `Address: ${agencyAddress}` : ""}
+${agencyServices ? `Fostering types: ${agencyServices}` : ""}
 
-GOAL: Help this page RANK when someone searches for "${clinicName}" on Google.
+GOAL: Help this page RANK when someone searches for "${agencyName}" on Google.
 
 Content Focus:
-- Use "${clinicName}" naturally 3-5 times throughout the content
-- Write ABOUT the clinic from a neutral third-party perspective
-- Include: About ${clinicName}, Services offered, Location & accessibility, Patient experience, FAQs about ${clinicName}
-- DO NOT invent specific facts (founding year, staff names, awards, patient counts)
+- Use "${agencyName}" naturally 3-5 times throughout the content
+- Write ABOUT the agency from a neutral third-party perspective
+- Include: About ${agencyName}, Fostering types offered, Location & areas covered, Carer experience, FAQs about ${agencyName}
+- DO NOT invent specific facts (founding year, staff names, awards, carer counts)
 - DO NOT create fake testimonials
-- Focus on what patients searching for this clinic would want to know`;
+- Focus on what people searching for this agency would want to know`;
           break;
           
         case "static":
-          pageContext = `This is a STATIC page (About, Features, Policy, etc.).
+          pageContext = `This is a STATIC page (About, Features, Policy, etc.) on Foster Connect.
 Context: Write informative content appropriate for the page's purpose.
-Include: Clear explanation of the topic, how it relates to AppointPanda, user benefits.`;
+Include: Clear explanation of the topic, how it relates to Foster Connect, user benefits.`;
           break;
           
         default:
-          pageContext = `This is a general page on AppointPanda.
-Context: Write helpful, informative content for dental patients.
-Include: Clear explanations, how AppointPanda helps, relevant information for the topic.`;
+          pageContext = `This is a general page on Foster Connect.
+Context: Write helpful, informative content for prospective foster carers in the UK.
+Include: Clear explanations, how Foster Connect helps, relevant information for the topic.`;
       }
 
       // Select the appropriate system prompt
