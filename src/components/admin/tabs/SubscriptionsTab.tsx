@@ -491,7 +491,7 @@ export default function SubscriptionsTab() {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-slate-50 dark:bg-slate-800/50">
-                    <TableHead className="font-semibold">Clinic</TableHead>
+                    <TableHead className="font-semibold">Agency</TableHead>
                     <TableHead className="font-semibold">Plan</TableHead>
                     <TableHead className="font-semibold">Price</TableHead>
                     <TableHead className="font-semibold">Status</TableHead>
