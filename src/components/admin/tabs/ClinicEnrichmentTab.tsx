@@ -704,7 +704,7 @@ export default function ClinicEnrichmentTab() {
           </TabsTrigger>
           <TabsTrigger value="descriptions" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
-            <span className="hidden md:inline">Clinics</span> ({clinicStats?.noDescription || 0})
+            <span className="hidden md:inline">Agencies</span> ({clinicStats?.noDescription || 0})
           </TabsTrigger>
           <TabsTrigger value="locations" className="flex items-center gap-2">
             <MapPin className="h-4 w-4" />
