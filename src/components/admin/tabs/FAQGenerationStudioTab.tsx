@@ -97,12 +97,15 @@ interface FAQAudit {
 const PAGE_TYPE_LABELS: Record<string, string> = {
   static: 'Static Pages',
   state: 'Region Pages',
+  region: 'Region Pages',
   city: 'City Pages',
   treatment: 'Fostering Type Pages',
   service: 'Fostering Type Pages',
   service_location: 'Fostering Type + Location',
   'service-location': 'Fostering Type + Location',
   city_treatment: 'City + Fostering Type',
+  city_category: 'City + Category',
+  'city-category': 'City + Category',
   clinic: 'Agency Profiles',
   dentist: 'Agency Profiles',
   blog: 'Blog Posts',
@@ -118,12 +121,15 @@ const PAGE_TYPE_LABELS: Record<string, string> = {
 const PAGE_TYPE_ICONS: Record<string, any> = {
   static: FileText,
   state: Globe,
+  region: Globe,
   city: MapPin,
   treatment: Stethoscope,
   service: Stethoscope,
   service_location: Layers,
   'service-location': Layers,
   city_treatment: Layers,
+  city_category: Layers,
+  'city-category': Layers,
   clinic: Building2,
   dentist: Users,
   blog: BookOpen,
@@ -135,6 +141,23 @@ const PAGE_TYPE_ICONS: Record<string, any> = {
   'insurance-index': FileText,
   'insurance-detail': FileText,
 };
+
+const PAGE_TYPE_FILTER_FALLBACK = [
+  'static',
+  'state',
+  'region',
+  'city',
+  'treatment',
+  'service',
+  'service_location',
+  'city_treatment',
+  'city_category',
+  'clinic',
+  'agency',
+  'category',
+  'blog',
+  'insurance',
+];
 
 const formatPageTypeLabel = (pageType: string): string => {
   return (
