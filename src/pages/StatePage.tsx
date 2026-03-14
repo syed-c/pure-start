@@ -408,7 +408,7 @@ const StatePage = () => {
                 profiles={filteredStateProfiles}
                 isLoading={profilesLoading}
                 locationName={stateName}
-                emptyMessage={`We're adding dentists in ${stateName}. Check back soon!`}
+                emptyMessage={`We're adding fostering agencies in ${stateName}. Check back soon!`}
                 hasActiveFilters={hasActiveStateFilters}
                 onClearFilters={() => setStateFilters({ maxBudget: null, minRating: 0, verifiedOnly: false, selectedServices: [] })}
                 maxHeight={700}
