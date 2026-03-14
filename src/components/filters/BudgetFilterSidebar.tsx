@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import { PoundSterling, Star, Shield, Sparkles, Filter, ChevronDown, ChevronUp, X, Heart, MapPin } from "lucide-react";
+import { PoundSterling, Star, Shield, Sparkles, Filter, ChevronDown, ChevronUp, X, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";

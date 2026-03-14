@@ -11,8 +11,6 @@ import { Footer } from "@/components/Footer";
 import { SearchBox } from "@/components/SearchBox";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import { useStatesWithClinics } from "@/hooks/useLocations";
