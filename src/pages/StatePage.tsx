@@ -324,77 +324,49 @@ const StatePage = () => {
         questions={faqs.map(f => ({ question: f.q, answer: f.a }))}
       />
       
-      {/* SECTION 1: Hero — Dark theme matching homepage */}
-      <section className="relative overflow-hidden min-h-[50vh] flex items-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-primary/15 rounded-full blur-[120px]" />
-          <div className="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-teal/10 rounded-full blur-[100px]" />
-          <div className="absolute inset-0 opacity-[0.03]" style={{
-            backgroundImage: 'linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)',
-            backgroundSize: '60px 60px',
-          }} />
-        </div>
-        
-        <div className="container relative z-10 py-16 md:py-20 px-5 md:px-8">
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-primary/[0.04] to-background">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)/0.06),transparent_60%)]" />
+        <div className="container relative z-10 py-14 md:py-20 px-5 md:px-8">
           <div className="flex justify-center mb-6">
-            <Breadcrumbs items={breadcrumbs} className="[&_a]:text-white/60 [&_span]:text-white/40 [&_svg]:text-white/30" />
+            <Breadcrumbs items={breadcrumbs} />
           </div>
-          
           <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 bg-primary/15 backdrop-blur-md border border-primary/30 rounded-full px-4 py-2 mb-6">
-              <Shield className="h-4 w-4 text-primary" />
-              <span className="text-sm font-bold text-primary">Ofsted Rated Fostering Agencies</span>
+            <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/15 rounded-full px-4 py-1.5 mb-6">
+              <Shield className="h-3.5 w-3.5 text-primary" />
+              <span className="text-xs font-bold text-primary uppercase tracking-wider">Ofsted Rated Agencies</span>
             </div>
-            
-            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 px-2" style={{ fontFamily: "'Varela Round', system-ui, sans-serif" }}>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-4 text-foreground" style={{ fontFamily: "'Outfit', sans-serif" }}>
               {pageH1.includes(stateName) ? (
-                <>
-                  <span className="text-white">{pageH1.split(stateName)[0]}</span>
-                  <span className="text-primary">{stateName}</span>
-                </>
+                <>{pageH1.split(stateName)[0]}<span className="text-primary">{stateName}</span></>
               ) : (
-                <span className="text-white">{pageH1}</span>
+                pageH1
               )}
             </h1>
-            
-            <p className="text-lg md:text-xl text-white/40 mb-8 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
               Discover trusted fostering agencies across {stateName}. Browse by city, compare reviews, and start your fostering journey.
             </p>
-
             <div className="flex flex-wrap justify-center gap-3 mb-8">
               <Link to="/search">
-                <Button size="lg" className="h-12 px-6 font-bold rounded-2xl">
+                <Button size="lg" className="h-12 px-6 font-bold rounded-xl shadow-md shadow-primary/20">
                   Find an Agency <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-2 md:flex md:flex-wrap md:justify-center md:gap-4 px-2">
-              <div className="flex flex-col md:flex-row items-center gap-1 md:gap-2 bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-xl md:rounded-2xl px-3 py-2 md:px-5 md:py-3">
-                <Building2 className="h-4 w-4 md:h-5 md:w-5 text-primary" />
-                <span className="font-bold text-sm md:text-base text-white">{cities?.length || 0}</span>
-                <span className="text-[10px] md:text-sm text-white/50 hidden md:inline">Areas</span>
-              </div>
-              <div className="flex flex-col md:flex-row items-center gap-1 md:gap-2 bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-xl md:rounded-2xl px-3 py-2 md:px-5 md:py-3">
-                <Star className="h-4 w-4 md:h-5 md:w-5 text-gold fill-gold" />
-                <span className="font-bold text-sm md:text-base text-white">4.8</span>
-                <span className="text-[10px] md:text-sm text-white/50 hidden md:inline">Avg. Rating</span>
-              </div>
-              <div className="flex flex-col md:flex-row items-center gap-1 md:gap-2 bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-xl md:rounded-2xl px-3 py-2 md:px-5 md:py-3">
-                <Clock className="h-4 w-4 md:h-5 md:w-5 text-primary" />
-                <span className="font-bold text-sm md:text-base text-white">60s</span>
-                <span className="text-[10px] md:text-sm text-white/50 hidden md:inline">Book</span>
-              </div>
+            <div className="flex flex-wrap justify-center gap-3">
+              {[
+                { icon: Building2, value: cities?.length || 0, label: "Areas" },
+                { icon: Star, value: "4.8", label: "Avg. Rating" },
+                { icon: Clock, value: "Quick", label: "Enquiry" },
+              ].map((s, i) => (
+                <div key={i} className="flex items-center gap-2 bg-muted/50 border border-border/50 rounded-xl px-4 py-2.5">
+                  <s.icon className="h-4 w-4 text-primary" />
+                  <span className="font-bold text-sm">{s.value}</span>
+                  <span className="text-xs text-muted-foreground">{s.label}</span>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-
-        {/* Bottom wave */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 80" fill="none" className="w-full h-12 md:h-16" preserveAspectRatio="none">
-            <path d="M0 80V40C240 10 480 0 720 20C960 40 1200 50 1440 30V80H0Z" className="fill-background" />
-          </svg>
         </div>
       </section>
 
