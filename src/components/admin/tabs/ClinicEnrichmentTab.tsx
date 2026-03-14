@@ -71,8 +71,6 @@ interface ClinicForEnrichment {
   slug: string;
   description: string | null;
   address: string | null;
-  rating: number | null;
-  review_count: number | null;
   cover_image_url: string | null;
   city: { name: string; state?: { abbreviation: string } } | null;
 }
@@ -137,7 +135,7 @@ export default function ClinicEnrichmentTab() {
       let query = supabase
         .from('clinics')
         .select(`
-          id, name, slug, description, address, rating, review_count, cover_image_url,
+          id, name, slug, description, address, cover_image_url,
           city:cities(name, state:states(abbreviation))
         `)
         .eq('is_active', true)
@@ -167,7 +165,7 @@ export default function ClinicEnrichmentTab() {
         let query = supabase
           .from('clinics')
           .select(`
-            id, name, slug, description, address, rating, review_count, cover_image_url,
+            id, name, slug, description, address, cover_image_url,
             city:cities(name, state:states(abbreviation))
           `)
           .eq('is_active', true)
@@ -553,10 +551,10 @@ export default function ClinicEnrichmentTab() {
               <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-purple to-primary flex items-center justify-center">
                 <Sparkles className="h-6 w-6 text-white" />
               </div>
-              Clinic Content Enrichment
+              Agency Content Enrichment
             </h1>
             <p className="text-muted-foreground mt-2">
-              AI-powered description generation and content management
+              AI-powered description generation and content management for fostering agencies
             </p>
           </div>
           <Button 
@@ -577,7 +575,7 @@ export default function ClinicEnrichmentTab() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total Clinics</p>
+                <p className="text-sm text-muted-foreground">Total Agencies</p>
                 <p className="text-3xl font-bold text-primary">{clinicStats?.total?.toLocaleString() || 0}</p>
               </div>
               <Building2 className="h-10 w-10 text-primary/30" />
@@ -706,7 +704,7 @@ export default function ClinicEnrichmentTab() {
           </TabsTrigger>
           <TabsTrigger value="descriptions" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
-            <span className="hidden md:inline">Clinics</span> ({clinicStats?.noDescription || 0})
+            <span className="hidden md:inline">Agencies</span> ({clinicStats?.noDescription || 0})
           </TabsTrigger>
           <TabsTrigger value="locations" className="flex items-center gap-2">
             <MapPin className="h-4 w-4" />
@@ -734,7 +732,7 @@ export default function ClinicEnrichmentTab() {
                 <Wand2 className="h-5 w-5 text-primary" />
                 Batch Enrichment Actions
               </CardTitle>
-              <CardDescription>Generate content for multiple clinics at once using AI</CardDescription>
+              <CardDescription>Generate content for multiple agencies at once using AI</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -745,11 +743,11 @@ export default function ClinicEnrichmentTab() {
                     </div>
                     <div>
                       <h3 className="font-bold text-lg">Generate Descriptions</h3>
-                      <p className="text-sm text-muted-foreground">{clinicStats?.noDescription?.toLocaleString() || 0} clinics need descriptions</p>
+                      <p className="text-sm text-muted-foreground">{clinicStats?.noDescription?.toLocaleString() || 0} agencies need descriptions</p>
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Use AI to generate unique, professional descriptions for clinics automatically.
+                    Use AI to generate unique, professional descriptions for fostering agencies automatically.
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {isEnriching ? (
@@ -787,11 +785,11 @@ export default function ClinicEnrichmentTab() {
                     </div>
                     <div>
                       <h3 className="font-bold text-lg">Add Placeholder Images</h3>
-                      <p className="text-sm text-muted-foreground">{clinicStats?.noImage?.toLocaleString() || 0} clinics need images</p>
+                      <p className="text-sm text-muted-foreground">{clinicStats?.noImage?.toLocaleString() || 0} agencies need images</p>
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Add professional dental clinic placeholder images to all clinics without cover photos.
+                    Add professional fostering agency placeholder images to all agencies without cover photos.
                   </p>
                   <Button 
                     onClick={addPlaceholderImages} 
@@ -905,12 +903,12 @@ export default function ClinicEnrichmentTab() {
                 <div>
                   <CardTitle className="flex items-center gap-2">
                     <FileText className="h-5 w-5 text-primary" />
-                    {showAllClinics ? 'All Clinics' : 'Clinics Needing Descriptions'}
+                    {showAllClinics ? 'All Agencies' : 'Agencies Needing Descriptions'}
                   </CardTitle>
                   <CardDescription>
                     {showAllClinics 
-                      ? `${allClinics.length.toLocaleString()} total clinics`
-                      : `${clinicsNeedingDescription.length.toLocaleString()} clinics without descriptions`
+                      ? `${allClinics.length.toLocaleString()} total agencies`
+                      : `${clinicsNeedingDescription.length.toLocaleString()} agencies without descriptions`
                     }
                   </CardDescription>
                 </div>
@@ -922,7 +920,7 @@ export default function ClinicEnrichmentTab() {
                     className="gap-2"
                   >
                     <Building2 className="h-4 w-4" />
-                    {showAllClinics ? 'Show Missing Only' : 'Show All Clinics'}
+                    {showAllClinics ? 'Show Missing Only' : 'Show All Agencies'}
                   </Button>
                   <Button 
                     variant="outline" 
@@ -936,7 +934,7 @@ export default function ClinicEnrichmentTab() {
                   <div className="relative w-64">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
-                      placeholder="Search clinics..."
+                      placeholder="Search agencies..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="pl-10"
@@ -962,9 +960,9 @@ export default function ClinicEnrichmentTab() {
                           }}
                         />
                       </TableHead>
-                      <TableHead className="font-bold">Clinic Name</TableHead>
+                      <TableHead className="font-bold">Agency Name</TableHead>
                       <TableHead className="font-bold">Location</TableHead>
-                      <TableHead className="font-bold">Rating</TableHead>
+                      <TableHead className="font-bold">Address</TableHead>
                       <TableHead className="font-bold">Status</TableHead>
                       <TableHead className="text-right font-bold">Actions</TableHead>
                     </TableRow>
@@ -983,10 +981,8 @@ export default function ClinicEnrichmentTab() {
                           {clinic.city?.name}{clinic.city?.state?.abbreviation ? `, ${clinic.city.state.abbreviation}` : ''}
                         </TableCell>
                         <TableCell>
-                          {clinic.rating ? (
-                            <span className="flex items-center gap-1">
-                              {clinic.rating} <span className="text-gold">★</span>
-                            </span>
+                          {clinic.address ? (
+                            <span className="text-sm">{clinic.address.substring(0, 30)}...</span>
                           ) : (
                             <span className="text-muted-foreground">-</span>
                           )}

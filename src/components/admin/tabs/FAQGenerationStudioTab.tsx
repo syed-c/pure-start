@@ -92,13 +92,15 @@ interface FAQAudit {
 }
 
 const PAGE_TYPE_LABELS: Record<string, string> = {
-  state: 'State Pages',
+  state: 'Region Pages',
   city: 'City Pages',
-  treatment: 'Service Pages',
-  service_location: 'Service + Location',
-  city_treatment: 'City + Treatment',
-  clinic: 'Clinic Pages',
-  dentist: 'Dentist Profiles',
+  treatment: 'Fostering Type Pages',
+  service_location: 'Fostering Type + Location',
+  city_treatment: 'City + Fostering Type',
+  clinic: 'Agency Profiles',
+  dentist: 'Agency Profiles',
+  agency: 'Agency Pages',
+  category: 'Category Pages',
 };
 
 const PAGE_TYPE_ICONS: Record<string, any> = {
@@ -109,6 +111,8 @@ const PAGE_TYPE_ICONS: Record<string, any> = {
   city_treatment: Layers,
   clinic: Building2,
   dentist: Building2,
+  agency: Building2,
+  category: Layers,
 };
 
 export default function FAQGenerationStudioTab() {
@@ -641,13 +645,13 @@ export default function FAQGenerationStudioTab() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Emirate</Label>
+                  <Label>Region</Label>
                   <Select value={stateFilter} onValueChange={setStateFilter}>
                     <SelectTrigger>
-                      <SelectValue placeholder="All Emirates" />
+                      <SelectValue placeholder="All Regions" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="__all__">All Emirates</SelectItem>
+                      <SelectItem value="__all__">All Regions</SelectItem>
                       {states?.map(state => (
                         <SelectItem key={state.id} value={state.id}>
                           {state.name}
