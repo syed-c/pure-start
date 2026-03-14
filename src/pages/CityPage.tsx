@@ -434,7 +434,7 @@ const CityPage = () => {
 
       {/* Page Intro Section - CMS Content */}
       <PageIntroSection
-        title={parsedContent?.sections?.[0]?.heading || `About Dental Care in ${cityName}`}
+        title={parsedContent?.sections?.[0]?.heading || `About Fostering in ${cityName}`}
         content={(seoContent as any)?.page_intro || parsedContent?.intro || parsedContent?.sections?.[0]?.content || generateAreaIntro(cityName, stateName, totalClinicCount || profiles?.length || 0, areaLocalContent)}
         isLoading={isSeoContentPending}
       />
