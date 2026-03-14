@@ -255,8 +255,8 @@ export default function TeamManagementTab() {
               <Stethoscope className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <p className="text-2xl font-bold">{dentists.length}</p>
-              <p className="text-sm text-muted-foreground">Dentists</p>
+              <p className="text-2xl font-bold">{specialists.length}</p>
+              <p className="text-sm text-muted-foreground">Specialists</p>
             </div>
           </CardContent>
         </Card>
