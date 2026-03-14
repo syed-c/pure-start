@@ -26,25 +26,19 @@ const InsurancePage = () => {
   const { data: insurances, isLoading } = useQuery({
     queryKey: ["insurances-full"],
     queryFn: async () => {
-      const { data } = await supabase
-        .from("insurances")
-        .select("*")
-        .eq("is_active", true)
-        .order("name");
+      const { data } = await supabase.from("insurances").select("*").eq("is_active", true).order("name");
       return data || [];
     },
   });
 
-  const { data: clinicCounts } = useQuery({
-    queryKey: ["insurance-clinic-counts"],
+  const { data: agencyCounts } = useQuery({
+    queryKey: ["insurance-agency-counts"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("insurances")
         .select("id, clinic_insurances(count)")
         .eq("is_active", true);
-
       if (error) throw error;
-
       const counts: Record<string, number> = {};
       (data || []).forEach((item: any) => {
         counts[item.id] = item.clinic_insurances?.[0]?.count || 0;
@@ -67,18 +61,18 @@ const InsurancePage = () => {
   }, [insurances]);
 
   const benefits = [
-    { icon: FileCheck, title: "Direct Billing", description: "No upfront payment. We bill your insurance directly." },
-    { icon: Sparkles, title: "Pre-Approval", description: "Partner clinics handle insurance pre-approvals." },
-    { icon: HeadphonesIcon, title: "Claims Help", description: "Get help with claims and reimbursement." },
+    { icon: FileCheck, title: "Verified Partners", description: "All partner agencies are Ofsted registered and verified." },
+    { icon: Sparkles, title: "Easy Matching", description: "Find agencies that work with your local authority or insurer." },
+    { icon: HeadphonesIcon, title: "Support", description: "Get help finding the right agency for your needs." },
   ];
 
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || "Dental Insurance Accepted - Find Dentists by Insurance | UAE"}
-        description={seoContent?.meta_description || "Find dental clinics accepting your insurance in Dubai, Abu Dhabi, Sharjah & across UAE. Direct billing with Daman, AXA, Cigna, Nextcare & 40+ providers."}
+        title={seoContent?.meta_title || "Partner Organisations — Find Agencies by Partnership | Foster Connect"}
+        description={seoContent?.meta_description || "Find fostering agencies that partner with your local authority or organisation. Browse verified agencies across the UK."}
         canonical="/insurance/"
-        keywords={['dental insurance UAE', 'dentist insurance Dubai', 'Daman dental', 'AXA dental UAE', 'Cigna dental']}
+        keywords={['fostering partnerships', 'local authority fostering', 'fostering agency partners', 'UK fostering']}
       />
 
       {/* Hero */}
@@ -87,18 +81,18 @@ const InsurancePage = () => {
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
             <Link to="/" className="hover:text-primary transition-colors">Home</Link>
             <span>/</span>
-            <span className="text-foreground font-medium">Insurance</span>
+            <span className="text-foreground font-medium">Partner Organisations</span>
           </nav>
 
           <div className="max-w-2xl mb-8">
             <h1 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-4">
-              Dental Insurance{" "}
+              Partner{" "}
               <span className="bg-gradient-to-r from-primary to-teal bg-clip-text text-transparent">
-                Accepted.
+                Organisations
               </span>
             </h1>
             <p className="text-lg text-muted-foreground mb-6">
-              Find dentists across the UAE that accept your insurance provider. Direct billing available with {(insurances || []).length}+ providers.
+              Find fostering agencies that partner with your local authority or organisation. Browse {(insurances || []).length}+ verified partners across the UK.
             </p>
             <InsuranceSearch insurances={insurances || []} />
           </div>
@@ -119,53 +113,32 @@ const InsurancePage = () => {
         </div>
       </div>
 
-      {/* Filters: Type + Alphabetical */}
+      {/* Filters */}
       <Section size="md">
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
           <div>
-            <p className="text-xs font-bold text-primary uppercase tracking-wider mb-2">Insurance Providers</p>
-            <h2 className="text-2xl md:text-3xl font-display font-bold">Choose Your Provider</h2>
+            <p className="text-xs font-bold text-primary uppercase tracking-wider mb-2">Partners</p>
+            <h2 className="text-2xl md:text-3xl font-display font-bold">Choose Your Organisation</h2>
           </div>
           <div className="sm:ml-auto flex gap-2">
             {(["all", "local", "international"] as const).map((group) => (
-              <Button
-                key={group}
-                variant={activeGroup === group ? "default" : "outline"}
-                size="sm"
-                className="rounded-full capitalize"
-                onClick={() => setActiveGroup(group)}
-              >
+              <Button key={group} variant={activeGroup === group ? "default" : "outline"} size="sm"
+                className="rounded-full capitalize" onClick={() => setActiveGroup(group)}>
                 {group === "all" ? "All" : group === "local" ? (
                   <><MapPin className="h-3.5 w-3.5 mr-1" />Local</>
                 ) : (
-                  <><Globe className="h-3.5 w-3.5 mr-1" />International</>
+                  <><Globe className="h-3.5 w-3.5 mr-1" />National</>
                 )}
               </Button>
             ))}
           </div>
         </div>
 
-        {/* Alphabetical Index */}
         <div className="flex flex-wrap gap-1 mb-6 pb-4 border-b border-border">
-          <Button
-            variant={!activeLetter ? "default" : "ghost"}
-            size="sm"
-            className="h-8 w-8 p-0 rounded-full text-xs"
-            onClick={() => setActiveLetter(null)}
-          >
-            All
-          </Button>
+          <Button variant={!activeLetter ? "default" : "ghost"} size="sm" className="h-8 w-8 p-0 rounded-full text-xs" onClick={() => setActiveLetter(null)}>All</Button>
           {ALPHABET.map((letter) => (
-            <Button
-              key={letter}
-              variant={activeLetter === letter ? "default" : "ghost"}
-              size="sm"
-              className="h-8 w-8 p-0 rounded-full text-xs"
-              onClick={() => setActiveLetter(letter)}
-              disabled={!availableLetters.has(letter)}
-            >
-              {letter}
-            </Button>
+            <Button key={letter} variant={activeLetter === letter ? "default" : "ghost"} size="sm"
+              className="h-8 w-8 p-0 rounded-full text-xs" onClick={() => setActiveLetter(letter)} disabled={!availableLetters.has(letter)}>{letter}</Button>
           ))}
         </div>
 
@@ -182,11 +155,8 @@ const InsurancePage = () => {
         ) : filtered.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
             {filtered.map((insurance) => (
-              <Link
-                key={insurance.id}
-                to={buildInsuranceUrl(insurance.slug)}
-                className="group p-4 rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-md transition-all"
-              >
+              <Link key={insurance.id} to={buildInsuranceUrl(insurance.slug)}
+                className="group p-4 rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-md transition-all">
                 <div className="flex items-center gap-3 mb-2">
                   <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                     {insurance.logo_url ? (
@@ -197,12 +167,10 @@ const InsurancePage = () => {
                   </div>
                   <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto opacity-0 group-hover:opacity-100" />
                 </div>
-                <h3 className="font-bold text-sm group-hover:text-primary transition-colors line-clamp-1">
-                  {insurance.name}
-                </h3>
+                <h3 className="font-bold text-sm group-hover:text-primary transition-colors line-clamp-1">{insurance.name}</h3>
                 <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
                   <Building2 className="h-3 w-3" />
-                  <span>{clinicCounts?.[insurance.id] || 0} clinics</span>
+                  <span>{agencyCounts?.[insurance.id] || 0} agencies</span>
                 </div>
               </Link>
             ))}
@@ -210,49 +178,36 @@ const InsurancePage = () => {
         ) : (
           <div className="text-center py-12 rounded-xl border border-dashed border-border">
             <Shield className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-            <h3 className="font-bold text-lg mb-2">No Providers Found</h3>
+            <h3 className="font-bold text-lg mb-2">No Partners Found</h3>
             <p className="text-sm text-muted-foreground">
-              {activeLetter ? `No providers starting with "${activeLetter}".` : "Try adjusting your filters."}
+              {activeLetter ? `No partners starting with "${activeLetter}".` : "Try adjusting your filters."}
             </p>
-            <Button variant="outline" size="sm" className="mt-3" onClick={() => { setActiveLetter(null); setActiveGroup("all"); }}>
-              Clear Filters
-            </Button>
+            <Button variant="outline" size="sm" className="mt-3" onClick={() => { setActiveLetter(null); setActiveGroup("all"); }}>Clear Filters</Button>
           </div>
         )}
       </Section>
 
-      {/* Educational Section */}
       <Section variant="muted" size="md">
         <InsuranceEducation />
       </Section>
 
-      {/* Internal Links - SEO */}
       <Section size="md">
         <InsuranceInternalLinks showInsurances={false} />
       </Section>
 
-      {/* CTA */}
       <Section size="sm">
         <div className="rounded-2xl p-6 md:p-8 bg-gradient-to-br from-primary/5 to-teal/5 border border-primary/20 text-center">
           <Users className="h-10 w-10 text-primary mx-auto mb-3" />
-          <h2 className="font-display text-xl md:text-2xl font-bold mb-2">
-            Don't See Your Insurance?
-          </h2>
+          <h2 className="font-display text-xl md:text-2xl font-bold mb-2">Don't See Your Organisation?</h2>
           <p className="text-sm text-muted-foreground mb-5 max-w-md mx-auto">
-            Contact us and we'll help you find clinics that accept your provider.
+            Contact us and we'll help you find agencies that work with your local authority.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <Button asChild className="rounded-xl font-bold" size="sm">
-              <Link to="/contact/">
-                <Phone className="h-4 w-4 mr-2" />
-                Contact Us
-              </Link>
+              <Link to="/contact/"><Phone className="h-4 w-4 mr-2" /> Contact Us</Link>
             </Button>
             <Button variant="outline" asChild className="rounded-xl font-bold" size="sm">
-              <Link to="/search/">
-                <Search className="h-4 w-4 mr-2" />
-                Browse Clinics
-              </Link>
+              <Link to="/search/"><Search className="h-4 w-4 mr-2" /> Browse Agencies</Link>
             </Button>
           </div>
         </div>
