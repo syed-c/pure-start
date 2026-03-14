@@ -401,7 +401,7 @@ const AISearchPage = () => {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Type your dental needs..."
+                  placeholder="Describe what you're looking for..."
                   className="w-full h-12 md:h-14 pl-11 md:pl-12 pr-4 text-sm md:text-base rounded-xl md:rounded-2xl bg-white/10 border-white/20 text-white placeholder:text-white/40 focus-visible:ring-primary"
                 />
               </div>
