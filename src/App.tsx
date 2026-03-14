@@ -17,7 +17,7 @@ import { MetaTagInjector } from "@/components/analytics/MetaTagInjector";
 import { CriticalResourceLoader } from "@/components/common/CriticalResourceLoader";
 
 // Critical pages - load immediately for fast FCP
-import Index from "./pages/Index";
+import HomeV2 from "./pages/HomeV2";
 import SearchPage from "./pages/SearchPage";
 import NotFound from "./pages/NotFound";
 
@@ -66,16 +66,16 @@ const GMBBusinessSelection = lazyRetry(() => import("./pages/GMBBusinessSelectio
 const AppointmentManagePage = lazyRetry(() => import("./pages/AppointmentManagePage"));
 const PatientFormPage = lazyRetry(() => import("./pages/PatientFormPage"));
 const BookDirectPage = lazyRetry(() => import("./pages/BookDirectPage"));
-const HomeV2 = lazyRetry(() => import("./pages/HomeV2"));
+const Index = lazyRetry(() => import("./pages/Index"));
 
-// Free Tools - Phase 3
-const DentalCostCalculator = lazyRetry(() => import("./pages/tools/DentalCostCalculator"));
+// Free Tools
+const FosteringAllowanceCalculator = lazyRetry(() => import("./pages/tools/DentalCostCalculator"));
 const InsuranceChecker = lazyRetry(() => import("./pages/tools/InsuranceChecker"));
-const EmergencyDentist = lazyRetry(() => import("./pages/EmergencyDentist"));
+const EmergencyFostering = lazyRetry(() => import("./pages/EmergencyDentist"));
 
-// Price Intelligence Pages
+// Service Pages
 const ServicePricePage = lazyRetry(() => import("./pages/ServicePricePage"));
-const EmirateComparisonPage = lazyRetry(() => import("./pages/EmirateComparisonPage"));
+const RegionComparisonPage = lazyRetry(() => import("./pages/EmirateComparisonPage"));
 
 const queryClient = new QueryClient();
 
@@ -140,11 +140,11 @@ const App = () => (
             <PandaBot />
             <Suspense fallback={<PageLoader />}>
               <Routes>
-                {/* Homepage - Main Design (Default) */}
-                <Route path="/" element={<Index />} />
+                {/* Homepage - New Fostering Design */}
+                <Route path="/" element={<HomeV2 />} />
                 
-                {/* Alternative Homepage Design */}
-                <Route path="/home-v2" element={<HomeV2 />} />
+                {/* Legacy Homepage */}
+                <Route path="/home-legacy" element={<Index />} />
                 
                 {/* Search */}
                 <Route path="/search" element={<SearchPage />} />
@@ -220,16 +220,18 @@ const App = () => (
                 <Route path="/form/:submissionId" element={<PatientFormPage />} />
                 <Route path="/book/:clinicId" element={<BookDirectPage />} />
 
-                {/* Free Tools - Phase 3 */}
-                <Route path="/tools/dental-cost-calculator" element={<DentalCostCalculator />} />
+                {/* Free Tools */}
+                <Route path="/tools/fostering-allowance-calculator" element={<FosteringAllowanceCalculator />} />
+                <Route path="/tools/dental-cost-calculator" element={<Navigate to="/tools/fostering-allowance-calculator" replace />} />
                 <Route path="/tools/insurance-checker" element={<InsuranceChecker />} />
-                <Route path="/emergency-dentist" element={<EmergencyDentist />} />
+                <Route path="/emergency-fostering" element={<EmergencyFostering />} />
+                <Route path="/emergency-dentist" element={<Navigate to="/emergency-fostering" replace />} />
 
-                {/* Price Intelligence Pages */}
+                {/* Service Comparison Pages */}
                 <Route path="/cost/:serviceSlug" element={<ServicePricePage />} />
-                <Route path="/compare/:serviceSlug/:emirate1-vs-:emirate2" element={<EmirateComparisonPage />} />
+                <Route path="/compare/:serviceSlug/:region1-vs-:region2" element={<RegionComparisonPage />} />
 
-                {/* Legacy redirects - UAE routes to new US structure */}
+                {/* Legacy redirects */}
                 <Route path="/ae/clinic/:clinicSlug" element={<LegacyClinicRedirect />} />
                 <Route path="/ae/dentist/:dentistSlug" element={<LegacyDentistRedirect />} />
                 <Route path="/ae" element={<Navigate to="/" replace />} />

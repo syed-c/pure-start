@@ -18,27 +18,27 @@ import { cn } from "@/lib/utils";
 
 // Service suggestions for quick selection
 const SERVICE_SUGGESTIONS = [
-  { label: "Cleaning", value: "cleaning" },
-  { label: "Implants", value: "dental implants" },
-  { label: "Whitening", value: "teeth whitening" },
-  { label: "Braces", value: "braces" },
-  { label: "Root Canal", value: "root canal" },
-  { label: "Veneers", value: "veneers" },
+  { label: "Emergency", value: "emergency fostering" },
+  { label: "Respite", value: "respite care" },
+  { label: "Long-term", value: "long-term fostering" },
+  { label: "Therapeutic", value: "therapeutic fostering" },
+  { label: "Parent & Child", value: "parent and child" },
+  { label: "Short-term", value: "short-term fostering" },
 ];
 
 // Location suggestions
 const LOCATION_SUGGESTIONS = [
-  { label: "Los Angeles, CA", value: "Los Angeles" },
-  { label: "Boston, MA", value: "Boston" },
-  { label: "Hartford, CT", value: "Hartford" },
-  { label: "San Francisco, CA", value: "San Francisco" },
+  { label: "London", value: "London" },
+  { label: "Birmingham", value: "Birmingham" },
+  { label: "Manchester", value: "Manchester" },
+  { label: "Leeds", value: "Leeds" },
   { label: "Near Me", value: "near me", isNearMe: true },
 ];
 
 const SEARCH_STEPS = [
   { label: "Understanding your needs", icon: Sparkles },
-  { label: "Matching budget & service", icon: DollarSign },
-  { label: "Finding dentists", icon: Search },
+  { label: "Matching your preferences", icon: DollarSign },
+  { label: "Finding agencies", icon: Search },
   { label: "Ranking by relevance", icon: Star },
 ];
 
@@ -103,15 +103,15 @@ const AISearchPage = () => {
     if (response?.conversationStep === "ask_service" || (!conversationContext.service && conversationContext.budget)) {
       // User is providing service
       setConversationContext(prev => ({ ...prev, service: input }));
-      fullQuery = `${input} under ${conversationContext.budget} AED`;
+      fullQuery = `${input} ${conversationContext.budget ? `budget ${conversationContext.budget}` : ''}`.trim();
     } else if (response?.conversationStep === "ask_location" || (conversationContext.service && !conversationContext.location)) {
       // User is providing location
       setConversationContext(prev => ({ ...prev, location: input }));
-      fullQuery = `${conversationContext.service} under ${conversationContext.budget || ''} AED in ${input}`.trim();
+      fullQuery = `${conversationContext.service} ${conversationContext.budget ? `budget ${conversationContext.budget}` : ''} in ${input}`.trim();
     } else {
       // Check if it's a budget-only query
-      const budgetMatch = input.match(/(?:under|below|max|budget)\s*\$?(\d+)/i);
-      if (budgetMatch && !input.match(/cleaning|implant|whitening|braces|veneers|root canal|extraction|crown/i)) {
+      const budgetMatch = input.match(/(?:under|below|max|budget)\s*£?(\d+)/i);
+      if (budgetMatch && !input.match(/emergency|respite|long-term|therapeutic|fostering|parent.*child/i)) {
         setConversationContext({ budget: parseInt(budgetMatch[1]) });
       }
     }
@@ -168,7 +168,7 @@ const AISearchPage = () => {
     if (results.length > 0) {
       return {
         type: "assistant",
-        text: `Found ${results.length} dentist${results.length !== 1 ? 's' : ''} matching your criteria${response.intent?.budget?.max ? ` within $${response.intent.budget.max}` : ''}${response.intent?.location?.city ? ` in ${response.intent.location.city}` : ''}.`,
+        text: `Found ${results.length} agenc${results.length !== 1 ? 'ies' : 'y'} matching your criteria${response.intent?.location?.city ? ` in ${response.intent.location.city}` : ''}.`,
       };
     }
     
@@ -180,16 +180,16 @@ const AISearchPage = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <SEOHead
-        title="Smart Dental Search | Find Dentists by Budget & Location | AppointPanda"
-        description="Tell us what you need, your budget, and location. Our AI finds the perfect dentist match instantly."
+        title="Smart Agency Search | Find Fostering Agencies by Location | Foster Connect"
+        description="Tell us what you need and your location. Our AI finds the perfect fostering agency match instantly."
         canonical="/search/"
-        keywords={["budget dental search", "affordable dentist", "find dentist near me", "dental care finder"]}
+        keywords={["fostering agency search", "find fostering agency", "foster care near me", "fostering directory"]}
       />
       <StructuredData
         type="breadcrumb"
         items={[
           { name: "Home", url: "/" },
-          { name: "Find Dentist", url: "/search/" },
+          { name: "Find Agency", url: "/search/" },
         ]}
       />
       <Navbar />
@@ -213,7 +213,7 @@ const AISearchPage = () => {
               Just Tell Us What You Need
             </h1>
             <p className="text-sm md:text-base text-white/60 max-w-xl mx-auto">
-              Describe your dental needs naturally — we'll find the perfect match.
+              Describe your fostering needs naturally — we'll find the perfect agency match.
             </p>
             
             {/* Stats - Compact on mobile */}
@@ -221,7 +221,7 @@ const AISearchPage = () => {
               <div className="flex items-center gap-1.5 bg-white/10 rounded-lg px-2.5 py-1.5 md:px-3 md:py-2">
                 <Building2 className="h-3.5 w-3.5 md:h-4 md:w-4 text-primary" />
                 <span className="text-white font-bold text-xs md:text-sm">{realCounts?.clinics?.toLocaleString() || 0}+</span>
-                <span className="text-white/60 text-xs hidden md:inline">Clinics</span>
+                <span className="text-white/60 text-xs hidden md:inline">Agencies</span>
               </div>
               <div className="flex items-center gap-1.5 bg-white/10 rounded-lg px-2.5 py-1.5 md:px-3 md:py-2">
                 <MapPin className="h-3.5 w-3.5 md:h-4 md:w-4 text-primary" />
@@ -244,13 +244,13 @@ const AISearchPage = () => {
             {conversation.length === 0 && !results.length && !isSearching && (
               <div className="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-6">
                 <p className="text-white font-medium mb-4 text-center text-sm md:text-base">
-                  💡 Try searching by service, budget, and location:
+                  💡 Try searching by fostering type and location:
                 </p>
                 <div className="flex flex-wrap justify-center gap-2">
                   {[
-                    "Cleaning under $80 in Boston",
-                    "Implants under $1500 near me",
-                    "Affordable whitening in LA",
+                    "Emergency fostering in London",
+                    "Therapeutic fostering near me",
+                    "Respite care in Birmingham",
                   ].map((example, i) => (
                     <button
                       key={i}
@@ -401,7 +401,7 @@ const AISearchPage = () => {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Type your dental needs..."
+                  placeholder="Describe what you're looking for..."
                   className="w-full h-12 md:h-14 pl-11 md:pl-12 pr-4 text-sm md:text-base rounded-xl md:rounded-2xl bg-white/10 border-white/20 text-white placeholder:text-white/40 focus-visible:ring-primary"
                 />
               </div>
@@ -434,20 +434,20 @@ const AISearchPage = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => handleUserInput("under $100")}
+                  onClick={() => handleUserInput("emergency fostering")}
                   className="rounded-full text-white/60 hover:text-white hover:bg-white/10 text-xs whitespace-nowrap shrink-0"
                 >
                   <DollarSign className="h-3 w-3 mr-1" />
-                  Under $100
+                  Emergency
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => handleUserInput("emergency dentist")}
+                  onClick={() => handleUserInput("therapeutic fostering")}
                   className="rounded-full text-white/60 hover:text-white hover:bg-white/10 text-xs whitespace-nowrap shrink-0"
                 >
                   <Clock className="h-3 w-3 mr-1" />
-                  Emergency
+                  Therapeutic
                 </Button>
               </div>
             )}

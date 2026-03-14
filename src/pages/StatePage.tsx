@@ -324,26 +324,45 @@ const StatePage = () => {
         questions={faqs.map(f => ({ question: f.q, answer: f.a }))}
       />
       
-      {/* Hero */}
-      <section className="py-14 md:py-20 bg-muted/30">
-        <div className="container px-4">
+      {/* Hero - Dark Gradient */}
+      <section className="relative py-16 md:py-24 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 overflow-hidden">
+        {/* Background decorations */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px]" />
+          <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-teal/10 rounded-full blur-[100px]" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
+        </div>
+        <div className="container px-4 relative z-10">
           <div className="flex justify-center mb-4">
-            <Breadcrumbs items={breadcrumbs} />
+            <Breadcrumbs items={breadcrumbs} className="text-white/60 [&_a]:text-white/80 [&_a:hover]:text-primary" />
           </div>
           <div className="max-w-3xl mx-auto text-center">
             <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">Ofsted Rated Agencies</p>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-foreground">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-white">
               {pageH1.includes(stateName) ? (
                 <>{pageH1.split(stateName)[0]}<span className="text-primary">{stateName}</span></>
               ) : (
                 pageH1
               )}
             </h1>
-            <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
+            <p className="text-lg text-white/60 mb-8 max-w-2xl mx-auto">
               Discover trusted fostering agencies across {stateName}. Browse by city, compare reviews, and start your fostering journey.
             </p>
+            <div className="flex flex-wrap justify-center gap-3 mb-8">
+              {[
+                { icon: Building2, value: `${totalClinicCount}+`, label: "Agencies" },
+                { icon: Star, value: "4.8", label: "Avg Rating" },
+                { icon: Shield, value: "Ofsted", label: "Verified" },
+              ].map((s, i) => (
+                <div key={i} className="flex items-center gap-1.5 bg-white/10 border border-white/10 rounded-xl px-4 py-2.5 backdrop-blur-sm">
+                  <s.icon className="h-4 w-4 text-primary" />
+                  <span className="font-bold text-sm text-white">{s.value}</span>
+                  <span className="text-xs text-white/50">{s.label}</span>
+                </div>
+              ))}
+            </div>
             <Link to="/search">
-              <Button size="lg" className="h-11 px-6 font-semibold rounded-lg">
+              <Button size="lg" className="h-12 px-8 font-bold rounded-xl shadow-lg shadow-primary/30">
                 Find an Agency <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
@@ -358,7 +377,7 @@ const StatePage = () => {
         isLoading={isSeoContentPending}
       />
 
-      {/* Main Content: Dentists + Filters */}
+      {/* Main Content: Agencies + Filters */}
       <Section size="lg">
         <div className="container px-4">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 max-w-6xl mx-auto">
