@@ -434,20 +434,20 @@ const AISearchPage = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => handleUserInput("under $100")}
+                  onClick={() => handleUserInput("emergency fostering")}
                   className="rounded-full text-white/60 hover:text-white hover:bg-white/10 text-xs whitespace-nowrap shrink-0"
                 >
                   <DollarSign className="h-3 w-3 mr-1" />
-                  Under $100
+                  Emergency
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => handleUserInput("emergency dentist")}
+                  onClick={() => handleUserInput("therapeutic fostering")}
                   className="rounded-full text-white/60 hover:text-white hover:bg-white/10 text-xs whitespace-nowrap shrink-0"
                 >
                   <Clock className="h-3 w-3 mr-1" />
-                  Emergency
+                  Therapeutic
                 </Button>
               </div>
             )}
