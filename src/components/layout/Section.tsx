@@ -20,9 +20,9 @@ export const Section = forwardRef<HTMLElement, SectionProps>(
     const variantClasses = {
       default: "bg-background",
       muted: "bg-muted/30",
-      dark: "bg-dark-section text-dark-section-foreground",
-      gradient: "gradient-hero",
-      primary: "bg-gradient-to-r from-primary to-teal-dark text-primary-foreground"
+      dark: "bg-foreground text-background",
+      gradient: "bg-gradient-to-b from-primary/[0.04] to-background",
+      primary: "bg-primary text-primary-foreground"
     };
 
     return (
