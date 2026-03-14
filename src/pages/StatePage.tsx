@@ -377,7 +377,7 @@ const StatePage = () => {
         isLoading={isSeoContentPending}
       />
 
-      {/* Main Content: Dentists + Filters */}
+      {/* Main Content: Agencies + Filters */}
       <Section size="lg">
         <div className="container px-4">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 max-w-6xl mx-auto">

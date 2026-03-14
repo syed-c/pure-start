@@ -486,7 +486,7 @@ const CityPage = () => {
             
             {/* Main Content Column */}
             <div className="flex-1 min-w-0 space-y-8">
-              {/* Dentist List Frame */}
+              {/* Agency List Frame */}
               <DentistListFrame
                 profiles={profiles}
                 isLoading={profilesLoading}
