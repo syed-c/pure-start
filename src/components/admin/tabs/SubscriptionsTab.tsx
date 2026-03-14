@@ -267,7 +267,7 @@ export default function SubscriptionsTab() {
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <Label>Clinic</Label>
+                  <Label>Agency</Label>
                   <Select value={form.clinic_id} onValueChange={(v) => setForm({ ...form, clinic_id: v })}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select clinic" />
