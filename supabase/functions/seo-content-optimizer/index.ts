@@ -413,101 +413,101 @@ DO NOT: Mention prompts or instructions, explain your process, copy content betw
       
       switch (page_type) {
         case "state":
-          context = `Generate unique SEO content for AppointPanda's ${name} state directory page.
+          context = `Generate unique SEO content for Foster Connect's ${name} region directory page.
 
 PAGE CONTEXT:
-- This is a STATE-level page showing all dental providers in ${name}
-- Users land here to explore dentists across ${name}
+- This is a REGION-level page showing all fostering agencies in ${name} (UK)
+- Users land here to explore fostering agencies across ${name}
 
 CONTENT DIRECTION:
-- Explain how AppointPanda helps patients find dentists across ${name}
-- Mention major cities in ${name} where we list providers
-- Discuss dental care landscape in ${name} (licensing, common needs)
+- Explain how Foster Connect helps prospective carers find agencies across ${name}
+- Mention major cities in ${name} where we list agencies
+- Discuss the fostering landscape in ${name} (Ofsted standards, local authority support)
 - Include ${name}-specific details to make content unique
-- H2 sections should cover: Overview of Dental Care in ${name}, How to Find a Dentist in ${name}, What AppointPanda Offers, Popular Dental Services, FAQs`;
+- H2 sections should cover: Overview of Fostering in ${name}, How to Find an Agency, What Foster Connect Offers, Types of Fostering, FAQs`;
           break;
           
         case "city":
-          context = `Generate unique SEO content for AppointPanda's ${name}, ${stateAbbr || stateName || ""} city directory page.
+          context = `Generate unique SEO content for Foster Connect's ${name}, ${stateAbbr || stateName || ""} city directory page.
 
 PAGE CONTEXT:
-- This is a CITY-level page showing dentists in ${name}
-- Users are looking for local dental care options
+- This is a CITY-level page showing fostering agencies in ${name}
+- Users are looking for local fostering options
 
 CONTENT DIRECTION:
-- Explain how AppointPanda helps ${name} residents find dentists
-- Reference ${name} neighborhoods, landmarks, or local context when helpful
-- Discuss how residents typically approach dental care locally
-- Include what makes dental care in ${name} accessible through our platform
-- H2 sections should cover: Dental Care in ${name}, Finding the Right Dentist, Services Available, Cost & Insurance, FAQs
+- Explain how Foster Connect helps ${name} residents find fostering agencies
+- Reference ${name} boroughs, landmarks, or local context when helpful
+- Discuss how residents typically approach fostering locally
+- Include what makes fostering in ${name} accessible through our platform
+- H2 sections should cover: Fostering in ${name}, Finding the Right Agency, Types Available, Support & Allowances, FAQs
 - NEVER invent statistics or claims about ${name}`;
           break;
           
         case "treatment":
-          context = `Generate unique SEO content for AppointPanda's ${name} service page.
+          context = `Generate unique SEO content for Foster Connect's ${name} fostering type page.
 
 PAGE CONTEXT:
-- This is a TREATMENT/SERVICE page about ${name}
-- Users want to understand this dental service and find providers
+- This is a FOSTERING TYPE page about ${name}
+- Users want to understand this type of fostering and find agencies offering it
 
 CONTENT DIRECTION:
-- Explain ${name} clearly - what it is, why patients may need it, general benefits
-- Describe what patients can expect during the procedure
-- Mention cost and insurance considerations carefully (use "may", "can", "often", "depends")
-- Explain how AppointPanda helps patients find ${name} specialists
-- H2 sections should cover: About ${name}, What to Expect, Benefits, Cost Considerations, How AppointPanda Helps, FAQs
+- Explain ${name} clearly - what it is, who can apply, general benefits
+- Describe what carers can expect during the assessment and placement process
+- Mention allowances and support carefully (use "may", "can", "often", "depends")
+- Explain how Foster Connect helps find ${name} agencies
+- H2 sections should cover: About ${name}, What to Expect, Benefits, Support & Allowances, How Foster Connect Helps, FAQs
 - Use cautious language - no guarantees or promises`;
           break;
           
         case "city_treatment":
-          context = `Generate unique SEO content for AppointPanda's ${name} providers in ${cityName}, ${stateAbbr || ""} page.
+          context = `Generate unique SEO content for Foster Connect's ${name} agencies in ${cityName}, ${stateAbbr || ""} page.
 
 PAGE CONTEXT:
-- This is a SERVICE + LOCATION page combining treatment info with local context
+- This is a FOSTERING TYPE + LOCATION page combining fostering info with local context
 - Users want ${name} specifically in ${cityName}
 
 CONTENT DIRECTION:
 - Explain ${name} clearly and specifically for ${cityName} residents
 - Reference ${cityName} naturally - don't force location keywords
-- Explain how AppointPanda helps ${cityName} patients find ${name} providers
-- Include local considerations for this treatment
-- H2 sections should cover: ${name} in ${cityName}, What to Know, Finding Specialists, Cost in ${cityName} Area, FAQs
+- Explain how Foster Connect helps ${cityName} people find ${name} agencies
+- Include local considerations for this fostering type
+- H2 sections should cover: ${name} in ${cityName}, What to Know, Finding Agencies, Support in ${cityName} Area, FAQs
 - NEVER invent statistics about ${cityName}`;
           break;
           
         case "clinic":
-          context = `Generate unique SEO content for a dental clinic profile on AppointPanda: ${name}.
+          context = `Generate unique SEO content for a fostering agency profile on Foster Connect: ${name}.
 
 PAGE CONTEXT:
-- This is a CLINIC PROFILE page
-- Users want to learn about this specific practice
+- This is an AGENCY PROFILE page
+- Users want to learn about this specific agency
 
 CONTENT DIRECTION:
-- Write from AppointPanda's perspective as the directory hosting this profile
-- Describe the practice overview based on available information
-- Explain what patients can expect
-- Mention how AppointPanda helps patients book with this clinic
-- Keep tone informative, not promotional for the clinic`;
+- Write from Foster Connect's perspective as the directory hosting this profile
+- Describe the agency overview based on available information
+- Explain what carers can expect
+- Mention how Foster Connect helps people enquire with this agency
+- Keep tone informative, not promotional for the agency`;
           break;
           
         case "blog":
-          context = `Generate unique SEO content for AppointPanda's dental health blog post: "${name}".
+          context = `Generate unique SEO content for Foster Connect's fostering blog post: "${name}".
 
 PAGE CONTEXT:
-- This is a BLOG POST on AppointPanda's dental health blog
-- Educational content for patients
+- This is a BLOG POST on Foster Connect's fostering blog
+- Educational content for prospective carers
 
 CONTENT DIRECTION:
-- Write from AppointPanda's first-party voice
-- Provide educational value and practical tips
-- Demonstrate dental expertise without giving medical instructions
-- Include how AppointPanda can help readers find appropriate dental care
-- End with a soft CTA to explore dentists on our platform`;
+- Write from Foster Connect's first-party voice
+- Provide educational value and practical tips about fostering
+- Demonstrate fostering expertise without making promises
+- Include how Foster Connect can help readers find appropriate agencies
+- End with a soft CTA to explore agencies on our platform`;
           break;
           
         default:
-          context = `Generate unique SEO content for AppointPanda's page about ${name}.
-Page type: ${page_type}. Write from AppointPanda's first-party platform voice.`;
+          context = `Generate unique SEO content for Foster Connect's page about ${name}.
+Page type: ${page_type}. Write from Foster Connect's first-party platform voice.`;
       }
       
       return `${context}
