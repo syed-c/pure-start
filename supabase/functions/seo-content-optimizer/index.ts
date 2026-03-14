@@ -238,10 +238,10 @@ DO NOT: Mention prompts or instructions, explain your process, copy content betw
 === FOCUS: META TITLES ===
 - Keep under 60 characters
 - Include primary keyword at the beginning
-- Add location for local pages
-- Use format: [Primary Keyword] in [Location] | AppointPanda
+- Add location for local pages (UK cities/regions)
+- Use format: [Primary Keyword] in [Location] | Foster Connect
 - Make titles compelling and click-worthy
-- Write from AppointPanda's perspective (e.g., "Find Dentists in..." not "Best Dentist...")`,
+- Write from Foster Connect's perspective (e.g., "Find Fostering Agencies in..." not "Best Agency...")`,
           meta_description: `
 
 === FOCUS: META DESCRIPTIONS ===
