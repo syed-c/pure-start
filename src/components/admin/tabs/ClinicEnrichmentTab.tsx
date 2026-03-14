@@ -743,11 +743,11 @@ export default function ClinicEnrichmentTab() {
                     </div>
                     <div>
                       <h3 className="font-bold text-lg">Generate Descriptions</h3>
-                      <p className="text-sm text-muted-foreground">{clinicStats?.noDescription?.toLocaleString() || 0} clinics need descriptions</p>
+                      <p className="text-sm text-muted-foreground">{clinicStats?.noDescription?.toLocaleString() || 0} agencies need descriptions</p>
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Use AI to generate unique, professional descriptions for clinics automatically.
+                    Use AI to generate unique, professional descriptions for fostering agencies automatically.
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {isEnriching ? (
