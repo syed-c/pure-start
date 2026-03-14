@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { SEOHead } from "@/components/seo/SEOHead";
-import { ArrowRight, Sparkles, Shield, Clock, Building2 } from "lucide-react";
+import { ArrowRight, Sparkles, Shield, Heart, Building2 } from "lucide-react";
 import { useRealCounts } from "@/hooks/useRealCounts";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 
@@ -26,7 +26,6 @@ const ServicesPage = () => {
     },
   });
 
-  // Fetch states for interlinking
   const { data: states } = useQuery({
     queryKey: ["states-for-services"],
     queryFn: async () => {
@@ -42,30 +41,25 @@ const ServicesPage = () => {
   const popularTreatments = treatments?.slice(0, 8) || [];
   const allTreatments = treatments || [];
   
-  // Get real clinic count
   const { data: realCounts } = useRealCounts();
   const { data: seoContent } = useSeoPageContent("services");
 
-  const breadcrumbs = [{ label: "Home", href: "/" }, { label: "Dental Services" }];
+  const breadcrumbs = [{ label: "Home", href: "/" }, { label: "Fostering Categories" }];
 
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || "Dental Services - All Treatments"}
-        description={seoContent?.meta_description || "Explore our comprehensive range of dental treatments. Find teeth whitening, veneers, dental implants, Invisalign, and more from verified specialists across the UAE."}
-        canonical="/services/"
-        keywords={['dental services', 'dental treatments', 'teeth whitening', 'dental implants', 'Invisalign', 'cosmetic dentistry']}
+        title={seoContent?.meta_title || "Fostering Categories — All Types of Foster Care | Foster Connect"}
+        description={seoContent?.meta_description || "Explore all types of fostering — from emergency and respite care to long-term and therapeutic placements. Find the right agency for your fostering journey across the UK."}
+        canonical="/categories/"
+        keywords={['fostering types', 'types of foster care', 'emergency fostering', 'therapeutic fostering', 'respite care', 'long-term fostering']}
       />
       
-      {/* Hero Section — Dark theme matching homepage */}
-      <section className="relative overflow-hidden min-h-[45vh] flex items-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden min-h-[40vh] flex items-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-primary/15 rounded-full blur-[120px]" />
-          <div className="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-teal/10 rounded-full blur-[100px]" />
-          <div className="absolute inset-0 opacity-[0.03]" style={{
-            backgroundImage: 'linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)',
-            backgroundSize: '60px 60px',
-          }} />
+          <div className="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-gold/10 rounded-full blur-[100px]" />
         </div>
         
         <div className="container relative z-10 py-16 md:py-20 px-5 md:px-8">
@@ -74,33 +68,30 @@ const ServicesPage = () => {
           <div className="max-w-4xl mx-auto text-center">
             <Badge variant="secondary" className="rounded-full px-4 py-2 text-sm font-bold mb-6 bg-primary/15 text-primary border-primary/30 backdrop-blur-md">
               <Sparkles className="h-4 w-4 mr-2" />
-              Verified Specialists
+              All Fostering Types
             </Badge>
             
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4" style={{ fontFamily: "'Varela Round', system-ui, sans-serif" }}>
-              <span className="text-white">Dental</span>
-              <span className="block text-primary">Services</span>
+            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
+              <span className="text-white">Fostering</span>
+              <span className="block text-primary">Categories</span>
             </h1>
             
             <p className="text-lg md:text-xl text-white/40 max-w-2xl mx-auto mb-8">
-              Explore our comprehensive range of dental treatments. Find the right service for your needs and connect with verified specialists across the UAE.
+              Explore all types of fostering placements. Find the right match for your family and connect with trusted agencies across the UK.
             </p>
 
             <div className="flex flex-wrap justify-center gap-4">
               <div className="flex items-center gap-2 bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-2xl px-5 py-3">
-                <span className="font-bold text-white">{allTreatments.length}+ Treatments</span>
+                <Heart className="h-5 w-5 text-primary" />
+                <span className="font-bold text-white">{allTreatments.length}+ Fostering Types</span>
               </div>
               <div className="flex items-center gap-2 bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-2xl px-5 py-3">
                 <Building2 className="h-5 w-5 text-primary" />
-                <span className="font-bold text-white">{realCounts?.clinics?.toLocaleString() || '6,000'}+ Clinics</span>
+                <span className="font-bold text-white">{realCounts?.clinics?.toLocaleString() || '500'}+ Agencies</span>
               </div>
               <div className="flex items-center gap-2 bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-2xl px-5 py-3">
                 <Shield className="h-5 w-5 text-primary" />
-                <span className="font-bold text-white">Top Specialists</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-2xl px-5 py-3">
-                <Clock className="h-5 w-5 text-primary" />
-                <span className="font-bold text-white">Book in 60s</span>
+                <span className="font-bold text-white">Ofsted Registered</span>
               </div>
             </div>
           </div>
@@ -113,12 +104,12 @@ const ServicesPage = () => {
         </div>
       </section>
 
-      {/* Popular Services */}
+      {/* Popular Categories */}
       <Section size="lg">
         <SectionHeader
-          label="Most Searched"
-          title="Popular Dental"
-          highlight="Treatments"
+          label="Most Popular"
+          title="Popular Fostering"
+          highlight="Categories"
         />
 
         {isLoading ? (
@@ -132,7 +123,7 @@ const ServicesPage = () => {
             {popularTreatments.map((treatment, i) => (
               <Link
                 key={treatment.id}
-                to={`/services/${treatment.slug}`}
+                to={`/categories/${treatment.slug}`}
                 className="group bg-card border border-border rounded-2xl p-6 hover:border-primary hover:shadow-xl transition-all animate-fade-in-up"
                 style={{ animationDelay: `${i * 0.05}s` }}
               >
@@ -145,7 +136,7 @@ const ServicesPage = () => {
                   </p>
                 )}
                 <span className="text-sm font-bold text-primary flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  Learn More <ArrowRight className="h-3 w-3" />
+                  View Agencies <ArrowRight className="h-3 w-3" />
                 </span>
               </Link>
             ))}
@@ -153,13 +144,13 @@ const ServicesPage = () => {
         )}
       </Section>
 
-      {/* All Services - Dark Section */}
+      {/* All Categories - Dark Section */}
       <section className="section-dark py-20">
         <div className="container">
           <div className="text-center mb-10">
             <p className="text-micro text-primary mb-2">Full Directory</p>
             <h2 className="text-section text-3xl md:text-4xl text-white">
-              All Dental <span className="text-primary">Services</span>
+              All Fostering <span className="text-primary">Types</span>
             </h2>
           </div>
 
@@ -167,7 +158,7 @@ const ServicesPage = () => {
             {allTreatments.map((treatment, i) => (
               <Link
                 key={treatment.id}
-                to={`/services/${treatment.slug}`}
+                to={`/categories/${treatment.slug}`}
                 className="bg-white/5 border border-white/10 rounded-2xl px-5 py-3 font-bold text-white hover:border-primary hover:text-primary hover:bg-white/10 transition-all animate-fade-in-up"
                 style={{ animationDelay: `${i * 0.03}s` }}
               >
@@ -178,12 +169,12 @@ const ServicesPage = () => {
         </div>
       </section>
 
-      {/* Services by State - Interlinking */}
+      {/* By Region - Interlinking */}
       <Section size="lg">
         <SectionHeader
-          label="By Location"
-          title="Find Treatments"
-          highlight="By Emirate"
+          label="By Region"
+          title="Find Agencies"
+          highlight="By Region"
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
           {states?.map((state, i) => (
@@ -197,7 +188,7 @@ const ServicesPage = () => {
                 {state.name}
               </h3>
               <p className="text-sm text-muted-foreground mb-3">
-                Browse dental services in {state.abbreviation}
+                Browse fostering agencies in {state.name}
               </p>
               <span className="text-sm font-bold text-primary flex items-center gap-1">
                 Explore <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
@@ -211,14 +202,14 @@ const ServicesPage = () => {
       <section className="bg-primary py-16 md:py-20">
         <div className="container text-center">
           <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 text-primary-foreground">
-            Not sure what you need?
+            Not sure which type of fostering is right for you?
           </h2>
           <p className="text-primary-foreground/80 mb-8 max-w-xl mx-auto">
-            Book a consultation with a general dentist who can assess your needs and recommend the right treatment.
+            Browse our agency directory and talk to agencies who can help you find the right fostering path for your family.
           </p>
           <Button asChild size="lg" variant="secondary" className="rounded-2xl font-bold">
             <Link to="/search">
-              Find a Dentist
+              Find an Agency
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </Button>
