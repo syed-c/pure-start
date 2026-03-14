@@ -560,8 +560,8 @@ const CityPage = () => {
       <Section size="lg" className="bg-muted/30">
         <div className="max-w-3xl mx-auto">
           <ConversationalQABlock
-            title={`Dental Care in ${cityName}`}
-            subtitle={`Common questions about finding a dentist in ${cityName}, ${stateAbbr}`}
+            title={`Fostering in ${cityName}`}
+            subtitle={`Common questions about finding a fostering agency in ${cityName}, ${stateAbbr}`}
             items={[
               ...faqs.map(f => ({ question: f.q, answer: f.a })),
               ...generateCityQA({ name: cityName, stateName, clinicCount: profiles?.length })
