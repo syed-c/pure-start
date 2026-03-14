@@ -31,7 +31,7 @@ import {
   Star, 
   Users,
   Clock,
-  Stethoscope,
+  Shield,
   SlidersHorizontal
 } from "lucide-react";
 import {
