@@ -332,6 +332,13 @@ export default function ContentGenerationStudioTab() {
     },
   });
 
+  const availablePageTypes = useMemo(() => {
+    const types = Array.from(new Set((seoPages || []).map((page) => page.page_type).filter(Boolean)));
+    const known = Object.keys(PAGE_TYPE_LABELS).filter((type) => types.includes(type));
+    const unknown = types.filter((type) => !PAGE_TYPE_LABELS[type]).sort();
+    return [...known, ...unknown];
+  }, [seoPages]);
+
   // Fetch content versions for history
   const { data: contentVersions } = useQuery({
     queryKey: ['content-versions', previewPage?.id],

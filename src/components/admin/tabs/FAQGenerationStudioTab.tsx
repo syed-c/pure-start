@@ -239,7 +239,14 @@ export default function FAQGenerationStudioTab() {
   });
 
   // Audit FAQs
-  const { data: faqAudit, refetch: refetchAudit } = useQuery({
+  const availablePageTypes = useMemo(() => {
+    const types = Array.from(new Set((seoPages || []).map((page) => page.page_type).filter(Boolean)));
+    const known = Object.keys(PAGE_TYPE_LABELS).filter((type) => types.includes(type));
+    const unknown = types.filter((type) => !PAGE_TYPE_LABELS[type]).sort();
+    return [...known, ...unknown];
+  }, [seoPages]);
+
+  const { data: faqAudit } = useQuery({
     queryKey: ['faq-audit'],
     queryFn: async (): Promise<FAQAudit> => {
       if (!seoPages) return { totalPages: 0, pagesWithFAQs: 0, pagesWithoutFAQs: 0, avgFAQCount: 0, duplicateIssues: 0 };
