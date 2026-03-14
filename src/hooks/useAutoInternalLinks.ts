@@ -16,11 +16,11 @@ interface LinkItem {
 // Anchor text variations to avoid repetitive link patterns
 const ANCHOR_VARIATIONS: Record<string, string[]> = {
   city: [
-    "Dentists in {name}",
-    "Find a dentist in {name}",
-    "{name} dental clinics",
-    "Top-rated dentists in {name}",
-    "Book a dentist in {name}",
+    "Agencies in {name}",
+    "Find an agency in {name}",
+    "{name} fostering agencies",
+    "Top-rated agencies in {name}",
+    "Find a fostering agency in {name}",
   ],
   treatment: [
     "{name}",
