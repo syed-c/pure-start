@@ -168,7 +168,7 @@ const AISearchPage = () => {
     if (results.length > 0) {
       return {
         type: "assistant",
-        text: `Found ${results.length} dentist${results.length !== 1 ? 's' : ''} matching your criteria${response.intent?.budget?.max ? ` within $${response.intent.budget.max}` : ''}${response.intent?.location?.city ? ` in ${response.intent.location.city}` : ''}.`,
+        text: `Found ${results.length} agenc${results.length !== 1 ? 'ies' : 'y'} matching your criteria${response.intent?.location?.city ? ` in ${response.intent.location.city}` : ''}.`,
       };
     }
     
