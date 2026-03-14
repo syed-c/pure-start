@@ -435,7 +435,7 @@ const CityPage = () => {
         isLoading={isSeoContentPending}
       />
 
-      {/* Main Content: Dentists + SEO Content */}
+      {/* Main Content: Agencies + SEO Content */}
       <Section size="lg">
         <div className="container px-4">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
