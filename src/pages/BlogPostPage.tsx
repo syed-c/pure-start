@@ -814,7 +814,7 @@ const BlogPostPage = () => {
             <div className="card-modern p-6 bg-muted/30">
               <div className="flex items-center gap-2 mb-4">
                 <Shield className="h-5 w-5 text-emerald-500" />
-                <h3 className="font-bold">Why AppointPanda?</h3>
+                <h3 className="font-bold">Why Foster Connect?</h3>
               </div>
               <ul className="space-y-3 text-sm">
                 <li className="flex items-start gap-2">
