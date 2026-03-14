@@ -1,4 +1,4 @@
-import { ArrowRight, Shield, Heart, Search, Building2, MapPin, Star, Users, ChevronRight, Sparkles, CheckCircle, Phone, Clock, BookOpen, Award } from "lucide-react";
+import { ArrowRight, Shield, Heart, Search, Building2, MapPin, Star, Users, ChevronRight, Sparkles, CheckCircle, Phone, BookOpen, Award } from "lucide-react";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
