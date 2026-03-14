@@ -27,117 +27,116 @@ interface Phase2Request {
 // SERVICE PAGE TEMPLATE (Sprint 2.1)
 // 14 sections, 3,500-5,000 words
 // ========================================
-const SERVICE_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE service page for AppointPanda dental directory.
+const SERVICE_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE fostering type page for Foster Connect, the UK fostering agency directory.
 
 === TEMPLATE STRUCTURE (3,500-5,000 words) ===
 
-1. H1: "[Service Name]: Complete Guide, Costs & Best Dentists [2026]"
+1. H1: "[Fostering Type]: Complete Guide, Support & Agencies [2026]"
 
 2. INTRODUCTION (200 words)
-   - What is this service
-   - Why patients need it
+   - What is this type of fostering
+   - Why it matters and who it helps
    - What to expect overview
    - Hook the reader immediately
 
-3. H2: What is [Service Name]? (400 words)
-   - Detailed medical explanation
-   - Types/variations of the procedure
-   - Materials used (titanium, ceramic, composite, etc.)
-   - Technology involved (CAD/CAM, 3D imaging, etc.)
+3. H2: What is [Fostering Type]? (400 words)
+   - Detailed explanation of this fostering type
+   - Types/variations of placements
+   - Who benefits from this type of fostering
+   - How it differs from other fostering types
 
-4. H2: When Do You Need [Service]? (300 words)
-   - Symptoms that indicate need
-   - Medical conditions requiring treatment
-   - Warning signs to watch for
-   - Preventive vs. restorative context
+4. H2: Who Can Become a [Fostering Type] Carer? (300 words)
+   - Eligibility requirements
+   - Personal qualities agencies look for
+   - Common misconceptions about eligibility
+   - Why diverse backgrounds are welcomed
 
-5. H2: The [Service] Procedure: Step-by-Step (500 words)
-   - Initial consultation and assessment
-   - Preparation phase
-   - During the procedure (detailed)
-   - Recovery timeline expectations
-   - Technology and equipment used
-   - Duration and number of visits
+5. H2: The Assessment Process: Step-by-Step (500 words)
+   - Initial enquiry and information events
+   - Skills to Foster training
+   - Form F assessment (detailed)
+   - Fostering panel and approval
+   - Timeline and what to expect at each stage
+   - DBS checks and references
 
-6. H2: Cost of [Service] in [2026] (600 words)
-   - National average cost range
-   - COST TABLE BY STATE (use markdown table):
-     | State | Average Cost | Range |
-     |-------|--------------|-------|
-     | California | $X,XXX | $X,XXX-$X,XXX |
-     | Massachusetts | $X,XXX | $X,XXX-$X,XXX |
-     | Connecticut | $X,XXX | $X,XXX-$X,XXX |
-     | New Jersey | $X,XXX | $X,XXX-$X,XXX |
-   - COST TABLE BY TOP CITIES (10 cities)
-   - Factors affecting cost (complexity, materials, location, dentist experience)
-   - Payment options and financing
+6. H2: Fostering Allowances for [Fostering Type] (600 words)
+   - National minimum allowance rates
+   - ALLOWANCE TABLE BY REGION (use markdown table):
+     | Region | Weekly Allowance | Age Range |
+     |--------|-----------------|-----------|
+     | London | £XXX-£XXX | 0-17 |
+     | South East | £XXX-£XXX | 0-17 |
+     | North West | £XXX-£XXX | 0-17 |
+     | Midlands | £XXX-£XXX | 0-17 |
+   - Factors affecting allowances (age, needs, agency type)
+   - Additional financial support available
+   - Tax implications for foster carers
 
-7. H2: Does Insurance Cover [Service]? (400 words)
-   - General coverage overview
-   - What major insurers typically cover (percentage breakdown)
-   - Pre-authorization requirements
-   - What's usually included/excluded
-   - How to verify your coverage
-   - FSA/HSA applicability
-   - CTA: "Check dentists accepting your insurance on AppointPanda"
+7. H2: Training & Support for [Fostering Type] Carers (400 words)
+   - Pre-approval training overview
+   - Ongoing professional development
+   - 24/7 support from supervising social workers
+   - Peer support groups and networks
+   - Specialist training for complex needs
+   - CTA: "Find agencies with comprehensive training on Foster Connect"
 
-8. H2: Recovery & Aftercare (400 words)
-   - Immediate post-procedure expectations
-   - Day-by-day recovery timeline
-   - Care instructions (dos and don'ts)
-   - When to call your dentist
-   - Potential complications and warning signs
-   - Long-term maintenance
+8. H2: Day-to-Day Life as a [Fostering Type] Carer (400 words)
+   - What a typical day looks like
+   - Working with social workers and birth families
+   - Education and school support
+   - Managing challenging behaviours
+   - Self-care and respite options
+   - Building meaningful relationships
 
-9. H2: Benefits of [Service] (300 words)
-   - Functional benefits (chewing, speaking, etc.)
-   - Aesthetic benefits
-   - Long-term oral health benefits
-   - Psychological/confidence benefits
-   - Longevity and durability
+9. H2: Benefits of [Fostering Type] (300 words)
+   - Making a difference to children's lives
+   - Personal growth and development
+   - Professional skills development
+   - Community and belonging
+   - Financial security
 
-10. H2: [Service] vs [Alternative] (400 words)
-    - Detailed comparison with main alternative
+10. H2: [Fostering Type] vs [Alternative Type] (400 words)
+    - Detailed comparison with alternative
     - COMPARISON TABLE:
-      | Factor | [Service] | [Alternative] |
-      |--------|-----------|---------------|
-      | Cost | | |
+      | Factor | [Type] | [Alternative] |
+      |--------|--------|---------------|
       | Duration | | |
-      | Longevity | | |
-      | Invasiveness | | |
-    - Pros and cons of each
-    - Which is right for different patient profiles
+      | Support Level | | |
+      | Allowance | | |
+      | Training | | |
+    - Which is right for different circumstances
 
-11. H2: How to Choose a Dentist for [Service] (350 words)
-    - Qualifications and certifications to look for
-    - Questions to ask during consultation
+11. H2: How to Choose a Fostering Agency for [Type] (350 words)
+    - Ofsted ratings and what they mean
+    - Questions to ask during information events
     - Red flags to avoid
-    - What to expect in your first visit
-    - Importance of before/after photos and reviews
+    - What to look for in agency support
+    - Importance of carer reviews
 
-12. H2: Find Top [Service] Dentists Near You (200 words)
-    - CTA to search AppointPanda directory
-    - Featured cities links
-    - "Book your consultation today"
-    - Trust signals (verified dentists, reviews)
+12. H2: Find [Fostering Type] Agencies Near You (200 words)
+    - CTA to search Foster Connect directory
+    - Featured cities/regions links
+    - "Submit your enquiry today"
+    - Trust signals (verified agencies, Ofsted-registered, carer reviews)
 
 13. H2: Frequently Asked Questions (500 words)
     - 10-15 common questions with detailed answers
-    - Include cost, pain, duration, alternatives questions
+    - Include allowances, eligibility, duration, alternatives questions
     - Format for FAQ schema markup
 
-14. H2: Patient Success Stories (200 words)
-    - General patient satisfaction insights
-    - What patients typically report
+14. H2: Carer Stories & Experiences (200 words)
+    - General carer satisfaction insights
+    - What carers typically report
     - Link to verified reviews
 
 === CONTENT REQUIREMENTS ===
-- Write in AppointPanda's first-party voice
-- No medical claims or diagnoses
-- Cite approximate costs with ranges
+- Write in Foster Connect's first-party voice
+- No false promises or guarantees
+- Cite approximate allowances with ranges in £
 - Include multiple CTAs throughout
 - Mobile-friendly formatting
 - Natural keyword usage (no stuffing)
+- British English spelling
 - E-E-A-T compliant`;
 
 // ========================================
