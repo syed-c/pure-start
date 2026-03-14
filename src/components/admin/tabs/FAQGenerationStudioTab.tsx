@@ -92,13 +92,15 @@ interface FAQAudit {
 }
 
 const PAGE_TYPE_LABELS: Record<string, string> = {
-  state: 'State Pages',
+  state: 'Region Pages',
   city: 'City Pages',
-  treatment: 'Service Pages',
-  service_location: 'Service + Location',
-  city_treatment: 'City + Treatment',
-  clinic: 'Clinic Pages',
-  dentist: 'Dentist Profiles',
+  treatment: 'Fostering Type Pages',
+  service_location: 'Fostering Type + Location',
+  city_treatment: 'City + Fostering Type',
+  clinic: 'Agency Profiles',
+  dentist: 'Agency Profiles',
+  agency: 'Agency Pages',
+  category: 'Category Pages',
 };
 
 const PAGE_TYPE_ICONS: Record<string, any> = {
@@ -109,6 +111,8 @@ const PAGE_TYPE_ICONS: Record<string, any> = {
   city_treatment: Layers,
   clinic: Building2,
   dentist: Building2,
+  agency: Building2,
+  category: Layers,
 };
 
 export default function FAQGenerationStudioTab() {
