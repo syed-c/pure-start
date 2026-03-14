@@ -212,12 +212,12 @@ export default function TeamManagementTab() {
   };
 
   // Group team by role category
-  const dentists = team?.filter(m => 
-    ['dentist', 'orthodontist', 'endodontist', 'periodontist', 'prosthodontist', 'oral_surgeon', 'pediatric_dentist'].includes(m.professional_type)
+  const specialists = team?.filter(m => 
+    ['social_worker', 'supervising_social_worker', 'therapist', 'panel_member', 'dentist', 'orthodontist', 'endodontist', 'periodontist', 'prosthodontist', 'oral_surgeon', 'pediatric_dentist'].includes(m.professional_type)
   ) || [];
   
   const support = team?.filter(m => 
-    ['hygienist', 'assistant', 'receptionist', 'practice_manager'].includes(m.professional_type)
+    ['hygienist', 'assistant', 'receptionist', 'practice_manager', 'support_worker', 'care_assistant'].includes(m.professional_type)
   ) || [];
 
   if (clinicLoading) {
