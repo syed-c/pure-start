@@ -586,7 +586,7 @@ const BlogPostPage = () => {
     <PageLayout>
       <SEOHead
         title={post.seo_title || post.title}
-        description={post.seo_description || post.excerpt || `Read "${post.title}" on AppointPanda's dental health blog.`}
+        description={post.seo_description || post.excerpt || `Read "${post.title}" on Foster Connect's fostering blog.`}
         canonical={`/blog/${post.slug}/`}
         ogType="article"
         ogImage={post.featured_image_url || undefined}
