@@ -42,7 +42,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-const MIN_DENTIST_COUNT = 2; // noindex pages with fewer than 2 dentists
+const MIN_AGENCY_COUNT = 2; // noindex pages with fewer than 2 agencies
 const MIN_PROFILES = 10; // Minimum profiles to show on a city page
 
 const CityPage = () => {
