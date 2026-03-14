@@ -120,7 +120,7 @@ const CityPage = () => {
       
       let allClinics = clinics || [];
       
-      // Fallback: if fewer than MIN_PROFILES, fill from UAE-wide clinics
+      // Fallback: if fewer than MIN_PROFILES, fill from UK-wide agencies
       if (allClinics.length < MIN_PROFILES) {
         const existingIds = allClinics.map(c => c.id);
         const needed = MIN_PROFILES - allClinics.length;

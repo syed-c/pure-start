@@ -128,7 +128,7 @@ const StatePage = () => {
         clinics = data || [];
       }
       
-      // Fallback: if fewer than MIN_PROFILES, fill from UAE-wide clinics
+      // Fallback: if fewer than MIN_PROFILES, fill from UK-wide agencies
       if (clinics.length < MIN_PROFILES) {
         const existingIds = clinics.map(c => c.id);
         const needed = MIN_PROFILES - clinics.length;
