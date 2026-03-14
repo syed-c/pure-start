@@ -81,7 +81,7 @@ export const LocationCard = ({
           {dentistCount !== undefined && (
             <div className="flex items-center gap-1.5 text-card/90 text-sm">
               <Users className="h-4 w-4" />
-              <span className="font-medium">{dentistCount} Dentists</span>
+              <span className="font-medium">{dentistCount} Agencies</span>
             </div>
           )}
           {clinicCount !== undefined && (
