@@ -577,7 +577,7 @@ export default function ClinicEnrichmentTab() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total Clinics</p>
+                <p className="text-sm text-muted-foreground">Total Agencies</p>
                 <p className="text-3xl font-bold text-primary">{clinicStats?.total?.toLocaleString() || 0}</p>
               </div>
               <Building2 className="h-10 w-10 text-primary/30" />
