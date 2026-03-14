@@ -54,7 +54,46 @@ import { format } from 'date-fns';
 import { toast } from 'sonner';
 
 // Types
-...
+interface SeoPage {
+  id: string;
+  slug: string;
+  page_type: string;
+  title: string | null;
+  h1: string | null;
+  content: string | null;
+  faqs: Array<{ question: string; answer: string }> | null;
+  word_count: number | null;
+  updated_at: string;
+}
+
+interface GenerationJob {
+  id: string;
+  status: 'running' | 'completed' | 'stopped' | 'error';
+  total: number;
+  processed: number;
+  success: number;
+  errors: number;
+  currentPage?: string;
+  logs: GenerationLog[];
+  startedAt: Date;
+}
+
+interface GenerationLog {
+  timestamp: Date;
+  page: string;
+  action: 'started' | 'completed' | 'error' | 'skipped';
+  message: string;
+  details?: any;
+}
+
+interface FAQAudit {
+  totalPages: number;
+  pagesWithFAQs: number;
+  pagesWithoutFAQs: number;
+  avgFAQCount: number;
+  duplicateIssues: number;
+}
+
 const PAGE_TYPE_LABELS: Record<string, string> = {
   static: 'Static Pages',
   state: 'Region Pages',
