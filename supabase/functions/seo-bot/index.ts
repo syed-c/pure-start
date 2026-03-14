@@ -47,17 +47,17 @@ function generateTitle(pageType: string, data: Record<string, any>): string {
   
   switch (pageType) {
     case "state":
-      title = `${pickFromSeed(TITLE_MODIFIERS, slug)} Dentists in ${name}`;
+      title = `${pickFromSeed(TITLE_MODIFIERS, slug)} Fostering Agencies in ${name}`;
       break;
     
     case "city": {
       const loc = stateAbbr ? `${name}, ${stateAbbr}` : name;
-      title = `Dentists in ${loc} - Book Online`;
+      title = `Fostering Agencies in ${loc} - Enquire Online`;
       break;
     }
     
     case "treatment":
-      title = `${name} - Find Dental Providers`;
+      title = `${name} - Find Fostering Agencies`;
       break;
     
     case "city_treatment": {
@@ -79,15 +79,15 @@ function generateTitle(pageType: string, data: Record<string, any>): string {
     }
     
     case "blog":
-      title = `${name} | Dental Tips`;
+      title = `${name} | Fostering Insights`;
       break;
     
     case "static":
-      title = `${name} | AppointPanda`;
+      title = `${name} | Foster Connect`;
       break;
     
     default:
-      title = `${name || "Dental Care"} | AppointPanda`;
+      title = `${name || "Foster Care"} | Foster Connect`;
   }
   
   return truncateTitle(title, 60);
