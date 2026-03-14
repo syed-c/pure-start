@@ -34,7 +34,7 @@ const stagger = {
 };
 
 const HomeV2 = () => {
-  const navigate = useNavigate();
+  const _navigate = useNavigate();
   const { data: _states } = useStatesWithClinics();
   const { data: realCounts } = useRealCounts();
   const { data: treatments } = useTreatments();

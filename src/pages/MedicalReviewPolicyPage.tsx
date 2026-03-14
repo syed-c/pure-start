@@ -2,15 +2,10 @@ import { Link } from "react-router-dom";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
 import { SEOHead } from "@/components/seo/SEOHead";
-import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { Button } from "@/components/ui/button";
-import { Shield, CheckCircle, Users, FileCheck, RefreshCw, ShieldCheck, BookOpen, ArrowRight } from "lucide-react";
+import { CheckCircle, Users, FileCheck, RefreshCw, ShieldCheck, ArrowRight } from "lucide-react";
 
 const MedicalReviewPolicyPage = () => {
-  const breadcrumbs = [
-    { label: "Home", href: "/" },
-    { label: "Content Review Policy" },
-  ];
 
   const reviewSteps = [
     { step: "1", title: "Content Drafting", desc: "Qualified writers create content using peer-reviewed sources, UK Government and Ofsted guidelines, and current fostering regulations." },

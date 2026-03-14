@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, ChevronDown, Search, ChevronRight, Heart, ArrowRight } from "lucide-react";
+import { Menu, X, ChevronDown, Search, ChevronRight, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,

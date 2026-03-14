@@ -2,15 +2,10 @@ import { Link } from "react-router-dom";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
 import { SEOHead } from "@/components/seo/SEOHead";
-import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Shield, FileCheck, Users, AlertTriangle, RefreshCw, BookOpen, ArrowRight, CheckCircle } from "lucide-react";
 
 const EditorialPolicyPage = () => {
-  const breadcrumbs = [
-    { label: "Home", href: "/" },
-    { label: "Editorial Policy" },
-  ];
 
   const keyPoints = ["Evidence-based content", "Expert reviewed", "Regular updates", "Transparent corrections"];
 
