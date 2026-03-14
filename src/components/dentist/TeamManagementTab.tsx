@@ -22,7 +22,7 @@ import { TeamMemberFormDialog, TeamMemberFormData } from './TeamMemberFormDialog
 const INITIAL_FORM_DATA: TeamMemberFormData = {
   name: '',
   title: '',
-  professional_type: 'dentist',
+  professional_type: 'social_worker',
   is_primary: false,
   license_number: '',
   department: '',
