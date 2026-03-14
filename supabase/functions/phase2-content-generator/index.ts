@@ -143,98 +143,86 @@ const SERVICE_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE fostering type
 // CITY PAGE TEMPLATE (Sprint 2.2)
 // 11 sections, 2,500-3,500 words
 // ========================================
-const CITY_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE city directory page for AppointPanda.
+const CITY_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE city directory page for Foster Connect.
 
 === TEMPLATE STRUCTURE (2,500-3,500 words) ===
 
-1. H1: "Best Dentists in [City], [State] | [#] Verified Clinics [2026]"
+1. H1: "Fostering Agencies in [City], [Region] | [#] Verified Agencies [2026]"
 
 2. INTRODUCTION (200 words)
-   - Overview of dental care in this city
-   - Number of clinics/dentists available
-   - What makes this city's dental scene unique
-   - Local context (neighborhoods, demographics)
+   - Overview of fostering in this city
+   - Number of agencies available
+   - What makes this city's fostering landscape unique
+   - Local context (boroughs, demographics, local authority)
 
-3. H2: Top-Rated Dentists in [City] (300 words)
-   - Preview of what patients can find
-   - Types of practices available
-   - How ratings work on AppointPanda
-   - CTA: "View all dentists in [City]"
+3. H2: Top-Rated Fostering Agencies in [City] (300 words)
+   - Preview of what prospective carers can find
+   - Types of agencies available (IFA vs local authority)
+   - How Ofsted ratings work
+   - CTA: "View all agencies in [City]"
 
-4. H2: Dental Services Available in [City] (400 words)
-   - List of all major services offered
-   - Most popular procedures in this city
-   - Specialty services (orthodontics, oral surgery, etc.)
-   - Pediatric and family dentistry
-   - Links to service-specific pages
+4. H2: Types of Fostering Available in [City] (400 words)
+   - List of all fostering types offered
+   - Most needed placement types in this city
+   - Specialist fostering (therapeutic, UASC, parent & child)
+   - Emergency and respite fostering
+   - Links to fostering-type-specific pages
 
-5. H2: Average Dental Costs in [City] (500 words)
-   - COST COMPARISON TABLE (15 procedures):
-     | Procedure | [City] Avg | [State] Avg | National Avg |
-     |-----------|------------|-------------|--------------|
-     | Cleaning | $XX | $XX | $XX |
-     | Filling | $XXX | $XXX | $XXX |
-     | Crown | $X,XXX | $X,XXX | $X,XXX |
-     | Root Canal | $X,XXX | $X,XXX | $X,XXX |
-     | Implant | $X,XXX | $X,XXX | $X,XXX |
-     | Invisalign | $X,XXX | $X,XXX | $X,XXX |
-     | Extraction | $XXX | $XXX | $XXX |
-     | Deep Cleaning | $XXX | $XXX | $XXX |
-     | Veneer (per tooth) | $X,XXX | $X,XXX | $X,XXX |
-     | Dentures | $X,XXX | $X,XXX | $X,XXX |
-   - Why costs vary in [City]
-   - Tips for affordable dental care
+5. H2: Fostering Allowances in [City] (500 words)
+   - ALLOWANCE TABLE (by fostering type):
+     | Fostering Type | Weekly Allowance | Additional Support |
+     |----------------|-----------------|-------------------|
+     | Short-term | £XXX-£XXX | Training, supervision |
+     | Long-term | £XXX-£XXX | Education support |
+     | Emergency | £XXX-£XXX | 24/7 on-call |
+     | Therapeutic | £XXX-£XXX | Specialist training |
+     | Respite | £XXX-£XXX | Flexible scheduling |
+   - Why allowances vary between agencies
+   - Additional financial support and benefits
 
-6. H2: Dental Insurance Accepted in [City] (300 words)
-   - Most commonly accepted insurance providers
-   - Percentage of dentists accepting major insurers
-   - Medicaid/Medicare acceptance
-   - How to find dentists with your insurance on AppointPanda
+6. H2: The Fostering Assessment Process (300 words)
+   - Overview of Form F assessment
+   - Timeline expectations (typically 4-6 months)
+   - What to expect at fostering panel
+   - How Foster Connect helps you compare agencies
 
-7. H2: Dentists by Neighborhood (400 words)
-   - List 6-10 major neighborhoods
-   - Number of clinics per area
-   - Character of each neighborhood's dental options
-   - Links to neighborhood-specific searches
-   
-   Example neighborhoods to cover:
-   - Downtown [City]
-   - [Major Neighborhood 1]
-   - [Major Neighborhood 2]
-   - [Suburb/Area]
+7. H2: Fostering by Area in [City] (400 words)
+   - List 6-10 major boroughs/areas
+   - Number of agencies per area
+   - Character of each area's fostering options
+   - Links to area-specific searches
 
-8. H2: Emergency Dental Care in [City] (300 words)
-   - 24/7 emergency dentist availability
-   - Weekend and evening availability
-   - Walk-in clinics
-   - What constitutes a dental emergency
-   - Average emergency visit costs
-   - CTA: "Find emergency dentists in [City]"
+8. H2: Emergency Fostering in [City] (300 words)
+   - Emergency placement availability
+   - How emergency fostering works
+   - What constitutes an emergency placement
+   - CTA: "Find emergency fostering agencies in [City]"
 
-9. H2: Finding a Dentist in [City]: What to Know (350 words)
-   - State licensing requirements
-   - How to verify credentials
-   - Patient rights in [State]
-   - What to expect at first visit
-   - Choosing between private practice vs. group practice
+9. H2: Starting Your Fostering Journey in [City] (350 words)
+   - Ofsted registration requirements
+   - How to verify an agency's credentials
+   - Carer rights and responsibilities
+   - What to expect during your first enquiry
+   - Choosing between IFAs and local authority
 
-10. H2: [City] Dental Care Statistics (250 words)
-    - Number of practicing dentists
-    - Dentist to population ratio
-    - Most common dental issues in area
-    - Community dental health programs
-    - Dental schools or teaching clinics nearby
+10. H2: [City] Fostering Statistics (250 words)
+    - Number of looked-after children in the area
+    - Agency availability
+    - Most common fostering needs
+    - Community fostering programmes
+    - Local authority partnerships
 
 11. H2: Frequently Asked Questions (400 words)
     - 8-10 city-specific FAQs
-    - Questions about insurance, costs, availability
+    - Questions about eligibility, allowances, assessment
     - Format for FAQ schema markup
 
 === LOCAL CONTEXT REQUIREMENTS ===
-- Mention specific neighborhoods by name
+- Mention specific boroughs/areas by name
 - Reference local landmarks or areas
-- Include regional cost context
-- Note any unique local factors (university towns, tech hubs, etc.)`;
+- Include regional allowance context
+- Note any unique local factors (urban, diverse community, etc.)
+- British English spelling throughout`;
 
 // ========================================
 // BLOG POST TEMPLATES (Sprint 2.3)
