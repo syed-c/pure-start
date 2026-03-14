@@ -1,4 +1,4 @@
-import { ArrowRight, Shield, Heart, Search, Building2, MapPin, Star, Users, ChevronRight, Sparkles, CheckCircle, Home, Phone } from "lucide-react";
+import { ArrowRight, Shield, Heart, Search, Building2, MapPin, Star, Users, ChevronRight, Sparkles, CheckCircle, Phone, BookOpen, Award } from "lucide-react";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -11,7 +11,7 @@ import { StructuredData } from "@/components/seo/StructuredData";
 import { POPULAR_CITIES, FOSTERING_CATEGORIES } from "@/lib/constants/activeRegions";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 
-// City landmark images
+// City images
 import londonImg from "@/assets/regions/london.jpg";
 import birminghamImg from "@/assets/regions/birmingham.jpg";
 import manchesterImg from "@/assets/regions/manchester.jpg";
@@ -20,14 +20,34 @@ import liverpoolImg from "@/assets/regions/liverpool.jpg";
 import bristolImg from "@/assets/regions/bristol.jpg";
 import sheffieldImg from "@/assets/regions/sheffield.jpg";
 
+// Hero
+import heroImg from "@/assets/hero-foster-family.jpg";
+
+// Fostering type images
+import longTermImg from "@/assets/fostering-types/long-term-fostering.jpg";
+import therapeuticImg from "@/assets/fostering-types/therapeutic-fostering.jpg";
+import emergencyImg from "@/assets/fostering-types/emergency-fostering.jpg";
+import parentChildImg from "@/assets/fostering-types/parent-child-fostering.jpg";
+import respiteImg from "@/assets/fostering-types/respite-fostering.jpg";
+import shortTermImg from "@/assets/fostering-types/short-term-fostering.jpg";
+import disabilityImg from "@/assets/fostering-types/disability-fostering.jpg";
+import independentImg from "@/assets/fostering-types/independent-agency.jpg";
+
 const cityImages: Record<string, string> = {
-  'london': londonImg,
-  'birmingham': birminghamImg,
-  'manchester': manchesterImg,
-  'leeds': leedsImg,
-  'liverpool': liverpoolImg,
-  'bristol': bristolImg,
-  'sheffield': sheffieldImg,
+  london: londonImg, birmingham: birminghamImg, manchester: manchesterImg,
+  leeds: leedsImg, liverpool: liverpoolImg, bristol: bristolImg, sheffield: sheffieldImg,
+};
+
+const fosteringImages: Record<string, string> = {
+  'long-term-fostering': longTermImg,
+  'therapeutic-fostering': therapeuticImg,
+  'emergency-fostering': emergencyImg,
+  'parent-and-child-fostering': parentChildImg,
+  'respite-fostering': respiteImg,
+  'short-term-fostering': shortTermImg,
+  'disability-complex-needs-fostering': disabilityImg,
+  'independent-fostering-agency': independentImg,
+  'local-authority-fostering': independentImg,
 };
 
 const heroTexts = [
@@ -40,98 +60,70 @@ const heroTexts = [
 ];
 
 const benefits = [
-  {
-    icon: Shield,
-    title: "Ofsted Verified",
-    description: "Every agency listed is registered and rated by Ofsted or the relevant regulatory body.",
-  },
-  {
-    icon: Heart,
-    title: "Trusted & Supportive",
-    description: "We connect prospective foster carers with agencies that provide ongoing training and support.",
-  },
-  {
-    icon: Star,
-    title: "Real Reviews",
-    description: "Read authentic reviews from foster carers across England to help you choose the right agency.",
-  },
-  {
-    icon: Users,
-    title: "All Fostering Types",
-    description: "From emergency and respite to long-term and therapeutic — find the right match for your family.",
-  },
+  { icon: Shield, title: "Ofsted Verified", description: "Every agency listed is registered and rated by Ofsted or the relevant regulatory body." },
+  { icon: Heart, title: "Trusted & Supportive", description: "We connect prospective foster carers with agencies that provide ongoing training and support." },
+  { icon: Star, title: "Real Reviews", description: "Read authentic reviews from foster carers across England to help you choose the right agency." },
+  { icon: Users, title: "All Fostering Types", description: "From emergency and respite to long-term and therapeutic — find the right match for your family." },
+];
+
+const testimonials = [
+  { name: "Sarah M.", location: "London", text: "Foster Connect made finding an agency so simple. Within a week, we had our first meeting with a wonderful IFA.", rating: 5 },
+  { name: "James & Claire T.", location: "Manchester", text: "The reviews from other carers were invaluable. We felt confident choosing our agency because of real feedback.", rating: 5 },
+  { name: "Priya K.", location: "Birmingham", text: "As a first-time carer, I was nervous. Foster Connect helped me understand the different types and find the perfect fit.", rating: 5 },
 ];
 
 const popularCities = POPULAR_CITIES.slice(0, 7);
 
 const ukFaqs = [
-  {
-    q: "How do I find a fostering agency near me?",
-    a: "Use our search to find agencies by city, county, or region across England. Filter by fostering type and agency type (independent or local authority) to find your best match."
-  },
-  {
-    q: "What is the difference between an independent fostering agency and a local authority?",
-    a: "Independent fostering agencies (IFAs) are privately run organisations approved by Ofsted. Local authority fostering services are run by your local council. Both recruit, assess, and support foster carers."
-  },
-  {
-    q: "What types of fostering are available?",
-    a: "There are several types including short-term, long-term, emergency, respite, parent & child, therapeutic, and specialist fostering for children with complex needs or disabilities."
-  },
-  {
-    q: "Do I need experience to become a foster carer?",
-    a: "No prior experience is required. Agencies provide full training and ongoing support. You need to be over 21, have a spare bedroom, and pass assessments. Your background and life experience are valued."
-  },
-  {
-    q: "How long does it take to become a foster carer?",
-    a: "The assessment process typically takes 4–6 months. This includes training, home visits, interviews, and background checks. Some agencies offer fast-track options for experienced carers."
-  },
+  { q: "How do I find a fostering agency near me?", a: "Use our search to find agencies by city, county, or region across England. Filter by fostering type and agency type." },
+  { q: "What is the difference between an IFA and a local authority?", a: "Independent fostering agencies (IFAs) are privately run organisations approved by Ofsted. Local authority fostering services are run by your local council." },
+  { q: "What types of fostering are available?", a: "There are several types including short-term, long-term, emergency, respite, parent & child, therapeutic, and specialist fostering." },
+  { q: "Do I need experience to become a foster carer?", a: "No prior experience is required. Agencies provide full training and ongoing support. You need to be over 21 and have a spare bedroom." },
+  { q: "How long does it take to become a foster carer?", a: "The assessment process typically takes 4–6 months, including training, home visits, interviews, and background checks." },
 ];
 
-const staggerContainer = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.08 } },
-};
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
+const fadeUp = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
 
-const staggerItem = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
+const headingFont = "'Varela Round', 'Quicksand', system-ui, sans-serif";
 
 const Index = () => {
   const { data: seoContent } = useSeoPageContent("/");
-
-  const headingFont = "'Varela Round', 'Quicksand', system-ui, sans-serif";
 
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
         title={seoContent?.meta_title || "Find Fostering Agencies in England & UK | Foster Connect"}
-        description={seoContent?.meta_description || "Search Ofsted-rated fostering agencies across England. Compare reviews, explore fostering types & connect with agencies near you. Your fostering journey starts here."}
+        description={seoContent?.meta_description || "Search Ofsted-rated fostering agencies across England. Compare reviews, explore fostering types & connect with agencies near you."}
         canonical="/"
-        keywords={['fostering agencies UK', 'foster care England', 'independent fostering agency', 'become a foster carer', 'fostering agencies near me', 'foster care agencies London']}
+        keywords={['fostering agencies UK', 'foster care England', 'independent fostering agency', 'become a foster carer', 'fostering agencies near me']}
       />
       <StructuredData type="organization" />
       <Navbar />
 
       {/* ══════════════════════════════════════════
-          HERO — Full-viewport, warm welcoming design
+          HERO — Centered with background image
           ══════════════════════════════════════════ */}
-      <section className="relative overflow-hidden min-h-[100svh] flex items-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-        {/* Ambient glow */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px]" />
-          <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-emerald/15 rounded-full blur-[100px]" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[150px]" />
+      <section className="relative overflow-hidden min-h-[100svh] flex items-center">
+        {/* Background image with overlay */}
+        <div className="absolute inset-0">
+          <img src={heroImg} alt="" className="w-full h-full object-cover" aria-hidden="true" />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/80 to-slate-950/95" />
         </div>
 
-        <div className="container relative z-10 py-20 md:py-24 lg:py-28 px-5 md:px-8">
-          <div className="max-w-5xl mx-auto">
+        {/* Ambient glow */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-primary/15 rounded-full blur-[150px]" />
+        </div>
+
+        <div className="container relative z-10 py-24 md:py-32 lg:py-36 px-5 md:px-8">
+          <div className="max-w-4xl mx-auto text-center">
             {/* Trust badges */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="flex flex-wrap gap-2.5 mb-8 md:mb-10 justify-center lg:justify-start"
+              className="flex flex-wrap gap-2.5 mb-8 md:mb-10 justify-center"
             >
               <span className="inline-flex items-center gap-2 bg-primary/15 backdrop-blur-md border border-primary/30 rounded-full px-4 py-2 shadow-lg">
                 <Shield className="h-4 w-4 text-primary" />
@@ -147,89 +139,55 @@ const Index = () => {
               </span>
             </motion.div>
 
-            <div className="grid lg:grid-cols-[1fr,auto] gap-10 lg:gap-16 items-center">
-              {/* Left: Headlines + Search */}
-              <div className="text-center lg:text-left">
-                <motion.h1
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.1 }}
-                  className="leading-[1.05] mb-5"
-                  style={{ fontFamily: headingFont }}
-                >
-                  <span className="block text-[2.75rem] sm:text-6xl md:text-7xl lg:text-[5rem] xl:text-[5.5rem] font-black text-white tracking-tight">
-                    Find Your
-                  </span>
-                  <span className="block text-[2.75rem] sm:text-6xl md:text-7xl lg:text-[5rem] xl:text-[5.5rem] font-black text-primary tracking-tight mt-1">
-                    Fostering Agency
-                  </span>
-                  <span className="block text-[2.75rem] sm:text-6xl md:text-7xl lg:text-[5rem] xl:text-[5.5rem] font-black text-white/80 tracking-tight mt-1">
-                    in the UK
-                  </span>
-                </motion.h1>
+            {/* Heading */}
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="leading-[1.05] mb-5"
+              style={{ fontFamily: headingFont }}
+            >
+              <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-black text-white tracking-tight">
+                Find Your Perfect
+              </span>
+              <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-black text-primary tracking-tight mt-1">
+                Fostering Agency
+              </span>
+            </motion.h1>
 
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                  className="mb-6"
-                >
-                  <span className="text-lg md:text-xl font-semibold text-white/50">
-                    Explore{" "}
-                    <TypewriterText texts={heroTexts} className="text-primary font-bold" />
-                  </span>
-                </motion.div>
+            {/* Typewriter */}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="mb-5">
+              <span className="text-lg md:text-xl font-semibold text-white/50">
+                Explore{" "}
+                <TypewriterText texts={heroTexts} className="text-primary font-bold" />
+              </span>
+            </motion.div>
 
-                <motion.p
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                  className="text-base md:text-lg text-white/40 max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed"
-                >
-                  Search Ofsted-rated fostering agencies across England. Compare reviews, explore fostering types & start your fostering journey today.
-                </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="text-base md:text-lg text-white/50 max-w-2xl mx-auto mb-10 leading-relaxed"
+            >
+              Compare Ofsted-rated fostering agencies across England, Scotland, Wales & Northern Ireland. Read real carer reviews and start your fostering journey today.
+            </motion.p>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                  className="max-w-2xl mx-auto lg:mx-0"
-                >
-                  <SearchBox variant="hero" />
-                </motion.div>
-              </div>
+            {/* Search Box */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="max-w-3xl mx-auto"
+            >
+              <SearchBox variant="hero" />
+            </motion.div>
 
-              {/* Right: Stats grid */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.6, duration: 0.5 }}
-                className="hidden lg:grid grid-cols-2 gap-4 w-[280px]"
-              >
-                {[
-                  { value: "500+", label: "Agencies", icon: Building2 },
-                  { value: "100+", label: "Cities", icon: MapPin },
-                  { value: "4.8★", label: "Rating", icon: Star },
-                  { value: "Free", label: "To Use", icon: Heart },
-                ].map((stat, i) => (
-                  <div
-                    key={i}
-                    className="bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-3xl p-5 text-center hover:bg-white/10 hover:border-primary/30 transition-all duration-300"
-                  >
-                    <stat.icon className="h-6 w-6 text-primary mx-auto mb-2" />
-                    <div className="text-2xl font-black text-white" style={{ fontFamily: headingFont }}>{stat.value}</div>
-                    <div className="text-[11px] font-bold text-white/50 uppercase tracking-widest mt-1">{stat.label}</div>
-                  </div>
-                ))}
-              </motion.div>
-            </div>
-
-            {/* Mobile stats */}
+            {/* Stats row */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
-              className="lg:hidden grid grid-cols-4 gap-2.5 mt-8"
+              className="grid grid-cols-4 gap-3 md:gap-6 mt-10 max-w-2xl mx-auto"
             >
               {[
                 { value: "500+", label: "Agencies" },
@@ -237,9 +195,9 @@ const Index = () => {
                 { value: "4.8★", label: "Rating" },
                 { value: "Free", label: "To Use" },
               ].map((stat, i) => (
-                <div key={i} className="bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-2xl p-3 text-center">
-                  <div className="text-lg font-black text-white" style={{ fontFamily: headingFont }}>{stat.value}</div>
-                  <div className="text-[9px] font-bold text-white/50 uppercase tracking-wider mt-0.5">{stat.label}</div>
+                <div key={i} className="text-center">
+                  <div className="text-xl md:text-3xl font-black text-white" style={{ fontFamily: headingFont }}>{stat.value}</div>
+                  <div className="text-[10px] md:text-xs font-bold text-white/40 uppercase tracking-widest mt-1">{stat.label}</div>
                 </div>
               ))}
             </motion.div>
@@ -254,9 +212,74 @@ const Index = () => {
       </section>
 
       {/* ══════════════════════════════════════════
+          FOSTERING TYPES — Visual cards with images
+          ══════════════════════════════════════════ */}
+      <section className="py-16 md:py-24 bg-background relative">
+        <div className="container px-5 md:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-10 md:mb-14"
+          >
+            <span className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-5 py-2.5 mb-5">
+              <Heart className="h-4 w-4 text-primary" />
+              <span className="text-sm font-bold text-primary">Explore Fostering Types</span>
+            </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-foreground" style={{ fontFamily: headingFont }}>
+              Find the Right <span className="text-primary">Type of Care</span>
+            </h2>
+            <p className="text-muted-foreground mt-3 max-w-xl mx-auto text-base md:text-lg">
+              Every child's needs are unique. Explore different fostering types to discover what's right for your family.
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6"
+          >
+            {FOSTERING_CATEGORIES.map((cat) => (
+              <motion.div key={cat.slug} variants={fadeUp}>
+                <Link
+                  to={`/services/${cat.slug}`}
+                  className="group block bg-card rounded-3xl overflow-hidden border border-border hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500"
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={fosteringImages[cat.slug] || longTermImg}
+                      alt={cat.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <h3 className="text-lg font-black text-white" style={{ fontFamily: headingFont }}>
+                        {cat.name}
+                      </h3>
+                    </div>
+                  </div>
+                  <div className="p-5">
+                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                      {getFosteringDescription(cat.slug)}
+                    </p>
+                    <span className="inline-flex items-center gap-1.5 text-primary font-bold text-sm mt-3 group-hover:gap-3 transition-all">
+                      Learn more <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
           BROWSE BY CITY — Auto-scrolling circles
           ══════════════════════════════════════════ */}
-      <section className="py-16 md:py-24 bg-background relative overflow-hidden">
+      <section className="py-16 md:py-24 bg-muted/30 relative overflow-hidden">
         <div className="container px-5 md:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -268,7 +291,7 @@ const Index = () => {
               <MapPin className="h-4 w-4 text-primary" />
               <span className="text-sm font-bold text-primary">Browse by City</span>
             </span>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-foreground" style={{ fontFamily: headingFont }}>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-foreground" style={{ fontFamily: headingFont }}>
               Find Agencies in Your{" "}
               <span className="text-primary">Area</span>
             </h2>
@@ -278,9 +301,8 @@ const Index = () => {
           </motion.div>
 
           <div className="relative">
-            <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
-            
+            <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-muted/30 to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-muted/30 to-transparent z-10 pointer-events-none" />
             <div className="overflow-hidden">
               <motion.div
                 className="flex gap-8 md:gap-10 py-4"
@@ -314,47 +336,7 @@ const Index = () => {
       </section>
 
       {/* ══════════════════════════════════════════
-          FOSTERING CATEGORIES
-          ══════════════════════════════════════════ */}
-      <section className="py-14 md:py-20 bg-muted/30 relative">
-        <div className="container px-5 md:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-8 md:mb-12"
-          >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground" style={{ fontFamily: headingFont }}>
-              Fostering <span className="text-primary">Categories</span>
-            </h2>
-            <p className="text-muted-foreground mt-2 max-w-lg mx-auto">
-              Explore different types of fostering to find what's right for your family.
-            </p>
-          </motion.div>
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            className="flex flex-wrap justify-center gap-2 max-w-5xl mx-auto"
-          >
-            {FOSTERING_CATEGORIES.map((cat) => (
-              <motion.span key={cat.slug} variants={staggerItem}>
-                <Link
-                  to={`/categories/${cat.slug}/`}
-                  className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-all"
-                >
-                  <Home className="h-3 w-3" />
-                  {cat.name}
-                </Link>
-              </motion.span>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════
-          WHY CHOOSE US
+          WHY CHOOSE US — Dark section
           ══════════════════════════════════════════ */}
       <section className="py-16 md:py-24 bg-slate-950 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
@@ -369,10 +351,10 @@ const Index = () => {
             className="text-center mb-10 md:mb-14"
           >
             <span className="inline-flex items-center gap-2 bg-primary/20 rounded-full px-5 py-2.5 mb-5 border border-primary/30">
-              <Heart className="h-4 w-4 text-primary" />
+              <Award className="h-4 w-4 text-primary" />
               <span className="text-sm font-bold text-primary">Why Foster Connect</span>
             </span>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-white" style={{ fontFamily: headingFont }}>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white" style={{ fontFamily: headingFont }}>
               The UK's Trusted{" "}
               <span className="text-primary">Fostering Directory</span>
             </h2>
@@ -382,14 +364,14 @@ const Index = () => {
           </motion.div>
 
           <motion.div
-            variants={staggerContainer}
+            variants={stagger}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5"
           >
             {benefits.map((benefit, i) => (
-              <motion.div key={i} variants={staggerItem}>
+              <motion.div key={i} variants={fadeUp}>
                 <div className="group bg-white/[0.04] backdrop-blur-sm rounded-3xl p-6 md:p-7 text-center border border-white/10 hover:border-primary/40 hover:bg-white/[0.08] transition-all duration-400 h-full">
                   <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/20 mb-5 group-hover:scale-110 transition-transform duration-300">
                     <benefit.icon className="h-7 w-7 text-primary" />
@@ -406,9 +388,114 @@ const Index = () => {
       </section>
 
       {/* ══════════════════════════════════════════
+          TESTIMONIALS
+          ══════════════════════════════════════════ */}
+      <section className="py-16 md:py-24 bg-background relative">
+        <div className="container px-5 md:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-10 md:mb-14"
+          >
+            <span className="inline-flex items-center gap-2 bg-gold/10 rounded-full px-5 py-2.5 mb-5">
+              <Star className="h-4 w-4 text-gold fill-gold" />
+              <span className="text-sm font-bold text-gold">Carer Reviews</span>
+            </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-foreground" style={{ fontFamily: headingFont }}>
+              Loved by <span className="text-primary">Foster Families</span>
+            </h2>
+          </motion.div>
+
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="grid md:grid-cols-3 gap-5 max-w-5xl mx-auto"
+          >
+            {testimonials.map((t, i) => (
+              <motion.div key={i} variants={fadeUp}>
+                <div className="bg-card rounded-3xl p-7 border border-border hover:border-primary/30 hover:shadow-xl transition-all duration-400 h-full flex flex-col">
+                  <div className="flex gap-1 mb-4">
+                    {Array.from({ length: t.rating }).map((_, j) => (
+                      <Star key={j} className="h-4 w-4 text-gold fill-gold" />
+                    ))}
+                  </div>
+                  <p className="text-foreground/80 text-sm leading-relaxed flex-1 italic">"{t.text}"</p>
+                  <div className="mt-5 pt-4 border-t border-border">
+                    <p className="font-black text-sm text-foreground" style={{ fontFamily: headingFont }}>{t.name}</p>
+                    <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+                      <MapPin className="h-3 w-3" /> {t.location}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          HOW IT WORKS — 3 Steps
+          ══════════════════════════════════════════ */}
+      <section className="py-16 md:py-24 bg-muted/20 relative overflow-hidden">
+        <div className="container relative z-10 px-5 md:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-3xl mx-auto text-center mb-14"
+          >
+            <span className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-5 py-2.5 mb-5">
+              <Sparkles className="h-4 w-4 text-primary" />
+              <span className="text-sm font-bold text-primary">Simple 3-Step Process</span>
+            </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-foreground mb-3" style={{ fontFamily: headingFont }}>
+              How It <span className="text-primary">Works</span>
+            </h2>
+            <p className="text-muted-foreground text-base md:text-lg max-w-xl mx-auto">
+              Finding the right fostering agency has never been easier.
+            </p>
+          </motion.div>
+
+          <div className="max-w-5xl mx-auto">
+            <motion.div
+              variants={stagger}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              className="grid md:grid-cols-3 gap-6 lg:gap-10"
+            >
+              {[
+                { step: 1, icon: Search, title: "Search Your Area", desc: "Enter your city or region to find fostering agencies near you. Filter by type and category." },
+                { step: 2, icon: CheckCircle, title: "Compare Agencies", desc: "Browse Ofsted-rated profiles, read reviews from foster carers, and compare agency offerings." },
+                { step: 3, icon: Phone, title: "Get in Touch", desc: "Send an enquiry, request information, or book an intro call with agencies you're interested in." },
+              ].map((item) => (
+                <motion.div key={item.step} variants={fadeUp}>
+                  <div className="group bg-card rounded-3xl p-7 md:p-8 border border-border hover:border-primary/30 hover:shadow-xl transition-all duration-400 h-full text-center">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground flex items-center justify-center mx-auto mb-5 text-xl font-black shadow-lg shadow-primary/25 group-hover:scale-110 transition-transform" style={{ fontFamily: headingFont }}>
+                      {item.step}
+                    </div>
+                    <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-5 group-hover:scale-105 transition-transform">
+                      <item.icon className="h-7 w-7 text-primary" />
+                    </div>
+                    <h3 className="text-xl md:text-2xl font-black text-foreground mb-3" style={{ fontFamily: headingFont }}>
+                      {item.title}
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed">{item.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
           FAQ SECTION
           ══════════════════════════════════════════ */}
-      <section className="py-16 md:py-24 bg-muted/20 relative">
+      <section className="py-16 md:py-24 bg-background relative">
         <div className="container px-5 md:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -417,10 +504,10 @@ const Index = () => {
             className="max-w-3xl mx-auto text-center mb-10"
           >
             <span className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-5 py-2.5 mb-5">
-              <Sparkles className="h-4 w-4 text-primary" />
+              <BookOpen className="h-4 w-4 text-primary" />
               <span className="text-sm font-bold text-primary">Fostering FAQ</span>
             </span>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-foreground" style={{ fontFamily: headingFont }}>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-foreground" style={{ fontFamily: headingFont }}>
               Common <span className="text-primary">Questions</span>
             </h2>
           </motion.div>
@@ -438,79 +525,13 @@ const Index = () => {
                   {faq.q}
                   <ChevronRight className="h-5 w-5 text-muted-foreground group-open:rotate-90 transition-transform shrink-0 ml-4" />
                 </summary>
-                <div className="px-6 pb-5 text-muted-foreground text-sm leading-relaxed">
-                  {faq.a}
-                </div>
+                <div className="px-6 pb-5 text-muted-foreground text-sm leading-relaxed">{faq.a}</div>
               </motion.details>
             ))}
           </div>
           <div className="text-center mt-8">
             <Button asChild variant="outline" className="rounded-2xl font-black" style={{ fontFamily: headingFont }}>
               <Link to="/faq">View All FAQs <ArrowRight className="ml-2 h-4 w-4" /></Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════
-          HOW IT WORKS — 3 Steps
-          ══════════════════════════════════════════ */}
-      <section className="py-16 md:py-24 bg-background relative overflow-hidden">
-        <div className="container relative z-10 px-5 md:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-3xl mx-auto text-center mb-14"
-          >
-            <span className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-5 py-2.5 mb-5">
-              <Sparkles className="h-4 w-4 text-primary" />
-              <span className="text-sm font-bold text-primary">Simple 3-Step Process</span>
-            </span>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-foreground mb-3" style={{ fontFamily: headingFont }}>
-              How It <span className="text-primary">Works</span>
-            </h2>
-            <p className="text-muted-foreground text-base md:text-lg max-w-xl mx-auto">
-              Finding the right fostering agency has never been easier.
-            </p>
-          </motion.div>
-
-          <div className="max-w-5xl mx-auto">
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
-              className="grid md:grid-cols-3 gap-6 lg:gap-10"
-            >
-              {[
-                { step: 1, icon: Search, title: "Search Your Area", desc: "Enter your city or region to find fostering agencies near you. Filter by type and category." },
-                { step: 2, icon: CheckCircle, title: "Compare Agencies", desc: "Browse Ofsted-rated profiles, read reviews from foster carers, and compare agency offerings." },
-                { step: 3, icon: Phone, title: "Get in Touch", desc: "Send an enquiry, request information, or book an intro call with agencies you're interested in." },
-              ].map((item) => (
-                <motion.div key={item.step} variants={staggerItem}>
-                  <div className="group bg-card rounded-3xl p-7 md:p-8 border border-border hover:border-primary/30 hover:shadow-xl transition-all duration-400 h-full text-center">
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground flex items-center justify-center mx-auto mb-5 text-xl font-black shadow-lg shadow-primary/25 group-hover:scale-110 transition-transform" style={{ fontFamily: headingFont }}>
-                      {item.step}
-                    </div>
-                    <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-5 group-hover:scale-105 transition-transform">
-                      <item.icon className="h-7 w-7 text-primary" />
-                    </div>
-                    <h3 className="text-xl md:text-2xl font-black text-foreground mb-3" style={{ fontFamily: headingFont }}>
-                      {item.title}
-                    </h3>
-                    <p className="text-muted-foreground leading-relaxed">{item.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-
-          <div className="text-center mt-12">
-            <Button asChild size="lg" className="rounded-2xl font-black px-10 h-14 text-base shadow-lg shadow-primary/20" style={{ fontFamily: headingFont }}>
-              <Link to="/search">
-                Start Your Search <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
             </Button>
           </div>
         </div>
@@ -554,7 +575,7 @@ const Index = () => {
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="rounded-2xl font-black px-10 h-14 text-lg border-2 border-white/20 text-white bg-white/5 hover:bg-white/10" style={{ fontFamily: headingFont }}>
-                  <Link to="/list-your-agency">
+                  <Link to="/list-your-practice">
                     <Building2 className="mr-2 h-5 w-5" /> List Your Agency
                   </Link>
                 </Button>
@@ -568,5 +589,20 @@ const Index = () => {
     </div>
   );
 };
+
+function getFosteringDescription(slug: string): string {
+  const descriptions: Record<string, string> = {
+    'independent-fostering-agency': 'Private agencies regulated by Ofsted providing comprehensive support to foster carers across the UK.',
+    'local-authority-fostering': 'Council-run fostering services managed by local authorities across England, Scotland, Wales & NI.',
+    'emergency-fostering': 'Urgent short-notice placements for children who need immediate care, often available 24/7.',
+    'respite-fostering': 'Planned short breaks to support existing foster carers or birth families, typically lasting a few days.',
+    'parent-and-child-fostering': 'Placements where a parent and their child are fostered together, with assessment and support.',
+    'therapeutic-fostering': 'Specialist placements for children with complex emotional, behavioural, or developmental needs.',
+    'long-term-fostering': 'Stable, permanent foster placements for children who cannot return to their birth families.',
+    'short-term-fostering': 'Temporary placements lasting from a few weeks to several months while longer-term plans are made.',
+    'disability-complex-needs-fostering': 'Specialist care for children with physical disabilities, learning difficulties, or complex health needs.',
+  };
+  return descriptions[slug] || 'Explore this fostering type to learn more about how you can make a difference.';
+}
 
 export default Index;
