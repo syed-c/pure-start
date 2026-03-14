@@ -511,6 +511,26 @@ export default function FAQGenerationStudioTab() {
     }
   };
 
+  // Setup ALL pages mutation
+  const setupAllMutation = useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.functions.invoke('setup-state-seo-pages', {
+        body: { action: 'setup_all' },
+      });
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      toast.success(data.message || 'All SEO pages created successfully!');
+      queryClient.invalidateQueries({ queryKey: ['faq-studio-pages'] });
+      queryClient.invalidateQueries({ queryKey: ['faq-audit'] });
+      refetchPages();
+    },
+    onError: (err) => {
+      toast.error(`Setup failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
+    },
+  });
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -531,6 +551,39 @@ export default function FAQGenerationStudioTab() {
           </Button>
         </div>
       </div>
+
+      {/* Quick Actions: Setup Pages */}
+      {(!seoPages || seoPages.length === 0) && (
+        <Card className="border-dashed border-2 border-primary/30 bg-primary/5">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Zap className="h-5 w-5 text-primary" />
+              No Pages Found — Setup Required
+            </CardTitle>
+            <CardDescription>
+              Create SEO page entries first so you can generate FAQs for them.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button
+              variant="default"
+              onClick={() => {
+                if (confirm('Create ALL SEO pages (static, region, city, fostering type, and service+location pages)?')) {
+                  setupAllMutation.mutate();
+                }
+              }}
+              disabled={setupAllMutation.isPending}
+            >
+              {setupAllMutation.isPending ? (
+                <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+              ) : (
+                <Zap className="h-4 w-4 mr-1" />
+              )}
+              Setup All Pages
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Stats Overview */}
       {faqAudit && (
