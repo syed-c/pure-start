@@ -430,7 +430,7 @@ function ResultCard({ item }: { item: SearchResultItem }) {
   const avatarUrl = item.image || getLetterAvatarUrl(item.name);
 
   return (
-    <Link to={linkTo} className="group block bg-card border border-border/50 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300">
+    <Link to={linkTo} className="group block bg-card border border-border rounded-xl overflow-hidden hover:shadow-md hover:border-primary/20 transition-all duration-200">
       <div className="aspect-[16/10] bg-muted relative overflow-hidden">
         <img src={avatarUrl} alt={item.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"

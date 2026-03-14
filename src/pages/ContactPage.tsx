@@ -103,27 +103,20 @@ const ContactPage = () => {
         keywords={['contact foster connect', 'fostering help', 'fostering agency questions', 'foster care support']}
       />
 
-      {/* Dark Hero Section */}
-      <section className="relative bg-dark-section text-dark-section-foreground overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.15),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(139,92,246,0.1),transparent_50%)]" />
-        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple/10 rounded-full blur-3xl" />
-        <div className="container relative py-20 md:py-28">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
-              <MessageSquare className="h-4 w-4 text-primary" />
-              <span className="text-sm font-bold text-primary">We're Here to Help</span>
-            </div>
-            <h1 className="font-display text-4xl md:text-6xl font-bold mb-6">
-              Get in <span className="text-gradient">Touch</span>
+      {/* Hero */}
+      <section className="py-16 md:py-24 bg-muted/30">
+        <div className="container">
+          <div className="max-w-3xl mx-auto text-center">
+            <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">We're Here to Help</p>
+            <h1 className="text-4xl md:text-5xl font-extrabold text-foreground mb-6">
+              Get in <span className="text-primary">Touch</span>
             </h1>
-            <p className="text-xl md:text-2xl text-dark-section-foreground/70 max-w-2xl mx-auto mb-8">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
               Have questions about fostering or listing your agency? Our UK-based team is ready to assist you.
             </p>
-            <div className="flex flex-wrap justify-center gap-4">
+            <div className="flex flex-wrap justify-center gap-3">
               {features.map((feature, i) => (
-                <div key={i} className="flex items-center gap-2 bg-white/5 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10">
+                <div key={i} className="flex items-center gap-2 bg-card border border-border rounded-lg px-4 py-2">
                   <CheckCircle className="h-4 w-4 text-primary" />
                   <span className="text-sm font-medium">{feature}</span>
                 </div>

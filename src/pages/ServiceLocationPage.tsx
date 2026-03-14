@@ -196,44 +196,42 @@ const ServiceLocationPage = () => {
       />
       
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-primary/[0.04] to-background">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)/0.06),transparent_60%)]" />
-        <div className="container relative z-10 py-14 md:py-18 px-4">
+      <section className="py-12 md:py-18 bg-muted/30">
+        <div className="container px-4">
           <div className="flex justify-center mb-4">
             <Breadcrumbs items={breadcrumbs} />
           </div>
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <Badge variant="secondary" className="rounded-full px-4 py-1.5 text-xs font-bold mb-4 bg-primary/10 text-primary border-primary/15">
-                <Building2 className="h-3 w-3 mr-1.5" /> Ofsted Registered Agencies
-              </Badge>
-            </motion.div>
-            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tight mb-3 text-foreground" style={{ fontFamily: "'Outfit', sans-serif" }}>
+          <div className="max-w-3xl mx-auto text-center">
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">
+              Ofsted Registered Agencies
+            </motion.p>
+            <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight mb-3 text-foreground">
               {pageH1.includes(locationName) ? (
                 <>{pageH1.split(locationName)[0]}<span className="text-primary">{locationName}</span>{pageH1.split(locationName)[1] || ''}</>
               ) : (
                 pageH1
               )}
             </motion.h1>
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-              className="text-sm md:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto mb-5 px-2">
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}
+              className="text-sm md:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto mb-5">
               Find and enquire with top-rated {treatmentName.toLowerCase()} agencies in {locationName}.
             </motion.p>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
               className="max-w-xl md:max-w-2xl mx-auto mb-5">
               <SearchBox variant="hero" stateSlug={stateSlug} defaultCity={`${citySlug}|${stateSlug}`} defaultTreatment={service} />
             </motion.div>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
               className="flex flex-wrap justify-center gap-2">
               {[
                 { icon: Users, text: `${profiles?.length || 0}+ Agencies` },
-                { icon: Star, text: "4.8 Avg. Rating" },
-                { icon: Shield, text: "Ofsted Registered" },
+                { icon: Star, text: "4.8 Rating" },
+                { icon: Shield, text: "Ofsted Verified" },
               ].map((s, i) => (
-                <div key={i} className="flex items-center gap-1.5 bg-muted/50 border border-border/50 rounded-xl px-3 py-2">
-                  <s.icon className="h-4 w-4 text-primary" />
-                  <span className="font-bold text-sm">{s.text}</span>
+                <div key={i} className="flex items-center gap-1.5 bg-card border border-border rounded-lg px-3 py-2">
+                  <s.icon className="h-3.5 w-3.5 text-primary" />
+                  <span className="font-semibold text-sm">{s.text}</span>
                 </div>
               ))}
             </motion.div>
