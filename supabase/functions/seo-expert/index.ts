@@ -880,7 +880,7 @@ serve(async (req) => {
 GOOGLE SEO POLICIES (Updated ${GOOGLE_SEO_POLICIES.lastUpdated}):
 ${JSON.stringify(GOOGLE_SEO_POLICIES.contentGuidelines.onPage, null, 2)}
 
-TASK: Fix ${issue_category} issues for a dental directory page.
+TASK: Fix ${issue_category} issues for a UK fostering directory page.
 ${custom_prompt ? `\nCUSTOM INSTRUCTIONS: ${custom_prompt}` : ""}
 
 Return ONLY valid JSON with the fixed content.`;

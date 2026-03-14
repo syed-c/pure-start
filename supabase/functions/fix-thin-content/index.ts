@@ -226,12 +226,10 @@ serve(async (req) => {
           const state = slugParts[0].toUpperCase();
           content = generateCityContent(state, state, state);
         } else if (page.page_type === "clinic") {
-          // For clinics, generate a shorter description
-          const clinicName = page.title || "This dental practice";
-          content = `## About ${clinicName}\n\n${generateClinicDescription(clinicName, "your area", "")}\n\n### Our Services\n\nWe offer a comprehensive range of dental services including general dentistry, cosmetic procedures, restorative treatments, and emergency care. Our experienced team is dedicated to providing personalized care in a comfortable environment.\n\n### Why Choose Us\n\n- Modern dental technology and techniques\n- Experienced, compassionate dental team\n- Convenient scheduling options\n- Most insurance plans accepted\n- Patient-focused approach to care`;
+          const agencyName = page.title || "This fostering agency";
+          content = `## About ${agencyName}\n\n${generateClinicDescription(agencyName, "your area", "")}\n\n### Our Services\n\nWe offer a comprehensive range of fostering placements including emergency, short-term, long-term, respite, and parent & child fostering. Our experienced team is dedicated to providing personalised support throughout your fostering journey.\n\n### Why Choose Us\n\n- Ofsted-registered and inspected\n- Experienced, compassionate support team\n- Comprehensive training programme\n- Competitive fostering allowances\n- 24/7 support for all foster carers`;
         } else {
-          // Generic content for other page types
-          content = `## Welcome\n\nThank you for visiting. We're dedicated to helping you find the best dental care. Browse our network of verified dental professionals and book your appointment online today.`;
+          content = `## Welcome\n\nThank you for visiting Foster Connect. We're dedicated to helping you find the best fostering agencies across the UK. Browse our directory of verified agencies and submit your enquiry online today.`;
         }
 
         const wordCount = content.split(/\s+/).length;

@@ -210,7 +210,7 @@ Generate ONLY the additional content sections to add (not the full page). Format
         body: JSON.stringify({
           model: "gemini-2.5-flash",
           messages: [
-            { role: "system", content: "You are an expert SEO content writer for dental directories. Write engaging, informative content that helps users find dental care." },
+            { role: "system", content: "You are an expert SEO content writer for UK fostering directories. Write engaging, informative content that helps people explore fostering opportunities." },
             { role: "user", content: prompt }
           ],
           max_tokens: 2000,
