@@ -553,10 +553,10 @@ export default function ClinicEnrichmentTab() {
               <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-purple to-primary flex items-center justify-center">
                 <Sparkles className="h-6 w-6 text-white" />
               </div>
-              Clinic Content Enrichment
+              Agency Content Enrichment
             </h1>
             <p className="text-muted-foreground mt-2">
-              AI-powered description generation and content management
+              AI-powered description generation and content management for fostering agencies
             </p>
           </div>
           <Button 
