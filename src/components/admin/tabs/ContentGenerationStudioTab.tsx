@@ -898,7 +898,7 @@ export default function ContentGenerationStudioTab() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Emirates (Multi-Select)</Label>
+                  <Label>Region (Multi-Select)</Label>
                   <div className="border rounded-md p-2 space-y-1 max-h-48 overflow-y-auto">
                     <div className="flex items-center justify-between pb-1 mb-1 border-b">
                       <button 
@@ -933,7 +933,7 @@ export default function ContentGenerationStudioTab() {
                   </div>
                   {stateFilters.length > 0 && (
                     <Badge variant="secondary" className="text-xs">
-                      {stateFilters.length} emirate{stateFilters.length > 1 ? 's' : ''} selected
+                      {stateFilters.length} region{stateFilters.length > 1 ? 's' : ''} selected
                     </Badge>
                   )}
                 </div>
