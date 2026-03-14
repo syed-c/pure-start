@@ -128,7 +128,7 @@ export default function SubscriptionsTab() {
   const [form, setForm] = useState({
     clinic_id: '',
     plan_name: 'basic',
-    price_aed: 99,
+    price_gbp: 79,
     status: 'active' as 'active' | 'pending' | 'expired' | 'cancelled',
     months: 12,
   });
