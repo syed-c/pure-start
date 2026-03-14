@@ -295,7 +295,7 @@ export default function SubscriptionsTab() {
                       >
                         <div className="flex justify-center mb-1">{getPlanIcon(plan.id)}</div>
                         <p className="text-sm font-medium">{plan.name}</p>
-                        <p className="text-xs text-muted-foreground">{plan.price_aed} AED/yr</p>
+                        <p className="text-xs text-muted-foreground">£{plan.price_gbp}/mo</p>
                       </button>
                     ))}
                   </div>
