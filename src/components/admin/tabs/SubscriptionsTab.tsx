@@ -644,7 +644,7 @@ export default function SubscriptionsTab() {
                           {getPlanIcon(plan.id)}
                           {plan.name}
                         </span>
-                        <span className="text-muted-foreground">{plan.revenue.toLocaleString()} AED ({percent.toFixed(0)}%)</span>
+                        <span className="text-muted-foreground">£{plan.revenue.toLocaleString()} ({percent.toFixed(0)}%)</span>
                       </div>
                       <Progress value={percent} className="h-2" />
                     </div>
