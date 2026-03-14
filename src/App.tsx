@@ -68,14 +68,14 @@ const PatientFormPage = lazyRetry(() => import("./pages/PatientFormPage"));
 const BookDirectPage = lazyRetry(() => import("./pages/BookDirectPage"));
 const Index = lazyRetry(() => import("./pages/Index"));
 
-// Free Tools - Phase 3
-const DentalCostCalculator = lazyRetry(() => import("./pages/tools/DentalCostCalculator"));
+// Free Tools
+const FosteringAllowanceCalculator = lazyRetry(() => import("./pages/tools/DentalCostCalculator"));
 const InsuranceChecker = lazyRetry(() => import("./pages/tools/InsuranceChecker"));
-const EmergencyDentist = lazyRetry(() => import("./pages/EmergencyDentist"));
+const EmergencyFostering = lazyRetry(() => import("./pages/EmergencyDentist"));
 
-// Price Intelligence Pages
+// Service Pages
 const ServicePricePage = lazyRetry(() => import("./pages/ServicePricePage"));
-const EmirateComparisonPage = lazyRetry(() => import("./pages/EmirateComparisonPage"));
+const RegionComparisonPage = lazyRetry(() => import("./pages/EmirateComparisonPage"));
 
 const queryClient = new QueryClient();
 
