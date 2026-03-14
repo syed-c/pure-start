@@ -107,7 +107,7 @@ const DEFAULT_PLANS: PlanConfig[] = [
     billing_period: 'month',
     description: 'Full suite for multi-location agencies',
     color: 'gold',
-    expected_patients: 11,
+    expected_carers: 11,
     features: {
       claim_profile: { enabled: true, limit: null, name: 'Everything in Professional' },
       dedicated_manager: { enabled: true, limit: null, name: 'Dedicated Account Manager' },
