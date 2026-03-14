@@ -92,7 +92,7 @@ const DEFAULT_PLANS: PlanConfig[] = [
     description: 'Advanced tools for growing agencies',
     color: 'primary',
     popular: true,
-    expected_patients: 6,
+    expected_carers: 6,
     features: {
       claim_profile: { enabled: true, limit: null, name: 'Claim & Customize Profile' },
       verification_badge: { enabled: true, limit: null, name: 'Verification Badge' },
