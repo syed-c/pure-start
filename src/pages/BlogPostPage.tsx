@@ -646,8 +646,8 @@ const BlogPostPage = () => {
                     <User className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <p className="font-bold">{post.author_name || "AppointPanda Team"}</p>
-                    <p className="text-sm text-muted-foreground">Dental Health Expert</p>
+                    <p className="font-bold">{post.author_name || "Foster Connect Team"}</p>
+                    <p className="text-sm text-muted-foreground">Fostering Expert</p>
                   </div>
                 </div>
                 {post.published_at && (

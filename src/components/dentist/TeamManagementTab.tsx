@@ -305,15 +305,15 @@ export default function TeamManagementTab() {
         </Card>
       </div>
 
-      {/* Dentists & Specialists */}
-      {dentists.length > 0 && (
+      {/* Specialists */}
+      {specialists.length > 0 && (
         <div className="space-y-4">
           <h3 className="text-lg font-semibold flex items-center gap-2">
             <Stethoscope className="h-5 w-5 text-primary" />
-            Dentists & Specialists
+            Specialists & Key Workers
           </h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {dentists.map((member) => (
+            {specialists.map((member) => (
               <TeamMemberCard 
                 key={member.id} 
                 member={member} 
