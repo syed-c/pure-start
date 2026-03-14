@@ -103,15 +103,15 @@ const AISearchPage = () => {
     if (response?.conversationStep === "ask_service" || (!conversationContext.service && conversationContext.budget)) {
       // User is providing service
       setConversationContext(prev => ({ ...prev, service: input }));
-      fullQuery = `${input} under ${conversationContext.budget} AED`;
+      fullQuery = `${input} ${conversationContext.budget ? `budget ${conversationContext.budget}` : ''}`.trim();
     } else if (response?.conversationStep === "ask_location" || (conversationContext.service && !conversationContext.location)) {
       // User is providing location
       setConversationContext(prev => ({ ...prev, location: input }));
-      fullQuery = `${conversationContext.service} under ${conversationContext.budget || ''} AED in ${input}`.trim();
+      fullQuery = `${conversationContext.service} ${conversationContext.budget ? `budget ${conversationContext.budget}` : ''} in ${input}`.trim();
     } else {
       // Check if it's a budget-only query
-      const budgetMatch = input.match(/(?:under|below|max|budget)\s*\$?(\d+)/i);
-      if (budgetMatch && !input.match(/cleaning|implant|whitening|braces|veneers|root canal|extraction|crown/i)) {
+      const budgetMatch = input.match(/(?:under|below|max|budget)\s*£?(\d+)/i);
+      if (budgetMatch && !input.match(/emergency|respite|long-term|therapeutic|fostering|parent.*child/i)) {
         setConversationContext({ budget: parseInt(budgetMatch[1]) });
       }
     }
