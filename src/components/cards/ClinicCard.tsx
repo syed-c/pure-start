@@ -74,7 +74,7 @@ export const ClinicCard = ({
 
       {/* Content */}
       <div className="p-5">
-        <Link to={`/clinic/${slug}`}>
+        <Link to={`/agency/${slug}`}>
           <h3 className="font-display text-xl font-bold text-foreground group-hover:text-primary transition-colors line-clamp-1">
             {name}
           </h3>
