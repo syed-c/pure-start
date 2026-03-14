@@ -270,7 +270,7 @@ export default function SubscriptionsTab() {
                   <Label>Agency</Label>
                   <Select value={form.clinic_id} onValueChange={(v) => setForm({ ...form, clinic_id: v })}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select clinic" />
+                      <SelectValue placeholder="Select agency" />
                     </SelectTrigger>
                     <SelectContent className="max-h-60">
                       {clinics.map(c => (
