@@ -144,14 +144,16 @@ interface GenerationConfig {
 
 const PAGE_TYPE_LABELS: Record<string, string> = {
   static: 'Static Pages',
-  state: 'State Pages',
+  state: 'Region Pages',
   city: 'City Pages',
-  treatment: 'Service Pages',
-  service_location: 'Service + Location',
-  city_treatment: 'City + Treatment',
-  clinic: 'Clinic/Dentist Pages',
-  dentist: 'Dentist Profiles',
+  treatment: 'Fostering Type Pages',
+  service_location: 'Fostering Type + Location',
+  city_treatment: 'City + Fostering Type',
+  clinic: 'Agency Profiles',
+  dentist: 'Agency Profiles',
   blog: 'Blog Posts',
+  agency: 'Agency Pages',
+  category: 'Category Pages',
 };
 
 const PAGE_TYPE_ICONS: Record<string, any> = {
