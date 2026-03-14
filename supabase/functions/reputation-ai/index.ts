@@ -434,7 +434,7 @@ async function callGemini(apiKey: string, payload: any): Promise<any> {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "gemini-2.0-flash",
+      model: "gemini-2.5-flash",
       temperature: 0.3,
       max_tokens: 1000,
       ...payload,
