@@ -18,6 +18,7 @@ import { useProfiles } from "@/hooks/useProfiles";
 import { useServicePriceRanges } from "@/hooks/useServicePriceRanges";
 import { useSeoPageContent, parseMarkdownContent, parseFaqFromContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
+import { RichContentSections } from "@/components/seo/RichContentSections";
 import {
   Accordion,
   AccordionContent,
