@@ -19,6 +19,7 @@ import { useSeoPageContent, parseMarkdownContent, parseFaqFromContent } from "@/
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
 import { usePinnedProfiles, sortWithPinnedFirst } from "@/hooks/usePinnedProfiles";
 import { normalizeStateSlug } from "@/lib/slug/normalizeStateSlug";
+import { RichContentSections } from "@/components/seo/RichContentSections";
 import NotFound from "./NotFound";
 import { 
   Star, Shield, Clock, Building2, ArrowRight, SlidersHorizontal
