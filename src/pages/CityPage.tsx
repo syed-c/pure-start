@@ -540,6 +540,16 @@ const CityPage = () => {
                 services={popularTreatments}
               />
 
+              {/* Rich SEO Content Sections */}
+              <RichContentSections
+                pageType="city"
+                cityName={cityName}
+                regionName={stateName}
+                agencyCount={totalClinicCount || profiles?.length || 0}
+                stateSlug={normalizedStateSlug}
+                citySlug={citySlug}
+              />
+
               {/* Nearby Cities Links */}
               {nearbyLocations.length > 0 && (
                 <LocationQuickLinks

@@ -492,6 +492,19 @@ const StatePage = () => {
         </div>
       </Section>
 
+      {/* Rich SEO Content Sections */}
+      <Section size="lg">
+        <div className="max-w-5xl mx-auto">
+          <RichContentSections
+            pageType="state"
+            regionName={stateName}
+            agencyCount={totalClinicCount}
+            cityCount={cities?.length || 0}
+            stateSlug={normalizedStateSlug}
+          />
+        </div>
+      </Section>
+
       {/* SECTION 5: FAQ */}
       <Section size="lg" className="bg-muted/30">
         <div className="max-w-3xl mx-auto">

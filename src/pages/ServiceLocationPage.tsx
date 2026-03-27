@@ -287,6 +287,18 @@ const ServiceLocationPage = () => {
               services={relatedTreatments}
             />
 
+            {/* Rich SEO Content Sections */}
+            <RichContentSections
+              pageType="service-location"
+              cityName={locationName}
+              regionName={stateName}
+              serviceName={treatmentName}
+              agencyCount={profiles?.length || 0}
+              stateSlug={normalizedStateSlug}
+              citySlug={citySlug}
+              serviceSlug={service}
+            />
+
             {nearbyLocations.length > 0 && (
               <LocationQuickLinks
                 variant="nearby"

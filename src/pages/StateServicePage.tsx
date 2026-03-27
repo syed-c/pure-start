@@ -309,6 +309,21 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
         </Section>
       )}
 
+      {/* Rich SEO Content Sections */}
+      <Section size="md">
+        <div className="max-w-5xl mx-auto">
+          <RichContentSections
+            pageType="state-service"
+            regionName={stateName}
+            serviceName={treatmentName}
+            agencyCount={profiles?.length || 0}
+            cityCount={cityLinks.length}
+            stateSlug={normalizedStateSlug}
+            serviceSlug={serviceSlug}
+          />
+        </div>
+      </Section>
+
       {/* Geographic Link Block */}
       <Section size="md">
         <div className="max-w-5xl mx-auto">

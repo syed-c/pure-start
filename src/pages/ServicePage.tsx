@@ -247,6 +247,20 @@ const ServicePage = () => {
         </div>
       </Section>
 
+      {/* Rich SEO Content Sections */}
+      <Section size="lg" className="bg-muted/30">
+        <div className="container px-4">
+          <div className="max-w-5xl mx-auto">
+            <RichContentSections
+              pageType="service"
+              serviceName={treatmentName}
+              agencyCount={profiles?.length || 0}
+              serviceSlug={serviceSlug}
+            />
+          </div>
+        </div>
+      </Section>
+
       {/* Find by Region */}
       {states && states.length > 0 && (
         <Section size="lg" className="bg-muted/30">
