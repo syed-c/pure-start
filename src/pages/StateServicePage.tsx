@@ -20,6 +20,7 @@ import { useCitiesByStateSlug } from "@/hooks/useLocations";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
 import { normalizeStateSlug } from "@/lib/slug/normalizeStateSlug";
 import { useServicePriceRanges } from "@/hooks/useServicePriceRanges";
+import { RichContentSections } from "@/components/seo/RichContentSections";
 import {
   Accordion,
   AccordionContent,
