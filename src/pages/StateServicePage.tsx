@@ -20,6 +20,7 @@ import { useCitiesByStateSlug } from "@/hooks/useLocations";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
 import { normalizeStateSlug } from "@/lib/slug/normalizeStateSlug";
 import { useServicePriceRanges } from "@/hooks/useServicePriceRanges";
+import { RichContentSections } from "@/components/seo/RichContentSections";
 import {
   Accordion,
   AccordionContent,
@@ -307,6 +308,21 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
           </div>
         </Section>
       )}
+
+      {/* Rich SEO Content Sections */}
+      <Section size="md">
+        <div className="max-w-5xl mx-auto">
+          <RichContentSections
+            pageType="state-service"
+            regionName={stateName}
+            serviceName={treatmentName}
+            agencyCount={profiles?.length || 0}
+            cityCount={cityLinks.length}
+            stateSlug={normalizedStateSlug}
+            serviceSlug={serviceSlug}
+          />
+        </div>
+      </Section>
 
       {/* Geographic Link Block */}
       <Section size="md">

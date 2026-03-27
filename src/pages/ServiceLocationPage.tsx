@@ -22,6 +22,7 @@ import { useState as useStateData, useCity, useCitiesByStateSlug } from "@/hooks
 import { useSeoPageContent, parseMarkdownContent, parseFaqFromContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
 import { normalizeStateSlug } from "@/lib/slug/normalizeStateSlug";
+import { RichContentSections } from "@/components/seo/RichContentSections";
 import {
   Accordion,
   AccordionContent,
@@ -284,6 +285,18 @@ const ServiceLocationPage = () => {
               serviceName={treatmentName}
               nearbyCities={nearbyLocations}
               services={relatedTreatments}
+            />
+
+            {/* Rich SEO Content Sections */}
+            <RichContentSections
+              pageType="service-location"
+              cityName={locationName}
+              regionName={stateName}
+              serviceName={treatmentName}
+              agencyCount={profiles?.length || 0}
+              stateSlug={normalizedStateSlug}
+              citySlug={citySlug}
+              serviceSlug={service}
             />
 
             {nearbyLocations.length > 0 && (

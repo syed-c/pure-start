@@ -25,6 +25,7 @@ import { usePrerenderReady } from "@/hooks/usePrerenderReady";
 import { usePinnedProfiles, sortWithPinnedFirst } from "@/hooks/usePinnedProfiles";
 import { useAreaLocalContent, generateAreaIntro } from "@/hooks/useAreaLocalContent";
 import { normalizeStateSlug } from "@/lib/slug/normalizeStateSlug";
+import { RichContentSections } from "@/components/seo/RichContentSections";
 import NotFound from "./NotFound";
 import StateServicePage from "./StateServicePage";
 import { 
@@ -537,6 +538,16 @@ const CityPage = () => {
                 cityName={cityName}
                 nearbyCities={nearbyLocations}
                 services={popularTreatments}
+              />
+
+              {/* Rich SEO Content Sections */}
+              <RichContentSections
+                pageType="city"
+                cityName={cityName}
+                regionName={stateName}
+                agencyCount={totalClinicCount || profiles?.length || 0}
+                stateSlug={normalizedStateSlug}
+                citySlug={citySlug}
               />
 
               {/* Nearby Cities Links */}

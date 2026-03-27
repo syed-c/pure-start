@@ -18,6 +18,7 @@ import { useProfiles } from "@/hooks/useProfiles";
 import { useServicePriceRanges } from "@/hooks/useServicePriceRanges";
 import { useSeoPageContent, parseMarkdownContent, parseFaqFromContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
+import { RichContentSections } from "@/components/seo/RichContentSections";
 import {
   Accordion,
   AccordionContent,
@@ -241,6 +242,20 @@ const ServicePage = () => {
               clinicCount={profiles?.length || 0}
               parsedContent={parsedContent}
               isLoading={isSeoContentPending}
+            />
+          </div>
+        </div>
+      </Section>
+
+      {/* Rich SEO Content Sections */}
+      <Section size="lg" className="bg-muted/30">
+        <div className="container px-4">
+          <div className="max-w-5xl mx-auto">
+            <RichContentSections
+              pageType="service"
+              serviceName={treatmentName}
+              agencyCount={profiles?.length || 0}
+              serviceSlug={serviceSlug}
             />
           </div>
         </div>
