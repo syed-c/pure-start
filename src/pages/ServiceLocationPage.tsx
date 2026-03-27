@@ -22,6 +22,7 @@ import { useState as useStateData, useCity, useCitiesByStateSlug } from "@/hooks
 import { useSeoPageContent, parseMarkdownContent, parseFaqFromContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
 import { normalizeStateSlug } from "@/lib/slug/normalizeStateSlug";
+import { RichContentSections } from "@/components/seo/RichContentSections";
 import {
   Accordion,
   AccordionContent,
