@@ -140,11 +140,11 @@ const App = () => (
             <PandaBot />
             <Suspense fallback={<PageLoader />}>
               <Routes>
-                {/* Homepage - New Fostering Design */}
-                <Route path="/" element={<HomeV2 />} />
+                {/* Homepage */}
+                <Route path="/" element={<Index />} />
                 
-                {/* Legacy Homepage */}
-                <Route path="/home-legacy" element={<Index />} />
+                {/* V2 Homepage */}
+                <Route path="/home-v2" element={<HomeV2 />} />
                 
                 {/* Search */}
                 <Route path="/search" element={<SearchPage />} />
