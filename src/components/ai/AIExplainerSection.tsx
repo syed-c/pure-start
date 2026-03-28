@@ -40,7 +40,7 @@ export const AIExplainerSection = ({ className, variant = "default" }: AIExplain
           <h3 className="font-bold text-foreground">How AI Search Works</h3>
         </div>
         <p className="text-sm text-muted-foreground leading-relaxed">
-          Simply describe what you need — treatment type, budget, location, or insurance. Our AI understands your request and matches you with the best-fit dentists from our verified network.
+          Simply describe what you need — treatment type, budget, location, or insurance. Our AI understands your request and matches you with the best-fit agencies from our verified network.
         </p>
       </div>
     );
@@ -85,7 +85,7 @@ export const AIExplainerSection = ({ className, variant = "default" }: AIExplain
           {/* Trust Note */}
           <div className="mt-10 text-center">
             <p className="text-sm text-muted-foreground">
-              <span className="font-semibold">Transparency promise:</span> AI assists matching — dentists control their profiles. Pricing and availability are set by clinics.
+              <span className="font-semibold">Transparency promise:</span> AI assists matching — agencies control their profiles. Pricing and availability are set by clinics.
             </p>
           </div>
         </div>

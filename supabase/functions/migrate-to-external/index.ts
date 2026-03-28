@@ -30,7 +30,7 @@ const MIGRATION_ORDER = [
   "clinics",
   
   // Level 4: Depends on clinics
-  "dentists",
+  "agencies",
   "clinic_treatments",
   "clinic_insurances",
   "clinic_gallery",

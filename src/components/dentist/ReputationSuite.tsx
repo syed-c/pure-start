@@ -116,7 +116,7 @@ const MESSAGE_TEMPLATES = [
     id: 'thank_you',
     name: 'Thank You',
     description: 'Thank patient for their visit',
-    message: 'Hi {name}! Thank you for choosing {clinic} for your dental care. We truly appreciate your trust in us!',
+    message: 'Hi {name}! Thank you for choosing {clinic} for your fostering care. We truly appreciate your trust in us!',
   },
 ];
 
@@ -153,7 +153,7 @@ export default function ReputationSuite() {
 
   // Fetch clinic
   const { data: clinic, isLoading: clinicLoading } = useQuery({
-    queryKey: ['dentist-clinic-reputation', user?.id],
+    queryKey: ['agency-profile-reputation', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clinics')

@@ -107,7 +107,7 @@ serve(async (req) => {
 
     // Build the notification message based on status
     let message = '';
-    const clinicName = appointment.clinic?.name || 'the dental clinic';
+    const clinicName = appointment.clinic?.name || 'the fostering agency';
     const patientName = appointment.patient_name;
     const appointmentDate = confirmedDate || appointment.confirmed_date || appointment.preferred_date || 'your scheduled date';
     const appointmentTime = confirmedTime || appointment.confirmed_time || appointment.preferred_time || 'your scheduled time';

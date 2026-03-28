@@ -25,7 +25,7 @@ interface ConversationalQABlockProps {
   title?: string;
   subtitle?: string;
   items: QAItem[];
-  /** Context label for AI crawlers (e.g., "dental-implants-dubai") */
+  /** Context label for AI crawlers (e.g., "fostering-placements-dubai") */
   contextLabel?: string;
   className?: string;
   /** Render as open accordion items for better crawlability */

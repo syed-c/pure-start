@@ -57,8 +57,8 @@ const EmirateComparisonPage = () => {
 
   const faqs = [
     { q: `Is ${treatmentName} cheaper in ${emirate1Name} or ${emirate2Name}?`, a: `${cheaperEmirate} is generally more affordable for ${treatmentName.toLowerCase()}, with savings of approximately ${savingsPercent}%. However, prices can vary significantly between individual clinics.` },
-    { q: `Should I travel to a different emirate for dental treatment?`, a: `If cost savings are significant (20%+), many UAE residents do travel between emirates for dental care. Consider the travel time, follow-up appointments, and whether you have insurance coverage at the destination clinic.` },
-    { q: `Are dental standards the same across all emirates?`, a: `Yes. All dental clinics in the UAE must be licensed by their respective health authority (DHA for Dubai, DOH for Abu Dhabi, MOHAP for others). Standards of care and safety regulations are consistent nationwide.` },
+    { q: `Should I travel to a different emirate for dental treatment?`, a: `If cost savings are significant (20%+), many UAE residents do travel between emirates for fostering care. Consider the travel time, follow-up appointments, and whether you have insurance coverage at the destination clinic.` },
+    { q: `Are dental standards the same across all emirates?`, a: `Yes. All fostering agencys in the UAE must be licensed by their respective health authority (DHA for Dubai, DOH for Abu Dhabi, MOHAP for others). Standards of care and safety regulations are consistent nationwide.` },
   ];
 
   return (

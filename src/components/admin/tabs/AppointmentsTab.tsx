@@ -23,7 +23,7 @@ import { format, isToday, isTomorrow, isPast, parseISO } from 'date-fns';
 export default function AppointmentsTab() {
   const queryClient = useQueryClient();
   const [filters, setFilters] = useState({
-    status: '', search: '', clinicId: '', dentistId: '', treatmentId: '', dateFrom: '', dateTo: '', source: '',
+    status: '', search: '', clinicId: '', contactId: '', treatmentId: '', dateFrom: '', dateTo: '', source: '',
   });
   const [showFilters, setShowFilters] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
@@ -32,7 +32,7 @@ export default function AppointmentsTab() {
   const { data: appointments, isLoading, refetch } = useAdminAppointments({
     status: filters.status || undefined,
     clinicId: filters.clinicId || undefined,
-    dentistId: filters.dentistId || undefined,
+    contactId: filters.contactId || undefined,
     treatmentId: filters.treatmentId || undefined,
     dateFrom: filters.dateFrom || undefined,
     dateTo: filters.dateTo || undefined,
@@ -64,9 +64,9 @@ export default function AppointmentsTab() {
   });
 
   const { data: contacts } = useQuery({
-    queryKey: ['filter-dentists'],
+    queryKey: ['filter-agencies'],
     queryFn: async () => {
-      const { data } = await supabase.from('dentists').select('id, name').eq('is_active', true).order('name').limit(100);
+      const { data } = await supabase.from('agencies').select('id, name').eq('is_active', true).order('name').limit(100);
       return data || [];
     },
   });
@@ -221,7 +221,7 @@ export default function AppointmentsTab() {
             <div className="flex flex-wrap gap-3">
               {agencyEnquiryCounts.slice(0, 10).map((d) => (
                 <div key={d.id} className="flex items-center gap-2 bg-muted/50 border border-border px-3 py-2 rounded-xl cursor-pointer hover:bg-muted transition-colors"
-                  onClick={() => setFilters({ ...filters, dentistId: d.id })}>
+                  onClick={() => setFilters({ ...filters, contactId: d.id })}>
                   <UserCheck className="h-4 w-4 text-primary" /><span className="text-sm font-medium">{d.name}</span><Badge variant="secondary">{d.count}</Badge>
                 </div>
               ))}
@@ -247,7 +247,7 @@ export default function AppointmentsTab() {
               </div>
               <div>
                 <label className="text-xs font-medium text-muted-foreground mb-1 block">Contact</label>
-                <Select value={filters.dentistId} onValueChange={(v) => setFilters({ ...filters, dentistId: v === 'all' ? '' : v })}>
+                <Select value={filters.contactId} onValueChange={(v) => setFilters({ ...filters, contactId: v === 'all' ? '' : v })}>
                   <SelectTrigger className="border-2"><SelectValue placeholder="All Contacts" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Contacts</SelectItem>
@@ -281,7 +281,7 @@ export default function AppointmentsTab() {
               <div><label className="text-xs font-medium text-muted-foreground mb-1 block">Date From</label><Input type="date" value={filters.dateFrom} onChange={(e) => setFilters({ ...filters, dateFrom: e.target.value })} className="border-2" /></div>
               <div><label className="text-xs font-medium text-muted-foreground mb-1 block">Date To</label><Input type="date" value={filters.dateTo} onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })} className="border-2" /></div>
               <div className="col-span-2 flex items-end">
-                <Button variant="ghost" size="sm" onClick={() => setFilters({ status: '', search: '', clinicId: '', dentistId: '', treatmentId: '', dateFrom: '', dateTo: '', source: '' })}>
+                <Button variant="ghost" size="sm" onClick={() => setFilters({ status: '', search: '', clinicId: '', contactId: '', treatmentId: '', dateFrom: '', dateTo: '', source: '' })}>
                   Clear All Filters
                 </Button>
               </div>

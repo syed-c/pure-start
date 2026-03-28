@@ -28,12 +28,12 @@ export default function ToolsManagementTab() {
             Tools Management
           </h2>
           <p className="text-muted-foreground">
-            Manage pricing, insurance coverage, and emergency dentist data for public tools
+            Manage pricing, insurance coverage, and emergency foster care data for public tools
           </p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" asChild>
-            <a href="/tools/dental-cost-calculator" target="_blank">
+            <a href="/tools/agency-cost-guide" target="_blank">
               <ExternalLink className="h-4 w-4 mr-1" /> Cost Calculator
             </a>
           </Button>
@@ -43,7 +43,7 @@ export default function ToolsManagementTab() {
             </a>
           </Button>
           <Button variant="outline" size="sm" asChild>
-            <a href="/emergency-dentist" target="_blank">
+            <a href="/emergency-foster-care" target="_blank">
               <ExternalLink className="h-4 w-4 mr-1" /> Emergency Finder
             </a>
           </Button>
@@ -236,7 +236,7 @@ function CostCalculatorManager() {
       <Card>
         <CardHeader>
           <CardTitle>Real Clinic Pricing Data</CardTitle>
-          <CardDescription>Average prices submitted by dentists on the platform</CardDescription>
+          <CardDescription>Average prices submitted by agencies on the platform</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
@@ -406,7 +406,7 @@ function InsuranceManager() {
   );
 }
 
-// ── Emergency Dentist Manager ──
+// ── Emergency Foster Care Manager ──
 function EmergencyManager() {
   const { data: emergencyStats } = useQuery({
     queryKey: ['admin-emergency-stats'],

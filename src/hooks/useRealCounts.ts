@@ -6,7 +6,7 @@ export interface RealCounts {
   states: number;
   cities: number;
   agencies: number;
-  dentists: number;
+  agencies: number;
   treatments: number;
 }
 
@@ -54,9 +54,9 @@ export function useRealCounts() {
           clinicCount = cCount || 0;
         }
         
-        // Count dentists in active clinics
+        // Count agencies in active clinics
         const { count: dCount } = await supabase
-          .from('dentists')
+          .from('agencies')
           .select('*', { count: 'exact', head: true })
           .eq('is_active', true);
         dentistCount = dCount || 0;
@@ -73,7 +73,7 @@ export function useRealCounts() {
         agencies: clinicCount,
         states: activeStateIds.length,
         cities: citiesCount,
-        dentists: dentistCount,
+        agencies: dentistCount,
         treatments: treatmentsCount || 0,
       };
     },

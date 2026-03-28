@@ -3,7 +3,7 @@ import { Star, MapPin, Briefcase, BadgeCheck, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { buildDentistProfileUrl, buildClinicProfileUrl } from "@/lib/url/buildProfileUrl";
+import { buildContactProfileUrl, buildClinicProfileUrl } from "@/lib/url/buildProfileUrl";
 
 interface DentistProfileCardProps {
   id: string;
@@ -39,7 +39,7 @@ export const DentistProfileCard = ({
   isFeatured = false,
   className
 }: DentistProfileCardProps) => {
-  const profileUrl = buildDentistProfileUrl({ slug });
+  const profileUrl = buildContactProfileUrl({ slug });
   const agencyUrl = clinicSlug ? buildClinicProfileUrl({ slug: clinicSlug }) : null;
 
   return (

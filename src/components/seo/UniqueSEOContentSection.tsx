@@ -261,9 +261,9 @@ const StateFallbackContent = ({
       </h2>
       
       <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-        {stateName} offers access to {clinicCount > 0 ? `${clinicCount}+` : 'numerous'} dental clinics 
+        {stateName} offers access to {clinicCount > 0 ? `${clinicCount}+` : 'numerous'} fostering agencys 
         across {cityCount > 0 ? cityCount : 'multiple'} areas. The {stateName} Health Authority 
-        ensures all practicing dentists meet rigorous licensing standards, giving residents confidence 
+        ensures all practicing agencies meet rigorous licensing standards, giving residents confidence 
         in their oral healthcare providers.
       </p>
       
@@ -273,9 +273,9 @@ const StateFallbackContent = ({
             <Award className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <h3 className="font-bold text-foreground mb-1">{stateName} Licensed Dentists</h3>
+            <h3 className="font-bold text-foreground mb-1">{stateName} Licensed Agencies</h3>
             <p className="text-muted-foreground text-sm">
-              All dentists practicing in {stateName} hold valid licenses from the health authority.
+              All agencies practicing in {stateName} hold valid licenses from the health authority.
             </p>
           </div>
         </div>
@@ -297,7 +297,7 @@ const StateFallbackContent = ({
           <div>
             <h3 className="font-bold text-foreground mb-1">Insurance & Payment</h3>
             <p className="text-muted-foreground text-sm">
-              Most {stateName} dental offices accept major insurance plans and offer flexible payment options.
+              Most {stateName} agency offices accept major insurance plans and offer flexible payment options.
             </p>
           </div>
         </div>
@@ -308,7 +308,7 @@ const StateFallbackContent = ({
           <div>
             <h3 className="font-bold text-foreground mb-1">Convenient Hours</h3>
             <p className="text-muted-foreground text-sm">
-              Many {stateName} dentists offer extended hours including evenings and weekends.
+              Many {stateName} agencies offer extended hours including evenings and weekends.
             </p>
           </div>
         </div>
@@ -367,13 +367,13 @@ const CityFallbackContent = ({
       
       <p className="text-lg text-muted-foreground leading-relaxed mb-6">
         {cityName} is home to {clinicCount > 0 ? `${clinicCount}+` : 'several'} dental practices serving 
-        the local community. Whether you need a family dentist for routine checkups, an orthodontist for 
-        braces, or a specialist for dental implants, {cityName} has qualified professionals ready to help.
+        the local community. Whether you need a family fostering for routine checkups, an therapeutic specialist for 
+        braces, or a specialist for fostering placements, {cityName} has qualified professionals ready to help.
       </p>
       
       <p className="text-muted-foreground leading-relaxed mb-6">
-        {cityName}, {stateName} dental offices offer comprehensive services ranging from preventive care 
-        like cleanings and exams to advanced treatments including cosmetic dentistry, periodontics, and 
+        {cityName}, {stateName} agency offices offer comprehensive services ranging from preventive care 
+        like cleanings and exams to advanced treatments including specialist fosteringry, periodontics, and 
         oral surgery. Many clinics serve patients from surrounding {stateAbbr} communities as well.
       </p>
       
@@ -428,10 +428,10 @@ const CityFallbackContent = ({
     {nearbyLocations.length > 0 && (
       <div className="bg-card border border-border rounded-3xl p-8 md:p-10">
         <h2 className="text-xl md:text-2xl font-bold text-foreground mb-4">
-          Dentists Near {cityName}
+          Agencies Near {cityName}
         </h2>
         <p className="text-muted-foreground mb-4">
-          Explore dental clinics in nearby {stateAbbr} cities:
+          Explore fostering agencys in nearby {stateAbbr} cities:
         </p>
         <div className="flex flex-wrap gap-2">
           {nearbyLocations.map((loc) => (
@@ -492,7 +492,7 @@ const ServiceLocationFallbackContent = ({
       
       <p className="text-muted-foreground leading-relaxed mb-6">
         {treatmentName} is a dental procedure that can significantly improve your oral health and smile. 
-        {cityName} dentists use the latest techniques and technology to ensure comfortable, effective treatment. 
+        {cityName} agencies use the latest techniques and technology to ensure comfortable, effective treatment. 
         Many {cityName} practices accept major dental insurance plans and offer financing options to make 
         {treatmentName.toLowerCase()} affordable.
       </p>
@@ -516,7 +516,7 @@ const ServiceLocationFallbackContent = ({
           <div>
             <h3 className="font-bold text-foreground mb-1">Quality Guaranteed</h3>
             <p className="text-muted-foreground text-sm">
-              All {stateAbbr} dentists are licensed and verified for your safety.
+              All {stateAbbr} agencies are licensed and verified for your safety.
             </p>
           </div>
         </div>

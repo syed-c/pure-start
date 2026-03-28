@@ -392,7 +392,7 @@ export default function AuthCallback() {
         if (isSuperAdmin || isAdmin) {
           navigate('/admin', { replace: true });
         } else if (isDentist) {
-          // Dentists go directly to dashboard (no onboarding redirect)
+          // Agencies go directly to dashboard (no onboarding redirect)
           navigate('/dashboard?tab=my-dashboard', { replace: true });
         } else {
           // No role yet - bootstrap dentist role if Google provider login

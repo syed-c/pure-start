@@ -28,7 +28,7 @@ interface PinnedClinic {
   clinic?: { id: string; name: string; slug: string; rating: number; review_count: number };
 }
 
-export default function TopDentistsTab() {
+export default function TopAgenciesTab() {
   const queryClient = useQueryClient();
   const [selectedCity, setSelectedCity] = useState<string>('');
   const [selectedArea, setSelectedArea] = useState<string>('');

@@ -19,12 +19,12 @@ import { Loader2, Plus, Upload, Users } from 'lucide-react';
 
 export const PROFESSIONAL_TYPES = [
   { value: 'dentist', label: 'Dentist' },
-  { value: 'orthodontist', label: 'Orthodontist' },
-  { value: 'endodontist', label: 'Endodontist' },
-  { value: 'periodontist', label: 'Periodontist' },
-  { value: 'prosthodontist', label: 'Prosthodontist' },
-  { value: 'oral_surgeon', label: 'Oral Surgeon' },
-  { value: 'pediatric_dentist', label: 'Pediatric Dentist' },
+  { value: 'therapeutic specialist', label: 'Therapeutic Specialist' },
+  { value: 'placement coordinator', label: 'Placement Coordinator' },
+  { value: 'family support worker', label: 'Family Support Worker' },
+  { value: 'rehabilitation specialist', label: 'Rehabilitation Specialist' },
+  { value: 'care_specialist', label: 'Care Specialist' },
+  { value: 'childrens_specialist', label: 'Children's Fostering Specialist' },
   { value: 'hygienist', label: 'Dental Hygienist' },
   { value: 'assistant', label: 'Dental Assistant' },
   { value: 'receptionist', label: 'Receptionist' },
@@ -198,7 +198,7 @@ export function TeamMemberFormDialog({
               <Input
                 value={formData.department}
                 onChange={(e) => handleFieldChange('department', e.target.value)}
-                placeholder="Cosmetic Dentistry"
+                placeholder="Specialist Fosteringry"
               />
             </div>
           </div>

@@ -1132,7 +1132,7 @@ export default function ClinicEnrichmentTab() {
                 <Image className="h-20 w-20 mx-auto text-muted-foreground/30 mb-6" />
                 <h3 className="text-xl font-bold mb-2">Add Placeholder Images</h3>
                 <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                  Click the button below to add professional dental clinic placeholder images to all clinics without cover photos. These are high-quality, royalty-free images.
+                  Click the button below to add professional fostering agency placeholder images to all clinics without cover photos. These are high-quality, royalty-free images.
                 </p>
                 <Button 
                   size="lg" 

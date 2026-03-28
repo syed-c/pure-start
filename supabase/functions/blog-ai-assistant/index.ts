@@ -262,14 +262,14 @@ Return JSON: {"links": [{"anchor_text": "exact text from content", "url": "/actu
       }
 
       case "detect_topic_cluster":
-        systemPrompt = "You are a content strategist. Analyze the blog post and identify the main topic cluster. Common dental topic clusters include: Oral Health, Preventive Care, Cosmetic Dentistry, Pediatric Dentistry, Dental Procedures, Dental Technology.";
+        systemPrompt = "You are a content strategist. Analyze the blog post and identify the main topic cluster. Common dental topic clusters include: Oral Health, Preventive Care, Specialist Fosteringry, Children's Fostering Specialistry, Dental Procedures, Dental Technology.";
         userPrompt = `Title: ${title}\n\nContent:\n${content?.substring(0, 2000)}\n\nIdentify the topic cluster and primary keyword in JSON format: {"cluster_name": "...", "primary_keyword": "...", "related_keywords": ["..."]}`;
         break;
 
       case "generate_faqs": {
         const faqCount = count && typeof count === "number" ? Math.min(Math.max(count, 3), 15) : 5;
         systemPrompt = `You are a dental content expert. Generate exactly ${faqCount} frequently asked questions (FAQs) that people commonly ask about the given topic. The FAQs should be:
-1. Relevant to potential dental patients searching for this topic
+1. Relevant to potential foster carers searching for this topic
 2. Informative and helpful
 3. Cover different aspects of the topic
 4. Written in a natural, conversational tone

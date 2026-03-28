@@ -4,13 +4,13 @@ import { useAuth } from './useAuth';
 
 /**
  * Hook to get the clinic owned/claimed by the current dentist user
- * This enforces that dentists can ONLY access their own clinic data
+ * This enforces that agencies can ONLY access their own clinic data
  */
-export function useDentistClinic() {
+export function useAgencyProfile() {
   const { user, isDentist, isAdmin, isSuperAdmin } = useAuth();
 
   return useQuery({
-    queryKey: ['dentist-clinic', user?.id],
+    queryKey: ['agency-profile', user?.id],
     queryFn: async () => {
       if (!user?.id) return null;
 
@@ -42,7 +42,7 @@ export function useDentistClinic() {
  * Hook to get appointments ONLY for the dentist's own clinic
  */
 export function useDentistAppointments() {
-  const { data: clinic } = useDentistClinic();
+  const { data: clinic } = useAgencyProfile();
 
   return useQuery({
     queryKey: ['dentist-appointments', clinic?.id],
@@ -54,7 +54,7 @@ export function useDentistAppointments() {
         .select(`
           *,
           treatment:treatments(id, name),
-          dentist:dentists(id, name)
+          dentist:agencies(id, name)
         `)
         .eq('clinic_id', clinic.id)
         .order('created_at', { ascending: false });
@@ -70,7 +70,7 @@ export function useDentistAppointments() {
  * Hook to get reviews ONLY for the dentist's own clinic
  */
 export function useDentistReviews() {
-  const { data: clinic } = useDentistClinic();
+  const { data: clinic } = useAgencyProfile();
 
   return useQuery({
     queryKey: ['dentist-reviews', clinic?.id],
@@ -100,10 +100,10 @@ export function useDentistReviews() {
 }
 
 /**
- * Hook to get team members (dentists) ONLY for the dentist's own clinic
+ * Hook to get team members (agencies) ONLY for the dentist's own clinic
  */
 export function useDentistTeam() {
-  const { data: clinic } = useDentistClinic();
+  const { data: clinic } = useAgencyProfile();
 
   return useQuery({
     queryKey: ['dentist-team', clinic?.id],
@@ -111,7 +111,7 @@ export function useDentistTeam() {
       if (!clinic?.id) return [];
 
       const { data, error } = await supabase
-        .from('dentists')
+        .from('agencies')
         .select('*')
         .eq('clinic_id', clinic.id)
         .order('is_primary', { ascending: false });
@@ -127,7 +127,7 @@ export function useDentistTeam() {
  * Hook to get patients ONLY for the dentist's own clinic
  */
 export function useDentistPatients() {
-  const { data: clinic } = useDentistClinic();
+  const { data: clinic } = useAgencyProfile();
 
   return useQuery({
     queryKey: ['dentist-patients', clinic?.id],
@@ -151,7 +151,7 @@ export function useDentistPatients() {
  * Hook to get messages ONLY for the dentist's own clinic
  */
 export function useDentistMessages() {
-  const { data: clinic } = useDentistClinic();
+  const { data: clinic } = useAgencyProfile();
 
   return useQuery({
     queryKey: ['dentist-messages', clinic?.id],
@@ -179,7 +179,7 @@ export function useDentistMessages() {
  * Hook to get leads ONLY for the dentist's own clinic
  */
 export function useDentistLeads() {
-  const { data: clinic } = useDentistClinic();
+  const { data: clinic } = useAgencyProfile();
 
   return useQuery({
     queryKey: ['dentist-leads', clinic?.id],
@@ -206,7 +206,7 @@ export function useDentistLeads() {
  * Hook to get clinic stats for the dentist's own clinic only
  */
 export function useDentistStats() {
-  const { data: clinic } = useDentistClinic();
+  const { data: clinic } = useAgencyProfile();
 
   return useQuery({
     queryKey: ['dentist-stats', clinic?.id],

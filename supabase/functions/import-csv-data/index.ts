@@ -87,7 +87,7 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      // Skip rows with invalid dentist_id FK if applicable
+      // Skip rows with invalid contact_id FK if applicable
       rows.push(row);
     }
 

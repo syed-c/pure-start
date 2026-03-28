@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useAdminClinics, useUpdateClinic, useAdminDentists, useCreateClinic, useCreateDentist } from '@/hooks/useAdminClinics';
+import { useAdminClinics, useUpdateClinic, useAdminAgencies, useCreateClinic, useCreateDentist } from '@/hooks/useAdminClinics';
 import { usePauseClinic, useDeleteClinic, useVerifyClinic, useClaimClinic } from '@/hooks/useAdminClinicsExtended';
 import { useAdminCities, useAdminAreas, useCountries } from '@/hooks/useAdminLocations';
 import { useAdminUsers } from '@/hooks/useAdminUsers';
@@ -38,7 +38,7 @@ export default function ClinicsTab() {
     source: filters.source || undefined,
     cityId: filters.cityId || undefined
   });
-  const { data: dentists, refetch: refetchDentists } = useAdminDentists();
+  const { data: agencies, refetch: refetchAgencies } = useAdminAgencies();
   const { data: cities } = useAdminCities();
   const { data: realCounts } = useRealCounts();
   const [selectedCityId, setSelectedCityId] = useState('');
@@ -55,7 +55,7 @@ export default function ClinicsTab() {
   const { data: totalContactCount = 0 } = useQuery({
     queryKey: ['total-dentist-count'],
     queryFn: async () => {
-      const { count } = await supabase.from('dentists').select('*', { count: 'exact', head: true });
+      const { count } = await supabase.from('agencies').select('*', { count: 'exact', head: true });
       return count || 0;
     },
   });
@@ -451,7 +451,7 @@ export default function ClinicsTab() {
                 <SelectItem value="manual">Manual</SelectItem>
               </SelectContent>
             </Select>
-            <Button variant="outline" size="icon" onClick={() => { refetch(); refetchDentists(); }} title="Refresh data">
+            <Button variant="outline" size="icon" onClick={() => { refetch(); refetchAgencies(); }} title="Refresh data">
               <RefreshCw className="h-4 w-4" />
             </Button>
           </div>
@@ -461,7 +461,7 @@ export default function ClinicsTab() {
         </CardContent>
       </Card>
 
-      {/* Agency Table (removed separate Clinics/Dentists tabs — unified view) */}
+      {/* Agency Table (removed separate Clinics/Agencies tabs — unified view) */}
       <Card className="card-modern">
         <CardContent className="p-0">
           <Table>

@@ -532,14 +532,14 @@ export default function MarketplaceControlTab() {
               <div className="text-center py-12">
                 <Target className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                 <p className="text-muted-foreground mb-2">
-                  Use the Pinned Profiles and Top Dentists tabs for manual ranking control
+                  Use the Pinned Profiles and Top Agencies tabs for manual ranking control
                 </p>
                 <div className="flex gap-2 justify-center">
                   <Button variant="outline" onClick={() => window.location.href = '/admin?tab=pinned-profiles'}>
                     Pinned Profiles
                   </Button>
-                  <Button variant="outline" onClick={() => window.location.href = '/admin?tab=top-dentists'}>
-                    Top Dentists
+                  <Button variant="outline" onClick={() => window.location.href = '/admin?tab=top-agencies'}>
+                    Top Agencies
                   </Button>
                 </div>
               </div>

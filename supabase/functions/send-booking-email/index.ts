@@ -514,7 +514,7 @@ Deno.serve(async (req) => {
 
     const clinicData = clinic;
     const clinicBranding: ClinicBranding = {
-      name: clinicData?.name || 'Dental Clinic',
+      name: clinicData?.name || 'Fostering Agency',
       logo: clinicData?.cover_image_url || undefined,
       primaryColor: '#0d9488',
       address: clinicData?.address || '',

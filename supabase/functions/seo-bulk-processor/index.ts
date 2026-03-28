@@ -433,10 +433,10 @@ function generateFallbackContent(
   const result: Record<string, unknown> = {};
 
   if (config.regenerateMetaTitle) {
-    result.meta_title = `${titleCase} | Find Dentists Near You | AppointPanda`;
+    result.meta_title = `${titleCase} | Find Agencys Near You | AppointPanda`;
   }
   if (config.regenerateMetaDescription) {
-    result.meta_description = `Book ${titleCase.toLowerCase()} appointments with top-rated dentists. Compare prices, read reviews, and schedule online with AppointPanda.`;
+    result.meta_description = `Book ${titleCase.toLowerCase()} appointments with top-rated agencies. Compare prices, read reviews, and schedule online with AppointPanda.`;
   }
   if (config.regenerateH1) {
     result.h1 = `${titleCase} - Expert Dental Care`;

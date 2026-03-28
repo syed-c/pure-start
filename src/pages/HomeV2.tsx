@@ -18,7 +18,7 @@ import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import { useStatesWithClinics } from "@/hooks/useLocations";
 import { useRealCounts } from "@/hooks/useRealCounts";
 import { useTreatments } from "@/hooks/useTreatments";
-import { useTopDentistsPerLocation } from "@/hooks/useProfiles";
+import { useTopAgenciesPerLocation } from "@/hooks/useProfiles";
 import { ACTIVE_STATES } from "@/lib/constants/activeStates";
 import { FOSTERING_CATEGORIES, POPULAR_CITIES } from "@/lib/constants/activeRegions";
 
@@ -63,7 +63,7 @@ const testimonials = [
 const HomeV2 = () => {
   const { data: realCounts } = useRealCounts();
   const { data: treatments } = useTreatments();
-  const { data: profiles } = useTopDentistsPerLocation(30);
+  const { data: profiles } = useTopAgenciesPerLocation(30);
   const { data: seoContent } = useSeoPageContent("/");
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [heroTextIdx, setHeroTextIdx] = useState(0);

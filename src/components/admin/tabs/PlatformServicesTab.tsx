@@ -48,7 +48,7 @@ const PLATFORM_SERVICES: PlatformService[] = [
   { id: 'dentist_profiles', key: 'dentist_profiles', name: 'Dentist Profiles', description: 'Individual dentist pages', icon: Users, category: 'core' },
   { id: 'search_directory', key: 'search_directory', name: 'Search & Directory', description: 'Location-based clinic search', icon: Search, category: 'core' },
   { id: 'appointment_booking', key: 'appointment_booking', name: 'Appointment Booking', description: 'Online booking functionality', icon: Calendar, category: 'core' },
-  { id: 'clinic_claiming', key: 'clinic_claiming', name: 'Clinic Claiming', description: 'Allow dentists to claim profiles', icon: Shield, category: 'core' },
+  { id: 'clinic_claiming', key: 'clinic_claiming', name: 'Clinic Claiming', description: 'Allow agencies to claim profiles', icon: Shield, category: 'core' },
   
   // Messaging Features
   { id: 'sms_notifications', key: 'sms_notifications', name: 'SMS Notifications', description: 'Send SMS to patients', icon: MessageSquare, category: 'messaging' },
@@ -68,7 +68,7 @@ const PLATFORM_SERVICES: PlatformService[] = [
   { id: 'outreach_campaigns', key: 'outreach_campaigns', name: 'Outreach Campaigns', description: 'Email marketing campaigns', icon: Mail, category: 'automation' },
   
   // Premium Features
-  { id: 'dedicated_crm_number', key: 'dedicated_crm_number', name: 'Dedicated CRM Number', description: 'Private virtual number for dentists', icon: MessageSquare, category: 'premium', isPremium: true },
+  { id: 'dedicated_crm_number', key: 'dedicated_crm_number', name: 'Dedicated CRM Number', description: 'Private virtual number for agencies', icon: MessageSquare, category: 'premium', isPremium: true },
   { id: 'advanced_analytics', key: 'advanced_analytics', name: 'Advanced Analytics', description: 'Detailed performance reports', icon: Activity, category: 'premium', isPremium: true },
   { id: 'priority_support', key: 'priority_support', name: 'Priority Support', description: 'Fast-track support tickets', icon: Shield, category: 'premium', isPremium: true },
 ];
@@ -252,7 +252,7 @@ export default function PlatformServicesTab() {
             <div>
               <p className="font-medium text-blue-custom">How Platform Services Work</p>
               <p className="text-sm text-muted-foreground mt-1">
-                Disabling a service will hide it from all users (dentists and patients) across the platform.
+                Disabling a service will hide it from all users (agencies and patients) across the platform.
                 This is useful for temporarily disabling features during maintenance or for phased rollouts.
                 Premium features can be controlled separately via Plan feature bundling.
               </p>

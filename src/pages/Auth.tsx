@@ -57,7 +57,7 @@ export default function Auth() {
     if (isSuperAdmin || isAdmin) {
       navigate('/admin', { replace: true });
     } else if (isDentist) {
-      // Dentists go to their dashboard
+      // Agencies go to their dashboard
       navigate('/dashboard?tab=my-dashboard', { replace: true });
     } else {
       // User has no specific role or unrecognised role - go to home

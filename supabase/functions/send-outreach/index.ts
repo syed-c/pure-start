@@ -250,10 +250,10 @@ serve(async (req) => {
 
         // Replace variables with test data
         const testVariables = {
-          clinic_name: 'Test Dental Clinic',
+          clinic_name: 'Test Fostering Agency',
           claim_link: 'https://appointpanda.ae/claim-profile?test=true',
           unsubscribe_link: 'https://appointpanda.ae/unsubscribe?test=true',
-          dentist_name: 'Dr. Test User',
+          contact_name: 'Dr. Test User',
           patient_name: 'Test Patient',
         };
 

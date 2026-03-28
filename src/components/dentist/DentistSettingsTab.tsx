@@ -45,7 +45,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 
-export default function DentistSettingsTab() {
+export default function AgencySettingsTab() {
   const { user, session } = useAuth();
   const queryClient = useQueryClient();
   const [showPassword, setShowPassword] = useState(false);
@@ -61,7 +61,7 @@ export default function DentistSettingsTab() {
 
   // Fetch clinic (without sensitive gmb fields that are now in clinic_oauth_tokens)
   const { data: clinic, isLoading: clinicLoading } = useQuery({
-    queryKey: ['dentist-clinic-settings', user?.id],
+    queryKey: ['agency-profile-settings', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clinics')
@@ -158,7 +158,7 @@ export default function DentistSettingsTab() {
       if (error) throw error;
 
       toast.success('GMB disconnected. Review sync has been disabled.');
-      queryClient.invalidateQueries({ queryKey: ['dentist-clinic-settings'] });
+      queryClient.invalidateQueries({ queryKey: ['agency-profile-settings'] });
       queryClient.invalidateQueries({ queryKey: ['clinic-oauth-tokens'] });
       setUnlinkGmbDialog(false);
     } catch (err: any) {

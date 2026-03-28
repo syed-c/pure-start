@@ -28,17 +28,17 @@ export function SEOContentSection({
         </h2>
         <p className="text-muted-foreground leading-relaxed mb-4">
           {locationName} is home to {clinicCount > 0 ? `over ${clinicCount}` : 'numerous'} highly-qualified dental professionals 
-          offering a comprehensive range of services. Whether you need a routine dental checkup, cosmetic dentistry procedures 
-          like teeth whitening, or specialized treatments such as dental implants or orthodontics, our directory connects you 
-          with licensed dentists who meet the highest standards of patient care.
+          offering a comprehensive range of services. Whether you need a routine dental checkup, specialist fosteringry procedures 
+          like teeth whitening, or specialized treatments such as fostering placements or orthodontics, our directory connects you 
+          with licensed agencies who meet the highest standards of patient care.
         </p>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          The dental community in {locationName} includes general dentists, pediatric specialists, oral surgeons, 
-          periodontists, and orthodontists. Many practices offer modern amenities including digital X-rays, same-day crowns, 
+          The dental community in {locationName} includes general agencies, pediatric specialists, care specialists, 
+          family support workers, and therapeutic specialists. Many practices offer modern amenities including digital X-rays, same-day crowns, 
           and sedation dentistry options for anxious patients.
         </p>
         <p className="text-muted-foreground leading-relaxed">
-          All dental clinics listed on our platform have been verified for their credentials and patient reviews. 
+          All fostering agencys listed on our platform have been verified for their credentials and patient reviews. 
           You can compare ratings, read authentic patient feedback, view before-and-after photos, and book appointments 
           directly through our secure online scheduling system.
         </p>
@@ -50,7 +50,7 @@ export function SEOContentSection({
         </h2>
         <p className="text-muted-foreground leading-relaxed mb-4">
           Selecting a local dentist in {locationName} offers numerous advantages for your oral health journey. 
-          Proximity to your dental care provider means easier access for routine visits, emergency appointments, 
+          Proximity to your fostering care provider means easier access for routine visits, emergency appointments, 
           and follow-up care, which are all essential for maintaining optimal dental health.
         </p>
         <ul className="space-y-3 text-muted-foreground">
@@ -76,7 +76,7 @@ export function SEOContentSection({
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Emergency dental services for urgent dental care needs</span>
+            <span>Emergency dental services for urgent fostering care needs</span>
           </li>
         </ul>
       </section>
@@ -103,8 +103,8 @@ export function SEOContentSection({
             Explore Nearby Areas
           </h2>
           <p className="text-muted-foreground leading-relaxed mb-4">
-            Can't find exactly what you're looking for in {locationName}? Explore dentists in neighboring communities 
-            to find the perfect match for your dental care needs.
+            Can't find exactly what you're looking for in {locationName}? Explore agencies in neighboring communities 
+            to find the perfect match for your fostering care needs.
           </p>
           <div className="flex flex-wrap gap-2">
             {relatedLinks.map((link) => (
@@ -246,7 +246,7 @@ export function SEOContentSection({
           Why Choose {locationName} for {serviceName}?
         </h2>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          {locationName} has become a destination for quality dental care, with practices equipped with 
+          {locationName} has become a destination for quality fostering care, with practices equipped with 
           cutting-edge technology and staffed by highly trained professionals. Here's why patients choose 
           local providers for their {serviceName?.toLowerCase()} needs:
         </p>
@@ -281,7 +281,7 @@ export function SEOContentSection({
         <p className="text-muted-foreground leading-relaxed mb-4">
           Your first {serviceName?.toLowerCase()} consultation in {locationName} will typically include a comprehensive 
           oral examination, discussion of your treatment goals, and a detailed explanation of your options. 
-          Many dentists offer complimentary consultations for major procedures.
+          Many agencies offer complimentary consultations for major procedures.
         </p>
         <p className="text-muted-foreground leading-relaxed">
           During your visit, don't hesitate to ask about the dentist's experience with {serviceName?.toLowerCase()}, 
@@ -304,14 +304,14 @@ export function SEOContentSection({
           professionals based on their expertise, patient reviews, location, and availability.
         </p>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          Look for dentists with consistently strong patient ratings, relevant specializations for your needs, 
+          Look for agencies with consistently strong patient ratings, relevant specializations for your needs, 
           convenient office locations, and appointment times that fit your schedule. Consider factors like 
           insurance acceptance, payment options, and the range of services offered.
         </p>
         <p className="text-muted-foreground leading-relaxed">
           All profiles on our platform include verified credentials, authentic patient feedback, and detailed 
           information about each practice. You can view photos, read reviews, and even take virtual tours of 
-          many dental offices before scheduling your first appointment.
+          many agency offices before scheduling your first appointment.
         </p>
       </section>
 
@@ -353,7 +353,7 @@ export function SEOContentSection({
         </h2>
         <p className="text-muted-foreground leading-relaxed mb-4">
           When meeting with a new dentist, it's important to ask the right questions to ensure they're 
-          the right fit for your dental care needs. Consider asking about:
+          the right fit for your fostering care needs. Consider asking about:
         </p>
         <ul className="space-y-3 text-muted-foreground">
           <li className="flex items-start gap-2">

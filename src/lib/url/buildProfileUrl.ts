@@ -9,7 +9,7 @@
 
 import { withTrailingSlash } from "./withTrailingSlash";
 
-export interface DentistData {
+export interface ContactData {
   slug: string;
 }
 
@@ -19,7 +19,7 @@ export interface ClinicData {
 
 // Aliases for fostering context
 export type AgencyData = ClinicData;
-export type ContactData = DentistData;
+export type ContactData = ContactData;
 
 export interface CityData {
   slug: string;
@@ -35,7 +35,7 @@ export interface ServiceData {
  * Build canonical dentist profile URL
  * Format: /dentist/{slug}/
  */
-export function buildDentistProfileUrl(dentist: DentistData): string {
+export function buildContactProfileUrl(dentist: ContactData): string {
   if (!dentist?.slug) return "/";
   return withTrailingSlash(`/dentist/${dentist.slug}`);
 }

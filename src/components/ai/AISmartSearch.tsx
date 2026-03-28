@@ -31,7 +31,7 @@ function generateExamples(city?: string, state?: string, service?: string): stri
     // City page examples
     examples.push(`Teeth whitening in ${city}`);
     examples.push(`Affordable dentist in ${city}`);
-    examples.push(`Emergency dental care ${city}`);
+    examples.push(`Emergency fostering care ${city}`);
     examples.push(`Invisalign specialist near me`);
   } else if (service) {
     // Service page examples

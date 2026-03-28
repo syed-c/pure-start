@@ -4,7 +4,7 @@ import {
   buildServiceLocationUrl, 
   buildCityUrl, 
   buildServiceUrl, 
-  buildDentistProfileUrl 
+  buildContactProfileUrl 
 } from "@/lib/url/buildProfileUrl";
 
 interface InterlinkingSectionProps {
@@ -17,7 +17,7 @@ interface InterlinkingSectionProps {
   citySlug?: string;
   relatedLocations?: Array<{ name: string; slug: string; parentSlug?: string; stateSlug?: string }>;
   relatedServices?: Array<{ name: string; slug: string }>;
-  nearbyDentists?: Array<{ name: string; slug: string }>;
+  nearbyAgencies?: Array<{ name: string; slug: string }>;
   className?: string;
 }
 
@@ -31,7 +31,7 @@ export function InterlinkingSection({
   citySlug = "",
   relatedLocations = [],
   relatedServices = [],
-  nearbyDentists = [],
+  nearbyAgencies = [],
   className = "",
 }: InterlinkingSectionProps) {
   // Use stateSlug if provided, fallback to citySlug for legacy compat
@@ -65,7 +65,7 @@ export function InterlinkingSection({
         <div>
           <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
             <MapPin className="h-5 w-5 text-primary" />
-            Dentists in Nearby Areas
+            Agencies in Nearby Areas
           </h3>
           <div className="flex flex-wrap gap-2">
             {relatedLocations.slice(0, 8).map((location) => (
@@ -193,7 +193,7 @@ export function InterlinkingSection({
           to={buildCityUrl(effectiveStateSlug, currentLocationSlug || "")}
           className="text-sm font-bold text-primary hover:underline inline-flex items-center gap-1"
         >
-          All Dentists in {currentLocationName} <ArrowRight className="h-3 w-3" />
+          All Agencies in {currentLocationName} <ArrowRight className="h-3 w-3" />
         </Link>
       </div>
     </>
@@ -233,20 +233,20 @@ export function InterlinkingSection({
             to={buildCityUrl(effectiveStateSlug, currentLocationSlug)}
             className="bg-card border border-border rounded-xl px-4 py-2 text-sm font-bold hover:border-primary hover:text-primary transition-all inline-block"
           >
-            View all Dentists in {currentLocationName}
+            View all Agencies in {currentLocationName}
           </Link>
         </div>
       )}
 
-      {/* Nearby Dentists */}
-      {nearbyDentists.length > 0 && (
+      {/* Nearby Agencies */}
+      {nearbyAgencies.length > 0 && (
         <div>
-          <h3 className="text-lg font-bold text-foreground mb-4">Similar Dentists Nearby</h3>
+          <h3 className="text-lg font-bold text-foreground mb-4">Similar Agencies Nearby</h3>
           <div className="flex flex-wrap gap-2">
-            {nearbyDentists.slice(0, 4).map((dentist) => (
+            {nearbyAgencies.slice(0, 4).map((dentist) => (
               <Link
                 key={dentist.slug}
-                to={buildDentistProfileUrl(dentist)}
+                to={buildContactProfileUrl(dentist)}
                 className="bg-card border border-border rounded-xl px-4 py-2 text-sm font-bold hover:border-primary hover:text-primary transition-all"
               >
                 {dentist.name}

@@ -108,7 +108,7 @@ export default function AdvancedFeaturesPanel() {
         { name: 'Insurance input integration', completed: true },
         { name: 'Procedure cost breakdown', completed: true },
         { name: 'Out-of-pocket estimates', completed: true },
-        { name: 'Compare dentists by price', completed: true },
+        { name: 'Compare agencies by price', completed: true },
         { name: 'Schedule consultation CTA', completed: true }
       ]
     },

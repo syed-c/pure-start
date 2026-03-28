@@ -91,7 +91,7 @@ const generateProfessionalTemplate = (type: string, clinicName = '{{clinic_name}
           <tr>
             <td style="padding:40px;">
               <p style="margin:0 0 20px;font-size:16px;color:#334155;line-height:1.6;">Hi ${clinicName} Team,</p>
-              <p style="margin:0 0 20px;font-size:16px;color:#334155;line-height:1.6;">Congratulations! Your dental practice is now visible to thousands of patients searching for quality dental care in your area.</p>
+              <p style="margin:0 0 20px;font-size:16px;color:#334155;line-height:1.6;">Congratulations! Your dental practice is now visible to thousands of patients searching for quality fostering care in your area.</p>
               <div style="background-color:#f0fdfa;border-left:4px solid #0d9488;padding:20px;margin:24px 0;border-radius:0 8px 8px 0;">
                 <p style="margin:0;font-size:14px;color:#0d9488;font-weight:600;">🎉 Your listing is live and ready to attract new patients!</p>
               </div>

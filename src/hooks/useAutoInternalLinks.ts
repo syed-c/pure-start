@@ -80,7 +80,7 @@ export function useAutoInternalLinks({
 
       if (pageType === "city" && stateSlug && stateName) {
         links.push({
-          label: `All ${stateName} Dentists`,
+          label: `All ${stateName} Agencies`,
           href: `/${stateSlug}/`,
           type: "parent",
         });

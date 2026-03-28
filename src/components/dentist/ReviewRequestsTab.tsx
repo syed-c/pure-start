@@ -41,7 +41,7 @@ export default function ReviewRequestsTab() {
   const [linkCopied, setLinkCopied] = useState(false);
   // Fetch clinic
   const { data: clinic, isLoading: clinicLoading } = useQuery({
-    queryKey: ['dentist-clinic', user?.id],
+    queryKey: ['agency-profile', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clinics')

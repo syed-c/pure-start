@@ -32,8 +32,8 @@ const SPRINT_DEFINITIONS = {
     targetWordCount: 3500,
     maxWordCount: 5000,
     priority: [
-      'dental-implants', 'teeth-whitening', 'invisalign', 'root-canal', 'dental-crowns',
-      'veneers', 'cosmetic-dentistry', 'emergency-dental-care', 'dentures', 'dental-bridges'
+      'fostering-placements', 'teeth-whitening', 'invisalign', 'root-canal', 'dental-crowns',
+      'veneers', 'specialist-fosteringry', 'emergency-dental-care', 'dentures', 'dental-bridges'
     ],
     template: 'service',
   },

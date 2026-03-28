@@ -403,11 +403,11 @@ serve(async (req) => {
 
     // ── ACTION: status ─────────────────────────────────────────────
     if (action === 'status') {
-      const [clinicsRes, hoursRes, reviewsRes, dentistsRes] = await Promise.all([
+      const [clinicsRes, hoursRes, reviewsRes, agenciesRes] = await Promise.all([
         supabase.from('clinics').select('id', { count: 'exact', head: true }),
         supabase.from('clinic_hours').select('id', { count: 'exact', head: true }),
         supabase.from('google_reviews').select('id', { count: 'exact', head: true }),
-        supabase.from('dentists').select('id', { count: 'exact', head: true }),
+        supabase.from('agencies').select('id', { count: 'exact', head: true }),
       ]);
 
       return new Response(JSON.stringify({
@@ -416,7 +416,7 @@ serve(async (req) => {
           clinics: clinicsRes.count ?? 0,
           clinic_hours: hoursRes.count ?? 0,
           google_reviews: reviewsRes.count ?? 0,
-          dentists: dentistsRes.count ?? 0,
+          agencies: agenciesRes.count ?? 0,
         },
       }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }

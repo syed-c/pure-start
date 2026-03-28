@@ -88,17 +88,17 @@ const NAV_SECTIONS = [
   },
 ];
 
-interface DentistDashboardLayoutProps {
+interface AgencyDashboardLayoutProps {
   children: ReactNode;
   activeTab: string;
   onTabChange: (tabId: string) => void;
 }
 
-export default function DentistDashboardLayout({
+export default function AgencyDashboardLayout({
   children,
   activeTab,
   onTabChange,
-}: DentistDashboardLayoutProps) {
+}: AgencyDashboardLayoutProps) {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
@@ -106,7 +106,7 @@ export default function DentistDashboardLayout({
 
   // Fetch clinic data
   const { data: clinic, isLoading: clinicLoading } = useQuery({
-    queryKey: ['dentist-clinic-layout', user?.id],
+    queryKey: ['agency-profile-layout', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clinics')

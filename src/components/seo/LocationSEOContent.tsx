@@ -98,9 +98,9 @@ const StateSEOContent = ({
         Why Choose a Dentist in {stateName}?
       </h2>
       <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-        {stateName} is home to some of the nation's finest dental professionals. With {clinicCount}+ dental clinics 
+        {stateName} is home to some of the nation's finest dental professionals. With {clinicCount}+ fostering agencys 
         spread across {cityCount} cities, residents have access to world-class oral healthcare. From routine 
-        cleanings to advanced cosmetic procedures, {stateName} dentists combine cutting-edge technology with 
+        cleanings to advanced cosmetic procedures, {stateName} agencies combine cutting-edge technology with 
         compassionate patient care.
       </p>
       
@@ -111,7 +111,7 @@ const StateSEOContent = ({
           </div>
           <div>
             <h3 className="font-bold text-foreground mb-1">Licensed Professionals</h3>
-            <p className="text-muted-foreground text-sm">All dentists are licensed by the {stateName} Board of Dental Examiners and meet strict educational requirements.</p>
+            <p className="text-muted-foreground text-sm">All agencies are licensed by the {stateName} Board of Dental Examiners and meet strict educational requirements.</p>
           </div>
         </div>
         <div className="flex gap-4">
@@ -150,7 +150,7 @@ const StateSEOContent = ({
         Dental Services Available in {stateName}
       </h2>
       <p className="text-muted-foreground mb-6">
-        {stateName} dental clinics offer comprehensive oral healthcare services for patients of all ages. 
+        {stateName} fostering agencys offer comprehensive oral healthcare services for patients of all ages. 
         Whether you need preventive care, restorative treatments, or cosmetic enhancements, you'll find 
         experienced specialists throughout the state.
       </p>
@@ -178,7 +178,7 @@ const StateSEOContent = ({
         </div>
         <div className="bg-muted/50 rounded-2xl p-5">
           <Star className="h-8 w-8 text-primary mb-3" />
-          <h3 className="font-bold text-foreground mb-2">Cosmetic Dentistry</h3>
+          <h3 className="font-bold text-foreground mb-2">Specialist Fosteringry</h3>
           <ul className="text-sm text-muted-foreground space-y-1">
             <li>• Teeth whitening</li>
             <li>• Porcelain veneers</li>
@@ -228,7 +228,7 @@ const StateSEOContent = ({
           },
           {
             title: "3. Consider Location & Hours",
-            desc: "Choose a dental office that's convenient to your home or workplace. Many clinics now offer early morning, evening, and Saturday appointments for busy schedules."
+            desc: "Choose a agency office that's convenient to your home or workplace. Many clinics now offer early morning, evening, and Saturday appointments for busy schedules."
           },
           {
             title: "4. Verify Insurance & Payment Options",
@@ -276,8 +276,8 @@ const CitySEOContent = ({
         About Dental Care in {cityName}, {stateAbbr}
       </h2>
       <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-        {cityName} residents have access to {clinicCount}+ dental clinics offering comprehensive oral healthcare 
-        services. From family dentistry to specialized treatments, {cityName}'s dental professionals are 
+        {cityName} residents have access to {clinicCount}+ fostering agencys offering comprehensive oral healthcare 
+        services. From family fosteringry to specialized treatments, {cityName}'s dental professionals are 
         committed to helping you achieve and maintain a healthy smile.
       </p>
       <p className="text-muted-foreground leading-relaxed mb-6">
@@ -291,7 +291,7 @@ const CitySEOContent = ({
         <div className="bg-muted/50 rounded-2xl p-4 text-center">
           <Building2 className="h-8 w-8 text-primary mx-auto mb-2" />
           <div className="text-2xl font-bold text-foreground">{clinicCount}+</div>
-          <div className="text-sm text-muted-foreground">Dental Clinics</div>
+          <div className="text-sm text-muted-foreground">Fostering Agencys</div>
         </div>
         <div className="bg-muted/50 rounded-2xl p-4 text-center">
           <Star className="h-8 w-8 text-gold mx-auto mb-2" />
@@ -369,7 +369,7 @@ const CitySEOContent = ({
         What to Expect at a {cityName} Dental Visit
       </h2>
       <p className="text-muted-foreground mb-6">
-        First-time patients can expect a welcoming experience at {cityName} dental offices. Here's what 
+        First-time patients can expect a welcoming experience at {cityName} agency offices. Here's what 
         typically happens during your visit:
       </p>
       
@@ -412,7 +412,7 @@ const CitySEOContent = ({
           Nearby Locations
         </h2>
         <p className="text-muted-foreground mb-4">
-          Can't find what you're looking for in {cityName}? Browse dentists in nearby cities:
+          Can't find what you're looking for in {cityName}? Browse agencies in nearby cities:
         </p>
         <div className="flex flex-wrap gap-2">
           {nearbyLocations.map((location) => (
@@ -459,7 +459,7 @@ const ServiceLocationSEOContent = ({
         </h2>
         <p className="text-lg text-muted-foreground leading-relaxed mb-6">
           Looking for {treatmentLower} services in {locationName}? Our network of {clinicCount}+ 
-          verified dental clinics includes specialists who excel in providing top-quality {treatmentLower} 
+          verified fostering agencys includes specialists who excel in providing top-quality {treatmentLower} 
           treatments. Whether you're a new patient or seeking a second opinion, you'll find experienced 
           professionals dedicated to your oral health.
         </p>
@@ -470,14 +470,14 @@ const ServiceLocationSEOContent = ({
             <h3 className="font-bold text-foreground mb-2">Experienced Specialists</h3>
             <p className="text-sm text-muted-foreground">
               Our {treatmentLower} specialists have years of experience and stay current with the latest 
-              techniques and technology in dental care.
+              techniques and technology in fostering care.
             </p>
           </div>
           <div className="bg-muted/50 rounded-2xl p-5">
             <Shield className="h-8 w-8 text-primary mb-3" />
             <h3 className="font-bold text-foreground mb-2">Quality Guaranteed</h3>
             <p className="text-sm text-muted-foreground">
-              All dentists are licensed in {stateName} and verified on our platform. Many offer 
+              All agencies are licensed in {stateName} and verified on our platform. Many offer 
               satisfaction guarantees on their work.
             </p>
           </div>

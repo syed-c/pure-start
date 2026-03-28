@@ -42,7 +42,7 @@ export default function TeamManagementTab() {
 
   // Fetch clinic
   const { data: clinic, isLoading: clinicLoading } = useQuery({
-    queryKey: ['dentist-clinic-team', user?.id],
+    queryKey: ['agency-profile-team', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clinics')
@@ -62,7 +62,7 @@ export default function TeamManagementTab() {
     queryKey: ['clinic-team', clinic?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('dentists')
+        .from('agencies')
         .select('*')
         .eq('clinic_id', clinic?.id)
         .order('is_primary', { ascending: false })
@@ -82,7 +82,7 @@ export default function TeamManagementTab() {
       const slug = data.name.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now().toString(36);
       
       const { error } = await supabase
-        .from('dentists')
+        .from('agencies')
         .insert({
           clinic_id: clinic.id,
           name: data.name,
@@ -122,7 +122,7 @@ export default function TeamManagementTab() {
   const updateMember = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: TeamMemberFormData }) => {
       const { error } = await supabase
-        .from('dentists')
+        .from('agencies')
         .update({
           name: data.name,
           title: data.title || null,
@@ -161,7 +161,7 @@ export default function TeamManagementTab() {
   const deleteMember = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
-        .from('dentists')
+        .from('agencies')
         .update({ is_active: false })
         .eq('id', id);
 
@@ -213,7 +213,7 @@ export default function TeamManagementTab() {
 
   // Group team by role category
   const specialists = team?.filter(m => 
-    ['social_worker', 'supervising_social_worker', 'therapist', 'panel_member', 'dentist', 'orthodontist', 'endodontist', 'periodontist', 'prosthodontist', 'oral_surgeon', 'pediatric_dentist'].includes(m.professional_type)
+    ['social_worker', 'supervising_social_worker', 'therapist', 'panel_member', 'dentist', 'therapeutic specialist', 'placement coordinator', 'family support worker', 'rehabilitation specialist', 'care_specialist', 'childrens_specialist'].includes(m.professional_type)
   ) || [];
   
   const support = team?.filter(m => 
@@ -358,7 +358,7 @@ export default function TeamManagementTab() {
             <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">No Team Members Yet</h3>
             <p className="text-muted-foreground mb-6">
-              Add dentists, hygienists, and support staff to your practice
+              Add agencies, hygienists, and support staff to your practice
             </p>
             <Button onClick={() => { setFormData(INITIAL_FORM_DATA); setIsAddDialogOpen(true); }}>
               <Plus className="h-4 w-4 mr-2" />

@@ -125,7 +125,7 @@ export default function Phase4SprintHubTab() {
         { label: '40 blog posts', achieved: (contentStats?.totalBlogPosts || 0) >= 40 },
         { label: 'Core Web Vitals green', achieved: true },
         { label: 'Schema markup site-wide', achieved: true },
-        { label: '200+ dentists claimed', achieved: false },
+        { label: '200+ agencies claimed', achieved: false },
         { label: '10-15 quality backlinks', achieved: false },
       ]
     },
@@ -135,7 +135,7 @@ export default function Phase4SprintHubTab() {
         { label: '100% traffic increase', achieved: false },
         { label: '100 blog posts', achieved: (contentStats?.totalBlogPosts || 0) >= 100 },
         { label: '150+ neighborhood pages', achieved: false },
-        { label: '500+ dentists claimed', achieved: false },
+        { label: '500+ agencies claimed', achieved: false },
         { label: '40-60 quality backlinks', achieved: false },
         { label: '150+ keywords in top 20', achieved: false },
       ]
@@ -145,7 +145,7 @@ export default function Phase4SprintHubTab() {
       targets: [
         { label: '300% traffic increase', achieved: false },
         { label: '250-300 blog posts', achieved: (contentStats?.totalBlogPosts || 0) >= 250 },
-        { label: '1,000+ dentists claimed', achieved: false },
+        { label: '1,000+ agencies claimed', achieved: false },
         { label: 'Domain Authority 50+', achieved: false },
         { label: '150+ keywords in top 10', achieved: false },
         { label: '1,000+ conversions/month', achieved: (kpiData?.conversions || 0) >= 1000 },

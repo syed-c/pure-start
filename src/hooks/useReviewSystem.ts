@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 export interface ReviewRequest {
   id: string;
   clinic_id: string;
-  dentist_id?: string | null;
+  contact_id?: string | null;
   patient_id: string | null;
   patient_name?: string | null;
   patient_email?: string | null;
@@ -40,7 +40,7 @@ export interface ReviewClick {
 export interface InternalReview {
   id: string;
   clinic_id: string;
-  dentist_id: string | null;
+  contact_id: string | null;
   patient_id: string | null;
   request_id: string | null;
   patient_name: string;
@@ -150,7 +150,7 @@ export function useCreateReviewRequest() {
   return useMutation({
     mutationFn: async (request: {
       clinic_id: string;
-      dentist_id?: string;
+      contact_id?: string;
       patient_id?: string;
       patient_name?: string;
       patient_email?: string;
@@ -278,7 +278,7 @@ export function useCreateInternalReview() {
   return useMutation({
     mutationFn: async (review: {
       clinic_id: string;
-      dentist_id?: string;
+      contact_id?: string;
       patient_id?: string;
       request_id?: string;
       patient_name: string;

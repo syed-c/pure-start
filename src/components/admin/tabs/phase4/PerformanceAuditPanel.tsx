@@ -76,7 +76,7 @@ export function PerformanceAuditPanel() {
       recommendations: ['Consider preloading critical fonts', 'Enable text compression']
     },
     {
-      url: '/dentists/california/los-angeles/',
+      url: '/agencies/california/los-angeles/',
       pageType: 'City Page',
       mobile: {
         lcp: { name: 'Largest Contentful Paint', value: 2.8, unit: 's', rating: 'needs-improvement', threshold: { good: 2.5, poor: 4 } },
@@ -99,7 +99,7 @@ export function PerformanceAuditPanel() {
       recommendations: ['Optimize hero image loading', 'Add explicit dimensions to dentist cards', 'Lazy load below-fold images']
     },
     {
-      url: '/services/dental-implants/',
+      url: '/services/fostering-placements/',
       pageType: 'Service Page',
       mobile: {
         lcp: { name: 'Largest Contentful Paint', value: 2.3, unit: 's', rating: 'good', threshold: { good: 2.5, poor: 4 } },

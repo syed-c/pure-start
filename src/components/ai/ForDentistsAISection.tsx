@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
-interface ForDentistsAISectionProps {
+interface ForAgenciesAISectionProps {
   className?: string;
   variant?: "full" | "compact";
 }
@@ -31,7 +31,7 @@ const benefits = [
   },
 ];
 
-export const ForDentistsAISection = ({ className, variant = "full" }: ForDentistsAISectionProps) => {
+export const ForAgenciesAISection = ({ className, variant = "full" }: ForAgenciesAISectionProps) => {
   if (variant === "compact") {
     return (
       <div className={cn("bg-card border border-border rounded-2xl p-6", className)}>

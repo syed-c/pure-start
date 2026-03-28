@@ -28,13 +28,13 @@ const PAGE_TITLES: Record<string, { title: string; description?: string }> = {
   'my-support': { title: 'Support', description: 'Get help and support' },
 };
 
-interface DentistDashboardLayoutV2Props {
+interface AgencyDashboardLayoutV2Props {
   children: ReactNode;
   activeTab: string;
   onTabChange: (tabId: string) => void;
 }
 
-export default function DentistDashboardLayoutV2({ children, activeTab, onTabChange }: DentistDashboardLayoutV2Props) {
+export default function AgencyDashboardLayoutV2({ children, activeTab, onTabChange }: AgencyDashboardLayoutV2Props) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const pageInfo = PAGE_TITLES[activeTab] || { title: 'Dashboard' };
 

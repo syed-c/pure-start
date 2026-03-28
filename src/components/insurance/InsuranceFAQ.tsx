@@ -19,7 +19,7 @@ const faqs = [
   },
   {
     q: "What if my dentist isn't in-network?",
-    a: "You can still see out-of-network dentists, but you may pay more. Check with your insurance about out-of-network benefits and reimbursement rates.",
+    a: "You can still see out-of-network agencies, but you may pay more. Check with your insurance about out-of-network benefits and reimbursement rates.",
   },
   {
     q: "How often can I get preventive care?",

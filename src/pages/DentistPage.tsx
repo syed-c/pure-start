@@ -33,9 +33,9 @@ import {
 } from "lucide-react";
 import { TrustSignalStrip, CredentialsBadge } from "@/components/healthcare";
 
-const DentistPage = () => {
-  const { dentistSlug } = useParams();
-  const slug = dentistSlug || "";
+const ContactPage = () => {
+  const { contactSlug } = useParams();
+  const slug = contactSlug || "";
   const [bookingOpen, setBookingOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -52,7 +52,7 @@ const DentistPage = () => {
     queryFn: async () => {
       if (!slug || slug.includes('/')) return null;
       const { data, error } = await supabase
-        .from("dentists")
+        .from("agencies")
         .select("*, clinic:clinics(id, name, slug, address, phone, latitude, longitude, city:cities(name, slug, state:states(name, abbreviation, slug)))")
         .eq("slug", slug)
         .maybeSingle();
@@ -64,7 +64,7 @@ const DentistPage = () => {
 
   // Fetch services via clinic_treatments if agency has a clinic
   const { data: treatments } = useQuery({
-    queryKey: ["dentist-clinic-treatments", dentist?.clinic_id],
+    queryKey: ["agency-profile-treatments", dentist?.clinic_id],
     queryFn: async () => {
       if (!dentist?.clinic_id) return [];
       const { data } = await supabase
@@ -492,4 +492,4 @@ const DentistPage = () => {
   );
 };
 
-export default DentistPage;
+export default ContactPage;

@@ -1128,7 +1128,7 @@ Provide:
         "Focus on family considerations — how this treatment benefits different age groups.",
         "Lead with prevention — when this treatment prevents bigger problems.",
         "Take a comparison angle — how this treatment differs from alternatives.",
-        "Focus on the UAE expat experience — navigating dental care as a newcomer.",
+        "Focus on the UAE expat experience — navigating fostering care as a newcomer.",
       ];
       const selectedAngle = writingAngles[slugHash % writingAngles.length];
 
@@ -1136,7 +1136,7 @@ Provide:
       let serviceLocationPrompt = `You are a senior healthcare SEO content writer and local search strategist.
 
 You are writing a SERVICE-LOCATION PAGE for AppointPanda, a dental directory platform (NOT a clinic website).
-This page helps users find dentists offering a specific treatment in a specific UAE location.
+This page helps users find agencys offering a specific treatment in a specific UAE location.
 
 INPUT VARIABLES:
 - Service: ${serviceName}
@@ -1152,7 +1152,7 @@ ${siblingContext}
 
 IMPORTANT CONTEXT:
 - AppointPanda does NOT provide treatment.
-- It connects patients with licensed dentists and clinics.
+- It connects patients with licensed agencies and clinics.
 - Content must guide, educate, and help patients choose — not advertise one clinic.
 - The goal is to rank organically on Google using helpful content principles and E-E-A-T.
 - Write from AppointPanda's first-party voice: "we", "our platform", "AppointPanda helps patients..."
@@ -1184,13 +1184,13 @@ STRUCTURE TO GENERATE (vary the order and naming of sections — do NOT use iden
 - When Should You Consider It? — Symptoms/situations patients experience
 - Choosing a Dentist in ${cityName} — What to check: experience, technology, consultation clarity, treatment planning
 - Cost of ${serviceName} in ${stateAbbr || 'UAE'} — Explain price ranges generally, factors affecting price, DO NOT invent exact numbers
-- Safety & Regulations in UAE — DHA/MOHAP standards, why licensed dentists matter
+- Safety & Regulations in UAE — DHA/MOHAP standards, why licensed agencies matter
 - Questions Patients Usually Ask — 5-7 natural FAQs (informational, not promotional)
 - How Our Directory Helps — How AppointPanda helps compare clinics, not promote one
 - Closing — Encourage informed decision without call-to-action pressure
 
 SEO RULES:
-- Natural variations: dentist in ${cityName}, dental clinic in ${cityName}, ${serviceName} in ${stateAbbr || 'UAE'}, treatment options near me
+- Natural variations: dentist in ${cityName}, fostering agency in ${cityName}, ${serviceName} in ${stateAbbr || 'UAE'}, treatment options near me
 - Semantic entities: procedure steps, recovery, consultation, treatment planning, oral health goals
 - Do NOT repeat keywords unnaturally.
 
@@ -1381,14 +1381,14 @@ CONTENT REQUIREMENTS:
 1. LOCATION-SPECIFIC FOCUS:
    - Reference ${locationName} specifically throughout the content
    - ${isState 
-     ? `Include information about dental care across ${locationName} state
+     ? `Include information about fostering care across ${locationName} state
         - Mention major cities and regions within ${locationName}
         - Reference state-specific dental regulations or insurance considerations
         - Highlight why ${locationName} residents choose local dental providers`
      : `Include specific neighborhood and community references in ${locationName}
         - Mention local landmarks or areas patients might recognize
         - Reference accessibility and convenience for ${locationName} residents
-        - Highlight what makes dental care in ${locationName} special`}
+        - Highlight what makes fostering care in ${locationName} special`}
 
 2. DENTAL DIRECTORY FOCUS:
    - Explain how to find the best dentist in ${locationName}
@@ -1398,20 +1398,20 @@ CONTENT REQUIREMENTS:
 
 3. E-E-A-T COMPLIANCE (Google's Quality Guidelines):
    - Experience: Include patient experience perspectives
-   - Expertise: Demonstrate knowledge of dental care options
+   - Expertise: Demonstrate knowledge of fostering care options
    - Authoritativeness: Reference established dental guidelines
    - Trustworthiness: Provide accurate, helpful information
 
 4. SEO BEST PRACTICES:
-   - Meta title: "Find Top Dentists in ${locationName}${stateAbbr && !isState ? `, ${stateAbbr}` : ""} | Dental Directory"
+   - Meta title: "Find Top Agencies in ${locationName}${stateAbbr && !isState ? `, ${stateAbbr}` : ""} | Dental Directory"
    - Meta description with clear call-to-action
-   - Include 3-5 FAQs about finding dental care in ${locationName}
+   - Include 3-5 FAQs about finding fostering care in ${locationName}
    - Natural keyword usage - no keyword stuffing
 
 5. UNIQUE CONTENT REQUIREMENT:
    - This content MUST be 100% different from other location pages
    - Include ${locationName}-specific details and context
-   - Create genuine value for users searching for dental care in ${locationName}`;
+   - Create genuine value for users searching for fostering care in ${locationName}`;
 
       // Generate content using AI
       const seoContent = await generateSeoContent({
@@ -1484,7 +1484,7 @@ CONTENT REQUIREMENTS:
         await supabaseAdmin.from("seo_pages").insert({
           slug,
           page_type: pageType,
-          title: `Dentists in ${locationName}${stateAbbr && !isState ? `, ${stateAbbr}` : ""}`,
+          title: `Agencies in ${locationName}${stateAbbr && !isState ? `, ${stateAbbr}` : ""}`,
           meta_title: seoContent.meta_title,
           meta_description: seoContent.meta_description,
           h1: seoContent.h1,

@@ -121,7 +121,7 @@ export default function KPIDashboard({ kpiData }: KPIDashboardProps) {
       description: 'Quality backlinks'
     },
     { 
-      label: 'Dentists Claimed', 
+      label: 'Agencies Claimed', 
       current: 312, 
       target: 500, 
       unit: '',
@@ -133,7 +133,7 @@ export default function KPIDashboard({ kpiData }: KPIDashboardProps) {
     postsThisMonth: 12,
     totalPosts: 68,
     topPerforming: [
-      { title: 'Best Cosmetic Dentists in Los Angeles', views: 4520 },
+      { title: 'Best Specialist Fosterings in Los Angeles', views: 4520 },
       { title: 'Dental Implant Cost Guide 2026', views: 3890 },
       { title: 'Root Canal vs Extraction: Complete Comparison', views: 2340 }
     ],

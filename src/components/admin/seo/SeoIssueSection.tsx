@@ -260,7 +260,7 @@ export const SEO_ISSUE_CONFIG = {
     ],
     bestPractices: [
       'Make H1 descriptive and specific to the page content',
-      'Include location for local pages (e.g., "Best Dentists in Miami, FL")',
+      'Include location for local pages (e.g., "Best Agencies in Miami, FL")',
       'Keep H1 between 20-70 characters for optimal display',
       'Use proper heading hierarchy (H1 → H2 → H3)',
       'Make it compelling and benefit-focused for users',

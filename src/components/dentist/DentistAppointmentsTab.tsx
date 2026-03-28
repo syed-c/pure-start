@@ -55,7 +55,7 @@ interface Appointment {
   treatment?: { id: string; name: string } | null;
 }
 
-export default function DentistAppointmentsTab() {
+export default function AgencyEnquiriesTab() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('all');
@@ -66,7 +66,7 @@ export default function DentistAppointmentsTab() {
 
   // Fetch clinic
   const { data: clinic, isLoading: clinicLoading } = useQuery({
-    queryKey: ['dentist-clinic-appointments', user?.id],
+    queryKey: ['agency-profile-appointments', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clinics')

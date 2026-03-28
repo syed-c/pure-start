@@ -52,7 +52,7 @@ const AREA_LOCAL_CONTEXT: Record<string, {
     character: 'established residential and retail hub',
     demographics: 'families, students and mid-range professionals',
     landmarks: ['Mall of the Emirates', 'Barsha Park'],
-    narrative: 'value-driven family dentistry',
+    narrative: 'value-driven family fosteringry',
     description: 'a well-established residential area anchored by Mall of the Emirates and excellent transport links',
   },
   'healthcare-city': {
@@ -136,7 +136,7 @@ const AREA_LOCAL_CONTEXT: Record<string, {
     character: 'established residential near airport',
     demographics: 'families, airport workers and long-term residents',
     landmarks: ['Rashidiya Metro', 'Dubai International Airport'],
-    narrative: 'airport-accessible dental care',
+    narrative: 'airport-accessible fostering care',
     description: 'a well-established residential area near Dubai International Airport with excellent metro connectivity',
   },
   'dubai-hills': {
@@ -211,12 +211,12 @@ export function generateAreaIntro(
   localContent: AreaLocalContent
 ): string {
   if (!localContent.hasLocalContext) {
-    return `Explore ${clinicCount}+ dental clinics in ${areaName}, ${emirateName}. Compare verified professionals, read patient reviews, and book your appointment today.`;
+    return `Explore ${clinicCount}+ fostering agencys in ${areaName}, ${emirateName}. Compare verified professionals, read patient reviews, and book your appointment today.`;
   }
 
   const landmarkMention = localContent.landmarks.length > 0
     ? ` near ${localContent.landmarks[0]}`
     : '';
 
-  return `${areaName} is ${localContent.description}. With ${clinicCount}+ dental clinics serving ${localContent.demographics}${landmarkMention}, finding the right dentist for your needs has never been easier. Whether you need a routine check-up or specialized treatment, ${areaName}'s dental professionals understand the unique needs of this ${localContent.character} community.`;
+  return `${areaName} is ${localContent.description}. With ${clinicCount}+ fostering agencys serving ${localContent.demographics}${landmarkMention}, finding the right dentist for your needs has never been easier. Whether you need a routine check-up or specialized treatment, ${areaName}'s dental professionals understand the unique needs of this ${localContent.character} community.`;
 }

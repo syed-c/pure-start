@@ -269,7 +269,7 @@ H1: How Much Does [Procedure] Cost in [State]? [2026 Price Guide]
    - Dental savings plans
    - Shop around tips
 
-7. H2: Find Affordable [Procedure] Dentists (200 words)
+7. H2: Find Affordable [Procedure] Agencies (200 words)
    - CTA to AppointPanda
    - How to filter by price
    - Request quotes
@@ -330,7 +330,7 @@ H1: [A] vs [B]: Complete Comparison Guide [2026]
    - Patient profile for [B]
    - Questions to ask your dentist
 
-9. H2: Find Dentists Offering Both Options (150 words)
+9. H2: Find Agencys Offering Both Options (150 words)
    - CTA to AppointPanda
 
 10. H2: FAQs (150 words)
@@ -385,10 +385,10 @@ H1: How to [Action]: Complete Guide [2026]
 
   'local-content': `You are writing a LOCAL/LISTICLE blog post for AppointPanda.
 
-=== TEMPLATE: "Best [Type] Dentists in [City]: Top [#] Clinics [2026]" ===
+=== TEMPLATE: "Best [Type] Agencies in [City]: Top [#] Clinics [2026]" ===
 Target: 2,200-2,800 words
 
-H1: Best [Type] Dentists in [City]: Top [#] Clinics [2026]
+H1: Best [Type] Agencies in [City]: Top [#] Clinics [2026]
 
 1. INTRODUCTION (200 words)
    - Why [City] for [type] dentistry
@@ -604,7 +604,7 @@ This content MUST be 100% unique with local context specific to ${cityName}.
 Generate the FULL content following all 11 sections in the template.
 Include realistic cost comparison table (15 procedures).
 Include 6-10 real neighborhoods/areas in ${cityName}.
-Add local context about ${cityName}'s dental care landscape.
+Add local context about ${cityName}'s fostering care landscape.
 
 Write in AppointPanda's voice. Return pure markdown content.`;
 

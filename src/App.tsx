@@ -25,7 +25,7 @@ import NotFound from "./pages/NotFound";
 const Auth = lazyRetry(() => import("./pages/Auth"));
 const AuthCallback = lazyRetry(() => import("./pages/AuthCallback"));
 const AdminDashboard = lazyRetry(() => import("./pages/admin/AdminDashboard"));
-const DentistDashboardV2 = lazyRetry(() => import("./components/dashboard-v2/DentistDashboardV2"));
+const AgencyDashboardV2 = lazyRetry(() => import("./components/dashboard-v2/AgencyDashboardV2"));
 
 // Public Pages - lazy loaded
 const AboutPage = lazyRetry(() => import("./pages/AboutPage"));
@@ -46,7 +46,7 @@ const ServicePage = lazyRetry(() => import("./pages/ServicePage"));
 const ServicesPage = lazyRetry(() => import("./pages/ServicesPage"));
 const ServiceLocationPage = lazyRetry(() => import("./pages/ServiceLocationPage"));
 const ClinicPage = lazyRetry(() => import("./pages/ClinicPage"));
-const DentistPage = lazyRetry(() => import("./pages/DentistPage"));
+const ContactPage = lazyRetry(() => import("./pages/ContactPage"));
 
 // Blog Pages - lazy loaded
 const BlogPage = lazyRetry(() => import("./pages/BlogPage"));
@@ -108,8 +108,8 @@ function LegacyClinicRedirect() {
 }
 
 function LegacyDentistRedirect() {
-  const { dentistSlug } = useParams();
-  return <Navigate to={dentistSlug ? `/dentist/${dentistSlug}/` : "/"} replace />;
+  const { contactSlug } = useParams();
+  return <Navigate to={contactSlug ? `/dentist/${contactSlug}/` : "/"} replace />;
 }
 
 // Loading fallback for lazy-loaded routes - optimized for CLS
@@ -168,7 +168,7 @@ const App = () => (
                 {/* Directory - City Pages (e.g., /california/los-angeles) */}
                 <Route path="/:stateSlug/:citySlug" element={<CityPage />} />
 
-                {/* Directory - Service + City combination (e.g., /california/los-angeles/cosmetic-dentist) */}
+                {/* Directory - Service + City combination (e.g., /california/los-angeles/specialist-fostering) */}
                 <Route path="/:stateSlug/:citySlug/:serviceSlug" element={<ServiceLocationPage />} />
 
                 {/* Blog */}
@@ -186,7 +186,7 @@ const App = () => (
                 {/* Dashboards */}
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/dashboard" element={<AdminDashboard />} />
-                <Route path="/dashboard-v2" element={<DentistDashboardV2 />} />
+                <Route path="/dashboard-v2" element={<AgencyDashboardV2 />} />
                 
                 {/* Static Pages */}
                 <Route path="/about" element={<AboutPage />} />
@@ -222,10 +222,10 @@ const App = () => (
 
                 {/* Free Tools */}
                 <Route path="/tools/fostering-allowance-calculator" element={<FosteringAllowanceCalculator />} />
-                <Route path="/tools/dental-cost-calculator" element={<Navigate to="/tools/fostering-allowance-calculator" replace />} />
+                <Route path="/tools/agency-cost-guide" element={<Navigate to="/tools/fostering-allowance-calculator" replace />} />
                 <Route path="/tools/insurance-checker" element={<InsuranceChecker />} />
                 <Route path="/emergency-fostering" element={<EmergencyFostering />} />
-                <Route path="/emergency-dentist" element={<Navigate to="/emergency-fostering" replace />} />
+                <Route path="/emergency-foster-care" element={<Navigate to="/emergency-fostering" replace />} />
 
                 {/* Service Comparison Pages */}
                 <Route path="/cost/:serviceSlug" element={<ServicePricePage />} />
@@ -233,7 +233,7 @@ const App = () => (
 
                 {/* Legacy redirects */}
                 <Route path="/ae/clinic/:clinicSlug" element={<LegacyClinicRedirect />} />
-                <Route path="/ae/dentist/:dentistSlug" element={<LegacyDentistRedirect />} />
+                <Route path="/ae/dentist/:contactSlug" element={<LegacyDentistRedirect />} />
                 <Route path="/ae" element={<Navigate to="/" replace />} />
                 <Route path="/ae/*" element={<Navigate to="/" replace />} />
                 

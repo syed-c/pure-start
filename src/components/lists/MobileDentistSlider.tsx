@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Profile } from "@/hooks/useProfiles";
 import { cn } from "@/lib/utils";
 
-interface MobileDentistSliderProps {
+interface MobileAgencySliderProps {
   profiles: Profile[];
   className?: string;
 }
 
-export function MobileDentistSlider({ profiles, className }: MobileDentistSliderProps) {
+export function MobileAgencySlider({ profiles, className }: MobileAgencySliderProps) {
   if (!profiles || profiles.length === 0) return null;
 
   return (

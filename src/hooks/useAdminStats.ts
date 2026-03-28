@@ -18,7 +18,7 @@ export interface AdminStats {
     gmbImported: number;
     manual: number;
   };
-  dentists: { total: number; active: number; featured: number }; // contacts
+  agencies: { total: number; active: number; featured: number }; // contacts
   patients: { total: number }; // carers
   leads: { today: number; week: number; month: number; total: number };
   appointments: { pending: number; confirmed: number; completed: number; cancelled: number; noShow: number }; // enquiries
@@ -54,9 +54,9 @@ export function useAdminStats() {
         { count: pausedClinics },
         { count: gmbImportedClinics },
         { count: manualClinics },
-        // Dentists
-        { count: totalDentists },
-        { count: activeDentists },
+        // Agencies
+        { count: totalAgencies },
+        { count: activeAgencies },
         // Patients
         { count: totalPatients },
         // Leads
@@ -96,9 +96,9 @@ export function useAdminStats() {
         supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('is_active', false),
         supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('source', 'gmb'),
         supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('source', 'manual'),
-        // Dentists
-        supabase.from('dentists').select('*', { count: 'exact', head: true }),
-        supabase.from('dentists').select('*', { count: 'exact', head: true }).eq('is_active', true),
+        // Agencies
+        supabase.from('agencies').select('*', { count: 'exact', head: true }),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('is_active', true),
         // Patients
         supabase.from('patients').select('*', { count: 'exact', head: true }),
         // Leads
@@ -146,9 +146,9 @@ export function useAdminStats() {
           gmbImported: gmbImportedClinics || 0,
           manual: manualClinics || 0,
         },
-        dentists: {
-          total: totalDentists || 0,
-          active: activeDentists || 0,
+        agencies: {
+          total: totalAgencies || 0,
+          active: activeAgencies || 0,
           featured: 0,
         },
         patients: {

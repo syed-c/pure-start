@@ -21,7 +21,7 @@ import { BookOpen, Search, Plus, Edit, Trash2, Eye, EyeOff, AlertTriangle, Link2
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import BlogContentBlockEditor, { type ContentBlock, blocksToMarkdown, markdownToBlocks } from '@/components/admin/blog/BlogContentBlockEditor';
-import DentistListInserter from '@/components/admin/blog/DentistListInserter';
+import AgencyListInserter from '@/components/admin/blog/AgencyListInserter';
 import FAQGeneratorInserter from '@/components/admin/blog/FAQGeneratorInserter';
 import BlogTopicsLibrary from '@/components/admin/blog/BlogTopicsLibrary';
 
@@ -833,7 +833,7 @@ export default function BlogTab() {
                         )}
 
                         {/* Dentist List Inserter */}
-                        <DentistListInserter
+                        <AgencyListInserter
                           blocks={contentBlocks}
                           onInsert={(newBlocks, insertAfterIndex) => {
                             if (useBlockEditor) {
@@ -1531,7 +1531,7 @@ export default function BlogTab() {
                   </div>
                   <div className="space-y-2">
                     <Label>Primary Keyword</Label>
-                    <Input value={clusterForm.primary_keyword} onChange={(e) => setClusterForm({ ...clusterForm, primary_keyword: e.target.value })} placeholder="e.g., dental implants" />
+                    <Input value={clusterForm.primary_keyword} onChange={(e) => setClusterForm({ ...clusterForm, primary_keyword: e.target.value })} placeholder="e.g., fostering placements" />
                   </div>
                   <div className="space-y-2">
                     <Label>Related Keywords (comma-separated)</Label>

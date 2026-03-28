@@ -33,24 +33,24 @@ interface TeamMember {
 interface ClinicTeamSectionProps {
   teamMembers: TeamMember[];
   clinicName: string;
-  onBookWithDentist: (dentistId: string) => void;
+  onBookWithDentist: (contactId: string) => void;
 }
 
 const PROFESSIONAL_LABELS: Record<string, string> = {
-  dentist: 'General Dentist',
-  orthodontist: 'Orthodontist',
-  endodontist: 'Endodontist',
-  periodontist: 'Periodontist',
-  prosthodontist: 'Prosthodontist',
-  oral_surgeon: 'Specialist',
-  pediatric_dentist: 'Children\'s Specialist',
+  dentist: 'Agency Contact',
+  therapeutic specialist: 'Therapeutic Specialist',
+  placement coordinator: 'Placement Coordinator',
+  family support worker: 'Family Support Worker',
+  rehabilitation specialist: 'Rehabilitation Specialist',
+  care_specialist: 'Specialist',
+  childrens_specialist: 'Children\'s Specialist',
   hygienist: 'Support Worker',
   assistant: 'Care Assistant',
   receptionist: 'Receptionist',
   practice_manager: 'Practice Manager',
 };
 
-const SPECIALIST_TYPES = ['dentist', 'orthodontist', 'endodontist', 'periodontist', 'prosthodontist', 'oral_surgeon', 'pediatric_dentist'];
+const SPECIALIST_TYPES = ['dentist', 'therapeutic specialist', 'placement coordinator', 'family support worker', 'rehabilitation specialist', 'care_specialist', 'childrens_specialist'];
 
 function TeamMemberRow({ 
   member, 
@@ -213,7 +213,7 @@ export function ClinicTeamSection({
         <div>
           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3 flex items-center gap-2">
             <Stethoscope className="h-4 w-4" />
-            Dentists & Specialists ({specialists.length})
+            Agencies & Specialists ({specialists.length})
           </h3>
           <div className="space-y-1">
             {specialists.map(member => (

@@ -50,8 +50,8 @@ Deno.serve(async (req) => {
 async function auditCityVisibility(supabase: any) {
   const stats = {
     totalCitiesChecked: 0,
-    citiesWithDentists: 0,
-    citiesWithoutDentists: 0,
+    citiesWithAgencies: 0,
+    citiesWithoutAgencies: 0,
     citiesHidden: 0,
     citiesActivated: 0,
     seoPagesUpdated: 0,
@@ -118,12 +118,12 @@ async function auditCityVisibility(supabase: any) {
       continue;
     }
 
-    const hasDentists = (count || 0) > 0;
+    const hasAgencies = (count || 0) > 0;
 
-    if (hasDentists) {
-      stats.citiesWithDentists++;
+    if (hasAgencies) {
+      stats.citiesWithAgencies++;
       
-      // If city was inactive but has dentists, activate it
+      // If city was inactive but has agencies, activate it
       if (!city.is_active) {
         const { error: updateError } = await supabase
           .from('cities')
@@ -144,9 +144,9 @@ async function auditCityVisibility(supabase: any) {
         }
       }
     } else {
-      stats.citiesWithoutDentists++;
+      stats.citiesWithoutAgencies++;
       
-      // If city was active but has no dentists, deactivate it
+      // If city was active but has no agencies, deactivate it
       if (city.is_active) {
         const { error: updateError } = await supabase
           .from('cities')

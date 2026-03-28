@@ -16,7 +16,7 @@ import { SEOHead } from '@/components/seo/SEOHead';
 import { useSeoPageContent } from '@/hooks/useSeoPageContent';
 
 export default function DentalCostCalculator() {
-  const { data: seoContent } = useSeoPageContent("tools/dental-cost-calculator");
+  const { data: seoContent } = useSeoPageContent("tools/agency-cost-guide");
   const [treatmentId, setTreatmentId] = useState('');
   const [stateId, setStateId] = useState('');
   const [cityId, setCityId] = useState('');
@@ -153,9 +153,9 @@ export default function DentalCostCalculator() {
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || "Dental Cost Calculator | Real Dentist Prices | AppointPanda"}
-        description={seoContent?.meta_description || "Get real cost estimates from verified dentists. Compare prices for dental implants, crowns, cleanings and more in your city."}
-        canonical="/tools/dental-cost-calculator/"
+        title={seoContent?.meta_title || "Agency Cost Guide | Real Dentist Prices | AppointPanda"}
+        description={seoContent?.meta_description || "Get real cost estimates from verified agencies. Compare prices for fostering placements, crowns, cleanings and more in your city."}
+        canonical="/tools/agency-cost-guide/"
       />
 
       <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -164,9 +164,9 @@ export default function DentalCostCalculator() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
             <Calculator className="h-8 w-8 text-primary" />
           </div>
-          <h1 className="text-4xl font-bold mb-4">Dental Cost Calculator</h1>
+          <h1 className="text-4xl font-bold mb-4">Agency Cost Guide</h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Get real cost estimates from verified dentists on our platform. Prices are submitted directly by dental offices.
+            Get real cost estimates from verified agencies on our platform. Prices are submitted directly by agency offices.
           </p>
         </div>
 
@@ -178,7 +178,7 @@ export default function DentalCostCalculator() {
                 <Banknote className="h-5 w-5" />
                 Calculate Your Cost
               </CardTitle>
-              <CardDescription>Select a treatment and location to see real prices from dentists</CardDescription>
+              <CardDescription>Select a treatment and location to see real prices from agencies</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Treatment */}
@@ -307,7 +307,7 @@ export default function DentalCostCalculator() {
                   <Button className="w-full" asChild>
                     <Link to={`/search?treatment=${selectedTreatment?.slug || ''}&state=${selectedState?.abbreviation || ''}`}>
                       <Search className="h-4 w-4 mr-2" />
-                      Find Dentists in Your Budget
+                      Find Agencys in Your Budget
                     </Link>
                   </Button>
                 </div>
@@ -333,7 +333,7 @@ export default function DentalCostCalculator() {
                   <Button className="w-full" asChild>
                     <Link to={`/search?treatment=${selectedTreatment?.slug || ''}`}>
                       <Search className="h-4 w-4 mr-2" />
-                      Find Dentists for This Treatment
+                      Find Agencys for This Treatment
                     </Link>
                   </Button>
                 </div>
@@ -345,7 +345,7 @@ export default function DentalCostCalculator() {
                   <Button className="mt-4 w-full" variant="outline" asChild>
                     <Link to="/search">
                       <Search className="h-4 w-4 mr-2" />
-                      Browse All Dentists
+                      Browse All Agencies
                     </Link>
                   </Button>
                 </div>
@@ -359,15 +359,15 @@ export default function DentalCostCalculator() {
           </Card>
         </div>
 
-        {/* Top Dentists */}
+        {/* Top Agencies */}
         {costEstimate?.topClinics && costEstimate.topClinics.length > 0 && (
           <Card className="mt-8">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Star className="h-5 w-5" />
-                Top-Rated Dentists for {selectedTreatment?.name}
+                Top-Rated Agencies for {selectedTreatment?.name}
               </CardTitle>
-              <CardDescription>Verified dentists offering this treatment{selectedState ? ` in ${selectedState.name}` : ''}</CardDescription>
+              <CardDescription>Verified agencies offering this treatment{selectedState ? ` in ${selectedState.name}` : ''}</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
@@ -420,7 +420,7 @@ export default function DentalCostCalculator() {
             <div>
               <h3 className="font-semibold mb-2">Where does this pricing data come from?</h3>
               <p className="text-muted-foreground">
-                All prices are submitted directly by verified dental offices on our platform. They reflect real pricing offered to patients.
+                All prices are submitted directly by verified agency offices on our platform. They reflect real pricing offered to patients.
               </p>
             </div>
             <div>
@@ -432,7 +432,7 @@ export default function DentalCostCalculator() {
             <div>
               <h3 className="font-semibold mb-2">How can I get an accurate quote?</h3>
               <p className="text-muted-foreground">
-                Request a consultation from 2-3 dentists in your area through AppointPanda for the most accurate pricing.
+                Request a consultation from 2-3 agencies in your area through AppointPanda for the most accurate pricing.
               </p>
             </div>
           </CardContent>

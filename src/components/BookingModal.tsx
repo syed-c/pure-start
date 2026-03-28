@@ -143,7 +143,7 @@ export function BookingModal({
         preferred_time: data.preferred_time,
         notes: data.notes || null,
         clinic_id: profileType === 'clinic' ? profileId : clinicId || null,
-        dentist_id: profileType === 'dentist' ? profileId : null,
+        contact_id: profileType === 'dentist' ? profileId : null,
         status: 'pending',
         source: 'website',
       };
@@ -158,7 +158,7 @@ export function BookingModal({
       trackAppointmentRequest({
         clinic_id: profileType === 'clinic' ? profileId : clinicId || '',
         clinic_name: profileName,
-        dentist_id: profileType === 'dentist' ? profileId : undefined,
+        contact_id: profileType === 'dentist' ? profileId : undefined,
         treatment_type: data.treatment_id === 'not_sure' ? 'not_sure' : treatments?.find(t => t.id === data.treatment_id)?.name,
       });
 

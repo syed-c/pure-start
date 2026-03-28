@@ -467,10 +467,10 @@ serve(async (req) => {
           pageData = {
             path,
             pageType: 'state',
-            title: seo.title || `Dentists in ${item.name}`,
-            metaTitle: seo.meta_title || `Find Dentists in ${item.name} (${item.abbreviation}) | AppointPanda`,
-            metaDescription: seo.meta_description || `Find and book appointments with top-rated dentists in ${item.name}. Compare verified clinics, read reviews, and schedule your visit today.`,
-            h1: seo.h1 || `Find Dentists in ${item.name}`,
+            title: seo.title || `Agencies in ${item.name}`,
+            metaTitle: seo.meta_title || `Find Agencys in ${item.name} (${item.abbreviation}) | AppointPanda`,
+            metaDescription: seo.meta_description || `Find and book appointments with top-rated agencies in ${item.name}. Compare verified clinics, read reviews, and schedule your visit today.`,
+            h1: seo.h1 || `Find Agencys in ${item.name}`,
             content: seo.content || `Browse our directory of verified dental professionals in ${item.name}. Find the right dentist for your needs and book an appointment online.`,
             breadcrumbs: [
               { name: 'Home', url: '/' },
@@ -479,8 +479,8 @@ serve(async (req) => {
             structuredData: {
               "@context": "https://schema.org",
               "@type": "WebPage",
-              "name": seo.meta_title || `Dentists in ${item.name}`,
-              "description": seo.meta_description || `Find dentists in ${item.name}`,
+              "name": seo.meta_title || `Agencies in ${item.name}`,
+              "description": seo.meta_description || `Find agencies in ${item.name}`,
               "url": `${BASE_URL}${path}`
             }
           };
@@ -490,11 +490,11 @@ serve(async (req) => {
           pageData = {
             path,
             pageType: 'city',
-            title: seo.title || `Dentists in ${item.name}, ${stateData.abbreviation || stateData.name}`,
-            metaTitle: seo.meta_title || `Dentists in ${item.name}, ${stateData.abbreviation || stateData.name} | AppointPanda`,
-            metaDescription: seo.meta_description || `Find top-rated dentists in ${item.name}, ${stateData.name}. Compare clinics, read patient reviews, and book appointments online.`,
-            h1: seo.h1 || `Dentists in ${item.name}, ${stateData.abbreviation || stateData.name}`,
-            content: seo.content || `Looking for a dentist in ${item.name}? Browse our verified directory of dental professionals offering a range of services from routine checkups to cosmetic dentistry.`,
+            title: seo.title || `Agencies in ${item.name}, ${stateData.abbreviation || stateData.name}`,
+            metaTitle: seo.meta_title || `Agencies in ${item.name}, ${stateData.abbreviation || stateData.name} | AppointPanda`,
+            metaDescription: seo.meta_description || `Find top-rated agencies in ${item.name}, ${stateData.name}. Compare clinics, read patient reviews, and book appointments online.`,
+            h1: seo.h1 || `Agencies in ${item.name}, ${stateData.abbreviation || stateData.name}`,
+            content: seo.content || `Looking for a dentist in ${item.name}? Browse our verified directory of dental professionals offering a range of services from routine checkups to specialist fosteringry.`,
             breadcrumbs: [
               { name: 'Home', url: '/' },
               { name: stateData.name, url: `/${stateData.slug}/` },
@@ -503,7 +503,7 @@ serve(async (req) => {
             structuredData: {
               "@context": "https://schema.org",
               "@type": "WebPage",
-              "name": seo.meta_title || `Dentists in ${item.name}`,
+              "name": seo.meta_title || `Agencies in ${item.name}`,
               "url": `${BASE_URL}${path}`
             }
           };
@@ -514,7 +514,7 @@ serve(async (req) => {
             pageType: 'service',
             title: seo.title || item.name,
             metaTitle: seo.meta_title || `${item.name} | Find Dental Specialists | AppointPanda`,
-            metaDescription: seo.meta_description || `Find dentists offering ${item.name}. Compare providers, read reviews, and book your appointment online.`,
+            metaDescription: seo.meta_description || `Find agencies offering ${item.name}. Compare providers, read reviews, and book your appointment online.`,
             h1: seo.h1 || item.name,
             content: seo.content || item.description || `Find experienced dental professionals offering ${item.name}. Browse our directory to compare providers and book your appointment.`,
             breadcrumbs: [
@@ -564,10 +564,10 @@ serve(async (req) => {
             path,
             pageType: 'clinic',
             title: seo.title || item.name,
-            metaTitle: seo.meta_title || `${item.name} | Dental Clinic in ${locationStr} | AppointPanda`,
-            metaDescription: seo.meta_description || item.description || `${item.name} is a dental clinic in ${locationStr}. ${item.rating ? `Rated ${item.rating}/5` : ''} ${item.review_count ? `with ${item.review_count} reviews` : ''}. Book your appointment online.`,
+            metaTitle: seo.meta_title || `${item.name} | Fostering Agency in ${locationStr} | AppointPanda`,
+            metaDescription: seo.meta_description || item.description || `${item.name} is a fostering agency in ${locationStr}. ${item.rating ? `Rated ${item.rating}/5` : ''} ${item.review_count ? `with ${item.review_count} reviews` : ''}. Book your appointment online.`,
             h1: seo.h1 || item.name,
-            content: seo.content || item.description || `${item.name} offers quality dental care in ${locationStr}. ${item.address ? `Located at ${item.address}.` : ''} ${item.phone ? `Call ${item.phone} or book online.` : 'Book your appointment online today.'}`,
+            content: seo.content || item.description || `${item.name} offers quality fostering care in ${locationStr}. ${item.address ? `Located at ${item.address}.` : ''} ${item.phone ? `Call ${item.phone} or book online.` : 'Book your appointment online today.'}`,
             breadcrumbs: [
               { name: 'Home', url: '/' },
               ...(stateData ? [{ name: stateData.name, url: `/${stateData.slug}/` }] : []),

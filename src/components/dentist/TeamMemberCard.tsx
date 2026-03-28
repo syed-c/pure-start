@@ -26,12 +26,12 @@ import {
 
 const PROFESSIONAL_TYPES_CONFIG = [
   { value: 'dentist', label: 'Dentist', icon: Stethoscope, color: 'bg-primary/10 text-primary' },
-  { value: 'orthodontist', label: 'Orthodontist', icon: Award, color: 'bg-purple-light text-purple' },
-  { value: 'endodontist', label: 'Endodontist', icon: Award, color: 'bg-coral-light text-coral' },
-  { value: 'periodontist', label: 'Periodontist', icon: Award, color: 'bg-blue-light text-blue-custom' },
-  { value: 'prosthodontist', label: 'Prosthodontist', icon: Award, color: 'bg-gold-light text-gold' },
-  { value: 'oral_surgeon', label: 'Specialist', icon: Award, color: 'bg-teal-light text-teal' },
-  { value: 'pediatric_dentist', label: 'Children\'s Specialist', icon: Award, color: 'bg-pink-100 text-pink-600' },
+  { value: 'therapeutic specialist', label: 'Therapeutic Specialist', icon: Award, color: 'bg-purple-light text-purple' },
+  { value: 'placement coordinator', label: 'Placement Coordinator', icon: Award, color: 'bg-coral-light text-coral' },
+  { value: 'family support worker', label: 'Family Support Worker', icon: Award, color: 'bg-blue-light text-blue-custom' },
+  { value: 'rehabilitation specialist', label: 'Rehabilitation Specialist', icon: Award, color: 'bg-gold-light text-gold' },
+  { value: 'care_specialist', label: 'Specialist', icon: Award, color: 'bg-teal-light text-teal' },
+  { value: 'childrens_specialist', label: 'Children\'s Specialist', icon: Award, color: 'bg-pink-100 text-pink-600' },
   { value: 'hygienist', label: 'Support Worker', icon: UserCheck, color: 'bg-teal-light text-teal' },
   { value: 'assistant', label: 'Care Assistant', icon: Users, color: 'bg-blue-light text-blue-custom' },
   { value: 'receptionist', label: 'Receptionist', icon: Phone, color: 'bg-gold-light text-gold' },

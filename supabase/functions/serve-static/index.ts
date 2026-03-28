@@ -50,7 +50,7 @@ const INDEXABLE_ROUTE_PATTERNS = [
   // IMPORTANT: Specific prefixed routes MUST come before generic wildcard routes
   { route: '/services/:serviceSlug', pageType: 'service' },
   { route: '/clinic/:clinicSlug', pageType: 'clinic' },
-  { route: '/dentist/:dentistSlug', pageType: 'dentist' },
+  { route: '/contact/:contactSlug', pageType: 'dentist' },
   { route: '/blog/:postSlug', pageType: 'blog-post' },
   { route: '/insurance/:insuranceSlug', pageType: 'insurance-detail' },
   { route: '/cost/:serviceSlug', pageType: 'cost-guide' },
@@ -64,7 +64,7 @@ const INDEXABLE_ROUTE_PATTERNS = [
 const PRIVATE_ROUTE_PATTERNS = [
   '/admin', '/dashboard', '/auth', '/onboarding', '/gmb-select',
   '/claim-profile', '/list-your-practice', '/review/', '/rq/',
-  '/appointment/', '/form/', '/book/', '/search', '/find-dentist',
+  '/appointment/', '/form/', '/book/', '/search', '/find-agency',
 ];
 
 // Active Emirates (must match database slugs exactly)
@@ -81,14 +81,14 @@ const CORE_STATES = [
 // Core services for fallback navigation (must match treatment slugs)
 const CORE_SERVICES = [
   { name: 'Teeth Whitening', slug: 'teeth-whitening' },
-  { name: 'Dental Implants', slug: 'dental-implants' },
+  { name: 'Dental Implants', slug: 'fostering-placements' },
   { name: 'Invisalign', slug: 'invisalign' },
   { name: 'Root Canal', slug: 'root-canal' },
   { name: 'Dental Crowns', slug: 'dental-crowns' },
   { name: 'Dental Veneers', slug: 'dental-veneers' },
   { name: 'Dental Bridges', slug: 'dental-bridges' },
   { name: 'Dentures', slug: 'dentures' },
-  { name: 'Cosmetic Dentistry', slug: 'cosmetic-dentistry' },
+  { name: 'Specialist Fosteringry', slug: 'specialist-fosteringry' },
   { name: 'Emergency Dental Care', slug: 'emergency-dental-care' },
   { name: 'Teeth Cleaning', slug: 'teeth-cleaning' },
   { name: 'Dental Fillings', slug: 'dental-fillings' },
@@ -96,7 +96,7 @@ const CORE_SERVICES = [
   { name: 'Wisdom Teeth Removal', slug: 'wisdom-teeth-removal' },
   { name: 'Dental X-Ray', slug: 'dental-x-ray' },
   { name: 'Gum Treatment', slug: 'gum-treatment' },
-  { name: 'Pediatric Dentistry', slug: 'pediatric-dentistry' },
+  { name: 'Children's Fostering Specialistry', slug: 'pediatric-dentistry' },
   { name: 'Dental Check-up', slug: 'dental-check-up' },
   { name: 'Tooth Extraction', slug: 'tooth-extraction' },
   { name: 'Smile Makeover', slug: 'smile-makeover' },
@@ -155,7 +155,7 @@ function classifyPath(pathname: string): { indexable: boolean; pageType: string 
 /**
  * Extract path segments for generating contextual content
  */
-function extractPathInfo(path: string): { stateSlug?: string; citySlug?: string; serviceSlug?: string; clinicSlug?: string; dentistSlug?: string } {
+function extractPathInfo(path: string): { stateSlug?: string; citySlug?: string; serviceSlug?: string; clinicSlug?: string; contactSlug?: string } {
   const parts = path.replace(/\/+$/, '').split('/').filter(Boolean);
   
   if (parts[0] === 'services' && parts[1]) {
@@ -167,7 +167,7 @@ function extractPathInfo(path: string): { stateSlug?: string; citySlug?: string;
   }
   
   if (parts[0] === 'dentist' && parts[1]) {
-    return { dentistSlug: parts[1] };
+    return { contactSlug: parts[1] };
   }
 
   if (parts[0] === 'cost' && parts[1]) {
@@ -411,7 +411,7 @@ async function generateMinimalHtmlWithContent(
   pageType: string
 ): Promise<string> {
   const pathInfo = extractPathInfo(path);
-  const { stateSlug, citySlug, serviceSlug, clinicSlug, dentistSlug } = pathInfo;
+  const { stateSlug, citySlug, serviceSlug, clinicSlug, contactSlug } = pathInfo;
   
   // Fetch real SEO content from database
   const seoContent = await fetchSeoContent(supabase, path);
@@ -419,7 +419,7 @@ async function generateMinimalHtmlWithContent(
   // Build contextual title and description
   // IMPORTANT: Generate page-type-specific defaults FIRST, then override with seo_pages data
   let title = 'AppointPanda - Find Your Perfect Dentist in UAE';
-  let h1 = 'Find Top-Rated Dentists in UAE';
+  let h1 = 'Find Top-Rated Agencies in UAE';
   let description = 'AppointPanda helps you find and book appointments with trusted dental professionals across the UAE. Compare verified clinics in Dubai, Sharjah, Abu Dhabi with transparent AED pricing.';
   let contentHtml = '';
   let faqHtml = '';
@@ -430,22 +430,22 @@ async function generateMinimalHtmlWithContent(
   // These apply regardless of whether seo_pages has data
   if (pageType === 'state' && stateSlug) {
     const stateName = CORE_STATES.find(s => s.slug === stateSlug)?.name || formatSlugToName(stateSlug);
-    title = `Dentists in ${stateName}, UAE | AppointPanda`;
-    h1 = `Find Dentists in ${stateName}`;
-    description = `Discover top-rated dental clinics and dentists in ${stateName}, UAE. Book appointments online with DHA-aligned dental professionals. Transparent AED pricing.`;
+    title = `Agencies in ${stateName}, UAE | AppointPanda`;
+    h1 = `Find Agencys in ${stateName}`;
+    description = `Discover top-rated fostering agencys and agencies in ${stateName}, UAE. Book appointments online with DHA-aligned dental professionals. Transparent AED pricing.`;
   } else if (pageType === 'city' && stateSlug && citySlug) {
     const stateName = CORE_STATES.find(s => s.slug === stateSlug)?.name || formatSlugToName(stateSlug);
     const cityName = formatSlugToName(citySlug);
-    title = `Dentists in ${cityName}, ${stateName} | AppointPanda`;
-    h1 = `Find Dentists in ${cityName}, ${stateName}`;
-    description = `Book appointments with top-rated dentists in ${cityName}, ${stateName}, UAE. Browse verified reviews, compare AED pricing, and find the perfect dental care provider.`;
+    title = `Agencies in ${cityName}, ${stateName} | AppointPanda`;
+    h1 = `Find Agencys in ${cityName}, ${stateName}`;
+    description = `Book appointments with top-rated agencies in ${cityName}, ${stateName}, UAE. Browse verified reviews, compare AED pricing, and find the perfect fostering care provider.`;
   } else if (pageType === 'service-location' && stateSlug && citySlug && serviceSlug) {
     const stateName = CORE_STATES.find(s => s.slug === stateSlug)?.name || formatSlugToName(stateSlug);
     const cityName = formatSlugToName(citySlug);
     const serviceName = formatSlugToName(serviceSlug);
     title = `${serviceName} in ${cityName}, ${stateName} | AppointPanda`;
-    h1 = `${serviceName} Dentists in ${cityName}, ${stateName}`;
-    description = `Find the best ${serviceName.toLowerCase()} specialists in ${cityName}, ${stateName}, UAE. Compare dentists, read reviews, check AED pricing, and book online.`;
+    h1 = `${serviceName} Agencies in ${cityName}, ${stateName}`;
+    description = `Find the best ${serviceName.toLowerCase()} specialists in ${cityName}, ${stateName}, UAE. Compare agencies, read reviews, check AED pricing, and book online.`;
   } else if (pageType === 'state-service' && stateSlug && serviceSlug) {
     const stateName = CORE_STATES.find(s => s.slug === stateSlug)?.name || formatSlugToName(stateSlug);
     const serviceName = CORE_SERVICES.find(s => s.slug === serviceSlug)?.name || formatSlugToName(serviceSlug);
@@ -464,22 +464,22 @@ async function generateMinimalHtmlWithContent(
     description = `Compare ${serviceName.toLowerCase()} prices across UAE Emirates. See side-by-side pricing in AED and find the best value.`;
   } else if (pageType === 'service' && serviceSlug) {
     const serviceName = formatSlugToName(serviceSlug);
-    title = `${serviceName} Dentists in UAE | AppointPanda`;
+    title = `${serviceName} Agencies in UAE | AppointPanda`;
     h1 = `Find ${serviceName} Specialists in UAE`;
-    description = `Discover top-rated ${serviceName.toLowerCase()} dentists across the UAE. Compare providers in Dubai, Abu Dhabi, Sharjah and book appointments online.`;
+    description = `Discover top-rated ${serviceName.toLowerCase()} agencies across the UAE. Compare providers in Dubai, Abu Dhabi, Sharjah and book appointments online.`;
   } else if (pageType === 'blog-index') {
     title = `Dental Health Blog | Tips & Guides | AppointPanda`;
     h1 = `Dental Health Blog`;
-    description = `Expert dental health articles, tips, and guides. Learn about dental treatments, costs in AED, and find the best dental care advice for UAE residents.`;
+    description = `Expert dental health articles, tips, and guides. Learn about dental treatments, costs in AED, and find the best fostering care advice for UAE residents.`;
   } else if (pageType === 'blog-post') {
     // Blog posts get their title from the DB below
   } else if (pageType === 'clinic' && clinicSlug) {
     const clinicName = formatSlugToName(clinicSlug);
-    title = `${clinicName} | Dental Clinic in UAE | AppointPanda`;
+    title = `${clinicName} | Fostering Agency in UAE | AppointPanda`;
     h1 = clinicName;
     description = `View ${clinicName} profile on AppointPanda. See services, reviews, AED pricing, and book an appointment.`;
-  } else if (pageType === 'dentist' && dentistSlug) {
-    const dentistName = formatSlugToName(dentistSlug);
+  } else if (pageType === 'dentist' && contactSlug) {
+    const dentistName = formatSlugToName(contactSlug);
     title = `${dentistName} | Dentist in UAE | AppointPanda`;
     h1 = dentistName;
     description = `View ${dentistName} profile on AppointPanda. See qualifications, reviews, and book an appointment.`;
@@ -491,11 +491,11 @@ async function generateMinimalHtmlWithContent(
     const insuranceName = formatSlugToName(path.replace(/^\/insurance\//, '').replace(/\/$/, ''));
     title = `${insuranceName} Dental Coverage in UAE | AppointPanda`;
     h1 = `${insuranceName} Dental Insurance`;
-    description = `Find dental clinics in the UAE that accept ${insuranceName} insurance. Compare providers, check coverage, and book appointments.`;
+    description = `Find fostering agencys in the UAE that accept ${insuranceName} insurance. Compare providers, check coverage, and book appointments.`;
   } else if (pageType === 'home') {
-    title = `Find the Best Dentists in Dubai & UAE | AppointPanda`;
+    title = `Find the Best Agencies in Dubai & UAE | AppointPanda`;
     h1 = `Find Your Perfect Dentist in the UAE`;
-    description = `AppointPanda is the UAE's leading dental directory. Find, compare, and book appointments with 6,600+ verified dental clinics across all 7 Emirates.`;
+    description = `AppointPanda is the UAE's leading dental directory. Find, compare, and book appointments with 6,600+ verified fostering agencys across all 7 Emirates.`;
   }
   
   // Override with seo_pages data if available (DB content takes priority)
@@ -566,7 +566,7 @@ async function generateMinimalHtmlWithContent(
     if (listings.clinics.length > 0) {
       listingsHtml = `
     <section itemscope itemtype="https://schema.org/ItemList">
-      <h2>Top Dental Clinics in ${formatSlugToName(citySlug)}</h2>
+      <h2>Top Fostering Agencys in ${formatSlugToName(citySlug)}</h2>
       <meta itemprop="numberOfItems" content="${listings.count}" />
       <ol class="clinic-list">
         ${listings.clinics.map((clinic, idx) => `
@@ -580,7 +580,7 @@ async function generateMinimalHtmlWithContent(
         </li>
         `).join('')}
       </ol>
-      ${listings.count > 10 ? `<p><a href="${BASE_URL}${path}">View all ${listings.count} dental clinics →</a></p>` : ''}
+      ${listings.count > 10 ? `<p><a href="${BASE_URL}${path}">View all ${listings.count} fostering agencys →</a></p>` : ''}
     </section>`;
     }
   }
@@ -591,7 +591,7 @@ async function generateMinimalHtmlWithContent(
     if (profile) {
       title = `${profile.name} | Dentist in ${profile.cityName} | AppointPanda`;
       h1 = profile.name;
-      description = profile.description || `${profile.name} is a dental clinic in ${profile.cityName}, ${profile.stateName}. Book your appointment online.`;
+      description = profile.description || `${profile.name} is a fostering agency in ${profile.cityName}, ${profile.stateName}. Book your appointment online.`;
       
       clinicProfileHtml = `
     <section itemscope itemtype="https://schema.org/Dentist">
@@ -611,7 +611,7 @@ async function generateMinimalHtmlWithContent(
         </ul>
       </div>
       ` : ''}
-      <p><a href="${BASE_URL}/${profile.stateSlug}">Browse more dentists in ${profile.stateName}</a></p>
+      <p><a href="${BASE_URL}/${profile.stateSlug}">Browse more agencies in ${profile.stateName}</a></p>
     </section>`;
     }
   }
@@ -623,7 +623,7 @@ async function generateMinimalHtmlWithContent(
       const serviceName = CORE_SERVICES.find(s => s.slug === serviceSlug)?.name || formatSlugToName(serviceSlug);
       contentHtml = `<section>
         <h2>${serviceName} in ${stateName}</h2>
-        <p>Looking for ${serviceName.toLowerCase()} in ${stateName}? AppointPanda lists verified dental clinics across ${stateName} offering professional ${serviceName.toLowerCase()} services with transparent AED pricing.</p>
+        <p>Looking for ${serviceName.toLowerCase()} in ${stateName}? AppointPanda lists verified fostering agencys across ${stateName} offering professional ${serviceName.toLowerCase()} services with transparent AED pricing.</p>
         <p>Compare clinics, read patient reviews, and book your ${serviceName.toLowerCase()} appointment online. All practitioners are licensed by the ${stateName} health authority.</p>
       </section>`;
     } else if (pageType === 'cost-guide' && serviceSlug) {
@@ -642,23 +642,23 @@ async function generateMinimalHtmlWithContent(
       const stateName = CORE_STATES.find(s => s.slug === stateSlug)?.name || formatSlugToName(stateSlug);
       contentHtml = `<section>
         <h2>Dental Care in ${stateName}</h2>
-        <p>${stateName} is home to hundreds of dental professionals offering comprehensive oral health services. From routine cleanings to advanced cosmetic procedures, you'll find qualified, DHA-aligned dentists ready to help you achieve your best smile.</p>
-        <p>AppointPanda makes it easy to compare dentists in ${stateName}, read verified patient reviews, check AED pricing, and book appointments online.</p>
+        <p>${stateName} is home to hundreds of dental professionals offering comprehensive oral health services. From routine cleanings to advanced cosmetic procedures, you'll find qualified, DHA-aligned agencies ready to help you achieve your best smile.</p>
+        <p>AppointPanda makes it easy to compare agencies in ${stateName}, read verified patient reviews, check AED pricing, and book appointments online.</p>
       </section>`;
     } else if (pageType === 'city' && stateSlug && citySlug) {
       const cityName = formatSlugToName(citySlug);
       const stateName = CORE_STATES.find(s => s.slug === stateSlug)?.name || formatSlugToName(stateSlug);
       contentHtml = `<section>
         <h2>About Dental Care in ${cityName}</h2>
-        <p>Looking for a dentist in ${cityName}? Our directory features verified dental clinics offering services from general dentistry to specialized treatments like dental implants, orthodontics, and cosmetic procedures.</p>
-        <p>Whether you need a routine checkup or emergency dental care, you can find and book appointments with trusted professionals in ${cityName}, ${stateName}.</p>
+        <p>Looking for a dentist in ${cityName}? Our directory features verified fostering agencys offering services from general dentistry to specialized treatments like fostering placements, orthodontics, and cosmetic procedures.</p>
+        <p>Whether you need a routine checkup or emergency fostering care, you can find and book appointments with trusted professionals in ${cityName}, ${stateName}.</p>
       </section>`;
     } else if (pageType === 'service-location' && stateSlug && citySlug && serviceSlug) {
       const cityName = formatSlugToName(citySlug);
       const serviceName = formatSlugToName(serviceSlug);
       contentHtml = `<section>
         <h2>About ${serviceName} in ${cityName}</h2>
-        <p>Find experienced ${serviceName.toLowerCase()} specialists in ${cityName}. Our directory features verified dentists with expertise in ${serviceName.toLowerCase()} procedures, patient reviews, and online booking.</p>
+        <p>Find experienced ${serviceName.toLowerCase()} specialists in ${cityName}. Our directory features verified agencies with expertise in ${serviceName.toLowerCase()} procedures, patient reviews, and online booking.</p>
         <p>Compare providers, view their qualifications, and schedule your ${serviceName.toLowerCase()} consultation today.</p>
       </section>`;
     } else if (pageType === 'service' && serviceSlug) {
@@ -671,7 +671,7 @@ async function generateMinimalHtmlWithContent(
     } else if (pageType === 'home') {
       contentHtml = `<section>
         <h2>UAE's Leading Dental Directory</h2>
-        <p>AppointPanda connects patients with 6,600+ verified dental clinics across all 7 Emirates. Find DHA, DOH & MOHAP licensed professionals with transparent AED pricing.</p>
+        <p>AppointPanda connects patients with 6,600+ verified fostering agencys across all 7 Emirates. Find DHA, DOH & MOHAP licensed professionals with transparent AED pricing.</p>
         <p>Search by location, treatment type, or insurance provider. Read verified patient reviews and book appointments online.</p>
       </section>`;
     } else if (pageType === 'blog-index') {
@@ -688,7 +688,7 @@ async function generateMinimalHtmlWithContent(
   // Build navigation links - CRITICAL for crawl discovery and internal linking
   // CANONICAL: All links use trailing slash (except root /)
   const stateLinks = CORE_STATES.map(s => 
-    `<li><a href="${BASE_URL}/${s.slug}/">Dentists in ${s.name}, UAE</a></li>`
+    `<li><a href="${BASE_URL}/${s.slug}/">Agencies in ${s.name}, UAE</a></li>`
   ).join('\n            ');
   
   const serviceLinks = CORE_SERVICES.map(s => 
@@ -699,7 +699,7 @@ async function generateMinimalHtmlWithContent(
   const nearbyCityLinks = nearbyCities.length > 0 
     ? nearbyCities
         .filter(c => c.slug !== citySlug)
-        .map(c => `<li><a href="${BASE_URL}/${stateSlug}/${c.slug}/">Dentists in ${c.name}</a></li>`)
+        .map(c => `<li><a href="${BASE_URL}/${stateSlug}/${c.slug}/">Agencies in ${c.name}</a></li>`)
         .join('\n            ')
     : '';
   
@@ -745,8 +745,8 @@ async function generateMinimalHtmlWithContent(
   } else if (clinicSlug) {
     breadcrumbNav += ` → <a href="${BASE_URL}/sitemap/">Clinics</a>`;
     breadcrumbNav += ` → <span>Clinic Profile</span>`;
-  } else if (dentistSlug) {
-    breadcrumbNav += ` → <a href="${BASE_URL}/sitemap/">Dentists</a>`;
+  } else if (contactSlug) {
+    breadcrumbNav += ` → <a href="${BASE_URL}/sitemap/">Agencies</a>`;
     breadcrumbNav += ` → <span>Dentist Profile</span>`;
   }
 
@@ -903,7 +903,7 @@ async function generateMinimalHtmlWithContent(
     ` : ''}
     
     <section>
-      <h2>Browse Dentists by Emirate</h2>
+      <h2>Browse Agencies by Emirate</h2>
       <ul class="link-grid">
         ${stateLinks}
       </ul>
@@ -1328,7 +1328,7 @@ serve(async (req) => {
 </head>
 <body>
   <h1>AppointPanda</h1>
-  <p>Find and book appointments with top-rated dentists.</p>
+  <p>Find and book appointments with top-rated agencies.</p>
   <p><a href="${BASE_URL}${requestedPath}">Visit this page</a></p>
 </body>
 </html>`;

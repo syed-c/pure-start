@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
 import { SearchBox } from "@/components/SearchBox";
-import { DentistListFrame, LocationQuickLinks } from "@/components/location";
+import { AgencyListFrame, LocationQuickLinks } from "@/components/location";
 import { SEOContentBlock } from "@/components/seo/SEOContentBlock";
 import { PageIntroSection } from "@/components/seo/PageIntroSection";
 import { GeographicLinkBlock } from "@/components/seo/GeographicLinkBlock";
@@ -251,7 +251,7 @@ const ServiceLocationPage = () => {
       <Section size="lg">
         <div className="container px-4">
           <div className="max-w-5xl mx-auto space-y-8">
-            <DentistListFrame
+            <AgencyListFrame
               profiles={profiles || []}
               isLoading={profilesLoading}
               locationName={locationName}

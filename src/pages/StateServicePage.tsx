@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
 import { SearchBox } from "@/components/SearchBox";
-import { DentistListFrame } from "@/components/location";
+import { AgencyListFrame } from "@/components/location";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { SyncStructuredData } from "@/components/seo/SyncStructuredData";
 import { GeographicLinkBlock } from "@/components/seo/GeographicLinkBlock";
@@ -253,7 +253,7 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
       <Section size="md">
         <div className="max-w-4xl mx-auto">
           <p className="text-muted-foreground leading-relaxed">
-            Looking for <strong>{treatmentName.toLowerCase()}</strong> in {stateName}? Our directory features {profiles?.length || 0}+ verified dental clinics offering {treatmentName.toLowerCase()} across {stateName}. 
+            Looking for <strong>{treatmentName.toLowerCase()}</strong> in {stateName}? Our directory features {profiles?.length || 0}+ verified fostering agencys offering {treatmentName.toLowerCase()} across {stateName}. 
             Compare prices, read patient reviews, and book your appointment online. Whether you're in{' '}
             {cityLinks.slice(0, 3).map((c, i) => (
               <span key={c.slug}>
@@ -270,7 +270,7 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
       <Section size="lg">
         <div className="container px-4">
           <div className="max-w-5xl mx-auto">
-            <DentistListFrame
+            <AgencyListFrame
               profiles={profiles || []}
               isLoading={profilesLoading}
               locationName={stateName}

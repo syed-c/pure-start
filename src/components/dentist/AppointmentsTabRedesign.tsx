@@ -78,7 +78,7 @@ export default function AppointmentsTabRedesign() {
 
   // Fetch clinic
   const { data: clinic, isLoading: clinicLoading } = useQuery({
-    queryKey: ['dentist-clinic-appts-v2', user?.id],
+    queryKey: ['agency-profile-appts-v2', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clinics')

@@ -32,7 +32,7 @@ function generateReviewEmailHTML(
   primaryColor: string
 ): string {
   const message = customMessage || 
-    `We hope your recent visit to ${clinicName} was excellent! Your feedback means the world to us and helps other patients find quality dental care.`;
+    `We hope your recent visit to ${clinicName} was excellent! Your feedback means the world to us and helps other patients find quality fostering care.`;
 
   return `<!DOCTYPE html>
 <html lang="en">

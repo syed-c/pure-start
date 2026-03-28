@@ -75,9 +75,9 @@ const NEIGHBORHOOD_TARGETS = {
 
 // Sprint 3.3: Free Tools & Outreach
 const FREE_TOOLS = [
-  { id: 'cost-calculator', name: 'Dental Cost Calculator', url: '/tools/dental-cost-calculator', icon: Calculator },
+  { id: 'cost-calculator', name: 'Agency Cost Guide', url: '/tools/agency-cost-guide', icon: Calculator },
   { id: 'insurance-checker', name: 'Insurance Coverage Checker', url: '/tools/insurance-checker', icon: Shield },
-  { id: 'emergency-finder', name: 'Emergency Dentist Finder', url: '/emergency-dentist', icon: Zap },
+  { id: 'emergency-finder', name: 'Emergency Foster Care Finder', url: '/emergency-foster-care', icon: Zap },
 ];
 
 interface GenerationJob {
@@ -704,9 +704,9 @@ export default function Phase3SprintHubTab() {
                         <Badge variant="default" className="bg-green-500/20 text-green-600 border-green-500/30">Live</Badge>
                       </TableCell>
                       <TableCell className="text-xs max-w-[200px] truncate">
-                        {tool.id === 'cost-calculator' && 'Dental Cost Calculator | Estimate Procedure Costs'}
+                        {tool.id === 'cost-calculator' && 'Agency Cost Guide | Estimate Procedure Costs'}
                         {tool.id === 'insurance-checker' && 'Insurance Coverage Checker | Verify Dental Coverage'}
-                        {tool.id === 'emergency-finder' && 'Emergency Dentist Near Me | 24/7 Dental Care'}
+                        {tool.id === 'emergency-finder' && 'Emergency Foster Care Near Me | 24/7 Dental Care'}
                       </TableCell>
                       <TableCell>
                         <Badge variant="secondary" className="text-[10px]">WebApplication</Badge>

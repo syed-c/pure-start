@@ -80,7 +80,7 @@ export default function MessagesTab() {
 
   // Fetch clinic
   const { data: clinic, isLoading: clinicLoading } = useQuery({
-    queryKey: ['dentist-clinic-messages', user?.id],
+    queryKey: ['agency-profile-messages', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clinics')

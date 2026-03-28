@@ -7,12 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Building2 } from 'lucide-react';
 import ReviewManager from './ReviewManager';
 
-export default function DentistReviewsTab() {
+export default function AgencyReviewsTab() {
   const { user } = useAuth();
 
   // Fetch clinic
   const { data: clinic, isLoading } = useQuery({
-    queryKey: ['dentist-clinic-reviews', user?.id],
+    queryKey: ['agency-profile-reviews', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clinics')

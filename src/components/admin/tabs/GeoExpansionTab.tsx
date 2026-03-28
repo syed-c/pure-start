@@ -149,7 +149,7 @@ export default function GeoExpansionTab() {
                 <h3 className="font-semibold text-lg">Database Population</h3>
                 <p className="text-sm text-muted-foreground max-w-md">
                   Populate all 51 US states and 1,500+ major cities into the master database. 
-                  This enables dentists to search and list their practice in any US city.
+                  This enables agencies to search and list their practice in any US city.
                 </p>
                 <div className="flex gap-4 mt-3 text-sm">
                   <span className="flex items-center gap-1">

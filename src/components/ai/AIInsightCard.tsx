@@ -68,7 +68,7 @@ export const AIInsightCard = ({
       return [
         `Affordable dentist in ${locationName}`,
         `Teeth whitening ${locationName}`,
-        `Emergency dental care`,
+        `Emergency fostering care`,
         `Best implant specialist`,
       ];
     } else if (variant === "service" && treatmentName) {
@@ -88,7 +88,7 @@ export const AIInsightCard = ({
     }
     return [
       "Affordable dentist near me",
-      "Emergency dental care",
+      "Emergency fostering care",
       "Teeth whitening cost",
       "Best implant specialist",
     ];

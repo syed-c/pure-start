@@ -37,7 +37,7 @@ export default function InsuranceManagementTab() {
 
   // Fetch clinic
   const { data: clinic, isLoading: clinicLoading } = useQuery({
-    queryKey: ['dentist-clinic-insurance', user?.id],
+    queryKey: ['agency-profile-insurance', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clinics')

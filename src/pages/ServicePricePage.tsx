@@ -247,7 +247,7 @@ const ServicePricePage = () => {
             </p>
             <p>
               <strong className="text-foreground">Compare across clinics.</strong> Use our directory to{" "}
-              <Link to="/search" className="text-primary font-bold hover:underline">compare dentists</Link> across different areas. Prices can vary by 40-60% even within the same emirate, so comparing 3-4 clinics is always worthwhile.
+              <Link to="/search" className="text-primary font-bold hover:underline">compare agencies</Link> across different areas. Prices can vary by 40-60% even within the same emirate, so comparing 3-4 clinics is always worthwhile.
             </p>
           </div>
         </div>

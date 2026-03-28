@@ -459,7 +459,7 @@ export default function UsersTab() {
             </div>
             <div>
               <p className="text-2xl font-bold">{roleBreakdown.dentist}</p>
-              <p className="text-sm text-muted-foreground">Dentists</p>
+              <p className="text-sm text-muted-foreground">Agencies</p>
             </div>
           </CardContent>
         </Card>

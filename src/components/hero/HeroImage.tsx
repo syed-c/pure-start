@@ -13,7 +13,7 @@ export const HeroImage = () => {
       >
         <img 
           src={heroSmileImage} 
-          alt="Happy dental patient with a bright smile" 
+          alt="Happy foster carer with a bright smile" 
           className="w-full h-auto object-cover aspect-[16/10] lg:aspect-[4/3]"
         />
         {/* Gradient overlay */}

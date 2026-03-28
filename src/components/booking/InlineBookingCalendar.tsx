@@ -274,7 +274,7 @@ export function InlineBookingCalendar({
         preferred_time: data.preferred_time,
         notes: data.notes || null,
         clinic_id: targetClinicId,
-        dentist_id: profileType === "dentist" ? profileId : null,
+        contact_id: profileType === "dentist" ? profileId : null,
         status: "pending" as const,
         source: "website" as const,
         is_returning_patient: isReturningPatient,

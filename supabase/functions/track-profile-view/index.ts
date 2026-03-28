@@ -10,7 +10,7 @@ const corsHeaders = {
 // Input validation schema with strict limits
 const TrackRequestSchema = z.object({
   clinicId: z.string().uuid().optional().nullable(),
-  dentistId: z.string().uuid().optional().nullable(),
+  contactId: z.string().uuid().optional().nullable(),
   eventType: z.enum(["view", "click", "booking_start", "booking_complete", "call", "direction", "website"]),
   source: z.string().max(100).optional().nullable(),
   metadata: z.record(z.unknown()).optional().nullable().refine(
@@ -119,11 +119,11 @@ serve(async (req) => {
       );
     }
 
-    const { clinicId, dentistId, eventType, source, metadata }: TrackRequest = parseResult.data;
+    const { clinicId, contactId, eventType, source, metadata }: TrackRequest = parseResult.data;
 
-    if (!clinicId && !dentistId) {
+    if (!clinicId && !contactId) {
       return new Response(
-        JSON.stringify({ error: "Either clinicId or dentistId is required" }),
+        JSON.stringify({ error: "Either clinicId or contactId is required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -139,7 +139,7 @@ serve(async (req) => {
     // Insert analytics event
     const { error } = await supabase.from("profile_analytics").insert({
       clinic_id: clinicId || null,
-      dentist_id: dentistId || null,
+      contact_id: contactId || null,
       event_type: eventType,
       source: source || null,
       user_agent: userAgent.substring(0, 500), // Limit user agent length

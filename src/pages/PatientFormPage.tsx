@@ -283,7 +283,7 @@ export default function PatientFormPage() {
   return (
     <PageLayout>
       <SEOHead
-        title={`${template?.name || "Patient Form"} - ${clinic?.name || "Dental Clinic"}`}
+        title={`${template?.name || "Patient Form"} - ${clinic?.name || "Fostering Agency"}`}
         description={template?.description || "Complete your patient intake form"}
         noindex
       />
@@ -338,7 +338,7 @@ export default function PatientFormPage() {
           </Card>
 
           <p className="text-xs text-center text-muted-foreground mt-6">
-            Your information is secure and encrypted. By submitting this form, you agree to share your health information with {clinic?.name || "the dental clinic"}.
+            Your information is secure and encrypted. By submitting this form, you agree to share your health information with {clinic?.name || "the fostering agency"}.
           </p>
         </div>
       </Section>

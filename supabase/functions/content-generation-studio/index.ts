@@ -457,7 +457,7 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
             function: {
               name: "generate_page_content",
               description: isClinicPage 
-                ? "Generate BODY CONTENT ONLY for a dental clinic profile page (no meta tags, no FAQs)" 
+                ? "Generate BODY CONTENT ONLY for a fostering agency profile page (no meta tags, no FAQs)" 
                 : "Generate BODY CONTENT ONLY for SEO page (no meta tags, no FAQs - those are handled separately)",
               parameters: {
                 type: "object",

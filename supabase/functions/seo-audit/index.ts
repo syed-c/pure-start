@@ -98,12 +98,12 @@ serve(async (req) => {
     const now = new Date().toISOString();
 
     // 1) Build index of real routes from DB
-    const [statesRes, citiesRes, treatmentsRes, clinicsRes, dentistsRes, blogRes] = await Promise.all([
+    const [statesRes, citiesRes, treatmentsRes, clinicsRes, agenciesRes, blogRes] = await Promise.all([
       supabaseAdmin.from("states").select("slug,name").eq("is_active", true),
       supabaseAdmin.from("cities").select("slug,name,states(slug)").eq("is_active", true),
       supabaseAdmin.from("treatments").select("slug,name").eq("is_active", true),
       supabaseAdmin.from("clinics").select("slug,name").eq("is_active", true),
-      supabaseAdmin.from("dentists").select("slug,name").eq("is_active", true),
+      supabaseAdmin.from("agencies").select("slug,name").eq("is_active", true),
       supabaseAdmin.from("blog_posts").select("slug,title").eq("status", "published"),
     ]);
 
@@ -111,7 +111,7 @@ serve(async (req) => {
     if (citiesRes.error) throw citiesRes.error;
     if (treatmentsRes.error) throw treatmentsRes.error;
     if (clinicsRes.error) throw clinicsRes.error;
-    if (dentistsRes.error) throw dentistsRes.error;
+    if (agenciesRes.error) throw agenciesRes.error;
     if (blogRes.error) throw blogRes.error;
 
     // US-focused static pages (no /ae/ prefix)
@@ -186,7 +186,7 @@ serve(async (req) => {
     }
 
     // Add dentist pages (e.g., /dentist/dr-smith)
-    for (const d of dentistsRes.data ?? []) {
+    for (const d of agenciesRes.data ?? []) {
       if (d.slug && d.name) {
         indexRows.push({
           slug: `/dentist/${d.slug}`,

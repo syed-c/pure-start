@@ -30,8 +30,8 @@ export const getAreaServiceUrl = (citySlug: string, areaSlug: string, serviceSlu
 export const getClinicUrl = (clinicSlug: string, countryCode: string = SITE_CONFIG.defaultCountry) => 
   `/${countryCode}/agency/${clinicSlug}`;
 
-export const getDentistUrl = (dentistSlug: string, countryCode: string = SITE_CONFIG.defaultCountry) => 
-  `/${countryCode}/contact/${dentistSlug}`;
+export const getContactUrl = (contactSlug: string, countryCode: string = SITE_CONFIG.defaultCountry) => 
+  `/${countryCode}/contact/${contactSlug}`;
 
 export const getBlogUrl = (countryCode: string = SITE_CONFIG.defaultCountry) => 
   `/${countryCode}/blog`;

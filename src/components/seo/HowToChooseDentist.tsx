@@ -22,7 +22,7 @@ export function HowToChooseDentist({ locationName, className = "" }: HowToChoose
     {
       icon: Shield,
       title: "Look for Verified Profiles",
-      description: "Dentists with 'Verified' badges have completed our additional verification process for your peace of mind."
+      description: "Agencies with 'Verified' badges have completed our additional verification process for your peace of mind."
     },
     {
       icon: Users,
