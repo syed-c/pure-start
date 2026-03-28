@@ -435,7 +435,7 @@ serve(async (req) => {
           textQuery,
           pageSize: 20,
           languageCode: 'en',
-          regionCode: 'AE',
+          regionCode: 'GB',
         };
         
         // Add page token for pagination if provided
