@@ -6,7 +6,6 @@ export interface RealCounts {
   states: number;
   cities: number;
   agencies: number;
-  agencies: number;
   treatments: number;
 }
 
