@@ -38,19 +38,19 @@ interface ClinicTeamSectionProps {
 
 const PROFESSIONAL_LABELS: Record<string, string> = {
   dentist: 'Agency Contact',
-  therapeutic specialist: 'Therapeutic Specialist',
-  placement coordinator: 'Placement Coordinator',
-  family support worker: 'Family Support Worker',
-  rehabilitation specialist: 'Rehabilitation Specialist',
-  care_specialist: 'Specialist',
-  childrens_specialist: 'Children\'s Specialist',
+  orthodontist: 'Therapeutic Specialist',
+  endodontist: 'Placement Coordinator',
+  periodontist: 'Family Support Worker',
+  prosthodontist: 'Rehabilitation Specialist',
+  oral_surgeon: 'Care Specialist',
+  pediatric_dentist: "Children's Specialist",
   hygienist: 'Support Worker',
   assistant: 'Care Assistant',
   receptionist: 'Receptionist',
   practice_manager: 'Practice Manager',
 };
 
-const SPECIALIST_TYPES = ['dentist', 'therapeutic specialist', 'placement coordinator', 'family support worker', 'rehabilitation specialist', 'care_specialist', 'childrens_specialist'];
+const SPECIALIST_TYPES = ['dentist', 'orthodontist', 'endodontist', 'periodontist', 'prosthodontist', 'oral_surgeon', 'pediatric_dentist'];
 
 function TeamMemberRow({ 
   member, 

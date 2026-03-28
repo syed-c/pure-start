@@ -25,11 +25,11 @@ import NotFound from "./pages/NotFound";
 const Auth = lazyRetry(() => import("./pages/Auth"));
 const AuthCallback = lazyRetry(() => import("./pages/AuthCallback"));
 const AdminDashboard = lazyRetry(() => import("./pages/admin/AdminDashboard"));
-const AgencyDashboardV2 = lazyRetry(() => import("./components/dashboard-v2/AgencyDashboardV2"));
+const AgencyDashboardV2 = lazyRetry(() => import("./components/dashboard-v2/DentistDashboardV2"));
 
 // Public Pages - lazy loaded
 const AboutPage = lazyRetry(() => import("./pages/AboutPage"));
-const ContactPage = lazyRetry(() => import("./pages/ContactPage"));
+const ContactPage = lazyRetry(() => import("./pages/DentistPage"));
 const FAQPage = lazyRetry(() => import("./pages/FAQPage"));
 const HowItWorksPage = lazyRetry(() => import("./pages/HowItWorksPage"));
 const PrivacyPage = lazyRetry(() => import("./pages/PrivacyPage"));
@@ -46,7 +46,7 @@ const ServicePage = lazyRetry(() => import("./pages/ServicePage"));
 const ServicesPage = lazyRetry(() => import("./pages/ServicesPage"));
 const ServiceLocationPage = lazyRetry(() => import("./pages/ServiceLocationPage"));
 const ClinicPage = lazyRetry(() => import("./pages/ClinicPage"));
-const ContactPage = lazyRetry(() => import("./pages/ContactPage"));
+// DentistPage is imported as ContactPage above (line 32)
 
 // Blog Pages - lazy loaded
 const BlogPage = lazyRetry(() => import("./pages/BlogPage"));

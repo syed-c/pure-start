@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
-import { useAgencyProfile } from '@/hooks/useAgencyProfile';
+import { useAgencyProfile } from '@/hooks/useDentistClinic';
 import {
   Bell,
   Mail,

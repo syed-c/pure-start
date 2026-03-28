@@ -56,7 +56,7 @@ export function useRealCounts() {
         
         // Count agencies in active clinics
         const { count: dCount } = await supabase
-          .from('agencies')
+          .from('dentists')
           .select('*', { count: 'exact', head: true })
           .eq('is_active', true);
         dentistCount = dCount || 0;

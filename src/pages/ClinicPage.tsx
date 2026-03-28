@@ -77,7 +77,7 @@ const ClinicPage = () => {
     queryFn: async () => {
       if (!clinic?.id) return [];
       const { data } = await supabase
-        .from("agencies")
+        .from("dentists")
         .select("*")
         .eq("clinic_id", clinic.id)
         .eq("is_active", true)

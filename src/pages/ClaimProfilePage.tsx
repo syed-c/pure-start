@@ -115,7 +115,7 @@ const ClaimProfilePage = () => {
         return data || [];
       } else {
         const { data } = await supabase
-          .from("agencies")
+          .from("dentists")
           .select("id, name, slug, title, clinic:clinics(id, name, slug, website, claim_emails)")
           .ilike("name", `%${searchQuery}%`)
           .limit(10);

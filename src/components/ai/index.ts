@@ -3,7 +3,7 @@ export { AIExplainerSection } from "./AIExplainerSection";
 export { AIInsightCard } from "./AIInsightCard";
 export { AIMatchBadge } from "./AIMatchBadge";
 export { AISearchHint } from "./AISearchHint";
-export { ForAgenciesAISection } from "./ForAgenciesAISection";
+export { ForAgenciesAISection } from "./ForDentistsAISection";
 
 // Re-export types from hook
 export type { SearchResult, AISearchResponse, SearchIntent } from "@/hooks/useAISearch";

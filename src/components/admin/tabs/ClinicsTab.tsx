@@ -55,7 +55,7 @@ export default function ClinicsTab() {
   const { data: totalContactCount = 0 } = useQuery({
     queryKey: ['total-dentist-count'],
     queryFn: async () => {
-      const { count } = await supabase.from('agencies').select('*', { count: 'exact', head: true });
+      const { count } = await supabase.from('dentists').select('*', { count: 'exact', head: true });
       return count || 0;
     },
   });

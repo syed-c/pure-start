@@ -1,4 +1,4 @@
-import { useAgencyProfile } from '@/hooks/useAgencyProfile';
+import { useAgencyProfile } from '@/hooks/useDentistClinic';
 import { useAuth } from '@/hooks/useAuth';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent } from '@/components/ui/card';

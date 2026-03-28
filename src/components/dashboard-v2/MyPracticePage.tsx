@@ -75,7 +75,7 @@ export default function MyPracticePage({ onNavigate }: MyPracticePageProps) {
     queryKey: ['my-practice-team-count', clinic?.id],
     queryFn: async () => {
       const { count } = await supabase
-        .from('agencies')
+        .from('dentists')
         .select('id', { count: 'exact', head: true })
         .eq('clinic_id', clinic?.id);
       return count || 0;

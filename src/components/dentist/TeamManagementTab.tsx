@@ -62,7 +62,7 @@ export default function TeamManagementTab() {
     queryKey: ['clinic-team', clinic?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('agencies')
+        .from('dentists')
         .select('*')
         .eq('clinic_id', clinic?.id)
         .order('is_primary', { ascending: false })
@@ -82,7 +82,7 @@ export default function TeamManagementTab() {
       const slug = data.name.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now().toString(36);
       
       const { error } = await supabase
-        .from('agencies')
+        .from('dentists')
         .insert({
           clinic_id: clinic.id,
           name: data.name,
@@ -122,7 +122,7 @@ export default function TeamManagementTab() {
   const updateMember = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: TeamMemberFormData }) => {
       const { error } = await supabase
-        .from('agencies')
+        .from('dentists')
         .update({
           name: data.name,
           title: data.title || null,
@@ -161,7 +161,7 @@ export default function TeamManagementTab() {
   const deleteMember = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
-        .from('agencies')
+        .from('dentists')
         .update({ is_active: false })
         .eq('id', id);
 

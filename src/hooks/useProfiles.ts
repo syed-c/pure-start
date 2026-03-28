@@ -102,7 +102,7 @@ export function useProfiles(filters: ProfileFilters = {}) {
 
       // Fetch agencies with their clinics
       let dentistQuery = supabase
-        .from('agencies')
+        .from('dentists')
         .select(`
           *,
           clinic:clinics(

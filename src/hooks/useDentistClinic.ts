@@ -111,7 +111,7 @@ export function useDentistTeam() {
       if (!clinic?.id) return [];
 
       const { data, error } = await supabase
-        .from('agencies')
+        .from('dentists')
         .select('*')
         .eq('clinic_id', clinic.id)
         .order('is_primary', { ascending: false });

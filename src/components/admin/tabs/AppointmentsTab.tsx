@@ -66,7 +66,7 @@ export default function AppointmentsTab() {
   const { data: contacts } = useQuery({
     queryKey: ['filter-agencies'],
     queryFn: async () => {
-      const { data } = await supabase.from('agencies').select('id, name').eq('is_active', true).order('name').limit(100);
+      const { data } = await supabase.from('dentists').select('id, name').eq('is_active', true).order('name').limit(100);
       return data || [];
     },
   });
