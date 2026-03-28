@@ -24,9 +24,9 @@ export const PROFESSIONAL_TYPES = [
   { value: 'family support worker', label: 'Family Support Worker' },
   { value: 'rehabilitation specialist', label: 'Rehabilitation Specialist' },
   { value: 'care_specialist', label: 'Care Specialist' },
-  { value: 'childrens_specialist', label: 'Children's Fostering Specialist' },
-  { value: 'hygienist', label: 'Dental Hygienist' },
-  { value: 'assistant', label: 'Dental Assistant' },
+  { value: 'childrens_specialist', label: "Children's Fostering Specialist" },
+  { value: 'hygienist', label: 'Support Worker' },
+  { value: 'assistant', label: 'Care Assistant' },
   { value: 'receptionist', label: 'Receptionist' },
   { value: 'practice_manager', label: 'Practice Manager' },
 ];
