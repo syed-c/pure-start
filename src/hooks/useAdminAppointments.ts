@@ -49,7 +49,7 @@ export function useAdminAppointments(filters: AppointmentsFilters = {}) {
 
       if (filters.status) query = query.eq('status', filters.status as 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'no_show');
       if (filters.clinicId) query = query.eq('clinic_id', filters.clinicId);
-      if (filters.contactId) query = query.eq('dentist_id', filters.contactId);
+      if (filters.dentistId) query = query.eq('dentist_id', filters.dentistId);
       if (filters.treatmentId) query = query.eq('treatment_id', filters.treatmentId);
       if (filters.dateFrom) query = query.gte('preferred_date', filters.dateFrom);
       if (filters.dateTo) query = query.lte('preferred_date', filters.dateTo);
