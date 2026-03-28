@@ -37,7 +37,7 @@ import {
 const PAGE_TYPES = [
   { id: 'homepage', label: 'Homepage', icon: Globe, schemaTypes: ['Organization'] },
   { id: 'clinic', label: 'Clinics', icon: Building2, schemaTypes: ['LocalBusiness', 'Dentist', 'Breadcrumb'] },
-  { id: 'dentist', label: 'Dentists', icon: User, schemaTypes: ['Person', 'Breadcrumb'] },
+  { id: 'dentist', label: 'Agencies', icon: User, schemaTypes: ['Person', 'Breadcrumb'] },
   { id: 'city', label: 'City Pages', icon: MapPin, schemaTypes: ['Breadcrumb', 'FAQPage'] },
   { id: 'state', label: 'State Pages', icon: MapPin, schemaTypes: ['Breadcrumb', 'FAQPage'] },
   { id: 'service', label: 'Service Pages', icon: FileText, schemaTypes: ['Service', 'FAQPage'] },
@@ -360,12 +360,12 @@ export default function StructuredDataTab() {
         .limit(5);
       samples.clinic = clinics?.map(c => ({ slug: `/clinic/${c.slug}`, name: c.name })) || [];
       
-      const { data: dentists } = await supabase
-        .from('dentists')
+      const { data: agencies } = await supabase
+        .from('agencies')
         .select('slug, name')
         .eq('is_active', true)
         .limit(5);
-      samples.dentist = dentists?.map(d => ({ slug: `/dentist/${d.slug}`, name: d.name })) || [];
+      samples.dentist = agencies?.map(d => ({ slug: `/dentist/${d.slug}`, name: d.name })) || [];
       
       const { data: cities } = await supabase
         .from('cities')
@@ -456,7 +456,7 @@ export default function StructuredDataTab() {
   const detectPageType = (url: string): string => {
     if (url === '/' || url === '') return 'homepage';
     if (url.startsWith('/clinic/')) return 'clinic';
-    if (url.startsWith('/dentist/')) return 'dentist';
+    if (url.startsWith('/contact/')) return 'dentist';
     if (url.startsWith('/services/')) return 'service';
     if (url.startsWith('/blog/')) return 'blog';
     const parts = url.split('/').filter(Boolean);

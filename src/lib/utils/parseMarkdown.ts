@@ -67,7 +67,7 @@ function buildAnchor(innerHtml: string, href: string): string {
 
 /**
  * Converts common generated patterns into proper anchor-text links.
- * Example: "**General Dentistry:** /services/general-dentistry/" becomes a link on the bold label.
+ * Example: "**Agency Contactry:** /services/general-dentistry/" becomes a link on the bold label.
  */
 function linkifyGeneratedLabelUrl(escapedText: string): string {
   let text = escapedText;
@@ -241,7 +241,7 @@ function renderTable(headerLine: string, bodyLines: string[]): string {
 /**
  * parseMarkdownToHtml - Converts markdown-style content to safe HTML.
  * Fixes the exact issues you reported:
- * - list items like "* **General Dentistry:**" become real lists (no visible stars)
+ * - list items like "* **Agency Contactry:**" become real lists (no visible stars)
  * - generated label+URL patterns become clickable anchor text (URL is removed)
  * - markdown tables render as a clean, responsive table
  * - Strips H1 headings and code fences to prevent duplication with Hero

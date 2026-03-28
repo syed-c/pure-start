@@ -614,7 +614,7 @@ export default function SeoTab() {
                   { pattern: '/{state}/{city}/', description: 'City pages', status: true },
                   { pattern: '/services/{service}/', description: 'Service pages', status: true },
                   { pattern: '/clinic/{slug}/', description: 'Clinic pages', status: true },
-                  { pattern: '/dentist/{slug}/', description: 'Dentist pages', status: true },
+                  { pattern: '/contact/{slug}/', description: 'Dentist pages', status: true },
                   { pattern: '/blog/', description: 'Blog listing', status: true },
                   { pattern: '/blog/{slug}/', description: 'Blog posts', status: true },
                 ].map((item, i) => (

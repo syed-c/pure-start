@@ -99,11 +99,11 @@ export default function GmbScraperBotTab() {
   
   const [selectedStateIds, setSelectedStateIds] = useState<string[]>([]);
   const [selectedCityIds, setSelectedCityIds] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(['dentist', 'dental clinic']);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(['dentist', 'fostering agency']);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   
   // NEW: Filter options for cities
-  const [cityFilter, setCityFilter] = useState<'all' | 'empty' | 'with-dentists'>('all');
+  const [cityFilter, setCityFilter] = useState<'all' | 'empty' | 'with-agencies'>('all');
   const [maxPagesPerSearch, setMaxPagesPerSearch] = useState<number>(5); // Support pagination beyond 20
   
   // Fetch cities for ALL selected states with dentist counts
@@ -147,7 +147,7 @@ export default function GmbScraperBotTab() {
     switch (cityFilter) {
       case 'empty':
         return cities.filter(c => (c.dentist_count ?? 0) === 0);
-      case 'with-dentists':
+      case 'with-agencies':
         return cities.filter(c => (c.dentist_count ?? 0) > 0);
       default:
         return cities;
@@ -997,7 +997,7 @@ export default function GmbScraperBotTab() {
             GMB Scraper Bot
           </h1>
           <p className="text-muted-foreground mt-1">
-            Search and import dentists city-by-city with auto-save
+            Search and import agencies city-by-city with auto-save
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -1135,10 +1135,10 @@ export default function GmbScraperBotTab() {
                       <SelectContent>
                         <SelectItem value="all">All Cities ({cities.length})</SelectItem>
                         <SelectItem value="empty">
-                          🔴 Empty - No Dentists ({cities.filter(c => (c.dentist_count ?? 0) === 0).length})
+                          🔴 Empty - No Agencies ({cities.filter(c => (c.dentist_count ?? 0) === 0).length})
                         </SelectItem>
-                        <SelectItem value="with-dentists">
-                          🟢 With Dentists ({cities.filter(c => (c.dentist_count ?? 0) > 0).length})
+                        <SelectItem value="with-agencies">
+                          🟢 With Agencies ({cities.filter(c => (c.dentist_count ?? 0) > 0).length})
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -1162,7 +1162,7 @@ export default function GmbScraperBotTab() {
                   <Alert className="bg-amber-500/10 border-amber-500/30">
                     <AlertTriangle className="h-4 w-4 text-amber-600" />
                     <AlertDescription className="text-amber-700 text-sm">
-                      Showing {filteredCities.length} cities with zero dentists. Select these to scrape and populate them.
+                      Showing {filteredCities.length} cities with zero agencies. Select these to scrape and populate them.
                     </AlertDescription>
                   </Alert>
                 )}

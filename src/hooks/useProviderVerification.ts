@@ -8,7 +8,7 @@ export type VerificationStatus = 'pending' | 'approved' | 'rejected' | 'expired'
 export interface ProviderVerification {
   id: string;
   clinic_id: string | null;
-  dentist_id: string | null;
+  contact_id: string | null;
   verification_type: VerificationType;
   status: VerificationStatus;
   submitted_at: string;
@@ -49,7 +49,7 @@ export function useAllVerifications(status?: VerificationStatus) {
         .select(`
           *,
           clinic:clinics(id, name),
-          dentist:dentists(id, name)
+          dentist:agencies(id, name)
         `)
         .order('submitted_at', { ascending: false });
 
@@ -70,7 +70,7 @@ export function useSubmitVerification() {
   return useMutation({
     mutationFn: async (data: {
       clinic_id?: string;
-      dentist_id?: string;
+      contact_id?: string;
       verification_type: VerificationType;
       documents?: any[];
       notes?: string;
@@ -79,7 +79,7 @@ export function useSubmitVerification() {
         .from('provider_verifications')
         .insert({
           clinic_id: data.clinic_id,
-          dentist_id: data.dentist_id,
+          contact_id: data.contact_id,
           verification_type: data.verification_type,
           status: 'pending',
           documents: data.documents || [],

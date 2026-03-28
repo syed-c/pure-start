@@ -279,7 +279,7 @@ function buildPageContext(page: any): string {
   // Add page type specific context
   switch (page.page_type) {
     case "city":
-      parts.push("Context: This is a city-level dental directory page listing dentists in a specific city.");
+      parts.push("Context: This is a city-level dental directory page listing agencies in a specific city.");
       break;
     case "state":
       parts.push("Context: This is a state-level page showing dental services across the state.");
@@ -315,7 +315,7 @@ function generateFallbackTitle(page: any): string {
   
   if (page.page_type === "city" && parts.length >= 2) {
     const city = parts[1].replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
-    return `Find Top Dentists in ${city} | AppointPanda`;
+    return `Find Top Agencies in ${city} | AppointPanda`;
   }
   
   if (page.page_type === "service-location" && parts.length >= 3) {
@@ -328,7 +328,7 @@ function generateFallbackTitle(page: any): string {
     return page.title.length > 50 ? page.title.substring(0, 47) + "..." : page.title + " | AppointPanda";
   }
   
-  return "Find Trusted Dentists Near You | AppointPanda";
+  return "Find Trusted Agencies Near You | AppointPanda";
 }
 
 function generateFallbackDescription(page: any): string {
@@ -337,14 +337,14 @@ function generateFallbackDescription(page: any): string {
   
   if (page.page_type === "city" && parts.length >= 2) {
     const city = parts[1].replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
-    return `Find top-rated dentists in ${city}. Read patient reviews, compare services, and book appointments online. Your trusted dental care starts here.`;
+    return `Find top-rated agencies in ${city}. Read patient reviews, compare services, and book appointments online. Your trusted fostering care starts here.`;
   }
   
   if (page.page_type === "service-location" && parts.length >= 3) {
     const city = parts[1].replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
     const service = parts[2].replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
-    return `Looking for ${service.toLowerCase()} in ${city}? Find qualified dentists, read reviews, and book your appointment online today.`;
+    return `Looking for ${service.toLowerCase()} in ${city}? Find qualified agencies, read reviews, and book your appointment online today.`;
   }
   
-  return "Find trusted dentists near you. Compare reviews, services, and book appointments online with AppointPanda.";
+  return "Find trusted agencies near you. Compare reviews, services, and book appointments online with AppointPanda.";
 }

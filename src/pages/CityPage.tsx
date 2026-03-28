@@ -9,7 +9,7 @@ import { generateCityQA } from "@/lib/ai-seo/generateQAContent";
 import { Section } from "@/components/layout/Section";
 import { SearchBox } from "@/components/SearchBox";
 import { BudgetFilterSidebar, useBudgetFilters } from "@/components/filters";
-import { DentistListFrame, LocationQuickLinks } from "@/components/location";
+import { AgencyListFrame, LocationQuickLinks } from "@/components/location";
 import { SEOContentBlock } from "@/components/seo/SEOContentBlock";
 import { PageIntroSection } from "@/components/seo/PageIntroSection";
 import { GeographicLinkBlock } from "@/components/seo/GeographicLinkBlock";
@@ -488,7 +488,7 @@ const CityPage = () => {
             {/* Main Content Column */}
             <div className="flex-1 min-w-0 space-y-8">
               {/* Agency List Frame */}
-              <DentistListFrame
+              <AgencyListFrame
                 profiles={profiles}
                 isLoading={profilesLoading}
                 locationName={cityName}

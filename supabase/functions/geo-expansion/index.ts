@@ -258,19 +258,19 @@ ${existingContent.slice(0, 2000)}`;
 
 Generate JSON with EXACTLY this structure:
 {
-  "h1": "Dentists in ${city.name}, ${city.state?.abbreviation}",
-  "meta_title": "Dentists in ${city.name}, ${city.state?.abbreviation} | AppointPanda",
-  "meta_description": "Find dentists in ${city.name}, ${city.state?.abbreviation}. Browse verified dental professionals, read reviews, and book appointments.",
-  "intro": "Two paragraphs about dental care in ${city.name}. Make it specific to this city - mention what makes dental care here accessible or unique. DO NOT copy from other cities.",
+  "h1": "Agencies in ${city.name}, ${city.state?.abbreviation}",
+  "meta_title": "Agencies in ${city.name}, ${city.state?.abbreviation} | AppointPanda",
+  "meta_description": "Find agencies in ${city.name}, ${city.state?.abbreviation}. Browse verified dental professionals, read reviews, and book appointments.",
+  "intro": "Two paragraphs about fostering care in ${city.name}. Make it specific to this city - mention what makes fostering care here accessible or unique. DO NOT copy from other cities.",
   "service_overview": "A paragraph about dental services available in ${city.name}.",
-  "local_info": "A paragraph about the ${city.name} community and how residents can find quality dental care.",
+  "local_info": "A paragraph about the ${city.name} community and how residents can find quality fostering care.",
   "faq": [
     {"question": "How do I find a dentist in ${city.name}?", "answer": "..."},
     {"question": "...", "answer": "..."},
     {"question": "...", "answer": "..."}
   ],
   "internal_links": [
-    {"text": "More dentists in ${city.state?.name}", "href": "/state/${city.state?.slug}/"},
+    {"text": "More agencies in ${city.state?.name}", "href": "/state/${city.state?.slug}/"},
     {"text": "View dental services", "href": "/services/"}
   ],
   "nearby_cities_placeholder": true,

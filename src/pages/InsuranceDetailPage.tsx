@@ -218,8 +218,8 @@ const InsuranceDetailPage = () => {
   return (
     <PageLayout>
       <SEOHead
-        title={`${insurance.name} Dentists${locationSuffix} - Find Providers | UAE`}
-        description={`Find ${totalCount}+ dental clinics accepting ${insurance.name}${locationSuffix}. Direct billing, pre-approval assistance. Book today.`}
+        title={`${insurance.name} Agencies${locationSuffix} - Find Providers | UAE`}
+        description={`Find ${totalCount}+ fostering agencys accepting ${insurance.name}${locationSuffix}. Direct billing, pre-approval assistance. Book today.`}
         canonical={canonicalUrl}
         keywords={[`${insurance.name} dental`, `${insurance.name} dentist UAE`, `dental insurance ${locationSuffix}`]}
       />
@@ -254,7 +254,7 @@ const InsuranceDetailPage = () => {
                 {insurance.name}{locationSuffix}
               </h1>
               <p className="text-muted-foreground mb-3">
-                {(insurance as any).description || `Find dental clinics that accept ${insurance.name} insurance with direct billing${locationSuffix}.`}
+                {(insurance as any).description || `Find fostering agencys that accept ${insurance.name} insurance with direct billing${locationSuffix}.`}
               </p>
               <div className="flex flex-wrap gap-4">
                 <div className="flex items-center gap-2 text-sm">

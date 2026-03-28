@@ -67,10 +67,10 @@ export default function SmokeTestTab() {
     },
   });
 
-  const { data: dentists } = useQuery({
-    queryKey: ['smoke-test-dentists'],
+  const { data: agencies } = useQuery({
+    queryKey: ['smoke-test-agencies'],
     queryFn: async () => {
-      const { data } = await supabase.from('dentists').select('slug, name').eq('is_active', true).limit(5);
+      const { data } = await supabase.from('agencies').select('slug, name').eq('is_active', true).limit(5);
       return data || [];
     },
   });
@@ -121,7 +121,7 @@ export default function SmokeTestTab() {
     });
 
     // Dentist pages
-    dentists?.forEach(dentist => {
+    agencies?.forEach(dentist => {
       routes.push({ path: `/dentist/${dentist.slug}`, type: 'dentist', name: dentist.name, status: 'pending' });
     });
 

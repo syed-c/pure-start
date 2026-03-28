@@ -35,7 +35,7 @@ interface ClinicStickyBookingProps {
   clinicAddress?: string;
   hours?: ClinicHour[];
   teamMembers?: TeamMember[];
-  onBookClick?: (dentistId?: string) => void;
+  onBookClick?: (contactId?: string) => void;
   isClaimed?: boolean;
   className?: string;
 }
@@ -64,8 +64,8 @@ export function ClinicStickyBooking({
   const today = new Date().getDay();
   const todayHours = hours.find(h => h.day_of_week === today);
   
-  const dentists = teamMembers.filter(m => 
-    ['dentist', 'orthodontist', 'endodontist', 'periodontist', 'prosthodontist', 'oral_surgeon', 'pediatric_dentist'].includes(m.professional_type)
+  const agencies = teamMembers.filter(m => 
+    ['dentist', 'therapeutic specialist', 'placement coordinator', 'family support worker', 'rehabilitation specialist', 'care_specialist', 'childrens_specialist'].includes(m.professional_type)
   );
 
   const isOpenNow = () => {
@@ -124,7 +124,7 @@ export function ClinicStickyBooking({
         </div>
 
         {/* Select Dentist (if claimed and has team) */}
-        {isClaimed && dentists.length > 0 && (
+        {isClaimed && agencies.length > 0 && (
           <div className="p-4 border-b border-border/50">
             <label className="text-xs font-medium text-muted-foreground mb-2 block">
               Choose dentist (optional)
@@ -142,7 +142,7 @@ export function ClinicStickyBooking({
                 Any available
               </button>
               
-              {dentists.slice(0, 4).map(dentist => (
+              {agencies.slice(0, 4).map(dentist => (
                 <button
                   key={dentist.id}
                   onClick={() => setSelectedDentist(dentist.id)}
@@ -218,7 +218,7 @@ export function ClinicStickyBooking({
       <InlineBookingCalendar
         profileId={selectedDentist || clinicId}
         profileName={selectedDentist 
-          ? dentists.find(d => d.id === selectedDentist)?.name || clinicName
+          ? agencies.find(d => d.id === selectedDentist)?.name || clinicName
           : clinicName
         }
         profileType={selectedDentist ? "dentist" : "clinic"}

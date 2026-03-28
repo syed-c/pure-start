@@ -109,7 +109,7 @@ export function InsuranceInternalLinks({
                     to={buildInsuranceUrl(ins.slug)}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
-                    {ins.name} Dentists
+                    {ins.name} Agencies
                   </Link>
                 </li>
               ))}
@@ -165,7 +165,7 @@ export function InsuranceInternalLinks({
                     to={withTrailingSlash(`/${em.slug}`)}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
-                    Dentists in {em.name}
+                    Agencies in {em.name}
                   </Link>
                 </li>
               ))}

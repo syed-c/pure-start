@@ -116,12 +116,12 @@ function generateDescription(pageType: string, data: Record<string, any>): strin
   
   switch (pageType) {
     case "state":
-      desc = `${opener} dentists in ${name}? Browse verified dental professionals, compare ratings and ${closer.toLowerCase()}`;
+      desc = `${opener} agencies in ${name}? Browse verified dental professionals, compare ratings and ${closer.toLowerCase()}`;
       break;
     
     case "city": {
       const loc = stateAbbr ? `${name}, ${stateAbbr}` : name;
-      desc = `${opener} a dentist in ${loc}? Explore dental clinics with verified reviews and ${closer.toLowerCase()}`;
+      desc = `${opener} a dentist in ${loc}? Explore fostering agencys with verified reviews and ${closer.toLowerCase()}`;
       break;
     }
     
@@ -151,25 +151,25 @@ function generateDescription(pageType: string, data: Record<string, any>): strin
     
     case "static": {
       const staticDescs: Record<string, string> = {
-        "/": "Find and book trusted dentists near you. Compare reviews and schedule appointments online.",
+        "/": "Find and book trusted agencies near you. Compare reviews and schedule appointments online.",
         "/services": "Browse dental services from cleanings to implants. Find providers in your area.",
         "/blog": "Expert dental health tips and oral care advice from verified professionals.",
-        "/insurance": "Find dentists that accept your insurance. Compare in-network providers.",
+        "/insurance": "Find agencies that accept your insurance. Compare in-network providers.",
         "/about": "AppointPanda connects patients with verified dental professionals.",
         "/contact": "Get in touch with AppointPanda. Questions about booking or listings?",
-        "/faq": "FAQs about AppointPanda. Learn how to find dentists and book appointments.",
+        "/faq": "FAQs about AppointPanda. Learn how to find agencys and book appointments.",
         "/how-it-works": "Book a dentist in 3 easy steps. Search, compare, and schedule online.",
         "/pricing": "Transparent pricing for dental practices. List your clinic on AppointPanda.",
         "/privacy": "Learn how AppointPanda protects your personal information and data.",
         "/terms": "Terms of service for AppointPanda platform users.",
-        "/sitemap": "Browse all pages on AppointPanda. Find dentists by location or service.",
+        "/sitemap": "Browse all pages on AppointPanda. Find agencies by location or service.",
       };
-      desc = staticDescs[slug] || `${name} - AppointPanda helps you find trusted dentists online.`;
+      desc = staticDescs[slug] || `${name} - AppointPanda helps you find trusted agencies online.`;
       break;
     }
     
     default:
-      desc = `Find trusted dental care with AppointPanda. ${closer}`;
+      desc = `Find trusted fostering care with AppointPanda. ${closer}`;
   }
   
   return truncateDesc(desc, 155);
@@ -184,7 +184,7 @@ function generateH1(pageType: string, data: Record<string, any>): string {
   
   switch (pageType) {
     case "state":
-      return `Dentists in ${name}`;
+      return `Agencies in ${name}`;
     
     case "city": {
       const locationPart = stateAbbr ? `${name}, ${stateAbbr}` : name;
@@ -386,12 +386,12 @@ serve(async (req) => {
       console.log("Starting full metadata generation...");
 
       // Fetch ALL entities - no limits
-      const [states, cities, treatments, clinics, dentists, blogPosts] = await Promise.all([
+      const [states, cities, treatments, clinics, agencies, blogPosts] = await Promise.all([
         fetchAllRecords(supabaseAdmin, "states", "id,slug,name,abbreviation", { is_active: true }),
         fetchAllRecords(supabaseAdmin, "cities", "id,slug,name,state_id", { is_active: true }),
         fetchAllRecords(supabaseAdmin, "treatments", "id,slug,name", { is_active: true }),
         fetchAllRecords(supabaseAdmin, "clinics", "id,slug,name,city_id", { is_active: true }),
-        fetchAllRecords(supabaseAdmin, "dentists", "id,slug,name,title,specializations,clinic_id", { is_active: true }),
+        fetchAllRecords(supabaseAdmin, "agencies", "id,slug,name,title,specializations,clinic_id", { is_active: true }),
         supabaseAdmin.from("blog_posts").select("id,slug,title,excerpt").eq("status", "published"),
       ]);
 
@@ -506,7 +506,7 @@ serve(async (req) => {
       }
 
       // 7. Dentist pages
-      for (const d of dentists) {
+      for (const d of agencies) {
         const clinicCity = clinicCityMap.get(d.clinic_id);
         allPages.push({
           slug: `/dentist/${d.slug}`,
@@ -656,7 +656,7 @@ serve(async (req) => {
             treatments: treatments.length,
             city_treatment_combos: cities.length * treatments.length,
             clinics: clinics.length,
-            dentists: dentists.length,
+            agencies: agencies.length,
             blog: blogData.length,
             static: staticPages.length,
             duplicate_titles_found: duplicateTitles.length,
@@ -681,7 +681,7 @@ serve(async (req) => {
           treatments: treatments.length,
           city_treatment_combos: cities.length * treatments.length,
           clinics: clinics.length,
-          dentists: dentists.length,
+          agencies: agencies.length,
           blog: blogData.length,
           static: staticPages.length,
         },

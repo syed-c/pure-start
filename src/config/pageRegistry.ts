@@ -102,7 +102,7 @@ export const INDEXABLE_PAGES: PageRegistryEntry[] = [
     pageType: 'service-location',
     indexable: true,
     renderMode: 'PRERENDER',
-    description: 'Service in location (e.g., /california/los-angeles/cosmetic-dentist)',
+    description: 'Service in location (e.g., /california/los-angeles/specialist-fostering)',
     priority: 0.8,
     changefreq: 'weekly',
   },
@@ -118,7 +118,7 @@ export const INDEXABLE_PAGES: PageRegistryEntry[] = [
     changefreq: 'weekly',
   },
   {
-    route: '/dentist/:dentistSlug',
+    route: '/contact/:contactSlug',
     pageType: 'dentist',
     indexable: true,
     renderMode: 'PRERENDER',
@@ -275,7 +275,7 @@ export const INDEXABLE_PAGES: PageRegistryEntry[] = [
     description: 'Search results page (noindex)',
   },
   {
-    route: '/find-dentist',
+    route: '/find-agency',
     pageType: 'utility',
     indexable: false,
     renderMode: 'CSR',
@@ -533,7 +533,7 @@ export const NOINDEX_PATTERNS = [
   '/form/',
   '/book/',
   '/search',
-  '/find-dentist',
+  '/find-agency',
 ];
 
 /**
@@ -567,7 +567,7 @@ export interface DynamicPageCounts {
   services: number;
   serviceLocations: number;
   clinics: number;
-  dentists: number;
+  agencies: number;
   blogPosts: number;
   insurances: number;
 }
@@ -582,7 +582,7 @@ export const ESTIMATED_PAGE_COUNTS: DynamicPageCounts = {
   services: 35, // Treatment types
   serviceLocations: 5000, // cities × services (filtered)
   clinics: 6600, // Active clinic profiles
-  dentists: 3000, // Active dentist profiles
+  agencies: 3000, // Active dentist profiles
   blogPosts: 200, // Published blog posts
   insurances: 30, // Insurance providers
 };

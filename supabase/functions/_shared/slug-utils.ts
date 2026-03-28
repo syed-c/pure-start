@@ -28,7 +28,7 @@ interface SlugRow {
  */
 export async function generateUniqueSlug(
   supabaseAdmin: SupabaseClient,
-  tableName: 'clinics' | 'dentists',
+  tableName: 'clinics' | 'agencies',
   name: string
 ): Promise<string> {
   const baseSlug = generateBaseSlug(name);

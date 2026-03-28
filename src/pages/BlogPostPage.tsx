@@ -765,7 +765,7 @@ const BlogPostPage = () => {
               </p>
               <Button asChild className="w-full rounded-xl font-bold">
                 <Link to="/search">
-                  Browse Dentists
+                  Browse Agencies
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>

@@ -77,7 +77,7 @@ const ClinicPage = () => {
     queryFn: async () => {
       if (!clinic?.id) return [];
       const { data } = await supabase
-        .from("dentists")
+        .from("agencies")
         .select("*")
         .eq("clinic_id", clinic.id)
         .eq("is_active", true)
@@ -644,7 +644,7 @@ const ClinicPage = () => {
               name: t.treatment?.name || '',
               slug: t.treatment?.slug || '',
             })).filter(s => s.name) || []}
-            nearbyDentists={[]}
+            nearbyAgencies={[]}
           />
         </div>
 

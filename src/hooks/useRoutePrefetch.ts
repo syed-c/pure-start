@@ -18,7 +18,7 @@ const ROUTE_PREFETCH_MAP: Record<string, () => Promise<unknown>> = {
   '/contact': () => import('@/pages/ContactPage'),
   '/faq': () => import('@/pages/FAQPage'),
   '/auth': () => import('@/pages/Auth'),
-  '/emergency-dentist': () => import('@/pages/EmergencyDentist'),
+  '/emergency-foster-care': () => import('@/pages/EmergencyDentist'),
 };
 
 const prefetchedRoutes = new Set<string>();

@@ -175,8 +175,8 @@ async function handleFullAudit(supabase: any) {
     suggestions.push({
       type: "content_gap",
       priority: "low",
-      title: `${areasWithoutClinics.length} active areas have 0 dentists`,
-      description: `Areas like ${areasWithoutClinics.slice(0, 3).map((a: any) => a.name).join(", ")} are active but show no dentists. Consider importing clinics or deactivating these areas.`,
+      title: `${areasWithoutClinics.length} active areas have 0 agencies`,
+      description: `Areas like ${areasWithoutClinics.slice(0, 3).map((a: any) => a.name).join(", ")} are active but show no agencies. Consider importing clinics or deactivating these areas.`,
       actionLabel: "View Locations",
       targetTab: "locations",
     });
@@ -214,7 +214,7 @@ async function handleScopedAudit(supabase: any, scope: string) {
     
     const { data: areasNoClinics } = await supabase.from("areas").select("name").eq("is_active", true).eq("dentist_count", 0).limit(20);
     if (areasNoClinics && areasNoClinics.length > 0) {
-      suggestions.push({ type: "content_gap", priority: "low", title: `${areasNoClinics.length} areas have 0 dentists`, description: `Areas like ${areasNoClinics.slice(0, 3).map((a: any) => a.name).join(", ")} are active but empty.`, actionLabel: "View Locations", targetTab: "locations" });
+      suggestions.push({ type: "content_gap", priority: "low", title: `${areasNoClinics.length} areas have 0 agencies`, description: `Areas like ${areasNoClinics.slice(0, 3).map((a: any) => a.name).join(", ")} are active but empty.`, actionLabel: "View Locations", targetTab: "locations" });
     }
   }
 
@@ -407,13 +407,13 @@ async function handleFixLinks(supabase: any, scope: string) {
         // Add sibling city/area links
         const siblingCities = (cities || []).filter((c: any) => c.state?.slug === slugParts[0] && c.slug !== slugParts[1]).slice(0, 3);
         siblingCities.forEach((c: any) => {
-          relatedLinks.push({ text: `Dentists in ${c.name}`, href: `/${c.state?.slug}/${c.slug}/` });
+          relatedLinks.push({ text: `Agencies in ${c.name}`, href: `/${c.state?.slug}/${c.slug}/` });
         });
       } else if (page.page_type === "service_location") {
         // Add parent city link
         if (slugParts.length >= 2) {
           const cityName = slugParts[1].replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase());
-          relatedLinks.push({ text: `All dentists in ${cityName}`, href: `/${slugParts[0]}/${slugParts[1]}/` });
+          relatedLinks.push({ text: `All agencies in ${cityName}`, href: `/${slugParts[0]}/${slugParts[1]}/` });
         }
         // Add related services
         (treatments || []).filter((t: any) => t.slug !== slugParts[2]).slice(0, 3).forEach((t: any) => {

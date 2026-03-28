@@ -191,7 +191,7 @@ export default function TemplatesTab() {
 
   // Fetch clinic - skip for admins
   const { data: clinic, isLoading: clinicLoading } = useQuery({
-    queryKey: ['dentist-clinic-templates', user?.id],
+    queryKey: ['agency-profile-templates', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clinics')

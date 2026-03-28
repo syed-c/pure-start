@@ -29,7 +29,7 @@ interface DbCounts {
   clinics: number;
   clinic_hours: number;
   google_reviews: number;
-  dentists: number;
+  agencies: number;
 }
 
 const BATCH_SIZE = 10;
@@ -199,7 +199,7 @@ export default function DataRecoveryTab() {
           { label: 'Clinics', value: counts?.clinics ?? '—', icon: '🏥' },
           { label: 'Hours', value: counts?.clinic_hours ?? '—', icon: '🕐' },
           { label: 'Reviews', value: counts?.google_reviews ?? '—', icon: '⭐' },
-          { label: 'Dentists', value: counts?.dentists ?? '—', icon: '🦷' },
+          { label: 'Agencies', value: counts?.agencies ?? '—', icon: '🦷' },
         ].map(item => (
           <Card key={item.label}>
             <CardContent className="p-4 text-center">

@@ -407,11 +407,11 @@ serve(async (req) => {
       followUpQuestion = "What specific service are you looking for? (e.g., cleaning, implants, whitening)";
       conversationStep = "ask_service";
     } else if (results.length === 0 && missingInfo.includes("location")) {
-      const service = intent.treatments[0] || "dental care";
+      const service = intent.treatments[0] || "fostering care";
       followUpQuestion = `Which city would you like to find ${service} in?`;
       conversationStep = "ask_location";
     } else if (results.length === 0) {
-      followUpQuestion = `No dentists found for "${intent.treatments[0] || 'your search'}" within $${intent.budget.max || '?'} in ${intent.location.city || 'your area'}. Try a higher budget or different location.`;
+      followUpQuestion = `No agencies found for "${intent.treatments[0] || 'your search'}" within $${intent.budget.max || '?'} in ${intent.location.city || 'your area'}. Try a higher budget or different location.`;
       conversationStep = "no_results";
     } else if (results.length < 5 && intent.budget.max) {
       followUpQuestion = `Found ${results.length} matches. Want to see more options at a higher budget?`;

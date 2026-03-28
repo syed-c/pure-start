@@ -95,7 +95,7 @@ function generateSitemapIndex(clinicChunks: number, serviceLocationChunks: numbe
     sitemaps.push(`sitemap-profiles-${i}.xml`);
   }
   
-  sitemaps.push("sitemap-dentists.xml", "sitemap-posts.xml", "sitemap-insurance.xml");
+  sitemaps.push("sitemap-agencies.xml", "sitemap-posts.xml", "sitemap-insurance.xml");
   
   return `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -408,13 +408,13 @@ serve(async (req) => {
     }
 
     // DENTISTS SITEMAP
-    if (sitemapType === "dentists") {
+    if (sitemapType === "agencies") {
       const urls: SitemapUrl[] = [];
 
-      const dentists = await fetchAllRows(supabase, "dentists", "slug, updated_at, bio", { is_active: true });
+      const agencies = await fetchAllRows(supabase, "agencies", "slug, updated_at, bio", { is_active: true });
 
-      for (const dentist of dentists) {
-        // Skip dentists with invalid slugs
+      for (const dentist of agencies) {
+        // Skip agencies with invalid slugs
         if (!dentist.slug || dentist.slug.trim() === '') continue;
         
         const hasThinContent = !dentist.bio || dentist.bio.length < 50;
@@ -426,7 +426,7 @@ serve(async (req) => {
         });
       }
 
-      console.log(`Dentists sitemap: ${urls.length} URLs`);
+      console.log(`Agencies sitemap: ${urls.length} URLs`);
       return xmlResponse(generateSitemapXml(urls), corsHeaders);
     }
 

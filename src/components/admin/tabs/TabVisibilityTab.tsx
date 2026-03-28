@@ -59,7 +59,7 @@ const iconMap: Record<string, React.ElementType> = {
 const ADMIN_TABS = [
   { id: 'overview', label: 'Command Center', icon: 'LayoutDashboard', group: 'Overview' },
   { id: 'weekly', label: 'Weekly Report', icon: 'TrendingUp', group: 'Overview' },
-  { id: 'clinics', label: 'Dental Offices', icon: 'Building2', group: 'Users & Clinics' },
+  { id: 'clinics', label: 'Agency Offices', icon: 'Building2', group: 'Users & Clinics' },
   { id: 'users', label: 'Users', icon: 'Users', group: 'Users & Clinics' },
   { id: 'claims', label: 'Claims', icon: 'Shield', group: 'Users & Clinics' },
   { id: 'treatments', label: 'Treatments', icon: 'Stethoscope', group: 'Users & Clinics' },
@@ -80,7 +80,7 @@ const ADMIN_TABS = [
   { id: 'seo-content-optimizer', label: 'Content Optimizer', icon: 'Zap', group: 'Content & SEO' },
   { id: 'ranking-rules', label: 'Ranking Rules', icon: 'TrendingUp', group: 'Content & SEO' },
   { id: 'pinned-profiles', label: 'Pinned Profiles', icon: 'Star', group: 'Content & SEO' },
-  { id: 'top-dentists', label: 'Top Dentists', icon: 'Star', group: 'Content & SEO' },
+  { id: 'top-agencies', label: 'Top Agencies', icon: 'Star', group: 'Content & SEO' },
   { id: 'api-control', label: 'API Control', icon: 'Zap', group: 'Integrations' },
   { id: 'crm-numbers', label: 'CRM Numbers', icon: 'Phone', group: 'Integrations' },
   { id: 'messaging-control', label: 'Messaging', icon: 'MessageSquare', group: 'Integrations' },

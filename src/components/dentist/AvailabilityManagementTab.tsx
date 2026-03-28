@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useDentistClinic } from '@/hooks/useDentistClinic';
+import { useAgencyProfile } from '@/hooks/useAgencyProfile';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -76,7 +76,7 @@ function formatTimeDisplay(time: string): string {
 }
 
 export default function AvailabilityManagementTab() {
-  const { data: clinic, isLoading: clinicLoading } = useDentistClinic();
+  const { data: clinic, isLoading: clinicLoading } = useAgencyProfile();
   const queryClient = useQueryClient();
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [blockReason, setBlockReason] = useState('');

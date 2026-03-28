@@ -68,7 +68,7 @@ export function BlogDentistList({
           name: c.name,
           slug: c.slug,
           type: 'clinic',
-          specialty: 'Dental Clinic',
+          specialty: 'Fostering Agency',
           location: loc,
           rating: Number(c.rating) || 0,
           reviewCount: c.review_count || 0,
@@ -96,7 +96,7 @@ export function BlogDentistList({
 
   if (!profiles?.length) return null;
 
-  const title = headingText || `Top ${profiles.length} Dentists${locationLabel ? ` in ${locationLabel}` : ''}`;
+  const title = headingText || `Top ${profiles.length} Agencies${locationLabel ? ` in ${locationLabel}` : ''}`;
 
   return (
     <div className="my-10 not-prose">

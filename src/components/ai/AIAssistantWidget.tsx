@@ -73,7 +73,7 @@ export function AIAssistantWidget({ clinicId, clinicName, className }: AIAssista
           <div>
             <p className="font-semibold text-sm">{clinicName || 'Panda 🐼'}</p>
             {!isMinimized && (
-              <p className="text-xs opacity-80">Your dental care guide in the UAE</p>
+              <p className="text-xs opacity-80">Your fostering care guide in the UAE</p>
             )}
           </div>
         </div>
@@ -104,8 +104,8 @@ export function AIAssistantWidget({ clinicId, clinicName, className }: AIAssista
             {messages.length === 0 && (
               <div className="text-center text-muted-foreground py-8">
                 <Bot className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p className="text-sm">Hi! I'm Panda 🐼, your dental care guide.</p>
-                <p className="text-xs mt-1">Ask me about dentists, treatments, costs, or booking in the UAE.</p>
+                <p className="text-sm">Hi! I'm Panda 🐼, your fostering care guide.</p>
+                <p className="text-xs mt-1">Ask me about agencies, treatments, costs, or booking in the UAE.</p>
               </div>
             )}
             <div className="space-y-4">

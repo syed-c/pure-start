@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useDentistClinic } from '@/hooks/useDentistClinic';
+import { useAgencyProfile } from '@/hooks/useAgencyProfile';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -71,7 +71,7 @@ const COLORS = [
 const DEFAULT_TYPES = [
   { name: 'New Patient Exam', duration: 60, color: 'blue', description: 'Comprehensive first-visit examination' },
   { name: 'Routine Cleaning', duration: 45, color: 'green', description: 'Professional dental cleaning' },
-  { name: 'Emergency Visit', duration: 30, color: 'orange', description: 'Urgent dental care' },
+  { name: 'Emergency Visit', duration: 30, color: 'orange', description: 'Urgent fostering care' },
   { name: 'Consultation', duration: 30, color: 'purple', description: 'Treatment planning discussion' },
   { name: 'Follow-up', duration: 15, color: 'teal', description: 'Post-treatment check' },
 ];
@@ -86,7 +86,7 @@ const DURATIONS = [
 ];
 
 export default function AppointmentTypesTab() {
-  const { data: clinic, isLoading: clinicLoading } = useDentistClinic();
+  const { data: clinic, isLoading: clinicLoading } = useAgencyProfile();
   const queryClient = useQueryClient();
   const [showDialog, setShowDialog] = useState(false);
   const [editingType, setEditingType] = useState<AppointmentType | null>(null);

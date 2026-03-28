@@ -199,11 +199,11 @@ serve(async (req) => {
       .slice(0, 80);
     
     const { data: existingDentistSlugs } = await supabaseAdmin
-      .from('dentists')
+      .from('agencies')
       .select('slug')
       .like('slug', `${dentistBaseSlug}%`);
     
-    let dentistSlug = dentistBaseSlug;
+    let contactSlug = dentistBaseSlug;
     if (existingDentistSlugs && existingDentistSlugs.length > 0) {
       const exactMatch = existingDentistSlugs.some((row: any) => row.slug === dentistBaseSlug);
       if (exactMatch) {
@@ -211,13 +211,13 @@ serve(async (req) => {
         while (existingDentistSlugs.some((row: any) => row.slug === `${dentistBaseSlug}-${counter}`)) {
           counter++;
         }
-        dentistSlug = `${dentistBaseSlug}-${counter}`;
+        contactSlug = `${dentistBaseSlug}-${counter}`;
       }
     }
 
-    await supabaseAdmin.from("dentists").insert({
+    await supabaseAdmin.from("agencies").insert({
       name: dentistName,
-      slug: dentistSlug,
+      slug: contactSlug,
       email,
       phone,
       clinic_id: clinic.id,

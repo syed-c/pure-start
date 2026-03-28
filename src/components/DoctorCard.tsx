@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { MultiStepBookingModal } from "@/components/MultiStepBookingModal";
 import { LazyImage } from "@/components/common/LazyImage";
-import { buildDentistProfileUrl, buildClinicProfileUrl } from "@/lib/url/buildProfileUrl";
+import { buildContactProfileUrl, buildClinicProfileUrl } from "@/lib/url/buildProfileUrl";
 
 interface DoctorCardProps {
   id?: string;

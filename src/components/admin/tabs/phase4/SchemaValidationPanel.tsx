@@ -79,7 +79,7 @@ export function SchemaValidationPanel() {
     {
       schemaType: 'LocalBusiness/Dentist',
       pageType: 'Clinic Pages',
-      sampleUrl: '/dentist/sample-clinic/',
+      sampleUrl: '/contact/sample-clinic/',
       isValid: true,
       issues: [
         { type: 'warning', field: 'openingHoursSpecification', message: 'Opening hours not always present', recommendation: 'Ensure all clinic profiles have hours configured' }
@@ -103,7 +103,7 @@ export function SchemaValidationPanel() {
     {
       schemaType: 'FAQPage',
       pageType: 'Service & City Pages',
-      sampleUrl: '/services/dental-implants/',
+      sampleUrl: '/services/fostering-placements/',
       isValid: true,
       issues: [],
       requiredFields: [
@@ -119,7 +119,7 @@ export function SchemaValidationPanel() {
     {
       schemaType: 'BreadcrumbList',
       pageType: 'All Pages',
-      sampleUrl: '/dentists/california/los-angeles/',
+      sampleUrl: '/agencies/california/los-angeles/',
       isValid: true,
       issues: [
         { type: 'info', field: 'item', message: 'All URLs use trailing slash format', recommendation: 'Canonical consistency maintained' }
@@ -159,7 +159,7 @@ export function SchemaValidationPanel() {
     {
       schemaType: 'ItemList',
       pageType: 'Listing Pages',
-      sampleUrl: '/dentists/california/',
+      sampleUrl: '/agencies/california/',
       isValid: true,
       issues: [],
       requiredFields: [

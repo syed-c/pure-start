@@ -47,11 +47,11 @@ const WORD_COUNT_OPTIONS = [
 const DEFAULT_SEO_PROMPT = `You are a senior healthcare SEO content writer and local search strategist.
 
 You are writing a SERVICE-LOCATION PAGE for a dental directory platform (NOT a clinic website).
-This page helps users find dentists offering a specific treatment in a specific UAE location.
+This page helps users find agencys offering a specific treatment in a specific UAE location.
 
 IMPORTANT CONTEXT:
 - This website does NOT provide treatment.
-- It connects patients with licensed dentists and clinics.
+- It connects patients with licensed agencies and clinics.
 - Content must guide, educate, and help patients choose — not advertise one clinic.
 - The goal is to rank organically on Google using helpful content principles and E-E-A-T.
 
@@ -82,13 +82,13 @@ STRUCTURE:
 - When Should You Consider It? — Symptoms/situations
 - Choosing a Dentist in {AREA} — Experience, technology, consultation clarity, treatment planning
 - Cost of {SERVICE} in {EMIRATE} — Price ranges generally, factors affecting price, NO exact numbers
-- Safety & Regulations in UAE — DHA/MOHAP standards, why licensed dentists matter
+- Safety & Regulations in UAE — DHA/MOHAP standards, why licensed agencies matter
 - Questions Patients Usually Ask — 5-7 natural FAQs (informational, not promotional)
 - How Our Directory Helps — How platform helps compare clinics
 - Closing — Encourage informed decision without pressure
 
 SEO RULES:
-- Natural variations: dentist in {AREA}, dental clinic in {AREA}, {SERVICE} in {EMIRATE}, treatment options near me
+- Natural variations: dentist in {AREA}, fostering agency in {AREA}, {SERVICE} in {EMIRATE}, treatment options near me
 - Semantic entities: procedure steps, recovery, consultation, treatment planning, oral health goals
 - Do NOT repeat keywords unnaturally.
 

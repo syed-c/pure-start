@@ -59,7 +59,7 @@ serve(async (req) => {
     let responseFormat = "";
 
     if (type === "support_ticket") {
-      prompt = `You are an AI assistant that categorizes dental clinic support tickets.
+      prompt = `You are an AI assistant that categorizes fostering agency support tickets.
 Analyze this ticket and return a JSON object with:
 - category: one of "billing", "technical", "appointment", "feedback", "complaint", "general"
 - urgency_score: number from 1 (low) to 10 (critical)
@@ -71,7 +71,7 @@ ${content}
 Return ONLY valid JSON, no markdown or explanation.`;
       responseFormat = '{"category": "...", "urgency_score": ..., "suggested_response": "..."}';
     } else if (type === "lead") {
-      prompt = `You are an AI assistant that scores and qualifies dental clinic leads.
+      prompt = `You are an AI assistant that scores and qualifies fostering agency leads.
 Analyze this lead and return a JSON object with:
 - quality_score: number from 1-100
 - conversion_likelihood: one of "high", "medium", "low"
@@ -83,7 +83,7 @@ ${content}
 Return ONLY valid JSON, no markdown or explanation.`;
       responseFormat = '{"quality_score": ..., "conversion_likelihood": "...", "recommended_action": "..."}';
     } else if (type === "review_sentiment") {
-      prompt = `You are an AI assistant that analyzes dental clinic review sentiment.
+      prompt = `You are an AI assistant that analyzes fostering agency review sentiment.
 Analyze this review and return a JSON object with:
 - sentiment: one of "positive", "neutral", "negative", "mixed"
 - key_themes: array of main topics mentioned

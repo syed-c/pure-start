@@ -40,7 +40,7 @@ interface MigrationLog {
 
 const MIGRATION_TABLES = [
   'states', 'insurances', 'subscription_plans', 'blog_categories', 'global_settings',
-  'plan_features', 'cities', 'seo_pages', 'treatments', 'clinics', 'dentists',
+  'plan_features', 'cities', 'seo_pages', 'treatments', 'clinics', 'agencies',
   'patients', 'leads', 'appointments', 'reviews', 'blog_posts', 'visitor_sessions',
   'page_views', 'google_reviews', 'audit_logs', 'clinic_hours', 'seo_metadata_history',
   'outreach_campaigns', 'automation_rules'

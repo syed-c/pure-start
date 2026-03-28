@@ -86,23 +86,23 @@ const MessagingControlTab = lazyRetry(() => import('@/components/admin/tabs/Mess
 const PlansTab = lazyRetry(() => import('@/components/admin/tabs/PlansTab'));
 const PromotionsTab = lazyRetry(() => import('@/components/admin/tabs/PromotionsTab'));
 const FounderWeeklyTab = lazyRetry(() => import('@/components/admin/tabs/FounderWeeklyTab'));
-const TopAgenciesTab = lazyRetry(() => import('@/components/admin/tabs/TopDentistsTab'));
+const TopAgenciesTab = lazyRetry(() => import('@/components/admin/tabs/TopAgenciesTab'));
 const PinnedProfilesTab = lazyRetry(() => import('@/components/admin/tabs/PinnedProfilesTab'));
-const AgencyDashboardTab = lazyRetry(() => import('@/components/admin/tabs/DentistDashboardTab'));
+const AgencyDashboardTab = lazyRetry(() => import('@/components/admin/tabs/AgencyDashboardTab'));
 const ProfileEditorTab = lazyRetry(() => import('@/components/dentist/ProfileEditorTab'));
 const ServicesTab = lazyRetry(() => import('@/components/dentist/ServicesTab'));
-const DentistReviewsTab = lazyRetry(() => import('@/components/dentist/DentistReviewsTab'));
-const DentistAppointmentsTab = lazyRetry(() => import('@/components/dentist/DentistAppointmentsTab'));
+const AgencyReviewsTab = lazyRetry(() => import('@/components/dentist/AgencyReviewsTab'));
+const AgencyEnquiriesTab = lazyRetry(() => import('@/components/dentist/AgencyEnquiriesTab'));
 const PatientsTab = lazyRetry(() => import('@/components/dentist/PatientsTab'));
 const MessagesTab = lazyRetry(() => import('@/components/dentist/MessagesTab'));
 const OperationsTab = lazyRetry(() => import('@/components/dentist/OperationsTab'));
 const ReviewRequestsTab = lazyRetry(() => import('@/components/dentist/ReviewRequestsTab'));
 const ReputationGrowthTab = lazyRetry(() => import('@/components/dentist/ReputationGrowthTab'));
-const DentistReputationHub = lazyRetry(() => import('@/components/reputation/DentistReputationHub'));
+const AgencyReputationHub = lazyRetry(() => import('@/components/reputation/AgencyReputationHub'));
 const AdminReputationHub = lazyRetry(() => import('@/components/reputation/AdminReputationHub'));
 const SupportTicketsTab = lazyRetry(() => import('@/components/dentist/SupportTicketsTab'));
 const TeamManagementTab = lazyRetry(() => import('@/components/dentist/TeamManagementTab'));
-const DentistSettingsTab = lazyRetry(() => import('@/components/dentist/DentistSettingsTab'));
+const AgencySettingsTab = lazyRetry(() => import('@/components/dentist/AgencySettingsTab'));
 const TemplatesTab = lazyRetry(() => import('@/components/dentist/TemplatesTab'));
 const InsuranceManagementTab = lazyRetry(() => import('@/components/dentist/InsuranceManagementTab'));
 const IntakeFormsTab = lazyRetry(() => import('@/components/dentist/IntakeFormsTab'));
@@ -157,7 +157,7 @@ import { useTabVisibility } from '@/hooks/useTabVisibility';
 import { useUserTabAccess } from '@/hooks/useUserTabAccess';
 
 // Lazy load the V2 dashboard for agency users
-const AgencyDashboardV2 = lazyRetry(() => import('@/components/dashboard-v2/DentistDashboardV2'));
+const AgencyDashboardV2 = lazyRetry(() => import('@/components/dashboard-v2/AgencyDashboardV2'));
 
 // Define tabs for agency users (comprehensive view)
 const dentistTabGroups = [
@@ -215,7 +215,7 @@ const adminTabGroups = [
       { id: 'overview', label: 'Dashboard Overview', icon: LayoutDashboard },
       { id: 'weekly', label: 'Weekly Report', icon: TrendingUp },
       { id: 'visitor-analytics', label: 'Visitor Analytics', icon: Activity, highlight: true },
-      { id: 'top-dentists', label: 'Top Agencies', icon: Star },
+      { id: 'top-agencies', label: 'Top Agencies', icon: Star },
       { id: 'pinned-profiles', label: 'Pinned Profiles', icon: Star },
     ],
   },
@@ -471,7 +471,7 @@ export default function AdminDashboard() {
 
   // Route separation:
   // - /admin is for admins only
-  // - /dashboard is for dentists only
+  // - /dashboard is for agencies only
   const tabParam = searchParams.get('tab');
 
   // If a dentist lands on /admin, push them to the dentist dashboard route
@@ -486,7 +486,7 @@ export default function AdminDashboard() {
     return <Navigate to={`/admin?tab=${preservedTab}`} replace />;
   }
 
-  // Access control: admins and dentists only
+  // Access control: admins and agencies only
   // Give a retry option for users who just signed up and roles haven't propagated yet
   // SuperAdmins never see this screen - they are fast-tracked
   if (!isAdmin && !isDentist && roleCheckAttempts >= 2) {
@@ -555,7 +555,7 @@ export default function AdminDashboard() {
   const renderTab = () => {
     switch (activeTab) {
       case 'my-dashboard': return <AgencyDashboardTab />;
-      case 'my-appointments': return <DentistAppointmentsTab />;
+      case 'my-appointments': return <AgencyEnquiriesTab />;
       case 'my-availability': return <AvailabilityManagementTab />;
       case 'my-appointment-types': return <AppointmentTypesTab />;
       case 'my-patients': return <PatientsTab />;
@@ -566,9 +566,9 @@ export default function AdminDashboard() {
       case 'my-team': return <TeamManagementTab />;
       case 'my-services': return <ServicesTab />;
       case 'my-insurance': return <InsuranceManagementTab />;
-      case 'my-reputation': return <DentistReputationHub />;
+      case 'my-reputation': return <AgencyReputationHub />;
       case 'my-templates': return <TemplatesTab />;
-      case 'my-settings': return <DentistSettingsTab />;
+      case 'my-settings': return <AgencySettingsTab />;
       case 'my-support': return <SupportTicketsTab />;
       case 'overview': return <OverviewTab />;
       case 'weekly': return <FounderWeeklyTab />;
@@ -579,7 +579,7 @@ export default function AdminDashboard() {
       case 'outreach': return <OutreachTab />;
       case 'ranking-rules': return <RankingRulesTab />;
       case 'pinned-profiles': return <PinnedProfilesTab />;
-      case 'top-dentists': return <TopAgenciesTab />;
+      case 'top-agencies': return <TopAgenciesTab />;
       case 'promotions': return <PromotionsTab />;
       case 'locations': return <LocationsTab />;
       case 'treatments': return <TreatmentsTab />;

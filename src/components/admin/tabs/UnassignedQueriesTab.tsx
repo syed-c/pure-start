@@ -266,7 +266,7 @@ export default function UnassignedQueriesTab() {
             Unassigned Patient Queries
           </h2>
           <p className="text-muted-foreground">
-            Appointment requests from unpaid dentists that need manual routing
+            Appointment requests from unpaid agencies that need manual routing
           </p>
         </div>
         <Button onClick={() => refetch()} variant="outline" className="gap-2">
@@ -346,7 +346,7 @@ export default function UnassignedQueriesTab() {
         <CardHeader>
           <CardTitle>Unassigned Queries ({filteredAppointments?.length || 0})</CardTitle>
           <CardDescription>
-            These appointments are from clinics without paid plans and need to be manually routed to paid dentists
+            These appointments are from clinics without paid plans and need to be manually routed to paid agencies
           </CardDescription>
         </CardHeader>
         <CardContent>

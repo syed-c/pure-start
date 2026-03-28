@@ -1,4 +1,4 @@
-import { useDentistClinic } from '@/hooks/useDentistClinic';
+import { useAgencyProfile } from '@/hooks/useAgencyProfile';
 import { useAuth } from '@/hooks/useAuth';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,12 +9,12 @@ import ReputationSuiteNew from '@/components/dentist/ReputationSuiteNew';
 
 /**
  * Wrapper component for the ReputationSuiteNew that injects the dentist's clinic ID.
- * This ensures dentists can ONLY see their own clinic's reputation data.
+ * This ensures agencies can ONLY see their own clinic's reputation data.
  * Admins/super_admins bypass the clinic requirement.
  */
-export default function DentistReputationHub() {
+export default function AgencyReputationHub() {
   const { isAdmin, isSuperAdmin } = useAuth();
-  const { data: clinic, isLoading, error } = useDentistClinic();
+  const { data: clinic, isLoading, error } = useAgencyProfile();
 
   if (isLoading) {
     return (

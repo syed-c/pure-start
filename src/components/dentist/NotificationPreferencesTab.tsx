@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
-import { useDentistClinic } from '@/hooks/useDentistClinic';
+import { useAgencyProfile } from '@/hooks/useAgencyProfile';
 import {
   Bell,
   Mail,
@@ -48,7 +48,7 @@ interface NotificationSettings {
 export default function NotificationPreferencesTab() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const { data: clinic, isLoading: clinicLoading } = useDentistClinic();
+  const { data: clinic, isLoading: clinicLoading } = useAgencyProfile();
 
   const [settings, setSettings] = useState<NotificationSettings>({
     notification_new_appointment: true,

@@ -41,7 +41,7 @@ export default function ReputationDashboard() {
 
   // Fetch clinic (without sensitive gmb fields)
   const { data: clinic, isLoading: clinicLoading } = useQuery({
-    queryKey: ['dentist-clinic-reputation', user?.id],
+    queryKey: ['agency-profile-reputation', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clinics')

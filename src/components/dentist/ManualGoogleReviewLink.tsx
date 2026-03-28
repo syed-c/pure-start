@@ -97,7 +97,7 @@ export default function ManualGoogleReviewLink({ clinicId, googlePlaceId }: Manu
       if (error) throw error;
 
       toast.success('Review link saved successfully!');
-      queryClient.invalidateQueries({ queryKey: ['dentist-clinic-reputation'] });
+      queryClient.invalidateQueries({ queryKey: ['agency-profile-reputation'] });
     } catch (error: any) {
       toast.error(error.message || 'Failed to save review link');
     } finally {

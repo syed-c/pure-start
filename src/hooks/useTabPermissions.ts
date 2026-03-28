@@ -22,10 +22,10 @@ export const AVAILABLE_TABS = [
   { key: 'seo-content-optimizer', label: 'Content Optimizer', category: 'Content & SEO' },
   { key: 'ranking-rules', label: 'Ranking Rules', category: 'Content & SEO' },
   { key: 'pinned-profiles', label: 'Pinned Profiles', category: 'Content & SEO' },
-  { key: 'top-dentists', label: 'Top Dentists', category: 'Content & SEO' },
+  { key: 'top-agencies', label: 'Top Agencies', category: 'Content & SEO' },
   
   // Users & Clinics
-  { key: 'clinics', label: 'Dental Offices', category: 'Users & Clinics' },
+  { key: 'clinics', label: 'Agency Offices', category: 'Users & Clinics' },
   { key: 'clinic-enrichment', label: 'Content Enrichment', category: 'Users & Clinics' },
   { key: 'users', label: 'Users', category: 'Users & Clinics' },
   { key: 'claims', label: 'Claims', category: 'Users & Clinics' },

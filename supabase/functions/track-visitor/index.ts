@@ -69,7 +69,7 @@ const PageviewDataSchema = z.object({
   pageTitle: z.string().max(200).optional().nullable(),
   pageType: z.string().max(50).optional().nullable(),
   clinicId: z.string().uuid().optional().nullable(),
-  dentistId: z.string().uuid().optional().nullable(),
+  contactId: z.string().uuid().optional().nullable(),
   citySlug: z.string().max(100).optional().nullable(),
   stateSlug: z.string().max(100).optional().nullable(),
   treatmentSlug: z.string().max(100).optional().nullable(),
@@ -87,7 +87,7 @@ const EventDataSchema = z.object({
   elementClass: z.string().max(200).optional().nullable(),
   elementText: z.string().max(200).optional().nullable(),
   clinicId: z.string().uuid().optional().nullable(),
-  dentistId: z.string().uuid().optional().nullable(),
+  contactId: z.string().uuid().optional().nullable(),
   metadata: MetadataSchema,
 });
 
@@ -95,7 +95,7 @@ const JourneyDataSchema = z.object({
   stage: z.string().max(50),
   pagePath: z.string().max(500),
   clinicId: z.string().uuid().optional().nullable(),
-  dentistId: z.string().uuid().optional().nullable(),
+  contactId: z.string().uuid().optional().nullable(),
   stepNumber: z.number().int().min(1).max(100).optional(),
   converted: z.boolean().optional(),
   appointmentId: z.string().uuid().optional().nullable(),
@@ -313,7 +313,7 @@ serve(async (req) => {
           page_title: pvData.pageTitle || null,
           page_type: pvData.pageType || null,
           clinic_id: pvData.clinicId || null,
-          dentist_id: pvData.dentistId || null,
+          contact_id: pvData.contactId || null,
           city_slug: pvData.citySlug || null,
           state_slug: pvData.stateSlug || null,
           treatment_slug: pvData.treatmentSlug || null,
@@ -372,7 +372,7 @@ serve(async (req) => {
           element_class: evData.elementClass || null,
           element_text: evData.elementText || null,
           clinic_id: evData.clinicId || null,
-          dentist_id: evData.dentistId || null,
+          contact_id: evData.contactId || null,
           metadata: evData.metadata || {},
         });
 
@@ -409,7 +409,7 @@ serve(async (req) => {
           journey_stage: jData.stage,
           page_path: jData.pagePath,
           clinic_id: jData.clinicId || null,
-          dentist_id: jData.dentistId || null,
+          contact_id: jData.contactId || null,
           step_number: jData.stepNumber || 1,
           converted: jData.converted || false,
           appointment_id: jData.appointmentId || null,

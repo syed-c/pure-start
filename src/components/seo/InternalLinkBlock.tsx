@@ -123,17 +123,17 @@ export const generateCityInternalLinks = (
   // Nearby city links (top 4)
   nearbyCities.slice(0, 4).forEach((c) => {
     links.push({
-      label: `Dentists in ${c.name}`,
+      label: `Agencies in ${c.name}`,
       href: `/${stateSlug}/${c.slug}/`,
-      description: `Browse dental clinics in ${c.name}, ${stateName}`,
+      description: `Browse fostering agencys in ${c.name}, ${stateName}`,
     });
   });
   
   // State link
   links.push({
-    label: `All ${stateName} Dentists`,
+    label: `All ${stateName} Agencies`,
     href: `/${stateSlug}/`,
-    description: `View all dental clinics across ${stateName}`,
+    description: `View all fostering agencys across ${stateName}`,
   });
   
   // Service directory links
@@ -147,7 +147,7 @@ export const generateCityInternalLinks = (
   links.push({
     label: 'Dental Insurance Accepted',
     href: '/insurance/',
-    description: 'Find dentists by insurance provider',
+    description: 'Find agencies by insurance provider',
   });
   
   return links;
@@ -168,9 +168,9 @@ export const generateServiceLocationInternalLinks = (
   
   // City page link
   links.push({
-    label: `All Dentists in ${cityName}`,
+    label: `All Agencies in ${cityName}`,
     href: `/${stateSlug}/${citySlug}/`,
-    description: `View all dental clinics in ${cityName}`,
+    description: `View all fostering agencys in ${cityName}`,
   });
   
   // Related services in same city (top 4)
@@ -202,16 +202,16 @@ export const generateServiceLocationInternalLinks = (
   
   // State page
   links.push({
-    label: `${stateName} Dentists`,
+    label: `${stateName} Agencies`,
     href: `/${stateSlug}/`,
-    description: `Browse all dentists in ${stateName}`,
+    description: `Browse all agencies in ${stateName}`,
   });
 
   // Insurance link
   links.push({
     label: 'Insurance Accepted',
     href: '/insurance/',
-    description: 'Find dentists by insurance provider',
+    description: 'Find agencies by insurance provider',
   });
   
   return links;
@@ -235,9 +235,9 @@ export const generateClinicInternalLinks = (
   if (citySlug && stateSlug && cityName) {
     // City page link
     links.push({
-      label: `Dentists in ${cityName}`,
+      label: `Agencies in ${cityName}`,
       href: `/${stateSlug}/${citySlug}/`,
-      description: `View all dental clinics in ${cityName}`,
+      description: `View all fostering agencys in ${cityName}`,
     });
     
     // Services in city (top 4)
@@ -270,7 +270,7 @@ export const generateClinicInternalLinks = (
   links.push({
     label: 'Insurance Accepted',
     href: '/insurance/',
-    description: 'Find dentists by insurance provider',
+    description: 'Find agencies by insurance provider',
   });
   
   return links;

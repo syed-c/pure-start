@@ -6,14 +6,14 @@ import { createAuditLog } from '@/lib/audit';
 
 // All available permissions organized by category
 export const ALL_PERMISSIONS = [
-  // Clinics & Dentists
-  { id: 'clinics.view', label: 'View Clinics', category: 'Clinics & Dentists' },
-  { id: 'clinics.create', label: 'Create Clinics', category: 'Clinics & Dentists' },
-  { id: 'clinics.edit', label: 'Edit Clinics', category: 'Clinics & Dentists' },
-  { id: 'clinics.delete', label: 'Delete Clinics', category: 'Clinics & Dentists' },
-  { id: 'clinics.verify', label: 'Verify Clinics', category: 'Clinics & Dentists' },
-  { id: 'clinics.pause', label: 'Pause Clinics', category: 'Clinics & Dentists' },
-  { id: 'clinics.claim', label: 'Force Claim/Unclaim', category: 'Clinics & Dentists' },
+  // Clinics & Agencies
+  { id: 'clinics.view', label: 'View Clinics', category: 'Clinics & Agencies' },
+  { id: 'clinics.create', label: 'Create Clinics', category: 'Clinics & Agencies' },
+  { id: 'clinics.edit', label: 'Edit Clinics', category: 'Clinics & Agencies' },
+  { id: 'clinics.delete', label: 'Delete Clinics', category: 'Clinics & Agencies' },
+  { id: 'clinics.verify', label: 'Verify Clinics', category: 'Clinics & Agencies' },
+  { id: 'clinics.pause', label: 'Pause Clinics', category: 'Clinics & Agencies' },
+  { id: 'clinics.claim', label: 'Force Claim/Unclaim', category: 'Clinics & Agencies' },
   
   // Locations
   { id: 'locations.view', label: 'View Locations', category: 'Locations' },

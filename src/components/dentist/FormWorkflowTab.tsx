@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useDentistClinic } from '@/hooks/useDentistClinic';
+import { useAgencyProfile } from '@/hooks/useAgencyProfile';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -61,7 +61,7 @@ const TRIGGER_OPTIONS = [
 
 export default function FormWorkflowTab() {
   const queryClient = useQueryClient();
-  const { data: clinic, isLoading: clinicLoading } = useDentistClinic();
+  const { data: clinic, isLoading: clinicLoading } = useAgencyProfile();
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingWorkflow, setEditingWorkflow] = useState<WorkflowSettings | null>(null);
 

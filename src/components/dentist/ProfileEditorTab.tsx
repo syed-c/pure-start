@@ -112,7 +112,7 @@ export default function ProfileEditorTab() {
 
   // Fetch clinic data
   const { data: clinic, isLoading } = useQuery({
-    queryKey: ['dentist-clinic-profile', user?.id],
+    queryKey: ['agency-profile-profile', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clinics')
@@ -221,7 +221,7 @@ export default function ProfileEditorTab() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['dentist-clinic-profile'] });
+      queryClient.invalidateQueries({ queryKey: ['agency-profile-profile'] });
       toast.success('Profile updated successfully');
     },
     onError: (e: any) => toast.error(e.message || 'Failed to update profile'),
@@ -483,7 +483,7 @@ export default function ProfileEditorTab() {
       });
       if (error) throw error;
       toast.success('Profile synced with Google Business');
-      queryClient.invalidateQueries({ queryKey: ['dentist-clinic-profile'] });
+      queryClient.invalidateQueries({ queryKey: ['agency-profile-profile'] });
     } catch (error: any) {
       toast.error(error.message || 'Failed to sync with Google');
     } finally {
@@ -515,7 +515,7 @@ export default function ProfileEditorTab() {
       
       toast.success('Google Place ID saved successfully');
       setManualPlaceId('');
-      queryClient.invalidateQueries({ queryKey: ['dentist-clinic-profile'] });
+      queryClient.invalidateQueries({ queryKey: ['agency-profile-profile'] });
     } catch (error: any) {
       toast.error(error.message || 'Failed to save Place ID');
     } finally {

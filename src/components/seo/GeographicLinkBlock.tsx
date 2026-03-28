@@ -68,20 +68,20 @@ const NEIGHBORING_STATES: Record<string, { name: string; slug: string }[]> = {
 
 // Related services mapping for cross-linking (expanded for UAE dental market)
 const RELATED_SERVICES: Record<string, string[]> = {
-  "dental-implants": ["dental-crowns", "dental-veneers", "teeth-whitening", "bone-grafting"],
+  "fostering-placements": ["dental-crowns", "dental-veneers", "teeth-whitening", "bone-grafting"],
   "teeth-whitening": ["dental-veneers", "teeth-cleaning", "invisalign", "smile-makeover"],
-  "root-canal": ["dental-crowns", "teeth-cleaning", "dental-implants", "tooth-extraction"],
-  "dental-crowns": ["dental-veneers", "root-canal", "dental-implants", "dental-bridges"],
+  "root-canal": ["dental-crowns", "teeth-cleaning", "fostering-placements", "tooth-extraction"],
+  "dental-crowns": ["dental-veneers", "root-canal", "fostering-placements", "dental-bridges"],
   "invisalign": ["braces", "teeth-whitening", "dental-veneers", "retainers"],
   "dental-veneers": ["teeth-whitening", "dental-crowns", "invisalign", "smile-makeover"],
   "teeth-cleaning": ["teeth-whitening", "root-canal", "dental-crowns", "gum-treatment"],
   "braces": ["invisalign", "teeth-cleaning", "teeth-whitening", "retainers"],
-  "gum-treatment": ["teeth-cleaning", "root-canal", "dental-implants"],
-  "tooth-extraction": ["dental-implants", "root-canal", "wisdom-teeth-removal"],
-  "dental-bridges": ["dental-crowns", "dental-implants", "dental-veneers"],
+  "gum-treatment": ["teeth-cleaning", "root-canal", "fostering-placements"],
+  "tooth-extraction": ["fostering-placements", "root-canal", "wisdom-teeth-removal"],
+  "dental-bridges": ["dental-crowns", "fostering-placements", "dental-veneers"],
   "smile-makeover": ["dental-veneers", "teeth-whitening", "invisalign"],
   "pediatric-dentistry": ["teeth-cleaning", "braces", "dental-sealants"],
-  "wisdom-teeth-removal": ["tooth-extraction", "dental-implants", "root-canal"],
+  "wisdom-teeth-removal": ["tooth-extraction", "fostering-placements", "root-canal"],
 };
 
 interface GeographicLinkBlockProps {
@@ -141,7 +141,7 @@ export const GeographicLinkBlock = ({
                   to={`/${stateSlug}/${city.slug}/`}
                   className="block text-sm text-foreground hover:text-primary transition-colors"
                 >
-                  Dentists in {city.name} →
+                  Agencies in {city.name} →
                 </Link>
               ))}
             </nav>
@@ -178,7 +178,7 @@ export const GeographicLinkBlock = ({
                     to={`/${state.slug}/`}
                     className="block text-sm text-foreground hover:text-primary transition-colors"
                   >
-                    Dentists in {state.name} →
+                    Agencies in {state.name} →
                   </Link>
                 ))}
               </nav>
@@ -234,7 +234,7 @@ export const GeographicLinkBlock = ({
                   to={`/${stateSlug}/${city.slug}/`}
                   className="block text-sm text-foreground hover:text-primary transition-colors"
                 >
-                  Dentists in {city.name} →
+                  Agencies in {city.name} →
                 </Link>
               ))}
             </nav>
@@ -258,7 +258,7 @@ export const GeographicLinkBlock = ({
                   to={`/${state.slug}/`}
                   className="block text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
-                  Dentists in {state.name} →
+                  Agencies in {state.name} →
                 </Link>
               ))}
             </nav>
@@ -335,7 +335,7 @@ export const GeographicLinkBlock = ({
                 to={`/${stateSlug}/${citySlug}/`}
                 className="block text-sm text-foreground hover:text-primary transition-colors"
               >
-                All dentists in {cityName} →
+                All agencies in {cityName} →
               </Link>
               <Link
                 to={`/${stateSlug}/`}

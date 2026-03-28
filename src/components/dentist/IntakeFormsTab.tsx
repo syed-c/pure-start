@@ -42,7 +42,7 @@ export default function IntakeFormsTab() {
   const [builderModalOpen, setBuilderModalOpen] = useState(false);
 
   const { data: clinic, isLoading: clinicLoading } = useQuery({
-    queryKey: ['dentist-clinic-forms', user?.id],
+    queryKey: ['agency-profile-forms', user?.id],
     queryFn: async () => {
       const { data } = await supabase
         .from('clinics')

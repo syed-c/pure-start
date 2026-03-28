@@ -121,16 +121,16 @@ export function useProfileAnalytics(clinicId?: string, days: number = 30) {
 // Track a profile view/event
 export async function trackProfileEvent(
   clinicId: string | undefined,
-  dentistId: string | undefined,
+  contactId: string | undefined,
   eventType: 'view' | 'click' | 'booking_start' | 'booking_complete' | 'call' | 'direction' | 'website',
   source?: string,
   metadata?: Record<string, any>
 ) {
-  if (!clinicId && !dentistId) return;
+  if (!clinicId && !contactId) return;
 
   try {
     await supabase.functions.invoke('track-profile-view', {
-      body: { clinicId, dentistId, eventType, source, metadata }
+      body: { clinicId, contactId, eventType, source, metadata }
     });
   } catch (error) {
     console.error('Failed to track event:', error);

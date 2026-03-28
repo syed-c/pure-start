@@ -117,15 +117,15 @@ function useRankingData() {
     },
   });
 
-  const dentists = useQuery({
-    queryKey: ['ranking-dentists'],
+  const agencies = useQuery({
+    queryKey: ['ranking-agencies'],
     queryFn: async () => {
-      const { count } = await supabase.from('dentists').select('*', { count: 'exact', head: true }).eq('is_active', true);
+      const { count } = await supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('is_active', true);
       return { total: count || 0 };
     },
   });
 
-  return { clinics, treatments, locations, seoPages, insurances, reviews, dentists };
+  return { clinics, treatments, locations, seoPages, insurances, reviews, agencies };
 }
 
 // ─── Compute Scores ───
@@ -136,7 +136,7 @@ function computeScores(data: ReturnType<typeof useRankingData>) {
   const s = data.seoPages.data;
   const ins = data.insurances.data;
   const r = data.reviews.data;
-  const _d = data.dentists.data;
+  const _d = data.agencies.data;
 
   // 1. Entity Graph Health
   const entityFactors = c ? [
@@ -214,7 +214,7 @@ export default function RankingControlCenterTab() {
   const isLoading = Object.values(data).some(q => q.isLoading);
   const scores = useMemo(() => computeScores(data), [
     data.clinics.data, data.treatments.data, data.locations.data,
-    data.seoPages.data, data.insurances.data, data.reviews.data, data.dentists.data,
+    data.seoPages.data, data.insurances.data, data.reviews.data, data.agencies.data,
   ]);
 
   const refetchAll = () => {
@@ -356,7 +356,7 @@ export default function RankingControlCenterTab() {
               <CardContent className="space-y-2 text-sm">
                 <div className="flex justify-between"><span className="text-muted-foreground">SEO Pages</span><span className="font-bold">{data.seoPages.data?.total || 0}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Treatments</span><span className="font-bold">{data.treatments.data?.total || 0}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Dentists</span><span className="font-bold">{data.dentists.data?.total || 0}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Agencies</span><span className="font-bold">{data.agencies.data?.total || 0}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Insurances</span><span className="font-bold">{data.insurances.data?.total || 0}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Reviews</span><span className="font-bold">{data.reviews.data?.total || 0}</span></div>
               </CardContent>
@@ -588,7 +588,7 @@ export default function RankingControlCenterTab() {
                   { label: 'Clinic ↔ Treatment Links', value: data.treatments.data?.linked || 0, benchmark: 'Target: 5 per clinic' },
                   { label: 'Clinic ↔ Insurance Links', value: data.insurances.data?.linked || 0, benchmark: 'Target: 3 per clinic' },
                   { label: 'Approved Reviews', value: data.reviews.data?.approved || 0, benchmark: 'Target: 5 per clinic' },
-                  { label: 'Active Dentist Profiles', value: data.dentists.data?.total || 0, benchmark: 'Target: 1 per clinic' },
+                  { label: 'Active Dentist Profiles', value: data.agencies.data?.total || 0, benchmark: 'Target: 1 per clinic' },
                 ].map(item => (
                   <div key={item.label} className="flex justify-between items-center p-2 rounded bg-muted/30">
                     <div>

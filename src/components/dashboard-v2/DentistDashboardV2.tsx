@@ -6,7 +6,7 @@
 
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import DentistDashboardLayoutV2 from './DentistDashboardLayoutV2';
+import AgencyDashboardLayoutV2 from './AgencyDashboardLayoutV2';
 import DashboardOverviewV2 from './DashboardOverviewV2';
 import MyPracticePage from './MyPracticePage';
 import AppointmentsPageV2 from './AppointmentsPageV2';
@@ -22,14 +22,14 @@ import ProfileEditorTab from '@/components/dentist/ProfileEditorTab';
 import TeamManagementTab from '@/components/dentist/TeamManagementTab';
 import ServicesTab from '@/components/dentist/ServicesTab';
 import InsuranceManagementTab from '@/components/dentist/InsuranceManagementTab';
-import DentistReputationHub from '@/components/reputation/DentistReputationHub';
+import AgencyReputationHub from '@/components/reputation/AgencyReputationHub';
 import TemplatesTab from '@/components/dentist/TemplatesTab';
-import DentistSettingsTab from '@/components/dentist/DentistSettingsTab';
+import AgencySettingsTab from '@/components/dentist/AgencySettingsTab';
 import SupportTicketsTab from '@/components/dentist/SupportTicketsTab';
 import NotificationPreferencesTab from '@/components/dentist/NotificationPreferencesTab';
 import FormWorkflowTab from '@/components/dentist/FormWorkflowTab';
 
-export default function DentistDashboardV2() {
+export default function AgencyDashboardV2() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(() => {
     return searchParams.get('tab') || 'my-dashboard';
@@ -71,13 +71,13 @@ export default function DentistDashboardV2() {
       case 'my-insurance':
         return <InsuranceManagementTab />;
       case 'my-reputation':
-        return <DentistReputationHub />;
+        return <AgencyReputationHub />;
       case 'my-templates':
         return <TemplatesTab />;
       case 'my-notifications':
         return <NotificationPreferencesTab />;
       case 'my-settings':
-        return <DentistSettingsTab />;
+        return <AgencySettingsTab />;
       case 'my-support':
         return <SupportTicketsTab />;
       default:
@@ -86,11 +86,11 @@ export default function DentistDashboardV2() {
   };
 
   return (
-    <DentistDashboardLayoutV2
+    <AgencyDashboardLayoutV2
       activeTab={activeTab}
       onTabChange={handleTabChange}
     >
       {renderContent()}
-    </DentistDashboardLayoutV2>
+    </AgencyDashboardLayoutV2>
   );
 }

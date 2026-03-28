@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/button";
-import { DentistListFrame } from "@/components/location";
+import { AgencyListFrame } from "@/components/location";
 import { SEOContentBlock } from "@/components/seo/SEOContentBlock";
 import { PageIntroSection } from "@/components/seo/PageIntroSection";
 import { GeographicLinkBlock } from "@/components/seo/GeographicLinkBlock";
@@ -48,8 +48,8 @@ const StatePage = () => {
     'about', 'contact', 'faq', 'how-it-works', 'privacy', 'terms', 
     'auth', 'admin', 'dashboard', 'search', 'services', 'insurance', 
     'blog', 'claim-profile', 'list-your-practice', 'onboarding', 
-    'gmb-select', 'find-dentist', 'clinic', 'dentist', 'sitemap',
-    'pricing', 'appointment', 'review', 'rq', 'tools', 'emergency-dentist',
+    'gmb-select', 'find-agency', 'clinic', 'dentist', 'sitemap',
+    'pricing', 'appointment', 'review', 'rq', 'tools', 'emergency-foster-care',
     'editorial-policy', 'medical-review-policy', 'verification-policy',
     'home-v2', 'dashboard-v2', 'form', 'book'
   ];
@@ -424,7 +424,7 @@ const StatePage = () => {
 
             {/* Main Content Column */}
             <div className="flex-1 min-w-0 space-y-8">
-              <DentistListFrame
+              <AgencyListFrame
                 profiles={filteredStateProfiles}
                 isLoading={profilesLoading}
                 locationName={stateName}

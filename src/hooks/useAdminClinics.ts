@@ -114,12 +114,12 @@ export function useUpdateClinic() {
   });
 }
 
-export function useAdminDentists(clinicId?: string) {
+export function useAdminAgencies(clinicId?: string) {
   return useQuery({
-    queryKey: ['admin-dentists', clinicId],
+    queryKey: ['admin-agencies', clinicId],
     queryFn: async () => {
       let query = supabase
-        .from('dentists')
+        .from('agencies')
         .select('*')
         .order('name');
       if (clinicId) query = query.eq('clinic_id', clinicId);
@@ -134,11 +134,11 @@ export function useUpdateDentist() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: Partial<AdminDentist> }) => {
-      const { error } = await supabase.from('dentists').update(updates as any).eq('id', id);
+      const { error } = await supabase.from('agencies').update(updates as any).eq('id', id);
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-dentists'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-agencies'] });
       toast.success('Dentist updated');
     },
     onError: (e) => toast.error('Failed: ' + e.message),
@@ -166,13 +166,13 @@ export function useCreateDentist() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (dentist: Record<string, unknown>) => {
-      const { data, error } = await supabase.from('dentists').insert([dentist as never]).select().single();
+      const { data, error } = await supabase.from('agencies').insert([dentist as never]).select().single();
       if (error) throw error;
       await createAuditLog({ action: 'CREATE', entityType: 'dentist', entityId: data.id, newValues: dentist });
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-dentists'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-agencies'] });
       toast.success('Dentist created');
     },
     onError: (e) => toast.error('Failed: ' + e.message),

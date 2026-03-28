@@ -210,8 +210,8 @@ CREATE TABLE IF NOT EXISTS public.clinics (
   verification_expires_at TIMESTAMPTZ
 );
 
--- Dentists
-CREATE TABLE IF NOT EXISTS public.dentists (
+-- Agencies
+CREATE TABLE IF NOT EXISTS public.agencies (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   clinic_id UUID REFERENCES public.clinics(id) ON DELETE SET NULL,
   user_id UUID,
@@ -246,7 +246,7 @@ CREATE TABLE IF NOT EXISTS public.user_roles (
 CREATE TABLE IF NOT EXISTS public.leads (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   clinic_id UUID REFERENCES public.clinics(id) ON DELETE SET NULL,
-  dentist_id UUID REFERENCES public.dentists(id) ON DELETE SET NULL,
+  contact_id UUID REFERENCES public.agencies(id) ON DELETE SET NULL,
   treatment_id UUID REFERENCES public.treatments(id) ON DELETE SET NULL,
   patient_name TEXT NOT NULL,
   patient_email TEXT,
@@ -270,7 +270,7 @@ CREATE TABLE IF NOT EXISTS public.appointments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   lead_id UUID REFERENCES public.leads(id) ON DELETE SET NULL,
   clinic_id UUID REFERENCES public.clinics(id) ON DELETE SET NULL,
-  dentist_id UUID REFERENCES public.dentists(id) ON DELETE SET NULL,
+  contact_id UUID REFERENCES public.agencies(id) ON DELETE SET NULL,
   treatment_id UUID REFERENCES public.treatments(id) ON DELETE SET NULL,
   patient_name TEXT NOT NULL,
   patient_email TEXT,
@@ -411,7 +411,7 @@ CREATE INDEX IF NOT EXISTS idx_clinics_slug ON public.clinics(slug);
 CREATE INDEX IF NOT EXISTS idx_cities_state ON public.cities(state_id);
 CREATE INDEX IF NOT EXISTS idx_cities_slug ON public.cities(slug);
 CREATE INDEX IF NOT EXISTS idx_states_slug ON public.states(slug);
-CREATE INDEX IF NOT EXISTS idx_dentists_clinic ON public.dentists(clinic_id);
+CREATE INDEX IF NOT EXISTS idx_agencies_clinic ON public.agencies(clinic_id);
 CREATE INDEX IF NOT EXISTS idx_leads_clinic ON public.leads(clinic_id);
 CREATE INDEX IF NOT EXISTS idx_appointments_clinic ON public.appointments(clinic_id);
 CREATE INDEX IF NOT EXISTS idx_audit_logs_created ON public.audit_logs(created_at DESC);
@@ -426,7 +426,7 @@ ALTER TABLE public.areas ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.treatments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.insurances ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.clinics ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.dentists ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.agencies ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.leads ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.appointments ENABLE ROW LEVEL SECURITY;
@@ -442,7 +442,7 @@ CREATE POLICY "Public can view active areas" ON public.areas FOR SELECT USING (i
 CREATE POLICY "Public can view active treatments" ON public.treatments FOR SELECT USING (is_active = true);
 CREATE POLICY "Public can view active insurances" ON public.insurances FOR SELECT USING (is_active = true);
 CREATE POLICY "Public can view active clinics" ON public.clinics FOR SELECT USING (is_active = true AND seo_visible = true);
-CREATE POLICY "Public can view active dentists" ON public.dentists FOR SELECT USING (is_active = true);
+CREATE POLICY "Public can view active agencies" ON public.agencies FOR SELECT USING (is_active = true);
 CREATE POLICY "Public can view published blog posts" ON public.blog_posts FOR SELECT USING (status = 'published');
 CREATE POLICY "Public can view published seo pages" ON public.seo_pages FOR SELECT USING (is_published = true);
 CREATE POLICY "Public can view active plans" ON public.subscription_plans FOR SELECT USING (is_active = true);
@@ -454,7 +454,7 @@ CREATE POLICY "Admins can manage all areas" ON public.areas FOR ALL USING (publi
 CREATE POLICY "Admins can manage all treatments" ON public.treatments FOR ALL USING (public.has_role(auth.uid(), 'super_admin'));
 CREATE POLICY "Admins can manage all insurances" ON public.insurances FOR ALL USING (public.has_role(auth.uid(), 'super_admin'));
 CREATE POLICY "Admins can manage all clinics" ON public.clinics FOR ALL USING (public.has_role(auth.uid(), 'super_admin'));
-CREATE POLICY "Admins can manage all dentists" ON public.dentists FOR ALL USING (public.has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Admins can manage all agencies" ON public.agencies FOR ALL USING (public.has_role(auth.uid(), 'super_admin'));
 CREATE POLICY "Admins can view user roles" ON public.user_roles FOR SELECT USING (public.has_role(auth.uid(), 'super_admin'));
 CREATE POLICY "Admins can manage all leads" ON public.leads FOR ALL USING (public.has_role(auth.uid(), 'super_admin'));
 CREATE POLICY "Admins can manage all appointments" ON public.appointments FOR ALL USING (public.has_role(auth.uid(), 'super_admin'));
@@ -463,13 +463,13 @@ CREATE POLICY "Admins can view audit logs" ON public.audit_logs FOR SELECT USING
 -- User can view own role
 CREATE POLICY "Users can view own roles" ON public.user_roles FOR SELECT USING (auth.uid() = user_id);
 
--- Dentists can manage their own clinic
-CREATE POLICY "Dentists can view own clinic" ON public.clinics FOR SELECT USING (claimed_by = auth.uid());
-CREATE POLICY "Dentists can update own clinic" ON public.clinics FOR UPDATE USING (claimed_by = auth.uid());
-CREATE POLICY "Dentists can view own leads" ON public.leads FOR SELECT USING (
+-- Agencies can manage their own clinic
+CREATE POLICY "Agencies can view own clinic" ON public.clinics FOR SELECT USING (claimed_by = auth.uid());
+CREATE POLICY "Agencies can update own clinic" ON public.clinics FOR UPDATE USING (claimed_by = auth.uid());
+CREATE POLICY "Agencies can view own leads" ON public.leads FOR SELECT USING (
   clinic_id IN (SELECT id FROM public.clinics WHERE claimed_by = auth.uid())
 );
-CREATE POLICY "Dentists can view own appointments" ON public.appointments FOR SELECT USING (
+CREATE POLICY "Agencies can view own appointments" ON public.appointments FOR SELECT USING (
   clinic_id IN (SELECT id FROM public.clinics WHERE claimed_by = auth.uid())
 );
 
@@ -486,7 +486,7 @@ FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 CREATE TRIGGER update_clinics_updated_at BEFORE UPDATE ON public.clinics 
 FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 
-CREATE TRIGGER update_dentists_updated_at BEFORE UPDATE ON public.dentists 
+CREATE TRIGGER update_agencies_updated_at BEFORE UPDATE ON public.agencies 
 FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 
 CREATE TRIGGER update_treatments_updated_at BEFORE UPDATE ON public.treatments 

@@ -84,7 +84,7 @@ const messageTemplates = [
     id: 'welcome_message',
     name: 'Welcome Message',
     channel: 'whatsapp',
-    template: 'Welcome to {{clinic_name}}! 👋\n\nThank you for choosing us for your dental care. We\'re here to help you maintain a healthy smile.\n\nBook your next appointment: {{booking_link}}\n\n– The {{clinic_name}} Team',
+    template: 'Welcome to {{clinic_name}}! 👋\n\nThank you for choosing us for your fostering care. We\'re here to help you maintain a healthy smile.\n\nBook your next appointment: {{booking_link}}\n\n– The {{clinic_name}} Team',
   },
   {
     id: 'followup',

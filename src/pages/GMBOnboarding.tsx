@@ -41,7 +41,7 @@ interface ProfileCompleteness {
  * GMBOnboarding (Welcome / Onboarding Page)
  * 
  * Shows for:
- * - New signups (dentists who just signed up via Google or email)
+ * - New signups (agencies who just signed up via Google or email)
  * - Users with onboarding_status != 'complete'
  * 
  * Allows:

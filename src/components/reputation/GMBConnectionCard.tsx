@@ -104,7 +104,7 @@ export default function GMBConnectionCard({
       });
       if (error) throw error;
       toast.success('Profile synced with Google Business');
-      queryClient.invalidateQueries({ queryKey: ['dentist-clinic'] });
+      queryClient.invalidateQueries({ queryKey: ['agency-profile'] });
       queryClient.invalidateQueries({ queryKey: ['google-reviews', clinicId] });
     } catch (error: any) {
       toast.error(error.message || 'Failed to sync');
@@ -128,7 +128,7 @@ export default function GMBConnectionCard({
       toast.success('Google Place ID saved');
       setManualPlaceId('');
       setShowManual(false);
-      queryClient.invalidateQueries({ queryKey: ['dentist-clinic'] });
+      queryClient.invalidateQueries({ queryKey: ['agency-profile'] });
     } catch (error: any) {
       toast.error(error.message || 'Failed to save');
     }

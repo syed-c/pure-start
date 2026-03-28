@@ -53,7 +53,7 @@ export default function SystemAuditTab() {
     queryFn: async () => {
       const [
         { count: clinicsCount },
-        { count: dentistsCount },
+        { count: agenciesCount },
         { count: appointmentsCount },
         { count: leadsCount },
         { count: reviewsCount },
@@ -64,7 +64,7 @@ export default function SystemAuditTab() {
         { count: insurancesCount },
       ] = await Promise.all([
         supabase.from('clinics').select('*', { count: 'exact', head: true }),
-        supabase.from('dentists').select('*', { count: 'exact', head: true }),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }),
         supabase.from('appointments').select('*', { count: 'exact', head: true }),
         supabase.from('leads').select('*', { count: 'exact', head: true }),
         supabase.from('internal_reviews').select('*', { count: 'exact', head: true }),
@@ -77,7 +77,7 @@ export default function SystemAuditTab() {
 
       return {
         clinics: clinicsCount || 0,
-        dentists: dentistsCount || 0,
+        agencies: agenciesCount || 0,
         appointments: appointmentsCount || 0,
         leads: leadsCount || 0,
         reviews: reviewsCount || 0,
@@ -111,11 +111,11 @@ export default function SystemAuditTab() {
       riskLevel: 'low',
     },
     {
-      id: 'dentists',
+      id: 'agencies',
       name: 'Dentist Profiles',
       status: 'active',
       description: 'Individual dentist profiles linked to clinics',
-      tables: ['dentists'],
+      tables: ['agencies'],
       integrationPoints: ['Clinic Team Management'],
       riskLevel: 'low',
     },
@@ -303,8 +303,8 @@ export default function SystemAuditTab() {
             <div className="flex items-center gap-3">
               <Users className="h-8 w-8 text-teal" />
               <div>
-                <p className="text-2xl font-bold">{stats?.dentists.toLocaleString()}</p>
-                <p className="text-xs text-muted-foreground">Dentists</p>
+                <p className="text-2xl font-bold">{stats?.agencies.toLocaleString()}</p>
+                <p className="text-xs text-muted-foreground">Agencies</p>
               </div>
             </div>
           </CardContent>
@@ -579,7 +579,7 @@ export default function SystemAuditTab() {
               <h4 className="font-medium text-sm mb-2">Core Entities</h4>
               <div className="space-y-1 text-xs text-muted-foreground">
                 <p>• clinics</p>
-                <p>• dentists</p>
+                <p>• agencies</p>
                 <p>• patients</p>
                 <p>• appointments</p>
                 <p>• leads</p>

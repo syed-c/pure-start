@@ -89,7 +89,7 @@ export const SEOContentBlock = ({
               {variant === 'service-location' ? `${treatmentName} in ${locationName}` : 
                variant === 'city' ? `Dental Care in ${locationName}` :
                variant === 'service' ? `About ${treatmentName}` :
-               `Dentists in ${locationName}`}
+               `Agencies in ${locationName}`}
             </h2>
             <div className="h-4 w-full bg-muted rounded" />
             <div className="h-4 w-5/6 bg-muted rounded" />
@@ -144,7 +144,7 @@ export const SEOContentBlock = ({
               ? `Discover top-rated dental professionals in ${locationName}. Browse verified clinics, compare services, and book appointments online.`
               : variant === 'service'
               ? `Learn about ${treatmentName} and find qualified specialists across the UAE. Compare providers and book consultations.`
-              : `Find trusted dental care providers in ${locationName}. Our directory features verified clinics with patient reviews and online booking.`
+              : `Find trusted fostering care providers in ${locationName}. Our directory features verified clinics with patient reviews and online booking.`
             }
           </p>
         </div>

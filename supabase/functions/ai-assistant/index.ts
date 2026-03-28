@@ -122,7 +122,7 @@ serve(async (req) => {
 
     // Fetch total dentist count
     const { count: dentistCount } = await supabase
-      .from("dentists")
+      .from("agencies")
       .select("id", { count: "exact", head: true })
       .eq("is_active", true);
 
@@ -145,7 +145,7 @@ serve(async (req) => {
     platformContext = `
 PLATFORM DATA (LIVE):
 - Total clinics listed: ${clinicCount || "190+"}
-- Total dentists listed: ${dentistCount || "many"}
+- Total agencies listed: ${dentistCount || "many"}
 - Emirates covered: ${statesList}
 - Top cities: ${citiesList}
 - Dental services available: ${treatmentsList}
@@ -181,7 +181,7 @@ PLATFORM DATA (LIVE):
           return h.is_closed ? `${days[h.day_of_week]}: Closed` : `${days[h.day_of_week]}: ${h.open_time} - ${h.close_time}`;
         }).join(", ") || "Contact for hours";
 
-        const clinicTreatments = clinic.clinic_treatments?.map((t: any) => t.treatment?.name).filter(Boolean).join(", ") || "General dentistry";
+        const clinicTreatments = clinic.clinic_treatments?.map((t: any) => t.treatment?.name).filter(Boolean).join(", ") || "Agency contactry";
         const clinicInsurances = clinic.clinic_insurances?.map((i: any) => i.insurance?.name).filter(Boolean).join(", ") || "Contact for insurance info";
         const cityName = Array.isArray(clinic.city) ? clinic.city[0]?.name : (clinic.city as any)?.name;
 
@@ -195,7 +195,7 @@ CURRENT CLINIC CONTEXT (user is viewing this clinic):
 - Hours: ${hours}
 - Services: ${clinicTreatments}
 - Insurance Accepted: ${clinicInsurances}
-- About: ${clinic.description || "Quality dental care"}
+- About: ${clinic.description || "Quality fostering care"}
 `;
       }
     }

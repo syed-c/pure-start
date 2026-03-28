@@ -100,7 +100,7 @@ interface ClinicProfile {
   area?: { name: string };
 }
 
-export default function DentistDashboardTab() {
+export default function AgencyDashboardTab() {
   const { user, isAdmin, isSuperAdmin } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();

@@ -60,7 +60,7 @@ export default function OperationsTab() {
 
   // Fetch clinic
   const { data: clinic, isLoading: clinicLoading } = useQuery({
-    queryKey: ['dentist-clinic-operations', user?.id],
+    queryKey: ['agency-profile-operations', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clinics')

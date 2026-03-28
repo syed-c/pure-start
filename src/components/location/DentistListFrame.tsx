@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProfileCard } from "@/components/ProfileCard";
-import { MobileDentistSlider } from "@/components/lists/MobileDentistSlider";
+import { MobileAgencySlider } from "@/components/lists/MobileAgencySlider";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -13,7 +13,7 @@ import {
   X
 } from "lucide-react";
 
-interface DentistListFrameProps {
+interface AgencyListFrameProps {
   profiles: any[];
   isLoading: boolean;
   locationName: string;
@@ -28,11 +28,11 @@ interface DentistListFrameProps {
 }
 
 /**
- * DentistListFrame - A scrollable container for dentist profiles
+ * AgencyListFrame - A scrollable container for dentist profiles
  * with a proper frame, expand/collapse functionality, and SEO-friendly rendering.
  * Content is rendered as real HTML for Google bots.
  */
-export const DentistListFrame = ({
+export const AgencyListFrame = ({
   profiles,
   isLoading,
   locationName,
@@ -42,7 +42,7 @@ export const DentistListFrame = ({
   onClearFilters,
   maxHeight = 600,
   initialCount = 10,
-}: DentistListFrameProps) => {
+}: AgencyListFrameProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   
   const displayProfiles = isExpanded ? profiles : profiles.slice(0, initialCount);
@@ -62,7 +62,7 @@ export const DentistListFrame = ({
             <div className="flex items-center gap-2">
               <Users className="h-5 w-5 text-primary" />
               <h3 className="font-bold text-lg" itemProp="name">
-                Dentists in {locationName}
+                Agencies in {locationName}
               </h3>
             </div>
             <span className="text-sm text-muted-foreground">Loading results...</span>
@@ -96,16 +96,16 @@ export const DentistListFrame = ({
         <div className="p-6 border-b border-border">
           <div className="flex items-center gap-2">
             <Users className="h-5 w-5 text-primary" />
-            <h3 className="font-bold text-lg">Dentists & Clinics</h3>
+            <h3 className="font-bold text-lg">Agencies & Clinics</h3>
           </div>
         </div>
         <div className="p-8 text-center">
           <MapPin className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-bold text-foreground mb-2">No dentists found</h3>
+          <h3 className="text-lg font-bold text-foreground mb-2">No agencies found</h3>
           <p className="text-muted-foreground mb-4">
             {emptyMessage || (hasActiveFilters 
               ? "Try adjusting your filters to see more results."
-              : `We're still adding dentists in ${locationName}. Check back soon!`
+              : `We're still adding agencies in ${locationName}. Check back soon!`
             )}
           </p>
           {hasActiveFilters && onClearFilters && (
@@ -130,7 +130,7 @@ export const DentistListFrame = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Users className="h-5 w-5 text-primary" />
-            <h3 className="font-bold text-lg">Dentists in {locationName}</h3>
+            <h3 className="font-bold text-lg">Agencies in {locationName}</h3>
           </div>
           <span className="text-sm text-muted-foreground">
             {profiles.length} {profiles.length === 1 ? 'result' : 'results'}
@@ -141,7 +141,7 @@ export const DentistListFrame = ({
       {/* SEO: Semantic HTML list always in DOM for bots/crawlers */}
       <noscript>
         <div itemScope itemType="https://schema.org/ItemList">
-          <meta itemProp="name" content={`Dentists in ${locationName}`} />
+          <meta itemProp="name" content={`Agencies in ${locationName}`} />
           <meta itemProp="numberOfItems" content={String(profiles.length)} />
           {profiles.map((profile, index) => (
             <div key={profile.id} itemScope itemType="https://schema.org/Dentist" itemProp="itemListElement">
@@ -162,9 +162,9 @@ export const DentistListFrame = ({
       </noscript>
 
       {/* Screen-reader / bot-accessible semantic list (visually hidden but in DOM) */}
-      <div className="sr-only" role="list" aria-label={`${profiles.length} dentists in ${locationName}`}
+      <div className="sr-only" role="list" aria-label={`${profiles.length} agencies in ${locationName}`}
         itemScope itemType="https://schema.org/ItemList">
-        <meta itemProp="name" content={`Dentists in ${locationName}`} />
+        <meta itemProp="name" content={`Agencies in ${locationName}`} />
         <meta itemProp="numberOfItems" content={String(profiles.length)} />
         {profiles.map((profile, index) => (
           <div key={profile.id} role="listitem" itemScope itemType="https://schema.org/Dentist" itemProp="itemListElement">
@@ -187,7 +187,7 @@ export const DentistListFrame = ({
       <div className="relative">
         {/* Mobile: Horizontal slider */}
         <div className="md:hidden p-4">
-          <MobileDentistSlider profiles={displayProfiles} />
+          <MobileAgencySlider profiles={displayProfiles} />
         </div>
         
         {/* Desktop: Scrollable list */}
@@ -253,7 +253,7 @@ export const DentistListFrame = ({
             ) : (
               <>
                 <ChevronDown className="h-4 w-4 mr-2 group-hover:animate-bounce" />
-                View All {remainingCount} More Dentists
+                View All {remainingCount} More Agencies
               </>
             )}
           </Button>
@@ -263,4 +263,4 @@ export const DentistListFrame = ({
   );
 };
 
-export default DentistListFrame;
+export default AgencyListFrame;

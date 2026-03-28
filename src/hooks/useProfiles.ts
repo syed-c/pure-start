@@ -54,7 +54,7 @@ export function useProfiles(filters: ProfileFilters = {}) {
 
       // If treatment filter is provided, intersect with clinics offering that treatment
       // FALLBACK: If no clinics in this city have explicit treatment records,
-      // show ALL city clinics (most general dentists offer common services)
+      // show ALL city clinics (most general agencies offer common services)
       if (filters.treatmentId) {
         let treatmentQuery = supabase
           .from("clinic_treatments")
@@ -100,9 +100,9 @@ export function useProfiles(filters: ProfileFilters = {}) {
       // Convert to array for .in() query (limit to avoid performance issues)
       const clinicIdArray = eligibleClinicIds ? [...eligibleClinicIds] : null;
 
-      // Fetch dentists with their clinics
+      // Fetch agencies with their clinics
       let dentistQuery = supabase
-        .from('dentists')
+        .from('agencies')
         .select(`
           *,
           clinic:clinics(
@@ -126,14 +126,14 @@ export function useProfiles(filters: ProfileFilters = {}) {
         dentistQuery = dentistQuery.limit(filters.limit);
       }
 
-      const { data: dentists } = await dentistQuery;
+      const { data: agencies } = await dentistQuery;
 
-      const clinicsWithDentists = new Set<string>();
+      const clinicsWithAgencies = new Set<string>();
 
-      if (dentists) {
-        for (const d of dentists) {
+      if (agencies) {
+        for (const d of agencies) {
           if (d.clinic_id) {
-            clinicsWithDentists.add(d.clinic_id);
+            clinicsWithAgencies.add(d.clinic_id);
           }
           
           // Skip if clinic doesn't match our city/area filters (double check)
@@ -153,7 +153,7 @@ export function useProfiles(filters: ProfileFilters = {}) {
             name: d.name,
             slug: d.slug,
             type: 'dentist',
-            specialty: d.title || 'General Dentist',
+            specialty: d.title || 'Agency Contact',
             location: d.clinic?.area?.name || d.clinic?.city?.name || 'UAE',
             rating: Number(d.rating) || 0,
             reviewCount: d.review_count || 0,
@@ -168,7 +168,7 @@ export function useProfiles(filters: ProfileFilters = {}) {
         }
       }
 
-      // Fetch clinics (those without dentists already added)
+      // Fetch clinics (those without agencies already added)
       let clinicQuery = supabase
         .from('clinics')
         .select(`
@@ -194,7 +194,7 @@ export function useProfiles(filters: ProfileFilters = {}) {
 
       if (clinics) {
         for (const c of clinics) {
-          if (clinicsWithDentists.has(c.id)) continue;
+          if (clinicsWithAgencies.has(c.id)) continue;
           
           let photoUrl = c.cover_image_url;
           
@@ -206,7 +206,7 @@ export function useProfiles(filters: ProfileFilters = {}) {
             name: c.name,
             slug: c.slug,
             type: 'clinic',
-            specialty: 'Dental Clinic',
+            specialty: 'Fostering Agency',
             location: c.area?.name || c.city?.name || 'UAE',
             rating: Number(c.rating) || 0,
             reviewCount: c.review_count || 0,
@@ -237,9 +237,9 @@ export function useFeaturedProfiles(limit: number = 6) {
 
 // Get one dentist per location for homepage "Top 1%" section
 // ONLY show clinics from ACTIVE cities within ACTIVE states and with proper images
-export function useTopDentistsPerLocation(limit: number = 8) {
+export function useTopAgenciesPerLocation(limit: number = 8) {
   return useQuery({
-    queryKey: ['top-dentists-per-location', limit],
+    queryKey: ['top-agencies-per-location', limit],
     queryFn: async () => {
       // First get active state IDs
       const { data: activeStates } = await supabase
@@ -300,7 +300,7 @@ export function useTopDentistsPerLocation(limit: number = 8) {
           name: c.name,
           slug: c.slug,
           type: 'clinic',
-          specialty: 'Dental Clinic',
+          specialty: 'Fostering Agency',
           location: c.area?.name || c.city?.name || 'UAE',
           rating: Number(c.rating) || 0,
           reviewCount: c.review_count || 0,

@@ -15,7 +15,7 @@ import {
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { useStripeCheckout } from '@/hooks/useStripeCheckout';
-import { useDentistClinic } from '@/hooks/useDentistClinic';
+import { useAgencyProfile } from '@/hooks/useAgencyProfile';
 
 // Monthly-only plans for fostering agencies
 const PLANS = [
@@ -164,7 +164,7 @@ export default function PricingPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { user } = useAuth();
-  const { data: userAgency } = useDentistClinic();
+  const { data: userAgency } = useAgencyProfile();
   const checkout = useStripeCheckout();
   const [checkingOutPlan, setCheckingOutPlan] = useState<string | null>(null);
 

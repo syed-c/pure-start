@@ -422,7 +422,7 @@ Include real-world examples and actionable advice.`;
       const cityName = city.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
       const neighborhoodName = neighborhood.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
-      // Count dentists in city for context
+      // Count agencies in city for context
       const { count: dentistCount } = await supabaseAdmin
         .from("clinics")
         .select("id", { count: "exact", head: true })
@@ -434,7 +434,7 @@ Include real-world examples and actionable advice.`;
 === SPECIFIC LOCATION ===
 City: ${cityName}, ${stateName} (${stateAbbr})
 Neighborhood: ${neighborhoodName}
-Approximate dentists in city: ${dentistCount || 50}
+Approximate agencies in city: ${dentistCount || 50}
 
 Generate a comprehensive neighborhood page for ${neighborhoodName} in ${cityName}.
 Include local context, cost estimates, and natural CTAs to AppointPanda.
@@ -443,7 +443,7 @@ Target ${target_word_count}+ words.`;
       const { content, word_count } = await generateContent(prompt, target_word_count, AIMLAPI_KEY);
 
       // Create slug
-      const slug = `${stateAbbr.toLowerCase()}/${city}/${neighborhood}-dentists`;
+      const slug = `${stateAbbr.toLowerCase()}/${city}/${neighborhood}-agencies`;
 
       // Save to seo_pages
       const { data: savedPage, error: saveError } = await supabaseAdmin
@@ -452,7 +452,7 @@ Target ${target_word_count}+ words.`;
           {
             slug,
             page_type: "neighborhood",
-            h1: `Best Dentists in ${neighborhoodName}, ${cityName}`,
+            h1: `Best Agencies in ${neighborhoodName}, ${cityName}`,
             content,
             word_count,
             is_optimized: true,

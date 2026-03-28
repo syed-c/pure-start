@@ -13,10 +13,10 @@ interface CityCardProps {
 
 export const CityCard = forwardRef<HTMLAnchorElement, CityCardProps>(
   ({ name, image, slug, dentistCount = 0, clinicCount = 0, stateSlug = '' }, ref) => {
-    // Show clinic count if no dentists, otherwise show dentist count
+    // Show clinic count if no agencies, otherwise show dentist count
     const showClinicCount = dentistCount === 0 && clinicCount > 0;
     const displayCount = showClinicCount ? clinicCount : dentistCount;
-    const countLabel = showClinicCount ? 'Clinics' : 'Dentists';
+    const countLabel = showClinicCount ? 'Clinics' : 'Agencies';
 
     return (
       <Link

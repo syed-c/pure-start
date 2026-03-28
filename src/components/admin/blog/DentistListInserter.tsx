@@ -10,7 +10,7 @@ import { MapPin, Users, Star, Loader2, ChevronDown, ChevronUp, Building2 } from 
 import { toast } from 'sonner';
 import type { ContentBlock } from './BlogContentBlockEditor';
 
-interface DentistListInserterProps {
+interface AgencyListInserterProps {
   blocks: ContentBlock[];
   onInsert: (blocks: ContentBlock[], insertAfterIndex: number | null) => void;
 }
@@ -26,7 +26,7 @@ interface Clinic {
   cover_image_url: string | null;
 }
 
-export default function DentistListInserter({ blocks, onInsert }: DentistListInserterProps) {
+export default function AgencyListInserter({ blocks, onInsert }: AgencyListInserterProps) {
   const [selectedState, setSelectedState] = useState<string>('');
   const [selectedCity, setSelectedCity] = useState<string>('');
   const [limit, setLimit] = useState<string>('5');
@@ -110,7 +110,7 @@ export default function DentistListInserter({ blocks, onInsert }: DentistListIns
       type: 'dentist-list',
       clinicIds: clinics.map(c => c.id),
       locationLabel: locationLabel,
-      headingText: `Top ${limit} Dentists in ${locationLabel}`,
+      headingText: `Top ${limit} Agencies in ${locationLabel}`,
     };
 
     const insertIndex = insertAfterIndex === 'end' 
@@ -120,7 +120,7 @@ export default function DentistListInserter({ blocks, onInsert }: DentistListIns
         : parseInt(insertAfterIndex);
 
     onInsert([dentistListBlock], insertIndex);
-    toast.success(`Inserted Top ${limit} dentists from ${locationLabel}`);
+    toast.success(`Inserted Top ${limit} agencies from ${locationLabel}`);
     
     // Reset selection
     setIsExpanded(false);
@@ -145,7 +145,7 @@ export default function DentistListInserter({ blocks, onInsert }: DentistListIns
           )}
         </button>
         <p className="text-xs text-muted-foreground mt-1">
-          Add a curated list of top dentists with booking buttons (same UI as location pages)
+          Add a curated list of top agencies with booking buttons (same UI as location pages)
         </p>
       </CardHeader>
       
@@ -194,7 +194,7 @@ export default function DentistListInserter({ blocks, onInsert }: DentistListIns
           {selectedCity && (
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
-                <Label className="text-xs">Number of Dentists</Label>
+                <Label className="text-xs">Number of Agencies</Label>
                 <Select value={limit} onValueChange={setLimit}>
                   <SelectTrigger className="h-9">
                     <SelectValue />
@@ -276,7 +276,7 @@ export default function DentistListInserter({ blocks, onInsert }: DentistListIns
               variant="default"
             >
               <Building2 className="h-4 w-4 mr-2" />
-              Insert Top {limit} Dentists {insertAfterIndex === 'end' ? 'at End' : insertAfterIndex === 'start' ? 'at Beginning' : `after Block ${parseInt(insertAfterIndex) + 1}`}
+              Insert Top {limit} Agencies {insertAfterIndex === 'end' ? 'at End' : insertAfterIndex === 'start' ? 'at Beginning' : `after Block ${parseInt(insertAfterIndex) + 1}`}
             </Button>
           )}
 

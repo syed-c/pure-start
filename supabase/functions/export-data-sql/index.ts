@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
       { name: "subscription_plans", orderBy: "created_at" },
       { name: "plan_features", orderBy: "created_at" },
       { name: "clinics", orderBy: "name" },
-      { name: "dentists", orderBy: "name" },
+      { name: "agencies", orderBy: "name" },
       { name: "patients", orderBy: "created_at" },
       { name: "clinic_hours", orderBy: "created_at" },
       { name: "clinic_images", orderBy: "created_at" },

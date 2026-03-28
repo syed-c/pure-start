@@ -170,7 +170,7 @@ export default function SiteConfigTab() {
       } else {
         // Default header links (no /ae/ prefix)
         setHeaderLinks([
-          { id: '1', label: 'Find Dentist', path: '/search', order: 1, isActive: true, type: 'main' },
+          { id: '1', label: 'Find Agency', path: '/search', order: 1, isActive: true, type: 'main' },
           { id: '2', label: 'Services', path: '/services', order: 2, isActive: true, type: 'main' },
           { id: '3', label: 'About', path: '/about', order: 3, isActive: true, type: 'main' },
           { id: '4', label: 'Blog', path: '/blog', order: 4, isActive: true, type: 'main' },
@@ -188,7 +188,7 @@ export default function SiteConfigTab() {
         setFooterSections([
           { id: '1', title: 'Services', order: 1, links: [
             { label: 'Teeth Whitening', path: '/services/teeth-whitening' },
-            { label: 'Dental Implants', path: '/services/dental-implants' },
+            { label: 'Dental Implants', path: '/services/fostering-placements' },
             { label: 'Invisalign', path: '/services/invisalign' },
           ]},
           { id: '2', title: 'Locations', order: 2, links: [
