@@ -6,7 +6,7 @@
 
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import AgencyDashboardLayoutV2 from './AgencyDashboardLayoutV2';
+import AgencyDashboardLayoutV2 from './DentistDashboardLayoutV2';
 import DashboardOverviewV2 from './DashboardOverviewV2';
 import MyPracticePage from './MyPracticePage';
 import AppointmentsPageV2 from './AppointmentsPageV2';
@@ -22,7 +22,7 @@ import ProfileEditorTab from '@/components/dentist/ProfileEditorTab';
 import TeamManagementTab from '@/components/dentist/TeamManagementTab';
 import ServicesTab from '@/components/dentist/ServicesTab';
 import InsuranceManagementTab from '@/components/dentist/InsuranceManagementTab';
-import AgencyReputationHub from '@/components/reputation/AgencyReputationHub';
+import AgencyReputationHub from '@/components/reputation/DentistReputationHub';
 import TemplatesTab from '@/components/dentist/TemplatesTab';
 import AgencySettingsTab from '@/components/dentist/AgencySettingsTab';
 import SupportTicketsTab from '@/components/dentist/SupportTicketsTab';

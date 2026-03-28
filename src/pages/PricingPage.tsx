@@ -15,7 +15,7 @@ import {
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { useStripeCheckout } from '@/hooks/useStripeCheckout';
-import { useAgencyProfile } from '@/hooks/useAgencyProfile';
+import { useAgencyProfile } from '@/hooks/useDentistClinic';
 
 // Monthly-only plans for fostering agencies
 const PLANS = [

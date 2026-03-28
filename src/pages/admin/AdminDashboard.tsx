@@ -98,7 +98,7 @@ const MessagesTab = lazyRetry(() => import('@/components/dentist/MessagesTab'));
 const OperationsTab = lazyRetry(() => import('@/components/dentist/OperationsTab'));
 const ReviewRequestsTab = lazyRetry(() => import('@/components/dentist/ReviewRequestsTab'));
 const ReputationGrowthTab = lazyRetry(() => import('@/components/dentist/ReputationGrowthTab'));
-const AgencyReputationHub = lazyRetry(() => import('@/components/reputation/AgencyReputationHub'));
+const AgencyReputationHub = lazyRetry(() => import('@/components/reputation/DentistReputationHub'));
 const AdminReputationHub = lazyRetry(() => import('@/components/reputation/AdminReputationHub'));
 const SupportTicketsTab = lazyRetry(() => import('@/components/dentist/SupportTicketsTab'));
 const TeamManagementTab = lazyRetry(() => import('@/components/dentist/TeamManagementTab'));

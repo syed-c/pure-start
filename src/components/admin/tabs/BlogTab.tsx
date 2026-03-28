@@ -21,7 +21,7 @@ import { BookOpen, Search, Plus, Edit, Trash2, Eye, EyeOff, AlertTriangle, Link2
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import BlogContentBlockEditor, { type ContentBlock, blocksToMarkdown, markdownToBlocks } from '@/components/admin/blog/BlogContentBlockEditor';
-import AgencyListInserter from '@/components/admin/blog/AgencyListInserter';
+import AgencyListInserter from '@/components/admin/blog/DentistListInserter';
 import FAQGeneratorInserter from '@/components/admin/blog/FAQGeneratorInserter';
 import BlogTopicsLibrary from '@/components/admin/blog/BlogTopicsLibrary';
 

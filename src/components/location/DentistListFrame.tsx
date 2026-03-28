@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ProfileCard } from "@/components/ProfileCard";
-import { MobileAgencySlider } from "@/components/lists/MobileAgencySlider";
+import { MobileAgencySlider } from "@/components/lists/MobileDentistSlider";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";

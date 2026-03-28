@@ -1,2 +1,2 @@
-export { AgencyListFrame } from "./AgencyListFrame";
+export { AgencyListFrame } from "./DentistListFrame";
 export { LocationQuickLinks } from "./LocationQuickLinks";
