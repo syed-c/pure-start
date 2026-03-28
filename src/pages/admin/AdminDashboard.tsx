@@ -88,7 +88,7 @@ const PromotionsTab = lazyRetry(() => import('@/components/admin/tabs/Promotions
 const FounderWeeklyTab = lazyRetry(() => import('@/components/admin/tabs/FounderWeeklyTab'));
 const TopAgenciesTab = lazyRetry(() => import('@/components/admin/tabs/TopDentistsTab'));
 const PinnedProfilesTab = lazyRetry(() => import('@/components/admin/tabs/PinnedProfilesTab'));
-const AgencyDashboardTab = lazyRetry(() => import('@/components/admin/tabs/AgencyDashboardTab'));
+const AgencyDashboardTab = lazyRetry(() => import('@/components/admin/tabs/DentistDashboardTab'));
 const ProfileEditorTab = lazyRetry(() => import('@/components/dentist/ProfileEditorTab'));
 const ServicesTab = lazyRetry(() => import('@/components/dentist/ServicesTab'));
 const AgencyReviewsTab = lazyRetry(() => import('@/components/dentist/DentistReviewsTab'));
