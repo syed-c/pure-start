@@ -46,7 +46,7 @@ const ServicePage = lazyRetry(() => import("./pages/ServicePage"));
 const ServicesPage = lazyRetry(() => import("./pages/ServicesPage"));
 const ServiceLocationPage = lazyRetry(() => import("./pages/ServiceLocationPage"));
 const ClinicPage = lazyRetry(() => import("./pages/ClinicPage"));
-const ContactPage = lazyRetry(() => import("./pages/DentistPage"));
+const DentistPage = lazyRetry(() => import("./pages/DentistPage"));
 
 // Blog Pages - lazy loaded
 const BlogPage = lazyRetry(() => import("./pages/BlogPage"));
