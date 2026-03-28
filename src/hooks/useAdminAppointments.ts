@@ -30,7 +30,7 @@ export interface AdminAppointment {
 interface AppointmentsFilters {
   status?: string;
   clinicId?: string;
-  contactId?: string;
+  dentistId?: string;
   treatmentId?: string;
   dateFrom?: string;
   dateTo?: string;
