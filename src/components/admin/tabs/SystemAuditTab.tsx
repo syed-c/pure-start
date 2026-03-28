@@ -115,7 +115,7 @@ export default function SystemAuditTab() {
       name: 'Dentist Profiles',
       status: 'active',
       description: 'Individual dentist profiles linked to clinics',
-      tables: ['agencies'],
+      tables: ['dentists'],
       integrationPoints: ['Clinic Team Management'],
       riskLevel: 'low',
     },

@@ -90,7 +90,7 @@ const AppointmentManagePage = () => {
         .select(`
           *,
           clinic:clinics!appointments_clinic_id_fkey(id, name, phone, address, slug),
-          dentist:agencies(id, name, slug),
+          dentist:dentists(id, name, slug),
           treatment:treatments(id, name)
         `)
         .eq("manage_token", token)

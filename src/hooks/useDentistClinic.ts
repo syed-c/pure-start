@@ -54,7 +54,7 @@ export function useDentistAppointments() {
         .select(`
           *,
           treatment:treatments(id, name),
-          dentist:agencies(id, name)
+          dentist:dentists(id, name)
         `)
         .eq('clinic_id', clinic.id)
         .order('created_at', { ascending: false });

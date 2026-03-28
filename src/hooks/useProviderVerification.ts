@@ -49,7 +49,7 @@ export function useAllVerifications(status?: VerificationStatus) {
         .select(`
           *,
           clinic:clinics(id, name),
-          dentist:agencies(id, name)
+          dentist:dentists(id, name)
         `)
         .order('submitted_at', { ascending: false });
 

@@ -184,7 +184,7 @@ export function AddPracticeModal({ open, onOpenChange }: AddPracticeModalProps) 
   };
 
   // Generate unique slug by checking existing slugs
-  const generateUniqueSlug = async (tableName: 'clinics' | 'agencies', name: string): Promise<string> => {
+  const generateUniqueSlug = async (tableName: 'clinics' | 'dentists', name: string): Promise<string> => {
     const baseSlug = generateBaseSlug(name);
     
     if (!baseSlug) {
@@ -280,7 +280,7 @@ export function AddPracticeModal({ open, onOpenChange }: AddPracticeModalProps) 
       }
 
       // Create dentist profile linked to clinic with unique slug
-      const contactSlug = await generateUniqueSlug('agencies', formData.dentistName);
+      const contactSlug = await generateUniqueSlug('dentists', formData.dentistName);
       await supabase.from('dentists').insert({
         name: formData.dentistName,
         slug: contactSlug,
