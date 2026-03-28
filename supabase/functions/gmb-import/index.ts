@@ -376,25 +376,21 @@ serve(async (req) => {
       (activeStates || []).map(s => s.name?.toLowerCase()).filter(Boolean)
     );
     
-    // Helper function to extract emirate from address (UAE format)
-    // UAE addresses: "Building, Street, Area - City - Emirate - United Arab Emirates"
+    // Helper function to extract region/state from address (UK format)
     const extractStateFromAddress = (address: string): { abbreviation: string | null; isValid: boolean } => {
       if (!address) return { abbreviation: null, isValid: false };
       
       const lowerAddress = address.toLowerCase();
       
-      // Check if address contains "united arab emirates" or "uae" to confirm it's UAE
-      const isUAE = lowerAddress.includes('united arab emirates') || lowerAddress.includes('uae');
+      // Check if address contains UK identifiers
+      const isUK = lowerAddress.includes('united kingdom') || lowerAddress.includes('uk') || lowerAddress.includes('england') || lowerAddress.includes('wales') || lowerAddress.includes('scotland') || lowerAddress.includes('northern ireland');
       
-      // UAE addresses use " - " as delimiter between parts (Area - City - Emirate)
-      // Also try comma-separated
-      const parts = address.split(/\s*[-,]\s*/).map(p => p.trim());
+      const parts = address.split(/\s*[,]\s*/).map(p => p.trim());
       
-      // Check each part against active emirate names
+      // Check each part against active state/region names
       for (const part of parts) {
         const lowerPart = part.toLowerCase().trim();
         
-        // Match against active state/emirate names
         if (activeStateNames.has(lowerPart)) {
           const matchedState = activeStates?.find(s => s.name?.toLowerCase() === lowerPart);
           return { 
@@ -403,7 +399,6 @@ serve(async (req) => {
           };
         }
         
-        // Match against abbreviations (DXB, AUH, SHJ, etc.)
         const upperPart = part.toUpperCase().trim();
         if (activeStateAbbreviations.has(upperPart)) {
           return { 
@@ -413,8 +408,8 @@ serve(async (req) => {
         }
       }
       
-      // If confirmed UAE address but no specific emirate found, still valid (will use geo-matching)
-      if (isUAE) {
+      // If confirmed UK address but no specific region found, still valid
+      if (isUK) {
         return { abbreviation: null, isValid: true };
       }
       
