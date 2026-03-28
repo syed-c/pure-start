@@ -86,9 +86,9 @@ const MessagingControlTab = lazyRetry(() => import('@/components/admin/tabs/Mess
 const PlansTab = lazyRetry(() => import('@/components/admin/tabs/PlansTab'));
 const PromotionsTab = lazyRetry(() => import('@/components/admin/tabs/PromotionsTab'));
 const FounderWeeklyTab = lazyRetry(() => import('@/components/admin/tabs/FounderWeeklyTab'));
-const TopAgenciesTab = lazyRetry(() => import('@/components/admin/tabs/TopAgenciesTab'));
+const TopAgenciesTab = lazyRetry(() => import('@/components/admin/tabs/TopDentistsTab'));
 const PinnedProfilesTab = lazyRetry(() => import('@/components/admin/tabs/PinnedProfilesTab'));
-const AgencyDashboardTab = lazyRetry(() => import('@/components/admin/tabs/AgencyDashboardTab'));
+const AgencyDashboardTab = lazyRetry(() => import('@/components/admin/tabs/DentistDashboardTab'));
 const ProfileEditorTab = lazyRetry(() => import('@/components/dentist/ProfileEditorTab'));
 const ServicesTab = lazyRetry(() => import('@/components/dentist/ServicesTab'));
 const AgencyReviewsTab = lazyRetry(() => import('@/components/dentist/DentistReviewsTab'));
@@ -157,7 +157,7 @@ import { useTabVisibility } from '@/hooks/useTabVisibility';
 import { useUserTabAccess } from '@/hooks/useUserTabAccess';
 
 // Lazy load the V2 dashboard for agency users
-const AgencyDashboardV2 = lazyRetry(() => import('@/components/dashboard-v2/AgencyDashboardV2'));
+const AgencyDashboardV2 = lazyRetry(() => import('@/components/dashboard-v2/DentistDashboardV2'));
 
 // Define tabs for agency users (comprehensive view)
 const dentistTabGroups = [

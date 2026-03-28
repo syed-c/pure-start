@@ -9,7 +9,7 @@
 
 import { withTrailingSlash } from "./withTrailingSlash";
 
-export interface ContactData {
+export interface DentistData {
   slug: string;
 }
 
@@ -19,7 +19,7 @@ export interface ClinicData {
 
 // Aliases for fostering context
 export type AgencyData = ClinicData;
-export type ContactData = ContactData;
+export type ContactData = DentistData;
 
 export interface CityData {
   slug: string;

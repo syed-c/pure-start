@@ -30,7 +30,7 @@ export interface AdminAppointment {
 interface AppointmentsFilters {
   status?: string;
   clinicId?: string;
-  contactId?: string;
+  dentistId?: string;
   treatmentId?: string;
   dateFrom?: string;
   dateTo?: string;
@@ -44,12 +44,12 @@ export function useAdminAppointments(filters: AppointmentsFilters = {}) {
     queryFn: async () => {
       let query = supabase
         .from('appointments')
-        .select('*, manage_token, clinic:clinics!appointments_clinic_id_fkey(id, name, slug), dentist:agencies(id, name), treatment:treatments(id, name)')
+        .select('*, manage_token, clinic:clinics!appointments_clinic_id_fkey(id, name, slug), dentist:dentists(id, name), treatment:treatments(id, name)')
         .order('created_at', { ascending: false });
 
       if (filters.status) query = query.eq('status', filters.status as 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'no_show');
       if (filters.clinicId) query = query.eq('clinic_id', filters.clinicId);
-      if (filters.contactId) query = query.eq('dentist_id', filters.contactId);
+      if (filters.dentistId) query = query.eq('dentist_id', filters.dentistId);
       if (filters.treatmentId) query = query.eq('treatment_id', filters.treatmentId);
       if (filters.dateFrom) query = query.gte('preferred_date', filters.dateFrom);
       if (filters.dateTo) query = query.lte('preferred_date', filters.dateTo);
@@ -131,7 +131,7 @@ export function useDentistBookingCounts() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('appointments')
-        .select('dentist_id, dentist:agencies(id, name)')
+        .select('dentist_id, dentist:dentists(id, name)')
         .not('dentist_id', 'is', null);
       
       if (error) throw error;
