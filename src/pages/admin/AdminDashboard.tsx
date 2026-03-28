@@ -157,7 +157,7 @@ import { useTabVisibility } from '@/hooks/useTabVisibility';
 import { useUserTabAccess } from '@/hooks/useUserTabAccess';
 
 // Lazy load the V2 dashboard for agency users
-const AgencyDashboardV2 = lazyRetry(() => import('@/components/dashboard-v2/AgencyDashboardV2'));
+const AgencyDashboardV2 = lazyRetry(() => import('@/components/dashboard-v2/DentistDashboardV2'));
 
 // Define tabs for agency users (comprehensive view)
 const dentistTabGroups = [

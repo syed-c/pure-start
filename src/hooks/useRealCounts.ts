@@ -69,10 +69,9 @@ export function useRealCounts() {
 
       return {
         clinics: clinicCount,
-        agencies: clinicCount,
+        agencies: dentistCount,
         states: activeStateIds.length,
         cities: citiesCount,
-        agencies: dentistCount,
         treatments: treatmentsCount || 0,
       };
     },
