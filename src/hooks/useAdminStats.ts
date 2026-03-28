@@ -97,8 +97,8 @@ export function useAdminStats() {
         supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('source', 'gmb'),
         supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('source', 'manual'),
         // Agencies
-        supabase.from('agencies').select('*', { count: 'exact', head: true }),
-        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('is_active', true),
+        supabase.from('dentists').select('*', { count: 'exact', head: true }),
+        supabase.from('dentists').select('*', { count: 'exact', head: true }).eq('is_active', true),
         // Patients
         supabase.from('patients').select('*', { count: 'exact', head: true }),
         // Leads

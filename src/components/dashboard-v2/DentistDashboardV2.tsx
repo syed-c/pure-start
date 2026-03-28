@@ -24,7 +24,7 @@ import ServicesTab from '@/components/dentist/ServicesTab';
 import InsuranceManagementTab from '@/components/dentist/InsuranceManagementTab';
 import AgencyReputationHub from '@/components/reputation/DentistReputationHub';
 import TemplatesTab from '@/components/dentist/TemplatesTab';
-import AgencySettingsTab from '@/components/dentist/AgencySettingsTab';
+import AgencySettingsTab from '@/components/dentist/DentistSettingsTab';
 import SupportTicketsTab from '@/components/dentist/SupportTicketsTab';
 import NotificationPreferencesTab from '@/components/dentist/NotificationPreferencesTab';
 import FormWorkflowTab from '@/components/dentist/FormWorkflowTab';

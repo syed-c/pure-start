@@ -52,7 +52,7 @@ const ContactPage = () => {
     queryFn: async () => {
       if (!slug || slug.includes('/')) return null;
       const { data, error } = await supabase
-        .from("agencies")
+        .from("dentists")
         .select("*, clinic:clinics(id, name, slug, address, phone, latitude, longitude, city:cities(name, slug, state:states(name, abbreviation, slug)))")
         .eq("slug", slug)
         .maybeSingle();

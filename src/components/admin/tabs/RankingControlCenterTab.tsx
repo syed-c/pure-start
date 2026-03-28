@@ -120,7 +120,7 @@ function useRankingData() {
   const agencies = useQuery({
     queryKey: ['ranking-agencies'],
     queryFn: async () => {
-      const { count } = await supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('is_active', true);
+      const { count } = await supabase.from('dentists').select('*', { count: 'exact', head: true }).eq('is_active', true);
       return { total: count || 0 };
     },
   });

@@ -91,8 +91,8 @@ const PinnedProfilesTab = lazyRetry(() => import('@/components/admin/tabs/Pinned
 const AgencyDashboardTab = lazyRetry(() => import('@/components/admin/tabs/AgencyDashboardTab'));
 const ProfileEditorTab = lazyRetry(() => import('@/components/dentist/ProfileEditorTab'));
 const ServicesTab = lazyRetry(() => import('@/components/dentist/ServicesTab'));
-const AgencyReviewsTab = lazyRetry(() => import('@/components/dentist/AgencyReviewsTab'));
-const AgencyEnquiriesTab = lazyRetry(() => import('@/components/dentist/AgencyEnquiriesTab'));
+const AgencyReviewsTab = lazyRetry(() => import('@/components/dentist/DentistReviewsTab'));
+const AgencyEnquiriesTab = lazyRetry(() => import('@/components/dentist/DentistAppointmentsTab'));
 const PatientsTab = lazyRetry(() => import('@/components/dentist/PatientsTab'));
 const MessagesTab = lazyRetry(() => import('@/components/dentist/MessagesTab'));
 const OperationsTab = lazyRetry(() => import('@/components/dentist/OperationsTab'));
@@ -102,7 +102,7 @@ const AgencyReputationHub = lazyRetry(() => import('@/components/reputation/Dent
 const AdminReputationHub = lazyRetry(() => import('@/components/reputation/AdminReputationHub'));
 const SupportTicketsTab = lazyRetry(() => import('@/components/dentist/SupportTicketsTab'));
 const TeamManagementTab = lazyRetry(() => import('@/components/dentist/TeamManagementTab'));
-const AgencySettingsTab = lazyRetry(() => import('@/components/dentist/AgencySettingsTab'));
+const AgencySettingsTab = lazyRetry(() => import('@/components/dentist/DentistSettingsTab'));
 const TemplatesTab = lazyRetry(() => import('@/components/dentist/TemplatesTab'));
 const InsuranceManagementTab = lazyRetry(() => import('@/components/dentist/InsuranceManagementTab'));
 const IntakeFormsTab = lazyRetry(() => import('@/components/dentist/IntakeFormsTab'));

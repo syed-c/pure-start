@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 export interface AdminLead {
   id: string;
   clinic_id: string | null;
-  contact_id: string | null;
+  dentist_id: string | null;
   treatment_id: string | null;
   patient_name: string;
   patient_email: string | null;

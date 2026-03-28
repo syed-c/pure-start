@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 export interface AdminAppointment {
   id: string;
   clinic_id: string | null;
-  contact_id: string | null;
+  dentist_id: string | null;
   treatment_id: string | null;
   patient_name: string;
   patient_email: string | null;
@@ -49,7 +49,7 @@ export function useAdminAppointments(filters: AppointmentsFilters = {}) {
 
       if (filters.status) query = query.eq('status', filters.status as 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'no_show');
       if (filters.clinicId) query = query.eq('clinic_id', filters.clinicId);
-      if (filters.contactId) query = query.eq('contact_id', filters.contactId);
+      if (filters.contactId) query = query.eq('dentist_id', filters.contactId);
       if (filters.treatmentId) query = query.eq('treatment_id', filters.treatmentId);
       if (filters.dateFrom) query = query.gte('preferred_date', filters.dateFrom);
       if (filters.dateTo) query = query.lte('preferred_date', filters.dateTo);
@@ -131,14 +131,14 @@ export function useDentistBookingCounts() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('appointments')
-        .select('contact_id, dentist:agencies(id, name)')
-        .not('contact_id', 'is', null);
+        .select('dentist_id, dentist:agencies(id, name)')
+        .not('dentist_id', 'is', null);
       
       if (error) throw error;
       
       const counts: Record<string, { name: string; count: number }> = {};
       data.forEach((apt: any) => {
-        const id = apt.contact_id;
+        const id = apt.dentist_id;
         const name = apt.dentist?.name || 'Unknown';
         if (!counts[id]) counts[id] = { name, count: 0 };
         counts[id].count++;

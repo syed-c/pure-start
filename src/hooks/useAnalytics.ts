@@ -38,8 +38,8 @@ export interface EventParams {
   // Appointment events
   clinic_id?: string;
   clinic_name?: string;
-  contact_id?: string;
-  contact_name?: string;
+  dentist_id?: string;
+  dentist_name?: string;
   treatment_type?: string;
   
   // Location events
@@ -109,8 +109,8 @@ export function useAnalytics() {
   const trackAppointmentRequest = useCallback((params: {
     clinic_id: string;
     clinic_name: string;
-    contact_id?: string;
-    contact_name?: string;
+    dentist_id?: string;
+    dentist_name?: string;
     treatment_type?: string;
     city?: string;
     state?: string;

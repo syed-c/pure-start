@@ -64,7 +64,7 @@ export default function SystemAuditTab() {
         { count: insurancesCount },
       ] = await Promise.all([
         supabase.from('clinics').select('*', { count: 'exact', head: true }),
-        supabase.from('agencies').select('*', { count: 'exact', head: true }),
+        supabase.from('dentists').select('*', { count: 'exact', head: true }),
         supabase.from('appointments').select('*', { count: 'exact', head: true }),
         supabase.from('leads').select('*', { count: 'exact', head: true }),
         supabase.from('internal_reviews').select('*', { count: 'exact', head: true }),

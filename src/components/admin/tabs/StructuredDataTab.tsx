@@ -361,7 +361,7 @@ export default function StructuredDataTab() {
       samples.clinic = clinics?.map(c => ({ slug: `/clinic/${c.slug}`, name: c.name })) || [];
       
       const { data: agencies } = await supabase
-        .from('agencies')
+        .from('dentists')
         .select('slug, name')
         .eq('is_active', true)
         .limit(5);

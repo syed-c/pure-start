@@ -281,7 +281,7 @@ export function AddPracticeModal({ open, onOpenChange }: AddPracticeModalProps) 
 
       // Create dentist profile linked to clinic with unique slug
       const contactSlug = await generateUniqueSlug('agencies', formData.dentistName);
-      await supabase.from('agencies').insert({
+      await supabase.from('dentists').insert({
         name: formData.dentistName,
         slug: contactSlug,
         email: formData.email,
