@@ -425,8 +425,8 @@ serve(async (req) => {
       case 'search': {
         const { category, city, state, area, pageToken } = params;
 
-        // Build search query (UAE market)
-        const textQuery = `${category} in ${area ? `${area}, ` : ''}${city}${state ? `, ${state}` : ''}, UAE`;
+        // Build search query (UK market)
+        const textQuery = `${category} in ${area ? `${area}, ` : ''}${city}${state ? `, ${state}` : ''}, UK`;
 
         console.log('Searching with NEW Places API:', textQuery, pageToken ? `(page token: ${pageToken.substring(0, 20)}...)` : '(first page)');
 
