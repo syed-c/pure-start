@@ -135,14 +135,14 @@ function haversineDistance(lat1: number, lng1: number, lat2: number, lng2: numbe
   return R * c;
 }
 
-// Find the nearest city/area for a given lat/lng within the same emirate
-// UAE-specific: Uses strict 10km radius since areas within emirates are close together
+// Find the nearest city/area for a given lat/lng
+// UK-specific: Uses 15km radius for matching cities
 async function findNearestCity(
   supabase: any, 
   lat: number, 
   lng: number, 
   stateAbbrev: string | null,
-  maxDistanceKm: number = 10 // 10km for UAE - areas are geographically small
+  maxDistanceKm: number = 15
 ): Promise<{ cityId: string; cityName: string; distance: number; areaId?: string; areaName?: string } | null> {
   // Fetch all active cities (areas) in the emirate with coordinates
   const query = supabase

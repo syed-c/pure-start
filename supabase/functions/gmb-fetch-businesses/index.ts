@@ -86,17 +86,17 @@ serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     });
 
-    // Use getClaims for JWT verification (handles ES256 signing properly)
-    const { data: claimsData, error: claimsError } = await userClient.auth.getClaims(token);
-    if (claimsError || !claimsData?.claims) {
-      console.error("JWT claims error:", claimsError);
+    // Verify user authentication
+    const { data: { user }, error: userError } = await userClient.auth.getUser();
+    if (userError || !user) {
+      console.error("Auth error:", userError);
       return new Response(
         JSON.stringify({ success: false, error: "Invalid authentication" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const userId = claimsData.claims.sub as string;
+    const userId = user.id;
 
     // Get the Google provider token from multiple sources (in priority order):
     // 1. Request body (passed from frontend after OAuth)
