@@ -70,19 +70,18 @@ interface ScraperSession {
 }
 
 const ALL_CATEGORIES = [
-  { id: 'dentist', label: 'Dentist' },
-  { id: 'dental clinic', label: 'Dental Clinic' },
-  { id: 'orthodontist', label: 'Orthodontist' },
-  { id: 'dental surgeon', label: 'Dental Surgeon' },
-  { id: 'pediatric dentist', label: 'Pediatric Dentist' },
-  { id: 'cosmetic dentist', label: 'Cosmetic Dentist' },
-  { id: 'endodontist', label: 'Endodontist' },
-  { id: 'periodontist', label: 'Periodontist' },
-  { id: 'prosthodontist', label: 'Prosthodontist' },
-  { id: 'oral surgeon', label: 'Oral Surgeon' },
-  { id: 'dental office', label: 'Dental Office' },
-  { id: 'family dentist', label: 'Family Dentist' },
-  { id: 'emergency dentist', label: 'Emergency Dentist' },
+  { id: 'fostering agency', label: 'Fostering Agency' },
+  { id: 'foster care agency', label: 'Foster Care Agency' },
+  { id: 'independent fostering agency', label: 'Independent Fostering Agency' },
+  { id: 'fostering service', label: 'Fostering Service' },
+  { id: 'children\'s home', label: "Children's Home" },
+  { id: 'adoption agency', label: 'Adoption Agency' },
+  { id: 'child care services', label: 'Child Care Services' },
+  { id: 'social services', label: 'Social Services' },
+  { id: 'family support services', label: 'Family Support Services' },
+  { id: 'residential care home', label: 'Residential Care Home' },
+  { id: 'therapeutic fostering', label: 'Therapeutic Fostering' },
+  { id: 'respite care', label: 'Respite Care' },
 ];
 
 export default function GmbScraperBotTab() {
