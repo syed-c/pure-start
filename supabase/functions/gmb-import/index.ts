@@ -135,14 +135,14 @@ function haversineDistance(lat1: number, lng1: number, lat2: number, lng2: numbe
   return R * c;
 }
 
-// Find the nearest city/area for a given lat/lng within the same emirate
-// UAE-specific: Uses strict 10km radius since areas within emirates are close together
+// Find the nearest city/area for a given lat/lng
+// UK-specific: Uses 15km radius for matching cities
 async function findNearestCity(
   supabase: any, 
   lat: number, 
   lng: number, 
   stateAbbrev: string | null,
-  maxDistanceKm: number = 10 // 10km for UAE - areas are geographically small
+  maxDistanceKm: number = 15
 ): Promise<{ cityId: string; cityName: string; distance: number; areaId?: string; areaName?: string } | null> {
   // Fetch all active cities (areas) in the emirate with coordinates
   const query = supabase
@@ -182,17 +182,17 @@ async function findNearestCity(
     }
   }
   
-  // If no match within strict radius, try wider (15km) but log warning
+  // If no match within strict radius, try wider (25km for UK)
   if (!nearestCity && cities.length > 0) {
     for (const city of cities) {
       if (!city.latitude || !city.longitude) continue;
       const distance = haversineDistance(lat, lng, parseFloat(city.latitude), parseFloat(city.longitude));
-      if (distance <= 15 && (!nearestCity || distance < nearestCity.distance)) {
+      if (distance <= 25 && (!nearestCity || distance < nearestCity.distance)) {
         nearestCity = { cityId: city.id, cityName: city.name, distance };
       }
     }
     if (nearestCity) {
-      console.warn(`⚠️ Used extended 15km radius to match city: ${nearestCity.cityName} (${nearestCity.distance.toFixed(2)}km)`);
+      console.warn(`⚠️ Used extended 25km radius to match city: ${nearestCity.cityName} (${nearestCity.distance.toFixed(2)}km)`);
     }
   }
   
@@ -376,25 +376,21 @@ serve(async (req) => {
       (activeStates || []).map(s => s.name?.toLowerCase()).filter(Boolean)
     );
     
-    // Helper function to extract emirate from address (UAE format)
-    // UAE addresses: "Building, Street, Area - City - Emirate - United Arab Emirates"
+    // Helper function to extract region/state from address (UK format)
     const extractStateFromAddress = (address: string): { abbreviation: string | null; isValid: boolean } => {
       if (!address) return { abbreviation: null, isValid: false };
       
       const lowerAddress = address.toLowerCase();
       
-      // Check if address contains "united arab emirates" or "uae" to confirm it's UAE
-      const isUAE = lowerAddress.includes('united arab emirates') || lowerAddress.includes('uae');
+      // Check if address contains UK identifiers
+      const isUK = lowerAddress.includes('united kingdom') || lowerAddress.includes('uk') || lowerAddress.includes('england') || lowerAddress.includes('wales') || lowerAddress.includes('scotland') || lowerAddress.includes('northern ireland');
       
-      // UAE addresses use " - " as delimiter between parts (Area - City - Emirate)
-      // Also try comma-separated
-      const parts = address.split(/\s*[-,]\s*/).map(p => p.trim());
+      const parts = address.split(/\s*[,]\s*/).map(p => p.trim());
       
-      // Check each part against active emirate names
+      // Check each part against active state/region names
       for (const part of parts) {
         const lowerPart = part.toLowerCase().trim();
         
-        // Match against active state/emirate names
         if (activeStateNames.has(lowerPart)) {
           const matchedState = activeStates?.find(s => s.name?.toLowerCase() === lowerPart);
           return { 
@@ -403,7 +399,6 @@ serve(async (req) => {
           };
         }
         
-        // Match against abbreviations (DXB, AUH, SHJ, etc.)
         const upperPart = part.toUpperCase().trim();
         if (activeStateAbbreviations.has(upperPart)) {
           return { 
@@ -413,8 +408,8 @@ serve(async (req) => {
         }
       }
       
-      // If confirmed UAE address but no specific emirate found, still valid (will use geo-matching)
-      if (isUAE) {
+      // If confirmed UK address but no specific region found, still valid
+      if (isUK) {
         return { abbreviation: null, isValid: true };
       }
       
@@ -425,8 +420,8 @@ serve(async (req) => {
       case 'search': {
         const { category, city, state, area, pageToken } = params;
 
-        // Build search query (UAE market)
-        const textQuery = `${category} in ${area ? `${area}, ` : ''}${city}${state ? `, ${state}` : ''}, UAE`;
+        // Build search query (UK market)
+        const textQuery = `${category} in ${area ? `${area}, ` : ''}${city}${state ? `, ${state}` : ''}, UK`;
 
         console.log('Searching with NEW Places API:', textQuery, pageToken ? `(page token: ${pageToken.substring(0, 20)}...)` : '(first page)');
 
@@ -435,7 +430,7 @@ serve(async (req) => {
           textQuery,
           pageSize: 20,
           languageCode: 'en',
-          regionCode: 'AE',
+          regionCode: 'GB',
         };
         
         // Add page token for pagination if provided
