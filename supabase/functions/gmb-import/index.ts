@@ -182,17 +182,17 @@ async function findNearestCity(
     }
   }
   
-  // If no match within strict radius, try wider (15km) but log warning
+  // If no match within strict radius, try wider (25km for UK)
   if (!nearestCity && cities.length > 0) {
     for (const city of cities) {
       if (!city.latitude || !city.longitude) continue;
       const distance = haversineDistance(lat, lng, parseFloat(city.latitude), parseFloat(city.longitude));
-      if (distance <= 15 && (!nearestCity || distance < nearestCity.distance)) {
+      if (distance <= 25 && (!nearestCity || distance < nearestCity.distance)) {
         nearestCity = { cityId: city.id, cityName: city.name, distance };
       }
     }
     if (nearestCity) {
-      console.warn(`⚠️ Used extended 15km radius to match city: ${nearestCity.cityName} (${nearestCity.distance.toFixed(2)}km)`);
+      console.warn(`⚠️ Used extended 25km radius to match city: ${nearestCity.cityName} (${nearestCity.distance.toFixed(2)}km)`);
     }
   }
   
