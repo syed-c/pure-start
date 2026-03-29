@@ -596,36 +596,17 @@ export default function GmbScraperBotTab() {
 
         const listing = newListings[i];
         
-        // Update status to importing
-        await supabase
-
-
-
-
-        
         const result = await importSinglePlace(listing.place_id, city.id, sessionId, runKey);
         
         if (result.imported) {
           cityImported++;
-          await supabase
-
-
-
-
+          listing.import_status = 'imported';
         } else if (result.duplicate) {
           cityDuplicates++;
-          await supabase
-
-
-
-
+          listing.import_status = 'duplicate';
         } else {
           cityErrors++;
-          await supabase
-
-
-
-
+          listing.import_status = 'error';
         }
         
         // Update stats every 10 imports
