@@ -146,9 +146,9 @@ export default function GmbScraperBotTab() {
     if (!cities) return [];
     switch (cityFilter) {
       case 'empty':
-        return cities.filter(c => (c.dentist_count ?? 0) === 0);
+        return cities.filter(c => (c.agency_count ?? 0) === 0);
       case 'with-agencies':
-        return cities.filter(c => (c.dentist_count ?? 0) > 0);
+        return cities.filter(c => (c.agency_count ?? 0) > 0);
       default:
         return cities;
     }
