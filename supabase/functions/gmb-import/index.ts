@@ -135,7 +135,7 @@ function haversineDistance(lat1: number, lng1: number, lat2: number, lng2: numbe
   return R * c;
 }
 
-// Find the nearest city/area for a given lat/lng
+// Find the nearest city for a given lat/lng
 // UK-specific: Uses 15km radius for matching cities
 async function findNearestCity(
   supabase: any, 
