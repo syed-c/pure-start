@@ -570,7 +570,7 @@ export default function GmbScraperBotTab() {
     }
     
     if (selectedStateIds.length === 0 || selectedCityIds.length === 0) {
-      toast.error('Please select at least one emirate and area');
+      toast.error('Please select at least one region and city');
       return;
     }
     
