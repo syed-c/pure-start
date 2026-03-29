@@ -617,9 +617,9 @@ export default function GmbScraperBotTab() {
     const citiesToScan = [...selectedCities];
     
     addLog('info', `🤖 Starting bot for ${stateNames}`);
-    addLog('info', `📊 ${citiesToScan.length} areas, ${selectedCategories.length} categories`);
+    addLog('info', `📊 ${citiesToScan.length} cities, ${selectedCategories.length} categories`);
     addLog('info', `💾 Auto-save enabled - progress persists even if connection drops`);
-    addLog('info', `📍 Using precise lat/lng matching (10km radius) for accurate area assignment in UAE`);
+    addLog('info', `📍 Using precise lat/lng matching (15km radius) for accurate city assignment in UK`);
     
     let totalImported = 0;
     let totalDuplicates = 0;
