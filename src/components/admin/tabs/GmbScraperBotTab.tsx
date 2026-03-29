@@ -106,7 +106,7 @@ export default function GmbScraperBotTab() {
   const [cityFilter, setCityFilter] = useState<'all' | 'empty' | 'with-agencies'>('all');
   const [maxPagesPerSearch, setMaxPagesPerSearch] = useState<number>(5); // Support pagination beyond 20
   
-  // Fetch cities for ALL selected states with dentist counts
+  // Fetch cities for ALL selected states with agency counts
   const { data: cities } = useQuery({
     queryKey: ['cities-for-states', selectedStateIds],
     queryFn: async () => {
