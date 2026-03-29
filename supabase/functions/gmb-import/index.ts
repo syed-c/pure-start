@@ -144,7 +144,7 @@ async function findNearestCity(
   stateAbbrev: string | null,
   maxDistanceKm: number = 15
 ): Promise<{ cityId: string; cityName: string; distance: number; areaId?: string; areaName?: string } | null> {
-  // Fetch all active cities (areas) in the emirate with coordinates
+  // Fetch all active cities in the region with coordinates
   const query = supabase
     .from('cities')
     .select('id, name, latitude, longitude, state_id, state:states!inner(id, abbreviation, name)')
