@@ -154,47 +154,10 @@ export default function GmbScraperBotTab() {
     }
   }, [cities, cityFilter]);
   
-  // Fetch existing sessions
-  const { data: sessions } = useQuery({
-    queryKey: ['gmb-scraper-sessions'],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('gmb_scraper_sessions')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(10);
-      return (data || []) as ScraperSession[];
-    },
-  });
+  // Sessions are tracked in-memory only (tables don't exist in DB)
+  const [sessions, setSessions] = useState<ScraperSession[]>([]);
   
-  // Fetch results for active session
-  const { data: sessionResults, refetch: refetchResults } = useQuery({
-    queryKey: ['gmb-scraper-results', activeSessionId],
-    queryFn: async () => {
-      if (!activeSessionId) return [];
-      const { data } = await supabase
-        .from('gmb_scraper_results')
-        .select('*')
-        .eq('session_id', activeSessionId)
-        .order('name');
-      return (data || []).map((r: any) => ({
-        place_id: r.place_id,
-        name: r.name,
-        address: r.address,
-        rating: r.rating,
-        reviews_count: r.reviews_count,
-        lat: r.lat,
-        lng: r.lng,
-        city_id: r.city_id,
-        city_name: r.city_name,
-        category: r.category,
-        already_imported: r.import_status === 'imported' || r.import_status === 'duplicate',
-        import_status: r.import_status,
-      })) as SearchResult[];
-    },
-    enabled: !!activeSessionId,
-    refetchInterval: activeSessionId ? 3000 : false,
-  });
+  // Results are tracked in-memory (no DB table for scraper results)
   
   // Bot state
   const [isRunning, setIsRunning] = useState(false);
@@ -261,23 +224,7 @@ export default function GmbScraperBotTab() {
     };
   }, []);
   
-  // Load session results when active session changes
-  useEffect(() => {
-    if (sessionResults && sessionResults.length > 0) {
-      setResults(sessionResults);
-      const pendingCount = sessionResults.filter(r => r.import_status === 'pending').length;
-      const importedCount = sessionResults.filter(r => r.import_status === 'imported').length;
-      const dupCount = sessionResults.filter(r => r.import_status === 'duplicate').length;
-      const errorCount = sessionResults.filter(r => r.import_status === 'error').length;
-      setStats({
-        totalFound: sessionResults.length,
-        newFound: pendingCount,
-        imported: importedCount,
-        duplicates: dupCount,
-        errors: errorCount,
-      });
-    }
-  }, [sessionResults]);
+  // No session results from DB - everything is in-memory
   
   useEffect(() => {
     logsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -420,7 +367,7 @@ export default function GmbScraperBotTab() {
       }
 
       let pageToken: string | null = null;
-      const seenPlaceIds = new Set<string>(); // Track seen results to avoid duplicates across pages
+      const _seenPlaceIds = new Set<string>(); // Track seen results to avoid duplicates across pages
 
       // Fetch all pages for this category - now uses maxPagesPerSearch
       for (let page = 0; page < maxPagesPerSearch; page++) {
@@ -519,47 +466,14 @@ export default function GmbScraperBotTab() {
     }
   };
   
-  // Save results to database
-  const saveResultsToDb = async (sessionId: string, resultsToSave: SearchResult[]) => {
-    if (resultsToSave.length === 0) return;
-    
-    const records = resultsToSave.map(r => ({
-      session_id: sessionId,
-      place_id: r.place_id,
-      name: r.name,
-      address: r.address,
-      rating: r.rating,
-      reviews_count: r.reviews_count,
-      lat: r.lat,
-      lng: r.lng,
-      city_id: r.city_id,
-      city_name: r.city_name,
-      category: r.category,
-      import_status: r.import_status || 'pending',
-    }));
-    
-    // Insert in batches
-    for (let i = 0; i < records.length; i += 500) {
-      const batch = records.slice(i, i + 500);
-      await supabase.from('gmb_scraper_results').upsert(batch, { 
-        onConflict: 'session_id,place_id',
-        ignoreDuplicates: true 
-      });
-    }
+  // No DB persistence for scraper results - all in-memory
+  const saveResultsToDb = async (_sessionId: string, _resultsToSave: SearchResult[]) => {
+    // No-op: gmb_scraper_results table doesn't exist
   };
   
-  // Update session stats
-  const updateSessionStats = async (sessionId: string, stats: { imported?: number; duplicates?: number; errors?: number; total?: number }) => {
-    const updates: Record<string, any> = { updated_at: new Date().toISOString() };
-    if (stats.imported !== undefined) updates.imported_count = stats.imported;
-    if (stats.duplicates !== undefined) updates.duplicate_count = stats.duplicates;
-    if (stats.errors !== undefined) updates.error_count = stats.errors;
-    if (stats.total !== undefined) updates.total_found = stats.total;
-    
-    await supabase
-      .from('gmb_scraper_sessions')
-      .update(updates)
-      .eq('id', sessionId);
+  // Update session stats (in-memory only)
+  const updateSessionStats = async (_sessionId: string, _stats: { imported?: number; duplicates?: number; errors?: number; total?: number }) => {
+    // No-op: gmb_scraper_sessions table doesn't exist
   };
   
   // Main bot runner - searches and imports city by city
@@ -582,26 +496,10 @@ export default function GmbScraperBotTab() {
     // Get region names for display
     const stateNames = selectedStates.map(s => s.name).join(', ');
     
-    // Create session - store first state for backward compat, but we track all
-    const { data: session, error: sessionError } = await supabase
-      .from('gmb_scraper_sessions')
-      .insert({
-        user_id: user.id,
-        state_id: selectedStateIds[0],
-        state_name: stateNames,
-        categories: selectedCategories,
-        status: 'running',
-      })
-      .select()
-      .single();
+    // Generate an in-memory session ID (no DB table)
+    const sessionId = crypto.randomUUID();
     
-    if (sessionError || !session) {
-      toast.error('Failed to create session');
-      console.error(sessionError);
-      return;
-    }
-    
-    setActiveSessionId(session.id);
+    setActiveSessionId(sessionId);
     setIsRunning(true);
     setIsPaused(false);
     abortRef.current = false;
@@ -669,7 +567,7 @@ export default function GmbScraperBotTab() {
       addLog('success', `  📊 Found ${uniqueResults.length} total, ${newListings.length} new`);
       
       // Save search results to DB immediately
-      await saveResultsToDb(session.id, uniqueResults);
+      await saveResultsToDb(sessionId, uniqueResults);
       
       // Update local state
       setResults(prev => mergeUnique(prev, uniqueResults));
@@ -698,36 +596,17 @@ export default function GmbScraperBotTab() {
 
         const listing = newListings[i];
         
-        // Update status to importing
-        await supabase
-          .from('gmb_scraper_results')
-          .update({ import_status: 'importing' })
-          .eq('session_id', session.id)
-          .eq('place_id', listing.place_id);
-        
-        const result = await importSinglePlace(listing.place_id, city.id, session.id, runKey);
+        const result = await importSinglePlace(listing.place_id, city.id, sessionId, runKey);
         
         if (result.imported) {
           cityImported++;
-          await supabase
-            .from('gmb_scraper_results')
-            .update({ import_status: 'imported' })
-            .eq('session_id', session.id)
-            .eq('place_id', listing.place_id);
+          listing.import_status = 'imported';
         } else if (result.duplicate) {
           cityDuplicates++;
-          await supabase
-            .from('gmb_scraper_results')
-            .update({ import_status: 'duplicate' })
-            .eq('session_id', session.id)
-            .eq('place_id', listing.place_id);
+          listing.import_status = 'duplicate';
         } else {
           cityErrors++;
-          await supabase
-            .from('gmb_scraper_results')
-            .update({ import_status: 'error', error_message: result.error })
-            .eq('session_id', session.id)
-            .eq('place_id', listing.place_id);
+          listing.import_status = 'error';
         }
         
         // Update stats every 10 imports
@@ -744,7 +623,7 @@ export default function GmbScraperBotTab() {
             errors: totalErrors,
           });
           
-          await updateSessionStats(session.id, {
+          await updateSessionStats(sessionId, {
             total: totalFound,
             imported: totalImported,
             duplicates: totalDuplicates,
@@ -765,24 +644,10 @@ export default function GmbScraperBotTab() {
       
       addLog('success', `  ✅ ${city.name} complete!`);
       
-      // Refresh results from DB
-      refetchResults();
+      // Update local results
+      setResults(prev => [...prev]);
     }
     
-    // Final session update
-    await supabase
-      .from('gmb_scraper_sessions')
-      .update({
-        status: isRunCancelled(runKey) ? 'cancelled' : 'completed',
-        total_found: totalFound,
-        imported_count: totalImported,
-        duplicate_count: totalDuplicates,
-        error_count: totalErrors,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', session.id);
-    
-    queryClient.invalidateQueries({ queryKey: ['gmb-scraper-sessions'] });
     queryClient.invalidateQueries({ queryKey: ['clinics'] });
     
     addLog('success', `\n🎉 Bot completed!`);
@@ -812,91 +677,24 @@ export default function GmbScraperBotTab() {
     }
     
     setIsRunning(true);
-    setIsPaused(false);
     abortRef.current = false;
     pausedRef.current = false;
-
-    // Create a unique run key for cancellation
     const runKey = newRunKey();
-
     addLog('info', `▶️ Resuming import of ${pendingResults.length} pending listings...`);
-
-    // Group by city
-    const byCity = new Map<string, SearchResult[]>();
-    for (const r of pendingResults) {
-      const key = r.city_id || 'unknown';
-      if (!byCity.has(key)) byCity.set(key, []);
-      byCity.get(key)!.push(r);
-    }
-
     let imported = stats.imported;
     let duplicates = stats.duplicates;
     let errors = stats.errors;
 
-    for (const [cityId, cityResults] of byCity) {
+    for (const listing of pendingResults) {
       if (isRunCancelled(runKey)) break;
-
-      const cityName = cityResults[0]?.city_name || 'Unknown';
-      addLog('info', `📍 Processing ${cityName} (${cityResults.length} pending)...`);
-
-      for (const listing of cityResults) {
-        if (isRunCancelled(runKey)) break;
-
-        while (pausedRef.current && !isRunCancelled(runKey)) {
-          await new Promise((r) => setTimeout(r, 500));
-        }
-
-        if (isRunCancelled(runKey)) break;
-
-        await supabase
-          .from('gmb_scraper_results')
-          .update({ import_status: 'importing' })
-          .eq('session_id', activeSessionId)
-          .eq('place_id', listing.place_id);
-
-        const result = await importSinglePlace(listing.place_id, cityId, activeSessionId, runKey);
-        
-        if (result.imported) {
-          imported++;
-          await supabase
-            .from('gmb_scraper_results')
-            .update({ import_status: 'imported' })
-            .eq('session_id', activeSessionId)
-            .eq('place_id', listing.place_id);
-        } else if (result.duplicate) {
-          duplicates++;
-          await supabase
-            .from('gmb_scraper_results')
-            .update({ import_status: 'duplicate' })
-            .eq('session_id', activeSessionId)
-            .eq('place_id', listing.place_id);
-        } else {
-          errors++;
-          await supabase
-            .from('gmb_scraper_results')
-            .update({ import_status: 'error', error_message: result.error })
-            .eq('session_id', activeSessionId)
-            .eq('place_id', listing.place_id);
-        }
-        
-        setStats({
-          totalFound: stats.totalFound,
-          newFound: stats.totalFound - imported - duplicates,
-          imported,
-          duplicates,
-          errors,
-        });
-        
-        await new Promise(r => setTimeout(r, 100));
-      }
+      const result = await importSinglePlace(listing.place_id, listing.city_id || '', activeSessionId || '', runKey);
+      if (result.imported) { imported++; listing.import_status = 'imported'; }
+      else if (result.duplicate) { duplicates++; listing.import_status = 'duplicate'; }
+      else { errors++; listing.import_status = 'error'; }
+      setStats({ totalFound: stats.totalFound, newFound: stats.totalFound - imported - duplicates, imported, duplicates, errors });
+      await new Promise(r => setTimeout(r, 100));
     }
-    
-    await updateSessionStats(activeSessionId, { imported, duplicates, errors });
-    
-    queryClient.invalidateQueries({ queryKey: ['gmb-scraper-sessions'] });
     queryClient.invalidateQueries({ queryKey: ['clinics'] });
-    refetchResults();
-    
     addLog('success', `✅ Resume complete! Imported: ${imported}, Duplicates: ${duplicates}, Errors: ${errors}`);
     setIsRunning(false);
     toast.success('Import resumed and completed!');
@@ -914,54 +712,18 @@ export default function GmbScraperBotTab() {
     }
   };
   
-  const deleteSession = async (sessionId: string) => {
-    // Confirm before delete
-    if (!window.confirm('Are you sure you want to delete this session and all its results? This action cannot be undone.')) {
-      return;
-    }
-
-    // Stop any running bot immediately if it's this session
-    if (activeSessionId === sessionId && isRunning) {
+  const deleteSession = async (sid: string) => {
+    if (activeSessionId === sid && isRunning) {
       cancelRun();
       setIsRunning(false);
       setIsPaused(false);
-      addLog('warning', '⛔ Session deleted - bot stopped');
     }
-
-    try {
-      // Delete results first (foreign key constraint)
-      const { error: resultsError } = await supabase
-        .from('gmb_scraper_results')
-        .delete()
-        .eq('session_id', sessionId);
-      
-      if (resultsError) {
-        console.error('Error deleting results:', resultsError);
-        throw resultsError;
-      }
-
-      // Then delete session
-      const { error: sessionError } = await supabase
-        .from('gmb_scraper_sessions')
-        .delete()
-        .eq('id', sessionId);
-      
-      if (sessionError) {
-        console.error('Error deleting session:', sessionError);
-        throw sessionError;
-      }
-
-      if (activeSessionId === sessionId) {
-        setActiveSessionId(null);
-        setResults([]);
-      }
-
-      queryClient.invalidateQueries({ queryKey: ['gmb-scraper-sessions'] });
-      toast.success('Session deleted successfully');
-    } catch (error: any) {
-      console.error('Delete session error:', error);
-      toast.error(`Failed to delete session: ${error.message || 'Unknown error'}`);
+    if (activeSessionId === sid) {
+      setActiveSessionId(null);
+      setResults([]);
     }
+    setSessions(prev => prev.filter(s => s.id !== sid));
+    toast.success('Session cleared');
   };
 
   const stopBot = () => {
