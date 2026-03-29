@@ -644,24 +644,10 @@ export default function GmbScraperBotTab() {
       
       addLog('success', `  ✅ ${city.name} complete!`);
       
-      // Refresh results from DB
-      refetchResults();
+      // Update local results
+      setResults(prev => [...prev]);
     }
     
-    // Final session update
-    await supabase
-      .from('gmb_scraper_sessions')
-      .update({
-        status: isRunCancelled(runKey) ? 'cancelled' : 'completed',
-        total_found: totalFound,
-        imported_count: totalImported,
-        duplicate_count: totalDuplicates,
-        error_count: totalErrors,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', sessionId);
-    
-    queryClient.invalidateQueries({ queryKey: ['gmb-scraper-sessions'] });
     queryClient.invalidateQueries({ queryKey: ['clinics'] });
     
     addLog('success', `\n🎉 Bot completed!`);
