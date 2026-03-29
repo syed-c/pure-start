@@ -367,7 +367,7 @@ export default function GmbScraperBotTab() {
       }
 
       let pageToken: string | null = null;
-      const seenPlaceIds = new Set<string>(); // Track seen results to avoid duplicates across pages
+      const _seenPlaceIds = new Set<string>(); // Track seen results to avoid duplicates across pages
 
       // Fetch all pages for this category - now uses maxPagesPerSearch
       for (let page = 0; page < maxPagesPerSearch; page++) {
@@ -712,54 +712,18 @@ export default function GmbScraperBotTab() {
     }
   };
   
-  const deleteSession = async (sessionId: string) => {
-    // Confirm before delete
-    if (!window.confirm('Are you sure you want to delete this session and all its results? This action cannot be undone.')) {
-      return;
-    }
-
-    // Stop any running bot immediately if it's this session
-    if (activeSessionId === sessionId && isRunning) {
+  const deleteSession = async (sid: string) => {
+    if (activeSessionId === sid && isRunning) {
       cancelRun();
       setIsRunning(false);
       setIsPaused(false);
-      addLog('warning', '⛔ Session deleted - bot stopped');
     }
-
-    try {
-      // Delete results first (foreign key constraint)
-      const { error: resultsError } = await supabase
-
-
-
-      
-      if (resultsError) {
-        console.error('Error deleting results:', resultsError);
-        throw resultsError;
-      }
-
-      // Then delete session
-      const { error: sessionError } = await supabase
-        .from('gmb_scraper_sessions')
-        .delete()
-        .eq('id', sessionId);
-      
-      if (sessionError) {
-        console.error('Error deleting session:', sessionError);
-        throw sessionError;
-      }
-
-      if (activeSessionId === sessionId) {
-        setActiveSessionId(null);
-        setResults([]);
-      }
-
-      queryClient.invalidateQueries({ queryKey: ['gmb-scraper-sessions'] });
-      toast.success('Session deleted successfully');
-    } catch (error: any) {
-      console.error('Delete session error:', error);
-      toast.error(`Failed to delete session: ${error.message || 'Unknown error'}`);
+    if (activeSessionId === sid) {
+      setActiveSessionId(null);
+      setResults([]);
     }
+    setSessions(prev => prev.filter(s => s.id !== sid));
+    toast.success('Session cleared');
   };
 
   const stopBot = () => {
@@ -834,11 +798,11 @@ export default function GmbScraperBotTab() {
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {sessions.map(session => (
-                <div key={sessionId} className="flex items-center gap-1">
+                <div key={session.id} className="flex items-center gap-1">
                   <Button
-                    variant={activeSessionId === sessionId ? 'default' : 'outline'}
+                    variant={activeSessionId === session.id ? 'default' : 'outline'}
                     size="sm"
-                    onClick={() => loadSession(sessionId)}
+                    onClick={() => loadSession(session.id)}
                     className="gap-2"
                   >
                     <MapPin className="h-3 w-3" />
@@ -854,7 +818,7 @@ export default function GmbScraperBotTab() {
                     onClick={(e) => {
                       e.stopPropagation();
                       e.preventDefault();
-                      deleteSession(sessionId);
+                      deleteSession(session.id);
                     }}
                   >
                     <Trash2 className="h-3 w-3" />
