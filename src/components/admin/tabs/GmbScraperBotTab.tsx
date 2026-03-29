@@ -1503,8 +1503,8 @@ export default function GmbScraperBotTab() {
       <Alert>
         <Zap className="h-4 w-4" />
         <AlertDescription>
-          <strong>Smart Multi-State Import:</strong> Select multiple states and cities in one run. The bot uses precise GPS coordinates (lat/lng) 
-          to assign each dentist to their exact city - not nearby areas. Progress is auto-saved continuously, so you can pause/stop anytime 
+          <strong>Smart Multi-Region Import:</strong> Select multiple regions and cities in one run. The bot uses precise GPS coordinates (lat/lng) 
+          to assign each agency to their exact city. Progress is auto-saved continuously, so you can pause/stop anytime 
           and resume later. The bot will wait for network reconnection if connection drops.
         </AlertDescription>
       </Alert>
