@@ -224,23 +224,7 @@ export default function GmbScraperBotTab() {
     };
   }, []);
   
-  // Load session results when active session changes
-  useEffect(() => {
-    if (sessionResults && sessionResults.length > 0) {
-      setResults(sessionResults);
-      const pendingCount = sessionResults.filter(r => r.import_status === 'pending').length;
-      const importedCount = sessionResults.filter(r => r.import_status === 'imported').length;
-      const dupCount = sessionResults.filter(r => r.import_status === 'duplicate').length;
-      const errorCount = sessionResults.filter(r => r.import_status === 'error').length;
-      setStats({
-        totalFound: sessionResults.length,
-        newFound: pendingCount,
-        imported: importedCount,
-        duplicates: dupCount,
-        errors: errorCount,
-      });
-    }
-  }, [sessionResults]);
+  // No session results from DB - everything is in-memory
   
   useEffect(() => {
     logsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
