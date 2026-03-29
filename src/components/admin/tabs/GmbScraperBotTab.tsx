@@ -1134,10 +1134,10 @@ export default function GmbScraperBotTab() {
                       <SelectContent>
                         <SelectItem value="all">All Cities ({cities.length})</SelectItem>
                         <SelectItem value="empty">
-                          🔴 Empty - No Agencies ({cities.filter(c => (c.dentist_count ?? 0) === 0).length})
+                          🔴 Empty - No Agencies ({cities.filter(c => (c.agency_count ?? 0) === 0).length})
                         </SelectItem>
                         <SelectItem value="with-agencies">
-                          🟢 With Agencies ({cities.filter(c => (c.dentist_count ?? 0) > 0).length})
+                          🟢 With Agencies ({cities.filter(c => (c.agency_count ?? 0) > 0).length})
                         </SelectItem>
                       </SelectContent>
                     </Select>
