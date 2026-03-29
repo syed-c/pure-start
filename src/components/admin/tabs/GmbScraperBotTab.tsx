@@ -154,18 +154,8 @@ export default function GmbScraperBotTab() {
     }
   }, [cities, cityFilter]);
   
-  // Fetch existing sessions
-  const { data: sessions } = useQuery({
-    queryKey: ['gmb-scraper-sessions'],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('gmb_scraper_sessions')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(10);
-      return (data || []) as ScraperSession[];
-    },
-  });
+  // Sessions are tracked in-memory only (tables don't exist in DB)
+  const [sessions, setSessions] = useState<ScraperSession[]>([]);
   
   // Fetch results for active session
   const { data: sessionResults, refetch: refetchResults } = useQuery({
