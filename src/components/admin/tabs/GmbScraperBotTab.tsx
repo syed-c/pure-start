@@ -132,10 +132,10 @@ export default function GmbScraperBotTab() {
         countMap.set(c.city_id, (countMap.get(c.city_id) || 0) + 1);
       });
 
-      // Override dentist_count with real clinic count
+      // Override agency_count with real clinic count
       return citiesData.map(city => ({
         ...city,
-        dentist_count: countMap.get(city.id) || 0,
+        agency_count: countMap.get(city.id) || 0,
       }));
     },
     enabled: selectedStateIds.length > 0,
