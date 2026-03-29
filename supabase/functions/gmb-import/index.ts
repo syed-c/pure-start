@@ -135,7 +135,7 @@ function haversineDistance(lat1: number, lng1: number, lat2: number, lng2: numbe
   return R * c;
 }
 
-// Find the nearest city/area for a given lat/lng
+// Find the nearest city for a given lat/lng
 // UK-specific: Uses 15km radius for matching cities
 async function findNearestCity(
   supabase: any, 
@@ -144,7 +144,7 @@ async function findNearestCity(
   stateAbbrev: string | null,
   maxDistanceKm: number = 15
 ): Promise<{ cityId: string; cityName: string; distance: number; areaId?: string; areaName?: string } | null> {
-  // Fetch all active cities (areas) in the emirate with coordinates
+  // Fetch all active cities in the region with coordinates
   const query = supabase
     .from('cities')
     .select('id, name, latitude, longitude, state_id, state:states!inner(id, abbreviation, name)')
@@ -159,7 +159,7 @@ async function findNearestCity(
   const { data: cities, error } = await query;
   
   if (error || !cities || cities.length === 0) {
-    console.log(`No cities/areas found for emirate ${stateAbbrev}`);
+    console.log(`No cities found for region ${stateAbbrev}`);
     return null;
   }
   

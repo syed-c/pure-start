@@ -99,14 +99,14 @@ export default function GmbScraperBotTab() {
   
   const [selectedStateIds, setSelectedStateIds] = useState<string[]>([]);
   const [selectedCityIds, setSelectedCityIds] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(['dentist', 'fostering agency']);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(['fostering agency', 'foster care agency', 'independent fostering agency']);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   
   // NEW: Filter options for cities
   const [cityFilter, setCityFilter] = useState<'all' | 'empty' | 'with-agencies'>('all');
   const [maxPagesPerSearch, setMaxPagesPerSearch] = useState<number>(5); // Support pagination beyond 20
   
-  // Fetch cities for ALL selected states with dentist counts
+  // Fetch cities for ALL selected states with agency counts
   const { data: cities } = useQuery({
     queryKey: ['cities-for-states', selectedStateIds],
     queryFn: async () => {
@@ -132,10 +132,10 @@ export default function GmbScraperBotTab() {
         countMap.set(c.city_id, (countMap.get(c.city_id) || 0) + 1);
       });
 
-      // Override dentist_count with real clinic count
+      // Override agency_count with real clinic count
       return citiesData.map(city => ({
         ...city,
-        dentist_count: countMap.get(city.id) || 0,
+        agency_count: countMap.get(city.id) || 0,
       }));
     },
     enabled: selectedStateIds.length > 0,
@@ -146,9 +146,9 @@ export default function GmbScraperBotTab() {
     if (!cities) return [];
     switch (cityFilter) {
       case 'empty':
-        return cities.filter(c => (c.dentist_count ?? 0) === 0);
+        return cities.filter(c => (c.agency_count ?? 0) === 0);
       case 'with-agencies':
-        return cities.filter(c => (c.dentist_count ?? 0) > 0);
+        return cities.filter(c => (c.agency_count ?? 0) > 0);
       default:
         return cities;
     }
@@ -570,7 +570,7 @@ export default function GmbScraperBotTab() {
     }
     
     if (selectedStateIds.length === 0 || selectedCityIds.length === 0) {
-      toast.error('Please select at least one emirate and area');
+      toast.error('Please select at least one region and city');
       return;
     }
     
@@ -579,7 +579,7 @@ export default function GmbScraperBotTab() {
       return;
     }
     
-    // Get emirate names for display
+    // Get region names for display
     const stateNames = selectedStates.map(s => s.name).join(', ');
     
     // Create session - store first state for backward compat, but we track all
@@ -587,9 +587,8 @@ export default function GmbScraperBotTab() {
       .from('gmb_scraper_sessions')
       .insert({
         user_id: user.id,
-        state_id: selectedStateIds[0], // First state for backward compat
+        state_id: selectedStateIds[0],
         state_name: stateNames,
-        city_ids: selectedCityIds,
         categories: selectedCategories,
         status: 'running',
       })
@@ -618,9 +617,9 @@ export default function GmbScraperBotTab() {
     const citiesToScan = [...selectedCities];
     
     addLog('info', `🤖 Starting bot for ${stateNames}`);
-    addLog('info', `📊 ${citiesToScan.length} areas, ${selectedCategories.length} categories`);
+    addLog('info', `📊 ${citiesToScan.length} cities, ${selectedCategories.length} categories`);
     addLog('info', `💾 Auto-save enabled - progress persists even if connection drops`);
-    addLog('info', `📍 Using precise lat/lng matching (10km radius) for accurate area assignment in UAE`);
+    addLog('info', `📍 Using precise lat/lng matching (15km radius) for accurate city assignment in UK`);
     
     let totalImported = 0;
     let totalDuplicates = 0;
@@ -795,7 +794,7 @@ export default function GmbScraperBotTab() {
     setIsRunning(false);
     setCurrentCity('');
     const completedStateNames = selectedStates.map(s => s.name).join(', ') || 'selected states';
-    toast.success(`Imported ${totalImported} clinics from ${completedStateNames}!`);
+    toast.success(`Imported ${totalImported} agencies from ${completedStateNames}!`);
   };
   
   // Resume importing pending items from a session
@@ -1135,10 +1134,10 @@ export default function GmbScraperBotTab() {
                       <SelectContent>
                         <SelectItem value="all">All Cities ({cities.length})</SelectItem>
                         <SelectItem value="empty">
-                          🔴 Empty - No Agencies ({cities.filter(c => (c.dentist_count ?? 0) === 0).length})
+                          🔴 Empty - No Agencies ({cities.filter(c => (c.agency_count ?? 0) === 0).length})
                         </SelectItem>
                         <SelectItem value="with-agencies">
-                          🟢 With Agencies ({cities.filter(c => (c.dentist_count ?? 0) > 0).length})
+                          🟢 With Agencies ({cities.filter(c => (c.agency_count ?? 0) > 0).length})
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -1186,10 +1185,10 @@ export default function GmbScraperBotTab() {
                         />
                         <span className="text-sm truncate">{city.name}</span>
                         <Badge 
-                          variant={(city.dentist_count ?? 0) === 0 ? "destructive" : "secondary"} 
+                          variant={(city.agency_count ?? 0) === 0 ? "destructive" : "secondary"} 
                           className="text-xs ml-auto"
                         >
-                          {city.dentist_count ?? 0}
+                          {city.agency_count ?? 0}
                         </Badge>
                       </div>
                     ))}
@@ -1504,8 +1503,8 @@ export default function GmbScraperBotTab() {
       <Alert>
         <Zap className="h-4 w-4" />
         <AlertDescription>
-          <strong>Smart Multi-State Import:</strong> Select multiple states and cities in one run. The bot uses precise GPS coordinates (lat/lng) 
-          to assign each dentist to their exact city - not nearby areas. Progress is auto-saved continuously, so you can pause/stop anytime 
+          <strong>Smart Multi-Region Import:</strong> Select multiple regions and cities in one run. The bot uses precise GPS coordinates (lat/lng) 
+          to assign each agency to their exact city. Progress is auto-saved continuously, so you can pause/stop anytime 
           and resume later. The bot will wait for network reconnection if connection drops.
         </AlertDescription>
       </Alert>
