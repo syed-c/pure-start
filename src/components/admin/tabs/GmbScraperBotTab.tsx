@@ -567,7 +567,7 @@ export default function GmbScraperBotTab() {
       addLog('success', `  📊 Found ${uniqueResults.length} total, ${newListings.length} new`);
       
       // Save search results to DB immediately
-      await saveResultsToDb(session.id, uniqueResults);
+      await saveResultsToDb(sessionId, uniqueResults);
       
       // Update local state
       setResults(prev => mergeUnique(prev, uniqueResults));
@@ -598,34 +598,34 @@ export default function GmbScraperBotTab() {
         
         // Update status to importing
         await supabase
-          .from('gmb_scraper_results')
-          .update({ import_status: 'importing' })
-          .eq('session_id', session.id)
-          .eq('place_id', listing.place_id);
+
+
+
+
         
-        const result = await importSinglePlace(listing.place_id, city.id, session.id, runKey);
+        const result = await importSinglePlace(listing.place_id, city.id, sessionId, runKey);
         
         if (result.imported) {
           cityImported++;
           await supabase
-            .from('gmb_scraper_results')
-            .update({ import_status: 'imported' })
-            .eq('session_id', session.id)
-            .eq('place_id', listing.place_id);
+
+
+
+
         } else if (result.duplicate) {
           cityDuplicates++;
           await supabase
-            .from('gmb_scraper_results')
-            .update({ import_status: 'duplicate' })
-            .eq('session_id', session.id)
-            .eq('place_id', listing.place_id);
+
+
+
+
         } else {
           cityErrors++;
           await supabase
-            .from('gmb_scraper_results')
-            .update({ import_status: 'error', error_message: result.error })
-            .eq('session_id', session.id)
-            .eq('place_id', listing.place_id);
+
+
+
+
         }
         
         // Update stats every 10 imports
@@ -642,7 +642,7 @@ export default function GmbScraperBotTab() {
             errors: totalErrors,
           });
           
-          await updateSessionStats(session.id, {
+          await updateSessionStats(sessionId, {
             total: totalFound,
             imported: totalImported,
             duplicates: totalDuplicates,
@@ -678,7 +678,7 @@ export default function GmbScraperBotTab() {
         error_count: totalErrors,
         updated_at: new Date().toISOString(),
       })
-      .eq('id', session.id);
+      .eq('id', sessionId);
     
     queryClient.invalidateQueries({ queryKey: ['gmb-scraper-sessions'] });
     queryClient.invalidateQueries({ queryKey: ['clinics'] });
@@ -747,34 +747,34 @@ export default function GmbScraperBotTab() {
         if (isRunCancelled(runKey)) break;
 
         await supabase
-          .from('gmb_scraper_results')
-          .update({ import_status: 'importing' })
-          .eq('session_id', activeSessionId)
-          .eq('place_id', listing.place_id);
+
+
+
+
 
         const result = await importSinglePlace(listing.place_id, cityId, activeSessionId, runKey);
         
         if (result.imported) {
           imported++;
           await supabase
-            .from('gmb_scraper_results')
-            .update({ import_status: 'imported' })
-            .eq('session_id', activeSessionId)
-            .eq('place_id', listing.place_id);
+
+
+
+
         } else if (result.duplicate) {
           duplicates++;
           await supabase
-            .from('gmb_scraper_results')
-            .update({ import_status: 'duplicate' })
-            .eq('session_id', activeSessionId)
-            .eq('place_id', listing.place_id);
+
+
+
+
         } else {
           errors++;
           await supabase
-            .from('gmb_scraper_results')
-            .update({ import_status: 'error', error_message: result.error })
-            .eq('session_id', activeSessionId)
-            .eq('place_id', listing.place_id);
+
+
+
+
         }
         
         setStats({
@@ -829,9 +829,9 @@ export default function GmbScraperBotTab() {
     try {
       // Delete results first (foreign key constraint)
       const { error: resultsError } = await supabase
-        .from('gmb_scraper_results')
-        .delete()
-        .eq('session_id', sessionId);
+
+
+
       
       if (resultsError) {
         console.error('Error deleting results:', resultsError);
@@ -934,11 +934,11 @@ export default function GmbScraperBotTab() {
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {sessions.map(session => (
-                <div key={session.id} className="flex items-center gap-1">
+                <div key={sessionId} className="flex items-center gap-1">
                   <Button
-                    variant={activeSessionId === session.id ? 'default' : 'outline'}
+                    variant={activeSessionId === sessionId ? 'default' : 'outline'}
                     size="sm"
-                    onClick={() => loadSession(session.id)}
+                    onClick={() => loadSession(sessionId)}
                     className="gap-2"
                   >
                     <MapPin className="h-3 w-3" />
@@ -954,7 +954,7 @@ export default function GmbScraperBotTab() {
                     onClick={(e) => {
                       e.stopPropagation();
                       e.preventDefault();
-                      deleteSession(session.id);
+                      deleteSession(sessionId);
                     }}
                   >
                     <Trash2 className="h-3 w-3" />
