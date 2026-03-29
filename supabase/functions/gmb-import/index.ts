@@ -159,7 +159,7 @@ async function findNearestCity(
   const { data: cities, error } = await query;
   
   if (error || !cities || cities.length === 0) {
-    console.log(`No cities/areas found for emirate ${stateAbbrev}`);
+    console.log(`No cities found for region ${stateAbbrev}`);
     return null;
   }
   
