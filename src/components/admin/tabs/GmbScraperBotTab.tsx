@@ -587,9 +587,8 @@ export default function GmbScraperBotTab() {
       .from('gmb_scraper_sessions')
       .insert({
         user_id: user.id,
-        state_id: selectedStateIds[0], // First state for backward compat
+        state_id: selectedStateIds[0],
         state_name: stateNames,
-        city_ids: selectedCityIds,
         categories: selectedCategories,
         status: 'running',
       })
