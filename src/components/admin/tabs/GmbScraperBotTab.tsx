@@ -466,47 +466,14 @@ export default function GmbScraperBotTab() {
     }
   };
   
-  // Save results to database
-  const saveResultsToDb = async (sessionId: string, resultsToSave: SearchResult[]) => {
-    if (resultsToSave.length === 0) return;
-    
-    const records = resultsToSave.map(r => ({
-      session_id: sessionId,
-      place_id: r.place_id,
-      name: r.name,
-      address: r.address,
-      rating: r.rating,
-      reviews_count: r.reviews_count,
-      lat: r.lat,
-      lng: r.lng,
-      city_id: r.city_id,
-      city_name: r.city_name,
-      category: r.category,
-      import_status: r.import_status || 'pending',
-    }));
-    
-    // Insert in batches
-    for (let i = 0; i < records.length; i += 500) {
-      const batch = records.slice(i, i + 500);
-      await supabase.from('gmb_scraper_results').upsert(batch, { 
-        onConflict: 'session_id,place_id',
-        ignoreDuplicates: true 
-      });
-    }
+  // No DB persistence for scraper results - all in-memory
+  const saveResultsToDb = async (_sessionId: string, _resultsToSave: SearchResult[]) => {
+    // No-op: gmb_scraper_results table doesn't exist
   };
   
-  // Update session stats
-  const updateSessionStats = async (sessionId: string, stats: { imported?: number; duplicates?: number; errors?: number; total?: number }) => {
-    const updates: Record<string, any> = { updated_at: new Date().toISOString() };
-    if (stats.imported !== undefined) updates.imported_count = stats.imported;
-    if (stats.duplicates !== undefined) updates.duplicate_count = stats.duplicates;
-    if (stats.errors !== undefined) updates.error_count = stats.errors;
-    if (stats.total !== undefined) updates.total_found = stats.total;
-    
-    await supabase
-      .from('gmb_scraper_sessions')
-      .update(updates)
-      .eq('id', sessionId);
+  // Update session stats (in-memory only)
+  const updateSessionStats = async (_sessionId: string, _stats: { imported?: number; duplicates?: number; errors?: number; total?: number }) => {
+    // No-op: gmb_scraper_sessions table doesn't exist
   };
   
   // Main bot runner - searches and imports city by city
