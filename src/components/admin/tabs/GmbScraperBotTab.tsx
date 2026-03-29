@@ -677,34 +677,16 @@ export default function GmbScraperBotTab() {
     }
     
     setIsRunning(true);
-    setIsPaused(false);
     abortRef.current = false;
     pausedRef.current = false;
-
-    // Create a unique run key for cancellation
     const runKey = newRunKey();
-
     addLog('info', `▶️ Resuming import of ${pendingResults.length} pending listings...`);
-
-    // Group by city
-    const byCity = new Map<string, SearchResult[]>();
-    for (const r of pendingResults) {
-      const key = r.city_id || 'unknown';
-      if (!byCity.has(key)) byCity.set(key, []);
-      byCity.get(key)!.push(r);
-    }
-
     let imported = stats.imported;
     let duplicates = stats.duplicates;
     let errors = stats.errors;
 
-    for (const [cityId, cityResults] of byCity) {
+    for (const listing of pendingResults) {
       if (isRunCancelled(runKey)) break;
-
-      const cityName = cityResults[0]?.city_name || 'Unknown';
-      addLog('info', `📍 Processing ${cityName} (${cityResults.length} pending)...`);
-
-      for (const listing of cityResults) {
         if (isRunCancelled(runKey)) break;
 
         while (pausedRef.current && !isRunCancelled(runKey)) {
