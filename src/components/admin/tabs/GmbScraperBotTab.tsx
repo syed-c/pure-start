@@ -99,7 +99,7 @@ export default function GmbScraperBotTab() {
   
   const [selectedStateIds, setSelectedStateIds] = useState<string[]>([]);
   const [selectedCityIds, setSelectedCityIds] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(['dentist', 'fostering agency']);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(['fostering agency', 'foster care agency', 'independent fostering agency']);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   
   // NEW: Filter options for cities
