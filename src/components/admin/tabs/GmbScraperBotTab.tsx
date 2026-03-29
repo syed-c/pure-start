@@ -157,34 +157,7 @@ export default function GmbScraperBotTab() {
   // Sessions are tracked in-memory only (tables don't exist in DB)
   const [sessions, setSessions] = useState<ScraperSession[]>([]);
   
-  // Fetch results for active session
-  const { data: sessionResults, refetch: refetchResults } = useQuery({
-    queryKey: ['gmb-scraper-results', activeSessionId],
-    queryFn: async () => {
-      if (!activeSessionId) return [];
-      const { data } = await supabase
-        .from('gmb_scraper_results')
-        .select('*')
-        .eq('session_id', activeSessionId)
-        .order('name');
-      return (data || []).map((r: any) => ({
-        place_id: r.place_id,
-        name: r.name,
-        address: r.address,
-        rating: r.rating,
-        reviews_count: r.reviews_count,
-        lat: r.lat,
-        lng: r.lng,
-        city_id: r.city_id,
-        city_name: r.city_name,
-        category: r.category,
-        already_imported: r.import_status === 'imported' || r.import_status === 'duplicate',
-        import_status: r.import_status,
-      })) as SearchResult[];
-    },
-    enabled: !!activeSessionId,
-    refetchInterval: activeSessionId ? 3000 : false,
-  });
+  // Results are tracked in-memory (no DB table for scraper results)
   
   // Bot state
   const [isRunning, setIsRunning] = useState(false);
