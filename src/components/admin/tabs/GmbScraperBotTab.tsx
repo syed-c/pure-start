@@ -794,7 +794,7 @@ export default function GmbScraperBotTab() {
     setIsRunning(false);
     setCurrentCity('');
     const completedStateNames = selectedStates.map(s => s.name).join(', ') || 'selected states';
-    toast.success(`Imported ${totalImported} clinics from ${completedStateNames}!`);
+    toast.success(`Imported ${totalImported} agencies from ${completedStateNames}!`);
   };
   
   // Resume importing pending items from a session

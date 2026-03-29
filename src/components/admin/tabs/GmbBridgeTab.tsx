@@ -434,7 +434,7 @@ export default function GmbBridgeTab() {
         <Info className="h-4 w-4 text-primary" />
         <AlertDescription className="text-sm">
           <strong>Note:</strong> Google Places API returns max 60 results per search query. 
-          Use <strong>"Super Search"</strong> to search across all dental categories (dentist, therapeutic specialist, surgeon, etc.) 
+          Use <strong>"Super Search"</strong> to search across all fostering categories (fostering agency, children's home, etc.) 
           and all areas to find MORE listings. For large cities, run Super Search multiple times or search specific areas.
         </AlertDescription>
       </Alert>
