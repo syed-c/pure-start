@@ -579,7 +579,7 @@ export default function GmbScraperBotTab() {
       return;
     }
     
-    // Get emirate names for display
+    // Get region names for display
     const stateNames = selectedStates.map(s => s.name).join(', ');
     
     // Create session - store first state for backward compat, but we track all
