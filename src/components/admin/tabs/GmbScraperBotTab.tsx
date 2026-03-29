@@ -1185,10 +1185,10 @@ export default function GmbScraperBotTab() {
                         />
                         <span className="text-sm truncate">{city.name}</span>
                         <Badge 
-                          variant={(city.dentist_count ?? 0) === 0 ? "destructive" : "secondary"} 
+                          variant={(city.agency_count ?? 0) === 0 ? "destructive" : "secondary"} 
                           className="text-xs ml-auto"
                         >
-                          {city.dentist_count ?? 0}
+                          {city.agency_count ?? 0}
                         </Badge>
                       </div>
                     ))}
