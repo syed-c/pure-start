@@ -496,26 +496,10 @@ export default function GmbScraperBotTab() {
     // Get region names for display
     const stateNames = selectedStates.map(s => s.name).join(', ');
     
-    // Create session - store first state for backward compat, but we track all
-    const { data: session, error: sessionError } = await supabase
-      .from('gmb_scraper_sessions')
-      .insert({
-        user_id: user.id,
-        state_id: selectedStateIds[0],
-        state_name: stateNames,
-        categories: selectedCategories,
-        status: 'running',
-      })
-      .select()
-      .single();
+    // Generate an in-memory session ID (no DB table)
+    const sessionId = crypto.randomUUID();
     
-    if (sessionError || !session) {
-      toast.error('Failed to create session');
-      console.error(sessionError);
-      return;
-    }
-    
-    setActiveSessionId(session.id);
+    setActiveSessionId(sessionId);
     setIsRunning(true);
     setIsPaused(false);
     abortRef.current = false;
