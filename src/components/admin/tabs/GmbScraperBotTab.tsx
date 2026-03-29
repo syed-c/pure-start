@@ -674,8 +674,8 @@ export default function GmbScraperBotTab() {
     if (pendingResults.length === 0) {
       toast.info('No pending listings to import');
       return;
-    }
-    
+}
+
     setIsRunning(true);
     abortRef.current = false;
     pausedRef.current = false;
