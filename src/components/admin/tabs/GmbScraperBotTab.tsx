@@ -687,63 +687,14 @@ export default function GmbScraperBotTab() {
 
     for (const listing of pendingResults) {
       if (isRunCancelled(runKey)) break;
-        if (isRunCancelled(runKey)) break;
-
-        while (pausedRef.current && !isRunCancelled(runKey)) {
-          await new Promise((r) => setTimeout(r, 500));
-        }
-
-        if (isRunCancelled(runKey)) break;
-
-        await supabase
-
-
-
-
-
-        const result = await importSinglePlace(listing.place_id, cityId, activeSessionId, runKey);
-        
-        if (result.imported) {
-          imported++;
-          await supabase
-
-
-
-
-        } else if (result.duplicate) {
-          duplicates++;
-          await supabase
-
-
-
-
-        } else {
-          errors++;
-          await supabase
-
-
-
-
-        }
-        
-        setStats({
-          totalFound: stats.totalFound,
-          newFound: stats.totalFound - imported - duplicates,
-          imported,
-          duplicates,
-          errors,
-        });
-        
-        await new Promise(r => setTimeout(r, 100));
-      }
+      const result = await importSinglePlace(listing.place_id, listing.city_id || '', activeSessionId || '', runKey);
+      if (result.imported) { imported++; listing.import_status = 'imported'; }
+      else if (result.duplicate) { duplicates++; listing.import_status = 'duplicate'; }
+      else { errors++; listing.import_status = 'error'; }
+      setStats({ totalFound: stats.totalFound, newFound: stats.totalFound - imported - duplicates, imported, duplicates, errors });
+      await new Promise(r => setTimeout(r, 100));
     }
-    
-    await updateSessionStats(activeSessionId, { imported, duplicates, errors });
-    
-    queryClient.invalidateQueries({ queryKey: ['gmb-scraper-sessions'] });
     queryClient.invalidateQueries({ queryKey: ['clinics'] });
-    refetchResults();
-    
     addLog('success', `✅ Resume complete! Imported: ${imported}, Duplicates: ${duplicates}, Errors: ${errors}`);
     setIsRunning(false);
     toast.success('Import resumed and completed!');
