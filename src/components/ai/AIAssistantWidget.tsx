@@ -73,7 +73,7 @@ export function AIAssistantWidget({ clinicId, clinicName, className }: AIAssista
           <div>
             <p className="font-semibold text-sm">{clinicName || 'Panda 🐼'}</p>
             {!isMinimized && (
-              <p className="text-xs opacity-80">Your fostering care guide in the UAE</p>
+              <p className="text-xs opacity-80">Your fostering care guide in the UK</p>
             )}
           </div>
         </div>
