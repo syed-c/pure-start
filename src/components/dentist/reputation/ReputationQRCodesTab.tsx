@@ -459,7 +459,7 @@ export default function ReputationQRCodesTab({
                       <Switch checked={settings.showStars} onCheckedChange={(checked) => updateSettings({ showStars: checked })} />
                     </div>
                     <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                      <Label>Show AppointPanda Branding</Label>
+                      <Label>Show Foster Connect Branding</Label>
                       <Switch checked={settings.showBranding} onCheckedChange={(checked) => updateSettings({ showBranding: checked })} />
                     </div>
                     <div className="space-y-2">
