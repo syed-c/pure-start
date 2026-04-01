@@ -41,8 +41,8 @@ async function getEmailSettings(supabase: any): Promise<EmailSettings | null> {
 
   // Default sender should be on your verified domain.
   return {
-    from_email: 'no-reply@appointpanda.ae',
-    from_name: 'Appoint Panda',
+    from_email: 'no-reply@foster-care.co.uk',
+    from_name: 'Foster Care',
   };
 }
 
@@ -67,8 +67,8 @@ async function sendEmailViaResend(
   try {
     const cleanHtml = minifyHtml(html);
 
-    const fromName = (settings.from_name || 'Appoint Panda').trim() || 'Appoint Panda';
-    const fromEmail = (settings.from_email || '').trim() || 'no-reply@appointpanda.ae';
+    const fromName = (settings.from_name || 'Foster Care').trim() || 'Foster Care';
+    const fromEmail = (settings.from_email || '').trim() || 'no-reply@foster-care.co.uk';
 
     const send = async () => {
       const response = await fetch('https://api.resend.com/emails', {
@@ -117,7 +117,7 @@ async function sendEmailViaResend(
       return {
         success: false,
         error:
-          'Resend is still treating this API key as test mode. This usually means the RESEND_API_KEY belongs to a different Resend account/team than the one where your domain is verified, OR the "from" address is not on the verified domain. Please confirm the API key and ensure from_email uses @appointpanda.ae.',
+          'Resend is still treating this API key as test mode. This usually means the RESEND_API_KEY belongs to a different Resend account/team than the one where your domain is verified, OR the "from" address is not on the verified domain. Please confirm the API key and ensure from_email uses @foster-care.co.uk.',
       };
     }
 
@@ -545,7 +545,7 @@ Deno.serve(async (req) => {
       mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clinicData.address)}`;
     }
 
-    const siteUrl = Deno.env.get('SITE_URL') || 'https://www.appointpanda.ae';
+    const siteUrl = Deno.env.get('SITE_URL') || 'https://www.foster-care.co.uk';
     const manageToken = appointment.manage_token || appointmentId;
 
     const subject = getSubjectLine(status, clinicBranding.name, patientName);

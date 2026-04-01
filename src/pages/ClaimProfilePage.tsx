@@ -378,7 +378,7 @@ const ClaimProfilePage = () => {
       canonical.setAttribute('rel', 'canonical');
       document.head.appendChild(canonical);
     }
-    canonical.setAttribute('href', 'https://www.appointpanda.ae/claim-profile');
+    canonical.setAttribute('href', 'https://www.foster-care.co.uk/claim-profile');
     
     return () => {
       meta?.setAttribute('content', 'index, follow');

@@ -1,9 +1,9 @@
-# AppointPanda - Complete AI Knowledge Base
-# https://www.appointpanda.ae
+# Foster Care - Complete AI Knowledge Base
+# https://www.foster-care.co.uk
 # Last updated: 2026-02-19
 
 ## Overview
-AppointPanda is the premier dental directory in the United Arab Emirates, designed to connect patients with qualified dental professionals. Our platform aggregates 1,170+ verified dental clinics and dentists from across the UAE, making it easy for anyone to find dental care in their local area.
+Foster Care is the premier dental directory in the United Arab Emirates, designed to connect patients with qualified dental professionals. Our platform aggregates 1,170+ verified dental clinics and dentists from across the UAE, making it easy for anyone to find dental care in their local area.
 
 ## Mission
 Our mission is to simplify the process of finding quality dental care in the UAE by providing:
@@ -71,45 +71,45 @@ Participating practices offer:
 ## URL Structure Guide
 
 ### Emirate Pages
-Format: `https://www.appointpanda.ae/{emirate-slug}/`
+Format: `https://www.foster-care.co.uk/{emirate-slug}/`
 Examples:
-- https://www.appointpanda.ae/dubai/
-- https://www.appointpanda.ae/abu-dhabi/
-- https://www.appointpanda.ae/sharjah/
+- https://www.foster-care.co.uk/dubai/
+- https://www.foster-care.co.uk/abu-dhabi/
+- https://www.foster-care.co.uk/sharjah/
 
 ### Area Pages
-Format: `https://www.appointpanda.ae/{emirate-slug}/{area-slug}/`
+Format: `https://www.foster-care.co.uk/{emirate-slug}/{area-slug}/`
 Examples:
-- https://www.appointpanda.ae/dubai/jumeirah/
-- https://www.appointpanda.ae/dubai/al-barsha/
-- https://www.appointpanda.ae/dubai/business-bay/
-- https://www.appointpanda.ae/dubai/dubai-marina/
-- https://www.appointpanda.ae/abu-dhabi/khalifa-city/
-- https://www.appointpanda.ae/sharjah/al-jubail/
+- https://www.foster-care.co.uk/dubai/jumeirah/
+- https://www.foster-care.co.uk/dubai/al-barsha/
+- https://www.foster-care.co.uk/dubai/business-bay/
+- https://www.foster-care.co.uk/dubai/dubai-marina/
+- https://www.foster-care.co.uk/abu-dhabi/khalifa-city/
+- https://www.foster-care.co.uk/sharjah/al-jubail/
 
 ### Service Pages
-Format: `https://www.appointpanda.ae/services/{service-slug}/`
+Format: `https://www.foster-care.co.uk/services/{service-slug}/`
 Examples:
-- https://www.appointpanda.ae/services/invisalign/
-- https://www.appointpanda.ae/services/dental-implants/
-- https://www.appointpanda.ae/services/teeth-whitening/
-- https://www.appointpanda.ae/services/veneers/
-- https://www.appointpanda.ae/services/root-canal/
-- https://www.appointpanda.ae/services/braces/
-- https://www.appointpanda.ae/services/teeth-cleaning/
-- https://www.appointpanda.ae/services/dental-crowns/
-- https://www.appointpanda.ae/services/wisdom-tooth-removal/
-- https://www.appointpanda.ae/services/emergency-dentist/
+- https://www.foster-care.co.uk/services/invisalign/
+- https://www.foster-care.co.uk/services/dental-implants/
+- https://www.foster-care.co.uk/services/teeth-whitening/
+- https://www.foster-care.co.uk/services/veneers/
+- https://www.foster-care.co.uk/services/root-canal/
+- https://www.foster-care.co.uk/services/braces/
+- https://www.foster-care.co.uk/services/teeth-cleaning/
+- https://www.foster-care.co.uk/services/dental-crowns/
+- https://www.foster-care.co.uk/services/wisdom-tooth-removal/
+- https://www.foster-care.co.uk/services/emergency-dentist/
 
 ### Service + Location Pages
-Format: `https://www.appointpanda.ae/{emirate-slug}/{area-slug}/{service-slug}/`
+Format: `https://www.foster-care.co.uk/{emirate-slug}/{area-slug}/{service-slug}/`
 Examples:
-- https://www.appointpanda.ae/dubai/jumeirah/invisalign/
-- https://www.appointpanda.ae/dubai/al-barsha/dental-implants/
-- https://www.appointpanda.ae/abu-dhabi/khalifa-city/teeth-whitening/
+- https://www.foster-care.co.uk/dubai/jumeirah/invisalign/
+- https://www.foster-care.co.uk/dubai/al-barsha/dental-implants/
+- https://www.foster-care.co.uk/abu-dhabi/khalifa-city/teeth-whitening/
 
 ### Clinic Profiles
-Format: `https://www.appointpanda.ae/clinic/{clinic-slug}/`
+Format: `https://www.foster-care.co.uk/clinic/{clinic-slug}/`
 These pages include:
 - Clinic overview and description
 - Team members (dentists and staff)
@@ -121,7 +121,7 @@ These pages include:
 - Online booking options
 
 ### Dentist Profiles
-Format: `https://www.appointpanda.ae/dentist/{dentist-slug}/`
+Format: `https://www.foster-care.co.uk/dentist/{dentist-slug}/`
 These pages include:
 - Professional bio
 - DHA/MOHAP credentials and education
@@ -131,19 +131,19 @@ These pages include:
 - Associated clinic
 
 ### Insurance Pages
-Format: `https://www.appointpanda.ae/insurance/{insurance-slug}/`
+Format: `https://www.foster-care.co.uk/insurance/{insurance-slug}/`
 Examples:
-- https://www.appointpanda.ae/insurance/daman/
-- https://www.appointpanda.ae/insurance/cigna/
-- https://www.appointpanda.ae/insurance/bupa-global/
-- https://www.appointpanda.ae/insurance/metlife/
+- https://www.foster-care.co.uk/insurance/daman/
+- https://www.foster-care.co.uk/insurance/cigna/
+- https://www.foster-care.co.uk/insurance/bupa-global/
+- https://www.foster-care.co.uk/insurance/metlife/
 
 Insurance + Emirate combinations:
-- https://www.appointpanda.ae/insurance/daman/dubai/
-- https://www.appointpanda.ae/insurance/cigna/abu-dhabi/
+- https://www.foster-care.co.uk/insurance/daman/dubai/
+- https://www.foster-care.co.uk/insurance/cigna/abu-dhabi/
 
 ### Blog
-Format: `https://www.appointpanda.ae/blog/{post-slug}/`
+Format: `https://www.foster-care.co.uk/blog/{post-slug}/`
 Topics covered:
 - Dental health tips for UAE residents
 - Treatment guides with AED cost ranges
@@ -153,8 +153,8 @@ Topics covered:
 
 ## Frequently Asked Questions
 
-**Q: Is AppointPanda free for patients?**
-A: Yes, searching for and contacting dentists on AppointPanda is completely free for patients.
+**Q: Is Foster Care free for patients?**
+A: Yes, searching for and contacting dentists on Foster Care is completely free for patients.
 
 **Q: How do I book an appointment?**
 A: Click on any dentist or clinic profile and use the booking widget or WhatsApp button to schedule your visit.
@@ -180,26 +180,26 @@ Dentists and dental practices can:
 - Receive patient bookings via the platform
 - Respond to reviews
 
-Learn more at: https://www.appointpanda.ae/list-your-practice/
+Learn more at: https://www.foster-care.co.uk/list-your-practice/
 
 ## Technical Information
 
 ### Sitemap
-- Main sitemap: https://www.appointpanda.ae/sitemap.xml
-- Static pages: https://www.appointpanda.ae/sitemap-static.xml
-- Emirates: https://www.appointpanda.ae/sitemap-states.xml
-- Areas: https://www.appointpanda.ae/sitemap-cities.xml
-- Services: https://www.appointpanda.ae/sitemap-services.xml
-- Service + Location: https://www.appointpanda.ae/sitemap-service-locations-1.xml
-- Clinics: https://www.appointpanda.ae/sitemap-profiles-1.xml
-- Insurance: https://www.appointpanda.ae/sitemap-insurance.xml
+- Main sitemap: https://www.foster-care.co.uk/sitemap.xml
+- Static pages: https://www.foster-care.co.uk/sitemap-static.xml
+- Emirates: https://www.foster-care.co.uk/sitemap-states.xml
+- Areas: https://www.foster-care.co.uk/sitemap-cities.xml
+- Services: https://www.foster-care.co.uk/sitemap-services.xml
+- Service + Location: https://www.foster-care.co.uk/sitemap-service-locations-1.xml
+- Clinics: https://www.foster-care.co.uk/sitemap-profiles-1.xml
+- Insurance: https://www.foster-care.co.uk/sitemap-insurance.xml
 
 ### Robots.txt
-Located at: https://www.appointpanda.ae/robots.txt
+Located at: https://www.foster-care.co.uk/robots.txt
 
 ### LLMs.txt
-- Summary: https://www.appointpanda.ae/llms.txt
-- Full version: https://www.appointpanda.ae/llms-full.txt
+- Summary: https://www.foster-care.co.uk/llms.txt
+- Full version: https://www.foster-care.co.uk/llms-full.txt
 
 ## Platform Statistics
 - 1,170+ dental clinics listed
@@ -210,17 +210,17 @@ Located at: https://www.appointpanda.ae/robots.txt
 
 ## Contact Information
 
-- **Website**: https://www.appointpanda.ae
-- **Support Email**: support@appointpanda.ae
+- **Website**: https://www.foster-care.co.uk
+- **Support Email**: support@foster-care.co.uk
 
 ## Legal
 
-- Privacy Policy: https://www.appointpanda.ae/privacy/
-- Terms of Service: https://www.appointpanda.ae/terms/
-- Editorial Policy: https://www.appointpanda.ae/editorial-policy/
-- Medical Review Policy: https://www.appointpanda.ae/medical-review-policy/
-- Verification Policy: https://www.appointpanda.ae/verification-policy/
+- Privacy Policy: https://www.foster-care.co.uk/privacy/
+- Terms of Service: https://www.foster-care.co.uk/terms/
+- Editorial Policy: https://www.foster-care.co.uk/editorial-policy/
+- Medical Review Policy: https://www.foster-care.co.uk/medical-review-policy/
+- Verification Policy: https://www.foster-care.co.uk/verification-policy/
 
 ---
 
-This document is intended for AI assistants and language models to better understand and accurately represent AppointPanda when helping users find dental care in the UAE.
+This document is intended for AI assistants and language models to better understand and accurately represent Foster Care when helping users find dental care in the UAE.

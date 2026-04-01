@@ -163,7 +163,7 @@ Located at: `public/robots.txt`
 ## Sitemap
 
 ### XML Sitemap Index
-URL: `https://www.appointpanda.com/sitemap.xml`
+URL: `https://www.foster-care.co.uk/sitemap.xml`
 
 Child sitemaps:
 - `sitemap-static.xml` - Static pages
@@ -175,7 +175,7 @@ Child sitemaps:
 - `sitemap-posts.xml` - Blog posts
 
 ### HTML Sitemap
-URL: `https://www.appointpanda.com/sitemap`
+URL: `https://www.foster-care.co.uk/sitemap`
 
 Visual sitemap with category cards and statistics.
 
@@ -209,10 +209,10 @@ Enter any URL to see:
 
 ```bash
 # Simulate Googlebot
-curl -A "Googlebot" https://www.appointpanda.com/california
+curl -A "Googlebot" https://www.foster-care.co.uk/california
 
 # Check if HTML contains content
-curl -A "Googlebot" https://www.appointpanda.com/clinic/smile-dental | grep "<h1>"
+curl -A "Googlebot" https://www.foster-care.co.uk/clinic/smile-dental | grep "<h1>"
 ```
 
 ## Maintenance

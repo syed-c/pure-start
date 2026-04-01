@@ -192,7 +192,7 @@ serve(async (req) => {
         }
 
         let htmlContent = '';
-        let subject = 'Test Email from AppointPanda';
+        let subject = 'Test Email from Foster Care';
 
         if (templateId) {
           const { data: template } = await supabase
@@ -239,7 +239,7 @@ serve(async (req) => {
                 </div>
                 <div style="text-align: center; margin-top: 30px;">
                   <p style="font-size: 12px; color: #9ca3af;">
-                    Sent from AppointPanda • Powered by your SMTP server
+                    Sent from Foster Care • Powered by your SMTP server
                   </p>
                 </div>
               </div>
@@ -251,8 +251,8 @@ serve(async (req) => {
         // Replace variables with test data
         const testVariables = {
           clinic_name: 'Test Fostering Agency',
-          claim_link: 'https://appointpanda.ae/claim-profile?test=true',
-          unsubscribe_link: 'https://appointpanda.ae/unsubscribe?test=true',
+          claim_link: 'https://foster-care.co.uk/claim-profile?test=true',
+          unsubscribe_link: 'https://foster-care.co.uk/unsubscribe?test=true',
           contact_name: 'Dr. Test User',
           patient_name: 'Test Patient',
         };
@@ -338,7 +338,7 @@ serve(async (req) => {
         let htmlContent = template.html_content;
         let subject = message.subject;
         
-        const siteUrl = Deno.env.get('SITE_URL') || 'https://appointpanda.ae';
+        const siteUrl = Deno.env.get('SITE_URL') || 'https://foster-care.co.uk';
         const variables = {
           clinic_name: clinic?.name || 'Your Clinic',
           claim_link: `${siteUrl}/claim-profile?clinic_id=${message.clinic_id}`,
@@ -543,7 +543,7 @@ serve(async (req) => {
           );
         }
 
-        const siteUrl = Deno.env.get('SITE_URL') || 'https://appointpanda.ae';
+        const siteUrl = Deno.env.get('SITE_URL') || 'https://foster-care.co.uk';
         let successCount = 0;
         let failCount = 0;
         const errors: string[] = [];

@@ -256,7 +256,7 @@ export default function SeoHealthCheckTab() {
         <CardContent className="space-y-4">
           <div className="flex gap-2">
             <Input
-              placeholder="/dubai/jumeirah or https://www.appointpanda.ae/blog"
+              placeholder="/dubai/jumeirah or https://www.foster-care.co.uk/blog"
               value={testUrl}
               onChange={(e) => setTestUrl(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleCheck()}
@@ -476,7 +476,7 @@ export default function SeoHealthCheckTab() {
               <div className="pt-4 border-t">
                 <Button variant="outline" asChild>
                   <a
-                    href={`https://www.appointpanda.ae${result.url}`}
+                    href={`https://www.foster-care.co.uk${result.url}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

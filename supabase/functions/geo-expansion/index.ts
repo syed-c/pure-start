@@ -259,7 +259,7 @@ ${existingContent.slice(0, 2000)}`;
 Generate JSON with EXACTLY this structure:
 {
   "h1": "Agencies in ${city.name}, ${city.state?.abbreviation}",
-  "meta_title": "Agencies in ${city.name}, ${city.state?.abbreviation} | AppointPanda",
+  "meta_title": "Agencies in ${city.name}, ${city.state?.abbreviation} | Foster Care",
   "meta_description": "Find agencies in ${city.name}, ${city.state?.abbreviation}. Browse verified dental professionals, read reviews, and book appointments.",
   "intro": "Two paragraphs about fostering care in ${city.name}. Make it specific to this city - mention what makes fostering care here accessible or unique. DO NOT copy from other cities.",
   "service_overview": "A paragraph about dental services available in ${city.name}.",

@@ -155,21 +155,21 @@ function generateDescription(pageType: string, data: Record<string, any>): strin
         "/services": "Browse dental services from cleanings to implants. Find providers in your area.",
         "/blog": "Expert dental health tips and oral care advice from verified professionals.",
         "/insurance": "Find agencies that accept your insurance. Compare in-network providers.",
-        "/about": "AppointPanda connects patients with verified dental professionals.",
-        "/contact": "Get in touch with AppointPanda. Questions about booking or listings?",
-        "/faq": "FAQs about AppointPanda. Learn how to find agencys and book appointments.",
+        "/about": "Foster Care connects patients with verified dental professionals.",
+        "/contact": "Get in touch with Foster Care. Questions about booking or listings?",
+        "/faq": "FAQs about Foster Care. Learn how to find agencys and book appointments.",
         "/how-it-works": "Book a dentist in 3 easy steps. Search, compare, and schedule online.",
-        "/pricing": "Transparent pricing for dental practices. List your clinic on AppointPanda.",
-        "/privacy": "Learn how AppointPanda protects your personal information and data.",
-        "/terms": "Terms of service for AppointPanda platform users.",
-        "/sitemap": "Browse all pages on AppointPanda. Find agencies by location or service.",
+        "/pricing": "Transparent pricing for dental practices. List your clinic on Foster Care.",
+        "/privacy": "Learn how Foster Care protects your personal information and data.",
+        "/terms": "Terms of service for Foster Care platform users.",
+        "/sitemap": "Browse all pages on Foster Care. Find agencies by location or service.",
       };
-      desc = staticDescs[slug] || `${name} - AppointPanda helps you find trusted agencies online.`;
+      desc = staticDescs[slug] || `${name} - Foster Care helps you find trusted agencies online.`;
       break;
     }
     
     default:
-      desc = `Find trusted fostering care with AppointPanda. ${closer}`;
+      desc = `Find trusted fostering care with Foster Care. ${closer}`;
   }
   
   return truncateDesc(desc, 155);
@@ -214,10 +214,10 @@ function generateH1(pageType: string, data: Record<string, any>): string {
         "/services": "Dental Services & Treatments",
         "/blog": "Dental Health Insights",
         "/insurance": "Dental Insurance Guide",
-        "/about": "About AppointPanda",
+        "/about": "About Foster Care",
         "/contact": "Contact Us",
         "/faq": "Frequently Asked Questions",
-        "/how-it-works": "How AppointPanda Works",
+        "/how-it-works": "How Foster Care Works",
         "/pricing": "Pricing for Practices",
         "/privacy": "Privacy Policy",
         "/terms": "Terms of Service",
@@ -585,7 +585,7 @@ serve(async (req) => {
           h1: h1,
           og_title: title,
           og_description: description,
-          canonical_url: `https://www.appointpanda.com${page.slug}`,
+          canonical_url: `https://www.foster-care.co.uk${page.slug}`,
           metadata_hash: metaHash,
           is_indexed: true,
           last_generated_at: now,

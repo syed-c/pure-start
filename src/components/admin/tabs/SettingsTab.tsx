@@ -198,7 +198,7 @@ export default function SettingsTab() {
               <div className="space-y-2">
                 <Label>Site Name</Label>
                 <Input
-                  value={(getSettingValue('platform')?.site_name as string) || 'Appoint Panda'}
+                  value={(getSettingValue('platform')?.site_name as string) || 'Foster Care'}
                   onChange={(e) => updateFormValue('platform', 'site_name', e.target.value)}
                 />
               </div>
@@ -498,9 +498,9 @@ export default function SettingsTab() {
                 <Input
                   value={(getSettingValue('legal')?.copyright_text as string) || ''}
                   onChange={(e) => updateFormValue('legal', 'copyright_text', e.target.value)}
-                  placeholder="© 2026 AppointPanda. All rights reserved by Quick Commerce LLC."
+                  placeholder="© 2026 Foster Care. All rights reserved by Quick Commerce LLC."
                 />
-                <p className="text-xs text-muted-foreground">Displays in the footer bottom bar (e.g., "© 2026 AppointPanda...")</p>
+                <p className="text-xs text-muted-foreground">Displays in the footer bottom bar (e.g., "© 2026 Foster Care...")</p>
               </div>
               <div className="space-y-2">
                 <Label>Footer Legal Text</Label>
@@ -805,7 +805,7 @@ export default function SettingsTab() {
                   <Input
                     value={(getSettingValue('smtp')?.from_name as string) || ''}
                     onChange={(e) => updateFormValue('smtp', 'from_name', e.target.value)}
-                    placeholder="Appoint Panda"
+                    placeholder="Foster Care"
                   />
                 </div>
                 <div className="space-y-2">

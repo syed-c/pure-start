@@ -124,7 +124,7 @@ H1: [Challenge]: Understanding, Managing & Getting Support [2026]
 8. H2: FAQs (150 words)
    - 5 practical questions`;
 
-const INSURANCE_TEMPLATE = `You are writing an INSURANCE & FINANCIAL blog post for AppointPanda.
+const INSURANCE_TEMPLATE = `You are writing an INSURANCE & FINANCIAL blog post for Foster Care.
 
 === TEMPLATE: "Fostering Allowances: What You Need to Know" ===
 Target: 1,800-2,200 words
@@ -437,7 +437,7 @@ Neighborhood: ${neighborhoodName}
 Approximate agencies in city: ${dentistCount || 50}
 
 Generate a comprehensive neighborhood page for ${neighborhoodName} in ${cityName}.
-Include local context, cost estimates, and natural CTAs to AppointPanda.
+Include local context, cost estimates, and natural CTAs to Foster Care.
 Target ${target_word_count}+ words.`;
 
       const { content, word_count } = await generateContent(prompt, target_word_count, AIMLAPI_KEY);

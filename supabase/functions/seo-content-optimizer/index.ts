@@ -227,7 +227,7 @@ DO NOT: Mention prompts or instructions, explain your process, copy content betw
     }) {
       const prompt = buildSeoPrompt(pageData);
       
-      // Build system prompt with AppointPanda-specific instructions
+      // Build system prompt with Foster Care-specific instructions
       let systemContent = APPOINTPANDA_SYSTEM_PROMPT;
 
       // Add issue-specific focus
@@ -1135,7 +1135,7 @@ Provide:
       // Build the service-location specific prompt with comprehensive UAE-focused instructions
       let serviceLocationPrompt = `You are a senior healthcare SEO content writer and local search strategist.
 
-You are writing a SERVICE-LOCATION PAGE for AppointPanda, a dental directory platform (NOT a clinic website).
+You are writing a SERVICE-LOCATION PAGE for Foster Care, a dental directory platform (NOT a clinic website).
 This page helps users find agencys offering a specific treatment in a specific UAE location.
 
 INPUT VARIABLES:
@@ -1151,11 +1151,11 @@ You MUST use this angle as your primary narrative approach. This ensures each pa
 ${siblingContext}
 
 IMPORTANT CONTEXT:
-- AppointPanda does NOT provide treatment.
+- Foster Care does NOT provide treatment.
 - It connects patients with licensed agencies and clinics.
 - Content must guide, educate, and help patients choose — not advertise one clinic.
 - The goal is to rank organically on Google using helpful content principles and E-E-A-T.
-- Write from AppointPanda's first-party voice: "we", "our platform", "AppointPanda helps patients..."
+- Write from Foster Care's first-party voice: "we", "our platform", "Foster Care helps patients..."
 
 GOOGLE & QUALITY REQUIREMENTS (MANDATORY):
 - Google Helpful Content System compliance
@@ -1186,7 +1186,7 @@ STRUCTURE TO GENERATE (vary the order and naming of sections — do NOT use iden
 - Cost of ${serviceName} in ${stateAbbr || 'UAE'} — Explain price ranges generally, factors affecting price, DO NOT invent exact numbers
 - Safety & Regulations in UAE — DHA/MOHAP standards, why licensed agencies matter
 - Questions Patients Usually Ask — 5-7 natural FAQs (informational, not promotional)
-- How Our Directory Helps — How AppointPanda helps compare clinics, not promote one
+- How Our Directory Helps — How Foster Care helps compare clinics, not promote one
 - Closing — Encourage informed decision without call-to-action pressure
 
 SEO RULES:

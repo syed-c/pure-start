@@ -1,5 +1,5 @@
 /**
- * AppointPanda Premium Design System v2
+ * Foster Care Premium Design System v2
  * A collection of reusable components with consistent styling
  */
 

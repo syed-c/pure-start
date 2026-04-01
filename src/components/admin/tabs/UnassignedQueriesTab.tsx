@@ -206,7 +206,7 @@ export default function UnassignedQueriesTab() {
             to: appointment.patient_email,
             type: 'email',
             subject: 'Response to Your Appointment Inquiry',
-            html: `<p>Dear ${appointment.patient_name},</p><p>${message}</p><p>Best regards,<br>AppointPanda Team</p>`,
+            html: `<p>Dear ${appointment.patient_name},</p><p>${message}</p><p>Best regards,<br>Foster Care Team</p>`,
           },
         });
       }

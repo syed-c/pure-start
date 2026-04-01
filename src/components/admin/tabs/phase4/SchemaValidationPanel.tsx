@@ -63,9 +63,9 @@ export function SchemaValidationPanel() {
       requiredFields: [
         { field: '@context', present: true, value: 'https://schema.org' },
         { field: '@type', present: true, value: 'Organization' },
-        { field: 'name', present: true, value: 'AppointPanda' },
-        { field: 'url', present: true, value: 'https://www.appointpanda.ae' },
-        { field: 'logo', present: true, value: 'https://www.appointpanda.ae/logo.png' }
+        { field: 'name', present: true, value: 'Foster Care' },
+        { field: 'url', present: true, value: 'https://www.foster-care.co.uk' },
+        { field: 'logo', present: true, value: 'https://www.foster-care.co.uk/logo.png' }
       ],
       recommendedFields: [
         { field: 'description', present: true },

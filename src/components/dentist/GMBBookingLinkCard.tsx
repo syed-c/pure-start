@@ -91,7 +91,7 @@ export default function GMBBookingLinkCard({
     }
   };
 
-  const bookingUrl = `https://www.appointpanda.ae/book/${clinicId}`;
+  const bookingUrl = `https://www.foster-care.co.uk/book/${clinicId}`;
 
   if (!isGmbConnected) {
     return (

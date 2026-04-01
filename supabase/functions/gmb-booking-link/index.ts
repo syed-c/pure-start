@@ -18,7 +18,7 @@ const corsHeaders = {
  * - status: Returns current booking link status
  */
 
-const BOOKING_BASE_URL = 'https://www.appointpanda.com';
+const BOOKING_BASE_URL = 'https://www.foster-care.co.uk';
 
 interface PlaceActionLink {
   name?: string;

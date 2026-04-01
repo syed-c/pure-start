@@ -427,7 +427,7 @@ ${existingContent.slice(0, 500)}...` : "No existing content - create from scratc
 
 ${uniquenessSeed}
 
-Generate comprehensive, unique content that helps this clinic rank for its name. Remember: NO AppointPanda mentions, write about the clinic only.`
+Generate comprehensive, unique content that helps this clinic rank for its name. Remember: NO Foster Care mentions, write about the clinic only.`
         : `Generate SEO-optimized content for this page:
 
 PAGE URL: /${slug}

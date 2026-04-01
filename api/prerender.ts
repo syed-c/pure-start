@@ -40,7 +40,7 @@ export default async function handler(request: Request) {
 
   try {
     // Build the full URL for prerendering
-    const targetUrl = `https://www.appointpanda.com${requestedPath}${forwardedQuery ? `?${forwardedQuery}` : ''}`;
+    const targetUrl = `https://www.foster-care.co.uk${requestedPath}${forwardedQuery ? `?${forwardedQuery}` : ''}`;
     const prerenderUrl = `https://service.prerender.io/${targetUrl}`;
 
     console.log(`Prerendering for bot: ${targetUrl}`);

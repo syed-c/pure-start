@@ -184,7 +184,7 @@ serve(async (req) => {
     const { submissionId, templateName, deliveryMethod, patientEmail, patientPhone, patientName, customMessage, clinicName } = body;
 
     // Generate the form URL
-    const baseUrl = `https://www.appointpanda.com/form/${submissionId}`;
+    const baseUrl = `https://www.foster-care.co.uk/form/${submissionId}`;
     const { data: submissionRow } = await supabase
       .from('patient_form_submissions')
       .select('access_token')

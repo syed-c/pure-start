@@ -285,7 +285,7 @@ Return JSON: {"links": [{"anchor_text": "exact text from content", "url": "/actu
         break;
 
       case "generate_full_post": {
-        systemPrompt = `You are an expert dental SEO content writer for AppointPanda.ae — the UAE's largest dental directory with 6,600+ DHA/DOH/MOHAP verified clinics. Write in a trusted, warm, factual tone. Always use AED for pricing, reference DHA/DOH/MOHAP (never FDA/NHS), and mention WhatsApp booking where relevant.
+        systemPrompt = `You are an expert dental SEO content writer for Foster Care.ae — the UAE's largest dental directory with 6,600+ DHA/DOH/MOHAP verified clinics. Write in a trusted, warm, factual tone. Always use AED for pricing, reference DHA/DOH/MOHAP (never FDA/NHS), and mention WhatsApp booking where relevant.
 
 RULES:
 - Start with a direct answer in the first paragraph
