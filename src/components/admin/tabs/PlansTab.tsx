@@ -639,7 +639,7 @@ export default function PlansTab() {
               <div className="flex gap-6 flex-wrap">
                 <div className="flex items-center gap-2 bg-white/10 rounded-lg px-4 py-2">
                   <Badge className="bg-red-500/80 text-white border-0">Competitors</Badge>
-                  <span className="font-bold">$120-190/booking</span>
+                  <span className="font-bold">£90-150/listing</span>
                 </div>
                 <div className="flex items-center gap-2 bg-white/20 rounded-lg px-4 py-2">
                   <Badge className="bg-white text-emerald-700 border-0 font-bold">Our Platform</Badge>
