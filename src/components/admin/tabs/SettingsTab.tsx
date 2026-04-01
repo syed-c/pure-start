@@ -207,7 +207,7 @@ export default function SettingsTab() {
                 <Input
                   value={(getSettingValue('platform')?.site_url as string) || ''}
                   onChange={(e) => updateFormValue('platform', 'site_url', e.target.value)}
-                  placeholder="https://appointpanda.ae"
+                  placeholder="https://www.fosterconnect.co.uk"
                 />
               </div>
               <div className="space-y-2">
