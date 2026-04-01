@@ -246,7 +246,7 @@ export default function ReputationQRCodesTab({
             <h2>${settings.customCTA}</h2>
             <p>${settings.customFooter}</p>
           </div>
-          ${settings.showBranding ? '<div class="footer">Powered by AppointPanda</div>' : ''}
+          ${settings.showBranding ? '<div class="footer">Powered by Foster Connect</div>' : ''}
         </div>
         <script>window.onload = function() { setTimeout(function() { window.print(); window.close(); }, 500); }</script>
       </body>
