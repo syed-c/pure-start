@@ -178,7 +178,7 @@ export const AgencyListFrame = ({
               <meta itemProp="bestRating" content="5" />
               <meta itemProp="worstRating" content="1" />
             </span>}
-            {profile.slug && <a itemProp="url" href={`https://www.appointpanda.ae/clinic/${profile.slug}/`}>{profile.name}</a>}
+            {profile.slug && <a itemProp="url" href={`https://www.fosterconnect.co.uk/clinic/${profile.slug}/`}>{profile.name}</a>}
           </div>
         ))}
       </div>
