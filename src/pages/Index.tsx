@@ -67,9 +67,9 @@ const benefits = [
 ];
 
 const testimonials = [
-  { name: "Sarah M.", location: "London", text: "Foster Connect made finding an agency so simple. Within a week, we had our first meeting with a wonderful IFA.", rating: 5 },
+  { name: "Sarah M.", location: "London", text: "Foster Care made finding an agency so simple. Within a week, we had our first meeting with a wonderful IFA.", rating: 5 },
   { name: "James & Claire T.", location: "Manchester", text: "The reviews from other carers were invaluable. We felt confident choosing our agency because of real feedback.", rating: 5 },
-  { name: "Priya K.", location: "Birmingham", text: "As a first-time carer, I was nervous. Foster Connect helped me understand the different types and find the perfect fit.", rating: 5 },
+  { name: "Priya K.", location: "Birmingham", text: "As a first-time carer, I was nervous. Foster Care helped me understand the different types and find the perfect fit.", rating: 5 },
 ];
 
 const popularCities = POPULAR_CITIES.slice(0, 7);
@@ -93,7 +93,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={seoContent?.meta_title || "Find Fostering Agencies in England & UK | Foster Connect"}
+        title={seoContent?.meta_title || "Find Fostering Agencies in England & UK | Foster Care"}
         description={seoContent?.meta_description || "Search Ofsted-rated fostering agencies across England. Compare reviews, explore fostering types & connect with agencies near you."}
         canonical="/"
         keywords={['fostering agencies UK', 'foster care England', 'independent fostering agency', 'become a foster carer', 'fostering agencies near me']}
@@ -352,7 +352,7 @@ const Index = () => {
           >
             <span className="inline-flex items-center gap-2 bg-primary/20 rounded-full px-5 py-2.5 mb-5 border border-primary/30">
               <Award className="h-4 w-4 text-primary" />
-              <span className="text-sm font-bold text-primary">Why Foster Connect</span>
+              <span className="text-sm font-bold text-primary">Why Foster Care</span>
             </span>
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white" style={{ fontFamily: headingFont }}>
               The UK's Trusted{" "}

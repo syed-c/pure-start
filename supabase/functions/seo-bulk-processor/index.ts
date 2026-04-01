@@ -357,7 +357,7 @@ async function generateSeoContent(
   if (config.regenerateIntro) tasksToGenerate.push("intro_text (2-3 sentences, engaging opener)");
   if (config.regenerateFaq) tasksToGenerate.push("faq_items (array of {question, answer} objects, 3-6 FAQs)");
 
-  const systemPrompt = `You are an SEO expert for AppointPanda, a dental appointment booking platform.
+  const systemPrompt = `You are an SEO expert for Foster Care, a dental appointment booking platform.
 Write content that is:
 - Unique and not templated/repetitive
 - Written in first-person plural ("we", "our team")
@@ -433,10 +433,10 @@ function generateFallbackContent(
   const result: Record<string, unknown> = {};
 
   if (config.regenerateMetaTitle) {
-    result.meta_title = `${titleCase} | Find Agencys Near You | AppointPanda`;
+    result.meta_title = `${titleCase} | Find Agencys Near You | Foster Care`;
   }
   if (config.regenerateMetaDescription) {
-    result.meta_description = `Book ${titleCase.toLowerCase()} appointments with top-rated agencies. Compare prices, read reviews, and schedule online with AppointPanda.`;
+    result.meta_description = `Book ${titleCase.toLowerCase()} appointments with top-rated agencies. Compare prices, read reviews, and schedule online with Foster Care.`;
   }
   if (config.regenerateH1) {
     result.h1 = `${titleCase} - Expert Dental Care`;

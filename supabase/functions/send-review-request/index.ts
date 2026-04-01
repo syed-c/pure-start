@@ -204,7 +204,7 @@ Deno.serve(async (req) => {
       throw new Error('Clinic not found');
     }
 
-    const siteUrl = Deno.env.get('SITE_URL') || 'https://appointpanda.ae';
+    const siteUrl = Deno.env.get('SITE_URL') || 'https://foster-care.co.uk';
     const reviewLink = `${siteUrl}/review/${clinic.slug}`;
     const googleReviewLink = clinic.google_place_id 
       ? `https://search.google.com/local/writereview?placeid=${clinic.google_place_id}`
@@ -239,7 +239,7 @@ Deno.serve(async (req) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: `${clinic.name} <no-reply@appointpanda.ae>`,
+          from: `${clinic.name} <no-reply@foster-care.co.uk>`,
           to: [recipientEmail],
           subject: `${recipientName}, how was your visit to ${clinic.name}?`,
           html: htmlContent,

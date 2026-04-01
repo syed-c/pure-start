@@ -6,7 +6,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const BASE_URL = "https://www.appointpanda.ae";
+const BASE_URL = "https://www.foster-care.co.uk";
 const CHUNK_SIZE = 2500; // Max URLs per sitemap chunk
 
 interface SitemapUrl {

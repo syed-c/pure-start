@@ -680,7 +680,7 @@ export default function AdminDashboard() {
               <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center shadow-lg shadow-primary/30">
                 <span className="text-white font-extrabold text-sm">FC</span>
               </div>
-              <span className="font-display font-bold text-lg text-white">Foster Connect</span>
+              <span className="font-display font-bold text-lg text-white">Foster Care</span>
             </div>
           )}
           <Button

@@ -105,7 +105,7 @@ serve(async (req) => {
     
     if (!product) {
       product = await stripe.products.create({
-        name: `${plan.name} Plan - AppointPanda`,
+        name: `${plan.name} Plan - Foster Care`,
         description: plan.description || `${plan.name} subscription plan`,
         metadata: {
           plan_id: plan.id,
@@ -149,7 +149,7 @@ serve(async (req) => {
     }
 
     // Create checkout session
-    const baseUrl = successUrl?.split('/')[0] + '//' + successUrl?.split('/')[2] || 'https://appointpanda.ae';
+    const baseUrl = successUrl?.split('/')[0] + '//' + successUrl?.split('/')[2] || 'https://foster-care.co.uk';
     
     const session = await stripe.checkout.sessions.create({
       customer: customerId,

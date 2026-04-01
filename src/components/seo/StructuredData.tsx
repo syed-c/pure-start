@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { useSchemaSettings } from '@/hooks/useSchemaSettings';
 import { withTrailingSlash } from '@/lib/url/withTrailingSlash';
 
-const BASE_URL = 'https://www.fosterconnect.co.uk';
+const BASE_URL = 'https://www.foster-care.co.uk';
 
 // Organization Schema
 export interface OrganizationSchemaProps {
@@ -103,7 +103,7 @@ const generateOrganizationSchema = (settings?: {
   socialProfiles?: string[];
 }) => {
   const org = settings || {
-    name: 'AppointPanda',
+    name: 'Foster Care',
     url: BASE_URL,
     logo: `${BASE_URL}/logo.png`,
     description: 'Find and book appointments with top-rated dental professionals across the UAE.',
@@ -228,11 +228,11 @@ const generateArticleSchema = (props: ArticleSchemaProps) => ({
   dateModified: props.dateModified || props.datePublished,
   author: {
     '@type': 'Person',
-    name: props.author || 'AppointPanda Team',
+    name: props.author || 'Foster Care Team',
   },
   publisher: {
     '@type': 'Organization',
-    name: 'AppointPanda',
+    name: 'Foster Care',
     logo: {
       '@type': 'ImageObject',
       url: `${BASE_URL}/logo.png`,
@@ -293,7 +293,7 @@ const generateServiceSchema = (props: ServiceSchemaProps) => ({
       }
     : {
         '@type': 'Organization',
-        name: 'AppointPanda',
+        name: 'Foster Care',
       },
   areaServed: props.areaServed
     ? {

@@ -1,9 +1,9 @@
-// SEO utility functions and constants — Foster Connect UK Fostering Agency Directory
+// SEO utility functions and constants — Foster Care UK Fostering Agency Directory
 
 export const SITE_CONFIG = {
-  name: 'Foster Connect',
-  domain: 'fosterconnect.co.uk',
-  baseUrl: 'https://www.fosterconnect.co.uk',
+  name: 'Foster Care',
+  domain: 'foster-care.co.uk',
+  baseUrl: 'https://www.foster-care.co.uk',
   defaultCountry: 'gb',
   defaultCity: 'london',
 };
@@ -97,7 +97,7 @@ export const generateDentistMeta = (contactName: string, specialty?: string, age
 
 export const generateBlogPostMeta = (title: string, excerpt?: string) => ({
   title,
-  description: excerpt || `Read ${title} on Foster Connect's fostering blog. Expert advice and guidance for foster carers and families across the UK.`,
+  description: excerpt || `Read ${title} on Foster Care's fostering blog. Expert advice and guidance for foster carers and families across the UK.`,
   keywords: [
     'fostering',
     'foster care',

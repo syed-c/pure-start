@@ -64,7 +64,7 @@ async function generateContent(prompt: string, apiKey: string): Promise<string> 
 function generateCityTreatmentContent(treatment: string, city: string, state: string): string {
   return `## ${treatment} Fostering in ${city}, ${state}
 
-Finding quality ${treatment.toLowerCase()} fostering agencies in ${city} doesn't have to be difficult. Foster Connect lists verified fostering agencies offering ${treatment.toLowerCase()} placements tailored to your circumstances.
+Finding quality ${treatment.toLowerCase()} fostering agencies in ${city} doesn't have to be difficult. Foster Care lists verified fostering agencies offering ${treatment.toLowerCase()} placements tailored to your circumstances.
 
 ### What to Expect from ${treatment} Fostering in ${city}
 
@@ -85,7 +85,7 @@ Working with fostering agencies in ${city} offers several advantages:
 
 Before making an enquiry, consider what type of fostering suits your household, your availability, and any questions about the assessment process. You don't need formal qualifications - agencies look for patience, resilience, and a genuine desire to help children.
 
-Most ${treatment.toLowerCase()} fostering agencies in ${city} offer an initial no-obligation chat to help you understand what's involved. Foster Connect makes it easy to compare agencies and submit enquiries online.`;
+Most ${treatment.toLowerCase()} fostering agencies in ${city} offer an initial no-obligation chat to help you understand what's involved. Foster Care makes it easy to compare agencies and submit enquiries online.`;
 }
 
 function generateCityContent(city: string, state: string, stateAbbr: string): string {
@@ -229,7 +229,7 @@ serve(async (req) => {
           const agencyName = page.title || "This fostering agency";
           content = `## About ${agencyName}\n\n${generateClinicDescription(agencyName, "your area", "")}\n\n### Our Services\n\nWe offer a comprehensive range of fostering placements including emergency, short-term, long-term, respite, and parent & child fostering. Our experienced team is dedicated to providing personalised support throughout your fostering journey.\n\n### Why Choose Us\n\n- Ofsted-registered and inspected\n- Experienced, compassionate support team\n- Comprehensive training programme\n- Competitive fostering allowances\n- 24/7 support for all foster carers`;
         } else {
-          content = `## Welcome\n\nThank you for visiting Foster Connect. We're dedicated to helping you find the best fostering agencies across the UK. Browse our directory of verified agencies and submit your enquiry online today.`;
+          content = `## Welcome\n\nThank you for visiting Foster Care. We're dedicated to helping you find the best fostering agencies across the UK. Browse our directory of verified agencies and submit your enquiry online today.`;
         }
 
         const wordCount = content.split(/\s+/).length;

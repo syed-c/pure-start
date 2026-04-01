@@ -6,7 +6,7 @@ interface CanonicalUrlProps {
   baseDomain?: string;
 }
 
-const BASE_URL = 'https://www.fosterconnect.co.uk';
+const BASE_URL = 'https://www.foster-care.co.uk';
 
 export function CanonicalUrl({ href, baseDomain }: CanonicalUrlProps) {
   const location = useLocation();

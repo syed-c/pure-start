@@ -27,7 +27,7 @@ interface Phase2Request {
 // SERVICE PAGE TEMPLATE (Sprint 2.1)
 // 14 sections, 3,500-5,000 words
 // ========================================
-const SERVICE_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE fostering type page for Foster Connect, the UK fostering agency directory.
+const SERVICE_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE fostering type page for Foster Care, the UK fostering agency directory.
 
 === TEMPLATE STRUCTURE (3,500-5,000 words) ===
 
@@ -78,7 +78,7 @@ const SERVICE_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE fostering type
    - 24/7 support from supervising social workers
    - Peer support groups and networks
    - Specialist training for complex needs
-   - CTA: "Find agencies with comprehensive training on Foster Connect"
+   - CTA: "Find agencies with comprehensive training on Foster Care"
 
 8. H2: Day-to-Day Life as a [Fostering Type] Carer (400 words)
    - What a typical day looks like
@@ -114,7 +114,7 @@ const SERVICE_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE fostering type
     - Importance of carer reviews
 
 12. H2: Find [Fostering Type] Agencies Near You (200 words)
-    - CTA to search Foster Connect directory
+    - CTA to search Foster Care directory
     - Featured cities/regions links
     - "Submit your enquiry today"
     - Trust signals (verified agencies, Ofsted-registered, carer reviews)
@@ -130,7 +130,7 @@ const SERVICE_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE fostering type
     - Link to verified reviews
 
 === CONTENT REQUIREMENTS ===
-- Write in Foster Connect's first-party voice
+- Write in Foster Care's first-party voice
 - No false promises or guarantees
 - Cite approximate allowances with ranges in £
 - Include multiple CTAs throughout
@@ -143,7 +143,7 @@ const SERVICE_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE fostering type
 // CITY PAGE TEMPLATE (Sprint 2.2)
 // 11 sections, 2,500-3,500 words
 // ========================================
-const CITY_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE city directory page for Foster Connect.
+const CITY_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE city directory page for Foster Care.
 
 === TEMPLATE STRUCTURE (2,500-3,500 words) ===
 
@@ -184,7 +184,7 @@ const CITY_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE city directory pa
    - Overview of Form F assessment
    - Timeline expectations (typically 4-6 months)
    - What to expect at fostering panel
-   - How Foster Connect helps you compare agencies
+   - How Foster Care helps you compare agencies
 
 7. H2: Fostering by Area in [City] (400 words)
    - List 6-10 major boroughs/areas
@@ -229,7 +229,7 @@ const CITY_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE city directory pa
 // 4 categories, 1,500-2,800 words each
 // ========================================
 const BLOG_TEMPLATES = {
-  'cost-guides': `You are writing a COST GUIDE blog post for AppointPanda.
+  'cost-guides': `You are writing a COST GUIDE blog post for Foster Care.
 
 === TEMPLATE: "How Much Does [Procedure] Cost in [State]? [2026 Price Guide]" ===
 Target: 1,800-2,200 words
@@ -270,14 +270,14 @@ H1: How Much Does [Procedure] Cost in [State]? [2026 Price Guide]
    - Shop around tips
 
 7. H2: Find Affordable [Procedure] Agencies (200 words)
-   - CTA to AppointPanda
+   - CTA to Foster Care
    - How to filter by price
    - Request quotes
 
 8. H2: FAQs (200 words)
    - 5-6 cost-specific questions`,
 
-  'comparisons': `You are writing a COMPARISON blog post for AppointPanda.
+  'comparisons': `You are writing a COMPARISON blog post for Foster Care.
 
 === TEMPLATE: "[Option A] vs [Option B]: Complete Comparison Guide [2026]" ===
 Target: 2,000-2,500 words
@@ -331,12 +331,12 @@ H1: [A] vs [B]: Complete Comparison Guide [2026]
    - Questions to ask your dentist
 
 9. H2: Find Agencys Offering Both Options (150 words)
-   - CTA to AppointPanda
+   - CTA to Foster Care
 
 10. H2: FAQs (150 words)
     - 5 comparison questions`,
 
-  'how-to': `You are writing a HOW-TO GUIDE blog post for AppointPanda.
+  'how-to': `You are writing a HOW-TO GUIDE blog post for Foster Care.
 
 === TEMPLATE: "How to [Action]: Complete Guide [2026]" ===
 Target: 1,500-2,000 words
@@ -377,13 +377,13 @@ H1: How to [Action]: Complete Guide [2026]
    - Industry best practices
 
 9. H2: Take Action Today (150 words)
-   - CTA to AppointPanda
+   - CTA to Foster Care
    - Next steps
 
 10. H2: FAQs (150 words)
     - 5 how-to questions`,
 
-  'local-content': `You are writing a LOCAL/LISTICLE blog post for AppointPanda.
+  'local-content': `You are writing a LOCAL/LISTICLE blog post for Foster Care.
 
 === TEMPLATE: "Best [Type] Agencies in [City]: Top [#] Clinics [2026]" ===
 Target: 2,200-2,800 words
@@ -405,7 +405,7 @@ H1: Best [Type] Agencies in [City]: Top [#] Clinics [2026]
    - Services offered
    - Patient experience highlights
    - Location advantages
-   - CTA: Book on AppointPanda
+   - CTA: Book on Foster Care
 
 4. H2: 2-7. [Repeat for each featured entry]
    - 200-250 words each
@@ -584,7 +584,7 @@ Generate the FULL content following all 14 sections in the template.
 Include realistic cost data for CA, MA, CT, NJ.
 Include comparison with the most common alternative treatment.
 
-Write in AppointPanda's voice. Return pure markdown content.`;
+Write in Foster Care's voice. Return pure markdown content.`;
 
     } else if (template === "city") {
       // Sprint 2.2: City pages
@@ -606,7 +606,7 @@ Include realistic cost comparison table (15 procedures).
 Include 6-10 real neighborhoods/areas in ${cityName}.
 Add local context about ${cityName}'s fostering care landscape.
 
-Write in AppointPanda's voice. Return pure markdown content.`;
+Write in Foster Care's voice. Return pure markdown content.`;
 
     } else if (template === "blog") {
       // Sprint 2.3: Blog posts
@@ -626,7 +626,7 @@ This content MUST be 100% unique and provide genuine value to readers.
 
 Generate the FULL content following the template structure.
 Include relevant data tables where specified.
-Write in AppointPanda's voice - helpful, trustworthy, patient-focused.
+Write in Foster Care's voice - helpful, trustworthy, patient-focused.
 
 Return pure markdown content.`;
     } else {

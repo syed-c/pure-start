@@ -640,7 +640,7 @@ export default function ApiControlTab() {
                 <Input
                   value={apiForm.smtp_from_name ?? (currentSettings.from_name as string) ?? ''}
                   onChange={(e) => setApiForm({ ...apiForm, smtp_from_name: e.target.value })}
-                  placeholder="Appoint Panda"
+                  placeholder="Foster Care"
                 />
               </div>
               

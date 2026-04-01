@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 const PrivacyPage = () => {
   const { data: siteSettings } = useSiteSettings();
   const { data: seoContent } = useSeoPageContent("privacy");
-  const supportEmail = siteSettings?.contactDetails?.support_email || 'support@fosterconnect.co.uk';
+  const supportEmail = siteSettings?.contactDetails?.support_email || 'support@foster-care.co.uk';
 
   const sections = [
     {
@@ -117,10 +117,10 @@ Data processed through our platform is stored within UK/EEA-compliant infrastruc
       title: "11. Contact Us",
       content: `If you have any questions about this Privacy Policy or wish to exercise your data rights under UK law, please contact us at:
 
-Foster Connect
+Foster Care
 London, United Kingdom
 Email: ${supportEmail}
-Data Protection Inquiries: privacy@fosterconnect.co.uk`
+Data Protection Inquiries: privacy@foster-care.co.uk`
     }
   ];
 
@@ -133,8 +133,8 @@ Data Protection Inquiries: privacy@fosterconnect.co.uk`
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || "Privacy Policy | Foster Connect Data Protection"}
-        description={seoContent?.meta_description || "Learn how Foster Connect collects, uses, and protects your personal information. Read our comprehensive privacy policy compliant with UK GDPR."}
+        title={seoContent?.meta_title || "Privacy Policy | Foster Care Data Protection"}
+        description={seoContent?.meta_description || "Learn how Foster Care collects, uses, and protects your personal information. Read our comprehensive privacy policy compliant with UK GDPR."}
         canonical="/privacy/"
         keywords={['privacy policy', 'data protection', 'foster connect privacy', 'UK GDPR']}
       />
@@ -190,7 +190,7 @@ Data Protection Inquiries: privacy@fosterconnect.co.uk`
             </div>
 
             <p className="text-muted-foreground mb-8 leading-relaxed p-4 rounded-xl bg-muted/50">
-              Foster Connect ("we", "us", or "our") is committed to protecting your privacy in accordance with the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our website and services within the United Kingdom.
+              Foster Care ("we", "us", or "our") is committed to protecting your privacy in accordance with the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our website and services within the United Kingdom.
             </p>
 
             <div className="space-y-8">

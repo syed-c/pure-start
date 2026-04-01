@@ -11,7 +11,7 @@
 import { useSchemaSettings } from '@/hooks/useSchemaSettings';
 import { withTrailingSlash } from '@/lib/url/withTrailingSlash';
 
-const BASE_URL = 'https://www.appointpanda.ae';
+const BASE_URL = 'https://www.foster-care.co.uk';
 
 // ========================== SCHEMA GENERATORS ==========================
 
@@ -142,7 +142,7 @@ export type SyncSchemaData =
 // Schema generation functions
 const generateOrganizationSchema = (settings?: any) => {
   const org = settings || {
-    name: 'AppointPanda',
+    name: 'Foster Care',
     url: BASE_URL,
     logo: `${BASE_URL}/logo.png`,
     description: 'Find and book appointments with top-rated dental professionals across the UAE.',
@@ -268,11 +268,11 @@ const generateArticleSchema = (data: ArticleSchemaData) => ({
   dateModified: data.dateModified || data.datePublished,
   author: {
     '@type': 'Person',
-    name: data.author || 'AppointPanda Team',
+    name: data.author || 'Foster Care Team',
   },
   publisher: {
     '@type': 'Organization',
-    name: 'AppointPanda',
+    name: 'Foster Care',
     logo: {
       '@type': 'ImageObject',
       url: `${BASE_URL}/logo.png`,
@@ -321,7 +321,7 @@ const generateServiceSchema = (data: ServiceSchemaData) => ({
   url: `${BASE_URL}${withTrailingSlash(data.url)}`,
   provider: {
     '@type': 'Organization',
-    name: data.provider || 'AppointPanda',
+    name: data.provider || 'Foster Care',
   },
   ...(data.areaServed && {
     areaServed: {
@@ -364,7 +364,7 @@ const generateMedicalProcedureSchema = (data: MedicalProcedureSchemaData) => ({
 const generateWebSiteSchema = (data: WebSiteSchemaData) => ({
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: data.name || 'AppointPanda',
+  name: data.name || 'Foster Care',
   url: data.url || BASE_URL,
   potentialAction: {
     '@type': 'SearchAction',

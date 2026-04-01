@@ -30,7 +30,7 @@ interface AIDiscoveryMetaProps {
   url: string;
 }
 
-const BASE_URL = "https://www.fosterconnect.co.uk";
+const BASE_URL = "https://www.foster-care.co.uk";
 
 export function AIDiscoveryMeta({
   pageTitle,

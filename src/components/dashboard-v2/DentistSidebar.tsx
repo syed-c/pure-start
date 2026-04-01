@@ -111,7 +111,7 @@ export default function DentistSidebar({ activeTab, onTabChange, collapsed, onCo
     <aside className={cn('fixed inset-y-0 left-0 z-50 flex flex-col', 'bg-white border-r border-slate-200 shadow-sm', 'transition-all duration-300 ease-out', collapsed ? 'w-[60px]' : 'w-56')}>
       <div className={cn('h-14 flex items-center gap-2 px-3 border-b border-slate-100', collapsed && 'justify-center')}>
         <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-teal flex items-center justify-center shadow-sm flex-shrink-0"><Sparkles className="h-4 w-4 text-white" /></div>
-        {!collapsed && (<span className="font-bold text-sm text-slate-800">Foster Connect</span>)}
+        {!collapsed && (<span className="font-bold text-sm text-slate-800">Foster Care</span>)}
       </div>
 
       {!collapsed && clinic && (

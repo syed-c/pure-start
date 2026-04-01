@@ -47,7 +47,7 @@ STRICT RULES:
 4. Follow Google E-E-A-T guidelines
 5. Be specific and relevant to the page content
 6. Include location for local pages (UK cities/regions)
-7. For Foster Connect: We are a fostering agency directory helping prospective carers find agencies
+7. For Foster Care: We are a fostering agency directory helping prospective carers find agencies
 8. Use British English spelling throughout
 
 OUTPUT FORMAT (JSON only, no markdown):
@@ -315,20 +315,20 @@ function generateFallbackTitle(page: any): string {
   
   if (page.page_type === "city" && parts.length >= 2) {
     const city = parts[1].replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
-    return `Find Top Agencies in ${city} | AppointPanda`;
+    return `Find Top Agencies in ${city} | Foster Care`;
   }
   
   if (page.page_type === "service-location" && parts.length >= 3) {
     const city = parts[1].replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
     const service = parts[2].replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
-    return `${service} in ${city} | AppointPanda`;
+    return `${service} in ${city} | Foster Care`;
   }
   
   if (page.title) {
-    return page.title.length > 50 ? page.title.substring(0, 47) + "..." : page.title + " | AppointPanda";
+    return page.title.length > 50 ? page.title.substring(0, 47) + "..." : page.title + " | Foster Care";
   }
   
-  return "Find Trusted Agencies Near You | AppointPanda";
+  return "Find Trusted Agencies Near You | Foster Care";
 }
 
 function generateFallbackDescription(page: any): string {
@@ -346,5 +346,5 @@ function generateFallbackDescription(page: any): string {
     return `Looking for ${service.toLowerCase()} in ${city}? Find qualified agencies, read reviews, and book your appointment online today.`;
   }
   
-  return "Find trusted agencies near you. Compare reviews, services, and book appointments online with AppointPanda.";
+  return "Find trusted agencies near you. Compare reviews, services, and book appointments online with Foster Care.";
 }

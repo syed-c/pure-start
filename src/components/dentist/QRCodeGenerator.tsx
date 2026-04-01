@@ -336,7 +336,7 @@ const QRCodeGenerator = forwardRef<HTMLDivElement, QRCodeGeneratorProps>(functio
             <h2>${settings.customCTA}</h2>
             <p>${settings.customFooter}</p>
           </div>
-          ${settings.showBranding ? '<div class="footer">Powered by AppointPanda</div>' : ''}
+          ${settings.showBranding ? '<div class="footer">Powered by Foster Care</div>' : ''}
         </div>
         <script>
           window.onload = function() { setTimeout(function() { window.print(); window.close(); }, 500); }
@@ -434,7 +434,7 @@ const QRCodeGenerator = forwardRef<HTMLDivElement, QRCodeGeneratorProps>(functio
                   {/* Footer */}
                   {settings.showBranding && (
                     <div className="border-t border-slate-100 py-3 text-center bg-slate-50">
-                      <span className="text-xs text-slate-400">Powered by <span className="font-semibold text-primary">AppointPanda</span></span>
+                      <span className="text-xs text-slate-400">Powered by <span className="font-semibold text-primary">Foster Care</span></span>
                     </div>
                   )}
                 </Card>

@@ -63,7 +63,7 @@ interface SupportTicket {
 export default function SupportTicketsTab() {
   const { user } = useAuth();
   const { data: siteSettings } = useSiteSettings();
-  const supportEmail = siteSettings?.contactDetails?.support_email || 'support@fosterconnect.co.uk';
+  const supportEmail = siteSettings?.contactDetails?.support_email || 'support@foster-care.co.uk';
   const queryClient = useQueryClient();
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [formData, setFormData] = useState({

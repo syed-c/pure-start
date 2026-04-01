@@ -10,18 +10,18 @@ import { Button } from "@/components/ui/button";
 const TermsPage = () => {
   const { data: siteSettings } = useSiteSettings();
   const { data: seoContent } = useSeoPageContent("terms");
-  const supportEmail = siteSettings?.contactDetails?.support_email || 'support@fosterconnect.co.uk';
+  const supportEmail = siteSettings?.contactDetails?.support_email || 'support@foster-care.co.uk';
 
   const sections = [
     {
       title: "1. Acceptance of Terms",
-      content: `By accessing or using Foster Connect ("the Platform"), you agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use our services.
+      content: `By accessing or using Foster Care ("the Platform"), you agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use our services.
 
 These terms apply to all users of the Platform, including prospective foster carers, fostering agencies, and social workers.`
     },
     {
       title: "2. Description of Services",
-      content: `Foster Connect provides an online platform that connects prospective foster carers with fostering agencies across the United Kingdom. Our services include:
+      content: `Foster Care provides an online platform that connects prospective foster carers with fostering agencies across the United Kingdom. Our services include:
 
 • Directory of fostering agencies
 • Agency profile pages with Ofsted ratings
@@ -67,7 +67,7 @@ Listed agencies are subject to verification requirements and must maintain curre
     },
     {
       title: "6. Intellectual Property",
-      content: `All content on the Platform, including text, graphics, logos, and software, is the property of Foster Connect or its licensors and is protected by intellectual property laws.
+      content: `All content on the Platform, including text, graphics, logos, and software, is the property of Foster Care or its licensors and is protected by intellectual property laws.
 
 You may not:
 • Copy, modify, or distribute our content without permission
@@ -109,7 +109,7 @@ Our total liability shall not exceed the amount you paid us in the past 12 month
     },
     {
       title: "10. Indemnification",
-      content: `You agree to indemnify and hold harmless Foster Connect, its officers, directors, employees, and agents from any claims, damages, or expenses arising from:
+      content: `You agree to indemnify and hold harmless Foster Care, its officers, directors, employees, and agents from any claims, damages, or expenses arising from:
 
 • Your use of the Platform
 • Your violation of these terms
@@ -134,7 +134,7 @@ Any disputes arising from these terms shall be subject to the exclusive jurisdic
       title: "13. Contact Information",
       content: `For questions about these terms, please contact us:
 
-Foster Connect
+Foster Care
 London, United Kingdom
 Email: ${supportEmail}`
     }
@@ -150,8 +150,8 @@ Email: ${supportEmail}`
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || "Terms and Conditions | Foster Connect Service Agreement"}
-        description={seoContent?.meta_description || "Read Foster Connect's terms and conditions. Understand the rules, policies, and guidelines for using our UK fostering agency directory."}
+        title={seoContent?.meta_title || "Terms and Conditions | Foster Care Service Agreement"}
+        description={seoContent?.meta_description || "Read Foster Care's terms and conditions. Understand the rules, policies, and guidelines for using our UK fostering agency directory."}
         canonical="/terms/"
         keywords={['terms and conditions', 'service agreement', 'fostering directory terms', 'foster connect terms']}
       />
@@ -175,7 +175,7 @@ Email: ${supportEmail}`
             </h1>
             
             <p className="text-lg text-dark-section-foreground/70 max-w-xl mx-auto mb-8">
-              Please read these terms carefully before using Foster Connect. By using our platform, you agree to these terms.
+              Please read these terms carefully before using Foster Care. By using our platform, you agree to these terms.
             </p>
 
             <div className="flex flex-wrap justify-center gap-3">

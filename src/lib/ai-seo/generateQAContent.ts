@@ -20,8 +20,8 @@ export function generateClinicQA(clinic: {
   items.push({
     question: `Is ${clinic.name} a good fostering agency?`,
     answer: clinic.rating
-      ? `${clinic.name}${location ? ` in ${location}` : ""} has a rating of ${clinic.rating}/5 based on ${clinic.reviewCount || 0} reviews. You can make an enquiry through Foster Connect to learn more about their services.`
-      : `${clinic.name}${location ? ` is located in ${location}` : ""} and accepts enquiries through Foster Connect. Check recent reviews on the agency's profile for the latest feedback.`,
+      ? `${clinic.name}${location ? ` in ${location}` : ""} has a rating of ${clinic.rating}/5 based on ${clinic.reviewCount || 0} reviews. You can make an enquiry through Foster Care to learn more about their services.`
+      : `${clinic.name}${location ? ` is located in ${location}` : ""} and accepts enquiries through Foster Care. Check recent reviews on the agency's profile for the latest feedback.`,
     followUp: "You can compare this agency with others in the area using our search filters.",
   });
 
@@ -34,7 +34,7 @@ export function generateClinicQA(clinic: {
 
   items.push({
     question: `How do I enquire with ${clinic.name}?`,
-    answer: `You can submit an enquiry to ${clinic.name} online through Foster Connect. Fill in your details and the agency will get back to you to discuss your fostering journey. No obligation.`,
+    answer: `You can submit an enquiry to ${clinic.name} online through Foster Care. Fill in your details and the agency will get back to you to discuss your fostering journey. No obligation.`,
     followUp: "Most agencies respond to enquiries within 1-2 working days.",
   });
 
@@ -48,7 +48,7 @@ export function generateClinicQA(clinic: {
 
   items.push({
     question: `Is ${clinic.name} Ofsted registered?`,
-    answer: `Fostering agencies in the UK must be registered and inspected by Ofsted. Check ${clinic.name}'s profile on Foster Connect for their current Ofsted rating and registration details.`,
+    answer: `Fostering agencies in the UK must be registered and inspected by Ofsted. Check ${clinic.name}'s profile on Foster Care for their current Ofsted rating and registration details.`,
   });
 
   return items;
@@ -64,26 +64,26 @@ export function generateCityQA(city: {
     {
       question: `How many fostering agencies are in ${city.name}?`,
       answer: city.clinicCount
-        ? `There are ${city.clinicCount}+ fostering agencies listed in ${city.name} on Foster Connect. Each agency is verified and features reviews, service information, and online enquiry forms.`
-        : `${city.name} has numerous fostering agencies listed on Foster Connect with verified profiles, reviews, and online enquiry capabilities.`,
+        ? `There are ${city.clinicCount}+ fostering agencies listed in ${city.name} on Foster Care. Each agency is verified and features reviews, service information, and online enquiry forms.`
+        : `${city.name} has numerous fostering agencies listed on Foster Care with verified profiles, reviews, and online enquiry capabilities.`,
       followUp: "Filter by fostering type, Ofsted rating, or location to find your ideal agency.",
     },
     {
       question: `What is the best fostering agency in ${city.name}?`,
-      answer: `The best fostering agency in ${city.name} depends on your specific needs and circumstances. Foster Connect ranks agencies based on reviews, Ofsted ratings, and service quality. Use our filters to find agencies specialising in your preferred fostering type.`,
+      answer: `The best fostering agency in ${city.name} depends on your specific needs and circumstances. Foster Care ranks agencies based on reviews, Ofsted ratings, and service quality. Use our filters to find agencies specialising in your preferred fostering type.`,
     },
     {
       question: `What support do foster carers get in ${city.name}?`,
-      answer: `Foster carers in ${city.name} typically receive comprehensive training, 24/7 support, a weekly fostering allowance, regular supervision, and access to peer support groups. Specific support varies by agency — check individual agency profiles on Foster Connect for details.`,
+      answer: `Foster carers in ${city.name} typically receive comprehensive training, 24/7 support, a weekly fostering allowance, regular supervision, and access to peer support groups. Specific support varies by agency — check individual agency profiles on Foster Care for details.`,
       followUp: "Most agencies offer an initial information event before you commit to the assessment process.",
     },
     {
       question: `Are fostering agencies in ${city.name} Ofsted rated?`,
-      answer: `All fostering agencies in England must be registered with and inspected by Ofsted (Office for Standards in Education). Foster Connect displays each agency's current Ofsted rating on their profile to help you make an informed choice.`,
+      answer: `All fostering agencies in England must be registered with and inspected by Ofsted (Office for Standards in Education). Foster Care displays each agency's current Ofsted rating on their profile to help you make an informed choice.`,
     },
     {
       question: `Can I start fostering quickly in ${city.name}?`,
-      answer: `The fostering assessment process typically takes 4-6 months, though some agencies offer fast-track assessments. Emergency and respite fostering may have shorter timelines. Use Foster Connect to find agencies in ${city.name} with current availability.`,
+      answer: `The fostering assessment process typically takes 4-6 months, though some agencies offer fast-track assessments. Emergency and respite fostering may have shorter timelines. Use Foster Care to find agencies in ${city.name} with current availability.`,
     },
   ];
 }
@@ -98,24 +98,24 @@ export function generateTreatmentQA(treatment: {
   return [
     {
       question: `What is ${treatment.name}${locationSuffix}?`,
-      answer: `${treatment.name}${locationSuffix} provides specialised care for children and young people who need a safe and supportive home. Foster Connect lists verified agencies offering ${treatment.name.toLowerCase()} so you can compare and enquire.`,
+      answer: `${treatment.name}${locationSuffix} provides specialised care for children and young people who need a safe and supportive home. Foster Care lists verified agencies offering ${treatment.name.toLowerCase()} so you can compare and enquire.`,
       followUp: "Compare agencies across multiple areas to find the best fit.",
     },
     {
       question: `What qualifications do I need for ${treatment.name}?`,
-      answer: `You don't need formal qualifications to become a foster carer for ${treatment.name.toLowerCase()}. Agencies look for patience, resilience, and a genuine desire to help children. Full training and support are provided. Enquire through Foster Connect to learn more.`,
+      answer: `You don't need formal qualifications to become a foster carer for ${treatment.name.toLowerCase()}. Agencies look for patience, resilience, and a genuine desire to help children. Full training and support are provided. Enquire through Foster Care to learn more.`,
     },
     {
       question: `How long does ${treatment.name} last?`,
-      answer: `The duration of ${treatment.name.toLowerCase()} depends on the individual child's needs and care plan. Your fostering agency will discuss placement timelines during the assessment process. Enquire through Foster Connect to get personalised information.`,
+      answer: `The duration of ${treatment.name.toLowerCase()} depends on the individual child's needs and care plan. Your fostering agency will discuss placement timelines during the assessment process. Enquire through Foster Care to get personalised information.`,
     },
     {
       question: `Where can I find ${treatment.name} agencies${locationSuffix}?`,
-      answer: `Foster Connect lists verified fostering agencies offering ${treatment.name.toLowerCase()}${locationSuffix}. Each agency profile includes reviews, Ofsted ratings, and online enquiry forms. Filter by location or fostering type to find the right agency.`,
+      answer: `Foster Care lists verified fostering agencies offering ${treatment.name.toLowerCase()}${locationSuffix}. Each agency profile includes reviews, Ofsted ratings, and online enquiry forms. Filter by location or fostering type to find the right agency.`,
     },
     {
       question: `What allowance do foster carers receive for ${treatment.name}${locationSuffix}?`,
-      answer: `Fostering allowances for ${treatment.name.toLowerCase()} vary by agency and local authority. Most agencies offer competitive weekly allowances plus additional support. Check with individual agencies through Foster Connect for current rates.`,
+      answer: `Fostering allowances for ${treatment.name.toLowerCase()} vary by agency and local authority. Most agencies offer competitive weekly allowances plus additional support. Check with individual agencies through Foster Care for current rates.`,
     },
   ];
 }

@@ -34,8 +34,8 @@ async function getEmailSettings(supabase: any): Promise<EmailSettings> {
   }
   
   return {
-    from_email: 'no-reply@fosterconnect.co.uk',
-    from_name: 'Foster Connect'
+    from_email: 'no-reply@foster-care.co.uk',
+    from_name: 'Foster Care'
   };
 }
 
@@ -184,7 +184,7 @@ serve(async (req) => {
     const { submissionId, templateName, deliveryMethod, patientEmail, patientPhone, patientName, customMessage, clinicName } = body;
 
     // Generate the form URL
-    const baseUrl = `https://www.appointpanda.com/form/${submissionId}`;
+    const baseUrl = `https://www.foster-care.co.uk/form/${submissionId}`;
     const { data: submissionRow } = await supabase
       .from('patient_form_submissions')
       .select('access_token')

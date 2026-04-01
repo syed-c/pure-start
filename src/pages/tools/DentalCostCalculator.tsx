@@ -153,7 +153,7 @@ export default function DentalCostCalculator() {
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || "Agency Cost Guide | Real Dentist Prices | AppointPanda"}
+        title={seoContent?.meta_title || "Agency Cost Guide | Real Dentist Prices | Foster Care"}
         description={seoContent?.meta_description || "Get real cost estimates from verified agencies. Compare prices for fostering placements, crowns, cleanings and more in your city."}
         canonical="/tools/agency-cost-guide/"
       />
@@ -432,7 +432,7 @@ export default function DentalCostCalculator() {
             <div>
               <h3 className="font-semibold mb-2">How can I get an accurate quote?</h3>
               <p className="text-muted-foreground">
-                Request a consultation from 2-3 agencies in your area through AppointPanda for the most accurate pricing.
+                Request a consultation from 2-3 agencies in your area through Foster Care for the most accurate pricing.
               </p>
             </div>
           </CardContent>

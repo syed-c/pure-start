@@ -657,7 +657,7 @@ const ClinicPage = () => {
       
       <AIDiscoveryMeta
         pageTitle={clinic.name}
-        aiSummary={`${clinic.name} is a fostering agency${clinic.city?.name ? ` in ${clinic.city.name}` : ""}, UK. ${clinic.rating ? `Rated ${clinic.rating}/5 by ${clinic.review_count || 0} reviewers.` : ""} Find and compare agencies on Foster Connect.`}
+        aiSummary={`${clinic.name} is a fostering agency${clinic.city?.name ? ` in ${clinic.city.name}` : ""}, UK. ${clinic.rating ? `Rated ${clinic.rating}/5 by ${clinic.review_count || 0} reviewers.` : ""} Find and compare agencies on Foster Care.`}
         entityType="clinic"
         location={{
           city: clinic.city?.name,

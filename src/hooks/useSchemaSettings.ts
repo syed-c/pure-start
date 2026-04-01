@@ -34,11 +34,11 @@ export interface SchemaSettings {
 }
 
 const defaultOrganization: OrganizationSettings = {
-  name: 'Foster Connect',
-  url: 'https://www.fosterconnect.co.uk',
-  logo: 'https://www.fosterconnect.co.uk/logo.png',
+  name: 'Foster Care',
+  url: 'https://www.foster-care.co.uk',
+  logo: 'https://www.foster-care.co.uk/logo.png',
   description: 'Find trusted fostering agencies across England and the UK. Compare services, read reviews, and take the first step towards fostering.',
-  email: 'support@fosterconnect.co.uk',
+  email: 'support@foster-care.co.uk',
   phone: '',
   address: {
     streetAddress: '',

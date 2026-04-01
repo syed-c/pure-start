@@ -139,14 +139,14 @@ serve(async (req) => {
       throw lastError || new Error("AI gateway failed after retries");
     }
 
-    // Foster Connect Master SEO Prompt - First-party platform voice
-    const APPOINTPANDA_SYSTEM_PROMPT = `You are generating SEO content ONLY for Foster Connect, a UK fostering agency directory and enquiry platform.
+    // Foster Care Master SEO Prompt - First-party platform voice
+    const APPOINTPANDA_SYSTEM_PROMPT = `You are generating SEO content ONLY for Foster Care, a UK fostering agency directory and enquiry platform.
 
 === CRITICAL BUSINESS CONTEXT (NON-NEGOTIABLE) ===
-- Foster Connect helps people find, compare, and enquire with fostering agencies across the UK
+- Foster Care helps people find, compare, and enquire with fostering agencies across the UK
 - We are NOT a fostering agency - we are a directory/enquiry platform
 - We are NOT writing content for third parties
-- ALL content must be written in Foster Connect's first-party voice: "we", "our platform", "Foster Connect helps prospective carers..."
+- ALL content must be written in Foster Care's first-party voice: "we", "our platform", "Foster Care helps prospective carers..."
 
 You must NEVER write as:
 - a fostering agency
@@ -192,15 +192,15 @@ Trustworthiness: No exaggerated claims, no "best agency" language, no guarantees
 - British English spelling throughout
 
 === PLATFORM POSITIONING (VERY IMPORTANT) ===
-Because this content is for Foster Connect:
+Because this content is for Foster Care:
 - Explain how our platform helps users: find agencies, compare Ofsted ratings, explore fostering types, submit enquiries
-- Mention Foster Connect naturally
+- Mention Foster Care naturally
 - Keep tone helpful, not promotional
 - Never sound like an advertisement
 
 === CALL TO ACTION ===
 End with a calm, helpful CTA such as:
-- Encouraging users to explore fostering agencies on Foster Connect
+- Encouraging users to explore fostering agencies on Foster Care
 - Inviting users to submit enquiries through our platform
 
 === OUTPUT FORMAT ===
@@ -209,7 +209,7 @@ End with a calm, helpful CTA such as:
 - H1 (clear page intent)
 - Structured content using H2/H3
 - FAQ section (3-5 questions)
-- Soft closing paragraph mentioning Foster Connect
+- Soft closing paragraph mentioning Foster Care
 
 DO NOT: Mention prompts or instructions, explain your process, copy content between pages.`;
 
@@ -227,7 +227,7 @@ DO NOT: Mention prompts or instructions, explain your process, copy content betw
     }) {
       const prompt = buildSeoPrompt(pageData);
       
-      // Build system prompt with AppointPanda-specific instructions
+      // Build system prompt with Foster Care-specific instructions
       let systemContent = APPOINTPANDA_SYSTEM_PROMPT;
 
       // Add issue-specific focus
@@ -239,15 +239,15 @@ DO NOT: Mention prompts or instructions, explain your process, copy content betw
 - Keep under 60 characters
 - Include primary keyword at the beginning
 - Add location for local pages (UK cities/regions)
-- Use format: [Primary Keyword] in [Location] | Foster Connect
+- Use format: [Primary Keyword] in [Location] | Foster Care
 - Make titles compelling and click-worthy
-- Write from Foster Connect's perspective (e.g., "Find Fostering Agencies in..." not "Best Agency...")`,
+- Write from Foster Care's perspective (e.g., "Find Fostering Agencies in..." not "Best Agency...")`,
           meta_description: `
 
 === FOCUS: META DESCRIPTIONS ===
 - Keep under 155 characters
 - Start with an action verb (Discover, Find, Explore, Compare)
-- Include clear value proposition from Foster Connect's perspective
+- Include clear value proposition from Foster Care's perspective
 - Add call-to-action (enquire now, compare agencies, read reviews)
 - Include location for local pages (UK)`,
           h1: `
@@ -265,18 +265,18 @@ DO NOT: Mention prompts or instructions, explain your process, copy content betw
 - Create 4-6 meaningful H2 sections
 - H2s should organize content logically
 - Include keywords naturally in H2s
-- Suggested H2s: About [Fostering Type/Location], What to Expect, How Foster Connect Helps, Support & Allowances, FAQs
+- Suggested H2s: About [Fostering Type/Location], What to Expect, How Foster Care Helps, Support & Allowances, FAQs
 - VARY H2 headings between pages - no templated repetition`,
           content: `
 
 === FOCUS: RICH CONTENT (Fix Thin Content) ===
 - Minimum 400-600 words
-- Include compelling introduction mentioning Foster Connect's role
+- Include compelling introduction mentioning Foster Care's role
 - Add fostering type/service descriptions
 - Include location-specific information (UK)
 - Add 3-5 FAQs with detailed answers
 - Use proper formatting (headings, paragraphs, lists)
-- Include how Foster Connect helps prospective carers in this area
+- Include how Foster Care helps prospective carers in this area
 - End with platform CTA`,
         };
         systemContent += issueInstructions[pageData.issueType] || "";
@@ -413,29 +413,29 @@ DO NOT: Mention prompts or instructions, explain your process, copy content betw
       
       switch (page_type) {
         case "state":
-          context = `Generate unique SEO content for Foster Connect's ${name} region directory page.
+          context = `Generate unique SEO content for Foster Care's ${name} region directory page.
 
 PAGE CONTEXT:
 - This is a REGION-level page showing all fostering agencies in ${name} (UK)
 - Users land here to explore fostering agencies across ${name}
 
 CONTENT DIRECTION:
-- Explain how Foster Connect helps prospective carers find agencies across ${name}
+- Explain how Foster Care helps prospective carers find agencies across ${name}
 - Mention major cities in ${name} where we list agencies
 - Discuss the fostering landscape in ${name} (Ofsted standards, local authority support)
 - Include ${name}-specific details to make content unique
-- H2 sections should cover: Overview of Fostering in ${name}, How to Find an Agency, What Foster Connect Offers, Types of Fostering, FAQs`;
+- H2 sections should cover: Overview of Fostering in ${name}, How to Find an Agency, What Foster Care Offers, Types of Fostering, FAQs`;
           break;
           
         case "city":
-          context = `Generate unique SEO content for Foster Connect's ${name}, ${stateAbbr || stateName || ""} city directory page.
+          context = `Generate unique SEO content for Foster Care's ${name}, ${stateAbbr || stateName || ""} city directory page.
 
 PAGE CONTEXT:
 - This is a CITY-level page showing fostering agencies in ${name}
 - Users are looking for local fostering options
 
 CONTENT DIRECTION:
-- Explain how Foster Connect helps ${name} residents find fostering agencies
+- Explain how Foster Care helps ${name} residents find fostering agencies
 - Reference ${name} boroughs, landmarks, or local context when helpful
 - Discuss how residents typically approach fostering locally
 - Include what makes fostering in ${name} accessible through our platform
@@ -444,7 +444,7 @@ CONTENT DIRECTION:
           break;
           
         case "treatment":
-          context = `Generate unique SEO content for Foster Connect's ${name} fostering type page.
+          context = `Generate unique SEO content for Foster Care's ${name} fostering type page.
 
 PAGE CONTEXT:
 - This is a FOSTERING TYPE page about ${name}
@@ -454,13 +454,13 @@ CONTENT DIRECTION:
 - Explain ${name} clearly - what it is, who can apply, general benefits
 - Describe what carers can expect during the assessment and placement process
 - Mention allowances and support carefully (use "may", "can", "often", "depends")
-- Explain how Foster Connect helps find ${name} agencies
-- H2 sections should cover: About ${name}, What to Expect, Benefits, Support & Allowances, How Foster Connect Helps, FAQs
+- Explain how Foster Care helps find ${name} agencies
+- H2 sections should cover: About ${name}, What to Expect, Benefits, Support & Allowances, How Foster Care Helps, FAQs
 - Use cautious language - no guarantees or promises`;
           break;
           
         case "city_treatment":
-          context = `Generate unique SEO content for Foster Connect's ${name} agencies in ${cityName}, ${stateAbbr || ""} page.
+          context = `Generate unique SEO content for Foster Care's ${name} agencies in ${cityName}, ${stateAbbr || ""} page.
 
 PAGE CONTEXT:
 - This is a FOSTERING TYPE + LOCATION page combining fostering info with local context
@@ -469,45 +469,45 @@ PAGE CONTEXT:
 CONTENT DIRECTION:
 - Explain ${name} clearly and specifically for ${cityName} residents
 - Reference ${cityName} naturally - don't force location keywords
-- Explain how Foster Connect helps ${cityName} people find ${name} agencies
+- Explain how Foster Care helps ${cityName} people find ${name} agencies
 - Include local considerations for this fostering type
 - H2 sections should cover: ${name} in ${cityName}, What to Know, Finding Agencies, Support in ${cityName} Area, FAQs
 - NEVER invent statistics about ${cityName}`;
           break;
           
         case "clinic":
-          context = `Generate unique SEO content for a fostering agency profile on Foster Connect: ${name}.
+          context = `Generate unique SEO content for a fostering agency profile on Foster Care: ${name}.
 
 PAGE CONTEXT:
 - This is an AGENCY PROFILE page
 - Users want to learn about this specific agency
 
 CONTENT DIRECTION:
-- Write from Foster Connect's perspective as the directory hosting this profile
+- Write from Foster Care's perspective as the directory hosting this profile
 - Describe the agency overview based on available information
 - Explain what carers can expect
-- Mention how Foster Connect helps people enquire with this agency
+- Mention how Foster Care helps people enquire with this agency
 - Keep tone informative, not promotional for the agency`;
           break;
           
         case "blog":
-          context = `Generate unique SEO content for Foster Connect's fostering blog post: "${name}".
+          context = `Generate unique SEO content for Foster Care's fostering blog post: "${name}".
 
 PAGE CONTEXT:
-- This is a BLOG POST on Foster Connect's fostering blog
+- This is a BLOG POST on Foster Care's fostering blog
 - Educational content for prospective carers
 
 CONTENT DIRECTION:
-- Write from Foster Connect's first-party voice
+- Write from Foster Care's first-party voice
 - Provide educational value and practical tips about fostering
 - Demonstrate fostering expertise without making promises
-- Include how Foster Connect can help readers find appropriate agencies
+- Include how Foster Care can help readers find appropriate agencies
 - End with a soft CTA to explore agencies on our platform`;
           break;
           
         default:
-          context = `Generate unique SEO content for Foster Connect's page about ${name}.
-Page type: ${page_type}. Write from Foster Connect's first-party platform voice.`;
+          context = `Generate unique SEO content for Foster Care's page about ${name}.
+Page type: ${page_type}. Write from Foster Care's first-party platform voice.`;
       }
       
       return `${context}
@@ -520,7 +520,7 @@ REQUIREMENTS:
 2. Location/fostering-type-specific information woven naturally throughout
 3. Proper H1 > H2 > H3 hierarchy (one H1, 4-6 H2s, H3s only where logical)
 4. Include 3-5 FAQs that match real user search intent about fostering
-5. Mention Foster Connect naturally in the content
+5. Mention Foster Care naturally in the content
 6. End with a soft, helpful CTA encouraging platform use`;
     }
 
@@ -1135,7 +1135,7 @@ Provide:
       // Build the service-location specific prompt with comprehensive UAE-focused instructions
       let serviceLocationPrompt = `You are a senior healthcare SEO content writer and local search strategist.
 
-You are writing a SERVICE-LOCATION PAGE for AppointPanda, a dental directory platform (NOT a clinic website).
+You are writing a SERVICE-LOCATION PAGE for Foster Care, a dental directory platform (NOT a clinic website).
 This page helps users find agencys offering a specific treatment in a specific UAE location.
 
 INPUT VARIABLES:
@@ -1151,11 +1151,11 @@ You MUST use this angle as your primary narrative approach. This ensures each pa
 ${siblingContext}
 
 IMPORTANT CONTEXT:
-- AppointPanda does NOT provide treatment.
+- Foster Care does NOT provide treatment.
 - It connects patients with licensed agencies and clinics.
 - Content must guide, educate, and help patients choose — not advertise one clinic.
 - The goal is to rank organically on Google using helpful content principles and E-E-A-T.
-- Write from AppointPanda's first-party voice: "we", "our platform", "AppointPanda helps patients..."
+- Write from Foster Care's first-party voice: "we", "our platform", "Foster Care helps patients..."
 
 GOOGLE & QUALITY REQUIREMENTS (MANDATORY):
 - Google Helpful Content System compliance
@@ -1186,7 +1186,7 @@ STRUCTURE TO GENERATE (vary the order and naming of sections — do NOT use iden
 - Cost of ${serviceName} in ${stateAbbr || 'UAE'} — Explain price ranges generally, factors affecting price, DO NOT invent exact numbers
 - Safety & Regulations in UAE — DHA/MOHAP standards, why licensed agencies matter
 - Questions Patients Usually Ask — 5-7 natural FAQs (informational, not promotional)
-- How Our Directory Helps — How AppointPanda helps compare clinics, not promote one
+- How Our Directory Helps — How Foster Care helps compare clinics, not promote one
 - Closing — Encourage informed decision without call-to-action pressure
 
 SEO RULES:

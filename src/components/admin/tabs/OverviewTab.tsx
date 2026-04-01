@@ -308,7 +308,7 @@ export default function OverviewTab() {
               )}
             </div>
             <h1 className="text-3xl font-extrabold text-white tracking-tight">Dashboard</h1>
-            <p className="text-white/60 mt-1">Foster Connect — UK Fostering Agency Directory</p>
+            <p className="text-white/60 mt-1">Foster Care — UK Fostering Agency Directory</p>
           </div>
           <div className="flex items-center gap-3">
             <Button className="bg-primary hover:bg-primary/90 text-white rounded-xl shadow-lg shadow-primary/30">

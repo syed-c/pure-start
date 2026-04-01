@@ -34,7 +34,7 @@ const FAQPage = () => {
   const { data: siteSettings } = useSiteSettings();
   const { data: counts } = useRealCounts();
   const { data: seoContent } = useSeoPageContent("faq");
-  const supportEmail = siteSettings?.contactDetails?.support_email || 'support@fosterconnect.co.uk';
+  const supportEmail = siteSettings?.contactDetails?.support_email || 'support@foster-care.co.uk';
   const supportPhone = siteSettings?.contactDetails?.support_phone || '+44 20 1234 5678';
 
   const categories = [
@@ -44,11 +44,11 @@ const FAQPage = () => {
       description: "Everything you need to know about starting your fostering journey.",
       color: "from-emerald-500/20 to-emerald-500/5",
       faqs: [
-        { q: "How do I find an Ofsted-registered fostering agency?", a: "Use our search feature to filter by region, city, or fostering type. All agencies on Foster Connect are registered with Ofsted. You can also compare agencies based on their Ofsted rating, reviews from other carers, and the types of fostering they specialise in." },
+        { q: "How do I find an Ofsted-registered fostering agency?", a: "Use our search feature to filter by region, city, or fostering type. All agencies on Foster Care are registered with Ofsted. You can also compare agencies based on their Ofsted rating, reviews from other carers, and the types of fostering they specialise in." },
         { q: "What are the requirements to become a foster carer?", a: "You need to be over 21, have a spare bedroom, and be a UK resident. You don't need to be married, own your home, or have previous experience with children. Agencies will assess your suitability through a thorough but supportive process." },
         { q: "How long does the fostering assessment take?", a: "The assessment process typically takes 4-6 months from initial enquiry to approval. This includes training, home visits, DBS checks, and a panel review. Some agencies offer a faster-track process for certain fostering types." },
         { q: "What fostering allowance will I receive?", a: "The national minimum allowance ranges from £132-£187 per week depending on the child's age. Many independent agencies offer enhanced rates above the minimum, plus additional support packages." },
-        { q: "Is Foster Connect free for prospective carers?", a: "Yes, completely free. Search, read reviews, compare services, and submit enquiries without any charges. We'll never ask you for payment." },
+        { q: "Is Foster Care free for prospective carers?", a: "Yes, completely free. Search, read reviews, compare services, and submit enquiries without any charges. We'll never ask you for payment." },
         { q: "Can I foster if I work full-time?", a: "Yes, many foster carers work either full or part-time. However, for certain types of fostering (especially young children), you may need to be available during the day. Your assessing agency will discuss flexible arrangements with you." },
       ]
     },
@@ -58,7 +58,7 @@ const FAQPage = () => {
       description: "Learn how to list and grow your agency on our platform.",
       color: "from-blue-500/20 to-blue-500/5",
       faqs: [
-        { q: "How do I list my agency on Foster Connect?", a: "Visit our 'List Your Agency' page and fill out the registration form with your Ofsted registration number. Our team will verify your details within 24-48 hours and your profile will go live." },
+        { q: "How do I list my agency on Foster Care?", a: "Visit our 'List Your Agency' page and fill out the registration form with your Ofsted registration number. Our team will verify your details within 24-48 hours and your profile will go live." },
         { q: "What are the benefits of a verified profile?", a: "Verified profiles receive an Ofsted badge, higher search ranking, priority placement in search results, access to an analytics dashboard, and the ability to respond to reviews publicly." },
         { q: "Can I manage multiple agency locations?", a: "Yes, you can manage multiple locations under one account. Each location has its own profile page with its own reviews, ratings, and service details." },
         { q: "Is there a cost to list my agency?", a: "Basic listings are free. Premium features including enhanced visibility, priority placement, and advanced analytics are available through our subscription plans." },
@@ -89,7 +89,7 @@ const FAQPage = () => {
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || "FAQ | Fostering Questions Answered | Foster Connect"}
+        title={seoContent?.meta_title || "FAQ | Fostering Questions Answered | Foster Care"}
         description={seoContent?.meta_description || "Find answers about fostering in the UK — Ofsted-registered agencies, fostering allowances, assessment process, and how to become a foster carer."}
         canonical="/faq/"
         keywords={['fostering FAQ UK', 'become foster carer questions', 'Ofsted fostering agency', 'fostering allowance']}

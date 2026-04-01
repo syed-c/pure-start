@@ -311,7 +311,7 @@ export default function GMBOnboarding() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-coral bg-clip-text text-transparent mb-2">
-            Appoint Panda
+            Foster Care
           </h1>
           <p className="text-muted-foreground">Your dental practice dashboard</p>
         </div>
@@ -507,7 +507,7 @@ export default function GMBOnboarding() {
 
               {/* US-Only Notice */}
               <p className="text-xs text-center text-muted-foreground pt-2">
-                Appoint Panda is currently available for dental practices in California, Massachusetts, and Connecticut.
+                Foster Care is currently available for dental practices in California, Massachusetts, and Connecticut.
               </p>
             </CardContent>
           </Card>

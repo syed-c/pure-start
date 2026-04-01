@@ -51,8 +51,8 @@ const heroRotatingTexts = [
 
 /* ───── testimonials ───── */
 const testimonials = [
-  { name: "Sarah Thompson", location: "London", text: "Foster Connect helped us find the perfect agency. The whole process was straightforward and we felt supported throughout our fostering journey.", rating: 5, avatar: "ST" },
-  { name: "James Richardson", location: "Birmingham", text: "We were nervous about fostering but the agency we found through Foster Connect provided amazing training and 24/7 support.", rating: 5, avatar: "JR" },
+  { name: "Sarah Thompson", location: "London", text: "Foster Care helped us find the perfect agency. The whole process was straightforward and we felt supported throughout our fostering journey.", rating: 5, avatar: "ST" },
+  { name: "James Richardson", location: "Birmingham", text: "We were nervous about fostering but the agency we found through Foster Care provided amazing training and 24/7 support.", rating: 5, avatar: "JR" },
   { name: "Maria Khan", location: "Manchester", text: "The reviews and agency profiles were incredibly helpful. Found a brilliant therapeutic fostering agency near us within days!", rating: 5, avatar: "MK" },
   { name: "David & Claire", location: "Leeds", text: "As first-time carers, the directory gave us confidence. We could see Ofsted ratings, real reviews, and compare agencies side by side.", rating: 5, avatar: "DC" },
 ];
@@ -102,7 +102,7 @@ const HomeV2 = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={seoContent?.meta_title || "Find Fostering Agencies in England & UK | Foster Connect"}
+        title={seoContent?.meta_title || "Find Fostering Agencies in England & UK | Foster Care"}
         description={seoContent?.meta_description || "Find Ofsted-rated fostering agencies across England. Compare reviews, explore fostering types & connect with agencies near you."}
         canonical="/"
       />
@@ -415,7 +415,7 @@ const HomeV2 = () => {
         <div className="container px-4">
           <div className="grid lg:grid-cols-2 gap-14 items-center max-w-6xl mx-auto">
             <motion.div {...fadeUp}>
-              <span className="text-xs font-bold text-primary uppercase tracking-widest mb-3 block">Why Foster Connect</span>
+              <span className="text-xs font-bold text-primary uppercase tracking-widest mb-3 block">Why Foster Care</span>
               <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-6">
                 Trusted by Families Across the UK
               </h2>
@@ -609,7 +609,7 @@ const HomeV2 = () => {
             </span>
             <h2 className="text-3xl md:text-4xl font-extrabold text-foreground">What Families Say</h2>
             <p className="text-muted-foreground mt-3 max-w-lg mx-auto">
-              Real stories from foster carers who found their agency through Foster Connect.
+              Real stories from foster carers who found their agency through Foster Care.
             </p>
           </motion.div>
 
@@ -679,7 +679,7 @@ const HomeV2 = () => {
                   <Link to="/services/long-term-fostering/" className="text-primary font-semibold hover:underline">long-term fostering</Link>,{" "}
                   <Link to="/services/short-term-fostering/" className="text-primary font-semibold hover:underline">short-term placements</Link>,{" "}
                   <Link to="/services/emergency-fostering/" className="text-primary font-semibold hover:underline">emergency fostering</Link>, or{" "}
-                  <Link to="/services/therapeutic-fostering/" className="text-primary font-semibold hover:underline">therapeutic care</Link>, our directory helps you compare agencies and find the best fit. Every agency listed on Foster Connect is registered with{" "}
+                  <Link to="/services/therapeutic-fostering/" className="text-primary font-semibold hover:underline">therapeutic care</Link>, our directory helps you compare agencies and find the best fit. Every agency listed on Foster Care is registered with{" "}
                   <strong className="text-foreground">Ofsted</strong> or the relevant regulatory body.
                 </p>
                 <p>
@@ -773,7 +773,7 @@ const HomeV2 = () => {
             <div className="space-y-3">
               {[
                 { q: "How do I find a fostering agency near me?", a: "Use our search to select your region and city. Browse verified agency profiles with Ofsted ratings, carer reviews, and fostering types offered." },
-                { q: "Is Foster Connect free to use?", a: "Yes, completely free for prospective foster carers. Search, compare, and enquire with agencies at no cost whatsoever." },
+                { q: "Is Foster Care free to use?", a: "Yes, completely free for prospective foster carers. Search, compare, and enquire with agencies at no cost whatsoever." },
                 { q: "Are all agencies verified?", a: "All agencies listed on our directory are registered with Ofsted or the relevant regulatory body for their nation. Look for the verified badge for additional checks." },
                 { q: "What types of fostering are available?", a: "Emergency, respite, long-term, short-term, therapeutic, parent & child fostering, and specialist placements for children with complex needs or disabilities." },
                 { q: "Do I need experience to become a foster carer?", a: "No prior childcare experience is required. Agencies provide comprehensive training and ongoing support. You need to be over 21, have a spare bedroom, and have time and commitment to give." },

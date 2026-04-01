@@ -87,7 +87,7 @@ const ContactPage = () => {
   const country = contactDetails?.country || 'United Kingdom';
 
   const departments = [
-    { icon: Headphones, title: "General Support", description: "Questions about Foster Connect", phone: supportPhone, email: supportEmail, color: "from-primary/20 to-teal/10" },
+    { icon: Headphones, title: "General Support", description: "Questions about Foster Care", phone: supportPhone, email: supportEmail, color: "from-primary/20 to-teal/10" },
     { icon: Building2, title: "Agency Partnerships", description: "List or manage your agency", phone: supportPhone, email: contactDetails?.partnerships_email || supportEmail, color: "from-gold/20 to-amber-500/10" },
     { icon: Home, title: "Fostering Enquiries", description: "Help finding an agency", phone: supportPhone, email: supportEmail, color: "from-purple/20 to-indigo-500/10" },
   ];
@@ -97,8 +97,8 @@ const ContactPage = () => {
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || "Contact Us | Get in Touch with Foster Connect"}
-        description={seoContent?.meta_description || "Have questions about finding a fostering agency or listing your agency? Contact the Foster Connect team. We're here to help."}
+        title={seoContent?.meta_title || "Contact Us | Get in Touch with Foster Care"}
+        description={seoContent?.meta_description || "Have questions about finding a fostering agency or listing your agency? Contact the Foster Care team. We're here to help."}
         canonical="/contact/"
         keywords={['contact foster connect', 'fostering help', 'fostering agency questions', 'foster care support']}
       />
