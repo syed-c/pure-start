@@ -70,7 +70,7 @@ const DEFAULT_CONTACT: ContactDetails = {
   city: '',
   state: '',
   zip_code: '',
-  country: 'United Arab Emirates',
+  country: 'United Kingdom',
 };
 
 const DEFAULT_SOCIAL: SocialLinks = {

@@ -5,10 +5,10 @@ export function InsuranceEducation() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-display font-bold mb-2">
-          How Dental Insurance Works in the UAE
+          How Partner Organisation Support Works in the UK
         </h2>
         <p className="text-muted-foreground">
-          Understanding your dental coverage helps you get the most from your insurance plan.
+          Understanding how partner organisations support fostering agencies and carers across the UK.
         </p>
       </div>
 
@@ -18,10 +18,10 @@ export function InsuranceEducation() {
             <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
               <Shield className="h-5 w-5 text-primary" />
             </div>
-            <h3 className="font-bold">DHA Mandatory Coverage</h3>
+            <h3 className="font-bold">Ofsted Registration</h3>
           </div>
           <p className="text-sm text-muted-foreground">
-            The Dubai Health Authority requires all residents to have health insurance. Most plans include basic dental coverage such as extractions and emergency treatments.
+            All fostering agencies in England must be registered with Ofsted and meet the national minimum standards for fostering services, ensuring consistent quality of care for children.
           </p>
         </div>
 
@@ -30,10 +30,10 @@ export function InsuranceEducation() {
             <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
               <FileCheck className="h-5 w-5 text-primary" />
             </div>
-            <h3 className="font-bold">Direct Billing vs Reimbursement</h3>
+            <h3 className="font-bold">Local Authority Partnerships</h3>
           </div>
           <p className="text-sm text-muted-foreground">
-            Many clinics offer direct billing — they bill your insurance directly so you only pay the copay. Some plans require reimbursement where you pay upfront and claim later.
+            Many independent fostering agencies work in partnership with local authorities to provide placements. These partnerships ensure children are matched with suitable carers in their local area.
           </p>
         </div>
 
@@ -42,10 +42,10 @@ export function InsuranceEducation() {
             <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
               <AlertTriangle className="h-5 w-5 text-primary" />
             </div>
-            <h3 className="font-bold">Pre-Approval Requirements</h3>
+            <h3 className="font-bold">Safeguarding Requirements</h3>
           </div>
           <p className="text-sm text-muted-foreground">
-            Major procedures like implants, crowns, and orthodontics typically require pre-approval from your insurer. Your clinic can submit the request on your behalf.
+            All fostering agencies must comply with safeguarding regulations, including enhanced DBS checks, safer recruitment policies, and ongoing supervision by qualified social workers.
           </p>
         </div>
 
@@ -54,10 +54,10 @@ export function InsuranceEducation() {
             <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
               <CheckCircle className="h-5 w-5 text-primary" />
             </div>
-            <h3 className="font-bold">Enhanced Plans</h3>
+            <h3 className="font-bold">Training & Development</h3>
           </div>
           <p className="text-sm text-muted-foreground">
-            Premium insurance plans offer comprehensive dental coverage including cleanings, whitening, orthodontics, and cosmetic procedures. Check your policy schedule of benefits.
+            Partner organisations provide comprehensive training programmes for foster carers, including the Skills to Foster course, safeguarding training, and continuous professional development.
           </p>
         </div>
       </div>

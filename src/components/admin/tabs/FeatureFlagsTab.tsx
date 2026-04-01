@@ -77,7 +77,7 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     key: 'review_ai_summary_enabled',
     name: 'AI Review Summaries',
-    description: 'Generate AI summaries of patient reviews for dentist profiles',
+    description: 'Generate AI summaries of carer reviews for agency profiles',
     category: 'reviews',
     icon: Star,
     defaultValue: false,
