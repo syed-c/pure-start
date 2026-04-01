@@ -68,8 +68,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   },
   {
     key: 'ai_match_enabled',
-    name: 'AI Dentist Matching',
-    description: 'AI-powered dentist recommendations based on user needs and preferences',
+    name: 'AI Agency Matching',
+    description: 'AI-powered fostering agency recommendations based on carer needs and preferences',
     category: 'ai',
     icon: Sparkles,
     defaultValue: false,
@@ -77,7 +77,7 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     key: 'review_ai_summary_enabled',
     name: 'AI Review Summaries',
-    description: 'Generate AI summaries of patient reviews for dentist profiles',
+    description: 'Generate AI summaries of carer reviews for agency profiles',
     category: 'reviews',
     icon: Star,
     defaultValue: false,

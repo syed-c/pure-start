@@ -209,7 +209,7 @@ export function TeamMemberFormDialog({
               <Input
                 value={formData.license_number}
                 onChange={(e) => handleFieldChange('license_number', e.target.value)}
-                placeholder="DHA-XXX-XXXX"
+                placeholder="REG-XXX-XXXX"
               />
             </div>
             <div className="space-y-2">

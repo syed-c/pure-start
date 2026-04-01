@@ -155,7 +155,7 @@ export const AgencyListFrame = ({
                 <meta itemProp="bestRating" content="5" />
                 <meta itemProp="worstRating" content="1" />
               </span>}
-              {profile.slug && <a itemProp="url" href={`https://www.appointpanda.ae/clinic/${profile.slug}/`}>View Profile</a>}
+              {profile.slug && <a itemProp="url" href={`https://www.fosterconnect.co.uk/clinic/${profile.slug}/`}>View Profile</a>}
             </div>
           ))}
         </div>
@@ -167,7 +167,7 @@ export const AgencyListFrame = ({
         <meta itemProp="name" content={`Agencies in ${locationName}`} />
         <meta itemProp="numberOfItems" content={String(profiles.length)} />
         {profiles.map((profile, index) => (
-          <div key={profile.id} role="listitem" itemScope itemType="https://schema.org/Dentist" itemProp="itemListElement">
+          <div key={profile.id} role="listitem" itemScope itemType="https://schema.org/Organization" itemProp="itemListElement">
             <meta itemProp="position" content={String(index + 1)} />
             <span itemProp="name">{profile.name}</span>
             {profile.location && <span itemProp="address">{profile.location}</span>}
@@ -178,7 +178,7 @@ export const AgencyListFrame = ({
               <meta itemProp="bestRating" content="5" />
               <meta itemProp="worstRating" content="1" />
             </span>}
-            {profile.slug && <a itemProp="url" href={`https://www.appointpanda.ae/clinic/${profile.slug}/`}>{profile.name}</a>}
+            {profile.slug && <a itemProp="url" href={`https://www.fosterconnect.co.uk/clinic/${profile.slug}/`}>{profile.name}</a>}
           </div>
         ))}
       </div>

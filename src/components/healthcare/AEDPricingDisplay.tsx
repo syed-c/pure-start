@@ -1,7 +1,8 @@
 /**
- * PricingDisplay - Displays service information for fostering agencies.
+ * ServiceDisplay - Displays fostering services offered by agencies.
  * 
  * Shows fostering types and services offered by agencies.
+ * Legacy export name "AEDPricingDisplay" maintained for backward compatibility.
  */
 
 import { cn } from '@/lib/utils';

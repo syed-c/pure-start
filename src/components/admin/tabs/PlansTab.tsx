@@ -632,14 +632,14 @@ export default function PlansTab() {
             <div className="flex-1">
               <h3 className="text-xl font-bold mb-2">Unbeatable Value vs Competitors</h3>
               <p className="text-emerald-100 mb-4">
-                While other platforms charge <span className="text-red-300 font-bold">$120-$190 per new patient booking</span>, 
-                our platform offers new patient acquisition at just <span className="text-white font-bold">$99 per booking equivalent</span> — 
-                saving practices thousands annually.
+                While other platforms charge <span className="text-red-300 font-bold">£90-£150 per new agency listing</span>, 
+                our platform offers agency listings at just <span className="text-white font-bold">£79 per listing equivalent</span> — 
+                saving agencies thousands annually.
               </p>
               <div className="flex gap-6 flex-wrap">
                 <div className="flex items-center gap-2 bg-white/10 rounded-lg px-4 py-2">
                   <Badge className="bg-red-500/80 text-white border-0">Competitors</Badge>
-                  <span className="font-bold">$120-190/booking</span>
+                  <span className="font-bold">£90-150/listing</span>
                 </div>
                 <div className="flex items-center gap-2 bg-white/20 rounded-lg px-4 py-2">
                   <Badge className="bg-white text-emerald-700 border-0 font-bold">Our Platform</Badge>

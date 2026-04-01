@@ -10,7 +10,7 @@ export default function SeoOperationsCenterTab() {
   const [activeTab, setActiveTab] = useState('operations');
 
   const handleInspectPage = (page: SeoPage) => {
-    window.open(`https://www.appointpanda.ae${page.slug}`, '_blank');
+    window.open(`https://www.fosterconnect.co.uk${page.slug}`, '_blank');
   };
 
   return (

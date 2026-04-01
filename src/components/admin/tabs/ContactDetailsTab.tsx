@@ -70,7 +70,7 @@ const DEFAULT_CONTACT: ContactDetails = {
   city: '',
   state: '',
   zip_code: '',
-  country: 'United Arab Emirates',
+  country: 'United Kingdom',
 };
 
 const DEFAULT_SOCIAL: SocialLinks = {
@@ -253,7 +253,7 @@ export default function ContactDetailsTab() {
                     type="email"
                     value={contactDetails.support_email}
                     onChange={(e) => updateContact('support_email', e.target.value)}
-                    placeholder="support@appointpanda.ae"
+                    placeholder="support@fosterconnect.co.uk"
                   />
                   <p className="text-xs text-muted-foreground">For customer inquiries and help requests</p>
                 </div>
@@ -267,7 +267,7 @@ export default function ContactDetailsTab() {
                     type="email"
                     value={contactDetails.booking_email}
                     onChange={(e) => updateContact('booking_email', e.target.value)}
-                    placeholder="bookings@appointpanda.ae"
+                    placeholder="enquiries@fosterconnect.co.uk"
                   />
                   <p className="text-xs text-muted-foreground">For appointment-related questions</p>
                 </div>
@@ -281,7 +281,7 @@ export default function ContactDetailsTab() {
                     type="email"
                     value={contactDetails.sales_email}
                     onChange={(e) => updateContact('sales_email', e.target.value)}
-                    placeholder="sales@appointpanda.ae"
+                    placeholder="agencies@fosterconnect.co.uk"
                   />
                   <p className="text-xs text-muted-foreground">For pricing and subscription inquiries</p>
                 </div>
@@ -295,7 +295,7 @@ export default function ContactDetailsTab() {
                     type="email"
                     value={contactDetails.partnerships_email}
                     onChange={(e) => updateContact('partnerships_email', e.target.value)}
-                    placeholder="partners@appointpanda.ae"
+                    placeholder="partners@fosterconnect.co.uk"
                   />
                   <p className="text-xs text-muted-foreground">For business partnerships and collaborations</p>
                 </div>
@@ -443,7 +443,7 @@ export default function ContactDetailsTab() {
                     <Input
                       value={contactDetails.country}
                       onChange={(e) => updateContact('country', e.target.value)}
-                      placeholder="United Arab Emirates"
+                      placeholder="United Kingdom"
                     />
                   </div>
                 </div>
@@ -461,7 +461,7 @@ export default function ContactDetailsTab() {
                   <p className="text-muted-foreground">
                     {contactDetails.city || 'City'}, {contactDetails.state || 'ST'} {contactDetails.zip_code || '00000'}
                   </p>
-                  <p className="text-muted-foreground">{contactDetails.country || 'United Arab Emirates'}</p>
+                  <p className="text-muted-foreground">{contactDetails.country || 'United Kingdom'}</p>
                 </div>
               </div>
             </CardContent>

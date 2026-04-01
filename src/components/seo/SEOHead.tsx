@@ -14,8 +14,8 @@ export interface SEOHeadProps {
   modifiedAt?: string;
 }
 
-const SITE_NAME = 'AppointPanda';
-const BASE_URL = 'https://www.appointpanda.ae';
+const SITE_NAME = 'Foster Connect';
+const BASE_URL = 'https://www.fosterconnect.co.uk';
 const DEFAULT_OG_IMAGE = `${BASE_URL}/og-image.png`;
 
 export const SEOHead = ({

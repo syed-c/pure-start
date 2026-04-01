@@ -105,14 +105,14 @@ export default function MessagingControlTab() {
   // Sample data for preview
   const sampleData = {
     patient_name: 'Sarah Johnson',
-    clinic_name: 'Premium Dental Care',
+    clinic_name: 'Bright Futures Fostering',
     date: 'January 15, 2026',
     time: '10:30 AM',
-    treatment: 'Teeth Cleaning',
-    review_link: 'https://appointpanda.ae/review/abc123',
-    booking_link: 'https://appointpanda.ae/book/abc123',
-    reschedule_link: 'https://appointpanda.ae/reschedule/abc123',
-    cancel_link: 'https://appointpanda.ae/cancel/abc123',
+    treatment: 'Fostering Enquiry',
+    review_link: 'https://www.fosterconnect.co.uk/review/abc123',
+    booking_link: 'https://www.fosterconnect.co.uk/book/abc123',
+    reschedule_link: 'https://www.fosterconnect.co.uk/reschedule/abc123',
+    cancel_link: 'https://www.fosterconnect.co.uk/cancel/abc123',
   };
   
   const renderPreviewContent = (template: string) => {
