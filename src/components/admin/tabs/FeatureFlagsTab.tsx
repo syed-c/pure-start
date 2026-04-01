@@ -68,8 +68,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   },
   {
     key: 'ai_match_enabled',
-    name: 'AI Dentist Matching',
-    description: 'AI-powered dentist recommendations based on user needs and preferences',
+    name: 'AI Agency Matching',
+    description: 'AI-powered fostering agency recommendations based on carer needs and preferences',
     category: 'ai',
     icon: Sparkles,
     defaultValue: false,
