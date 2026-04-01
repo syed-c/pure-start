@@ -395,7 +395,7 @@ export default function ReputationQRCodesTab({
                     </div>
                     {settings.showBranding && (
                       <div className="border-t border-slate-100 py-3 text-center bg-slate-50">
-                        <span className="text-xs text-slate-400">Powered by <span className="font-semibold text-primary">AppointPanda</span></span>
+                        <span className="text-xs text-slate-400">Powered by <span className="font-semibold text-primary">Foster Connect</span></span>
                       </div>
                     )}
                   </Card>
