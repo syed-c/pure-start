@@ -443,7 +443,7 @@ export default function ContactDetailsTab() {
                     <Input
                       value={contactDetails.country}
                       onChange={(e) => updateContact('country', e.target.value)}
-                      placeholder="United Arab Emirates"
+                      placeholder="United Kingdom"
                     />
                   </div>
                 </div>
