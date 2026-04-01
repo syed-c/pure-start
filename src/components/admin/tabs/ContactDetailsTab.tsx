@@ -253,7 +253,7 @@ export default function ContactDetailsTab() {
                     type="email"
                     value={contactDetails.support_email}
                     onChange={(e) => updateContact('support_email', e.target.value)}
-                    placeholder="support@appointpanda.ae"
+                    placeholder="support@fosterconnect.co.uk"
                   />
                   <p className="text-xs text-muted-foreground">For customer inquiries and help requests</p>
                 </div>
