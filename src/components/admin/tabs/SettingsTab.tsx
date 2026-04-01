@@ -883,7 +883,7 @@ export default function SettingsTab() {
                   </Button>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Set your production callback URL (e.g., <strong>https://www.appointpanda.ae/auth/callback</strong>). Add this URL as an authorized redirect URI in your{' '}
+                  Set your production callback URL (e.g., <strong>https://www.fosterconnect.co.uk/auth/callback</strong>). Add this URL as an authorized redirect URI in your{' '}
                   <a 
                     href="https://console.cloud.google.com/apis/credentials" 
                     target="_blank" 
