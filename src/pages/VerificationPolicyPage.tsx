@@ -40,8 +40,8 @@ const VerificationPolicyPage = () => {
   return (
     <PageLayout>
       <SEOHead
-        title="Verification Policy — How We Verify Fostering Agencies | Foster Connect"
-        description="Learn how Foster Connect verifies fostering agencies in the UK. Our multi-step process ensures families connect with legitimate, Ofsted-registered agencies."
+        title="Verification Policy — How We Verify Fostering Agencies | Foster Care"
+        description="Learn how Foster Care verifies fostering agencies in the UK. Our multi-step process ensures families connect with legitimate, Ofsted-registered agencies."
         canonical="/verification-policy/"
       />
       <StructuredData type="faq" questions={faqs} />
@@ -147,7 +147,7 @@ const VerificationPolicyPage = () => {
               <h3 className="font-bold text-foreground mb-1">Report a Concern</h3>
               <p className="text-sm text-muted-foreground">
                 If you believe a listed agency is unregistered or misrepresenting their credentials, please report it to{" "}
-                <a href="mailto:trust@fosterconnect.co.uk" className="text-primary hover:underline">trust@fosterconnect.co.uk</a>.
+                <a href="mailto:trust@foster-care.co.uk" className="text-primary hover:underline">trust@foster-care.co.uk</a>.
                 All reports are investigated within 48 hours.
               </p>
             </div>

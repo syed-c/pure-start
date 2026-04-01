@@ -52,7 +52,7 @@ const SitemapPage = () => {
     { name: "Home", path: "/", icon: Home, description: "Find fostering agencies" },
     { name: "Find an Agency", path: "/search", icon: Search, description: "Search fostering agencies" },
     { name: "About Us", path: "/about", icon: Info, description: "Our mission & story" },
-    { name: "How It Works", path: "/how-it-works", icon: HelpCircle, description: "How Foster Connect works" },
+    { name: "How It Works", path: "/how-it-works", icon: HelpCircle, description: "How Foster Care works" },
     { name: "Contact", path: "/contact", icon: Phone, description: "Get in touch" },
     { name: "FAQs", path: "/faq", icon: HelpCircle, description: "Common questions" },
     { name: "Blog", path: "/blog", icon: BookOpen, description: "Fostering resources & guides" },
@@ -88,8 +88,8 @@ const SitemapPage = () => {
   return (
     <PageLayout>
       <SEOHead
-        title="Sitemap | Foster Connect"
-        description="Navigate all pages on Foster Connect — find fostering agencies, locations, fostering types, and resources across England & the UK."
+        title="Sitemap | Foster Care"
+        description="Navigate all pages on Foster Care — find fostering agencies, locations, fostering types, and resources across England & the UK."
         canonical="/sitemap"
       />
 

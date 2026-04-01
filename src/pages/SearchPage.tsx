@@ -314,7 +314,7 @@ export default function SearchPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <SEOHead title="Find Fostering Agencies in England & UK | Foster Connect"
+      <SEOHead title="Find Fostering Agencies in England & UK | Foster Care"
         description="Search and compare Ofsted-rated fostering agencies across England. Filter by region, city, fostering type, and agency rating."
         canonical="/search/" keywords={["fostering agencies UK", "find fostering agency", "foster care agencies England", "Ofsted rated agencies"]} />
       <StructuredData type="breadcrumb" items={[{ name: "Home", url: "/" }, { name: "Search Agencies", url: "/search/" }]} />

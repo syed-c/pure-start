@@ -69,7 +69,7 @@ const InsurancePage = () => {
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || "Partner Organisations — Find Agencies by Partnership | Foster Connect"}
+        title={seoContent?.meta_title || "Partner Organisations — Find Agencies by Partnership | Foster Care"}
         description={seoContent?.meta_description || "Find fostering agencies that partner with your local authority or organisation. Browse verified agencies across the UK."}
         canonical="/insurance/"
         keywords={['fostering partnerships', 'local authority fostering', 'fostering agency partners', 'UK fostering']}

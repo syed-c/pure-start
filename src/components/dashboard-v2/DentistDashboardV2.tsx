@@ -1,7 +1,7 @@
 /**
  * Agency Dashboard V2 Tab
  * Wrapper component that uses the new v2 layout and components
- * Foster Connect — UK Fostering Agency Directory
+ * Foster Care — UK Fostering Agency Directory
  */
 
 import { useState } from 'react';

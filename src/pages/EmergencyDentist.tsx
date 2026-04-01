@@ -103,7 +103,7 @@ export default function EmergencyFosteringFinder() {
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || "Emergency Fostering | Find Agencies With Immediate Placements | Foster Connect"}
+        title={seoContent?.meta_title || "Emergency Fostering | Find Agencies With Immediate Placements | Foster Care"}
         description={seoContent?.meta_description || "Find fostering agencies offering emergency placements. Get immediate support for children who need urgent care."}
         canonical="/emergency-fostering/"
       />

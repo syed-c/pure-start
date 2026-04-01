@@ -25,7 +25,7 @@ interface Phase3Request {
 // BLOG TEMPLATES BY CATEGORY
 // ========================================
 
-const INFORMATIONAL_TEMPLATE = `You are writing an INFORMATIONAL DEEP DIVE blog post for Foster Connect, the UK fostering agency directory.
+const INFORMATIONAL_TEMPLATE = `You are writing an INFORMATIONAL DEEP DIVE blog post for Foster Care, the UK fostering agency directory.
 
 === TEMPLATE: "What to Expect During Your Fostering Assessment" ===
 Target: 1,800-2,200 words
@@ -72,14 +72,14 @@ H1: What to Expect During Your Fostering Assessment: Complete Guide [2026]
    - What agencies provide during this period
    - Financial considerations
 
-8. H2: Find an Agency on Foster Connect (150 words)
-   - CTA to Foster Connect
+8. H2: Find an Agency on Foster Care (150 words)
+   - CTA to Foster Care
    - Benefits of using directory
 
 9. H2: FAQs (200 words)
    - 5-6 common assessment questions`;
 
-const PROBLEM_SOLVING_TEMPLATE = `You are writing a PROBLEM-SOLVING blog post for Foster Connect.
+const PROBLEM_SOLVING_TEMPLATE = `You are writing a PROBLEM-SOLVING blog post for Foster Care.
 
 === TEMPLATE: Challenging Situations in Fostering ===
 Target: 1,200-1,800 words
@@ -117,7 +117,7 @@ H1: [Challenge]: Understanding, Managing & Getting Support [2026]
    - Equipment and resources
    - Local authority support
 
-7. H2: Find Supportive Agencies on Foster Connect (150 words)
+7. H2: Find Supportive Agencies on Foster Care (150 words)
    - CTA to find agencies with specialist support
    - Compare agency support packages
 
@@ -162,16 +162,16 @@ H1: Fostering Allowances in [Region]: Complete Guide [2026]
    - Travel expenses
 
 7. H2: How to Compare Agency Allowances (200 words)
-   - Using Foster Connect to compare
+   - Using Foster Care to compare
    - Questions to ask agencies
 
 8. H2: Find Agencies with Competitive Allowances (150 words)
-   - CTA to Foster Connect
+   - CTA to Foster Care
 
 9. H2: FAQs (150 words)
    - 5 financial questions`;
 
-const NEIGHBORHOOD_TEMPLATE = `You are generating a NEIGHBOURHOOD/AREA landing page for Foster Connect.
+const NEIGHBORHOOD_TEMPLATE = `You are generating a NEIGHBOURHOOD/AREA landing page for Foster Care.
 
 === TEMPLATE: Fostering Agencies in [Area], [City] ===
 Target: 1,500-2,000 words
@@ -231,15 +231,15 @@ async function generateContent(
   targetWordCount: number,
   aimlApiKey: string
 ): Promise<{ content: string; word_count: number }> {
-  const systemPrompt = `You are an expert UK fostering content writer for Foster Connect, a leading fostering agency directory.
+  const systemPrompt = `You are an expert UK fostering content writer for Foster Care, a leading fostering agency directory.
 
-VOICE: Write in Foster Connect's first-party platform voice ("we", "our directory", "on Foster Connect").
+VOICE: Write in Foster Care's first-party platform voice ("we", "our directory", "on Foster Care").
 STYLE: Professional yet accessible, carer-focused, factually accurate but not bureaucratic.
 FORMAT: Use markdown with proper heading hierarchy (H1, H2, H3).
 TABLES: Use markdown tables for allowance comparisons and structured data.
 LENGTH: Target ${targetWordCount} words minimum. Be comprehensive.
 E-E-A-T: Demonstrate expertise, experience, authoritativeness, trustworthiness.
-CTAs: Include natural calls-to-action to Foster Connect directory throughout.
+CTAs: Include natural calls-to-action to Foster Care directory throughout.
 LANGUAGE: British English spelling throughout.
 
 CRITICAL RULES:

@@ -47,7 +47,7 @@ STRICT RULES:
 4. Follow Google E-E-A-T guidelines
 5. Be specific and relevant to the page content
 6. Include location for local pages (UK cities/regions)
-7. For Foster Connect: We are a fostering agency directory helping prospective carers find agencies
+7. For Foster Care: We are a fostering agency directory helping prospective carers find agencies
 8. Use British English spelling throughout
 
 OUTPUT FORMAT (JSON only, no markdown):

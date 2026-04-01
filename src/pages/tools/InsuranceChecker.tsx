@@ -117,7 +117,7 @@ export default function InsuranceChecker() {
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || "Support Services Checker | Foster Connect"}
+        title={seoContent?.meta_title || "Support Services Checker | Foster Care"}
         description={seoContent?.meta_description || "Check which fostering agencies offer the support services you need. Find agencies near you with the right expertise."}
         canonical="/tools/insurance-checker/"
       />
@@ -316,7 +316,7 @@ export default function InsuranceChecker() {
             <div>
               <h3 className="font-semibold mb-2">How can I verify an agency's credentials?</h3>
               <p className="text-muted-foreground">
-                All agencies listed on Foster Connect are Ofsted-registered. You can verify their Ofsted rating on their profile page or directly on the Ofsted website.
+                All agencies listed on Foster Care are Ofsted-registered. You can verify their Ofsted rating on their profile page or directly on the Ofsted website.
               </p>
             </div>
           </CardContent>

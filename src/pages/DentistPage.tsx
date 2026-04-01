@@ -101,7 +101,7 @@ const ContactPage = () => {
 
   const handleShare = async () => {
     const url = window.location.href;
-    const title = `${dentist?.name || 'Agency'} - Foster Connect`;
+    const title = `${dentist?.name || 'Agency'} - Foster Care`;
     
     if (navigator.share) {
       try {

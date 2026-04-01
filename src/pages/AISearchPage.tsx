@@ -180,7 +180,7 @@ const AISearchPage = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <SEOHead
-        title="Smart Agency Search | Find Fostering Agencies by Location | Foster Connect"
+        title="Smart Agency Search | Find Fostering Agencies by Location | Foster Care"
         description="Tell us what you need and your location. Our AI finds the perfect fostering agency match instantly."
         canonical="/search/"
         keywords={["fostering agency search", "find fostering agency", "foster care near me", "fostering directory"]}

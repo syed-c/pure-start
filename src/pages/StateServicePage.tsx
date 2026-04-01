@@ -163,7 +163,7 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
             name: `${treatmentName} in ${stateName}`,
             description: pageDescription,
             url: `/${normalizedStateSlug}/${serviceSlug}/`,
-            provider: 'Foster Connect',
+            provider: 'Foster Care',
             areaServed: stateName,
           },
         ]}

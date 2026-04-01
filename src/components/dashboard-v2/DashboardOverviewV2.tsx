@@ -1,7 +1,7 @@
 /**
  * Premium Dashboard Overview v2
  * Widget-based command centre with animated KPIs, circular progress, and AI suggestions
- * Foster Connect — UK Fostering Agency Directory
+ * Foster Care — UK Fostering Agency Directory
  */
 
 import { useQuery } from '@tanstack/react-query';

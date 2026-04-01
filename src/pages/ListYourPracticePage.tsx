@@ -292,8 +292,8 @@ const ListYourPracticePage = () => {
   return (
     <PageLayout>
       <SEOHead
-        title="List Your Fostering Agency | Join Foster Connect Directory"
-        description="List your fostering agency for free on Foster Connect. Reach prospective foster carers, get verified, collect reviews, and grow your agency."
+        title="List Your Fostering Agency | Join Foster Care Directory"
+        description="List your fostering agency for free on Foster Care. Reach prospective foster carers, get verified, collect reviews, and grow your agency."
         canonical="/list-your-agency/"
         keywords={['list fostering agency', 'fostering directory listing', 'agency marketing', 'fostering agency growth']}
       />
@@ -549,7 +549,7 @@ const ListYourPracticePage = () => {
             {/* Benefits Sidebar */}
             <div className="lg:col-span-2">
               <div className="card-modern p-6 sticky top-24">
-                <h3 className="font-display text-lg font-bold mb-6">Why List on Foster Connect?</h3>
+                <h3 className="font-display text-lg font-bold mb-6">Why List on Foster Care?</h3>
                 <div className="space-y-5">
                   {benefits.map((benefit, i) => (
                     <div key={i} className="flex gap-4">

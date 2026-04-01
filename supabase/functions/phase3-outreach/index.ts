@@ -26,10 +26,10 @@ interface OutreachRequest {
 // Email templates
 const EMAIL_TEMPLATES = {
   claim: {
-    subject: "You're Listed on Foster Connect - Claim Your Free Profile",
+    subject: "You're Listed on Foster Care - Claim Your Free Profile",
     body: `Hi {{last_name}},
 
-I'm reaching out because {{practice_name}} is currently listed on Foster Connect with basic information, but you haven't claimed your profile yet.
+I'm reaching out because {{practice_name}} is currently listed on Foster Care with basic information, but you haven't claimed your profile yet.
 
 When you claim and complete your profile (takes 5 minutes), you'll receive:
 
@@ -44,19 +44,19 @@ Your profile: {{profile_url}}
 Claim it here: {{claim_url}}
 
 Best,
-The Foster Connect Team
+The Foster Care Team
 
 ---
-Foster Connect - Connecting Carers with Great Agencies
+Foster Care - Connecting Carers with Great Agencies
 Unsubscribe: {{unsubscribe_url}}`,
   },
   followup: {
-    subject: "{{practice_name}} - Get More Carer Enquiries From Foster Connect",
+    subject: "{{practice_name}} - Get More Carer Enquiries From Foster Care",
     body: `{{last_name}},
 
-I wanted to follow up about your Foster Connect profile.
+I wanted to follow up about your Foster Care profile.
 
-Last month, {{monthly_searches}} prospective carers in {{city}} used Foster Connect to find fostering agencies.
+Last month, {{monthly_searches}} prospective carers in {{city}} used Foster Care to find fostering agencies.
 
 Here's what agencies with claimed profiles get:
 - 5x more profile views
@@ -69,16 +69,16 @@ Complete your profile: {{claim_url}}
 Takes 5 minutes, no credit card needed.
 
 Best,
-The Foster Connect Team
+The Foster Care Team
 
 ---
 Unsubscribe: {{unsubscribe_url}}`,
   },
   final: {
-    subject: "Final reminder: Claim your Foster Connect profile",
+    subject: "Final reminder: Claim your Foster Care profile",
     body: `{{last_name}},
 
-This is my final reminder about claiming your free Foster Connect profile for {{practice_name}}.
+This is my final reminder about claiming your free Foster Care profile for {{practice_name}}.
 
 Your profile is currently showing basic information only. Claimed profiles receive:
 
@@ -92,7 +92,7 @@ Claim your profile now: {{claim_url}}
 If you have questions, just reply to this email.
 
 Best,
-The Foster Connect Team
+The Foster Care Team
 
 ---
 Unsubscribe: {{unsubscribe_url}}`,

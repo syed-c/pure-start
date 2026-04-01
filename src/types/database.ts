@@ -1,4 +1,4 @@
-// Database types for the Foster Connect Platform - UK Edition
+// Database types for the Foster Care Platform - UK Edition
 
 export type AppRole = 'super_admin' | 'regional_manager' | 'agency_admin' | 'user' | 'district_manager' | 'dentist' | 'patient';
 export type ClaimStatus = 'unclaimed' | 'pending' | 'claimed';

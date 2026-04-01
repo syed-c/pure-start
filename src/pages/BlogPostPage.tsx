@@ -586,11 +586,11 @@ const BlogPostPage = () => {
     <PageLayout>
       <SEOHead
         title={post.seo_title || post.title}
-        description={post.seo_description || post.excerpt || `Read "${post.title}" on Foster Connect's fostering blog.`}
+        description={post.seo_description || post.excerpt || `Read "${post.title}" on Foster Care's fostering blog.`}
         canonical={`/blog/${post.slug}/`}
         ogType="article"
         ogImage={post.featured_image_url || undefined}
-        author={post.author_name || 'Foster Connect Team'}
+        author={post.author_name || 'Foster Care Team'}
         publishedAt={post.published_at || undefined}
         modifiedAt={post.updated_at || undefined}
         keywords={post.tags || ['fostering', 'foster care']}
@@ -603,7 +603,7 @@ const BlogPostPage = () => {
         url={`/blog/${post.slug}/`}
         datePublished={post.published_at || ''}
         dateModified={post.updated_at || post.published_at || ''}
-        author={post.author_name || 'Foster Connect Team'}
+        author={post.author_name || 'Foster Care Team'}
       />
       <StructuredData
         type="breadcrumb"
@@ -646,7 +646,7 @@ const BlogPostPage = () => {
                     <User className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <p className="font-bold">{post.author_name || "Foster Connect Team"}</p>
+                    <p className="font-bold">{post.author_name || "Foster Care Team"}</p>
                     <p className="text-sm text-muted-foreground">Fostering Expert</p>
                   </div>
                 </div>
@@ -814,7 +814,7 @@ const BlogPostPage = () => {
             <div className="card-modern p-6 bg-muted/30">
               <div className="flex items-center gap-2 mb-4">
                 <Shield className="h-5 w-5 text-emerald-500" />
-                <h3 className="font-bold">Why Foster Connect?</h3>
+                <h3 className="font-bold">Why Foster Care?</h3>
               </div>
               <ul className="space-y-3 text-sm">
                 <li className="flex items-start gap-2">

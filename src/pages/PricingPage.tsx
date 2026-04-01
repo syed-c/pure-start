@@ -140,7 +140,7 @@ const FAQS = [
   { question: 'Why monthly billing only?', answer: 'Monthly billing keeps us accountable. You see results every month, or you can cancel. No long contracts, no hidden fees.' },
   { question: 'Do you guarantee new carer enquiries?', answer: 'We track verified enquiries (calls, form submissions, chat contacts). We provide visibility and enquiry flow — no guarantees, just transparent tracking.' },
   { question: 'Is my data secure?', answer: 'Yes. We follow UK GDPR data protection standards. We track contact intent only. All sensitive data remains secure and encrypted.' },
-  { question: 'Do I need new software?', answer: 'No. Foster Connect works alongside your existing systems. We provide a dashboard for reputation and enquiries.' },
+  { question: 'Do I need new software?', answer: 'No. Foster Care works alongside your existing systems. We provide a dashboard for reputation and enquiries.' },
   { question: 'Who owns the website content?', answer: 'You own all content you create. Cancel anytime and export your content.' },
   { question: 'How does the verification badge work?', answer: 'We verify your agency credentials (Ofsted registration, address, ownership) through a manual review process. Once verified, a trust badge appears on your profile.' },
   { question: 'What counts as a verified enquiry?', answer: 'A verified enquiry is: (1) A phone call lasting 30+ seconds, (2) A completed enquiry form, or (3) A chat conversation resulting in contact info exchange.' },
@@ -200,7 +200,7 @@ export default function PricingPage() {
   return (
     <>
       <SEOHead
-        title="Pricing | Fostering Agency Growth Platform | Foster Connect"
+        title="Pricing | Fostering Agency Growth Platform | Foster Care"
         description="Monthly fostering agency growth plans. Verified listings, reputation management, enquiry tracking, SEO. No contracts, cancel anytime."
       />
       <div className="min-h-screen flex flex-col bg-background">
@@ -403,7 +403,7 @@ export default function PricingPage() {
             <div className="container mx-auto px-4">
               <div className="max-w-3xl mx-auto text-center text-xs text-muted-foreground space-y-2">
                 <p><strong>No Guarantees:</strong> Enquiry quotas represent verified enquiries tracked, not carers delivered. Results depend on profile quality, response time, reviews, and local market.</p>
-                <p><strong>Data Protection:</strong> Foster Connect tracks contact intent only and follows UK GDPR standards. All sensitive data remains secure.</p>
+                <p><strong>Data Protection:</strong> Foster Care tracks contact intent only and follows UK GDPR standards. All sensitive data remains secure.</p>
                 <p><strong>Google Business Profile:</strong> We assist and optimise — we do not impersonate or auto-post on your behalf.</p>
               </div>
             </div>
@@ -416,7 +416,7 @@ export default function PricingPage() {
                 Ready to Grow Your Fostering Agency?
               </h2>
               <p className="text-primary-foreground/80 text-lg mb-8 max-w-2xl mx-auto">
-                Join fostering agencies across England who trust Foster Connect for verified visibility and carer recruitment.
+                Join fostering agencies across England who trust Foster Care for verified visibility and carer recruitment.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" variant="secondary" className="gap-2" onClick={() => navigate('/list-your-agency')}>

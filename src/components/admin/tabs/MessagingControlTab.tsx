@@ -109,10 +109,10 @@ export default function MessagingControlTab() {
     date: 'January 15, 2026',
     time: '10:30 AM',
     treatment: 'Fostering Enquiry',
-    review_link: 'https://www.fosterconnect.co.uk/review/abc123',
-    booking_link: 'https://www.fosterconnect.co.uk/book/abc123',
-    reschedule_link: 'https://www.fosterconnect.co.uk/reschedule/abc123',
-    cancel_link: 'https://www.fosterconnect.co.uk/cancel/abc123',
+    review_link: 'https://www.foster-care.co.uk/review/abc123',
+    booking_link: 'https://www.foster-care.co.uk/book/abc123',
+    reschedule_link: 'https://www.foster-care.co.uk/reschedule/abc123',
+    cancel_link: 'https://www.foster-care.co.uk/cancel/abc123',
   };
   
   const renderPreviewContent = (template: string) => {

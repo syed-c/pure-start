@@ -157,13 +157,13 @@ serve(async (req) => {
       throw lastError || new Error("AI gateway failed after retries");
     }
 
-    // Master system prompt for Foster Connect content (non-agency pages)
-    const PLATFORM_SYSTEM_PROMPT = `You are generating SEO content ONLY for Foster Connect, a UK fostering agency directory and enquiry platform.
+    // Master system prompt for Foster Care content (non-agency pages)
+    const PLATFORM_SYSTEM_PROMPT = `You are generating SEO content ONLY for Foster Care, a UK fostering agency directory and enquiry platform.
 
 === CRITICAL BUSINESS CONTEXT ===
-- Foster Connect helps people find, compare, and enquire with fostering agencies across the UK
+- Foster Care helps people find, compare, and enquire with fostering agencies across the UK
 - We are NOT a fostering agency - we are a directory/enquiry platform
-- ALL content must be written in Foster Connect's first-party voice: "we", "our platform", "Foster Connect helps prospective carers..."
+- ALL content must be written in Foster Care's first-party voice: "we", "our platform", "Foster Care helps prospective carers..."
 
 You must NEVER write as:
 - a fostering agency
@@ -211,16 +211,16 @@ You must NEVER write as:
 
 === CALL TO ACTION ===
 End with calm, helpful CTA encouraging users to:
-- Explore fostering agencies on Foster Connect
+- Explore fostering agencies on Foster Care
 - Submit enquiries through our platform`;
 
     // AGENCY-SPECIFIC system prompt - focuses on the agency itself for branded SEO
-    const CLINIC_SYSTEM_PROMPT = `You are generating SEO content for a FOSTERING AGENCY profile page on Foster Connect.
+    const CLINIC_SYSTEM_PROMPT = `You are generating SEO content for a FOSTERING AGENCY profile page on Foster Care.
 
 === CRITICAL BUSINESS CONTEXT ===
 - This content is for the agency's profile page to help it RANK for the agency name
 - Write as a neutral, informative third-party describing THIS agency
-- DO NOT mention "Foster Connect", "our platform", or any directory references
+- DO NOT mention "Foster Care", "our platform", or any directory references
 - Focus 100% on the AGENCY: its services, location, team, carer support
 - Goal: When someone searches the agency name on Google, this page should rank
 
@@ -270,7 +270,7 @@ End with calm, helpful CTA encouraging users to:
 - Do NOT invent specific facts (founding year, staff names, awards)
 - Do NOT make up carer testimonials
 - Do NOT claim specific Ofsted ratings unless provided
-- Do NOT mention Foster Connect or any directory platform`;
+- Do NOT mention Foster Care or any directory platform`;
 
     // Generate unique anti-duplication seed based on slug and random factors
     function generateUniquenessSeed(slug: string, pageType: string): string {
@@ -340,15 +340,15 @@ MANDATORY DIFFERENTIATION:
         case "state":
           const stateName = title || parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "this region";
           pageContext = `This is a REGION/COUNTRY directory page for ${stateName} (UK).
-Context: Show all fostering agencies in ${stateName}. Explain how Foster Connect helps prospective carers find agencies across the region.
-Include: Overview of fostering landscape, how to find an agency, what Foster Connect offers, types of fostering available, Ofsted/regulatory context.`;
+Context: Show all fostering agencies in ${stateName}. Explain how Foster Care helps prospective carers find agencies across the region.
+Include: Overview of fostering landscape, how to find an agency, what Foster Care offers, types of fostering available, Ofsted/regulatory context.`;
           break;
           
         case "city":
           const cityName = title || parts[1] || parts[0] || "this city";
           const regionName = parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "";
           pageContext = `This is a CITY/AREA directory page for ${cityName}, ${regionName} (UK).
-Context: Show fostering agencies in ${cityName}. Explain how Foster Connect helps local residents explore fostering.
+Context: Show fostering agencies in ${cityName}. Explain how Foster Care helps local residents explore fostering.
 Include: Local fostering landscape overview, finding the right agency, types of fostering available, support and allowances.
 LOCAL SPECIFICITY: Mention specific aspects of ${cityName} - its boroughs, community character, local authority, or regional fostering needs.`;
           break;
@@ -358,7 +358,7 @@ LOCAL SPECIFICITY: Mention specific aspects of ${cityName} - its boroughs, commu
           const serviceName = title || slug.replace(/-/g, " ");
           pageContext = `This is a FOSTERING TYPE page for ${serviceName}.
 Context: Explain what ${serviceName} fostering is, who it's for, what to expect.
-Include: What is this type of fostering, who can apply, the process, support available, how Foster Connect helps find agencies offering it.`;
+Include: What is this type of fostering, who can apply, the process, support available, how Foster Care helps find agencies offering it.`;
           break;
           
         case "service_location":
@@ -368,7 +368,7 @@ Include: What is this type of fostering, who can apply, the process, support ava
           const locationRegion = parts[0]?.replace(/-/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "";
           pageContext = `This is a FOSTERING TYPE + LOCATION page for ${fosteringType} in ${locationCity}, ${locationRegion} (UK).
 Context: Explain ${fosteringType} and how to find agencies offering it in ${locationCity}.
-Include: What is ${fosteringType}, local availability, allowances in this area, how to choose an agency, Foster Connect's role.
+Include: What is ${fosteringType}, local availability, allowances in this area, how to choose an agency, Foster Care's role.
 IMPORTANT: Make this unique - combine local ${locationCity} context with ${fosteringType} specifics. Don't just merge generic content.`;
           break;
           
@@ -398,15 +398,15 @@ Content Focus:
           break;
           
         case "static":
-          pageContext = `This is a STATIC page (About, Features, Policy, etc.) on Foster Connect.
+          pageContext = `This is a STATIC page (About, Features, Policy, etc.) on Foster Care.
 Context: Write informative content appropriate for the page's purpose.
-Include: Clear explanation of the topic, how it relates to Foster Connect, user benefits.`;
+Include: Clear explanation of the topic, how it relates to Foster Care, user benefits.`;
           break;
           
         default:
-          pageContext = `This is a general page on Foster Connect.
+          pageContext = `This is a general page on Foster Care.
 Context: Write helpful, informative content for prospective foster carers in the UK.
-Include: Clear explanations, how Foster Connect helps, relevant information for the topic.`;
+Include: Clear explanations, how Foster Care helps, relevant information for the topic.`;
       }
 
       // Select the appropriate system prompt

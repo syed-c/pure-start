@@ -19,8 +19,8 @@ const MedicalReviewPolicyPage = () => {
   return (
     <PageLayout>
       <SEOHead
-        title="Content Review Policy — Quality Standards | Foster Connect"
-        description="Understand how Foster Connect's fostering content is reviewed by qualified professionals to ensure accuracy and compliance with UK fostering standards."
+        title="Content Review Policy — Quality Standards | Foster Care"
+        description="Understand how Foster Care's fostering content is reviewed by qualified professionals to ensure accuracy and compliance with UK fostering standards."
         canonical="/medical-review-policy/"
       />
 
@@ -58,7 +58,7 @@ const MedicalReviewPolicyPage = () => {
               <div>
                 <h2 className="text-2xl font-extrabold text-foreground mb-4">Our Review Process</h2>
                 <p className="text-muted-foreground mb-8 leading-relaxed">
-                  Every piece of fostering-related content on Foster Connect undergoes a rigorous multi-step review process to ensure families receive accurate, trustworthy information.
+                  Every piece of fostering-related content on Foster Care undergoes a rigorous multi-step review process to ensure families receive accurate, trustworthy information.
                 </p>
 
                 <div className="space-y-5">
@@ -86,7 +86,7 @@ const MedicalReviewPolicyPage = () => {
               <div className="bg-muted/50 rounded-2xl p-6 border border-border">
                 <h3 className="font-bold text-foreground mb-2">Important Notice</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Content on Foster Connect is reviewed for general accuracy but does not replace professional advice. Individual fostering decisions should always be made in consultation with a qualified social worker or fostering agency who can evaluate your specific circumstances.
+                  Content on Foster Care is reviewed for general accuracy but does not replace professional advice. Individual fostering decisions should always be made in consultation with a qualified social worker or fostering agency who can evaluate your specific circumstances.
                 </p>
               </div>
             </div>

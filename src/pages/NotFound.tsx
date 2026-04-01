@@ -19,7 +19,7 @@ const NotFound = () => {
     }
     meta.setAttribute('content', 'noindex, nofollow');
     
-    document.title = 'Page Not Found | Foster Connect';
+    document.title = 'Page Not Found | Foster Care';
     
     return;
   }, [location.pathname, navigate]);

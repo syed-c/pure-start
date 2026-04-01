@@ -90,7 +90,7 @@ const ServicePage = () => {
   const faqs = seoFaqs.length > 0 ? seoFaqs.map(f => ({ q: f.question, a: f.answer })) : [
     {
       q: `What is ${treatmentName}?`,
-      a: treatment?.description || `${treatmentName} is a specialised type of fostering that provides care for children and young people with specific needs. Browse verified agencies on Foster Connect to learn more.`,
+      a: treatment?.description || `${treatmentName} is a specialised type of fostering that provides care for children and young people with specific needs. Browse verified agencies on Foster Care to learn more.`,
     },
     {
       q: `How do I find ${treatmentName} agencies in the UK?`,
@@ -102,7 +102,7 @@ const ServicePage = () => {
     },
     {
       q: `What support is available for ${treatmentName} carers?`,
-      a: `Agencies provide 24/7 support, specialist training, supervision, peer groups, and competitive fostering allowances. Check individual agency profiles on Foster Connect for specific support packages.`,
+      a: `Agencies provide 24/7 support, specialist training, supervision, peer groups, and competitive fostering allowances. Check individual agency profiles on Foster Care for specific support packages.`,
     },
   ];
 
@@ -122,7 +122,7 @@ const ServicePage = () => {
         name={`${treatmentName} in the UK`}
         description={treatment?.description || `Professional ${treatmentName} services across the UK`}
         url={`/services/${serviceSlug}/`}
-        provider="Foster Connect Partner Agencies"
+        provider="Foster Care Partner Agencies"
         areaServed="United Kingdom"
       />
       <StructuredData type="faq" questions={faqs.map(f => ({ question: f.q, answer: f.a }))} />

@@ -1,6 +1,6 @@
-# Foster Connect — SEO Content Writing Guidelines
+# Foster Care — SEO Content Writing Guidelines
 
-## About Foster Connect
+## About Foster Care
 - UK-wide fostering agency directory covering all 4 nations
 - Primary focus on England with county and city-level pages
 - Fostering categories: Independent, Local Authority, Emergency, Respite, Therapeutic, and more
@@ -15,7 +15,7 @@ Trusted, warm, supportive UK guide. People-first, practical, factual. Culturally
 ## 10 MANDATORY SEO RULES
 
 ### RULE 1 — TITLE TAG & H1
-Format: `[Primary Keyword] in [Location] — [Benefit] | Foster Connect`
+Format: `[Primary Keyword] in [Location] — [Benefit] | Foster Care`
 - Primary keyword in first 60 characters
 - One clear keyword focus per page — never stuff
 
@@ -72,7 +72,7 @@ Format:
 - Direct answer in FIRST paragraph
 - Numbered lists and comparison tables
 - Statements tied to official UK bodies
-- Unique data referencing Foster Connect directory counts
+- Unique data referencing Foster Care directory counts
 - Well-structured headers as standalone answers
 
 ---
@@ -95,7 +95,7 @@ Sections:
 ### TEMPLATE B: BLOG — FOSTERING GUIDE
 Sections:
 1. H1: [Topic] — Complete UK Guide [Year]
-2. Opening: Key facts in sentence one, cite Foster Connect data
+2. Opening: Key facts in sentence one, cite Foster Care data
 3. H2: Overview of the fostering process
 4. H2: Types of fostering explained
 5. H2: Regional comparison
@@ -133,7 +133,7 @@ Sections:
 - [ ] Ofsted is referenced
 - [ ] 3–5 internal links with descriptive anchor text
 - [ ] FAQ section has minimum 5 questions
-- [ ] CTA links to Foster Connect search/listing page
+- [ ] CTA links to Foster Care search/listing page
 - [ ] No specific agency names unless from verified database
 - [ ] Word count minimum 800 (1500+ for commercial pages)
 - [ ] Schema markup type flagged

@@ -449,9 +449,9 @@ export default function OutreachTab() {
     const sampleData: Record<string, string> = {
       clinic_name: 'Bright Futures Fostering',
       patient_name: 'Sarah Johnson',
-      claim_link: 'https://www.fosterconnect.co.uk/claim/abc123',
-      review_link: 'https://www.fosterconnect.co.uk/review/abc123',
-      unsubscribe_link: 'https://www.fosterconnect.co.uk/unsubscribe',
+      claim_link: 'https://www.foster-care.co.uk/claim/abc123',
+      review_link: 'https://www.foster-care.co.uk/review/abc123',
+      unsubscribe_link: 'https://www.foster-care.co.uk/unsubscribe',
     };
     let content = html;
     Object.entries(sampleData).forEach(([key, value]) => {

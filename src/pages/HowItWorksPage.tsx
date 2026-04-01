@@ -50,7 +50,7 @@ const HowItWorksPage = () => {
     <PageLayout>
       <SEOHead
         title="How It Works | Find Fostering Agencies or List Your Agency"
-        description="Learn how Foster Connect works. Search, compare, and enquire with fostering agencies. Agencies can list their services and reach more carers."
+        description="Learn how Foster Care works. Search, compare, and enquire with fostering agencies. Agencies can list their services and reach more carers."
         canonical="/how-it-works/"
         keywords={['how to find fostering agency', 'become foster carer', 'list fostering agency']}
       />
@@ -69,7 +69,7 @@ const HowItWorksPage = () => {
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 text-foreground leading-tight">
                 How{" "}
-                <span className="text-primary">Foster Connect</span>{" "}
+                <span className="text-primary">Foster Care</span>{" "}
                 Works
               </h1>
               <p className="text-lg text-muted-foreground max-w-lg leading-relaxed mb-8">
@@ -92,7 +92,7 @@ const HowItWorksPage = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="flex justify-center"
             >
-              <img src={howItWorksImg} alt="How Foster Connect works" className="w-full max-w-md drop-shadow-xl" />
+              <img src={howItWorksImg} alt="How Foster Care works" className="w-full max-w-md drop-shadow-xl" />
             </motion.div>
           </div>
         </div>
@@ -146,7 +146,7 @@ const HowItWorksPage = () => {
             <div className="bg-gradient-to-br from-primary/[0.04] to-muted/30 border border-border rounded-3xl p-8 md:p-10">
               <div className="grid md:grid-cols-2 gap-8 items-center">
                 <div>
-                  <h3 className="text-xl font-bold mb-5 text-foreground">Why Carers Love Foster Connect</h3>
+                  <h3 className="text-xl font-bold mb-5 text-foreground">Why Carers Love Foster Care</h3>
                   <div className="grid sm:grid-cols-2 gap-3">
                     {carerBenefits.map((benefit, i) => (
                       <div key={i} className="flex items-center gap-2.5">
@@ -176,7 +176,7 @@ const HowItWorksPage = () => {
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/20 text-primary text-xs font-bold uppercase tracking-wider mb-4">
               <Building2 className="h-3.5 w-3.5" /> For Agencies
             </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-background">Grow Your Agency with Foster Connect</h2>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-background">Grow Your Agency with Foster Care</h2>
             <p className="text-background/50 mt-4 max-w-2xl mx-auto">
               Reach prospective foster carers actively searching for agencies in your area. It's free to get started.
             </p>
@@ -230,7 +230,7 @@ const HowItWorksPage = () => {
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-4">
               <Eye className="h-3.5 w-3.5" /> Why Us
             </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold">Why Choose Foster Connect?</h2>
+            <h2 className="text-3xl md:text-4xl font-extrabold">Why Choose Foster Care?</h2>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -266,7 +266,7 @@ const HowItWorksPage = () => {
               Ready to Get Started?
             </h2>
             <p className="text-primary-foreground/70 mb-8 max-w-xl mx-auto text-lg">
-              Join thousands of prospective carers and agencies already using Foster Connect.
+              Join thousands of prospective carers and agencies already using Foster Care.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               <Button asChild size="lg" variant="secondary" className="rounded-xl font-semibold h-12 px-8 shadow-lg">

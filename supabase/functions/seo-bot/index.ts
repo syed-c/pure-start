@@ -83,11 +83,11 @@ function generateTitle(pageType: string, data: Record<string, any>): string {
       break;
     
     case "static":
-      title = `${name} | Foster Connect`;
+      title = `${name} | Foster Care`;
       break;
     
     default:
-      title = `${name || "Foster Care"} | Foster Connect`;
+      title = `${name || "Foster Care"} | Foster Care`;
   }
   
   return truncateTitle(title, 60);

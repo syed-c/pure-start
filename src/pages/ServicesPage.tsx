@@ -39,7 +39,7 @@ const ServicesPage = () => {
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || "Fostering Categories — All Types of Foster Care | Foster Connect"}
+        title={seoContent?.meta_title || "Fostering Categories — All Types of Foster Care | Foster Care"}
         description={seoContent?.meta_description || "Explore all types of fostering — from emergency and respite care to long-term and therapeutic placements."}
         canonical="/categories/"
         keywords={['fostering types', 'types of foster care', 'emergency fostering', 'therapeutic fostering']}

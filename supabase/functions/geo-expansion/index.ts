@@ -103,7 +103,7 @@ ${existingContent.slice(0, 1500)}`;
 Generate JSON with EXACTLY this structure:
 {
   "h1": "Find Fostering Agencies in ${state.name}",
-  "meta_title": "Fostering Agencies in ${state.name} | Find Local Foster Care | Foster Connect",
+  "meta_title": "Fostering Agencies in ${state.name} | Find Local Foster Care | Foster Care",
   "meta_description": "Looking for a fostering agency in ${state.name}? Browse verified agencies, read carer reviews, and submit enquiries online.",
   "intro": "Two paragraphs introducing fostering options in ${state.name}. Be specific about the region's fostering landscape without making false claims.",
   "service_overview": "A paragraph about fostering services available in the region.",

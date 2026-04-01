@@ -47,7 +47,7 @@ const AboutPage = () => {
   ];
 
   const timeline = [
-    { year: "2023", title: "Founded", description: "Foster Connect was born from a simple idea — make finding a fostering agency as easy as searching online." },
+    { year: "2023", title: "Founded", description: "Foster Care was born from a simple idea — make finding a fostering agency as easy as searching online." },
     { year: "2024", title: "500+ Agencies", description: "Reached a milestone of listing over 500 Ofsted-registered fostering agencies across England." },
     { year: "2025", title: "UK-Wide Expansion", description: "Expanded coverage to include agencies across all four UK nations with verified profiles." },
     { year: "Future", title: "AI-Powered Matching", description: "Building intelligent matching to connect the right carers with the right agencies automatically." },
@@ -56,8 +56,8 @@ const AboutPage = () => {
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || "About Foster Connect | UK's Trusted Fostering Agency Directory"}
-        description={seoContent?.meta_description || "Learn about Foster Connect, the UK's trusted platform connecting prospective foster carers with verified fostering agencies across England."}
+        title={seoContent?.meta_title || "About Foster Care | UK's Trusted Fostering Agency Directory"}
+        description={seoContent?.meta_description || "Learn about Foster Care, the UK's trusted platform connecting prospective foster carers with verified fostering agencies across England."}
         canonical="/about/"
         keywords={['about foster connect', 'fostering directory', 'find fostering agency', 'foster care platform']}
       />
@@ -153,7 +153,7 @@ const AboutPage = () => {
                 <span className="text-primary">Trusted Agencies</span>
               </h2>
               <p className="text-muted-foreground text-lg leading-relaxed mb-6">
-                We believe every child deserves a safe and loving home. Foster Connect was founded to bridge the gap between prospective foster carers and trusted, Ofsted-verified fostering agencies across the UK. Our platform makes it simple to search, compare, and connect — all for free.
+                We believe every child deserves a safe and loving home. Foster Care was founded to bridge the gap between prospective foster carers and trusted, Ofsted-verified fostering agencies across the UK. Our platform makes it simple to search, compare, and connect — all for free.
               </p>
               <p className="text-muted-foreground leading-relaxed mb-8">
                 With over {counts?.clinics?.toLocaleString() || "500"} agencies listed across {counts?.cities?.toLocaleString() || "100"} cities, we're the UK's most comprehensive fostering directory. Every agency on our platform is verified against Ofsted records to ensure you're connecting with legitimate, registered providers.
@@ -191,7 +191,7 @@ const AboutPage = () => {
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-4">
               <BookOpen className="h-3.5 w-3.5" /> Our Journey
             </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold">The Foster Connect Story</h2>
+            <h2 className="text-3xl md:text-4xl font-extrabold">The Foster Care Story</h2>
             <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
               From a small idea to the UK's leading fostering directory — here's how we got here.
             </p>
@@ -251,7 +251,7 @@ const AboutPage = () => {
         <div className="container">
           <motion.div {...fadeUp} className="text-center mb-16">
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/20 text-primary text-xs font-bold uppercase tracking-wider mb-4">
-              <Award className="h-3.5 w-3.5" /> Why Foster Connect
+              <Award className="h-3.5 w-3.5" /> Why Foster Care
             </span>
             <h2 className="text-3xl md:text-4xl font-extrabold text-background">
               The UK's Most Trusted Fostering Directory
@@ -287,7 +287,7 @@ const AboutPage = () => {
               Ready to Start Your Fostering Journey?
             </h2>
             <p className="text-primary-foreground/70 mb-8 max-w-xl mx-auto text-lg">
-              Join thousands of prospective carers who've found their ideal fostering agency through Foster Connect.
+              Join thousands of prospective carers who've found their ideal fostering agency through Foster Care.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               <Button asChild size="lg" variant="secondary" className="rounded-xl font-semibold h-12 px-8 shadow-lg">

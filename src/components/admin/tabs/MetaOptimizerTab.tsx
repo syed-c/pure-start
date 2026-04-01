@@ -710,7 +710,7 @@ export default function MetaOptimizerTab() {
                 {previewPage?.meta_title || previewPage?.title || 'No Title Set'}
               </p>
               <p className="text-green-700 text-sm">
-                https://www.fosterconnect.co.uk{previewPage?.slug?.startsWith('/') ? previewPage.slug : `/${previewPage?.slug}`}
+                https://www.foster-care.co.uk{previewPage?.slug?.startsWith('/') ? previewPage.slug : `/${previewPage?.slug}`}
               </p>
               <p className="text-gray-600 text-sm mt-1 line-clamp-2">
                 {previewPage?.meta_description || 'No description set. This page needs a meta description for better SEO.'}
@@ -775,7 +775,7 @@ export default function MetaOptimizerTab() {
             <div className="p-4 bg-slate-50 border rounded-lg">
               <p className="text-xs text-muted-foreground mb-2">Google Preview:</p>
               <p className="text-blue-700 font-medium truncate">{editTitle || 'No Title'}</p>
-              <p className="text-green-700 text-sm">https://www.fosterconnect.co.uk{editPage?.slug?.startsWith('/') ? editPage.slug : `/${editPage?.slug}`}</p>
+              <p className="text-green-700 text-sm">https://www.foster-care.co.uk{editPage?.slug?.startsWith('/') ? editPage.slug : `/${editPage?.slug}`}</p>
               <p className="text-gray-600 text-sm mt-1 line-clamp-2">{editDescription || 'No description'}</p>
             </div>
           </div>

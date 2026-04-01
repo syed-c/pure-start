@@ -24,7 +24,7 @@ function escapeHtml(input: string): string {
 }
 
 function isInternalHref(href: string): boolean {
-  return href.startsWith("/") || href.includes("fosterconnect.co.uk");
+  return href.startsWith("/") || href.includes("foster-care.co.uk");
 }
 
 function normalizeHref(rawHref: string): string | null {
@@ -43,7 +43,7 @@ function normalizeHref(rawHref: string): string | null {
     try {
       const url = new URL(href);
       // if it's our domain, convert to internal path (keeps SPA routing + canonical)
-      if (url.hostname.includes("fosterconnect.co.uk")) {
+      if (url.hostname.includes("foster-care.co.uk")) {
         return withTrailingSlash(url.pathname + url.search + url.hash);
       }
       return url.toString();

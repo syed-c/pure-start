@@ -78,7 +78,7 @@ const BlogPage = () => {
   return (
     <PageLayout>
       <SEOHead
-        title="Fostering Blog — Tips, Carer Stories & Agency News | Foster Connect"
+        title="Fostering Blog — Tips, Carer Stories & Agency News | Foster Care"
         description="Expert fostering advice, carer stories, and the latest news from fostering agencies across the UK. Learn about becoming a foster carer, regulations, and more."
         canonical="/blog/"
         keywords={['fostering blog', 'foster carer advice', 'fostering tips', 'foster care stories', 'UK fostering news']}

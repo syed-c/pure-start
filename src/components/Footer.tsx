@@ -147,7 +147,7 @@ export const Footer = forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>
           <div className="container py-5">
             <div className="flex flex-col md:flex-row justify-between items-center gap-3">
               <div className="flex flex-wrap justify-center md:justify-start items-center gap-x-4 gap-y-1 text-xs text-background/25">
-                <span>© {new Date().getFullYear()} Foster Connect</span>
+                <span>© {new Date().getFullYear()} Foster Care</span>
                 {legal.map((item) => (
                   <Link key={item.path} to={item.path} className="hover:text-background/40 transition-colors">
                     {item.name}
@@ -155,7 +155,7 @@ export const Footer = forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>
                 ))}
               </div>
               <p className="text-[11px] text-background/15 text-center md:text-right max-w-lg">
-                Foster Connect is a directory service. Information displayed is for guidance only. Agency registration is verified with Ofsted and relevant UK regulatory bodies.
+                Foster Care is a directory service. Information displayed is for guidance only. Agency registration is verified with Ofsted and relevant UK regulatory bodies.
               </p>
             </div>
           </div>

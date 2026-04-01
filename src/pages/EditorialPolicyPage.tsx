@@ -12,8 +12,8 @@ const EditorialPolicyPage = () => {
   return (
     <PageLayout>
       <SEOHead
-        title="Editorial Policy — Content Standards | Foster Connect"
-        description="Learn about Foster Connect's editorial standards, fact-checking process, and commitment to accurate, evidence-based fostering information for UK families."
+        title="Editorial Policy — Content Standards | Foster Care"
+        description="Learn about Foster Care's editorial standards, fact-checking process, and commitment to accurate, evidence-based fostering information for UK families."
         canonical="/editorial-policy/"
       />
 
@@ -61,7 +61,7 @@ const EditorialPolicyPage = () => {
               <PolicySection
                 icon={Shield}
                 title="Our Commitment to Accuracy"
-                content="All content published on Foster Connect is created, reviewed, and maintained to the highest editorial standards. Our goal is to provide UK families with accurate, evidence-based fostering information that helps them make informed decisions about their fostering journey."
+                content="All content published on Foster Care is created, reviewed, and maintained to the highest editorial standards. Our goal is to provide UK families with accurate, evidence-based fostering information that helps them make informed decisions about their fostering journey."
               />
               <PolicySection
                 icon={FileCheck}
@@ -76,7 +76,7 @@ const EditorialPolicyPage = () => {
               <PolicySection
                 icon={AlertTriangle}
                 title="Corrections & Updates"
-                content="We take accuracy seriously. If you identify an error or outdated information, please contact us at editorial@fosterconnect.co.uk. Corrections are made promptly and transparently. Significant corrections are noted at the top of the affected content."
+                content="We take accuracy seriously. If you identify an error or outdated information, please contact us at editorial@foster-care.co.uk. Corrections are made promptly and transparently. Significant corrections are noted at the top of the affected content."
               />
               <PolicySection
                 icon={RefreshCw}
@@ -87,7 +87,7 @@ const EditorialPolicyPage = () => {
               <div className="bg-muted/50 rounded-2xl p-6 border border-border">
                 <h3 className="font-bold text-foreground mb-2">Disclaimer</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Content on Foster Connect is for informational purposes only and does not constitute professional advice. Always consult a qualified social worker or fostering agency for guidance specific to your situation. Fostering allowance information is indicative and may vary by agency and local authority.
+                  Content on Foster Care is for informational purposes only and does not constitute professional advice. Always consult a qualified social worker or fostering agency for guidance specific to your situation. Fostering allowance information is indicative and may vary by agency and local authority.
                 </p>
               </div>
             </div>

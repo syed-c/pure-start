@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { useSchemaSettings } from '@/hooks/useSchemaSettings';
 import { withTrailingSlash } from '@/lib/url/withTrailingSlash';
 
-const BASE_URL = 'https://www.fosterconnect.co.uk';
+const BASE_URL = 'https://www.foster-care.co.uk';
 
 // Organization Schema
 export interface OrganizationSchemaProps {

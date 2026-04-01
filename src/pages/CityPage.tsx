@@ -583,7 +583,7 @@ const CityPage = () => {
       {/* AI Discovery Meta */}
       <AIDiscoveryMeta
         pageTitle={pageTitle}
-        aiSummary={`Find ${profiles?.length || 0}+ verified fostering agencies in ${cityName}, ${stateName}, UK. Compare ratings, read carer reviews, and submit enquiries online through Foster Connect.`}
+        aiSummary={`Find ${profiles?.length || 0}+ verified fostering agencies in ${cityName}, ${stateName}, UK. Compare ratings, read carer reviews, and submit enquiries online through Foster Care.`}
         entityType="location"
         location={{ city: cityName, country: "UK" }}
         url={`/${normalizedStateSlug}/${citySlug}/`}

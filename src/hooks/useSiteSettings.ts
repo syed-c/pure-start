@@ -57,13 +57,13 @@ export interface SiteSettings {
 }
 
 const DEFAULT_SITE_SETTINGS: SiteSettings = {
-  siteName: 'Foster Connect',
-  siteUrl: 'https://www.fosterconnect.co.uk/',
+  siteName: 'Foster Care',
+  siteUrl: 'https://www.foster-care.co.uk/',
   siteTagline: 'UK Fostering Agency Directory',
   contactDetails: {
-    support_email: 'support@fosterconnect.co.uk',
-    sales_email: 'agencies@fosterconnect.co.uk',
-    partnerships_email: 'partners@fosterconnect.co.uk',
+    support_email: 'support@foster-care.co.uk',
+    sales_email: 'agencies@foster-care.co.uk',
+    partnerships_email: 'partners@foster-care.co.uk',
     support_phone: '+44 20 7946 0958',
     address_line1: '',
     address_line2: '',
@@ -82,7 +82,7 @@ const DEFAULT_SITE_SETTINGS: SiteSettings = {
   },
   footerSections: [],
   legalText: 'Connecting families with trusted fostering agencies across the UK.',
-  copyrightText: '© 2026 Foster Connect. All rights reserved.',
+  copyrightText: '© 2026 Foster Care. All rights reserved.',
   branding: {
     logo_url: '',
     logo_dark_url: '',

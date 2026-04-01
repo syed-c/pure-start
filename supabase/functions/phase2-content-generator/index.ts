@@ -27,7 +27,7 @@ interface Phase2Request {
 // SERVICE PAGE TEMPLATE (Sprint 2.1)
 // 14 sections, 3,500-5,000 words
 // ========================================
-const SERVICE_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE fostering type page for Foster Connect, the UK fostering agency directory.
+const SERVICE_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE fostering type page for Foster Care, the UK fostering agency directory.
 
 === TEMPLATE STRUCTURE (3,500-5,000 words) ===
 
@@ -78,7 +78,7 @@ const SERVICE_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE fostering type
    - 24/7 support from supervising social workers
    - Peer support groups and networks
    - Specialist training for complex needs
-   - CTA: "Find agencies with comprehensive training on Foster Connect"
+   - CTA: "Find agencies with comprehensive training on Foster Care"
 
 8. H2: Day-to-Day Life as a [Fostering Type] Carer (400 words)
    - What a typical day looks like
@@ -114,7 +114,7 @@ const SERVICE_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE fostering type
     - Importance of carer reviews
 
 12. H2: Find [Fostering Type] Agencies Near You (200 words)
-    - CTA to search Foster Connect directory
+    - CTA to search Foster Care directory
     - Featured cities/regions links
     - "Submit your enquiry today"
     - Trust signals (verified agencies, Ofsted-registered, carer reviews)
@@ -130,7 +130,7 @@ const SERVICE_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE fostering type
     - Link to verified reviews
 
 === CONTENT REQUIREMENTS ===
-- Write in Foster Connect's first-party voice
+- Write in Foster Care's first-party voice
 - No false promises or guarantees
 - Cite approximate allowances with ranges in £
 - Include multiple CTAs throughout
@@ -143,7 +143,7 @@ const SERVICE_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE fostering type
 // CITY PAGE TEMPLATE (Sprint 2.2)
 // 11 sections, 2,500-3,500 words
 // ========================================
-const CITY_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE city directory page for Foster Connect.
+const CITY_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE city directory page for Foster Care.
 
 === TEMPLATE STRUCTURE (2,500-3,500 words) ===
 
@@ -184,7 +184,7 @@ const CITY_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE city directory pa
    - Overview of Form F assessment
    - Timeline expectations (typically 4-6 months)
    - What to expect at fostering panel
-   - How Foster Connect helps you compare agencies
+   - How Foster Care helps you compare agencies
 
 7. H2: Fostering by Area in [City] (400 words)
    - List 6-10 major boroughs/areas
