@@ -267,7 +267,7 @@ export default function ContactDetailsTab() {
                     type="email"
                     value={contactDetails.booking_email}
                     onChange={(e) => updateContact('booking_email', e.target.value)}
-                    placeholder="bookings@appointpanda.ae"
+                    placeholder="enquiries@fosterconnect.co.uk"
                   />
                   <p className="text-xs text-muted-foreground">For appointment-related questions</p>
                 </div>
