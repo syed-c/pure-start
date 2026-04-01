@@ -215,7 +215,7 @@ export default function SettingsTab() {
                 <Input
                   value={(getSettingValue('platform')?.support_email as string) || ''}
                   onChange={(e) => updateFormValue('platform', 'support_email', e.target.value)}
-                  placeholder="support@appointpanda.ae"
+                  placeholder="support@fosterconnect.co.uk"
                 />
               </div>
               <div className="space-y-2">

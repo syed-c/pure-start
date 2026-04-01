@@ -447,11 +447,11 @@ export default function OutreachTab() {
   // Sample data for preview rendering
   const renderPreviewContent = (html: string) => {
     const sampleData: Record<string, string> = {
-      clinic_name: 'Premium Dental Care',
+      clinic_name: 'Bright Futures Fostering',
       patient_name: 'Sarah Johnson',
-      claim_link: 'https://appointpanda.ae/claim/abc123',
-      review_link: 'https://appointpanda.ae/review/abc123',
-      unsubscribe_link: 'https://appointpanda.ae/unsubscribe',
+      claim_link: 'https://www.fosterconnect.co.uk/claim/abc123',
+      review_link: 'https://www.fosterconnect.co.uk/review/abc123',
+      unsubscribe_link: 'https://www.fosterconnect.co.uk/unsubscribe',
     };
     let content = html;
     Object.entries(sampleData).forEach(([key, value]) => {
