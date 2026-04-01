@@ -813,7 +813,7 @@ export default function SettingsTab() {
                   <Input
                     value={(getSettingValue('smtp')?.from_email as string) || ''}
                     onChange={(e) => updateFormValue('smtp', 'from_email', e.target.value)}
-                    placeholder="noreply@appointpanda.ae"
+                    placeholder="noreply@fosterconnect.co.uk"
                   />
                 </div>
               </div>
