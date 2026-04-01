@@ -281,7 +281,7 @@ export default function ContactDetailsTab() {
                     type="email"
                     value={contactDetails.sales_email}
                     onChange={(e) => updateContact('sales_email', e.target.value)}
-                    placeholder="sales@appointpanda.ae"
+                    placeholder="agencies@fosterconnect.co.uk"
                   />
                   <p className="text-xs text-muted-foreground">For pricing and subscription inquiries</p>
                 </div>
