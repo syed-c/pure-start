@@ -1823,7 +1823,7 @@ export default function ContentGenerationStudioTab() {
                     {editContent.meta_title || editContent.h1 || 'Page Title'}
                   </p>
                   <p className="text-green-700 text-sm truncate">
-                    appointpanda.ae/{editingPage?.slug}
+                    fosterconnect.co.uk/{editingPage?.slug}
                   </p>
                   <p className="text-sm text-muted-foreground line-clamp-2">
                     {editContent.meta_description || 'No meta description set...'}
