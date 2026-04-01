@@ -710,7 +710,7 @@ export default function MetaOptimizerTab() {
                 {previewPage?.meta_title || previewPage?.title || 'No Title Set'}
               </p>
               <p className="text-green-700 text-sm">
-                https://www.appointpanda.ae{previewPage?.slug?.startsWith('/') ? previewPage.slug : `/${previewPage?.slug}`}
+                https://www.fosterconnect.co.uk{previewPage?.slug?.startsWith('/') ? previewPage.slug : `/${previewPage?.slug}`}
               </p>
               <p className="text-gray-600 text-sm mt-1 line-clamp-2">
                 {previewPage?.meta_description || 'No description set. This page needs a meta description for better SEO.'}
