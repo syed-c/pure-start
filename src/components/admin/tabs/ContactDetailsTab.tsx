@@ -461,7 +461,7 @@ export default function ContactDetailsTab() {
                   <p className="text-muted-foreground">
                     {contactDetails.city || 'City'}, {contactDetails.state || 'ST'} {contactDetails.zip_code || '00000'}
                   </p>
-                  <p className="text-muted-foreground">{contactDetails.country || 'United Arab Emirates'}</p>
+                  <p className="text-muted-foreground">{contactDetails.country || 'United Kingdom'}</p>
                 </div>
               </div>
             </CardContent>
