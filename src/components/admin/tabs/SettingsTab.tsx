@@ -868,7 +868,7 @@ export default function SettingsTab() {
                   <Input
                     value={(getSettingValue('google_oauth')?.callback_url as string) || `${window.location.origin}/auth/callback`}
                     onChange={(e) => updateFormValue('google_oauth', 'callback_url', e.target.value)}
-                    placeholder="https://www.appointpanda.ae/auth/callback"
+                    placeholder="https://www.fosterconnect.co.uk/auth/callback"
                   />
                   <Button 
                     variant="outline" 
