@@ -45,7 +45,7 @@ import { TrustSignalStrip } from "@/components/fostering/TrustSignalStrip";
 import { ConversationalQABlock, AIDiscoveryMeta } from "@/components/ai-seo";
 import { generateClinicQA } from "@/lib/ai-seo/generateQAContent";
 
-const ClinicPage = () => {
+const AgencyProfilePage = () => {
   const { agencySlug } = useParams();
   const slug = agencySlug || "";
   const [enquiryOpen, setEnquiryOpen] = useState(false);
@@ -700,4 +700,4 @@ const ClinicPage = () => {
   );
 };
 
-export default ClinicPage;
+export default AgencyProfilePage;
