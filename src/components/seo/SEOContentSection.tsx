@@ -24,23 +24,22 @@ export function SEOContentSection({
     <div className="space-y-8">
       <section>
         <h2 className="text-2xl font-bold text-foreground mb-4">
-          Finding the Best Dentist in {locationName}{stateName ? `, ${stateName}` : ''}
+          Finding the Best Fostering Agency in {locationName}{stateName ? `, ${stateName}` : ''}
         </h2>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          {locationName} is home to {clinicCount > 0 ? `over ${clinicCount}` : 'numerous'} highly-qualified dental professionals 
-          offering a comprehensive range of services. Whether you need a routine dental checkup, specialist fosteringry procedures 
-          like teeth whitening, or specialized treatments such as fostering placements or orthodontics, our directory connects you 
-          with licensed agencies who meet the highest standards of patient care.
+          {locationName} is home to {clinicCount > 0 ? `over ${clinicCount}` : 'numerous'} Ofsted-registered fostering agencies 
+          offering a comprehensive range of fostering services. Whether you need short-term, long-term, emergency, or specialist fostering care, 
+          our directory connects you with licensed agencies who meet the highest standards of care.
         </p>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          The dental community in {locationName} includes general agencies, pediatric specialists, care specialists, 
-          family support workers, and therapeutic specialists. Many practices offer modern amenities including digital X-rays, same-day crowns, 
-          and sedation dentistry options for anxious patients.
+          The fostering community in {locationName} includes independent fostering agencies (IFAs), local authority teams, 
+          therapeutic specialists, and specialist support services. Many agencies offer comprehensive training, 24/7 support, 
+          and competitive allowances for foster carers.
         </p>
         <p className="text-muted-foreground leading-relaxed">
-          All fostering agencys listed on our platform have been verified for their credentials and patient reviews. 
-          You can compare ratings, read authentic patient feedback, view before-and-after photos, and book appointments 
-          directly through our secure online scheduling system.
+          All fostering agencies listed on our platform have been verified for their Ofsted registration and credentials. 
+          You can compare ratings, read authentic reviews, view agency profiles, and send enquiries 
+          directly through our platform.
         </p>
       </section>
 
