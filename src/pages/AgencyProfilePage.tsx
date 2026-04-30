@@ -2,30 +2,27 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useAnalytics } from "@/hooks/useAnalytics";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { SyncStructuredData } from "@/components/seo/SyncStructuredData";
-import { InterlinkingSection } from "@/components/seo/InterlinkingSection";
-import { RelatedClinicsBlock } from "@/components/seo/RelatedClinicsBlock";
-import { useSeoPageContent, parseMarkdownContent, parseFaqFromContent } from "@/hooks/useSeoPageContent";
+import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
-import {
-  ClaimProfileCTA,
-  ClinicGallery,
-} from "@/components/clinic";
-import { AgencyStickyContact } from "@/components/fostering/AgencyStickyContact";
-import { AgencyReviewsSection } from "@/components/fostering/AgencyReviewsSection";
+import { useAnalytics } from "@/hooks/useAnalytics";
+import { toast } from "sonner";
 import {
   Star,
   BadgeCheck,
-  Calendar,
   Share2,
   Heart,
   Award,
@@ -34,32 +31,80 @@ import {
   Phone,
   Globe,
   AlertTriangle,
-  Percent,
   HandHeart,
   Shield,
   Clock,
-  CheckCircle
+  CheckCircle,
+  ExternalLink,
+  ArrowRight,
+  Mail,
+  ChevronRight,
+  Home,
+  Building2,
+  Calendar,
+  Briefcase,
+  Baby,
+  HeartHandshake,
+  Accessibility,
+  Puzzle,
+  Clock3,
+  LucideIcon
 } from "lucide-react";
-import { AIMatchBadge } from "@/components/ai";
-import { TrustSignalStrip } from "@/components/fostering/TrustSignalStrip";
-import { ConversationalQABlock, AIDiscoveryMeta } from "@/components/ai-seo";
-import { generateClinicQA } from "@/lib/ai-seo/generateQAContent";
+import { cn } from "@/lib/utils";
+
+const FOSTERING_TYPES = [
+  { value: "short_term", label: "Short-Term Fostering", icon: Clock3 as LucideIcon },
+  { value: "long_term", label: "Long-Term Fostering", icon: Home as LucideIcon },
+  { value: "emergency", label: "Emergency Fostering", icon: AlertTriangle as LucideIcon },
+  { value: "respite", label: "Respite Fostering", icon: Heart as LucideIcon },
+  { value: "parent_child", label: "Parent & Child Fostering", icon: Baby as LucideIcon },
+  { value: "therapeutic", label: "Therapeutic Fostering", icon: HeartHandshake as LucideIcon },
+  { value: "specialist", label: "Specialist Fostering", icon: Puzzle as LucideIcon },
+  { value: "sibling", label: "Sibling Fostering", icon: Users as LucideIcon },
+  { value: "teenage", label: "Teenage Fostering", icon: Briefcase as LucideIcon },
+  { value: "disability", label: "Disability Fostering", icon: Accessibility as LucideIcon },
+];
+
+const ENQUIRY_TYPES = [
+  { value: "becoming_foster_carer", label: "Becoming a Foster Carer" },
+  { value: "speak_to_agency", label: "Speaking to this Agency" },
+  { value: "learning_about_fostering", label: "Learning about Fostering" },
+  { value: "placement_referral", label: "Placement Referral" },
+  { value: "general_enquiry", label: "General Enquiry" },
+];
 
 const AgencyProfilePage = () => {
   const { agencySlug } = useParams();
   const slug = agencySlug || "";
-  const [enquiryOpen, setEnquiryOpen] = useState(false);
   const { trackProfileView } = useAnalytics();
 
-  const seoSlug = `clinic/${slug}`;
-  const { data: seoContent } = useSeoPageContent(seoSlug);
-  const parsedContent = seoContent?.content ? parseMarkdownContent(seoContent.content) : null;
-  const seoFaqs = seoContent?.faqs && Array.isArray(seoContent.faqs) && seoContent.faqs.length > 0
-    ? seoContent.faqs
-    : seoContent?.content ? parseFaqFromContent(seoContent.content) : [];
+  const [enquiryOpen, setEnquiryOpen] = useState(false);
+  const [claimDialogOpen, setClaimDialogOpen] = useState(false);
+  const [enquiryForm, setEnquiryForm] = useState({
+    full_name: "",
+    email: "",
+    phone: "",
+    postcode: "",
+    city: "",
+    enquiry_type: "",
+    fostering_type: "",
+    message: "",
+    consent: false,
+  });
+  const [claimForm, setClaimForm] = useState({
+    contact_name: "",
+    role: "",
+    email: "",
+    phone: "",
+    website: "",
+    message: "",
+  });
 
-  const { data: clinic, isLoading, error } = useQuery<any>({
-    queryKey: ["clinic", slug],
+  const seoSlug = `agency/${slug}`;
+  const { data: seoContent } = useSeoPageContent(seoSlug);
+
+  const { data: agency, isLoading } = useQuery<any>({
+    queryKey: ["agency", slug],
     queryFn: async () => {
       if (!slug || slug.includes('/')) return null;
       
@@ -78,135 +123,138 @@ const AgencyProfilePage = () => {
     enabled: !!slug && !slug.includes('/'),
   });
 
-  const { data: teamMembers } = useQuery({
-    queryKey: ["agency-team", clinic?.id],
+  const { data: agencyHours } = useQuery({
+    queryKey: ["agency-hours", agency?.id],
     queryFn: async () => {
-      // No team members for agencies in this version
-      return [];
-    },
-    enabled: !!clinic?.id,
-  });
-
-  const { data: treatments } = useQuery({
-    queryKey: ["agency-services", clinic?.id],
-    queryFn: async () => {
-      if (!clinic?.id) return [];
-      const { data } = await supabase
-        .from("clinic_treatments")
-        .select("*, treatment:treatments(*)")
-        .eq("clinic_id", clinic.id);
-      return data || [];
-    },
-    enabled: !!clinic?.id,
-  });
-
-  const { data: reviews } = useQuery({
-    queryKey: ["agency-reviews", clinic?.id],
-    queryFn: async () => {
-      if (!clinic?.id) return [];
-      const { data } = await supabase
-        .from("review_funnel_events")
-        .select("*")
-        .eq("clinic_id", clinic.id)
-        .eq("event_type", "rating_submitted")
-        .order("created_at", { ascending: false })
-        .limit(20);
-      return (data || []).map((r: any) => ({
-        id: r.id,
-        patient_name: r.visitor_id || 'Anonymous',
-        rating: r.rating || 5,
-        content: r.comment || '',
-        created_at: r.created_at,
-        source: 'internal' as const,
-      }));
-    },
-    enabled: !!clinic?.id,
-  });
-
-  const { data: googleReviews } = useQuery({
-    queryKey: ["agency-google-reviews", clinic?.id],
-    queryFn: async () => {
-      if (!clinic?.id) return [];
-      const { data } = await supabase
-        .from("google_reviews")
-        .select("*")
-        .eq("clinic_id", clinic.id)
-        .order("review_time", { ascending: false })
-        .limit(20);
-      return data || [];
-    },
-    enabled: !!clinic?.id && clinic?.gmb_connected,
-  });
-
-  const { data: galleryImages } = useQuery({
-    queryKey: ["agency-gallery", clinic?.id],
-    queryFn: async () => {
-      if (!clinic?.id) return [];
-      const { data } = await supabase
-        .from("clinic_images")
-        .select("*")
-        .eq("clinic_id", clinic.id)
-        .order("display_order");
-      return data || [];
-    },
-    enabled: !!clinic?.id,
-  });
-
-  const { data: hours } = useQuery({
-    queryKey: ["agency-hours", clinic?.id],
-    queryFn: async () => {
-      if (!clinic?.id) return [];
+      if (!agency?.id) return [];
       const { data } = await supabase
         .from("agency_opening_hours")
         .select("*")
-        .eq("agency_id", clinic.id)
+        .eq("agency_id", agency.id)
         .order("day_of_week");
       return data || [];
     },
-    enabled: !!clinic?.id,
+    enabled: !!agency?.id,
+  });
+
+  const { data: agencyPhotos } = useQuery({
+    queryKey: ["agency-photos", agency?.id],
+    queryFn: async () => {
+      if (!agency?.id) return [];
+      const { data } = await supabase
+        .from("agency_photos")
+        .select("*")
+        .eq("agency_id", agency.id)
+        .order("display_order");
+      return data || [];
+    },
+    enabled: !!agency?.id,
   });
 
   const { data: agencyReviews } = useQuery({
-    queryKey: ["agency-reviews", clinic?.id],
+    queryKey: ["agency-reviews", agency?.id],
     queryFn: async () => {
-      if (!clinic?.id) return [];
+      if (!agency?.id) return [];
       const { data } = await supabase
         .from("agency_reviews")
         .select("*")
-        .eq("agency_id", clinic.id)
-        .order("created_at", { ascending: false })
-        .limit(20);
+        .eq("agency_id", agency.id)
+        .order("review_time", { ascending: false })
+        .limit(10);
       return data || [];
     },
-    enabled: !!clinic?.id,
+    enabled: !!agency?.id,
   });
 
-  const handleEnquiryClick = () => {
-    setEnquiryOpen(true);
-  };
+  const { data: similarAgencies } = useQuery({
+    queryKey: ["similar-agencies", agency?.id, agency?.city],
+    queryFn: async () => {
+      if (!agency?.id) return [];
+      const { data } = await supabase
+        .from("agencies")
+        .select("id, name, slug, city, state, rating, review_count, cover_image_url")
+        .eq("city", agency.city)
+        .neq("id", agency.id)
+        .limit(3);
+      return data || [];
+    },
+    enabled: !!agency?.id && !!agency?.city,
+  });
 
   useEffect(() => {
-    if (clinic?.id && clinic?.name) {
+    if (agency?.id && agency?.name) {
       trackProfileView({
-        profile_type: 'clinic',
-        profile_id: clinic.id,
-        profile_name: clinic.name,
-        city: clinic.city?.name,
-        state: clinic.city?.state?.abbreviation,
+        profile_type: 'agency',
+        profile_id: agency.id,
+        profile_name: agency.name,
+        city: agency.city,
+        state: agency.state,
       });
     }
-  }, [clinic?.id, clinic?.name, clinic?.city?.name, clinic?.city?.state?.abbreviation, trackProfileView]);
+  }, [agency?.id, agency?.name, agency?.city, agency?.state, trackProfileView]);
 
-  const isDataReady = !isLoading && !!clinic && 
-    !!treatments && 
-    (!!seoContent || !seoSlug);
-  usePrerenderReady(isDataReady, { delay: 600 });
+  usePrerenderReady(!isLoading && !!agency, { delay: 600 });
+
+  const handleEnquirySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!enquiryForm.consent) {
+      toast.error("Please agree to the privacy policy");
+      return;
+    }
+    
+    try {
+      const { error } = await supabase.from("enquiries").insert({
+        agency_id: agency.id,
+        full_name: enquiryForm.full_name,
+        email: enquiryForm.email,
+        phone: enquiryForm.phone,
+        postcode: enquiryForm.postcode,
+        city: enquiryForm.city,
+        enquiry_type: enquiryForm.enquiry_type,
+        fostering_type: enquiryForm.fostering_type,
+        message: enquiryForm.message,
+        status: "pending",
+      });
+      
+      if (error) throw error;
+      
+      toast.success("Enquiry sent successfully!");
+      setEnquiryOpen(false);
+      setEnquiryForm({
+        full_name: "",
+        email: "",
+        phone: "",
+        postcode: "",
+        city: "",
+        enquiry_type: "",
+        fostering_type: "",
+        message: "",
+        consent: false,
+      });
+    } catch (err: any) {
+      toast.error(`Failed to send: ${err.message}`);
+    }
+  };
+
+  const handleClaimSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    toast.success("Claim request submitted! We'll be in touch soon.");
+    setClaimDialogOpen(false);
+    setClaimForm({
+      contact_name: "",
+      role: "",
+      email: "",
+      phone: "",
+      website: "",
+      message: "",
+    });
+  };
 
   if (isLoading) {
     return (
       <PageLayout>
         <div className="container py-8">
-          <Skeleton className="h-80 rounded-3xl mb-8" />
+          <Skeleton className="h-80 rounded-2xl mb-8" />
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-4">
               <Skeleton className="h-12 w-3/4" />
@@ -214,7 +262,7 @@ const AgencyProfilePage = () => {
               <Skeleton className="h-32 w-full" />
             </div>
             <div>
-              <Skeleton className="h-64 rounded-3xl" />
+              <Skeleton className="h-64 rounded-2xl" />
             </div>
           </div>
         </div>
@@ -222,17 +270,20 @@ const AgencyProfilePage = () => {
     );
   }
 
-  if (!clinic) {
+  if (!agency) {
     return (
       <PageLayout>
         <Section>
           <div className="text-center py-20">
-            <h1 className="font-display text-3xl font-bold mb-4">Agency Not Found</h1>
-            <p className="text-muted-foreground mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-muted mb-6">
+              <Building2 className="h-8 w-8 text-muted-foreground" />
+            </div>
+            <h1 className="text-3xl md:text-4xl font-bold mb-4">Agency Not Found</h1>
+            <p className="text-muted-foreground mb-8 max-w-md mx-auto">
               The fostering agency you're looking for doesn't exist or has been removed.
             </p>
-            <Button asChild className="rounded-xl font-bold">
-              <Link to="/search">Browse Agencies</Link>
+            <Button asChild size="lg" className="rounded-full font-semibold px-8 bg-primary hover:bg-primary/90">
+              <Link to="/agencies">Browse Agencies <ArrowRight className="ml-2 h-4 w-4" /></Link>
             </Button>
           </div>
         </Section>
@@ -240,462 +291,805 @@ const AgencyProfilePage = () => {
     );
   }
 
-  const isClaimed = (clinic as any).is_claimed === true;
-  const isVerified = (clinic as any).is_verified === true;
-  const isGmbConnected = false;
-  const agencyCity = (clinic as any).city || '';
-  const agencyState = (clinic as any).state || '';
-  
+  const isVerified = agency.is_verified === true;
+  const isClaimed = agency.claim_status === 'claimed';
+  const agencyCity = agency.city || '';
+  const agencyState = agency.state || '';
+
+  const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
   const breadcrumbs = [
-    { label: "Agencies", href: "/search" },
+    { label: "Home", href: "/" },
+    { label: "Fostering Agencies", href: "/agencies" },
     ...(agencyState ? [{ label: agencyState, href: `/${agencyState.toLowerCase().replace(/ /g, '-')}` }] : []),
-    ...(agencyCity ? [{ label: agencyCity, href: `/${agencyState.toLowerCase().replace(/ /g, '-')}/${agencyCity.toLowerCase().replace(/ /g, '-')}` }] : []),
-    { label: clinic.name },
+    ...(agencyCity ? [{ label: agencyCity, href: `/agencies/${agencyCity.toLowerCase().replace(/ /g, '-')}` }] : []),
+    { label: agency.name },
   ];
 
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || `${clinic.name} - Fostering Agency in ${agencyCity || 'UK'}`}
-        description={seoContent?.meta_description || `Learn about ${clinic.name}. ${isVerified ? 'Verified' : ''} fostering agency in ${agencyCity || 'UK'}.`}
-        canonical={`/agency/${clinic.slug}/`}
-        keywords={[clinic.name, `fostering agency ${agencyCity}`, `foster care ${agencyState || 'UK'}`]}
+        title={seoContent?.meta_title || `${agency.name} | Fostering Agency in ${agencyCity || 'UK'}`}
+        description={seoContent?.meta_description || `View ${agency.name}, a fostering agency serving ${agencyCity || 'the UK'}. Find contact details, services, and enquiry options.`}
+        canonical={`/agency/${agency.slug}/`}
+        keywords={[agency.name, `fostering agency ${agencyCity}`, `foster care ${agencyState || 'UK'}`]}
       />
+      
       <SyncStructuredData
         data={[
           {
             type: 'breadcrumb',
-            items: [
-              { name: 'Home', url: '/' },
-              ...(agencyState ? [{ name: agencyState, url: `/${agencyState.toLowerCase().replace(/ /g, '-')}/` }] : []),
-              ...(agencyCity ? [{ name: agencyCity, url: `/${agencyState.toLowerCase().replace(/ /g, '-')}/${agencyCity.toLowerCase().replace(/ /g, '-')}/` }] : []),
-              { name: clinic.name },
-            ],
+            items: breadcrumbs.map(b => ({ name: b.label, url: b.href === '/' ? 'https://fostercare.uk/' : `https://fostercare.uk${b.href}` })),
           },
           {
-            type: 'localBusiness',
-            name: clinic.name,
+            type: 'Organization',
+            name: agency.name,
             description: `Fostering agency in ${agencyCity || 'UK'}`,
-            address: (clinic as any).address || '',
-            city: agencyCity,
-            state: agencyState,
-            country: 'United Kingdom',
-            phone: clinic.phone || '',
-            url: `/agency/${clinic.slug}/`,
-            rating: clinic.rating ? Number(clinic.rating) : undefined,
-            reviewCount: clinic.review_count || undefined,
-            priceRange: '£',
+            address: agency.address || '',
+            addressLocality: agencyCity,
+            addressRegion: agencyState,
+            addressCountry: 'GB',
+            telephone: agency.phone || '',
+            url: `https://fostercare.uk/agency/${agency.slug}/`,
           },
         ]}
         id="agency-schema"
       />
 
-      {/* Hero Cover */}
-      <div className="relative h-56 md:h-72 bg-muted">
-        {(clinic.cover_image_url || (clinic as any).image_url) ? (
-          <img src={clinic.cover_image_url || (clinic as any).image_url} alt={clinic.name} className="w-full h-full object-cover" />
+      {/* Hero Section */}
+      <div className="relative h-72 md:h-80 bg-slate-900 overflow-hidden">
+        {agency.cover_image_url || agency.main_image_url ? (
+          <img 
+            src={agency.cover_image_url || agency.main_image_url} 
+            alt={agency.name} 
+            className="w-full h-full object-cover opacity-40"
+          />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-primary/20 via-teal/10 to-accent/20" />
+          <div className="w-full h-full bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-        <div className="absolute top-4 left-0 right-0">
-          <div className="container">
-            <Breadcrumbs items={breadcrumbs} className="text-white/80" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent" />
+        
+        <div className="absolute top-0 left-0 right-0 z-10">
+          <div className="container px-4 py-4">
+            <Breadcrumbs items={breadcrumbs} className="text-white/70" />
           </div>
         </div>
       </div>
 
       {/* Agency Header Card */}
-      <Section size="sm" className="-mt-20 relative z-10">
-        <div className="card-modern p-5 md:p-6">
-          <div className="flex flex-col lg:flex-row gap-5">
+      <Section size="sm" className="-mt-32 relative z-20">
+        <div className="bg-card rounded-2xl border border-border p-6 md:p-8 shadow-xl">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+            {/* Logo/Image */}
             <div className="shrink-0">
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-card overflow-hidden border-4 border-background shadow-elevated">
-                {(clinic.cover_image_url || (clinic as any).image_url) ? (
-                  <img src={clinic.cover_image_url || (clinic as any).image_url} alt={clinic.name} className="w-full h-full object-cover" />
+              <div className="w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-gradient-to-br from-teal-500/20 to-emerald-500/20 border border-border overflow-hidden flex items-center justify-center">
+                {agency.main_image_url || agency.cover_image_url ? (
+                  <img 
+                    src={agency.main_image_url || agency.cover_image_url} 
+                    alt={agency.name} 
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-primary/20 to-teal/20 flex items-center justify-center">
-                    <span className="text-2xl font-display font-bold text-primary/50">{clinic.name.charAt(0)}</span>
-                  </div>
+                  <Building2 className="h-12 w-12 text-teal-600" />
                 )}
               </div>
             </div>
 
+            {/* Agency Info */}
             <div className="flex-1 min-w-0">
-              <div className="flex flex-wrap items-center gap-2 mb-2">
+              <div className="flex flex-wrap items-center gap-2 mb-3">
                 {isVerified && (
-                  <Badge className="bg-primary text-primary-foreground rounded-full px-3 py-1 font-bold">
-                    <BadgeCheck className="h-3.5 w-3.5 mr-1" /> Verified
-                  </Badge>
+                  <span className="inline-flex items-center gap-1.5 bg-teal-500/10 text-teal-700 rounded-full px-3 py-1 text-xs font-semibold">
+                    <BadgeCheck className="h-3.5 w-3.5" /> Verified Agency
+                  </span>
                 )}
                 {isClaimed && !isVerified && (
-                  <Badge className="bg-gold/10 text-gold border border-gold/20 rounded-full px-3 py-1 font-bold">
-                    <Award className="h-3.5 w-3.5 mr-1" /> Claimed
-                  </Badge>
-                )}
-                {isGmbConnected && (
-                  <Badge variant="outline" className="rounded-full px-3 py-1 text-xs">
-                    <img src="https://www.google.com/favicon.ico" alt="Google" className="h-3 w-3 mr-1" /> GMB Synced
-                  </Badge>
+                  <span className="inline-flex items-center gap-1.5 bg-amber-500/10 text-amber-700 rounded-full px-3 py-1 text-xs font-semibold">
+                    <Award className="h-3.5 w-3.5" /> Claimed Profile
+                  </span>
                 )}
                 {!isClaimed && (
-                  <Badge variant="outline" className="rounded-full px-3 py-1 text-xs text-amber-600 border-amber-300">
-                    <AlertTriangle className="h-3 w-3 mr-1" /> Unclaimed
-                  </Badge>
+                  <span className="inline-flex items-center gap-1.5 bg-muted text-muted-foreground rounded-full px-3 py-1 text-xs font-semibold">
+                    <AlertTriangle className="h-3.5 w-3.5" /> Unclaimed
+                  </span>
                 )}
               </div>
 
-              <TrustSignalStrip
-                isVerified={isVerified}
-                isClaimed={isClaimed}
-                isGmbConnected={isGmbConnected}
-                reviewCount={clinic.review_count || 0}
-                rating={Number(clinic.rating) || 0}
-                dentistCount={teamMembers?.length}
-                className="mb-2"
-              />
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3">
+                {agency.name}
+              </h1>
 
-              <h1 className="font-display text-2xl md:text-3xl font-bold mb-2 truncate">{clinic.name}</h1>
-
-              <div className="flex flex-wrap items-center gap-4 text-sm">
-                {(Number(clinic.rating) || 0) > 0 && (
-                  <div className="flex items-center gap-1.5">
-                    <div className="flex items-center gap-0.5 text-gold">
-                      <Star className="h-4 w-4 fill-current" />
-                      <span className="font-bold">{Number(clinic.rating).toFixed(1)}</span>
+              <div className="flex flex-wrap items-center gap-4 text-sm mb-4">
+                {agencyCity && (
+                  <span className="flex items-center gap-1.5 text-muted-foreground">
+                    <MapPin className="h-4 w-4 text-primary" />
+                    {agencyCity}{agencyState ? `, ${agencyState}` : ''}
+                  </span>
+                )}
+                {(agency.rating || agency.review_count) && (
+                  <span className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-0.5">
+                      <Star className="h-4 w-4 fill-gold text-gold" />
+                      <span className="font-bold text-foreground">{Number(agency.rating || 0).toFixed(1)}</span>
                     </div>
-                    <span className="text-muted-foreground">({clinic.review_count || 0})</span>
-                  </div>
-                )}
-                {(clinic.area || clinic.city) && (
-                  <div className="flex items-center gap-1 text-muted-foreground">
-                    <MapPin className="h-4 w-4" />
-                    <span>{clinic.area?.name || clinic.city?.name}</span>
-                  </div>
-                )}
-                {teamMembers && teamMembers.length > 0 && (
-                  <div className="flex items-center gap-1 text-muted-foreground">
-                    <Users className="h-4 w-4" />
-                    <span>{teamMembers.length} Team Members</span>
-                  </div>
+                    <span className="text-muted-foreground">({agency.review_count || 0} reviews)</span>
+                  </span>
                 )}
               </div>
 
-              {isClaimed && (
-                <div className="flex flex-wrap gap-3 mt-3">
-                  {clinic.phone && (
-                    <a href={`tel:${clinic.phone}`} className="text-sm text-primary hover:underline flex items-center gap-1">
-                      <Phone className="h-3.5 w-3.5" /> {clinic.phone}
-                    </a>
-                  )}
-                  {clinic.website && (
-                    <a href={clinic.website} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1">
-                      <Globe className="h-3.5 w-3.5" /> Website
-                    </a>
-                  )}
-                </div>
+              {agency.description && (
+                <p className="text-muted-foreground text-sm md:text-base line-clamp-2 max-w-2xl">
+                  {agency.description}
+                </p>
               )}
             </div>
 
-            <div className="hidden lg:flex flex-col gap-2 shrink-0">
-              <Button size="lg" className="rounded-xl font-bold bg-teal hover:bg-teal/90" onClick={() => handleEnquiryClick()}>
-                <HandHeart className="h-4 w-4 mr-2" /> Make an Enquiry
+            {/* CTA Buttons */}
+            <div className="shrink-0 flex flex-col gap-3">
+              <Button 
+                size="lg" 
+                className="rounded-full font-semibold bg-primary hover:bg-primary/90 shadow-lg shadow-primary/25"
+                onClick={() => setEnquiryOpen(true)}
+              >
+                <HandHeart className="h-4 w-4 mr-2" />
+                Send Enquiry
               </Button>
               <div className="flex gap-2">
-                <Button variant="outline" size="icon" className="rounded-xl flex-1">
-                  <Share2 className="h-4 w-4" />
-                </Button>
-                <Button variant="outline" size="icon" className="rounded-xl flex-1" asChild>
-                  <Link to="/become-foster-carer">
-                    <Heart className="h-4 w-4" />
+                {agency.phone && (
+                  <Button variant="outline" size="lg" className="rounded-full font-semibold flex-1" asChild>
+                    <a href={`tel:${agency.phone}`}>
+                      <Phone className="h-4 w-4 mr-1.5" />
+                      Call
+                    </a>
+                  </Button>
+                )}
+                {agency.website && (
+                  <Button variant="outline" size="lg" className="rounded-full font-semibold flex-1" asChild>
+                    <a href={agency.website} target="_blank" rel="noopener noreferrer">
+                      <Globe className="h-4 w-4 mr-1.5" />
+                      Website
+                    </a>
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </Section>
+
+      {/* Trust Indicators */}
+      <Section size="sm" className="py-4">
+        <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-3 text-sm">
+          {isVerified && (
+            <span className="flex items-center gap-2 text-muted-foreground">
+              <BadgeCheck className="h-4 w-4 text-primary" />
+              <span className="font-medium">Ofsted Registered</span>
+            </span>
+          )}
+          <span className="flex items-center gap-2 text-muted-foreground">
+            <Shield className="h-4 w-4 text-primary" />
+            <span className="font-medium">DBS Checked</span>
+          </span>
+          {(agency.rating || agency.review_count) && (
+            <span className="flex items-center gap-2 text-muted-foreground">
+              <Star className="h-4 w-4 text-gold fill-gold" />
+              <span className="font-medium">{agency.review_count || 0} Verified Reviews</span>
+            </span>
+          )}
+          <span className="flex items-center gap-2 text-muted-foreground">
+            <Heart className="h-4 w-4 text-primary" />
+            <span className="font-medium">100% Free Service</span>
+          </span>
+        </div>
+      </Section>
+
+      {/* Main Content */}
+      <Section size="md" className="py-12 md:py-16">
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Left Column - Main Content */}
+          <div className="lg:col-span-2 space-y-8">
+            
+            {/* About Section */}
+            <div className="bg-card rounded-2xl border border-border p-6 md:p-8 hover:border-teal-500/30 transition-all duration-300">
+              <h2 className="text-xl md:text-2xl font-bold mb-4 flex items-center gap-2">
+                <Building2 className="h-5 w-5 text-primary" />
+                About This Fostering Agency
+              </h2>
+              {agency.description ? (
+                <p className="text-muted-foreground leading-relaxed">{agency.description}</p>
+              ) : (
+                <p className="text-muted-foreground leading-relaxed">
+                  This profile uses publicly available business information. The agency can claim this profile to add full details about its fostering services, support, and service areas.
+                </p>
+              )}
+            </div>
+
+            {/* Fostering Services Section */}
+            <div className="bg-card rounded-2xl border border-border p-6 md:p-8 hover:border-teal-500/30 transition-all duration-300">
+              <h2 className="text-xl md:text-2xl font-bold mb-6 flex items-center gap-2">
+                <Heart className="h-5 w-5 text-primary" />
+                Fostering Services
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {FOSTERING_TYPES.slice(0, 6).map((type) => (
+                  <Link 
+                    key={type.value}
+                    to={`/categories/${type.value}`}
+                    className="flex items-center gap-3 p-4 rounded-xl bg-muted/30 border border-border hover:border-teal-500/40 hover:bg-teal-500/5 transition-all duration-300 group"
+                  >
+                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                      <type.icon className="h-5 w-5 text-primary" />
+                    </div>
+                    <span className="font-medium text-sm group-hover:text-primary transition-colors">{type.label}</span>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto group-hover:text-primary transition-colors" />
                   </Link>
-                </Button>
+                ))}
+              </div>
+              {!isClaimed && (
+                <p className="text-sm text-muted-foreground mt-4">
+                  Contact the agency to learn about their specific fostering services and availability.
+                </p>
+              )}
+            </div>
+
+            {/* Areas Served Section */}
+            <div className="bg-card rounded-2xl border border-border p-6 md:p-8 hover:border-teal-500/30 transition-all duration-300">
+              <h2 className="text-xl md:text-2xl font-bold mb-6 flex items-center gap-2">
+                <MapPin className="h-5 w-5 text-primary" />
+                Areas Served
+              </h2>
+              <div className="flex flex-wrap gap-3">
+                {agencyCity && (
+                  <Link 
+                    to={`/agencies/${agencyCity.toLowerCase().replace(/ /g, '-')}`}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-500/10 text-teal-700 font-medium text-sm hover:bg-teal-500/20 transition-colors"
+                  >
+                    <MapPin className="h-4 w-4" />
+                    Fostering Agencies in {agencyCity}
+                  </Link>
+                )}
+                {agencyState && (
+                  <Link 
+                    to={`/${agencyState.toLowerCase().replace(/ /g, '-')}`}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-muted text-muted-foreground font-medium text-sm hover:bg-muted/80 transition-colors"
+                  >
+                    <Globe className="h-4 w-4" />
+                    {agencyState}
+                  </Link>
+                )}
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-muted text-muted-foreground font-medium text-sm">
+                  United Kingdom
+                </span>
               </div>
             </div>
-          </div>
-        </div>
-      </Section>
 
-      {/* Fostering Services Banner */}
-      <Section size="sm" className="pt-0">
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-teal via-emerald to-teal p-[2px]">
-          <div className="relative rounded-2xl bg-background/95 backdrop-blur-sm px-6 py-4">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-teal to-emerald flex items-center justify-center">
-                  <HandHeart className="h-6 w-6 text-primary-foreground" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="font-display font-bold text-lg">Need a Foster Carer?</h3>
-                    <Badge className="bg-teal text-primary-foreground border-0">Learn More</Badge>
-                  </div>
-                  <p className="text-muted-foreground text-sm">
-                    Contact this agency to learn about becoming a foster carer or arranging a placement.
-                  </p>
-                </div>
-              </div>
-              <Button asChild className="bg-gradient-to-r from-teal to-emerald text-primary-foreground border-0 hover:opacity-90">
-                <Link to="/become-foster-carer">Become a Foster Carer</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </Section>
-
-      {!isClaimed && (
-        <Section size="sm" className="pt-0">
-          <ClaimProfileCTA clinicId={clinic.id} clinicName={clinic.name} variant="banner" />
-        </Section>
-      )}
-
-      {/* Main Content Grid */}
-      <Section size="md" className="overflow-x-hidden">
-        <div className="grid lg:grid-cols-3 gap-6 md:gap-8">
-          <div className="lg:col-span-2 min-w-0 overflow-hidden">
-            <Tabs defaultValue="overview" className="w-full">
-              <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide touch-manipulation pb-1">
-                <TabsList className="inline-flex w-max md:w-full justify-start bg-muted/50 rounded-2xl p-1 mb-4 md:mb-6">
-                  <TabsTrigger value="overview" className="rounded-xl font-bold text-xs px-2.5 py-2 md:text-sm md:px-4 whitespace-nowrap">Overview</TabsTrigger>
-                  <TabsTrigger value="team" className="rounded-xl font-bold text-xs px-2.5 py-2 md:text-sm md:px-4 whitespace-nowrap">Team</TabsTrigger>
-                  <TabsTrigger value="services" className="rounded-xl font-bold text-xs px-2.5 py-2 md:text-sm md:px-4 whitespace-nowrap">Services</TabsTrigger>
-                  <TabsTrigger value="reviews" className="rounded-xl font-bold text-xs px-2.5 py-2 md:text-sm md:px-4 whitespace-nowrap">Reviews</TabsTrigger>
-                  {galleryImages && galleryImages.length > 0 && (
-                    <TabsTrigger value="photos" className="rounded-xl font-bold text-xs px-2.5 py-2 md:text-sm md:px-4 whitespace-nowrap">Photos</TabsTrigger>
+            {/* Gallery Section */}
+            {(agencyPhotos && agencyPhotos.length > 0) || agency.cover_image_url ? (
+              <div className="bg-card rounded-2xl border border-border p-6 md:p-8 hover:border-teal-500/30 transition-all duration-300">
+                <h2 className="text-xl md:text-2xl font-bold mb-6 flex items-center gap-2">
+                  <Users className="h-5 w-5 text-primary" />
+                  Gallery
+                </h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {agency.cover_image_url && (
+                    <div className="aspect-video rounded-xl overflow-hidden bg-muted">
+                      <img 
+                        src={agency.cover_image_url} 
+                        alt={`${agency.name} gallery`}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
                   )}
-                </TabsList>
+                  {agencyPhotos?.slice(0, 7).map((photo: any, idx: number) => (
+                    <div key={photo.id || idx} className="aspect-video rounded-xl overflow-hidden bg-muted">
+                      <img 
+                        src={photo.photo_url || photo.local_url} 
+                        alt={`${agency.name} photo ${idx + 1}`}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
+            ) : null}
 
-              <TabsContent value="overview" className="space-y-6 animate-fade-in-up">
-                <AIMatchBadge
-                  clinicName={clinic.name}
-                  location={clinic.city?.name || ''}
-                  rating={Number(clinic.rating) || 0}
-                  isVerified={isVerified}
-                />
+            {/* Opening Hours Section */}
+            <div className="bg-card rounded-2xl border border-border p-6 md:p-8 hover:border-teal-500/30 transition-all duration-300">
+              <h2 className="text-xl md:text-2xl font-bold mb-6 flex items-center gap-2">
+                <Clock className="h-5 w-5 text-primary" />
+                Opening Hours
+              </h2>
+              {agencyHours && agencyHours.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {agencyHours.map((hour: any) => {
+                    const today = new Date().getDay();
+                    const isToday = hour.day_of_week === today;
+                    return (
+                      <div 
+                        key={hour.day_of_week}
+                        className={cn(
+                          "flex justify-between items-center p-3 rounded-xl",
+                          isToday ? "bg-teal-500/10 border border-teal-500/20" : "bg-muted/30"
+                        )}
+                      >
+                        <span className={cn("font-medium", isToday ? "text-teal-700" : "")}>
+                          {dayNames[hour.day_of_week]}
+                        </span>
+                        <span className={cn("text-sm", hour.is_closed ? "text-muted-foreground" : "")}>
+                          {hour.is_closed ? 'Closed' : `${hour.open_time} - ${hour.close_time}`}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="text-muted-foreground">Opening hours are not available yet.</p>
+              )}
+            </div>
 
-                <div className="card-modern p-4 md:p-6 overflow-hidden">
-                  <h2 className="font-display text-lg md:text-xl font-bold mb-4">About This Agency</h2>
-                  
-                  {parsedContent && parsedContent.intro ? (
-                    <div className="space-y-4 overflow-hidden">
-                      <p className="text-muted-foreground leading-relaxed text-sm md:text-base break-words">{parsedContent.intro}</p>
-                      {parsedContent.sections.filter(s => !s.heading.toLowerCase().includes('faq')).slice(0, 3).map((section, idx) => (
-                        <div key={idx} className="mt-6 overflow-hidden">
-                          {section.level === 2 ? (
-                            <h3 className="font-display text-base md:text-lg font-bold text-foreground mb-3">{section.heading}</h3>
-                          ) : (
-                            <h4 className="font-semibold text-foreground mb-2 text-sm md:text-base">{section.heading}</h4>
-                          )}
-                          <div className="text-muted-foreground leading-relaxed prose prose-sm max-w-none text-sm md:text-base break-words overflow-hidden" dangerouslySetInnerHTML={{ __html: section.content.replace(/\n/g, '<br/>') }} />
-                        </div>
+            {/* Reviews Section */}
+            <div className="bg-card rounded-2xl border border-border p-6 md:p-8 hover:border-teal-500/30 transition-all duration-300">
+              <h2 className="text-xl md:text-2xl font-bold mb-6 flex items-center gap-2">
+                <Star className="h-5 w-5 text-gold" />
+                Agency Reviews
+              </h2>
+              {(agency.rating || agency.review_count) && (
+                <div className="flex items-center gap-4 mb-6 p-4 rounded-xl bg-muted/30">
+                  <div className="text-4xl font-bold text-foreground">{Number(agency.rating || 0).toFixed(1)}</div>
+                  <div>
+                    <div className="flex items-center gap-1 mb-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star 
+                          key={i} 
+                          className={cn(
+                            "h-5 w-5", 
+                            i < Math.round(Number(agency.rating || 0)) ? "fill-gold text-gold" : "text-muted"
+                          )} 
+                        />
                       ))}
                     </div>
-                  ) : (
-                    <p className="text-muted-foreground leading-relaxed text-sm md:text-base break-words">
-                      {clinic.description || `${clinic.name} is a fostering agency in ${clinic.area?.name || clinic.city?.name || 'the UK'}${isClaimed ? ', offering comprehensive fostering services with a focus on child welfare and carer support.' : '. More details will be available once the agency claims their profile.'}`}
-                    </p>
-                  )}
-                  
-                  {!isClaimed && (
-                    <div className="mt-4">
-                      <ClaimProfileCTA clinicId={clinic.id} clinicName={clinic.name} variant="inline" />
-                    </div>
-                  )}
-                </div>
-
-                {(() => {
-                  const agencyQA = generateClinicQA({
-                    name: clinic.name,
-                    city: clinic.city?.name,
-                    area: clinic.area?.name,
-                    rating: clinic.rating || clinic.average_rating,
-                    reviewCount: clinic.review_count || clinic.total_reviews,
-                    treatments: treatments?.map(t => t.treatment?.name).filter(Boolean) as string[],
-                  });
-                  const allFaqs = seoFaqs.length > 0
-                    ? [...seoFaqs.slice(0, 5).map(f => ({ question: f.question, answer: f.answer })), ...agencyQA.slice(0, 2)]
-                    : agencyQA;
-                  return (
-                    <ConversationalQABlock
-                      title={`About ${clinic.name}`}
-                      subtitle="Common questions about this agency"
-                      items={allFaqs}
-                      contextLabel={`agency-${slug}`}
-                      className="px-0"
-                    />
-                  );
-                })()}
-
-                {galleryImages && galleryImages.length > 0 && (
-                  <div className="card-modern p-4 md:p-6 overflow-hidden">
-                    <h2 className="font-display text-lg md:text-xl font-bold mb-4">Photos</h2>
-                    <ClinicGallery images={galleryImages.slice(0, 4)} clinicName={clinic.name} />
+                    <p className="text-sm text-muted-foreground">{agency.review_count || 0} reviews</p>
                   </div>
-                )}
-
-                {treatments && treatments.length > 0 && (
-                  <div className="card-modern p-4 md:p-6 overflow-hidden">
-                    <h2 className="font-display text-lg md:text-xl font-bold mb-4">Fostering Services</h2>
-                    <div className="flex flex-wrap gap-2">
-                      {treatments.slice(0, 8).map((ct: any) => {
-                        const serviceUrl = clinic.city?.state?.slug && clinic.city?.slug
-                          ? `/${clinic.city.state.slug}/${clinic.city.slug}/${ct.treatment?.slug}`
-                          : `/categories/${ct.treatment?.slug}`;
-                        return (
-                          <Link key={ct.id} to={serviceUrl} className="px-3 py-2 rounded-xl bg-muted/50 hover:bg-muted hover:text-primary transition-colors max-w-full">
-                            <span className="text-sm font-medium truncate">{ct.treatment?.name}</span>
-                          </Link>
-                        );
-                      })}
-                      {treatments.length > 8 && (
-                        <Badge variant="secondary" className="rounded-xl">+{treatments.length - 8} more</Badge>
+                </div>
+              )}
+              
+              {agencyReviews && agencyReviews.length > 0 ? (
+                <div className="space-y-4">
+                  {agencyReviews.slice(0, 5).map((review: any) => (
+                    <div key={review.id} className="p-4 rounded-xl bg-muted/30 border border-border">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-medium">{review.reviewer_name || 'Anonymous'}</span>
+                        <div className="flex items-center gap-0.5">
+                          {[...Array(5)].map((_, i) => (
+                            <Star 
+                              key={i} 
+                              className={cn(
+                                "h-3 w-3", 
+                                i < review.rating ? "fill-gold text-gold" : "text-muted"
+                              )} 
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      {review.review_text && (
+                        <p className="text-sm text-muted-foreground line-clamp-3">{review.review_text}</p>
+                      )}
+                      {review.relative_time_description && (
+                        <p className="text-xs text-muted-foreground mt-2">{review.relative_time_description}</p>
                       )}
                     </div>
-                  </div>
-                )}
-              </TabsContent>
-
-              <TabsContent value="team" className="animate-fade-in-up">
-                <div className="card-modern p-4 md:p-6 overflow-hidden">
-                  <h2 className="font-display text-lg md:text-xl font-bold mb-4 md:mb-6">About This Agency</h2>
-                  <p className="text-muted-foreground">
-                    {clinic.description || `This is a fostering agency in ${clinic.city?.name || 'the UK'}. Contact the agency directly to learn more about their services and how to become a foster carers.`}
-                  </p>
-                  {isClaimed && (
-                    <div className="mt-4 p-4 bg-muted/50 rounded-lg">
-                      <h3 className="font-semibold mb-2">Contact Information</h3>
-                      {clinic.phone && <p className="text-sm">Phone: {clinic.phone}</p>}
-                      {clinic.email && <p className="text-sm">Email: {clinic.email}</p>}
-                      {clinic.website && <p className="text-sm">Website: {clinic.website}</p>}
-                    </div>
-                  )}
+                  ))}
                 </div>
-              </TabsContent>
-
-              <TabsContent value="services" className="animate-fade-in-up">
-                <div className="card-modern p-4 md:p-6 overflow-hidden space-y-6">
-                  <h2 className="font-display text-lg md:text-xl font-bold">Fostering Types Offered</h2>
-                  {treatments && treatments.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {treatments.map((ct: any) => (
-                        <div key={ct.id} className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
-                          <Heart className="h-5 w-5 text-primary shrink-0" />
-                          <div>
-                            <p className="font-medium text-foreground">{ct.treatment?.name || ''}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-muted-foreground text-sm md:text-base">
-                      {isClaimed ? "Contact the agency for available fostering types." : "Fostering types will be listed once the agency claims their profile."}
-                    </p>
-                  )}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="reviews" className="animate-fade-in-up">
-                <div className="card-modern p-4 md:p-6 overflow-hidden">
-                  <h2 className="font-display text-lg md:text-xl font-bold mb-4 md:mb-6">Agency Reviews</h2>
-                  <AgencyReviewsSection
-                    reviews={agencyReviews || []}
-                    googleReviews={googleReviews || []}
-                    agencyRating={clinic.rating ? Number(clinic.rating) : undefined}
-                    agencyReviewCount={clinic.review_count || 0}
-                    agencySlug={clinic.slug}
-                    agencyId={clinic.id}
-                  />
-                </div>
-              </TabsContent>
-
-              {galleryImages && galleryImages.length > 0 && (
-                <TabsContent value="photos" className="animate-fade-in-up">
-                  <div className="card-modern p-4 md:p-6 overflow-hidden">
-                    <h2 className="font-display text-lg md:text-xl font-bold mb-4">Gallery ({galleryImages.length} photos)</h2>
-                    <ClinicGallery images={galleryImages} clinicName={clinic.name} />
-                  </div>
-                </TabsContent>
+              ) : (
+                <p className="text-muted-foreground text-center py-8">No reviews yet</p>
               )}
-            </Tabs>
-          </div>
+            </div>
 
-          <div className="space-y-6">
-            <div className="lg:sticky lg:top-24">
-              <AgencyStickyContact
-                agencyId={clinic.id}
-                agencyName={clinic.name}
-                agencyPhone={clinic.phone}
-                agencyRating={clinic.rating ? Number(clinic.rating) : undefined}
-                agencyReviewCount={clinic.review_count || 0}
-                agencyArea={clinic.city?.name || clinic.area?.name}
-                agencyLatitude={clinic.latitude ? Number(clinic.latitude) : undefined}
-                agencyLongitude={clinic.longitude ? Number(clinic.longitude) : undefined}
-                agencyAddress={clinic.address || undefined}
-                agencyWebsite={clinic.website}
-                agencyGoogleMapsUrl={clinic.google_maps_url}
-                hours={hours || []}
-                isClaimed={isClaimed}
-              />
-              
-              {!isClaimed && (
-                <div className="mt-6">
-                  <ClaimProfileCTA clinicId={clinic.id} clinicName={clinic.name} variant="sidebar" />
-                </div>
-              )}
-
-              <div className="mt-6">
-                <RelatedClinicsBlock
-                  clinicId={clinic.id}
-                  cityId={clinic.city_id}
-                  cityName={clinic.city?.name}
-                  citySlug={clinic.city?.slug}
-                  stateSlug={clinic.city?.state?.slug}
-                />
+            {/* FAQ Section */}
+            <div className="bg-card rounded-2xl border border-border p-6 md:p-8 hover:border-teal-500/30 transition-all duration-300">
+              <h2 className="text-xl md:text-2xl font-bold mb-6 flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-primary" />
+                Frequently Asked Questions
+              </h2>
+              <div className="space-y-3">
+                {[
+                  { q: "How do I contact this fostering agency?", a: `You can call them at ${agency.phone || 'N/A'}, send an enquiry through this page, or visit their website.` },
+                  { q: "Can I apply to become a foster carer through this agency?", a: "Yes, this agency accepts enquiries from people interested in becoming foster carers. Click 'Send Enquiry' to get started." },
+                  { q: "Are the services on this profile verified?", a: isVerified ? "Yes, this agency has been verified as an Ofsted-registered fostering provider." : "This profile contains publicly available information. The agency can claim this profile to verify their services." },
+                  { q: "What types of fostering can agencies offer?", a: "Agencies typically offer short-term, long-term, emergency, respite, parent & child, therapeutic, and specialist fostering placements." },
+                  { q: "Can this agency update or claim its profile?", a: "Yes, the agency can claim this profile through the 'Claim This Profile' button below to add and update their information." },
+                ].map((faq, idx) => (
+                  <details 
+                    key={idx}
+                    className="group bg-muted/30 rounded-xl border border-border overflow-hidden"
+                  >
+                    <summary className="flex items-center justify-between cursor-pointer px-5 py-4 font-medium text-foreground hover:text-primary transition-colors">
+                      {faq.q}
+                      <ChevronRight className="h-5 w-5 text-muted-foreground group-open:rotate-90 transition-transform shrink-0 ml-4" />
+                    </summary>
+                    <div className="px-5 pb-4 text-sm text-muted-foreground">{faq.a}</div>
+                  </details>
+                ))}
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="mt-8 max-w-5xl mx-auto px-4">
-          <InterlinkingSection
-            variant="clinic"
-            stateSlug={clinic.city?.state?.slug}
-            currentLocationName={clinic.city?.name}
-            currentLocationSlug={clinic.city?.slug}
-            relatedServices={treatments?.map(t => ({
-              name: t.treatment?.name || '',
-              slug: t.treatment?.slug || '',
-            })).filter(s => s.name) || []}
-            nearbyAgencies={[]}
-          />
-        </div>
+          {/* Right Column - Sidebar */}
+          <div className="space-y-6">
+            <div className="lg:sticky lg:top-24 space-y-6">
+              
+              {/* Quick Info Card */}
+              <div className="bg-card rounded-2xl border border-border p-6 hover:border-teal-500/30 transition-all duration-300">
+                <h3 className="font-bold text-lg mb-4">Quick Contact</h3>
+                <div className="space-y-4">
+                  {agency.phone && (
+                    <a href={`tel:${agency.phone}`} className="flex items-center gap-3 text-sm hover:text-primary transition-colors">
+                      <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <Phone className="h-4 w-4 text-primary" />
+                      </div>
+                      <span>{agency.phone}</span>
+                    </a>
+                  )}
+                  {agency.email && (
+                    <a href={`mailto:${agency.email}`} className="flex items-center gap-3 text-sm hover:text-primary transition-colors">
+                      <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <Mail className="h-4 w-4 text-primary" />
+                      </div>
+                      <span>{agency.email}</span>
+                    </a>
+                  )}
+                  {agency.website && (
+                    <a 
+                      href={agency.website} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 text-sm hover:text-primary transition-colors"
+                    >
+                      <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <Globe className="h-4 w-4 text-primary" />
+                      </div>
+                      <span className="flex items-center gap-1">
+                        Visit Website
+                        <ExternalLink className="h-3 w-3" />
+                      </span>
+                    </a>
+                  )}
+                  {agency.google_maps_url && (
+                    <a 
+                      href={agency.google_maps_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 text-sm hover:text-primary transition-colors"
+                    >
+                      <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <MapPin className="h-4 w-4 text-primary" />
+                      </div>
+                      <span className="flex items-center gap-1">
+                        Get Directions
+                        <ExternalLink className="h-3 w-3" />
+                      </span>
+                    </a>
+                  )}
+                </div>
+              </div>
 
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur border-t border-border z-40">
-          <Button className="w-full rounded-xl font-bold h-12 text-base bg-teal hover:bg-teal/90" size="lg" onClick={() => handleEnquiryClick()}>
-            <HandHeart className="h-5 w-5 mr-2" /> Make an Enquiry
-          </Button>
+              {/* Enquiry Button (Sticky) */}
+              <Button 
+                size="lg" 
+                className="w-full rounded-full font-semibold bg-primary hover:bg-primary/90 shadow-lg shadow-primary/25"
+                onClick={() => setEnquiryOpen(true)}
+              >
+                <HandHeart className="h-4 w-4 mr-2" />
+                Send Enquiry
+              </Button>
+
+              {/* Claim Profile (if unclaimed) */}
+              {!isClaimed && (
+                <div className="bg-gradient-to-br from-amber-500/10 to-amber-600/5 rounded-2xl border border-amber-200 p-6">
+                  <h3 className="font-bold text-lg mb-2">Are you the owner?</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Are you the owner or authorised representative of this fostering agency?
+                  </p>
+                  <Button 
+                    className="w-full rounded-full font-semibold bg-amber-500 hover:bg-amber-600 text-white"
+                    onClick={() => setClaimDialogOpen(true)}
+                  >
+                    <Award className="h-4 w-4 mr-2" />
+                    Claim This Profile
+                  </Button>
+                </div>
+              )}
+
+              {/* Similar Agencies */}
+              {similarAgencies && similarAgencies.length > 0 && (
+                <div className="bg-card rounded-2xl border border-border p-6 hover:border-teal-500/30 transition-all duration-300">
+                  <h3 className="font-bold text-lg mb-4">Similar Agencies</h3>
+                  <div className="space-y-3">
+                    {similarAgencies.map((similar: any) => (
+                      <Link 
+                        key={similar.id}
+                        to={`/agency/${similar.slug}`}
+                        className="flex items-center gap-3 p-3 rounded-xl bg-muted/30 hover:bg-teal-500/5 border border-transparent hover:border-teal-500/20 transition-all group"
+                      >
+                        <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-teal-500/20 to-emerald-500/20 flex items-center justify-center shrink-0">
+                          {similar.cover_image_url ? (
+                            <img src={similar.cover_image_url} alt={similar.name} className="h-full w-full object-cover rounded-lg" />
+                          ) : (
+                            <Building2 className="h-4 w-4 text-primary" />
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-sm truncate group-hover:text-primary transition-colors">{similar.name}</p>
+                          <p className="text-xs text-muted-foreground">{similar.city}, {similar.state}</p>
+                        </div>
+                        {similar.rating && (
+                          <div className="flex items-center gap-1 shrink-0">
+                            <Star className="h-3 w-3 fill-gold text-gold" />
+                            <span className="text-xs font-medium">{Number(similar.rating).toFixed(1)}</span>
+                          </div>
+                        )}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </Section>
-      
-      <AIDiscoveryMeta
-        pageTitle={clinic.name}
-        aiSummary={`${clinic.name} is a fostering agency${clinic.city?.name ? ` in ${clinic.city.name}` : ""}, UK. ${clinic.rating ? `Rated ${clinic.rating}/5 by ${clinic.review_count || 0} reviewers.` : ""} Find and compare agencies on Foster Care.`}
-        entityType="clinic"
-        location={{
-          city: clinic.city?.name,
-          area: clinic.area?.name,
-          country: "United Kingdom",
-        }}
-        url={`/agency/${slug}/`}
-        faqs={generateClinicQA({
-          name: clinic.name,
-          city: clinic.city?.name,
-          area: clinic.area?.name,
-          rating: clinic.rating || clinic.average_rating,
-          reviewCount: clinic.review_count || clinic.total_reviews,
-        })}
-      />
+
+      {/* Mobile Enquiry Button */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur border-t border-border z-40">
+        <Button 
+          className="w-full rounded-full font-semibold h-12 text-base bg-primary hover:bg-primary/90"
+          onClick={() => setEnquiryOpen(true)}
+        >
+          <HandHeart className="h-5 w-5 mr-2" /> Send Enquiry
+        </Button>
+      </div>
+
+      {/* Enquiry Modal */}
+      <Dialog open={enquiryOpen} onOpenChange={setEnquiryOpen}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <HandHeart className="h-5 w-5 text-primary" />
+              Send Enquiry to {agency.name}
+            </DialogTitle>
+          </DialogHeader>
+          
+          <form onSubmit={handleEnquirySubmit} className="space-y-4">
+            <div className="grid gap-2">
+              <Label htmlFor="full_name">Full Name *</Label>
+              <Input
+                id="full_name"
+                value={enquiryForm.full_name}
+                onChange={(e) => setEnquiryForm({ ...enquiryForm, full_name: e.target.value })}
+                placeholder="Your full name"
+                required
+                className="h-12 rounded-xl"
+              />
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={enquiryForm.email}
+                  onChange={(e) => setEnquiryForm({ ...enquiryForm, email: e.target.value })}
+                  placeholder="your@email.com"
+                  required
+                  className="h-12 rounded-xl"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="phone">Phone</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={enquiryForm.phone}
+                  onChange={(e) => setEnquiryForm({ ...enquiryForm, phone: e.target.value })}
+                  placeholder="Your phone"
+                  className="h-12 rounded-xl"
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="postcode">Postcode</Label>
+                <Input
+                  id="postcode"
+                  value={enquiryForm.postcode}
+                  onChange={(e) => setEnquiryForm({ ...enquiryForm, postcode: e.target.value })}
+                  placeholder="Your postcode"
+                  className="h-12 rounded-xl"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="city">City</Label>
+                <Input
+                  id="city"
+                  value={enquiryForm.city}
+                  onChange={(e) => setEnquiryForm({ ...enquiryForm, city: e.target.value })}
+                  placeholder="Your city"
+                  className="h-12 rounded-xl"
+                />
+              </div>
+            </div>
+            
+            <div className="grid gap-2">
+              <Label>I am interested in *</Label>
+              <Select
+                value={enquiryForm.enquiry_type}
+                onValueChange={(value) => setEnquiryForm({ ...enquiryForm, enquiry_type: value })}
+              >
+                <SelectTrigger className="h-12 rounded-xl">
+                  <SelectValue placeholder="Select an option" />
+                </SelectTrigger>
+                <SelectContent>
+                  {ENQUIRY_TYPES.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="grid gap-2">
+              <Label>Fostering Type Interest</Label>
+              <Select
+                value={enquiryForm.fostering_type}
+                onValueChange={(value) => setEnquiryForm({ ...enquiryForm, fostering_type: value })}
+              >
+                <SelectTrigger className="h-12 rounded-xl">
+                  <SelectValue placeholder="Select a type (optional)" />
+                </SelectTrigger>
+                <SelectContent>
+                  {FOSTERING_TYPES.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="grid gap-2">
+              <Label htmlFor="message">Message</Label>
+              <Textarea
+                id="message"
+                value={enquiryForm.message}
+                onChange={(e) => setEnquiryForm({ ...enquiryForm, message: e.target.value })}
+                placeholder="Tell us more about your enquiry..."
+                rows={3}
+                className="rounded-xl"
+              />
+            </div>
+            
+            <div className="flex items-start gap-2">
+              <Checkbox
+                id="consent"
+                checked={enquiryForm.consent}
+                onCheckedChange={(checked) => setEnquiryForm({ ...enquiryForm, consent: checked as boolean })}
+              />
+              <Label htmlFor="consent" className="text-sm text-muted-foreground leading-tight">
+                I agree to the privacy policy and consent to being contacted about my enquiry.
+              </Label>
+            </div>
+            
+            <Button 
+              type="submit" 
+              className="w-full rounded-full font-semibold h-12 bg-primary hover:bg-primary/90"
+            >
+              <HandHeart className="h-4 w-4 mr-2" />
+              Send Enquiry
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Claim Profile Modal */}
+      <Dialog open={claimDialogOpen} onOpenChange={setClaimDialogOpen}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Award className="h-5 w-5 text-amber-500" />
+              Claim This Profile
+            </DialogTitle>
+          </DialogHeader>
+          
+          <form onSubmit={handleClaimSubmit} className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Are you the owner or authorised representative of {agency.name}? Fill in your details below and we'll be in touch.
+            </p>
+            
+            <div className="grid gap-2">
+              <Label htmlFor="contact_name">Contact Person Name *</Label>
+              <Input
+                id="contact_name"
+                value={claimForm.contact_name}
+                onChange={(e) => setClaimForm({ ...claimForm, contact_name: e.target.value })}
+                placeholder="Your full name"
+                required
+                className="h-12 rounded-xl"
+              />
+            </div>
+            
+            <div className="grid gap-2">
+              <Label htmlFor="role">Your Role *</Label>
+              <Input
+                id="role"
+                value={claimForm.role}
+                onChange={(e) => setClaimForm({ ...claimForm, role: e.target.value })}
+                placeholder="e.g. Director, Manager"
+                required
+                className="h-12 rounded-xl"
+              />
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="claim_email">Agency Email *</Label>
+                <Input
+                  id="claim_email"
+                  type="email"
+                  value={claimForm.email}
+                  onChange={(e) => setClaimForm({ ...claimForm, email: e.target.value })}
+                  placeholder="agency@email.com"
+                  required
+                  className="h-12 rounded-xl"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="claim_phone">Phone</Label>
+                <Input
+                  id="claim_phone"
+                  type="tel"
+                  value={claimForm.phone}
+                  onChange={(e) => setClaimForm({ ...claimForm, phone: e.target.value })}
+                  placeholder="Agency phone"
+                  className="h-12 rounded-xl"
+                />
+              </div>
+            </div>
+            
+            <div className="grid gap-2">
+              <Label htmlFor="claim_website">Agency Website</Label>
+              <Input
+                id="claim_website"
+                value={claimForm.website}
+                onChange={(e) => setClaimForm({ ...claimForm, website: e.target.value })}
+                placeholder="https://agency-website.co.uk"
+                className="h-12 rounded-xl"
+              />
+            </div>
+            
+            <div className="grid gap-2">
+              <Label htmlFor="claim_message">Message</Label>
+              <Textarea
+                id="claim_message"
+                value={claimForm.message}
+                onChange={(e) => setClaimForm({ ...claimForm, message: e.target.value })}
+                placeholder="Tell us about your role and how you can verify you represent this agency..."
+                rows={3}
+                className="rounded-xl"
+              />
+            </div>
+            
+            <Button 
+              type="submit" 
+              className="w-full rounded-full font-semibold h-12 bg-amber-500 hover:bg-amber-600 text-white"
+            >
+              <Award className="h-4 w-4 mr-2" />
+              Submit Claim Request
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </PageLayout>
   );
 };
