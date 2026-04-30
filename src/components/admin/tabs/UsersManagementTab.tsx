@@ -152,8 +152,8 @@ export default function UsersManagementTab() {
             );
           })}
         </TabsList>
-
-      <Card>
+        <TabsContent value="all">
+          <Card>
         <Table>
           <TableHeader>
             <TableRow>
@@ -204,7 +204,9 @@ export default function UsersManagementTab() {
             )}
           </TableBody>
         </Table>
-      </Card>
+        </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
