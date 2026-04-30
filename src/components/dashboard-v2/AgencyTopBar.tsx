@@ -18,13 +18,13 @@ import {
 import { Search, Bell, Calendar, MessageSquare, Star, AlertCircle, HelpCircle, ChevronDown, Check } from 'lucide-react';
 import { format } from 'date-fns';
 
-interface DentistTopBarProps {
+interface AgencyTopBarProps {
   pageTitle: string;
   pageDescription?: string;
   breadcrumbs?: { label: string; onClick?: () => void }[];
 }
 
-export default function DentistTopBar({ pageTitle, pageDescription, breadcrumbs }: DentistTopBarProps) {
+export default function AgencyTopBar({ pageTitle, pageDescription, breadcrumbs }: AgencyTopBarProps) {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
 

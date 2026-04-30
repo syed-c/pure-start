@@ -5,8 +5,8 @@
 
 import { useState, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
-import DentistSidebar from './DentistSidebar';
-import DentistTopBar from './DentistTopBar';
+import AgencySidebar from './AgencySidebar';
+import AgencyTopBar from './AgencyTopBar';
 
 const PAGE_TITLES: Record<string, { title: string; description?: string }> = {
   'my-dashboard': { title: 'Dashboard', description: 'Your agency at a glance' },
@@ -63,9 +63,9 @@ export default function AgencyDashboardLayoutV2({ children, activeTab, onTabChan
 
   return (
     <div className="min-h-screen bg-background">
-      <DentistSidebar activeTab={activeTab} onTabChange={onTabChange} collapsed={sidebarCollapsed} onCollapsedChange={setSidebarCollapsed} />
+      <AgencySidebar activeTab={activeTab} onTabChange={onTabChange} collapsed={sidebarCollapsed} onCollapsedChange={setSidebarCollapsed} />
       <div className={cn('min-h-screen transition-all duration-300 ease-out', sidebarCollapsed ? 'ml-[72px]' : 'ml-64')}>
-        <DentistTopBar pageTitle={pageInfo.title} pageDescription={pageInfo.description} breadcrumbs={getBreadcrumbs()} />
+        <AgencyTopBar pageTitle={pageInfo.title} pageDescription={pageInfo.description} breadcrumbs={getBreadcrumbs()} />
         <main className="p-6">{children}</main>
       </div>
     </div>

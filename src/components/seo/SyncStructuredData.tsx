@@ -170,21 +170,21 @@ const generateOrganizationSchema = (settings?: any) => {
 
 const generateLocalBusinessSchema = (data: LocalBusinessSchemaData) => ({
   '@context': 'https://schema.org',
-  '@type': ['Dentist', 'LocalBusiness', 'MedicalBusiness'],
+  '@type': ['Organization', 'LocalBusiness'],
   name: data.name,
   description: data.description,
   url: `${BASE_URL}${withTrailingSlash(data.url)}`,
   image: data.image,
   telephone: data.phone,
   email: data.email,
-  priceRange: data.priceRange || '$$',
+  priceRange: '£',
   ...(data.address && {
     address: {
       '@type': 'PostalAddress',
       streetAddress: data.address,
       addressLocality: data.city,
       addressRegion: data.state,
-      addressCountry: data.country || 'AE',
+      addressCountry: data.country || 'GB',
     },
   }),
   ...(data.geo && {
@@ -215,7 +215,7 @@ const generateLocalBusinessSchema = (data: LocalBusinessSchemaData) => ({
   ...(data.services?.length && {
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
-      name: 'Dental Services',
+      name: 'Fostering Services',
       itemListElement: data.services.map((service) => ({
         '@type': 'Offer',
         itemOffered: {
@@ -227,17 +227,17 @@ const generateLocalBusinessSchema = (data: LocalBusinessSchemaData) => ({
   }),
 });
 
-const generateDentistSchema = (data: DentistSchemaData) => ({
+const generateAgencySchema = (data: DentistSchemaData) => ({
   '@context': 'https://schema.org',
-  '@type': 'Dentist',
+  '@type': 'Organization',
   name: data.name,
-  jobTitle: data.specialty || 'Dentist',
+  jobTitle: data.specialty || 'Fostering Agency',
   description: data.description,
   image: data.image,
   url: `${BASE_URL}${withTrailingSlash(data.url)}`,
   ...(data.worksFor && {
     worksFor: {
-      '@type': 'Dentist',
+      '@type': 'Organization',
       name: data.worksFor.name,
       url: `${BASE_URL}${withTrailingSlash(data.worksFor.url)}`,
     },
@@ -414,7 +414,8 @@ function generateSchema(data: SyncSchemaData, organizationSettings?: any): objec
     case 'localBusiness':
       return generateLocalBusinessSchema(data);
     case 'dentist':
-      return generateDentistSchema(data);
+    case 'agency':
+      return generateAgencySchema(data);
     case 'article':
       return generateArticleSchema(data);
     case 'faq':
@@ -425,8 +426,8 @@ function generateSchema(data: SyncSchemaData, organizationSettings?: any): objec
       return generateServiceSchema(data);
     case 'itemList':
       return generateItemListSchema(data);
-    case 'medicalProcedure':
-      return generateMedicalProcedureSchema(data);
+    case 'fosteringService':
+      return generateServiceSchema(data);
     case 'webSite':
       return generateWebSiteSchema(data);
     case 'place':

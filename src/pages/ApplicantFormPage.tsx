@@ -41,7 +41,7 @@ const FORM_TYPE_ICONS: Record<string, any> = {
   custom: ClipboardList,
 };
 
-export default function PatientFormPage() {
+export default function ApplicantFormPage() {
   const { submissionId } = useParams();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");

@@ -26,7 +26,7 @@ import NotFound from "./pages/NotFound";
 const Auth = lazyRetry(() => import("./pages/Auth"));
 const AuthCallback = lazyRetry(() => import("./pages/AuthCallback"));
 const AdminDashboard = lazyRetry(() => import("./pages/admin/AdminDashboard"));
-const AgencyDashboardV2 = lazyRetry(() => import("./components/dashboard-v2/DentistDashboardV2"));
+const AgencyDashboardV2 = lazyRetry(() => import("./components/dashboard-v2/AgencyDashboardV2"));
 
 // Public Pages - lazy loaded
 const AboutPage = lazyRetry(() => import("./pages/AboutPage"));
@@ -64,7 +64,7 @@ const ReviewRequestPage = lazyRetry(() => import("./pages/ReviewRequestPage"));
 const GMBOnboarding = lazyRetry(() => import("./pages/GMBOnboarding"));
 const GMBBusinessSelection = lazyRetry(() => import("./pages/GMBBusinessSelection"));
 const AppointmentManagePage = lazyRetry(() => import("./pages/AppointmentManagePage"));
-const PatientFormPage = lazyRetry(() => import("./pages/PatientFormPage"));
+const ApplicantFormPage = lazyRetry(() => import("./pages/ApplicantFormPage"));
 const BookDirectPage = lazyRetry(() => import("./pages/BookDirectPage"));
 const Index = lazyRetry(() => import("./pages/Index"));
 
@@ -244,7 +244,7 @@ const App = () => (
                 <Route path="/review/:clinicId" element={<ReviewFunnelPage />} />
                 <Route path="/rq/:requestCode" element={<ReviewRequestPage />} />
                 <Route path="/appointment/:token" element={<AppointmentManagePage />} />
-                <Route path="/form/:submissionId" element={<PatientFormPage />} />
+                <Route path="/form/:submissionId" element={<ApplicantFormPage />} />
                 <Route path="/book/:clinicId" element={<BookDirectPage />} />
 
                 {/* Free Tools */}

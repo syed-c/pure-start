@@ -48,14 +48,14 @@ const NAV_SECTIONS = [
   { title: 'Settings', items: [{ id: 'my-settings', label: 'Settings', icon: Settings }, { id: 'my-support', label: 'Support', icon: HelpCircle }] },
 ];
 
-interface DentistSidebarProps {
+interface AgencySidebarProps {
   activeTab: string;
   onTabChange: (tabId: string) => void;
   collapsed: boolean;
   onCollapsedChange: (collapsed: boolean) => void;
 }
 
-export default function DentistSidebar({ activeTab, onTabChange, collapsed, onCollapsedChange }: DentistSidebarProps) {
+export default function AgencySidebar({ activeTab, onTabChange, collapsed, onCollapsedChange }: AgencySidebarProps) {
   const { user, signOut } = useAuth();
 
   const { data: clinic } = useQuery({
