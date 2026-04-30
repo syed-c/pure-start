@@ -162,6 +162,7 @@ const App = () => (
 
                 {/* Directory - Agency Profiles */}
                 <Route path="/agency/:agencySlug" element={<AgencyPage />} />
+                <Route path="/agency/:agencySlug/" element={<AgencyPage />} />
                 <Route path="/agency/:agencySlug/*" element={<NotFound />} />
                 {/* Legacy clinic route - redirect to agency */}
                 <Route path="/clinic/:clinicSlug" element={<Navigate to="/agency" replace />} />
