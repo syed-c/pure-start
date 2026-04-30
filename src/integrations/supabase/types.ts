@@ -102,6 +102,75 @@ export type Database = {
           },
         ]
       }
+      agencies: {
+        Row: {
+          id: string
+          name: string
+          slug: string
+          address: string | null
+          city: string | null
+          state: string | null
+          postcode: string | null
+          phone: string | null
+          email: string | null
+          website: string | null
+          rating: number | null
+          review_count: number | null
+          place_id: string | null
+          google_maps_url: string | null
+          is_verified: boolean
+          is_featured: boolean
+          is_claimed: boolean
+          source: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          slug: string
+          address?: string | null
+          city?: string | null
+          state?: string | null
+          postcode?: string | null
+          phone?: string | null
+          email?: string | null
+          website?: string | null
+          rating?: number | null
+          review_count?: number | null
+          place_id?: string | null
+          google_maps_url?: string | null
+          is_verified?: boolean
+          is_featured?: boolean
+          is_claimed?: boolean
+          source?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          slug?: string
+          address?: string | null
+          city?: string | null
+          state?: string | null
+          postcode?: string | null
+          phone?: string | null
+          email?: string | null
+          website?: string | null
+          rating?: number | null
+          review_count?: number | null
+          place_id?: string | null
+          google_maps_url?: string | null
+          is_verified?: boolean
+          is_featured?: boolean
+          is_claimed?: boolean
+          source?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       ai_feedback: {
         Row: {
           action: string

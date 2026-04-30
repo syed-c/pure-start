@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { StructuredData } from "@/components/seo/StructuredData";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, supabaseAdmin } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 
 import { getLetterAvatarUrl } from "@/hooks/useProfiles";
@@ -123,74 +123,88 @@ function useSearchResults(filters: SearchFilters, page: number) {
   return useQuery({
     queryKey: ["search-results", filters, page],
     queryFn: async () => {
+      console.log('=== SEARCH PAGE DEBUG ===');
+      console.log('Filters:', JSON.stringify(filters));
+      
       const results: SearchResultItem[] = [];
-      let eligibleAgencyIds: Set<string> | null = null;
-
-      if (filters.cityId) {
-        const { data: agencies } = await supabase.from("clinics").select("id").eq("city_id", filters.cityId).eq("is_active", true);
-        eligibleAgencyIds = new Set((agencies || []).map((c) => c.id));
-        if (eligibleAgencyIds.size === 0) return { results: [], total: 0 };
-      } else if (filters.regionId) {
-        const { data: cities } = await supabase.from("cities").select("id").eq("state_id", filters.regionId).eq("is_active", true);
-        const cityIds = (cities || []).map((c) => c.id);
-        if (cityIds.length === 0) return { results: [], total: 0 };
-        const { data: agencies } = await supabase.from("clinics").select("id").in("city_id", cityIds).eq("is_active", true);
-        eligibleAgencyIds = new Set((agencies || []).map((c) => c.id));
-        if (eligibleAgencyIds.size === 0) return { results: [], total: 0 };
+      
+      // First, let's test with a simple count query
+      const { count, error: countError } = await supabaseAdmin
+        .from("agencies")
+        .select('*', { count: 'exact', head: true });
+      
+      console.log('Agency count:', count, 'error:', countError);
+      
+      if (countError) {
+        console.error('Count error:', countError.message, countError);
       }
 
-      if (filters.fosteringTypeId) {
-        const { data: ct } = await supabase.from("clinic_treatments").select("clinic_id").eq("treatment_id", filters.fosteringTypeId);
-        const typeAgencyIds = new Set((ct || []).map((c) => c.clinic_id));
-        if (typeAgencyIds.size > 0) {
-          eligibleAgencyIds = eligibleAgencyIds
-            ? new Set([...eligibleAgencyIds].filter((id) => typeAgencyIds.has(id)))
-            : typeAgencyIds;
-        }
+      // Now select all agencies with all needed fields including fostering types
+      console.log('Fetching all agencies...');
+      const { data: allAgencies, error: allError } = await supabaseAdmin
+        .from("agencies")
+        .select("id, name, slug, city, state, phone, email, website, rating, review_count, is_verified, is_featured, is_claimed, image_url, cover_image_url, fostering_types")
+        .order('rating', { ascending: false })
+        .limit(200);
+      
+      console.log('All agencies query result:', { count: allAgencies?.length, error: allError, errorMsg: allError?.message });
+      
+      if (allError) {
+        console.error('Error fetching agencies:', allError.message, allError);
+        // Try without order and limit as fallback
+        const { data: fallbackData, error: fallbackError } = await supabaseAdmin.from("agencies").select("*").limit(100);
+        console.log('Fallback query result:', { count: fallbackData?.length, error: fallbackError });
+        if (fallbackError) return { results: [], total: 0 };
+        allAgencies = fallbackData as any;
       }
-
-      const agencyIdArray = eligibleAgencyIds ? [...eligibleAgencyIds] : null;
-
-      let agencyQuery = supabase
-        .from("clinics")
-        .select(`id, name, slug, cover_image_url, rating, review_count, verification_status, claim_status, city:cities(name, slug, state_id, state:states(name, slug)), area:areas(name, slug)`)
-        .eq("is_active", true);
-
-      if (agencyIdArray && agencyIdArray.length > 0) {
-        agencyQuery = agencyQuery.in("id", agencyIdArray);
-      } else if (agencyIdArray && agencyIdArray.length === 0) {
-        agencyQuery = agencyQuery.eq("id", "impossible-match");
+      
+      if (!allAgencies || allAgencies.length === 0) {
+        console.log('No agencies found in database at all');
+        return { results: [], total: 0 };
       }
-      if (filters.minRating > 0) agencyQuery = agencyQuery.gte("rating", filters.minRating);
-      if (filters.query) agencyQuery = agencyQuery.ilike("name", `%${filters.query}%`);
-
-      if (filters.sortBy === "reviews") agencyQuery = agencyQuery.order("review_count", { ascending: false });
-      else if (filters.sortBy === "name") agencyQuery = agencyQuery.order("name", { ascending: true });
-      else agencyQuery = agencyQuery.order("rating", { ascending: false });
-
-      const { data: agencies } = await agencyQuery;
-
-      if (agencies) {
-        for (const a of agencies) {
-          const isVerified = a.claim_status === "claimed" && a.verification_status === "verified";
-          if (filters.verifiedOnly && !isVerified) continue;
-          results.push({
-            id: a.id, name: a.name, slug: a.slug, type: "agency", title: "Fostering Agency",
-            rating: Number(a.rating) || 0, reviewCount: a.review_count || 0,
-            image: a.cover_image_url || undefined, isVerified,
-            agencyName: a.name, agencySlug: a.slug,
-            regionName: (a.city as any)?.state?.name, cityName: (a.area as any)?.name || (a.city as any)?.name,
-          });
-        }
+      
+      console.log('Total agencies found:', allAgencies.length);
+      console.log('First 3 agencies:', allAgencies.slice(0, 3).map((a: any) => ({ name: a.name, slug: a.slug, image: a.image_url })));
+      
+      // Map to results - use any type to bypass TS issues
+      for (const a of allAgencies as any[]) {
+        const isVerified = a.is_verified === true;
+        if (filters.verifiedOnly && !isVerified) continue;
+        
+        // Format fostering types for display
+        const fosteringTypesList = a.fostering_types || [];
+        const fosteringTypesFormatted = fosteringTypesList.map((t: string) => 
+          t.replace(/_/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())
+        );
+        
+        results.push({
+          id: a.id, name: a.name, slug: a.slug, type: "agency", title: "Fostering Agency",
+          rating: Number(a.rating) || 0, reviewCount: a.review_count || 0,
+          image: a.image_url || a.cover_image_url || undefined, isVerified,
+          agencyName: a.name, agencySlug: a.slug,
+          regionName: a.state, cityName: a.city,
+          fosteringTypes: fosteringTypesFormatted,
+        });
       }
+      
+      console.log('Total results after mapping:', results.length);
 
-      if (filters.sortBy === "reviews") results.sort((a, b) => b.reviewCount - a.reviewCount);
-      else if (filters.sortBy === "name") results.sort((a, b) => a.name.localeCompare(b.name));
-      else results.sort((a, b) => b.rating - a.rating);
+      // Apply filters to results
+      let filteredResults = results;
+      if (filters.minRating > 0) {
+        filteredResults = filteredResults.filter(r => r.rating >= filters.minRating);
+      }
+      if (filters.query) {
+        const q = filters.query.toLowerCase();
+        filteredResults = filteredResults.filter(r => r.name.toLowerCase().includes(q));
+      }
+      if (filters.sortBy === "reviews") filteredResults.sort((a, b) => b.reviewCount - a.reviewCount);
+      else if (filters.sortBy === "name") filteredResults.sort((a, b) => a.name.localeCompare(b.name));
+      else filteredResults.sort((a, b) => b.rating - a.rating);
 
-      const total = results.length;
+      const total = filteredResults.length;
       const start = (page - 1) * ITEMS_PER_PAGE;
-      return { results: results.slice(start, start + ITEMS_PER_PAGE), total };
+      return { results: filteredResults.slice(start, start + ITEMS_PER_PAGE), total };
     },
   });
 }
@@ -323,9 +337,14 @@ export default function SearchPage() {
       {/* Search Header */}
       <div className="bg-muted/30 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 py-8 md:py-10">
-          <h1 className="text-2xl md:text-3xl font-extrabold text-foreground mb-5">
+          <h1 className="text-2xl md:text-3xl font-extrabold text-foreground mb-2">
             Find a Fostering Agency
           </h1>
+          <p className="text-muted-foreground mb-5">
+            {searchData?.total ? `${searchData.total} agencies available` : 'Browse verified fostering agencies across the UK'}
+            {filters.fosteringTypeId && fosteringTypes?.find(t => t.id === filters.fosteringTypeId) && 
+              ` offering ${fosteringTypes.find(t => t.id === filters.fosteringTypeId)?.name}`}
+          </p>
           <div className="flex gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -426,7 +445,8 @@ function FilterSection({ title, icon, children }: { title: string; icon: React.R
 }
 
 function ResultCard({ item }: { item: SearchResultItem }) {
-  const linkTo = `/agency/${item.slug}`;
+  const linkTo = item.slug ? `/agency/${item.slug}` : '/find-agency';
+  console.log('ResultCard - item.slug:', item.slug, 'item.name:', item.name);
   const avatarUrl = item.image || getLetterAvatarUrl(item.name);
 
   return (
@@ -452,6 +472,16 @@ function ResultCard({ item }: { item: SearchResultItem }) {
       <div className="p-4">
         <h3 className="font-bold text-[15px] text-foreground truncate group-hover:text-primary transition-colors">{item.name}</h3>
         {item.title && <p className="text-xs text-muted-foreground mt-0.5 truncate">{item.title}</p>}
+        {item.fosteringTypes && item.fosteringTypes.length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-2">
+            {item.fosteringTypes.slice(0, 3).map((type, idx) => (
+              <Badge key={idx} variant="secondary" className="text-[10px] px-1.5 py-0.5">{type}</Badge>
+            ))}
+            {item.fosteringTypes.length > 3 && (
+              <Badge variant="outline" className="text-[10px] px-1.5 py-0.5">+{item.fosteringTypes.length - 3}</Badge>
+            )}
+          </div>
+        )}
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-2">
           <MapPin className="h-3 w-3 shrink-0 text-primary/50" />
           <span className="truncate">{[item.cityName, item.regionName].filter(Boolean).join(", ") || "England"}</span>

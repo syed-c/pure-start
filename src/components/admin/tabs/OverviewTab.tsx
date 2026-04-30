@@ -35,6 +35,12 @@ import {
   StopCircle,
   Eye,
   MousePointer,
+  Home,
+  Heart,
+  GraduationCap,
+  AlertCircle,
+  TrendingDown,
+  Briefcase,
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart as RechartsPie, Pie, Cell, LineChart, Line, AreaChart, Area } from 'recharts';
 import AIInsightsWidget from '@/components/admin/AIInsightsWidget';
@@ -171,16 +177,16 @@ export default function OverviewTab() {
     },
   });
 
-  // Fetch recent activity
+  // Fetch recent activity - Fostering specific
   const { data: recentActivity = [] } = useQuery({
     queryKey: ['platform-activity'],
     queryFn: async () => {
-      const [enquiries, claims, leads] = await Promise.all([
-        supabase.from('appointments').select('id, patient_name, created_at, status')
+      const [enquiries, fosterCarers, applicants] = await Promise.all([
+        supabase.from('enquiries').select('id, name, created_at, status')
           .order('created_at', { ascending: false }).limit(3),
-        supabase.from('claim_requests').select('id, created_at, status, clinic:clinics(name)')
+        supabase.from('foster_carer_profiles').select('id, first_name, last_name, status, created_at')
           .order('created_at', { ascending: false }).limit(2),
-        supabase.from('leads').select('id, patient_name, created_at, source')
+        supabase.from('applicant_profiles').select('id, first_name, last_name, application_stage, created_at')
           .order('created_at', { ascending: false }).limit(2),
       ]);
 
@@ -190,21 +196,21 @@ export default function OverviewTab() {
           icon: Calendar,
           iconColor: 'blue',
           title: `New enquiry`,
-          subtitle: a.patient_name,
+          subtitle: a.name || 'Unknown',
         })),
-        ...(claims.data || []).map(c => ({
-          id: c.id,
-          icon: Shield,
-          iconColor: 'gold',
-          title: `Claim request`,
-          subtitle: (c.clinic as any)?.name || 'Unknown agency',
-        })),
-        ...(leads.data || []).map(l => ({
-          id: l.id,
-          icon: UserPlus,
+        ...(fosterCarers.data || []).map(fc => ({
+          id: fc.id,
+          icon: Heart,
           iconColor: 'teal',
-          title: `New lead`,
-          subtitle: l.patient_name,
+          title: `New foster carer`,
+          subtitle: `${fc.first_name || ''} ${fc.last_name || ''}`.trim() || 'Pending',
+        })),
+        ...(applicants.data || []).map(app => ({
+          id: app.id,
+          icon: UserPlus,
+          iconColor: 'gold',
+          title: `New applicant`,
+          subtitle: `${app.first_name || ''} ${app.last_name || ''}`.trim() || 'Pending',
         })),
       ].slice(0, 5);
     },
@@ -242,6 +248,75 @@ export default function OverviewTab() {
     refetchInterval: 60000,
   });
 
+  // Fostering-specific stats
+  const { data: fosterStats } = useQuery({
+    queryKey: ['foster-platform-stats'],
+    queryFn: async () => {
+      const [
+        fosterCarersResult,
+        applicantsResult,
+        activePlacementsResult,
+        pendingEnquiriesResult,
+        agenciesWithCarersResult,
+        trainingCoursesResult,
+      ] = await Promise.all([
+        supabase.from('foster_carer_profiles').select('id', { count: 'exact', head: true }).eq('status', 'active'),
+        supabase.from('applicant_profiles').select('id', { count: 'exact', head: true }),
+        supabase.from('foster_carer_profiles').select('id', { count: 'exact', head: true }).eq('status', 'active'),
+        supabase.from('enquiries').select('id', { count: 'exact', head: true }).eq('status', 'new'),
+        supabase.from('foster_carer_profiles').select('organisation_id', { count: 'exact', head: true }).not('organisation_id', 'is', null).eq('status', 'active'),
+        supabase.from('trainer_profiles').select('id', { count: 'exact', head: true }),
+      ]);
+
+      return {
+        activeFosterCarers: fosterCarersResult.count || 0,
+        applicants: applicantsResult.count || 0,
+        pendingPlacements: activePlacementsResult.count || 0,
+        pendingEnquiries: pendingEnquiriesResult.count || 0,
+        agenciesWithCarers: agenciesWithCarersResult.count || 0,
+        trainingCourses: trainingCoursesResult.count || 0,
+      };
+    },
+    staleTime: 30000,
+  });
+
+  // Compliance alerts - overdue reviews, expiring approvals
+  const { data: complianceAlerts } = useQuery({
+    queryKey: ['compliance-alerts'],
+    queryFn: async () => {
+      const sixMonthsAgo = subDays(new Date(), 180).toISOString();
+      const [
+        overdueReviews,
+        expiringApprovals,
+        pendingApplications,
+      ] = await Promise.all([
+        supabase.from('foster_carer_profiles')
+          .select('id, first_name, last_name, panel_date')
+          .lt('panel_date', sixMonthsAgo)
+          .eq('status', 'active')
+          .limit(5),
+        supabase.from('foster_carer_profiles')
+          .select('id, first_name, last_name, approval_date')
+          .gte('approval_date', subDays(new Date(), 730).toISOString())
+          .lt('approval_date', subDays(new Date(), 695).toISOString())
+          .eq('status', 'active')
+          .limit(5),
+        supabase.from('applicant_profiles')
+          .select('id, first_name, last_name, application_stage')
+          .eq('application_stage', 'assessment')
+          .limit(5),
+      ]);
+
+      return {
+        overdueReviews: overdueReviews.data || [],
+        expiringApprovals: expiringApprovals.data || [],
+        pendingApplications: pendingApplications.data || [],
+        totalAlerts: (overdueReviews.data?.length || 0) + (expiringApprovals.data?.length || 0) + (pendingApplications.data?.length || 0),
+      };
+    },
+    staleTime: 60000,
+  });
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -258,16 +333,16 @@ export default function OverviewTab() {
     ? Math.round(((stats.clinics.verified || 0) / stats.clinics.claimed) * 100) 
     : 0;
 
-  // Quick actions
+  // Quick actions - Fostering Platform
   const quickActions = [
-    { icon: Building2, label: 'Agencies', onClick: () => navigateTo('clinics'), color: 'primary' as const },
-    { icon: Calendar, label: 'Enquiries', onClick: () => navigateTo('appointments'), color: 'teal' as const, badge: String(stats?.appointments?.pending || 0) },
-    { icon: UserPlus, label: 'Leads', onClick: () => navigateTo('leads'), color: 'gold' as const },
-    { icon: Shield, label: 'Claims', onClick: () => navigateTo('claims'), color: 'coral' as const },
+    { icon: Building2, label: 'Agencies', onClick: () => navigateTo('agencies'), color: 'primary' as const },
+    { icon: Heart, label: 'Foster Carers', onClick: () => navigateTo('users'), color: 'teal' as const, badge: String(fosterStats?.activeFosterCarers || 0) },
+    { icon: UserPlus, label: 'Applicants', onClick: () => navigateTo('users'), color: 'gold' as const },
+    { icon: Calendar, label: 'Enquiries', onClick: () => navigateTo('leads'), color: 'coral' as const, badge: String(fosterStats?.pendingEnquiries || 0) },
     { icon: MessageSquare, label: 'Reviews', onClick: () => navigateTo('review-insights'), color: 'purple' as const },
-    { icon: Globe, label: 'Ofsted Status', onClick: () => navigateTo('gmb-connections'), color: 'teal' as const },
-    { icon: Users, label: 'Users', onClick: () => navigateTo('users'), color: 'primary' as const },
-    { icon: Bot, label: 'AI Controls', onClick: () => navigateTo('ai-controls'), color: 'purple' as const },
+    { icon: Shield, label: 'Ofsted Status', onClick: () => navigateTo('gmb-connections'), color: 'teal' as const },
+    { icon: GraduationCap, label: 'Training', onClick: () => navigateTo('users'), color: 'primary' as const },
+    { icon: AlertCircle, label: 'Compliance', onClick: () => navigateTo('audit'), color: 'coral' as const },
   ];
 
   // Pie chart data for agency distribution
@@ -277,12 +352,12 @@ export default function OverviewTab() {
     { name: 'Unclaimed', value: stats?.clinics?.unclaimed || 0 },
   ].filter(d => d.value > 0);
 
-  // Task items for project list
+  // Task items for project list - Fostering specific
   const taskItems = [
-    { id: '1', icon: Zap, iconColor: 'purple', title: 'Review pending claims', subtitle: `${stats?.claims?.pending || 0} awaiting review` },
-    { id: '2', icon: Target, iconColor: 'teal', title: 'SEO optimisation', subtitle: 'Improve page rankings' },
+    { id: '1', icon: AlertCircle, iconColor: 'coral', title: 'Compliance review', subtitle: `${complianceAlerts?.totalAlerts || 0} items need attention` },
+    { id: '2', icon: Heart, iconColor: 'teal', title: 'Carer assessments', subtitle: `${complianceAlerts?.pendingApplications?.length || 0} pending` },
     { id: '3', icon: BarChart3, iconColor: 'gold', title: 'Monthly report', subtitle: 'Due in 3 days' },
-    { id: '4', icon: Mail, iconColor: 'blue', title: 'Outreach campaign', subtitle: 'Follow up with leads' },
+    { id: '4', icon: Calendar, iconColor: 'blue', title: 'Enquiry follow-ups', subtitle: `${fosterStats?.pendingEnquiries || 0} awaiting response` },
   ];
 
   return (
@@ -350,38 +425,51 @@ export default function OverviewTab() {
         </div>
       </div>
 
-      {/* Primary Stats Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Primary Stats Row - Fostering Platform */}
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
         <ModernStatCard
-          title="Total Agencies"
+          title="Fostering Agencies"
           value={stats?.clinics?.total || 0}
           icon={Building2}
           variant="filled"
           color="primary"
-          trend={12}
-          trendLabel="Increased from last month"
-          onClick={() => navigateTo('clinics')}
+          onClick={() => navigateTo('agencies')}
         />
         <ModernStatCard
-          title="Claimed Profiles"
-          value={stats?.clinics?.claimed || 0}
-          icon={Shield}
-          subtitle={`${claimRate}% claim rate`}
-          onClick={() => navigateTo('clinics')}
+          title="Active Carers"
+          value={fosterStats?.activeFosterCarers || 0}
+          icon={Heart}
+          color="teal"
+          onClick={() => navigateTo('users')}
         />
         <ModernStatCard
-          title="Active Leads"
-          value={stats?.leads?.total || 0}
+          title="Applicants"
+          value={fosterStats?.applicants || 0}
           icon={UserPlus}
-          trend={8}
-          trendLabel="Increased from last month"
+          color="gold"
+          onClick={() => navigateTo('users')}
+        />
+        <ModernStatCard
+          title="Pending Enquiries"
+          value={fosterStats?.pendingEnquiries || 0}
+          icon={MessageSquare}
+          color="coral"
           onClick={() => navigateTo('leads')}
         />
         <ModernStatCard
-          title="Pending Tasks"
-          value={alerts?.length || 0}
-          icon={AlertTriangle}
-          subtitle="Requires attention"
+          title="Training Providers"
+          value={fosterStats?.trainingCourses || 0}
+          icon={GraduationCap}
+          color="purple"
+          onClick={() => navigateTo('users')}
+        />
+        <ModernStatCard
+          title="Compliance Alerts"
+          value={complianceAlerts?.totalAlerts || 0}
+          icon={AlertCircle}
+          subtitle={complianceAlerts?.totalAlerts ? 'Requires attention' : 'All clear'}
+          color={complianceAlerts?.totalAlerts ? 'coral' : 'teal'}
+          onClick={() => navigateTo('audit')}
         />
       </div>
 
@@ -718,6 +806,81 @@ export default function OverviewTab() {
           </div>
         </div>
       </div>
+
+      {/* Foster Care Compliance & Alerts */}
+      {(complianceAlerts?.totalAlerts || 0) > 0 && (
+        <div className="bg-card rounded-2xl border border-coral/30 overflow-hidden shadow-sm">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-border/50 bg-gradient-to-r from-coral/5 to-amber/5">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-coral to-amber flex items-center justify-center">
+                <AlertTriangle className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <h3 className="font-bold text-foreground">Compliance Alerts</h3>
+                <p className="text-xs text-muted-foreground">Items requiring immediate attention</p>
+              </div>
+            </div>
+            <Badge className="bg-coral/10 text-coral border-0">
+              {complianceAlerts?.totalAlerts} Alert{complianceAlerts?.totalAlerts !== 1 ? 's' : ''}
+            </Badge>
+          </div>
+          <div className="p-6">
+            <div className="grid md:grid-cols-3 gap-4">
+              {complianceAlerts?.overdueReviews?.length > 0 && (
+                <div className="p-4 rounded-xl bg-red-50 border border-red-100">
+                  <h4 className="font-semibold text-red-800 mb-2 flex items-center gap-2">
+                    <Shield className="h-4 w-4" />
+                    Overdue Reviews
+                  </h4>
+                  <ul className="space-y-2">
+                    {complianceAlerts.overdueReviews.slice(0, 3).map((fc: any) => (
+                      <li key={fc.id} className="text-sm text-red-700">
+                        {fc.first_name} {fc.last_name} - Panel due {fc.panel_date ? new Date(fc.panel_date).toLocaleDateString() : 'N/A'}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {complianceAlerts?.expiringApprovals?.length > 0 && (
+                <div className="p-4 rounded-xl bg-amber-50 border border-amber-100">
+                  <h4 className="font-semibold text-amber-800 mb-2 flex items-center gap-2">
+                    <Clock className="h-4 w-4" />
+                    Expiring Approvals
+                  </h4>
+                  <ul className="space-y-2">
+                    {complianceAlerts.expiringApprovals.slice(0, 3).map((fc: any) => (
+                      <li key={fc.id} className="text-sm text-amber-700">
+                        {fc.first_name} {fc.last_name} - Expires {fc.approval_date ? new Date(fc.approval_date).toLocaleDateString() : 'N/A'}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {complianceAlerts?.pendingApplications?.length > 0 && (
+                <div className="p-4 rounded-xl bg-blue-50 border border-blue-100">
+                  <h4 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
+                    <UserPlus className="h-4 w-4" />
+                    Pending Assessments
+                  </h4>
+                  <ul className="space-y-2">
+                    {complianceAlerts.pendingApplications.slice(0, 3).map((app: any) => (
+                      <li key={app.id} className="text-sm text-blue-700">
+                        {app.first_name} {app.last_name} - Stage: {app.application_stage}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+            <div className="mt-4 flex justify-end">
+              <Button variant="outline" onClick={() => navigateTo('audit')}>
+                View All Compliance
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* AI Insights */}
       <div className="bg-card rounded-2xl border border-border/50 overflow-hidden shadow-sm">

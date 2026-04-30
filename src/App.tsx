@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useParams } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
 import { useDynamicFavicon } from "@/hooks/useDynamicFavicon";
 import { HelmetProvider } from "react-helmet-async";
@@ -45,8 +46,7 @@ const CityPage = lazyRetry(() => import("./pages/CityPage"));
 const ServicePage = lazyRetry(() => import("./pages/ServicePage"));
 const ServicesPage = lazyRetry(() => import("./pages/ServicesPage"));
 const ServiceLocationPage = lazyRetry(() => import("./pages/ServiceLocationPage"));
-const ClinicPage = lazyRetry(() => import("./pages/ClinicPage"));
-// DentistPage is imported as ContactPage above (line 32)
+const AgencyPage = lazyRetry(() => import("./pages/ClinicPage"));
 
 // Blog Pages - lazy loaded
 const BlogPage = lazyRetry(() => import("./pages/BlogPage"));
@@ -69,13 +69,14 @@ const BookDirectPage = lazyRetry(() => import("./pages/BookDirectPage"));
 const Index = lazyRetry(() => import("./pages/Index"));
 
 // Free Tools
-const FosteringAllowanceCalculator = lazyRetry(() => import("./pages/tools/DentalCostCalculator"));
+const FosteringAllowanceCalculator = lazyRetry(() => import("./pages/tools/FosteringAllowanceCalculator"));
 const InsuranceChecker = lazyRetry(() => import("./pages/tools/InsuranceChecker"));
-const EmergencyFostering = lazyRetry(() => import("./pages/EmergencyDentist"));
+const EmergencyFostering = lazyRetry(() => import("./pages/EmergencyFostering"));
 
 // Service Pages
 const ServicePricePage = lazyRetry(() => import("./pages/ServicePricePage"));
-const RegionComparisonPage = lazyRetry(() => import("./pages/EmirateComparisonPage"));
+const AgenciesDirectoryPage = lazyRetry(() => import("./pages/AgenciesDirectoryPage"));
+const BecomeFosterCarerPage = lazyRetry(() => import("./pages/fostering/BecomeFosterCarerPage"));
 
 const queryClient = new QueryClient();
 
@@ -149,6 +150,9 @@ const App = () => (
                 {/* Search */}
                 <Route path="/search" element={<SearchPage />} />
                 <Route path="/find-agency" element={<SearchPage />} />
+                <Route path="/agencies" element={<AgenciesDirectoryPage />} />
+                <Route path="/agencies/:citySlug" element={<AgenciesDirectoryPage />} />
+                <Route path="/become-foster-carer" element={<BecomeFosterCarerPage />} />
                 
                 {/* Directory - Categories (formerly Services) */}
                 <Route path="/categories" element={<ServicesPage />} />
@@ -157,10 +161,14 @@ const App = () => (
                 <Route path="/services/:serviceSlug" element={<ServicePage />} />
 
                 {/* Directory - Agency Profiles */}
-                <Route path="/clinic/:clinicSlug" element={<ClinicPage />} />
-                <Route path="/clinic/:clinicSlug/*" element={<NotFound />} />
-                <Route path="/agency/:clinicSlug" element={<ClinicPage />} />
-                <Route path="/agency/:clinicSlug/*" element={<NotFound />} />
+                <Route path="/agency/:agencySlug" element={<AgencyPage />} />
+                <Route path="/agency/:agencySlug/*" element={<NotFound />} />
+                {/* Legacy clinic route - redirect to agency */}
+                <Route path="/clinic/:clinicSlug" element={<Navigate to="/agency" replace />} />
+
+                {/* Fostering Directory - new routes */}
+                <Route path="/fostering/:typeSlug" element={<AgencyPage />} />
+                <Route path="/compare" element={<AgencyPage />} />
 
                 {/* Directory - State Pages (e.g., /california, /massachusetts) */}
                 <Route path="/:stateSlug" element={<StatePage />} />
@@ -184,9 +192,27 @@ const App = () => (
                 <Route path="/gmb-select" element={<GMBBusinessSelection />} />
                 
                 {/* Dashboards */}
-                <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="/dashboard" element={<AdminDashboard />} />
-                <Route path="/dashboard-v2" element={<AgencyDashboardV2 />} />
+                <Route path="/admin" element={
+                  <ProtectedRoute allowedRoles={['super_admin', 'agency_admin', 'agency_staff', 'trainer', 'auditor']}>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/dashboard" element={
+                  <ProtectedRoute allowedRoles={['super_admin', 'agency_admin', 'agency_staff', 'trainer', 'auditor']}>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                } />
+                {/* Legacy route - redirect to admin */}
+                <Route path="/dashboard/:section" element={
+                  <ProtectedRoute allowedRoles={['super_admin', 'agency_admin', 'agency_staff', 'trainer', 'auditor']}>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/dashboard-v2" element={
+                  <ProtectedRoute allowedRoles={['super_admin', 'agency_admin', 'agency_staff']}>
+                    <AgencyDashboardV2 />
+                  </ProtectedRoute>
+                } />
                 
                 {/* Static Pages */}
                 <Route path="/about" element={<AboutPage />} />
@@ -206,8 +232,8 @@ const App = () => (
                 {/* Insurance */}
                 <Route path="/insurance" element={<InsurancePage />} />
                 <Route path="/insurance/:insuranceSlug" element={<InsuranceDetailPage />} />
-                <Route path="/insurance/:insuranceSlug/:emirateSlug" element={<InsuranceDetailPage />} />
-                <Route path="/insurance/:insuranceSlug/:emirateSlug/:citySlug" element={<InsuranceDetailPage />} />
+                <Route path="/insurance/:insuranceSlug/:regionSlug" element={<InsuranceDetailPage />} />
+                <Route path="/insurance/:insuranceSlug/:regionSlug/:citySlug" element={<InsuranceDetailPage />} />
                 
                 {/* Business - Agency listing */}
                 <Route path="/claim-profile" element={<ClaimProfilePage />} />
@@ -227,15 +253,17 @@ const App = () => (
                 <Route path="/emergency-fostering" element={<EmergencyFostering />} />
                 <Route path="/emergency-foster-care" element={<Navigate to="/emergency-fostering" replace />} />
 
-                {/* Service Comparison Pages */}
+                {/* Service Pages */}
                 <Route path="/cost/:serviceSlug" element={<ServicePricePage />} />
-                <Route path="/compare/:serviceSlug/:region1-vs-:region2" element={<RegionComparisonPage />} />
 
-                {/* Legacy redirects */}
-                <Route path="/ae/clinic/:clinicSlug" element={<LegacyClinicRedirect />} />
-                <Route path="/ae/dentist/:contactSlug" element={<LegacyDentistRedirect />} />
+                {/* Legacy redirects - UAE to UK */}
+                <Route path="/ae/clinic/:clinicSlug" element={<Navigate to="/find-agency" replace />} />
+                <Route path="/ae/dentist/:contactSlug" element={<Navigate to="/find-agency" replace />} />
                 <Route path="/ae" element={<Navigate to="/" replace />} />
                 <Route path="/ae/*" element={<Navigate to="/" replace />} />
+                
+                {/* Legacy - duplicate home */}
+                <Route path="/home-v2" element={<Navigate to="/" replace />} />
                 
                 {/* Catch-all */}
                 <Route path="*" element={<NotFound />} />

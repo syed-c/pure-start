@@ -253,11 +253,11 @@ export function PlanSelectionModal({
                       <div className="mt-2">
                         {/* 50% OFF Pricing */}
                         <div className="flex items-baseline gap-1 justify-center">
-                          <span className="text-3xl font-bold text-red-600">{getDiscountedPrice(price).discounted} AED</span>
+                          <span className="text-3xl font-bold text-primary">£{getDiscountedPrice(price).discounted}</span>
                           <span className="text-muted-foreground">/month</span>
                         </div>
                         <div className="flex items-center gap-2 justify-center mt-1">
-                          <span className="text-sm text-muted-foreground line-through">{price} AED</span>
+                          <span className="text-sm text-muted-foreground line-through">£{price}</span>
                           <Badge className="bg-red-500 text-white border-0 text-xs">50% OFF</Badge>
                         </div>
                       </div>

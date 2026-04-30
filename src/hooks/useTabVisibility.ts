@@ -3,12 +3,12 @@ import { supabase } from '@/integrations/supabase/client';
 
 interface TabVisibility {
   adminTabs: Record<string, boolean>;
-  dentistTabs: Record<string, boolean>;
+  agencyTabs: Record<string, boolean>;
 }
 
 const DEFAULT_VISIBILITY: TabVisibility = {
   adminTabs: {},
-  dentistTabs: {},
+  agencyTabs: {},
 };
 
 export function useTabVisibility() {
@@ -32,9 +32,9 @@ export function useTabVisibility() {
     retry: false,
   });
 
-  const isTabVisible = (tabId: string, dashboardType: 'admin' | 'dentist'): boolean => {
+  const isTabVisible = (tabId: string, dashboardType: 'admin' | 'agency'): boolean => {
     if (!data) return true;
-    const visibilityMap = dashboardType === 'admin' ? data.adminTabs : data.dentistTabs;
+    const visibilityMap = dashboardType === 'admin' ? data.adminTabs : data.agencyTabs;
     if (visibilityMap[tabId] === undefined) return true;
     return visibilityMap[tabId];
   };

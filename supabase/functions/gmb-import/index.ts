@@ -1,113 +1,11 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Input validation schemas
-const SearchSchema = z.object({
-  action: z.literal('search'),
-  category: z.string().min(1, "Category required").max(100, "Category too long"),
-  city: z.string().min(1, "City required").max(100, "City too long"),
-  state: z.string().max(100, "State too long").optional(),
-  area: z.string().max(100, "Area too long").optional(),
-  pageToken: z.string().max(2000, "Page token too long").optional(),
-  radius: z.number().min(100).max(50000).default(5000),
-});
-
-const ImportSchema = z.object({
-  action: z.literal('import'),
-  placeIds: z.array(z.string().min(1).max(500)).min(1, "At least one place ID required").max(50, "Maximum 50 places per batch"),
-  cityId: z.string().uuid("Invalid city ID format"),
-  areaId: z.string().uuid("Invalid area ID format").optional(),
-  sessionId: z.string().uuid("Invalid session ID format").optional(),
-});
-
-const CheckDuplicatesSchema = z.object({
-  action: z.literal('check-duplicates'),
-  name: z.string().max(200).optional(),
-  phone: z.string().max(50).optional(),
-  address: z.string().max(500).optional(),
-});
-
-const RequestSchema = z.discriminatedUnion('action', [
-  SearchSchema,
-  ImportSchema,
-  CheckDuplicatesSchema,
-]);
-
-// New Places API response interfaces
-interface NewPlaceResult {
-  id: string; // Format: "places/ChIJ..." - need to extract place_id
-  displayName?: { text: string; languageCode?: string };
-  formattedAddress?: string;
-  nationalPhoneNumber?: string;
-  internationalPhoneNumber?: string;
-  websiteUri?: string;
-  rating?: number;
-  userRatingCount?: number;
-  location?: { latitude: number; longitude: number };
-  types?: string[];
-  photos?: Array<{
-    name: string; // Format: "places/ChIJ.../photos/..."
-    widthPx: number;
-    heightPx: number;
-    authorAttributions?: Array<{ displayName: string; uri: string }>;
-  }>;
-  reviews?: Array<{
-    name: string;
-    relativePublishTimeDescription: string;
-    rating: number;
-    text?: { text: string; languageCode?: string };
-    originalText?: { text: string; languageCode?: string };
-    authorAttribution?: {
-      displayName: string;
-      uri?: string;
-      photoUri?: string;
-    };
-    publishTime?: string;
-  }>;
-  regularOpeningHours?: {
-    openNow?: boolean;
-    periods?: Array<{
-      open: { day: number; hour: number; minute: number };
-      close?: { day: number; hour: number; minute: number };
-    }>;
-    weekdayDescriptions?: string[];
-  };
-  currentOpeningHours?: any;
-  editorialSummary?: { text: string; languageCode?: string };
-  addressComponents?: Array<{
-    longText: string;
-    shortText: string;
-    types: string[];
-  }>;
-  adrFormatAddress?: string;
-  businessStatus?: string;
-  priceLevel?: string;
-  utcOffsetMinutes?: number;
-  googleMapsUri?: string;
-  accessibilityOptions?: {
-    wheelchairAccessibleEntrance?: boolean;
-  };
-  delivery?: boolean;
-  dineIn?: boolean;
-  curbsidePickup?: boolean;
-  reservable?: boolean;
-  takeout?: boolean;
-  servesBreakfast?: boolean;
-  servesBrunch?: boolean;
-  servesLunch?: boolean;
-  servesDinner?: boolean;
-  servesBeer?: boolean;
-  servesWine?: boolean;
-  servesVegetarianFood?: boolean;
-}
-
-// Helper to extract place_id from new API format "places/ChIJ..."
 function extractPlaceId(id: string): string {
   if (id.startsWith('places/')) {
     return id.replace('places/', '');
@@ -115,317 +13,117 @@ function extractPlaceId(id: string): string {
   return id;
 }
 
-// Helper to format time from new API format {hour, minute} to "HH:MM"
-function formatTimeFromNew(time: { hour: number; minute: number }): string {
-  const hour = time.hour.toString().padStart(2, '0');
-  const minute = time.minute.toString().padStart(2, '0');
-  return `${hour}:${minute}`;
+function extractPhotoReference(photoName: string): string {
+  if (!photoName) return '';
+  if (photoName.includes('/')) {
+    return photoName.split('/').pop() || '';
+  }
+  return photoName;
 }
 
-// Haversine formula to calculate distance between two lat/lng points in km
-function haversineDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
-  const R = 6371; // Earth's radius in km
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLng = (lng2 - lng1) * Math.PI / 180;
-  const a = 
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-    Math.sin(dLng / 2) * Math.sin(dLng / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
+function buildPhotoUrl(photoRef: string, apiKey: string, maxWidth: number = 800): string {
+  if (!photoRef) return '';
+  return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxWidth}&photo_reference=${photoRef}&key=${apiKey}`;
 }
 
-// Find the nearest city for a given lat/lng
-// UK-specific: Uses 15km radius for matching cities
-async function findNearestCity(
-  supabase: any, 
-  lat: number, 
-  lng: number, 
-  stateAbbrev: string | null,
-  maxDistanceKm: number = 15
-): Promise<{ cityId: string; cityName: string; distance: number; areaId?: string; areaName?: string } | null> {
-  // Fetch all active cities in the region with coordinates
-  const query = supabase
-    .from('cities')
-    .select('id, name, latitude, longitude, state_id, state:states!inner(id, abbreviation, name)')
-    .eq('is_active', true)
-    .not('latitude', 'is', null)
-    .not('longitude', 'is', null);
+function parseAddress(formattedAddress: string): {
+  address: string;
+  city: string;
+  county: string;
+  postcode: string;
+  country: string;
+} {
+  const result = {
+    address: '',
+    city: '',
+    county: '',
+    postcode: '',
+    country: 'United Kingdom'
+  };
   
-  if (stateAbbrev) {
-    query.eq('state.abbreviation', stateAbbrev.toUpperCase());
+  if (!formattedAddress) return result;
+  
+  const parts = formattedAddress.split(',').map(p => p.trim());
+  
+  if (parts.length >= 1) result.address = parts[0];
+  if (parts.length >= 2) result.city = parts[parts.length - 2];
+  if (parts.length >= 3) result.county = parts[parts.length - 1];
+  
+  // Try to extract postcode (usually last part if it looks like UK postcode)
+  const postcodeMatch = formattedAddress.match(/[A-Z]{1,2}[0-9][A-Z0-9]?\s?[0-9][A-Z]{2}/i);
+  if (postcodeMatch) {
+    result.postcode = postcodeMatch[0];
   }
   
-  const { data: cities, error } = await query;
-  
-  if (error || !cities || cities.length === 0) {
-    console.log(`No cities found for region ${stateAbbrev}`);
-    return null;
-  }
-  
-  let nearestCity: { cityId: string; cityName: string; distance: number; areaId?: string; areaName?: string } | null = null;
-  
-  for (const city of cities) {
-    if (!city.latitude || !city.longitude) continue;
-    
-    const distance = haversineDistance(
-      lat, lng,
-      parseFloat(city.latitude), parseFloat(city.longitude)
-    );
-    
-    if (distance <= maxDistanceKm && (!nearestCity || distance < nearestCity.distance)) {
-      nearestCity = {
-        cityId: city.id,
-        cityName: city.name,
-        distance
-      };
-    }
-  }
-  
-  // If no match within strict radius, try wider (25km for UK)
-  if (!nearestCity && cities.length > 0) {
-    for (const city of cities) {
-      if (!city.latitude || !city.longitude) continue;
-      const distance = haversineDistance(lat, lng, parseFloat(city.latitude), parseFloat(city.longitude));
-      if (distance <= 25 && (!nearestCity || distance < nearestCity.distance)) {
-        nearestCity = { cityId: city.id, cityName: city.name, distance };
-      }
-    }
-    if (nearestCity) {
-      console.warn(`⚠️ Used extended 25km radius to match city: ${nearestCity.cityName} (${nearestCity.distance.toFixed(2)}km)`);
-    }
-  }
-  
-  // Also try to match area within the matched city
-  if (nearestCity) {
-    const { data: areas } = await supabase
-      .from('areas')
-      .select('id, name')
-      .eq('city_id', nearestCity.cityId)
-      .eq('is_active', true);
-    
-    // Try to find area by matching address text (done by caller) or nearest geo
-    // For now, return city match - area matching happens via address parsing
-  }
-  
-  return nearestCity;
+  return result;
 }
 
-// Helper to parse opening hours from new API periods array
-function parseOpeningHoursNew(periods?: Array<{ open: { day: number; hour: number; minute: number }; close?: { day: number; hour: number; minute: number } }>): Array<{ day_of_week: number; open_time: string | null; close_time: string | null; is_closed: boolean }> {
-  const hours: Array<{ day_of_week: number; open_time: string | null; close_time: string | null; is_closed: boolean }> = [];
+function determineConfidence(googleTypes: string[], searchQuery: string): 'high' | 'medium' | 'low' {
+  const fosteringKeywords = ['foster', 'fostering', 'care', 'children', 'adoption', 'social'];
+  const nonFosteringKeywords = ['dental', 'medical', 'restaurant', 'shop', 'retail'];
   
-  // Initialize all days as closed
-  for (let day = 0; day < 7; day++) {
-    hours.push({ day_of_week: day, open_time: null, close_time: null, is_closed: true });
-  }
+  const searchLower = searchQuery.toLowerCase();
+  const typesLower = (googleTypes || []).map(t => t.toLowerCase());
   
-  if (!periods || periods.length === 0) {
-    return hours;
-  }
+  // Check for clear fostering matches
+  const hasFosteringKeyword = fosteringKeywords.some(k => searchLower.includes(k));
+  const hasNonFostering = nonFosteringKeywords.some(k => searchLower.includes(k) || typesLower.some(t => t.includes(k)));
   
-  // Check for 24/7 business (single period with day 0, no close)
-  if (periods.length === 1 && !periods[0].close) {
-    for (let day = 0; day < 7; day++) {
-      hours[day] = { day_of_week: day, open_time: '00:00', close_time: '23:59', is_closed: false };
-    }
-    return hours;
-  }
-  
-  // Parse each period
-  for (const period of periods) {
-    const day = period.open.day;
-    const openTime = formatTimeFromNew(period.open);
-    const closeTime = period.close ? formatTimeFromNew(period.close) : '23:59';
-    
-    hours[day] = {
-      day_of_week: day,
-      open_time: openTime,
-      close_time: closeTime,
-      is_closed: false,
-    };
-  }
-  
-  return hours;
+  if (hasFosteringKeyword && !hasNonFostering) return 'high';
+  if (hasFosteringKeyword) return 'medium';
+  if (hasNonFostering) return 'low';
+  return 'medium';
 }
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { status: 200, headers: corsHeaders });
   }
 
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
     
-    // Create service role client for DB operations
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
-    // SECURITY FIX: Require authentication
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      return new Response(
-        JSON.stringify({ success: false, error: 'Authentication required' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+    // Get Google API key from global_settings
+    const { data: settingsData } = await supabase
+      .from('global_settings')
+      .select('value')
+      .eq('key', 'google_places_api_key')
+      .single();
+    
+    let googleApiKey = '';
+    if (settingsData?.value) {
+      const value = typeof settingsData.value === 'string' 
+        ? JSON.parse(settingsData.value) 
+        : settingsData.value;
+      googleApiKey = value.api_key || value;
     }
 
-    const token = authHeader.replace('Bearer ', '');
-    const userClient = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: `Bearer ${token}` } }
-    });
-    
-    const { data: { user }, error: authError } = await userClient.auth.getUser();
-    
-    if (authError || !user) {
+    if (!googleApiKey) {
       return new Response(
-        JSON.stringify({ success: false, error: 'Invalid authentication' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // REQUIRED: Verify admin role
-    const { data: roles } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', user.id)
-      .in('role', ['super_admin', 'district_manager']);
-    
-    if (!roles || roles.length === 0) {
-      return new Response(
-        JSON.stringify({ success: false, error: 'Unauthorized: Admin access required' }),
-        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-    console.log(`Admin user verified: ${user.email}`);
-
-    // Try to get Google API key from environment first, then fall back to global_settings
-    let googleApiKey = Deno.env.get('GOOGLE_PLACES_API_KEY');
-    let keySource = 'environment';
-    
-    // If env key doesn't exist or is empty, try global_settings
-    if (!googleApiKey || googleApiKey.trim() === '') {
-      console.log('GOOGLE_PLACES_API_KEY not in env, checking global_settings...');
-      const { data: settingsData, error: settingsError } = await supabase
-        .from('global_settings')
-        .select('value')
-        .eq('key', 'google_places')
-        .single();
-      
-      if (settingsError) {
-        console.error('Error fetching google_places settings:', settingsError.message);
-      }
-      
-      if (settingsData?.value && typeof settingsData.value === 'object') {
-        const settings = settingsData.value as Record<string, unknown>;
-        googleApiKey = settings.api_key as string;
-        if (googleApiKey && googleApiKey.trim() !== '') {
-          keySource = 'global_settings';
-          console.log('Using Google Places API key from global_settings');
-        }
-      }
-    } else {
-      console.log('Using Google Places API key from environment secrets');
-    }
-
-    if (!googleApiKey || googleApiKey.trim() === '') {
-      console.error('GOOGLE_PLACES_API_KEY not configured in environment or global_settings');
-      return new Response(
-        JSON.stringify({ 
-          success: false, 
-          error: 'Google Places API key not configured. Please add your API key in Admin → Settings → Google APIs.',
-          requiresSetup: true,
-          setupInstructions: 'Create a new API key in Google Cloud Console with NO restrictions or IP restrictions only. HTTP referrer restrictions do NOT work with server-side Places API calls.'
-        }),
+        JSON.stringify({ success: false, error: 'Google Places API key not configured' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-    
-    console.log(`Google API key source: ${keySource}, key prefix: ${googleApiKey.substring(0, 10)}...`);
-    
-    // Parse and validate input
+
     const body = await req.json();
-    const validationResult = RequestSchema.safeParse(body);
-    
-    if (!validationResult.success) {
-      console.error("Validation error:", validationResult.error.issues);
-      return new Response(
-        JSON.stringify({ 
-          success: false, 
-          error: 'Invalid input', 
-          details: validationResult.error.issues.map(i => i.message)
-        }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+    const { action, category, city, state, placeIds, cityId, maxPages, importType = 'new' } = body;
 
-    const params = validationResult.data;
-    console.log(`GMB Import action: ${params.action}`, params);
-
-    // Fetch active states for validation
-    const { data: activeStates } = await supabase
-      .from('states')
-      .select('id, name, abbreviation, slug')
-      .eq('is_active', true);
-    
-    const activeStateAbbreviations = new Set(
-      (activeStates || []).map(s => s.abbreviation?.toUpperCase()).filter(Boolean)
-    );
-    const activeStateNames = new Set(
-      (activeStates || []).map(s => s.name?.toLowerCase()).filter(Boolean)
-    );
-    
-    // Helper function to extract region/state from address (UK format)
-    const extractStateFromAddress = (address: string): { abbreviation: string | null; isValid: boolean } => {
-      if (!address) return { abbreviation: null, isValid: false };
+    // =============================================================================
+    // SEARCH ACTION - Search for places
+    // =============================================================================
+    if (action === 'search') {
+      const textQuery = `${category} in ${city}${state ? `, ${state}` : ''}, UK`;
+      console.log('Searching for foster care agencies:', textQuery);
       
-      const lowerAddress = address.toLowerCase();
+      const allResults: any[] = [];
+      let pageToken: string | null = null;
+      let pageCount = 0;
+      const maxPagesToFetch = maxPages || 3;
       
-      // Check if address contains UK identifiers
-      const isUK = lowerAddress.includes('united kingdom') || lowerAddress.includes('uk') || lowerAddress.includes('england') || lowerAddress.includes('wales') || lowerAddress.includes('scotland') || lowerAddress.includes('northern ireland');
-      
-      const parts = address.split(/\s*[,]\s*/).map(p => p.trim());
-      
-      // Check each part against active state/region names
-      for (const part of parts) {
-        const lowerPart = part.toLowerCase().trim();
-        
-        if (activeStateNames.has(lowerPart)) {
-          const matchedState = activeStates?.find(s => s.name?.toLowerCase() === lowerPart);
-          return { 
-            abbreviation: matchedState?.abbreviation || null, 
-            isValid: true 
-          };
-        }
-        
-        const upperPart = part.toUpperCase().trim();
-        if (activeStateAbbreviations.has(upperPart)) {
-          return { 
-            abbreviation: upperPart, 
-            isValid: true 
-          };
-        }
-      }
-      
-      // If confirmed UK address but no specific region found, still valid
-      if (isUK) {
-        return { abbreviation: null, isValid: true };
-      }
-      
-      return { abbreviation: null, isValid: false };
-    };
-
-    switch (params.action) {
-      case 'search': {
-        const { category, city, state, area, pageToken } = params;
-
-        // Build search query (UK market)
-        const textQuery = `${category} in ${area ? `${area}, ` : ''}${city}${state ? `, ${state}` : ''}, UK`;
-
-        console.log('Searching with NEW Places API:', textQuery, pageToken ? `(page token: ${pageToken.substring(0, 20)}...)` : '(first page)');
-
-        // Build request body with optional page token for pagination
+      do {
         const requestBody: any = {
           textQuery,
           pageSize: 20,
@@ -433,669 +131,493 @@ serve(async (req) => {
           regionCode: 'GB',
         };
         
-        // Add page token for pagination if provided
-        if (pageToken && pageToken.trim() !== '') {
+        if (pageToken) {
           requestBody.pageToken = pageToken;
         }
-
-        // Use NEW Places API (v1) - Text Search with pagination support
+        
         const searchResponse = await fetch('https://places.googleapis.com/v1/places:searchText', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'X-Goog-Api-Key': googleApiKey,
-            'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.location,places.types,nextPageToken',
+            'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.location,places.types,places.photos,places.regularOpeningHours,places.nationalPhoneNumber,places.websiteUri,places.googleMapsUri,places.businessStatus,places.priceLevel,nextPageToken',
           },
           body: JSON.stringify(requestBody),
         });
 
         const searchData = await searchResponse.json();
 
-        // Handle errors
         if (searchData.error) {
-          console.error('Google Places API (New) error:', searchData.error);
-          
-          const errorCode = searchData.error.code;
-          const errorMessage = searchData.error.message || 'Unknown error';
-          const errorStatus = searchData.error.status || 'ERROR';
-          
-          // Handle specific error cases
-          if (errorStatus === 'PERMISSION_DENIED' || errorCode === 403) {
-            return new Response(
-              JSON.stringify({
-                success: false,
-                error: `Google API error: ${errorMessage}`,
-                solution: 'Please enable "Places API (New)" in your Google Cloud Console: APIs & Services → Library → Search "Places API (New)" → Enable',
-                requiresSetup: true,
-              }),
-              { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-            );
-          }
-          
+          console.error('Google API Error:', searchData.error);
           return new Response(
-            JSON.stringify({
-              success: false,
-              error: `Google API error: ${errorStatus} - ${errorMessage}`,
-            }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            JSON.stringify({ success: false, error: searchData.error.message || 'API error' }),
+            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
           );
         }
 
-        const places: NewPlaceResult[] = searchData.places || [];
+        if (searchData.places && searchData.places.length > 0) {
+          allResults.push(...searchData.places);
+        }
+
+        pageToken = searchData.nextPageToken || null;
+        pageCount++;
         
-        // Get existing place IDs to mark duplicates
-        const placeIds = places.map(p => extractPlaceId(p.id));
-        const { data: existingClinics } = await supabase
-          .from('clinics')
-          .select('google_place_id')
-          .in('google_place_id', placeIds);
+        console.log(`Page ${pageCount}: ${searchData.places?.length || 0} results`);
         
-        const existingPlaceIds = new Set(existingClinics?.map(c => c.google_place_id) || []);
-        
-        // Map results with import status - FILTER to only include valid states
-        const allResults = places.map((place: NewPlaceResult) => {
-          const placeId = extractPlaceId(place.id);
-          const address = place.formattedAddress || '';
-          const stateInfo = extractStateFromAddress(address);
-          
-          return {
-            place_id: placeId,
-            name: place.displayName?.text || 'Unknown',
-            address: address,
-            rating: place.rating,
-            reviews_count: place.userRatingCount,
-            lat: place.location?.latitude,
-            lng: place.location?.longitude,
-            types: place.types,
-            already_imported: existingPlaceIds.has(placeId),
-            state_abbreviation: stateInfo.abbreviation,
-            is_valid_state: stateInfo.isValid,
-          };
-        });
-        
-        // Filter to only show results from active emirates
-        // For UAE, if address contains "United Arab Emirates" or "UAE" we consider it valid
-        const validResults = allResults.filter((r: any) => {
-          // Always valid if address parsing found an emirate
-          if (r.is_valid_state) return true;
-          // Also valid if address contains UAE indicator
-          const addr = (r.address || '').toLowerCase();
-          return addr.includes('united arab emirates') || addr.includes('uae');
-        });
-        const filteredCount = allResults.length - validResults.length;
-        
-        if (filteredCount > 0) {
-          console.log(`Filtered out ${filteredCount} results not in UAE`);
+        if (pageToken && pageCount < maxPagesToFetch) {
+          await new Promise(resolve => setTimeout(resolve, 1500));
         }
         
-        // Extract nextPageToken from response for pagination
-        const nextPageToken = searchData.nextPageToken || null;
-        
-        console.log(`Found ${validResults.length} valid results`, nextPageToken ? '(more pages available)' : '(last page)');
-        
-        return new Response(
-          JSON.stringify({
-            success: true,
-            results: validResults,
-            next_page_token: nextPageToken, // Now properly returns next page token
-            total_found: validResults.length,
-            filtered_out: filteredCount,
-            has_more: !!nextPageToken,
-            api_version: 'places_v1_new',
-          }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
+      } while (pageToken && pageCount < maxPagesToFetch);
 
-      case 'import': {
-        const { placeIds, cityId, areaId } = params;
+      console.log(`Total results: ${allResults.length} from ${pageCount} pages`);
+
+      // Get existing place IDs to check for duplicates
+      const placeIdsList = allResults.map((p: any) => extractPlaceId(p.id));
+      const { data: existing } = await supabase
+        .from('agencies')
+        .select('id, place_id, name, status')
+        .in('place_id', placeIdsList);
+      
+      const existingMap = new Map((existing || []).map((a: any) => [a.place_id, a]));
+
+      // Generate results with all available data
+      const results = allResults.map((place: any) => {
+        const placeId = extractPlaceId(place.id);
+        const existingAgency = existingMap.get(placeId);
         
-        const imported: string[] = [];
-        const duplicates: string[] = [];
-        const errors: string[] = [];
-        
-        for (const placeId of placeIds) {
-          try {
-            // Check if already exists
-            const { data: existing } = await supabase
-              .from('clinics')
-              .select('id')
-              .eq('google_place_id', placeId)
-              .maybeSingle();
-            
-            if (existing) {
-              duplicates.push(placeId);
-              continue;
-            }
-            
-            // Fetch place details using NEW Places API (v1)
-            // The placeId needs to be prefixed with "places/" for the new API
-            const resourceName = placeId.startsWith('places/') ? placeId : `places/${placeId}`;
-            
-            const detailsResponse = await fetch(`https://places.googleapis.com/v1/${resourceName}`, {
-              method: 'GET',
-              headers: {
-                'X-Goog-Api-Key': googleApiKey,
-                'X-Goog-FieldMask': [
-                  'id',
-                  'displayName',
-                  'formattedAddress',
-                  'nationalPhoneNumber',
-                  'internationalPhoneNumber',
-                  'websiteUri',
-                  'googleMapsUri',
-                  'location',
-                  'addressComponents',
-                  'adrFormatAddress',
-                  'rating',
-                  'userRatingCount',
-                  'reviews',
-                  'types',
-                  'businessStatus',
-                  'priceLevel',
-                  'utcOffsetMinutes',
-                  'editorialSummary',
-                  'photos',
-                  'regularOpeningHours',
-                  'currentOpeningHours',
-                  'accessibilityOptions',
-                  'delivery',
-                  'dineIn',
-                  'curbsidePickup',
-                  'reservable',
-                  'takeout',
-                  'servesBreakfast',
-                  'servesBrunch',
-                  'servesLunch',
-                  'servesDinner',
-                  'servesBeer',
-                  'servesWine',
-                  'servesVegetarianFood',
-                ].join(','),
-              },
-            });
-            
-            const detailsData = await detailsResponse.json();
-            
-            // Handle errors
-            if (detailsData.error) {
-              const errorMsg = detailsData.error.message || 'Unknown error';
-              console.error(`Failed to fetch place ${placeId}:`, detailsData.error);
-              
-              if (detailsData.error.code === 403 || detailsData.error.status === 'PERMISSION_DENIED') {
-                return new Response(
-                  JSON.stringify({
-                    success: false,
-                    error: 'API Key Configuration Error: Please enable "Places API (New)" in Google Cloud Console.',
-                    solution: 'Go to APIs & Services → Library → Search "Places API (New)" → Enable',
-                    requiresSetup: true,
-                  }),
-                  { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-                );
-              }
-              
-              errors.push(`Failed to fetch ${placeId}: ${errorMsg}`);
-              continue;
-            }
-            
-            const place: NewPlaceResult = detailsData;
-            const actualPlaceId = extractPlaceId(place.id);
-            const placeName = place.displayName?.text || 'Unknown';
-            const formattedAddress = place.formattedAddress || '';
-            
-            // VALIDATE: Check that this business is in an active emirate
-            const addressStateInfo = extractStateFromAddress(formattedAddress);
-            if (!addressStateInfo.isValid) {
-              console.warn(`Skipping ${placeName} - address "${formattedAddress}" is not in an active emirate (detected: ${addressStateInfo.abbreviation || 'unknown'})`);
-              errors.push(`${placeName}: Not in an active emirate (${addressStateInfo.abbreviation || 'unknown'}). Only importing from: ${Array.from(activeStateNames).join(', ')}`);
-              continue;
-            }
-            
-            console.log(`Processing place: ${placeName} in ${addressStateInfo.abbreviation} with ${place.photos?.length || 0} photos`);
-            
-            // SMART CITY ASSIGNMENT: Use lat/lng to find the exact city
-            let actualCityId = cityId;
-            let actualCityName = '';
-            
-            const placeLat = place.location?.latitude;
-            const placeLng = place.location?.longitude;
-            
-            if (placeLat && placeLng) {
-              console.log(`Finding nearest area for ${placeName} at (${placeLat}, ${placeLng}) in ${addressStateInfo.abbreviation || 'any emirate'}...`);
-              
-              const nearestCity = await findNearestCity(
-                supabase,
-                placeLat,
-                placeLng,
-                addressStateInfo.abbreviation,
-                10 // Max 10km for UAE - areas are geographically compact
-              );
-              
-              if (nearestCity) {
-                actualCityId = nearestCity.cityId;
-                actualCityName = nearestCity.cityName;
-                console.log(`✓ Matched ${placeName} to ${nearestCity.cityName} (${nearestCity.distance.toFixed(2)}km away)`);
-              } else {
-                // Fallback: use provided cityId but log warning
-                const { data: fallbackCity } = await supabase
-                  .from('cities')
-                  .select('name')
-                  .eq('id', cityId)
-                  .single();
-                actualCityName = fallbackCity?.name || 'Unknown';
-                console.warn(`⚠️ No nearby city found for ${placeName} at (${placeLat}, ${placeLng}) - using fallback: ${actualCityName}`);
-              }
+        let photoUrl = null;
+        if (place.photos && place.photos.length > 0) {
+          const photoRef = extractPhotoReference(place.photos[0].name);
+          if (photoRef) {
+            photoUrl = buildPhotoUrl(photoRef, googleApiKey, 400);
+          }
+        }
+
+        let openingHours = '';
+        if (place.regularOpeningHours && place.regularOpeningHours.weekdayDescriptions) {
+          openingHours = place.regularOpeningHours.weekdayDescriptions.join('; ');
+        }
+
+        const confidence = determineConfidence(place.types || [], textQuery);
+
+        return {
+          place_id: placeId,
+          name: place.displayName?.text || 'Unknown',
+          address: place.formattedAddress || '',
+          rating: place.rating,
+          reviews_count: place.userRatingCount,
+          lat: place.location?.latitude,
+          lng: place.location?.longitude,
+          phone: place.nationalPhoneNumber || null,
+          website: place.websiteUri || null,
+          google_maps_url: place.googleMapsUri || null,
+          types: place.types,
+          business_status: place.businessStatus,
+          photo_url: photoUrl,
+          opening_hours: openingHours,
+          has_photos: place.photos && place.photos.length > 0,
+          photo_count: place.photos?.length || 0,
+          already_imported: !!existingAgency,
+          existing_id: existingAgency?.id || null,
+          existing_status: existingAgency?.status || null,
+          confidence,
+        };
+      });
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          results,
+          total_pages_fetched: pageCount,
+          total_found: results.length,
+          new_count: results.filter(r => !r.already_imported).length,
+          existing_count: results.filter(r => r.already_imported).length,
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // =============================================================================
+    // IMPORT ACTION - Import selected places
+    // =============================================================================
+    if (action === 'import') {
+      const imported: any[] = [];
+      const errors: string[] = [];
+      const skipped: string[] = [];
+
+      for (const placeId of placeIds) {
+        try {
+          // Check if already exists
+          const { data: existing } = await supabase
+            .from('agencies')
+            .select('id, place_id, name')
+            .eq('place_id', placeId)
+            .maybeSingle();
+          
+          if (existing) {
+            if (importType === 'update' || importType === 'sync') {
+              // Update existing - handled below
+              console.log(`Updating existing: ${existing.name}`);
             } else {
-              // No coordinates - use provided cityId
-              const { data: fallbackCity } = await supabase
-                .from('cities')
-                .select('name')
-                .eq('id', cityId)
-                .single();
-              actualCityName = fallbackCity?.name || 'Unknown';
-              console.log(`Using provided cityId for ${placeName} (no coordinates available)`);
+              skipped.push(`${placeId}: Already exists as ${existing.name}`);
+              continue;
+            }
+          }
+
+          // Get place details with all available fields
+          const resourceName = placeId.startsWith('places/') ? placeId : `places/${placeId}`;
+          
+          const detailsResponse = await fetch(`https://places.googleapis.com/v1/${resourceName}`, {
+            method: 'GET',
+            headers: {
+              'X-Goog-Api-Key': googleApiKey,
+              'X-Goog-FieldMask': 'id,displayName,formattedAddress,nationalPhoneNumber,internationalPhoneNumber,websiteUri,googleMapsUri,location,rating,userRatingCount,photos,regularOpeningHours,reviews,shortFormattedAddress,adrFormatAddress,priceLevel,businessStatus,utcOffsetMinutes,primaryType,types',
+            },
+          });
+
+          const place = await detailsResponse.json();
+
+          if (place.error) {
+            errors.push(`${placeId}: ${place.error.message || 'Failed to fetch'}`);
+            continue;
+          }
+
+          const placeName = place.displayName?.text || 'Unknown';
+          const slug = placeName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+          
+          // Parse address components
+          const addressParts = parseAddress(place.formattedAddress || '');
+
+          // Get photos
+          let mainImageUrl = null;
+          let coverImageUrl = null;
+          const photoReferences: string[] = [];
+          
+          if (place.photos && place.photos.length > 0) {
+            // First photo as main
+            const firstRef = extractPhotoReference(place.photos[0].name);
+            if (firstRef) {
+              mainImageUrl = buildPhotoUrl(firstRef, googleApiKey, 800);
+              photoReferences.push(firstRef);
             }
             
-            // Generate clean slug
-            const baseSlug = placeName
-              .toLowerCase()
-              .replace(/[^a-z0-9]+/g, '-')
-              .replace(/^-|-$/g, '');
+            // Second photo as cover
+            if (place.photos.length > 1) {
+              const secondRef = extractPhotoReference(place.photos[1].name);
+              if (secondRef) {
+                coverImageUrl = buildPhotoUrl(secondRef, googleApiKey, 1200);
+                photoReferences.push(secondRef);
+              }
+            }
             
-            // Check if slug already exists and add city suffix if needed
-            const { data: existingSlug } = await supabase
-              .from('clinics')
+            // Store remaining photo references
+            for (let i = 2; i < place.photos.length; i++) {
+              const ref = extractPhotoReference(place.photos[i].name);
+              if (ref) photoReferences.push(ref);
+            }
+          }
+
+          // Parse opening hours
+          const weekdayText = place.regularOpeningHours?.weekdayDescriptions || [];
+          const openNow = place.regularOpeningHours?.currentOpeningHours?.openNow;
+
+          // Prepare agency data
+          const agencyData = {
+            name: placeName,
+            slug,
+            place_id: extractPlaceId(place.id),
+            google_place_id: extractPlaceId(place.id),
+            address: place.formattedAddress,
+            city: addressParts.city || city || '',
+            state: addressParts.county || state || '',
+            postcode: addressParts.postcode || '',
+            phone: place.nationalPhoneNumber || place.internationalPhoneNumber || null,
+            website: place.websiteUri || null,
+            google_maps_url: place.googleMapsUri || null,
+            google_website_url: place.websiteUri || null,
+            international_phone: place.internationalPhoneNumber || null,
+            rating: place.rating || 0,
+            review_count: place.userRatingCount || 0,
+            google_primary_type: place.primaryType || null,
+            google_types: place.types || [],
+            business_status: place.businessStatus || null,
+            price_level: place.priceLevel || null,
+            utc_offset_minutes: place.utcOffsetMinutes || null,
+            editorial_summary: place.shortFormattedAddress || null,
+            
+            // Images
+            main_image_url: mainImageUrl,
+            cover_image_url: coverImageUrl || mainImageUrl,
+            
+            // Status - default to pending for review
+            status: 'pending',
+            listing_status: 'unlisted',
+            verification_status: 'unverified',
+            claim_status: 'unclaimed',
+            is_verified: false,
+            is_featured: false,
+            
+            // Import tracking
+            import_source: 'gmb',
+            imported_at: new Date().toISOString(),
+            last_synced_at: new Date().toISOString(),
+          };
+
+          let agencyId: string;
+
+          if (existing) {
+            // Update existing
+            const { data: updated, error: updateError } = await supabase
+              .from('agencies')
+              .update(agencyData)
+              .eq('id', existing.id)
               .select('id')
-              .eq('slug', baseSlug)
-              .maybeSingle();
+              .single();
             
-            let slug = baseSlug;
-            if (existingSlug) {
-              if (actualCityName) {
-                slug = `${baseSlug}-${actualCityName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-              } else {
-                slug = `${baseSlug}-${Date.now().toString(36)}`;
-              }
+            if (updateError) {
+              errors.push(`${placeName}: Update failed - ${updateError.message}`);
+              continue;
             }
-            
-            // Download and persist ALL photos to Supabase Storage - NO LIMIT
-            let coverImageUrl: string | null = null;
-            const photoUrls: string[] = [];
-            const maxPhotos = place.photos?.length || 0; // Fetch ALL photos
-            
-            if (place.photos && place.photos.length > 0) {
-              console.log(`Downloading ALL ${maxPhotos} photos for ${placeName}...`);
-              
-              for (let i = 0; i < maxPhotos; i++) {
-                const photoName = place.photos[i]?.name;
-                if (!photoName) continue;
-                
-                try {
-                  const maxWidth = i === 0 ? 1600 : 1200; // Highest quality
-                  // New API photo URL format
-                  const googlePhotoUrl = `https://places.googleapis.com/v1/${photoName}/media?maxWidthPx=${maxWidth}&key=${googleApiKey}`;
-                  
-                  // Download the image from Google
-                  const photoResponse = await fetch(googlePhotoUrl, { redirect: 'follow' });
-                  if (!photoResponse.ok) {
-                    console.warn(`Failed to download photo ${i} for ${placeName}: ${photoResponse.status}`);
-                    continue;
-                  }
-                  
-                  const photoBlob = await photoResponse.arrayBuffer();
-                  const contentType = photoResponse.headers.get('content-type') || 'image/jpeg';
-                  const extension = contentType.includes('png') ? 'png' : 'jpg';
-                  
-                  // Create a unique filename
-                  const sanitizedName = slug.substring(0, 30);
-                  const fileName = `clinics/${sanitizedName}/${Date.now()}-${i}.${extension}`;
-                  
-                  // Upload to Supabase Storage
-                  const { error: uploadError } = await supabase.storage
-                    .from('clinic-assets')
-                    .upload(fileName, photoBlob, {
-                      contentType,
-                      upsert: false,
-                    });
-                  
-                  if (uploadError) {
-                    console.warn(`Failed to upload photo ${i} for ${placeName}:`, uploadError);
-                    continue;
-                  }
-                  
-                  // Get the public URL
-                  const { data: publicUrlData } = supabase.storage
-                    .from('clinic-assets')
-                    .getPublicUrl(fileName);
-                  
-                  const permanentUrl = publicUrlData.publicUrl;
-                  photoUrls.push(permanentUrl);
-                  
-                  // First photo is the cover image
-                  if (i === 0) {
-                    coverImageUrl = permanentUrl;
-                  }
-                  
-                  console.log(`Uploaded photo ${i + 1}/${maxPhotos} for ${placeName}`);
-                } catch (photoErr) {
-                  console.warn(`Error processing photo ${i} for ${placeName}:`, photoErr);
-                }
-              }
-              
-              console.log(`Successfully stored ${photoUrls.length}/${maxPhotos} photos for ${placeName}`);
-            }
-            
-            // Build description from editorial summary or reviews
-            let description = '';
-            if (place.editorialSummary?.text) {
-              description = place.editorialSummary.text;
-            } else if (place.reviews && place.reviews.length > 0) {
-              const positiveReview = place.reviews.find((r) => r.rating >= 4);
-              if (positiveReview && positiveReview.text?.text) {
-                description = `"${positiveReview.text.text.substring(0, 300)}..."`;
-              }
-            }
-            
-            // Parse business hours from new API format
-            const businessHours = parseOpeningHoursNew(place.regularOpeningHours?.periods);
-            
-            // Store ALL GMB data with COMPLETE metadata - everything Google provides (new format)
-            const gmbData = {
-              // Photos
-              photo_names: place.photos?.map((p) => ({
-                name: p.name,
-                widthPx: p.widthPx,
-                heightPx: p.heightPx,
-                authorAttributions: p.authorAttributions,
-              })),
-              photos_persisted: photoUrls.length,
-              total_photos_available: place.photos?.length || 0,
-              
-              // Business hours - all formats
-              opening_hours_text: place.regularOpeningHours?.weekdayDescriptions,
-              opening_hours_periods: place.regularOpeningHours?.periods,
-              opening_hours_open_now: place.regularOpeningHours?.openNow,
-              current_opening_hours: place.currentOpeningHours,
-              
-              // Reviews - complete data (new format)
-              reviews: place.reviews?.map((r) => ({
-                name: r.name,
-                author_name: r.authorAttribution?.displayName,
-                author_url: r.authorAttribution?.uri,
-                profile_photo_url: r.authorAttribution?.photoUri,
-                rating: r.rating,
-                text: r.text?.text || r.originalText?.text,
-                publish_time: r.publishTime,
-                relative_time_description: r.relativePublishTimeDescription,
-                language: r.text?.languageCode,
-              })),
-              total_reviews_fetched: place.reviews?.length || 0,
-              
-              // Business types/categories
-              types: place.types,
-              primary_type: place.types?.[0],
-              
-              // Location data
-              google_maps_url: place.googleMapsUri,
-              address_components: place.addressComponents?.map((c) => ({
-                long_name: c.longText,
-                short_name: c.shortText,
-                types: c.types,
-              })),
-              adr_address: place.adrFormatAddress,
-              
-              // Business status and info
-              business_status: place.businessStatus,
-              price_level: place.priceLevel,
-              utc_offset_minutes: place.utcOffsetMinutes,
-              editorial_summary: place.editorialSummary,
-              
-              // Service attributes (what services they offer)
-              service_options: {
-                curbside_pickup: place.curbsidePickup,
-                delivery: place.delivery,
-                dine_in: place.dineIn,
-                reservable: place.reservable,
-                takeout: place.takeout,
-              },
-              
-              // Accessibility
-              accessibility: {
-                wheelchair_accessible_entrance: place.accessibilityOptions?.wheelchairAccessibleEntrance,
-              },
-              
-              // Additional attributes
-              serves_breakfast: place.servesBreakfast,
-              serves_brunch: place.servesBrunch,
-              serves_lunch: place.servesLunch,
-              serves_dinner: place.servesDinner,
-              serves_beer: place.servesBeer,
-              serves_wine: place.servesWine,
-              serves_vegetarian_food: place.servesVegetarianFood,
-              
-              // Metadata
-              fetched_at: new Date().toISOString(),
-              api_version: 'places_v1_new',
-              data_completeness: {
-                has_photos: (place.photos?.length || 0) > 0,
-                has_reviews: (place.reviews?.length || 0) > 0,
-                has_hours: !!(place.regularOpeningHours?.periods),
-                has_website: !!place.websiteUri,
-                has_phone: !!(place.nationalPhoneNumber || place.internationalPhoneNumber),
-                has_description: !!place.editorialSummary?.text,
-              },
-            };
-            
-            // Insert clinic with all data
-            const { data: newClinic, error: insertError } = await supabase
-              .from('clinics')
-              .insert({
-                name: placeName,
-                slug,
-                google_place_id: actualPlaceId,
-                google_maps_url: place.googleMapsUri || null,
-                address: formattedAddress,
-                phone: place.nationalPhoneNumber || place.internationalPhoneNumber,
-                website: place.websiteUri,
-                rating: place.rating || 0,
-                review_count: place.userRatingCount || 0,
-                average_rating: place.rating || 0,
-                total_reviews: place.userRatingCount || 0,
-                latitude: placeLat,
-                longitude: placeLng,
-                city_id: actualCityId,
-                area_id: areaId || null,
-                source: 'gmb',
-                claim_status: 'unclaimed',
-                verification_status: 'unverified',
-                is_active: true,
-                description: description || null,
-                cover_image_url: coverImageUrl,
-                logo_url: coverImageUrl,
-                photos: photoUrls.length > 0 ? photoUrls : null,
-                opening_hours: place.regularOpeningHours ? {
-                  weekday_descriptions: place.regularOpeningHours.weekdayDescriptions,
-                  periods: place.regularOpeningHours.periods,
-                  open_now: place.regularOpeningHours.openNow,
-                } : null,
-                gmb_data: gmbData,
-                gmb_connected: true,
-              })
-              .select()
+            agencyId = updated.id;
+            console.log(`✓ Updated: ${placeName}`);
+          } else {
+            // Insert new
+            const { data: newAgency, error: insertError } = await supabase
+              .from('agencies')
+              .insert(agencyData)
+              .select('id')
               .single();
             
             if (insertError) {
-              console.error(`Insert error for ${placeName}:`, insertError);
-              errors.push(`Failed to insert ${placeName}: ${insertError.message}`);
+              errors.push(`${placeName}: Insert failed - ${insertError.message}`);
               continue;
             }
-            
-            console.log(`Successfully imported: ${placeName} (${newClinic.id})`);
-            imported.push(actualPlaceId);
-            
-            // Insert clinic hours into clinic_hours table
-            if (businessHours.length > 0) {
-              const hoursInserts = businessHours.map(h => ({
-                clinic_id: newClinic.id,
-                day_of_week: h.day_of_week,
-                open_time: h.open_time,
-                close_time: h.close_time,
-                is_closed: h.is_closed,
-              }));
-              
-              const { error: hoursError } = await supabase
-                .from('clinic_hours')
-                .insert(hoursInserts);
-              
-              if (hoursError) {
-                console.error(`Failed to insert hours for ${placeName}:`, hoursError);
-              } else {
-                console.log(`Inserted business hours for ${placeName}`);
-              }
-            }
-            
-            // Insert ALL images into clinic_images table
-            if (photoUrls.length > 0) {
-              const imageInserts = photoUrls.map((url, index) => ({
-                clinic_id: newClinic.id,
-                image_url: url,
-                display_order: index,
-                caption: index === 0 ? 'Main Photo' : `Photo ${index + 1}`,
-              }));
-              
-              const { error: imagesError } = await supabase
-                .from('clinic_images')
-                .insert(imageInserts);
-                
-              if (imagesError) {
-                console.error(`Failed to insert images for ${placeName}:`, imagesError);
-              } else {
-                console.log(`Inserted ${imageInserts.length} images for ${placeName}`);
-              }
-            }
-            
-            // Store Google reviews if available (new format)
-            if (place.reviews && place.reviews.length > 0) {
-              const reviewInserts = place.reviews.map((r) => ({
-                clinic_id: newClinic.id,
-                author_name: r.authorAttribution?.displayName || 'Anonymous',
-                author_photo_url: r.authorAttribution?.photoUri,
-                rating: r.rating,
-                text_content: r.text?.text || r.originalText?.text || '',
-                review_time: r.publishTime || null,
-                google_review_id: `gmb_${actualPlaceId}_${r.name}`,
-                synced_at: new Date().toISOString(),
-              }));
-              
-              const { error: reviewsError } = await supabase
-                .from('google_reviews')
-                .insert(reviewInserts);
-              
-              if (reviewsError) {
-                console.error(`Failed to insert reviews for ${placeName}:`, reviewsError);
-              } else {
-                console.log(`Inserted ${reviewInserts.length} reviews for ${placeName}`);
-              }
-            }
-            
-            // Log to audit
-            await supabase.from('audit_logs').insert({
-              action: 'GMB_IMPORT',
-              entity_type: 'clinic',
-              entity_id: newClinic.id,
-              user_id: user.id,
-              user_email: user.email,
-              new_values: { 
-                name: placeName, 
-                source: 'gmb', 
-                google_place_id: actualPlaceId,
-                rating: place.rating,
-                review_count: place.userRatingCount,
-                photos_count: photoUrls.length,
-                hours_synced: businessHours.filter(h => !h.is_closed).length,
-                reviews_synced: place.reviews?.length || 0,
-                api_version: 'places_v1_new',
-              },
-            });
-            
-          } catch (err: unknown) {
-            console.error(`Error importing ${placeId}:`, err);
-            const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-            errors.push(`Error importing ${placeId}: ${errorMessage}`);
+            agencyId = newAgency.id;
+            console.log(`✓ Imported: ${placeName}`);
           }
-        }
-        
-        // Log import batch
-        try {
-          await supabase.from('gmb_imports').insert({
-            search_query: `Batch import of ${placeIds.length} places`,
-            total_found: placeIds.length,
-            imported_count: imported.length,
-            duplicate_count: duplicates.length,
-            status: 'completed',
-            completed_at: new Date().toISOString(),
-            error_log: errors.length > 0 ? { errors } : null,
+
+          // Store photos in agency_photos table (if table exists)
+          try {
+            if (place.photos && place.photos.length > 0) {
+              console.log(`  └─ Attempting to store ${place.photos.length} photos for agency ${agencyId}`);
+              
+              const photoInserts = place.photos.map((photo: any, index: number) => ({
+                agency_id: agencyId,
+                photo_type: index === 0 ? 'main' : index === 1 ? 'cover' : 'gallery',
+                google_photo_name: photo.name,
+                google_photo_reference: extractPhotoReference(photo.name),
+                photo_url: buildPhotoUrl(extractPhotoReference(photo.name), googleApiKey, 1200),
+                width: photo.widthPx || null,
+                height: photo.heightPx || null,
+                is_primary: index === 0,
+                source: 'google',
+                display_order: index,
+                imported_at: new Date().toISOString(),
+              }));
+
+              console.log(`  └─ Photo inserts:`, JSON.stringify(photoInserts.slice(0, 2)));
+              
+              // Use insert instead of upsert to avoid unique constraint issues
+              const { data: photoData, error: photoError } = await supabase.from('agency_photos').insert(photoInserts).select();
+              
+              if (photoError) {
+                console.log(`  └─ Photo insert FAILED: ${photoError.message}, code: ${photoError.code}, details: ${photoError.details}`);
+              } else {
+                console.log(`  └─ Stored ${photoInserts.length} photos, data:`, photoData);
+              }
+            }
+          } catch (photoErr) {
+            console.log(`  └─ Photo storage exception: ${photoErr instanceof Error ? photoErr.message : String(photoErr)}`);
+          }
+
+          // Store opening hours in agency_opening_hours table (if table exists)
+          try {
+            if (weekdayText.length > 0) {
+              const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+              const hoursInserts = weekdayText.map((dayText: string, index: number) => {
+                // Parse "Monday: 9:00 AM - 5:00 PM" format
+                const parts = dayText.split(': ');
+                const dayName = parts[0] || dayNames[index];
+                const timeRange = parts[1] || '';
+                const isClosed = timeRange.toLowerCase().includes('closed');
+                
+                let openTime = null;
+                let closeTime = null;
+                if (!isClosed && timeRange.includes('-')) {
+                  const times = timeRange.split(' - ');
+                  openTime = times[0]?.trim();
+                  closeTime = times[1]?.trim();
+                }
+
+                return {
+                  agency_id: agencyId,
+                  day_of_week: index,
+                  open_time: openTime,
+                  close_time: closeTime,
+                  is_closed: isClosed,
+                  weekday_text: dayText,
+                  source: 'google',
+                };
+              });
+
+              await supabase.from('agency_opening_hours').upsert(hoursInserts, { onConflict: 'agency_id,day_of_week' });
+              console.log(`  └─ Stored ${hoursInserts.length} opening hours`);
+            }
+          } catch (hoursErr) {
+            console.log(`  └─ Hours storage skipped: ${hoursErr instanceof Error ? hoursErr.message : 'Table may not exist'}`);
+          }
+
+          // Store reviews in agency_reviews table (if table exists)
+          try {
+            if (place.reviews && place.reviews.length > 0) {
+              console.log(`  └─ Attempting to store ${place.reviews.length} reviews for agency ${agencyId}`);
+              
+              const reviewInserts = place.reviews.map((review: any) => ({
+                agency_id: agencyId,
+                source: 'google',
+                source_review_id: review.name || null,
+                reviewer_name: review.authorName || null,
+                reviewer_profile_url: review.authorUrl || null,
+                reviewer_photo_url: review.profilePhotoUrl || null,
+                rating: review.rating || 0,
+                review_text: review.text || null,
+                review_language: review.languageCode || null,
+                review_time: review.publishTime || null,
+                relative_time_description: review.relativeTimeDescription || null,
+                is_verified: true,
+                is_displayed: true,
+                imported_at: new Date().toISOString(),
+              }));
+
+              console.log(`  └─ Review inserts:`, JSON.stringify(reviewInserts.slice(0, 1)));
+              
+              // Use insert instead of upsert to avoid unique constraint issues
+              const { data: reviewData, error: reviewError } = await supabase.from('agency_reviews').insert(reviewInserts).select();
+              
+              if (reviewError) {
+                console.log(`  └─ Review insert FAILED: ${reviewError.message}, code: ${reviewError.code}, details: ${reviewError.details}`);
+              } else {
+                console.log(`  └─ Stored ${reviewInserts.length} reviews, data:`, reviewData);
+              }
+            }
+          } catch (reviewErr) {
+            console.log(`  └─ Review storage exception: ${reviewErr instanceof Error ? reviewErr.message : String(reviewErr)}`);
+          }
+
+          imported.push({
+            place_id: placeId,
+            agency_id: agencyId,
+            name: placeName,
+            city: addressParts.city,
+            rating: place.rating,
+            photos_stored: place.photos?.length || 0,
+            hours_stored: weekdayText.length,
+            reviews_stored: place.reviews?.length || 0,
           });
-        } catch (logErr) {
-          console.error('Failed to log import batch:', logErr);
+
+        } catch (err) {
+          console.error('Import error:', err);
+          errors.push(`${placeId}: ${err instanceof Error ? err.message : 'Unknown error'}`);
         }
-        
-        console.log(`Import complete: ${imported.length} imported, ${duplicates.length} duplicates, ${errors.length} errors`);
-        
-        return new Response(
-          JSON.stringify({
-            success: true,
-            imported: imported.length,
-            duplicates: duplicates.length,
-            imported_place_ids: imported,
-            duplicate_place_ids: duplicates,
-            errors,
-            message: `Successfully imported ${imported.length} clinics with all photos, hours, and reviews.`,
-            api_version: 'places_v1_new',
-          }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
       }
 
-      case 'check-duplicates': {
-        const { phone } = params;
-        
-        let query = supabase.from('clinics').select('id, name, phone, address, google_place_id');
-        
-        const conditions: string[] = [];
-        if (phone) {
-          const normalizedPhone = phone.replace(/\D/g, '').slice(-9);
-          conditions.push(`phone.ilike.%${normalizedPhone}%`);
-        }
-        
-        if (conditions.length === 0) {
-          return new Response(
-            JSON.stringify({ success: true, duplicates: [] }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        }
-        
-        const { data: potentialDuplicates } = await query.or(conditions.join(','));
-        
-        return new Response(
-          JSON.stringify({
-            success: true,
-            duplicates: potentialDuplicates || [],
-          }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-
-      default:
-        return new Response(
-          JSON.stringify({ success: false, error: 'Unknown action' }),
-          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
+      return new Response(
+        JSON.stringify({
+          success: true,
+          imported: imported.length,
+          skipped: skipped.length,
+          errors: errors.length,
+          imported_agencies: imported,
+          skipped_agencies: skipped,
+          error_messages: errors,
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
-  } catch (error: unknown) {
-    console.error('GMB Import error:', error);
+
+    // =============================================================================
+    // REFRESH ACTION - Refresh existing agency data
+    // =============================================================================
+    if (action === 'refresh') {
+      const refreshed: any[] = [];
+      
+      // If specific placeIds provided, refresh those
+      // Otherwise, refresh all agencies with place_id
+      let agenciesToRefresh;
+      
+      if (placeIds && placeIds.length > 0) {
+        const { data } = await supabase
+          .from('agencies')
+          .select('id, place_id, name')
+          .in('place_id', placeIds);
+        agenciesToRefresh = data || [];
+      } else {
+        const { data } = await supabase
+          .from('agencies')
+          .select('id, place_id, name')
+          .not('place_id', 'is', null)
+          .eq('import_source', 'gmb')
+          .limit(50);
+        agenciesToRefresh = data || [];
+      }
+
+      for (const agency of agenciesToRefresh) {
+        try {
+          const resourceName = `places/${agency.place_id}`;
+          
+          const detailsResponse = await fetch(`https://places.googleapis.com/v1/${resourceName}`, {
+            method: 'GET',
+            headers: {
+              'X-Goog-Api-Key': googleApiKey,
+              'X-Goog-FieldMask': 'id,displayName,rating,userRatingCount,photos,regularOpeningHours,reviews,businessStatus',
+            },
+          });
+
+          const place = await detailsResponse.json();
+          
+          if (place.error) {
+            console.log(`Refresh failed for ${agency.name}: ${place.error.message}`);
+            continue;
+          }
+
+          // Update agency with refreshed data
+          const { error: updateError } = await supabase
+            .from('agencies')
+            .update({
+              rating: place.rating || 0,
+              review_count: place.userRatingCount || 0,
+              last_synced_at: new Date().toISOString(),
+            })
+            .eq('id', agency.id);
+
+          if (!updateError) {
+            refreshed.push({ id: agency.id, name: agency.name });
+          }
+        } catch (err) {
+          console.error(`Refresh error for ${agency.name}:`, err);
+        }
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          refreshed: refreshed.length,
+          agencies: refreshed,
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     return new Response(
-      JSON.stringify({ success: false, error: 'An unexpected error occurred' }),
+      JSON.stringify({ success: false, error: 'Unknown action' }),
+      { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+
+  } catch (error) {
+    console.error('Error:', error);
+    return new Response(
+      JSON.stringify({ success: false, error: 'Internal server error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

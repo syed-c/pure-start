@@ -1,6 +1,6 @@
 import { useParams, Navigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, supabaseAdmin } from '@/integrations/supabase/client';
 import { CalendarBookingForm } from '@/components/booking/CalendarBookingForm';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SEOHead } from '@/components/seo/SEOHead';
@@ -22,25 +22,14 @@ export default function BookDirectPage() {
     queryFn: async () => {
       if (!clinicId) throw new Error('No clinic ID');
 
-      const { data, error } = await supabase
-        .from('clinics')
-        .select(`
-          id,
-          name,
-          slug,
-          address,
-          latitude,
-          longitude,
-          phone,
-          cover_image_url,
-          city:cities(name),
-          area:areas(name)
-        `)
+      const { data, error } = await supabaseAdmin
+        .from('agencies')
+        .select(`*`)
         .eq('id', clinicId)
         .single();
 
       if (error) throw error;
-      return data;
+      return data as any;
     },
     enabled: !!clinicId,
   });

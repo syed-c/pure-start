@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, supabaseAdmin } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
@@ -35,7 +35,7 @@ export default function ReviewFunnelPage() {
       
       const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identifier);
       
-      let query = supabase.from('clinics').select('id, name, slug, google_place_id, cover_image_url');
+      let query = supabaseAdmin.from('agencies').select('*');
       
       if (isUUID) {
         query = query.eq('id', identifier);

@@ -2,6 +2,7 @@
 import { useState, useEffect, useMemo, Suspense } from 'react';
 import { lazyRetry } from '@/utils/lazyRetry';
 import { useAuth } from '@/hooks/useAuth';
+import { AppRole } from '@/types/database';
 import { Navigate, useSearchParams, Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useBookingNotifications, useMarkNotificationRead } from '@/hooks/useAdminAppointments';
@@ -45,6 +46,11 @@ import {
   Sparkles,
   Database,
   RotateCcw,
+  Wand2,
+  BarChart3,
+  Heart,
+  Home,
+  UserCheck,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -81,12 +87,20 @@ const SmokeTestTab = lazyRetry(() => import('@/components/admin/tabs/SmokeTestTa
 const RankingRulesTab = lazyRetry(() => import('@/components/admin/tabs/RankingRulesTab'));
 const ReviewInsightsTab = lazyRetry(() => import('@/components/admin/tabs/ReviewInsightsTab'));
 const SeoCopilotTab = lazyRetry(() => import('@/components/admin/tabs/SeoCopilotTab'));
+const ContentAdminTab = lazyRetry(() => import('@/components/admin/tabs/ContentAdminTab'));
 const CrmNumbersTab = lazyRetry(() => import('@/components/admin/tabs/CrmNumbersTab'));
 const MessagingControlTab = lazyRetry(() => import('@/components/admin/tabs/MessagingControlTab'));
 const PlansTab = lazyRetry(() => import('@/components/admin/tabs/PlansTab'));
 const PromotionsTab = lazyRetry(() => import('@/components/admin/tabs/PromotionsTab'));
 const FounderWeeklyTab = lazyRetry(() => import('@/components/admin/tabs/FounderWeeklyTab'));
 const TopAgenciesTab = lazyRetry(() => import('@/components/admin/tabs/TopDentistsTab'));
+const FosteringAgenciesTab = lazyRetry(() => import('@/components/admin/tabs/FosteringAgenciesTab'));
+const UsersManagementTab = lazyRetry(() => import('@/components/admin/tabs/UsersManagementTab'));
+const LocationsManagementTab = lazyRetry(() => import('@/components/admin/tabs/LocationsManagementTab'));
+const FosteringCategoriesTab = lazyRetry(() => import('@/components/admin/tabs/FosteringCategoriesTab'));
+const BlogManagementTab = lazyRetry(() => import('@/components/admin/tabs/BlogManagementTab'));
+const EnquiriesTab = lazyRetry(() => import('@/components/admin/tabs/EnquiriesTab'));
+const AgencyClaimsTab = lazyRetry(() => import('@/components/admin/tabs/AgencyClaimsTab'));
 const PinnedProfilesTab = lazyRetry(() => import('@/components/admin/tabs/PinnedProfilesTab'));
 const AgencyDashboardTab = lazyRetry(() => import('@/components/admin/tabs/DentistDashboardTab'));
 const ProfileEditorTab = lazyRetry(() => import('@/components/dentist/ProfileEditorTab'));
@@ -150,6 +164,10 @@ const InternalLinkingHubTab = lazyRetry(() => import('@/components/admin/tabs/In
 const QualityIdentityTab = lazyRetry(() => import('@/components/admin/tabs/QualityIdentityTab'));
 const ContentStrategyTab = lazyRetry(() => import('@/components/admin/tabs/ContentStrategyTab'));
 const PriceComparisonControlTab = lazyRetry(() => import('@/components/admin/tabs/PriceComparisonControlTab'));
+const ReportsTab = lazyRetry(() => import('@/components/admin/tabs/ReportsTab'));
+const GooglePlacesImportTab = lazyRetry(() => import('@/components/admin/tabs/GooglePlacesImportTab'));
+const FosterCarersTab = lazyRetry(() => import('@/components/admin/tabs/FosterCarersTab'));
+const ApplicantsTab = lazyRetry(() => import('@/components/admin/tabs/ApplicantsTab'));
 
 import NotificationCenter from '@/components/admin/NotificationCenter';
 import { useNotificationSubscription } from '@/hooks/useNotifications';
@@ -159,51 +177,50 @@ import { useUserTabAccess } from '@/hooks/useUserTabAccess';
 // Lazy load the V2 dashboard for agency users
 const AgencyDashboardV2 = lazyRetry(() => import('@/components/dashboard-v2/DentistDashboardV2'));
 
-// Define tabs for agency users (comprehensive view)
-const dentistTabGroups = [
+// Define tabs for agency users (Fostering Agency Dashboard)
+const agencyTabGroups = [
   {
     label: 'Dashboard',
     tabs: [
-      { id: 'my-dashboard', label: 'My Agency', icon: LayoutDashboard },
+      { id: 'my-dashboard', label: 'Dashboard Overview', icon: LayoutDashboard },
+    ],
+  },
+  {
+    label: 'People',
+    tabs: [
+      { id: 'my-team', label: 'Staff', icon: Users, highlight: true },
+      { id: 'my-patients', label: 'Foster Carers', icon: Heart },
+      { id: 'my-intake-forms', label: 'Applicants', icon: UserCheck },
     ],
   },
   {
     label: 'Operations',
     tabs: [
       { id: 'my-appointments', label: 'Enquiries', icon: Calendar, highlight: true },
-      { id: 'my-availability', label: 'Availability', icon: Clock },
-      { id: 'my-appointment-types', label: 'Enquiry Types', icon: Stethoscope },
-      { id: 'my-patients', label: 'Carers', icon: Users },
+      { id: 'my-availability', label: 'Placements', icon: Home },
+      { id: 'my-appointment-types', label: 'Fostering Types', icon: Stethoscope },
+      { id: 'my-operations', label: 'Training', icon: BookOpen },
+    ],
+  },
+  {
+    label: 'Records',
+    tabs: [
+      { id: 'my-documents', label: 'Documents', icon: FileText },
       { id: 'my-messages', label: 'Messages', icon: Inbox },
-      { id: 'my-intake-forms', label: 'Application Forms', icon: ClipboardList },
-      { id: 'my-operations', label: 'Automation', icon: Zap },
     ],
   },
   {
-    label: 'Profile',
+    label: 'Agency',
     tabs: [
-      { id: 'my-profile', label: 'Edit Profile', icon: Building2 },
-      { id: 'my-team', label: 'Team', icon: Users },
-      { id: 'my-services', label: 'Fostering Types', icon: Stethoscope },
-    ],
-  },
-  {
-    label: 'Reputation',
-    tabs: [
-      { id: 'my-reputation', label: 'Reputation Suite', icon: Star, highlight: true },
-    ],
-  },
-  {
-    label: 'Communication',
-    tabs: [
-      { id: 'my-templates', label: 'Templates', icon: FileText },
+      { id: 'my-profile', label: 'Agency Profile', icon: Building2 },
+      { id: 'my-reputation', label: 'Reviews', icon: Star },
     ],
   },
   {
     label: 'Settings',
     tabs: [
       { id: 'my-settings', label: 'Settings', icon: Settings },
-      { id: 'my-support', label: 'Support Tickets', icon: Shield },
+      { id: 'my-support', label: 'Support', icon: Shield },
     ],
   },
 ];
@@ -215,14 +232,14 @@ const adminTabGroups = [
       { id: 'overview', label: 'Dashboard Overview', icon: LayoutDashboard },
       { id: 'weekly', label: 'Weekly Report', icon: TrendingUp },
       { id: 'visitor-analytics', label: 'Visitor Analytics', icon: Activity, highlight: true },
-      { id: 'top-agencies', label: 'Top Agencies', icon: Star },
-      { id: 'pinned-profiles', label: 'Pinned Profiles', icon: Star },
+      { id: 'top-agencies', label: 'Top Agencies', icon: Star, highlight: true },
+      { id: 'reports', label: 'Reports', icon: BarChart3, highlight: true },
     ],
   },
   {
     label: 'Marketplace',
     tabs: [
-      { id: 'clinics', label: 'Agencies', icon: Building2 },
+      { id: 'agencies', label: 'Fostering Agencies', icon: Building2 },
       { id: 'users', label: 'Users', icon: Users },
       { id: 'claims', label: 'Claims', icon: Shield },
       { id: 'treatments', label: 'Fostering Categories', icon: Stethoscope },
@@ -235,16 +252,14 @@ const adminTabGroups = [
   {
     label: 'Discovery & SEO',
     tabs: [
-      { id: 'ranking-control', label: 'Ranking Control Center', icon: TrendingUp, highlight: true },
+      { id: 'content-admin', label: 'Content Admin', icon: Wand2, highlight: true },
+      { id: 'ranking-control', label: 'Ranking Control', icon: TrendingUp, highlight: true },
       { id: 'seo-command-center', label: 'SEO Command Center', icon: Sparkles },
       { id: 'seo-operations', label: 'SEO Operations', icon: Sparkles },
-      { id: 'seo-health', label: 'SEO Health Check', icon: Activity },
+      { id: 'seo-health', label: 'SEO Health', icon: Activity },
       { id: 'meta-optimizer', label: 'Meta Optimizer', icon: Search },
-      { id: 'structured-data', label: 'Schema & Structured Data', icon: Database, highlight: true },
-      { id: 'content-audit', label: 'Content Audit Bot', icon: Activity, highlight: true },
-      { id: 'internal-linking', label: 'Internal Linking', icon: Globe, highlight: true },
-      { id: 'micro-location', label: 'Micro-Location Coverage', icon: MapPin, highlight: true },
-      { id: 'smoke-test', label: 'URL Smoke Test', icon: Globe },
+      { id: 'structured-data', label: 'Schema Markup', icon: Database },
+      { id: 'internal-linking', label: 'Internal Linking', icon: Globe },
     ],
   },
   {
@@ -266,9 +281,8 @@ const adminTabGroups = [
   {
     label: 'Growth & Marketing',
     tabs: [
-      { id: 'gmb-scraper', label: 'Scraper Bot', icon: Bot, highlight: true },
+      { id: 'gmb-import', label: 'Google Places Import', icon: Globe, highlight: true },
       { id: 'email-enrichment', label: 'Email Enrichment', icon: Mail, highlight: true },
-      { id: 'gmb-bridge', label: 'Google Import', icon: Globe },
       { id: 'outreach', label: 'Outreach Center', icon: Mail },
       { id: 'promotions', label: 'Promotions', icon: Target },
     ],
@@ -285,17 +299,11 @@ const adminTabGroups = [
     label: 'Content Management',
     tabs: [
       { id: 'content-command-center', label: 'Content Hub', icon: Bot, highlight: true },
-      { id: 'quality-identity', label: 'Quality & Identity', icon: Activity, highlight: true },
       { id: 'content-studio', label: 'Content Studio', icon: Sparkles, highlight: true },
       { id: 'faq-studio', label: 'FAQ Studio', icon: Search, highlight: true },
-      { id: 'clinic-enrichment', label: 'Agency Enrichment', icon: Sparkles, highlight: true },
       { id: 'blog', label: 'Blog Engine', icon: BookOpen },
-      { id: 'content-strategy', label: 'Content Strategy', icon: Calendar, highlight: true },
       { id: 'static-pages', label: 'Static Pages', icon: Globe },
-      { id: 'seo-content-optimizer', label: 'Content Optimizer', icon: Zap },
-      { id: 'phase2-sprint-hub', label: 'Services Sprint', icon: Target, highlight: true },
-      { id: 'phase3-sprint-hub', label: 'Locations Sprint', icon: TrendingUp, highlight: true },
-      { id: 'phase4-sprint-hub', label: 'Optimization Sprint', icon: Activity, highlight: true },
+      { id: 'clinic-enrichment', label: 'Agency Enrichment', icon: Sparkles },
     ],
   },
   {
@@ -341,20 +349,33 @@ const adminTabGroups = [
 ];
 
 export default function AdminDashboard() {
-  const { user, roles, signOut, isLoading, refreshRoles } = useAuth();
+  const { user, roles, signOut, isLoading, refreshRoles, role, profile } = useAuth();
+  
   const location = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   
   // Define roles that can access admin dashboard
-  const ADMIN_ROLES = ['super_admin', 'district_manager', 'seo_team', 'content_team', 'marketing_team', 'support_team'];
-  const isAdmin = roles.some(role => ADMIN_ROLES.includes(role));
-  const isSuperAdmin = roles.includes('super_admin') || roles.includes('district_manager');
-  const isDentist = roles.includes('dentist');
-  const primaryRole = roles[0] || 'user';
+  // Use both roles array AND single role for compatibility
+  const ADMIN_ROLES = ['super_admin', 'agency_admin', 'agency_staff', 'trainer', 'auditor'];
+  
+  // Properly get role from profile
+  const profileRole = profile?.role as string | null;
+  const authRole = role as string | null;
+  const currentRole = authRole || profileRole || null;
+  
+  // Check if user is super admin
+  const isSuperAdmin = profileRole === 'super_admin' || authRole === 'super_admin';
+  const isAdmin = isSuperAdmin || (currentRole !== null && ADMIN_ROLES.includes(currentRole as any));
+  const isAgency = currentRole === 'agency_admin' && !isSuperAdmin;
+  const primaryRole = currentRole || 'user';
 
   const [activeTab, setActiveTab] = useState<string>(() => {
     const tabFromUrl = searchParams.get('tab');
+    // Force overview tab for super admins
+    if (isSuperAdmin) {
+      return tabFromUrl || 'overview';
+    }
     return tabFromUrl || (isAdmin ? 'overview' : 'my-dashboard');
   });
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -379,14 +400,14 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (isAdmin) return;
     
-    if (!isLoading && user && roles.length === 0 && roleCheckAttempts < 2) {
+    if (!isLoading && user && !currentRole && roleCheckAttempts < 2) {
       const timer = setTimeout(() => {
         refreshRoles();
         setRoleCheckAttempts(prev => prev + 1);
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [isLoading, user, roles, roleCheckAttempts, refreshRoles, isAdmin]);
+  }, [isLoading, user, currentRole, roleCheckAttempts, refreshRoles, isAdmin]);
 
   // Get global tab visibility settings
   const { isTabVisible } = useTabVisibility();
@@ -395,8 +416,9 @@ export default function AdminDashboard() {
   const { canAccessTab, hasFullAccess } = useUserTabAccess();
 
   // Determine which tab groups to show and filter by visibility + user permissions
-  const rawTabGroups = isAdmin ? adminTabGroups : dentistTabGroups;
-  const dashboardType = isAdmin ? 'admin' : 'dentist';
+  // For super admin, show admin tabs
+  const rawTabGroups = isAdmin ? adminTabGroups : (isAgency ? agencyTabGroups : []);
+  const dashboardType = isAdmin ? 'admin' : 'agency';
   
   const tabGroups = useMemo(() => 
     rawTabGroups.map(group => ({
@@ -453,91 +475,16 @@ export default function AdminDashboard() {
     };
   }, []);
 
-  // Only show loading if auth is genuinely loading (not during tab switches)
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto" />
-          <p className="mt-3 text-sm text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <Navigate to="/auth" replace />;
-  }
-
-  // Route separation:
-  // - /admin is for admins only
-  // - /dashboard is for agencies only
-  const tabParam = searchParams.get('tab');
-
-  // If a dentist lands on /admin, push them to the dentist dashboard route
-  if (location.pathname.startsWith('/admin') && !isAdmin && isDentist) {
-    const targetTab = tabParam && tabParam.startsWith('my-') ? tabParam : 'my-dashboard';
-    return <Navigate to={`/dashboard?tab=${encodeURIComponent(targetTab)}`} replace />;
-  }
-
-  // If an admin lands on /dashboard, push them to /admin but preserve the tab param
-  if (location.pathname.startsWith('/dashboard') && isAdmin) {
-    const preservedTab = tabParam || 'overview';
-    return <Navigate to={`/admin?tab=${preservedTab}`} replace />;
-  }
-
-  // Access control: admins and agencies only
-  // Give a retry option for users who just signed up and roles haven't propagated yet
-  // SuperAdmins never see this screen - they are fast-tracked
-  if (!isAdmin && !isDentist && roleCheckAttempts >= 2) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-background">
-        <div className="text-center p-8 bg-card rounded-2xl shadow-lg border max-w-md">
-          <div className="h-16 w-16 rounded-full bg-yellow-100 flex items-center justify-center mx-auto mb-4">
-            <Lock className="h-8 w-8 text-yellow-600" />
-          </div>
-          <h1 className="text-2xl font-bold text-foreground mb-2">Access Restricted</h1>
-          <p className="text-muted-foreground mb-4">
-            Your account doesn't have admin access. If you believe this is an error, please contact an administrator.
-          </p>
-          <div className="mt-6 flex gap-2 justify-center">
-            <Button 
-              variant="default" 
-              onClick={() => {
-                refreshRoles();
-                setRoleCheckAttempts(0);
-              }}
-            >
-              <RotateCcw className="h-4 w-4 mr-2" />
-              Retry
-            </Button>
-            <Button variant="outline" onClick={signOut}>
-              Sign Out
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-  
-  // Still loading roles - show loading spinner instead of "Setting Up Account" prematurely
-  // SuperAdmins bypass this entirely
-  if (!isAdmin && !isDentist && roleCheckAttempts < 2) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto" />
-          <p className="mt-3 text-sm text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
-  }
+// Skip early returns - always render for authenticated users
+  // For super admin, always show the dashboard
 
   // Check if this is an agency user accessing their dashboard - redirect to V2
-  const isAgencyRoute = location.pathname.startsWith('/dashboard') && isDentist && !isAdmin;
+  // Don't redirect super admins to agency dashboard
+  // Don't redirect super admins to agency dashboard
+  const isAgencyOnly = isAgency && !isSuperAdmin;
   
   // For agency users, use the redesigned V2 dashboard
-  if (isAgencyRoute) {
+  if (isAgencyOnly && location.pathname.startsWith('/dashboard') && !isSuperAdmin) {
     return (
       <Suspense fallback={
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-primary/10">
@@ -558,10 +505,10 @@ export default function AdminDashboard() {
       case 'my-appointments': return <AgencyEnquiriesTab />;
       case 'my-availability': return <AvailabilityManagementTab />;
       case 'my-appointment-types': return <AppointmentTypesTab />;
-      case 'my-patients': return <PatientsTab />;
+      case 'my-patients': return <FosterCarersTab />;
       case 'my-messages': return <MessagesTab />;
       case 'my-operations': return <OperationsTab />;
-      case 'my-intake-forms': return <IntakeFormsTab />;
+      case 'my-intake-forms': return <ApplicantsTab />;
       case 'my-profile': return <ProfileEditorTab />;
       case 'my-team': return <TeamManagementTab />;
       case 'my-services': return <ServicesTab />;
@@ -580,23 +527,27 @@ export default function AdminDashboard() {
       case 'ranking-rules': return <RankingRulesTab />;
       case 'pinned-profiles': return <PinnedProfilesTab />;
       case 'top-agencies': return <TopAgenciesTab />;
+      case 'reports': return <ReportsTab />;
+      case 'gmb-import': return <GooglePlacesImportTab />;
       case 'promotions': return <PromotionsTab />;
-      case 'locations': return <LocationsTab />;
-      case 'treatments': return <TreatmentsTab />;
-      case 'clinics': return <ClinicsTab />;
-      case 'claims': return <ClaimsTab />;
-      case 'users': return <UsersTab />;
+      case 'agencies': return <FosteringAgenciesTab />;
+      case 'clinics': return <FosteringAgenciesTab />;
+      case 'users': return <UsersManagementTab />;
+      case 'locations': return <LocationsManagementTab />;
+      case 'treatments': return <FosteringCategoriesTab />;
+      case 'claims': return <AgencyClaimsTab />;
       case 'booking-system': return <BookingSystemTab />;
       case 'appointments': return <AppointmentsTab />;
       case 'visitor-analytics': return <VisitorAnalyticsTab />;
-      case 'leads': return <LeadsTab />;
+      case 'leads': return <EnquiriesTab />;
       case 'pages': return <PagesTab />;
-      case 'blog': return <BlogTab />;
+      case 'blog': return <BlogManagementTab />;
       case 'seo': return <SeoTab />;
       case 'static-pages': return <StaticPagesTab />;
       case 'seo-health': return <SeoHealthCheckTab />;
       case 'seo-command-center': return <SeoCommandCenterTab />;
       case 'ranking-control': return <RankingControlCenterTab />;
+      case 'content-admin': return <ContentAdminTab />;
       case 'seo-operations': return <SeoOperationsCenterTab />;
       case 'meta-optimizer': return <MetaOptimizerTab />;
       case 'seo-expert': return <SeoExpertTab />;

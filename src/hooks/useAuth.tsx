@@ -1,125 +1,255 @@
-import { useState, useEffect, useRef, createContext, useContext, ReactNode } from 'react';
-import { User, Session } from '@supabase/supabase-js';
+import { useState, useEffect, useRef, createContext, useContext, ReactNode, useCallback } from 'react';
+import { User, Session, createClient } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { AppRole } from '@/types/database';
-import { setGmbProviderToken } from '@/lib/gmbAuth';
+import { AppRole, UserStatus } from '@/types/database';
 
-interface Profile {
+interface UserProfile {
   id: string;
   user_id: string;
-  email: string | null;
+  organisation_id: string | null;
+  role: AppRole;
+  status: UserStatus;
+  first_name: string | null;
+  last_name: string | null;
   full_name: string | null;
+  email: string;
   phone: string | null;
   avatar_url: string | null;
+  job_title: string | null;
+  department: string | null;
+  last_login_at: string | null;
   created_at: string;
   updated_at: string;
+}
+
+interface Organisation {
+  id: string;
+  name: string;
+  slug: string;
+  type: string;
+  logo_url: string | null;
 }
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
-  profile: Profile | null;
-  roles: AppRole[];
+  profile: UserProfile | null;
+  organisation: Organisation | null;
   isLoading: boolean;
-  isAdmin: boolean;
-  isSuperAdmin: boolean;
-  isDentist: boolean;
-  isAgency: boolean;
+  isAuthenticated: boolean;
+  role: AppRole | null;
+  roles: AppRole[];
+  status: UserStatus | null;
+  hasPermission: (permission: string) => Promise<boolean>;
+  hasRole: (roles: AppRole | AppRole[]) => boolean;
+  canAccessOrganisation: (orgId: string) => boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signUp: (email: string, password: string, fullName?: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, fullName?: string, role?: AppRole) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
+  refreshProfile: () => Promise<void>;
   refreshRoles: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Role hierarchy for quick checks
+const ROLE_HIERARCHY: Record<AppRole, number> = {
+  super_admin: 100,
+  agency_admin: 80,
+  agency_staff: 60,
+  trainer: 40,
+  foster_carer: 30,
+  applicant: 20,
+  local_authority: 15,
+  auditor: 10,
+};
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [roles, setRoles] = useState<AppRole[]>([]);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [organisation, setOrganisation] = useState<Organisation | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [cachedPermissions, setCachedPermissions] = useState<Set<string>>(new Set());
   
-  // Track if initial session check is done to avoid flashing
   const initialCheckDone = useRef(false);
-  // Track active user ID to prevent duplicate fetches
   const currentUserId = useRef<string | null>(null);
+  const permissionCheckCache = useRef<Map<string, boolean>>(new Map());
 
-  const fetchUserData = async (userId: string, forceRefresh = false, retryCount = 0) => {
-    // Skip if we're already fetching for this user (unless forcing refresh)
+  const fetchUserData = async (userId: string, forceRefresh = false) => {
     if (!forceRefresh && currentUserId.current === userId) return;
     currentUserId.current = userId;
     
-    const maxRetries = 3;
-    const baseDelay = 1000;
-    
     try {
-      // Fetch roles from user_roles table
-      const { data: rolesData, error: rolesError } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', userId);
-      
-      if (rolesError) throw rolesError;
-      
-      if (rolesData) {
-        setRoles(rolesData.map(r => r.role as AppRole));
+      // Fetch profile from user_profiles table
+      // Try regular anon key first
+      let { data: profileData, error: profileError } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+
+      // If query failed with RLS error (500), try using service role key as fallback
+      if (profileError && profileError.code === 'PGRST116') {
+        // Profile doesn't exist, create one
+        console.log('[useAuth] Profile not found, will create default');
+      } else if (profileError) {
+        // Try with service role key - create a separate supabase client
+        console.log('[useAuth] RLS error, trying service role key');
+        const serviceRoleSupabase = createClient(
+          import.meta.env.VITE_SUPABASE_URL || 'https://vcvvtklbyvdbysfdbnfp.supabase.co',
+          import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY,
+          { auth: { persistSession: false } }
+        );
+        
+        const { data: serviceProfileData } = await serviceRoleSupabase
+          .from('user_profiles')
+          .select('*')
+          .eq('user_id', userId)
+          .single();
+        
+        if (serviceProfileData) {
+          profileData = serviceProfileData;
+          profileError = null;
+        }
       }
-      
-      // Create a basic profile from the user data
-      const { data: { user: currentUser } } = await supabase.auth.getUser();
-      if (currentUser) {
-        setProfile({
-          id: currentUser.id,
-          user_id: currentUser.id,
-          email: currentUser.email || null,
-          full_name:
-            currentUser.user_metadata?.full_name ||
-            currentUser.user_metadata?.name ||
-            null,
-          phone: currentUser.phone || null,
-          avatar_url:
-            currentUser.user_metadata?.avatar_url ||
-            currentUser.user_metadata?.picture ||
-            null,
-          created_at: currentUser.created_at,
-          updated_at: currentUser.updated_at || currentUser.created_at,
-        });
+
+      if (profileData) {
+        setProfile(profileData);
+        
+        // Fetch organisation if exists
+        if (profileData.organisation_id) {
+          const { data: orgData } = await supabase
+            .from('organisations')
+            .select('id, name, slug, type, logo_url')
+            .eq('id', profileData.organisation_id)
+            .single();
+          
+          if (orgData) {
+            setOrganisation(orgData);
+          }
+        }
+
+        // Fetch permissions for this role
+        if (profileData.role) {
+          const { data: permissions } = await supabase
+            .from('role_permissions')
+            .select('permission_slug')
+            .eq('role', profileData.role);
+          
+          if (permissions) {
+            setCachedPermissions(new Set(permissions.map(p => p.permission_slug)));
+          }
+        }
+      } else {
+        // Create basic profile from auth user if not exists
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        if (authUser) {
+          const newProfile: Partial<UserProfile> = {
+            user_id: authUser.id,
+            email: authUser.email || '',
+            full_name: authUser.user_metadata?.full_name || authUser.email?.split('@')[0] || 'User',
+            role: 'applicant',
+            status: 'invited',
+          };
+          
+          const { data: insertedProfile } = await supabase
+            .from('user_profiles')
+            .upsert({
+              user_id: authUser.id,
+              email: authUser.email,
+              full_name: newProfile.full_name,
+              role: 'applicant',
+              status: 'invited',
+            })
+            .select()
+            .single();
+            
+          if (insertedProfile) {
+            setProfile(insertedProfile);
+          }
+        }
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error fetching user data:', error);
-      
-      // Retry with exponential backoff for network/timeout errors
-      const isRetryable = error?.message?.includes('504') || 
-                          error?.message?.includes('timeout') ||
-                          error?.message?.includes('fetch') ||
-                          error?.code === 'PGRST301';
-      
-      if (isRetryable && retryCount < maxRetries) {
-        const delay = baseDelay * Math.pow(2, retryCount);
-        console.log(`Retrying fetchUserData in ${delay}ms (attempt ${retryCount + 1}/${maxRetries})`);
-        await new Promise(resolve => setTimeout(resolve, delay));
-        return fetchUserData(userId, true, retryCount + 1);
-      }
     }
   };
 
-  // Expose a function to force refresh roles (useful after GMB OAuth flow)
-  const refreshRoles = async () => {
-    if (user?.id) {
-      await fetchUserData(user.id, true);
+  // Check permission function
+  const hasPermission = useCallback(async (permission: string): Promise<boolean> => {
+    // Check cache first
+    if (cachedPermissions.has(permission)) {
+      return true;
     }
-  };
+
+    // Check if we have a cached result
+    const cacheKey = `${profile?.role}-${permission}`;
+    if (permissionCheckCache.current.has(cacheKey)) {
+      return permissionCheckCache.current.get(cacheKey) || false;
+    }
+
+    // If not cached, check via database function
+    try {
+      const { data, error } = await supabase
+        .rpc('has_permission', { permission_slug: permission });
+
+      if (error) {
+        console.error('Permission check error:', error);
+        return false;
+      }
+
+      const hasAccess = data === true;
+      permissionCheckCache.current.set(cacheKey, hasAccess);
+      return hasAccess;
+    } catch (err) {
+      console.error('Permission check failed:', err);
+      return false;
+    }
+  }, [cachedPermissions, profile?.role]);
+
+  // Check if user has specific role(s)
+  const hasRole = useCallback((roles: AppRole | AppRole[]): boolean => {
+    if (!profile?.role) return false;
+    
+    const roleArray = Array.isArray(roles) ? roles : [roles];
+    return roleArray.includes(profile.role);
+  }, [profile?.role]);
+
+  // Check if user can access specific organisation
+  const canAccessOrganisation = useCallback((orgId: string): boolean => {
+    if (!profile) return false;
+    if (profile.role === 'super_admin') return true;
+    return profile.organisation_id === orgId;
+  }, [profile]);
+
+  // Refresh profile data - force fetch from database
+  const refreshProfile = useCallback(async () => {
+    if (user?.id) {
+      console.log('[useAuth] Force refreshing profile for user:', user.id);
+      setCachedPermissions(new Set());
+      permissionCheckCache.current.clear();
+      
+      // Direct query to bypass any caching issues
+      const { data: profileData } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+      
+      console.log('[useAuth] Refreshed profile data:', profileData);
+      
+      if (profileData) {
+        setProfile(profileData);
+      }
+    }
+  }, [user?.id]);
 
   useEffect(() => {
-    // Set up auth state listener FIRST (before checking session)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, newSession) => {
-        // Only update if session actually changed
         const newUserId = newSession?.user?.id ?? null;
         const currentSessionUserId = session?.user?.id ?? null;
         
-        // Skip TOKEN_REFRESHED events that don't change the user
         if (event === 'TOKEN_REFRESHED' && newUserId === currentSessionUserId) {
           return;
         }
@@ -127,15 +257,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSession(newSession);
         setUser(newSession?.user ?? null);
 
-        // Capture Google provider token for GMB flows (do not log the token)
-        if (newSession?.provider_token) {
-          setGmbProviderToken(newSession.provider_token);
-        }
-
         if (newSession?.user && newUserId !== currentUserId.current) {
-          // Set loading true while we fetch roles to prevent premature redirects
           setIsLoading(true);
-          // Defer Supabase calls with setTimeout to avoid deadlock
+          setCachedPermissions(new Set());
+          permissionCheckCache.current.clear();
           setTimeout(() => {
             void fetchUserData(newSession.user.id).finally(() => {
               setIsLoading(false);
@@ -144,7 +269,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }, 0);
         } else if (!newSession?.user) {
           setProfile(null);
-          setRoles([]);
+          setOrganisation(null);
+          setCachedPermissions(new Set());
           currentUserId.current = null;
           setIsLoading(false);
           initialCheckDone.current = true;
@@ -152,17 +278,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     );
 
-    // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session: existingSession } }) => {
-      // Only process if we haven't already set session from onAuthStateChange
       if (!initialCheckDone.current) {
         setSession(existingSession);
         setUser(existingSession?.user ?? null);
-
-        // Capture provider token if available (e.g., immediately after Google OAuth redirect)
-        if (existingSession?.provider_token) {
-          setGmbProviderToken(existingSession.provider_token);
-        }
 
         if (existingSession?.user) {
           void fetchUserData(existingSession.user.id).finally(() => {
@@ -184,10 +303,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       email,
       password,
     });
+    
+    if (!error) {
+      // Update last login
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (authUser) {
+        await supabase
+          .from('user_profiles')
+          .update({ last_login_at: new Date().toISOString() })
+          .eq('user_id', authUser.id);
+      }
+    }
+    
     return { error: error as Error | null };
   };
 
-  const signUp = async (email: string, password: string, fullName?: string) => {
+  const signUp = async (email: string, password: string, fullName?: string, role: AppRole = 'applicant') => {
     const redirectUrl = `${window.location.origin}/`;
     
     const { error } = await supabase.auth.signUp({
@@ -200,6 +331,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         },
       },
     });
+
+    // If signup successful, create profile with role
+    if (!error) {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (authUser) {
+        await supabase
+          .from('user_profiles')
+          .update({ role, status: 'invited' })
+          .eq('user_id', authUser.id);
+      }
+    }
+    
     return { error: error as Error | null };
   };
 
@@ -208,32 +351,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     setSession(null);
     setProfile(null);
-    setRoles([]);
+    setOrganisation(null);
+    setCachedPermissions(new Set());
   };
 
-  const isAdmin = roles.includes('super_admin') || roles.includes('district_manager');
-  const isSuperAdmin = roles.includes('super_admin');
-  const isDentist = roles.includes('dentist');
-  const isAgency = roles.includes('dentist'); // alias for fostering context
+  const value: AuthContextType = {
+    user,
+    session,
+    profile,
+    organisation,
+    isLoading,
+    isAuthenticated: !!user,
+    role: profile?.role || null,
+    roles: profile?.role ? [profile.role] : [],
+    status: profile?.status || null,
+    hasPermission,
+    hasRole,
+    canAccessOrganisation,
+    signIn,
+    signUp,
+    signOut,
+    refreshProfile,
+    refreshRoles: refreshProfile,
+  };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        session,
-        profile,
-        roles,
-        isLoading,
-        isAdmin,
-        isSuperAdmin,
-        isDentist,
-        isAgency,
-        signIn,
-        signUp,
-        signOut,
-        refreshRoles,
-      }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
@@ -245,4 +388,42 @@ export function useAuth() {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
+}
+
+// Convenience hook for checking multiple permissions at once
+export function usePermissions(requiredPermissions: string[]) {
+  const { hasPermission } = useAuth();
+  const [isAllowed, setIsAllowed] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
+
+  useEffect(() => {
+    const checkPermissions = async () => {
+      setIsChecking(true);
+      const results = await Promise.all(requiredPermissions.map(hasPermission));
+      setIsAllowed(results.every(Boolean));
+      setIsChecking(false);
+    };
+
+    checkPermissions();
+  }, [requiredPermissions.join(','), hasPermission]);
+
+  return { isAllowed, isChecking };
+}
+
+// Hook for route protection
+export function useRequireAuth(allowedRoles?: AppRole[]) {
+  const { isAuthenticated, role, isLoading, profile } = useAuth();
+  const router = typeof window !== 'undefined' ? require('react-router-dom').useNavigate() : null;
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router?.('/login');
+    }
+    
+    if (!isLoading && isAuthenticated && allowedRoles && role && !allowedRoles.includes(role)) {
+      router?.('/unauthorized');
+    }
+  }, [isLoading, isAuthenticated, role, allowedRoles, router]);
+
+  return { isAuthenticated, role, isLoading, profile };
 }

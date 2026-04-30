@@ -65,7 +65,7 @@ export const Footer = forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>
                   <Heart className="h-4 w-4" />
                 </div>
                 <span className="text-sm font-extrabold text-background tracking-tight">
-                  Foster<span className="text-primary">Connect</span>
+                  Foster<span className="text-primary">Care</span>
                 </span>
               </Link>
               <p className="text-background/35 text-sm leading-relaxed max-w-xs mb-6">

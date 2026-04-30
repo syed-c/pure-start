@@ -47,12 +47,65 @@ export const ENGLAND_COUNTIES = [
   { name: 'Nottinghamshire', slug: 'nottinghamshire', abbr: 'NTT' },
   { name: 'Bristol', slug: 'bristol', abbr: 'BST' },
   { name: 'Tyne and Wear', slug: 'tyne-and-wear', abbr: 'TWR' },
+  // Additional English Counties
+  { name: 'Derbyshire', slug: 'derbyshire', abbr: 'DER' },
+  { name: 'East Riding of Yorkshire', slug: 'east-riding-of-yorkshire', abbr: 'ERY' },
+  { name: 'Berkshire', slug: 'berkshire', abbr: 'BRK' },
+  { name: 'Buckinghamshire', slug: 'buckinghamshire', abbr: 'BKM' },
+  { name: 'Staffordshire', slug: 'staffordshire', abbr: 'STS' },
+  { name: 'Cheshire', slug: 'cheshire', abbr: 'CHE' },
+  { name: 'Cambridgeshire', slug: 'cambridgeshire', abbr: 'CAM' },
+  { name: 'East Sussex', slug: 'east-sussex', abbr: 'ESX' },
+  { name: 'Leicestershire', slug: 'leicestershire', abbr: 'LEI' },
+  { name: 'North Yorkshire', slug: 'north-yorkshire', abbr: 'NYK' },
+  { name: 'Bedfordshire', slug: 'bedfordshire', abbr: 'BDF' },
+] as const;
+
+/**
+ * Scotland regions/cities
+ */
+export const SCOTLAND_REGIONS = [
+  { name: 'Glasgow City', slug: 'glasgow-city', abbr: 'GLG' },
+  { name: 'City of Edinburgh', slug: 'city-of-edinburgh', abbr: 'EDH' },
+  { name: 'Aberdeen City', slug: 'aberdeen-city', abbr: 'ABD' },
+  { name: 'Dundee City', slug: 'dundee-city', abbr: 'DND' },
+  { name: 'Highland', slug: 'highland', abbr: 'HLD' },
+  { name: 'Stirling', slug: 'stirling', abbr: 'STG' },
+  { name: 'Renfrewshire', slug: 'renfrewshire', abbr: 'RFW' },
+] as const;
+
+/**
+ * Wales counties
+ */
+export const WALES_COUNTIES = [
+  { name: 'Cardiff', slug: 'cardiff', abbr: 'CDF' },
+  { name: 'Swansea', slug: 'swansea', abbr: 'SWA' },
+  { name: 'Newport', slug: 'newport', abbr: 'NWP' },
+  { name: 'Wrexham', slug: 'wrexham', abbr: 'WRX' },
+  { name: 'Vale of Glamorgan', slug: 'vale-of-glamorgan', abbr: 'VGL' },
+  { name: 'Powys', slug: 'powys', abbr: 'POW' },
+  { name: 'Carmarthenshire', slug: 'carmarthenshire', abbr: 'CMN' },
+  { name: 'Gwynedd', slug: 'gwynedd', abbr: 'GWN' },
+] as const;
+
+/**
+ * Northern Ireland counties
+ */
+export const NORTHERN_IRELAND_COUNTIES = [
+  { name: 'Belfast', slug: 'belfast', abbr: 'BFS' },
+  { name: 'Derry and Strabane', slug: 'derry-and-strabane', abbr: 'DER' },
+  { name: 'Lisburn and Castlereagh', slug: 'lisburn-and-castlereagh', abbr: 'LBC' },
+  { name: 'Newry, Mourne and Down', slug: 'newry-mourne-and-down', abbr: 'NMD' },
+  { name: 'Antrim and Newtownabbey', slug: 'antrim-and-newtownabbey', abbr: 'ANN' },
+  { name: 'Armagh City, Banbridge and Craigavon', slug: 'armagh-banbridge-craigavon', abbr: 'ABC' },
 ] as const;
 
 /**
  * Major cities for quick access / popular areas
+ * Priority UK cities for SEO - balanced coverage across nations
  */
 export const POPULAR_CITIES = [
+  // England - Major Cities
   { name: 'London', slug: 'london', region: 'england', county: 'greater-london' },
   { name: 'Birmingham', slug: 'birmingham', region: 'england', county: 'west-midlands' },
   { name: 'Manchester', slug: 'manchester', region: 'england', county: 'greater-manchester' },
@@ -71,21 +124,71 @@ export const POPULAR_CITIES = [
   { name: 'Plymouth', slug: 'plymouth', region: 'england', county: 'devon' },
   { name: 'Reading', slug: 'reading', region: 'england', county: 'berkshire' },
   { name: 'Norwich', slug: 'norwich', region: 'england', county: 'norfolk' },
+  // Additional England Cities
+  { name: 'Derby', slug: 'derby', region: 'england', county: 'derbyshire' },
+  { name: 'Hull', slug: 'hull', region: 'england', county: 'east-riding-of-yorkshire' },
+  { name: 'Portsmouth', slug: 'portsmouth', region: 'england', county: 'hampshire' },
+  { name: 'Luton', slug: 'luton', region: 'england', county: 'bedfordshire' },
+  { name: 'Milton Keynes', slug: 'milton-keynes', region: 'england', county: 'buckinghamshire' },
+  { name: 'Wolverhampton', slug: 'wolverhampton', region: 'england', county: 'west-midlands' },
+  { name: 'Sunderland', slug: 'sunderland', region: 'england', county: 'tyne-and-wear' },
+  { name: 'Walsall', slug: 'walsall', region: 'england', county: 'west-midlands' },
+  { name: 'Oldham', slug: 'oldham', region: 'england', county: 'greater-manchester' },
+  { name: 'Wigan', slug: 'wigan', region: 'england', county: 'greater-manchester' },
+  { name: 'Stoke-on-Trent', slug: 'stoke-on-trent', region: 'england', county: 'staffordshire' },
+  { name: 'Warrington', slug: 'warrington', region: 'england', county: 'cheshire' },
+  { name: 'Bradford', slug: 'bradford', region: 'england', county: 'west-yorkshire' },
+  { name: 'York', slug: 'york', region: 'england', county: 'north-yorkshire' },
+  { name: 'Salford', slug: 'salford', region: 'england', county: 'greater-manchester' },
+  { name: 'Blackpool', slug: 'blackpool', region: 'england', county: 'lancashire' },
+  { name: 'Exeter', slug: 'exeter', region: 'england', county: 'devon' },
+  { name: 'Colchester', slug: 'colchester', region: 'england', county: 'essex' },
+  { name: 'Chelmsford', slug: 'chelmsford', region: 'england', county: 'essex' },
+  { name: 'Maidstone', slug: 'maidstone', region: 'england', county: 'kent' },
+  // Scotland
+  { name: 'Glasgow', slug: 'glasgow', region: 'scotland', county: 'glasgow-city' },
+  { name: 'Edinburgh', slug: 'edinburgh', region: 'scotland', county: 'city-of-edinburgh' },
+  { name: 'Aberdeen', slug: 'aberdeen', region: 'scotland', county: 'aberdeen-city' },
+  { name: 'Dundee', slug: 'dundee', region: 'scotland', county: 'dundee-city' },
+  { name: 'Inverness', slug: 'inverness', region: 'scotland', county: 'highland' },
+  { name: 'Stirling', slug: 'stirling', region: 'scotland', county: 'stirling' },
+  { name: 'Paisley', slug: 'paisley', region: 'scotland', county: 'renfrewshire' },
+  // Wales
+  { name: 'Cardiff', slug: 'cardiff', region: 'wales', county: 'cardiff' },
+  { name: 'Swansea', slug: 'swansea', region: 'wales', county: 'swansea' },
+  { name: 'Newport', slug: 'newport', region: 'wales', county: 'newport' },
+  { name: 'Wrexham', slug: 'wrexham', region: 'wales', county: 'wrexham' },
+  { name: 'Barry', slug: 'barry', region: 'wales', county: 'vale-of-glamorgan' },
+  // Northern Ireland
+  { name: 'Belfast', slug: 'belfast', region: 'northern-ireland', county: 'belfast' },
+  { name: 'Derry', slug: 'derry', region: 'northern-ireland', county: 'derry-and-strabane' },
+  { name: 'Lisburn', slug: 'lisburn', region: 'northern-ireland', county: 'lisburn-and-castlereagh' },
+  { name: 'Newry', slug: 'newry', region: 'northern-ireland', county: 'newry-mourne-and-down' },
 ] as const;
 
 /**
- * Fostering categories
+ * Fostering categories / service types
  */
 export const FOSTERING_CATEGORIES = [
+  // Agency Types
   { name: 'Independent Fostering Agency', slug: 'independent-fostering-agency' },
   { name: 'Local Authority Fostering', slug: 'local-authority-fostering' },
+  // Primary Fostering Types
   { name: 'Emergency Fostering', slug: 'emergency-fostering' },
+  { name: 'Short-Term Fostering', slug: 'short-term-fostering' },
+  { name: 'Long-Term Fostering', slug: 'long-term-fostering' },
   { name: 'Respite Fostering', slug: 'respite-fostering' },
+  // Specialised Types
   { name: 'Parent & Child Fostering', slug: 'parent-and-child-fostering' },
   { name: 'Therapeutic Fostering', slug: 'therapeutic-fostering' },
-  { name: 'Long-Term Fostering', slug: 'long-term-fostering' },
-  { name: 'Short-Term Fostering', slug: 'short-term-fostering' },
+  { name: 'Sibling Fostering', slug: 'sibling-fostering' },
+  { name: 'Teenage Fostering', slug: 'teenage-fostering' },
   { name: 'Disability & Complex Needs', slug: 'disability-complex-needs-fostering' },
+  // Additional Types
+  { name: 'Kinship Fostering', slug: 'kinship-fostering' },
+  { name: 'Remand Fostering', slug: 'remand-fostering' },
+  { name: 'Specialist Fostering', slug: 'specialist-fostering' },
+  { name: 'UASC Fostering', slug: 'uasc-fostering' },
 ] as const;
 
 /**

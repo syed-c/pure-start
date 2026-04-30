@@ -25,7 +25,7 @@ import {
 const PAGE_SIZE = 20;
 
 const InsuranceDetailPage = () => {
-  const { insuranceSlug, emirateSlug, citySlug: urlCitySlug } = useParams();
+  const { insuranceSlug, regionSlug, citySlug: urlCitySlug } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const slug = insuranceSlug || "";
 
@@ -33,9 +33,9 @@ const InsuranceDetailPage = () => {
   const sortParam = searchParams.get("sort") as "rating" | "reviews" | "name" | null;
   const ratingParam = searchParams.get("rating");
 
-  // Use URL segments for location filtering
+  // Use URL segments for location filtering (support both old emirate and new region)
   const cityFilter = urlCitySlug || searchParams.get("city");
-  const stateFilter = emirateSlug || searchParams.get("state");
+  const stateFilter = regionSlug || searchParams.get("state");
 
   const [sortBy, setSortBy] = useState<"rating" | "reviews" | "name">(sortParam || "rating");
   const [minRating, setMinRating] = useState<number | undefined>(
@@ -55,24 +55,24 @@ const InsuranceDetailPage = () => {
     },
   });
 
-  // Fetch emirate data if URL segment present
-  const { data: emirateData } = useQuery({
-    queryKey: ["emirate-info", emirateSlug],
+  // Fetch region data if URL segment present
+  const { data: regionData } = useQuery({
+    queryKey: ["region-info", regionSlug],
     queryFn: async () => {
-      if (!emirateSlug) return null;
+      if (!regionSlug) return null;
       const { data } = await supabase
         .from("states")
         .select("id, name, slug, abbreviation")
-        .eq("slug", emirateSlug)
+        .eq("slug", regionSlug)
         .maybeSingle();
       return data;
     },
-    enabled: !!emirateSlug,
+    enabled: !!regionSlug,
   });
 
   // Fetch city data if URL segment present
   const { data: cityData } = useQuery({
-    queryKey: ["city-info", urlCitySlug, emirateSlug],
+    queryKey: ["city-info", urlCitySlug, regionSlug],
     queryFn: async () => {
       if (!urlCitySlug) return null;
       const { data } = await supabase
@@ -164,21 +164,21 @@ const InsuranceDetailPage = () => {
     if (insurance) {
       crumbs.push({ label: insurance.name, href: buildInsuranceUrl(insurance.slug) });
     }
-    if (emirateData) {
-      crumbs.push({ label: emirateData.name, href: buildInsuranceUrl(slug, emirateData.slug) });
+    if (regionData) {
+      crumbs.push({ label: regionData.name, href: buildInsuranceUrl(slug, regionData.slug) });
     }
     if (cityData) {
       const cityName = (cityData as any)?.name || urlCitySlug;
-      crumbs.push({ label: cityName, href: buildInsuranceUrl(slug, emirateSlug!, urlCitySlug!) });
+      crumbs.push({ label: cityName, href: buildInsuranceUrl(slug, regionSlug!, urlCitySlug!) });
     }
     return crumbs;
-  }, [insurance, emirateData, cityData, slug, emirateSlug, urlCitySlug]);
+  }, [insurance, regionData, cityData, slug, regionSlug, urlCitySlug]);
 
   // Location title suffix
   const locationSuffix = cityData
     ? ` in ${(cityData as any)?.name}`
-    : emirateData
-    ? ` in ${emirateData.name}`
+    : regionData
+    ? ` in ${regionData.name}`
     : "";
 
   if (insuranceLoading) {
@@ -213,7 +213,7 @@ const InsuranceDetailPage = () => {
     );
   }
 
-  const canonicalUrl = buildInsuranceUrl(insurance.slug, emirateSlug, urlCitySlug);
+  const canonicalUrl = buildInsuranceUrl(insurance.slug, regionSlug, urlCitySlug);
 
   return (
     <PageLayout>
@@ -288,7 +288,7 @@ const InsuranceDetailPage = () => {
                 <Link
                   to={buildInsuranceUrl(insurance.slug)}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                    !emirateSlug
+                    !regionSlug
                       ? "bg-primary text-primary-foreground"
                       : "bg-muted hover:bg-primary/10 hover:text-primary"
                   }`}
@@ -300,7 +300,7 @@ const InsuranceDetailPage = () => {
                     key={em.slug}
                     to={buildInsuranceUrl(insurance.slug, em.slug)}
                     className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                      emirateSlug === em.slug
+                      regionSlug === em.slug
                         ? "bg-primary text-primary-foreground"
                         : "bg-muted hover:bg-primary/10 hover:text-primary"
                     }`}
@@ -391,7 +391,7 @@ const InsuranceDetailPage = () => {
       <Section size="md">
         <InsuranceInternalLinks
           currentInsuranceSlug={insurance.slug}
-          currentStateSlug={emirateSlug}
+          currentStateSlug={regionSlug}
           currentCitySlug={urlCitySlug}
         />
       </Section>

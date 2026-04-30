@@ -10,7 +10,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ACTIVE_STATE_SLUGS } from '@/lib/constants/activeStates';
 import {
   AlertTriangle,
   Bot,
@@ -88,11 +87,11 @@ export default function GmbScraperBotTab() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   
-  // State selection - NOW SUPPORTS MULTIPLE STATES (active states only)
+  // State selection - GET ALL STATES FROM DB
   const { data: states } = useQuery({
-    queryKey: ['states-active'],
+    queryKey: ['states-all'],
     queryFn: async () => {
-      const { data } = await supabase.from('states').select('*').eq('is_active', true).in('slug', ACTIVE_STATE_SLUGS).order('name');
+      const { data } = await supabase.from('states').select('*').order('name');
       return data || [];
     },
   });
@@ -113,26 +112,27 @@ export default function GmbScraperBotTab() {
       if (selectedStateIds.length === 0) return [];
       const { data: citiesData } = await supabase
         .from('cities')
-        .select('*, state:states(id, name, abbreviation)')
+        .select('*, state:states(id, name, abbreviation, slug)')
         .in('state_id', selectedStateIds)
-        .eq('is_active', true)
         .order('name');
       if (!citiesData || citiesData.length === 0) return [];
 
-      // Fetch real clinic counts per city
+      // Fetch real agency counts per city
       const cityIds = citiesData.map(c => c.id);
-      const { data: clinicCounts } = await supabase
-        .from('clinics')
-        .select('city_id')
-        .in('city_id', cityIds)
-        .eq('is_active', true);
+      const { data: agencyCounts } = await supabase
+        .from('agencies')
+        .select('city')
+        .in('city', citiesData.map(c => c.name));
 
       const countMap = new Map<string, number>();
-      (clinicCounts || []).forEach((c: any) => {
-        countMap.set(c.city_id, (countMap.get(c.city_id) || 0) + 1);
+      (agencyCounts || []).forEach((a: any) => {
+        const cityName = a.city;
+        const cityObj = citiesData.find(c => c.name?.toLowerCase() === cityName?.toLowerCase());
+        if (cityObj) {
+          countMap.set(cityObj.id, (countMap.get(cityObj.id) || 0) + 1);
+        }
       });
 
-      // Override agency_count with real clinic count
       return citiesData.map(city => ({
         ...city,
         agency_count: countMap.get(city.id) || 0,
@@ -450,12 +450,15 @@ export default function GmbScraperBotTab() {
       }, runKey, 3, 500);
 
       if (data?.success) {
+        // Log debug info for debugging
+        console.log('GMB Import Result:', data);
         return {
           imported: (data.imported || 0) > 0,
           duplicate: (data.duplicates || 0) > 0,
         };
       }
 
+      console.log('GMB Import Error:', data);
       return { imported: false, duplicate: false, error: data?.error || 'Import failed' };
     } catch (err) {
       return {
@@ -648,7 +651,7 @@ export default function GmbScraperBotTab() {
       setResults(prev => [...prev]);
     }
     
-    queryClient.invalidateQueries({ queryKey: ['clinics'] });
+    queryClient.invalidateQueries({ queryKey: ['agencies'] });
     
     addLog('success', `\n🎉 Bot completed!`);
     addLog('success', `   Total found: ${totalFound}`);
@@ -694,7 +697,7 @@ export default function GmbScraperBotTab() {
       setStats({ totalFound: stats.totalFound, newFound: stats.totalFound - imported - duplicates, imported, duplicates, errors });
       await new Promise(r => setTimeout(r, 100));
     }
-    queryClient.invalidateQueries({ queryKey: ['clinics'] });
+    queryClient.invalidateQueries({ queryKey: ['agencies'] });
     addLog('success', `✅ Resume complete! Imported: ${imported}, Duplicates: ${duplicates}, Errors: ${errors}`);
     setIsRunning(false);
     toast.success('Import resumed and completed!');

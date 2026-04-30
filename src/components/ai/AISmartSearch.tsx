@@ -24,27 +24,26 @@ function generateExamples(city?: string, state?: string, service?: string): stri
   if (service && city) {
     // Service + Location page examples
     examples.push(`Affordable ${service.toLowerCase()} in ${city}`);
-    examples.push(`Best ${service.toLowerCase()} specialist near me`);
-    examples.push(`${service} under 2,000 AED`);
+    examples.push(`Best ${service.toLowerCase()} agency near me`);
     examples.push(`Emergency ${service.toLowerCase()} today`);
+    examples.push(`Ofsted rated ${service.toLowerCase()} ${city}`);
   } else if (city) {
     // City page examples
-    examples.push(`Teeth whitening in ${city}`);
-    examples.push(`Affordable dentist in ${city}`);
-    examples.push(`Emergency fostering care ${city}`);
-    examples.push(`Invisalign specialist near me`);
+    examples.push(`Fostering agencies in ${city}`);
+    examples.push(`Emergency fostering ${city}`);
+    examples.push(`Best fostering agency near me`);
+    examples.push(`Long-term fostering ${city}`);
   } else if (service) {
     // Service page examples
-    examples.push(`${service} under 3,000 AED`);
-    examples.push(`Best ${service.toLowerCase()} near me`);
-    examples.push(`${service} with financing options`);
-    examples.push(`Affordable ${service.toLowerCase()} in Dubai`);
+    examples.push(`Best ${service.toLowerCase()} agency UK`);
+    examples.push(`Ofsted rated ${service.toLowerCase()}`);
+    examples.push(`Find ${service.toLowerCase()} near me`);
   } else {
     // Homepage/generic examples
-    examples.push(`Dental implants under 4,000 AED`);
-    examples.push(`Affordable dentist near me`);
-    examples.push(`Emergency tooth extraction today`);
-    examples.push(`Teeth whitening in Dubai`);
+    examples.push(`Emergency fostering near me`);
+    examples.push(`Best fostering agency London`);
+    examples.push(`Long-term fostering Manchester`);
+    examples.push(`Therapeutic fostering Birmingham`);
   }
   
   return examples.slice(0, 4);
@@ -171,7 +170,7 @@ export function AISmartSearch({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onFocus={() => results.length > 0 && setShowResults(true)}
-              placeholder="e.g., cleaning under 500 AED in Dubai..."
+              placeholder="e.g., emergency fostering London..."
               className="h-12 md:h-14 pl-10 md:pl-12 pr-10 md:pr-12 text-sm md:text-base rounded-xl md:rounded-2xl border-border bg-muted/30 focus-visible:ring-primary"
             />
             <div className="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
@@ -266,12 +265,6 @@ export function AISmartSearch({
                     <Badge variant="outline" className="gap-1">
                       <MapPin className="h-3 w-3" />
                       {response.intent.location.city}
-                    </Badge>
-                  )}
-                  {response.intent.budget.max && (
-                    <Badge variant="outline" className="gap-1">
-                      <Banknote className="h-3 w-3" />
-                      Under {response.intent.budget.max.toLocaleString()} AED
                     </Badge>
                   )}
                   {response.intent.insurance && (

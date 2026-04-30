@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, supabaseAdmin } from '@/integrations/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -58,30 +58,27 @@ export default function EmergencyFosteringFinder() {
     },
   });
 
-  const { data: clinics, isLoading } = useQuery({
-    queryKey: ['emergency-clinics', stateId, cityId],
+  const { data: agencies, isLoading } = useQuery({
+    queryKey: ['emergency-agencies', stateId, cityId],
     queryFn: async () => {
-      let query = supabase
-        .from('clinics')
-        .select(`
-          id, name, slug, address, phone, rating, review_count, city_id,
-          cities(name, states(abbreviation))
-        `)
-        .eq('is_active', true)
+      let query = supabaseAdmin
+        .from('agencies')
+        .select(`*`)
         .not('phone', 'is', null);
 
       if (cityId) {
-        query = query.eq('city_id', cityId);
-      } else if (stateId) {
-        query = query.eq('cities.state_id', stateId);
+        const { data: cityData } = await supabaseAdmin.from('cities').select('name').eq('id', cityId).maybeSingle();
+        if (cityData?.name) {
+          query = query.ilike('city', `%${cityData.name}%`);
+        }
       }
 
       const { data } = await query.limit(30);
 
-      return (data || []).map((clinic: any) => ({
-        ...clinic,
-        cityName: clinic.cities?.name || '',
-        stateAbbr: clinic.cities?.states?.abbreviation || '',
+      return (data || []).map((agency: any) => ({
+        ...agency,
+        cityName: agency.city || '',
+        stateAbbr: agency.state || '',
       })).sort((a: any, b: any) => (b.rating || 0) - (a.rating || 0));
     },
     enabled: searchTriggered,
@@ -182,41 +179,41 @@ export default function EmergencyFosteringFinder() {
       {searchTriggered && (
         <Section size="md">
           <div className="max-w-4xl mx-auto space-y-8">
-            {clinics && clinics.length > 0 ? (
+            {agencies && agencies.length > 0 ? (
               <div>
                 <h2 className="font-display text-xl font-bold mb-4 flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-emerald" />
-                  Agencies Found ({clinics.length})
+                  Agencies Found ({agencies.length})
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {clinics.map((clinic: any) => (
-                    <Card key={clinic.id} className="rounded-2xl hover:border-primary/30 transition-all">
+                  {agencies.map((agency: any) => (
+                    <Card key={agency.id} className="rounded-2xl hover:border-primary/30 transition-all">
                       <CardContent className="p-5">
                         <div className="flex items-start justify-between mb-3">
                           <div>
-                            <h3 className="font-bold text-base">{clinic.name}</h3>
+                            <h3 className="font-bold text-base">{agency.name}</h3>
                             <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
                               <MapPin className="h-3 w-3" />
-                              {clinic.cityName}{clinic.stateAbbr ? `, ${clinic.stateAbbr}` : ''}
+                              {agency.cityName}{agency.stateAbbr ? `, ${agency.stateAbbr}` : ''}
                             </p>
                           </div>
-                          {clinic.rating && (
+                          {agency.rating && (
                             <div className="flex items-center gap-1 text-sm">
                               <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                              <span className="font-bold">{clinic.rating.toFixed(1)}</span>
+                              <span className="font-bold">{agency.rating.toFixed(1)}</span>
                             </div>
                           )}
                         </div>
                         <div className="flex gap-2 mt-3">
-                          {clinic.phone && (
+                          {agency.phone && (
                             <Button size="sm" variant="outline" className="rounded-lg flex-1" asChild>
-                              <a href={`tel:${clinic.phone}`}>
+                              <a href={`tel:${agency.phone}`}>
                                 <Phone className="h-3.5 w-3.5 mr-1" /> Call
                               </a>
                             </Button>
                           )}
                           <Button size="sm" className="rounded-lg flex-1" asChild>
-                            <Link to={`/agency/${clinic.slug || clinic.id}`}>
+                            <Link to={`/agency/${agency.slug || agency.id}`}>
                               View Profile <ArrowRight className="h-3.5 w-3.5 ml-1" />
                             </Link>
                           </Button>

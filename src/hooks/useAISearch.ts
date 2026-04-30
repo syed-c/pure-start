@@ -117,7 +117,7 @@ export function useAISearch(options: UseAISearchOptions = {}) {
       }
 
       const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-search`,
+        `${import.meta.env.VITE_SUPABASE_URL ?? "https://vcvvtklbyvdbysfdbnfp.supabase.co"}/functions/v1/ai-search`,
         {
           method: "POST",
           headers: {
@@ -162,7 +162,7 @@ export function useAISearch(options: UseAISearchOptions = {}) {
   const logClick = useCallback(async (resultId: string) => {
     try {
       await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-search`,
+        `${import.meta.env.VITE_SUPABASE_URL ?? "https://vcvvtklbyvdbysfdbnfp.supabase.co"}/functions/v1/ai-search`,
         {
           method: "PATCH",
           headers: {

@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
-import { Filter, Star, Banknote, Stethoscope, X, ChevronDown, Sparkles } from "lucide-react";
+import { Filter, Star, X, ChevronDown, Sparkles, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -36,20 +36,14 @@ interface SearchFiltersProps {
   variant?: "light" | "dark";
 }
 
-const BUDGET_OPTIONS = [
-  { label: "Any", value: null },
-  { label: "Under 500 AED", value: 500 },
-  { label: "Under 1,000 AED", value: 1000 },
-  { label: "Under 2,500 AED", value: 2500 },
-  { label: "Under 5,000 AED", value: 5000 },
-];
-
 const RATING_OPTIONS = [
   { label: "Any Rating", value: 0 },
   { label: "3+ Stars", value: 3 },
   { label: "4+ Stars", value: 4 },
   { label: "4.5+ Stars", value: 4.5 },
 ];
+
+// Foster care doesn't use budget filters - removed AED references
 
 export function SearchFilters({
   filters,
@@ -131,30 +125,6 @@ export function SearchFilters({
               )}
             >
               {option.value > 0 && <Star className="h-3 w-3 mr-1 fill-current" />}
-              {option.label}
-            </Button>
-          ))}
-        </div>
-      </div>
-
-      {/* Budget Filter */}
-      <div>
-        <label className={cn("text-sm font-bold mb-3 block", isDark ? "text-white" : "text-foreground")}>
-          Budget Range
-        </label>
-        <div className="flex flex-wrap gap-2">
-          {BUDGET_OPTIONS.map((option) => (
-            <Button
-              key={option.value ?? "any"}
-              variant={filters.maxBudget === option.value ? "default" : "outline"}
-              size="sm"
-              onClick={() => handleBudgetChange(option.value)}
-              className={cn(
-                "rounded-full",
-                filters.maxBudget !== option.value && baseBtn
-              )}
-            >
-              <Banknote className="h-3 w-3 mr-1" />
               {option.label}
             </Button>
           ))}
@@ -268,49 +238,24 @@ export function SearchFilters({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Budget Dropdown */}
+        {/* Fostering Types Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className={cn("rounded-2xl font-bold", baseBtn)}>
-              <Banknote className="h-4 w-4 mr-2" />
-              {filters.maxBudget ? `Under ${filters.maxBudget.toLocaleString()} AED` : "Budget"}
+              <Heart className="h-4 w-4 mr-2" />
+              Fostering Type
+              {filters.services.length > 0 && (
+                <Badge variant="default" className="ml-2 h-5 min-w-5 p-0 px-1 flex items-center justify-center text-xs">
+                  {filters.services.length}
+                </Badge>
+              )}
               <ChevronDown className="h-4 w-4 ml-2" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-48">
-            <DropdownMenuLabel>Max Budget</DropdownMenuLabel>
+          <DropdownMenuContent align="start" className="w-56 max-h-64 overflow-y-auto">
+            <DropdownMenuLabel>Select Fostering Type</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            {BUDGET_OPTIONS.map((option) => (
-              <DropdownMenuCheckboxItem
-                key={option.value ?? "any"}
-                checked={filters.maxBudget === option.value}
-                onCheckedChange={() => handleBudgetChange(option.value)}
-              >
-                {option.label}
-              </DropdownMenuCheckboxItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        {/* Services Dropdown */}
-        {availableServices.length > 0 && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className={cn("rounded-2xl font-bold", baseBtn)}>
-                <Stethoscope className="h-4 w-4 mr-2" />
-                Services
-                {filters.services.length > 0 && (
-                  <Badge variant="default" className="ml-2 h-5 min-w-5 p-0 px-1 flex items-center justify-center text-xs">
-                    {filters.services.length}
-                  </Badge>
-                )}
-                <ChevronDown className="h-4 w-4 ml-2" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56 max-h-64 overflow-y-auto">
-              <DropdownMenuLabel>Select Services</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {availableServices.map((service) => (
+            {availableServices.map((service) => (
                 <DropdownMenuCheckboxItem
                   key={service.id}
                   checked={filters.services.includes(service.slug)}
@@ -321,7 +266,6 @@ export function SearchFilters({
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-        )}
 
         {/* Verified Toggle */}
         <Button

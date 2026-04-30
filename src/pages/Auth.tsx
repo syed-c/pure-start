@@ -15,8 +15,10 @@ import { Loader2 } from 'lucide-react';
 const emailSchema = z.string().email('Please enter a valid email address');
 const passwordSchema = z.string().min(6, 'Password must be at least 6 characters');
 
+import { AppRole } from '@/types/database';
+
 export default function Auth() {
-  const { user, roles, signIn, signUp, isLoading } = useAuth();
+  const { user, profile, signIn, signUp, isLoading } = useAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
@@ -30,40 +32,30 @@ export default function Auth() {
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
   const [signupName, setSignupName] = useState('');
+  const [signupRole, setSignupRole] = useState<AppRole>('applicant');
+
+  const role = profile?.role;
 
   useEffect(() => {
-    // Wait for auth to finish loading AND ensure user exists
-    if (isLoading || !user || hasRedirected) return;
+    // If user is logged in, redirect to dashboard
+    if (user && !hasRedirected) {
+      // Check if there's an active GMB flow - don't redirect if so
+      const isGmbFlow = localStorage.getItem('gmb_listing_flow') === 'true' ||
+                        localStorage.getItem('gmb_relink_flow') === 'true' ||
+                        localStorage.getItem('gmb_pending') === 'true' ||
+                        localStorage.getItem('gmb_restore_session') === 'true';
+      
+      if (isGmbFlow) {
+        console.log('[Auth] GMB flow in progress, not redirecting');
+        return;
+      }
 
-    // Check if there's an active GMB flow - don't redirect if so
-    const isGmbFlow = localStorage.getItem('gmb_listing_flow') === 'true' ||
-                      localStorage.getItem('gmb_relink_flow') === 'true' ||
-                      localStorage.getItem('gmb_pending') === 'true' ||
-                      localStorage.getItem('gmb_restore_session') === 'true';
-    
-    if (isGmbFlow) {
-      console.log('[Auth] GMB flow in progress, not redirecting');
-      return;
-    }
-
-    // Redirect authenticated users away from auth page
-    setHasRedirected(true);
-
-    const isSuperAdmin = roles.includes('super_admin') || roles.includes('district_manager');
-    const isAdmin = isSuperAdmin || roles.some(r => ['seo_team', 'content_team', 'marketing_team', 'support_team'].includes(r));
-    const isDentist = roles.includes('dentist');
-
-    // SuperAdmins go directly to /admin - no delays, no onboarding
-    if (isSuperAdmin || isAdmin) {
+      setHasRedirected(true);
+      // Redirect to /admin for all authenticated users (super admins and staff)
+      // The AdminDashboard will handle the routing internally
       navigate('/admin', { replace: true });
-    } else if (isDentist) {
-      // Agencies go to their dashboard
-      navigate('/dashboard?tab=my-dashboard', { replace: true });
-    } else {
-      // User has no specific role or unrecognised role - go to home
-      navigate('/', { replace: true });
     }
-  }, [user, roles, isLoading, navigate, hasRedirected]);
+  }, [user, navigate, hasRedirected]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,7 +96,7 @@ export default function Auth() {
     }
 
     setIsSubmitting(true);
-    const { error } = await signUp(signupEmail, signupPassword, signupName);
+    const { error } = await signUp(signupEmail, signupPassword, signupName, signupRole);
     setIsSubmitting(false);
 
     if (error) {
@@ -250,10 +242,23 @@ export default function Auth() {
                   <Input
                     id="signup-name"
                     type="text"
-                    placeholder="Dr. John Smith"
+                    placeholder="John Smith"
                     value={signupName}
                     onChange={(e) => setSignupName(e.target.value)}
                   />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="signup-role">I am a...</Label>
+                  <select
+                    id="signup-role"
+                    className="w-full h-10 px-3 rounded-md border bg-background text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                    value={signupRole}
+                    onChange={(e) => setSignupRole(e.target.value as AppRole)}
+                  >
+                    <option value="applicant">Prospective Foster Carer (Applicant)</option>
+                    <option value="trainer">Training Provider</option>
+                    <option value="local_authority">Local Authority User</option>
+                  </select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-email">Email</Label>

@@ -124,6 +124,9 @@ export interface PlaceSchemaData {
   url: string;
   geo?: { lat: number; lng: number };
   containedInPlace?: string;
+  addressLocality?: string;
+  addressRegion?: string;
+  addressCountry?: string;
 }
 
 export type SyncSchemaData =
@@ -397,8 +400,9 @@ const generatePlaceSchema = (data: PlaceSchemaData) => ({
   }),
   address: {
     '@type': 'PostalAddress',
-    addressLocality: data.name,
-    addressCountry: 'AE',
+    addressLocality: data.addressLocality || data.name,
+    addressRegion: data.addressRegion,
+    addressCountry: data.addressCountry || 'GB',
   },
 });
 

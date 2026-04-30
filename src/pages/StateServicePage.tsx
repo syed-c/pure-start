@@ -1,12 +1,12 @@
 /**
- * StateServicePage - Emirate-level service page
- * Renders when URL is /{emirate}/{service}/ (e.g., /dubai/teeth-whitening/)
- * Shows all clinics offering that service across the entire emirate.
+ * StateServicePage - Region-level fostering type page
+ * Renders when URL is /{region}/{fostering-type}/ (e.g., /london/emergency-fostering/)
+ * Shows all agencies offering that fostering type across the entire region.
  */
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, supabaseAdmin } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
 import { SearchBox } from "@/components/SearchBox";
@@ -19,7 +19,6 @@ import { Badge } from "@/components/ui/badge";
 import { useCitiesByStateSlug } from "@/hooks/useLocations";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
 import { normalizeStateSlug } from "@/lib/slug/normalizeStateSlug";
-import { useServicePriceRanges } from "@/hooks/useServicePriceRanges";
 import { RichContentSections } from "@/components/seo/RichContentSections";
 import {
   Accordion,
@@ -27,29 +26,26 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Users, Star, Clock, Stethoscope } from "lucide-react";
+import { Users, Star, Clock, Heart } from "lucide-react";
 
 interface StateServicePageProps {
   stateSlug: string;
   serviceSlug: string;
   stateName: string;
   stateId: string;
-  treatment: { id: string; name: string; slug: string; description?: string | null };
+  fosteringType: { id: string; name: string; slug: string; description?: string | null };
 }
 
-const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatment }: StateServicePageProps) => {
+const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, fosteringType }: StateServicePageProps) => {
   const normalizedStateSlug = normalizeStateSlug(stateSlug);
-  const treatmentName = treatment.name;
+  const treatmentName = fosteringType.name;
 
   // Fetch cities for this state
   const { data: cities, isLoading: citiesLoading } = useCitiesByStateSlug(normalizedStateSlug || '');
 
-  // Fetch price ranges for this service
-  const { data: priceRanges } = useServicePriceRanges(serviceSlug);
-
-  // Fetch clinics offering this service across the state
+  // Fetch agencies offering this fostering type across the state
   const { data: profiles, isLoading: profilesLoading } = useQuery({
-    queryKey: ['state-service-profiles', stateId, treatment.id],
+    queryKey: ['state-service-profiles', stateId, fosteringType.id],
     queryFn: async () => {
       // Get city IDs for this state
       const { data: stateCities } = await supabase
@@ -61,42 +57,37 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
       if (!stateCities?.length) return [];
       const cityIds = stateCities.map(c => c.id);
 
-      // Get clinics in these cities
-      const { data: clinics } = await supabase
-        .from('clinics')
-        .select(`
-          id, name, slug, description, cover_image_url, rating, review_count,
-          address, phone, verification_status, claim_status,
-          city:cities(name, slug, state:states(name, abbreviation))
-        `)
-        .in('city_id', cityIds)
-        .eq('is_active', true)
+      // Get agencies in these cities
+      const { data: agencies } = await supabaseAdmin
+        .from('agencies')
+        .select(`*`)
+        .in('city', stateCities.map(c => c.name))
         .order('rating', { ascending: false })
         .limit(50);
 
-      return (clinics || []).map(c => ({
+      return (agencies || []).map((c: any) => ({
         id: c.id,
         name: c.name,
         slug: c.slug,
-        type: 'clinic' as const,
+        type: 'agency' as const,
         specialty: treatmentName,
-        location: c.city ? `${c.city.name}, ${c.city.state?.name || ''}` : '',
+        location: c.city ? `${c.city}, ${c.state || ''}` : '',
         rating: c.rating || 0,
         reviewCount: c.review_count || 0,
-        image: c.cover_image_url,
-        isVerified: c.verification_status === 'verified',
-        isClaimed: c.claim_status === 'claimed',
+        image: c.image_url || c.cover_image_url || undefined,
+        isVerified: c.is_verified === true,
+        isClaimed: c.is_claimed === true,
         isPinned: false,
       }));
     },
-    enabled: !!stateId && !!treatment.id,
+    enabled: !!stateId && !!fosteringType.id,
   });
 
   const isDataReady = !profilesLoading && !citiesLoading;
   usePrerenderReady(isDataReady, { delay: 600 });
 
-  const pageTitle = `${treatmentName} in ${stateName} - Best Clinics & Prices (AED)`;
-  const pageDescription = `Find the best ${treatmentName.toLowerCase()} clinics in ${stateName}. Compare ${profiles?.length || 0}+ verified providers, prices in AED, and book appointments online.`;
+  const pageTitle = `${treatmentName} in ${stateName} - Ofsted Rated Agencies`;
+  const pageDescription = `Find the best ${treatmentName.toLowerCase()} agencies in ${stateName}. Compare ${profiles?.length || 0}+ Ofsted-rated providers and connect with them directly.`;
 
   const breadcrumbs = [
     { label: "Home", href: "/" },
@@ -104,30 +95,22 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
     { label: treatmentName },
   ];
 
-  // Get price range for this emirate
-  const emiratePrice = priceRanges?.find(p => {
-    const state = (p as any).state;
-    return state?.slug === normalizedStateSlug;
-  });
-
   const faqs = [
     {
-      q: `How much does ${treatmentName} cost in ${stateName}?`,
-      a: emiratePrice
-        ? `${treatmentName} in ${stateName} typically costs between AED ${(emiratePrice as any).min_price?.toLocaleString()} and AED ${(emiratePrice as any).max_price?.toLocaleString()}. Prices vary by clinic, location, and complexity.`
-        : `${treatmentName} costs in ${stateName} vary by clinic and complexity. We recommend booking a consultation for an accurate AED quote.`,
+      q: `How do I find ${treatmentName.toLowerCase()} agencies in ${stateName}?`,
+      a: `Our directory features ${profiles?.length || 0}+ verified ${treatmentName.toLowerCase()} agencies across ${stateName}. Browse our directory above to compare Ofsted ratings and connect directly with agencies.`,
     },
     {
-      q: `Where can I find ${treatmentName} specialists in ${stateName}?`,
-      a: `We list ${profiles?.length || 0}+ verified ${treatmentName.toLowerCase()} specialists across ${stateName}. Browse our directory above to compare ratings and book appointments.`,
+      q: `What is ${treatmentName.toLowerCase()}?`,
+      a: `${treatmentName} provides specialised care for children with specific needs. Contact agencies directly to learn more about their specific offerings and whether it's right for your family.`,
     },
     {
-      q: `Does insurance cover ${treatmentName} in ${stateName}?`,
-      a: `Many dental insurance plans in the UAE cover ${treatmentName.toLowerCase()} partially or fully. Coverage varies by provider — use our insurance filter to check compatibility.`,
+      q: `How much does fostering pay in ${stateName}?`,
+      a: `Fostering allowances vary by agency and the child's needs. The national minimum allowance ranges from £132-£187 per week, but many independent agencies offer enhanced rates above the minimum.`,
     },
     {
-      q: `How do I choose the best ${treatmentName} clinic in ${stateName}?`,
-      a: `Compare clinic ratings, patient reviews, pricing, and insurance acceptance. Look for the "Verified" badge for extra assurance of quality.`,
+      q: `How do I choose the best ${treatmentName.toLowerCase()} agency in ${stateName}?`,
+      a: `Compare Ofsted ratings, read reviews from current foster carers, and consider the support and training each agency offers. Look for the "Verified" badge for extra assurance of quality.`,
     },
   ];
 
@@ -142,7 +125,7 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
         title={pageTitle}
         description={pageDescription}
         canonical={`/${normalizedStateSlug}/${serviceSlug}/`}
-        keywords={[`${treatmentName} ${stateName}`, `${treatmentName} cost ${stateName}`, `best ${treatmentName} clinic ${stateName}`]}
+        keywords={[`${treatmentName} ${stateName}`, `${treatmentName} agency ${stateName}`, `best ${treatmentName} agency ${stateName}`]}
       />
       <SyncStructuredData
         data={[
@@ -163,7 +146,7 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
             name: `${treatmentName} in ${stateName}`,
             description: pageDescription,
             url: `/${normalizedStateSlug}/${serviceSlug}/`,
-            provider: 'Foster Care',
+            provider: 'Foster Care UK',
             areaServed: stateName,
           },
         ]}
@@ -185,8 +168,8 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
           <div className="max-w-4xl mx-auto text-center">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
               <Badge variant="secondary" className="rounded-full px-4 py-1.5 text-xs md:text-sm font-bold mb-4 bg-primary/15 text-primary border-primary/30 backdrop-blur-md">
-                <Stethoscope className="h-3 w-3 md:h-4 md:w-4 mr-1.5" />
-                {stateName} Specialists
+                <Heart className="h-3 w-3 md:h-4 md:w-4 mr-1.5" />
+                {stateName} Agencies
               </Badge>
             </motion.div>
 
@@ -207,8 +190,7 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
               transition={{ delay: 0.2 }}
               className="text-sm md:text-base lg:text-lg text-white/40 max-w-2xl mx-auto mb-5 px-2"
             >
-              Compare {profiles?.length || 0}+ verified {treatmentName.toLowerCase()} clinics across {stateName}.
-              {emiratePrice && (emiratePrice as any).min_price && (emiratePrice as any).max_price && ` Prices range from AED ${(emiratePrice as any).min_price?.toLocaleString()} to AED ${(emiratePrice as any).max_price?.toLocaleString()}.`}
+              Compare {profiles?.length || 0}+ Ofsted-rated {treatmentName.toLowerCase()} agencies across {stateName}.
             </motion.p>
 
             <motion.div
@@ -228,7 +210,7 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
             >
               <div className="flex items-center gap-1.5 bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-xl px-3 py-2">
                 <Users className="h-4 w-4 text-primary" />
-                <span className="font-bold text-sm text-white">{profiles?.length || 0}+ Clinics</span>
+                <span className="font-bold text-sm text-white">{profiles?.length || 0}+ Agencies</span>
               </div>
               <div className="flex items-center gap-1.5 bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-xl px-3 py-2">
                 <Star className="h-4 w-4 text-gold fill-gold" />
@@ -236,7 +218,7 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
               </div>
               <div className="flex items-center gap-1.5 bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-xl px-3 py-2">
                 <Clock className="h-4 w-4 text-primary" />
-                <span className="font-bold text-sm text-white">Book in 60s</span>
+                <span className="font-bold text-sm text-white">Connect Today</span>
               </div>
             </motion.div>
           </div>
@@ -253,8 +235,8 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
       <Section size="md">
         <div className="max-w-4xl mx-auto">
           <p className="text-muted-foreground leading-relaxed">
-            Looking for <strong>{treatmentName.toLowerCase()}</strong> in {stateName}? Our directory features {profiles?.length || 0}+ verified fostering agencys offering {treatmentName.toLowerCase()} across {stateName}. 
-            Compare prices, read patient reviews, and book your appointment online. Whether you're in{' '}
+            Looking for <strong>{treatmentName.toLowerCase()}</strong> in {stateName}? Our directory features {profiles?.length || 0}+ Ofsted-rated fostering agencies offering {treatmentName.toLowerCase()} across {stateName}. 
+            Read reviews from current foster carers, compare ratings, and connect directly with agencies. Whether you're in{' '}
             {cityLinks.slice(0, 3).map((c, i) => (
               <span key={c.slug}>
                 <Link to={`/${normalizedStateSlug}/${c.slug}/${serviceSlug}/`} className="text-primary hover:underline font-medium">{c.name}</Link>
@@ -266,7 +248,7 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
         </div>
       </Section>
 
-      {/* Clinic Listings */}
+      {/* Agency Listings */}
       <Section size="lg">
         <div className="container px-4">
           <div className="max-w-5xl mx-auto">
@@ -274,7 +256,7 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
               profiles={profiles || []}
               isLoading={profilesLoading}
               locationName={stateName}
-              emptyMessage={`We're adding ${treatmentName.toLowerCase()} specialists in ${stateName}. Check back soon!`}
+              emptyMessage={`We're adding ${treatmentName.toLowerCase()} agencies in ${stateName}. Check back soon!`}
               maxHeight={700}
               initialCount={10}
             />
@@ -290,7 +272,7 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, treatmen
               <span className="text-primary">{treatmentName}</span> by Area in {stateName}
             </h2>
             <p className="text-muted-foreground mb-6">
-              Find {treatmentName.toLowerCase()} clinics in specific areas across {stateName}:
+              Find {treatmentName.toLowerCase()} agencies in specific areas across {stateName}:
             </p>
             <div className="flex flex-wrap gap-x-1 gap-y-1.5">
               {cityLinks.map((city, i) => (

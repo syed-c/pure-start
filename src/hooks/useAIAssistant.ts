@@ -35,7 +35,7 @@ export function useAIAssistant({ clinicId, onError }: UseAIAssistantOptions = {}
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-assistant`,
+        `${import.meta.env.VITE_SUPABASE_URL ?? "https://vcvvtklbyvdbysfdbnfp.supabase.co"}/functions/v1/ai-assistant`,
         {
           method: 'POST',
           headers: {

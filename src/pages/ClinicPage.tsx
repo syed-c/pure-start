@@ -14,16 +14,14 @@ import { SEOHead } from "@/components/seo/SEOHead";
 import { SyncStructuredData } from "@/components/seo/SyncStructuredData";
 import { InterlinkingSection } from "@/components/seo/InterlinkingSection";
 import { RelatedClinicsBlock } from "@/components/seo/RelatedClinicsBlock";
-import { MultiStepBookingModal } from "@/components/MultiStepBookingModal";
 import { useSeoPageContent, parseMarkdownContent, parseFaqFromContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
 import {
-  ClinicStickyBooking,
-  ClinicTeamSection,
   ClaimProfileCTA,
   ClinicGallery,
-  ClinicReviewsSection,
 } from "@/components/clinic";
+import { AgencyStickyContact } from "@/components/fostering/AgencyStickyContact";
+import { AgencyReviewsSection } from "@/components/fostering/AgencyReviewsSection";
 import {
   Star,
   BadgeCheck,
@@ -36,18 +34,21 @@ import {
   Phone,
   Globe,
   AlertTriangle,
-  Percent
+  Percent,
+  HandHeart,
+  Shield,
+  Clock,
+  CheckCircle
 } from "lucide-react";
 import { AIMatchBadge } from "@/components/ai";
-import { TrustSignalStrip, AEDPricingDisplay } from "@/components/healthcare";
+import { TrustSignalStrip } from "@/components/fostering/TrustSignalStrip";
 import { ConversationalQABlock, AIDiscoveryMeta } from "@/components/ai-seo";
 import { generateClinicQA } from "@/lib/ai-seo/generateQAContent";
 
 const ClinicPage = () => {
-  const { clinicSlug } = useParams();
-  const slug = clinicSlug || "";
-  const [bookingOpen, setBookingOpen] = useState(false);
-  const [selectedDentistId, setSelectedDentistId] = useState<string | undefined>();
+  const { agencySlug } = useParams();
+  const slug = agencySlug || "";
+  const [enquiryOpen, setEnquiryOpen] = useState(false);
   const { trackProfileView } = useAnalytics();
 
   const seoSlug = `clinic/${slug}`;
@@ -57,16 +58,21 @@ const ClinicPage = () => {
     ? seoContent.faqs
     : seoContent?.content ? parseFaqFromContent(seoContent.content) : [];
 
-  const { data: clinic, isLoading, error } = useQuery({
+  const { data: clinic, isLoading, error } = useQuery<any>({
     queryKey: ["clinic", slug],
     queryFn: async () => {
       if (!slug || slug.includes('/')) return null;
+      
       const { data, error } = await supabase
-        .from("clinics")
-        .select("*, city:cities(name, slug, state:states(name, slug, abbreviation)), area:areas(name, slug)")
+        .from("agencies")
+        .select("*")
         .eq("slug", slug)
         .maybeSingle();
-      if (error) throw error;
+      
+      if (error) {
+        console.error('Error fetching agency:', error);
+        return null;
+      }
       return data;
     },
     enabled: !!slug && !slug.includes('/'),
@@ -75,15 +81,8 @@ const ClinicPage = () => {
   const { data: teamMembers } = useQuery({
     queryKey: ["agency-team", clinic?.id],
     queryFn: async () => {
-      if (!clinic?.id) return [];
-      const { data } = await supabase
-        .from("dentists")
-        .select("*")
-        .eq("clinic_id", clinic.id)
-        .eq("is_active", true)
-        .order("is_primary", { ascending: false })
-        .order("name");
-      return data || [];
+      // No team members for agencies in this version
+      return [];
     },
     enabled: !!clinic?.id,
   });
@@ -158,18 +157,32 @@ const ClinicPage = () => {
     queryFn: async () => {
       if (!clinic?.id) return [];
       const { data } = await supabase
-        .from("clinic_hours")
+        .from("agency_opening_hours")
         .select("*")
-        .eq("clinic_id", clinic.id)
+        .eq("agency_id", clinic.id)
         .order("day_of_week");
       return data || [];
     },
     enabled: !!clinic?.id,
   });
 
-  const handleBookClick = (teamMemberId?: string) => {
-    setSelectedDentistId(teamMemberId);
-    setBookingOpen(true);
+  const { data: agencyReviews } = useQuery({
+    queryKey: ["agency-reviews", clinic?.id],
+    queryFn: async () => {
+      if (!clinic?.id) return [];
+      const { data } = await supabase
+        .from("agency_reviews")
+        .select("*")
+        .eq("agency_id", clinic.id)
+        .order("created_at", { ascending: false })
+        .limit(20);
+      return data || [];
+    },
+    enabled: !!clinic?.id,
+  });
+
+  const handleEnquiryClick = () => {
+    setEnquiryOpen(true);
   };
 
   useEffect(() => {
@@ -227,25 +240,26 @@ const ClinicPage = () => {
     );
   }
 
-  const isClaimed = clinic.claim_status === "claimed";
-  const isVerified = clinic.verification_status === "verified" && isClaimed;
-  const isGmbConnected = clinic.gmb_connected === true;
-  const stateSlug = clinic.city?.state?.slug || '';
+  const isClaimed = (clinic as any).is_claimed === true;
+  const isVerified = (clinic as any).is_verified === true;
+  const isGmbConnected = false;
+  const agencyCity = (clinic as any).city || '';
+  const agencyState = (clinic as any).state || '';
   
   const breadcrumbs = [
     { label: "Agencies", href: "/search" },
-    ...(clinic.city?.state ? [{ label: clinic.city.state.name, href: `/${clinic.city.state.slug}` }] : []),
-    ...(clinic.city ? [{ label: clinic.city.name, href: `/${stateSlug}/${clinic.city.slug}` }] : []),
+    ...(agencyState ? [{ label: agencyState, href: `/${agencyState.toLowerCase().replace(/ /g, '-')}` }] : []),
+    ...(agencyCity ? [{ label: agencyCity, href: `/${agencyState.toLowerCase().replace(/ /g, '-')}/${agencyCity.toLowerCase().replace(/ /g, '-')}` }] : []),
     { label: clinic.name },
   ];
 
   return (
     <PageLayout>
       <SEOHead
-        title={seoContent?.meta_title || `${clinic.name} - Fostering Agency in ${clinic.city?.name || 'UK'}`}
-        description={seoContent?.meta_description || clinic.description || `Learn about ${clinic.name}. ${isVerified ? 'Verified' : ''} fostering agency in ${clinic.city?.name || 'UK'}.`}
+        title={seoContent?.meta_title || `${clinic.name} - Fostering Agency in ${agencyCity || 'UK'}`}
+        description={seoContent?.meta_description || `Learn about ${clinic.name}. ${isVerified ? 'Verified' : ''} fostering agency in ${agencyCity || 'UK'}.`}
         canonical={`/agency/${clinic.slug}/`}
-        keywords={[clinic.name, `fostering agency ${clinic.city?.name}`, `foster care ${clinic.city?.state?.abbreviation || 'UK'}`]}
+        keywords={[clinic.name, `fostering agency ${agencyCity}`, `foster care ${agencyState || 'UK'}`]}
       />
       <SyncStructuredData
         data={[
@@ -253,25 +267,24 @@ const ClinicPage = () => {
             type: 'breadcrumb',
             items: [
               { name: 'Home', url: '/' },
-              ...(clinic.city?.state?.abbreviation ? [{ name: clinic.city?.state?.name || '', url: `/${clinic.city?.state?.slug}/` }] : []),
-              ...(clinic.city ? [{ name: clinic.city.name, url: `/${stateSlug}/${clinic.city.slug}/` }] : []),
+              ...(agencyState ? [{ name: agencyState, url: `/${agencyState.toLowerCase().replace(/ /g, '-')}/` }] : []),
+              ...(agencyCity ? [{ name: agencyCity, url: `/${agencyState.toLowerCase().replace(/ /g, '-')}/${agencyCity.toLowerCase().replace(/ /g, '-')}/` }] : []),
               { name: clinic.name },
             ],
           },
           {
             type: 'localBusiness',
             name: clinic.name,
-            description: clinic.description || `Fostering agency in ${clinic.city?.name || 'UK'}`,
-            address: clinic.address || '',
-            city: clinic.city?.name || '',
-            state: clinic.city?.state?.abbreviation || '',
+            description: `Fostering agency in ${agencyCity || 'UK'}`,
+            address: (clinic as any).address || '',
+            city: agencyCity,
+            state: agencyState,
             country: 'United Kingdom',
             phone: clinic.phone || '',
             url: `/agency/${clinic.slug}/`,
-            geo: clinic.latitude && clinic.longitude ? { lat: Number(clinic.latitude), lng: Number(clinic.longitude) } : undefined,
             rating: clinic.rating ? Number(clinic.rating) : undefined,
             reviewCount: clinic.review_count || undefined,
-            services: (treatments || []).slice(0, 10).map(t => t.treatment?.name).filter(Boolean) as string[],
+            priceRange: '£',
           },
         ]}
         id="agency-schema"
@@ -279,8 +292,8 @@ const ClinicPage = () => {
 
       {/* Hero Cover */}
       <div className="relative h-56 md:h-72 bg-muted">
-        {clinic.cover_image_url ? (
-          <img src={clinic.cover_image_url} alt={clinic.name} className="w-full h-full object-cover" />
+        {(clinic.cover_image_url || (clinic as any).image_url) ? (
+          <img src={clinic.cover_image_url || (clinic as any).image_url} alt={clinic.name} className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-primary/20 via-teal/10 to-accent/20" />
         )}
@@ -298,8 +311,8 @@ const ClinicPage = () => {
           <div className="flex flex-col lg:flex-row gap-5">
             <div className="shrink-0">
               <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-card overflow-hidden border-4 border-background shadow-elevated">
-                {clinic.cover_image_url ? (
-                  <img src={clinic.cover_image_url} alt={clinic.name} className="w-full h-full object-cover" />
+                {(clinic.cover_image_url || (clinic as any).image_url) ? (
+                  <img src={clinic.cover_image_url || (clinic as any).image_url} alt={clinic.name} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-primary/20 to-teal/20 flex items-center justify-center">
                     <span className="text-2xl font-display font-bold text-primary/50">{clinic.name.charAt(0)}</span>
@@ -385,15 +398,17 @@ const ClinicPage = () => {
             </div>
 
             <div className="hidden lg:flex flex-col gap-2 shrink-0">
-              <Button size="lg" className="rounded-xl font-bold" onClick={() => handleBookClick()}>
-                <Calendar className="h-4 w-4 mr-2" /> Make Enquiry
+              <Button size="lg" className="rounded-xl font-bold bg-teal hover:bg-teal/90" onClick={() => handleEnquiryClick()}>
+                <HandHeart className="h-4 w-4 mr-2" /> Make an Enquiry
               </Button>
               <div className="flex gap-2">
                 <Button variant="outline" size="icon" className="rounded-xl flex-1">
                   <Share2 className="h-4 w-4" />
                 </Button>
-                <Button variant="outline" size="icon" className="rounded-xl flex-1">
-                  <Heart className="h-4 w-4" />
+                <Button variant="outline" size="icon" className="rounded-xl flex-1" asChild>
+                  <Link to="/become-foster-carer">
+                    <Heart className="h-4 w-4" />
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -401,27 +416,27 @@ const ClinicPage = () => {
         </div>
       </Section>
 
-      {/* Promotion Banner */}
+      {/* Fostering Services Banner */}
       <Section size="sm" className="pt-0">
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary via-teal to-emerald p-[2px]">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-teal via-emerald to-teal p-[2px]">
           <div className="relative rounded-2xl bg-background/95 backdrop-blur-sm px-6 py-4">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-teal flex items-center justify-center">
-                  <Percent className="h-6 w-6 text-primary-foreground" />
+                <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-teal to-emerald flex items-center justify-center">
+                  <HandHeart className="h-6 w-6 text-primary-foreground" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="font-display font-bold text-lg">🎉 50% OFF All Plans</h3>
-                    <Badge className="bg-primary text-primary-foreground border-0 animate-pulse">Limited Time</Badge>
+                    <h3 className="font-display font-bold text-lg">Need a Foster Carer?</h3>
+                    <Badge className="bg-teal text-primary-foreground border-0">Learn More</Badge>
                   </div>
                   <p className="text-muted-foreground text-sm">
-                    Claim this profile & get 50% off your first month. Verified badge + enhanced listing.
+                    Contact this agency to learn about becoming a foster carer or arranging a placement.
                   </p>
                 </div>
               </div>
-              <Button asChild className="bg-gradient-to-r from-primary to-teal text-primary-foreground border-0 hover:opacity-90">
-                <Link to="/pricing">View Plans</Link>
+              <Button asChild className="bg-gradient-to-r from-teal to-emerald text-primary-foreground border-0 hover:opacity-90">
+                <Link to="/become-foster-carer">Become a Foster Carer</Link>
               </Button>
             </div>
           </div>
@@ -543,30 +558,38 @@ const ClinicPage = () => {
 
               <TabsContent value="team" className="animate-fade-in-up">
                 <div className="card-modern p-4 md:p-6 overflow-hidden">
-                  <h2 className="font-display text-lg md:text-xl font-bold mb-4 md:mb-6">Our Team</h2>
-                  <ClinicTeamSection
-                    teamMembers={teamMembers || []}
-                    clinicName={clinic.name}
-                    onBookWithDentist={(id) => handleBookClick(id)}
-                  />
+                  <h2 className="font-display text-lg md:text-xl font-bold mb-4 md:mb-6">About This Agency</h2>
+                  <p className="text-muted-foreground">
+                    {clinic.description || `This is a fostering agency in ${clinic.city?.name || 'the UK'}. Contact the agency directly to learn more about their services and how to become a foster carers.`}
+                  </p>
+                  {isClaimed && (
+                    <div className="mt-4 p-4 bg-muted/50 rounded-lg">
+                      <h3 className="font-semibold mb-2">Contact Information</h3>
+                      {clinic.phone && <p className="text-sm">Phone: {clinic.phone}</p>}
+                      {clinic.email && <p className="text-sm">Email: {clinic.email}</p>}
+                      {clinic.website && <p className="text-sm">Website: {clinic.website}</p>}
+                    </div>
+                  )}
                 </div>
               </TabsContent>
 
               <TabsContent value="services" className="animate-fade-in-up">
                 <div className="card-modern p-4 md:p-6 overflow-hidden space-y-6">
-                  <h2 className="font-display text-lg md:text-xl font-bold">Services Offered</h2>
+                  <h2 className="font-display text-lg md:text-xl font-bold">Fostering Types Offered</h2>
                   {treatments && treatments.length > 0 ? (
-                    <AEDPricingDisplay
-                      treatments={treatments.map((ct: any) => ({
-                        name: ct.treatment?.name || '',
-                        slug: ct.treatment?.slug || '',
-                        priceAed: ct.price_aed || null,
-                      }))}
-                      hasInsurance={isClaimed}
-                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {treatments.map((ct: any) => (
+                        <div key={ct.id} className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
+                          <Heart className="h-5 w-5 text-primary shrink-0" />
+                          <div>
+                            <p className="font-medium text-foreground">{ct.treatment?.name || ''}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   ) : (
                     <p className="text-muted-foreground text-sm md:text-base">
-                      {isClaimed ? "Contact the agency for available services." : "Services will be listed once the agency claims their profile."}
+                      {isClaimed ? "Contact the agency for available fostering types." : "Fostering types will be listed once the agency claims their profile."}
                     </p>
                   )}
                 </div>
@@ -574,15 +597,14 @@ const ClinicPage = () => {
 
               <TabsContent value="reviews" className="animate-fade-in-up">
                 <div className="card-modern p-4 md:p-6 overflow-hidden">
-                  <h2 className="font-display text-lg md:text-xl font-bold mb-4 md:mb-6">Reviews</h2>
-                  <ClinicReviewsSection
-                    reviews={reviews || []}
+                  <h2 className="font-display text-lg md:text-xl font-bold mb-4 md:mb-6">Agency Reviews</h2>
+                  <AgencyReviewsSection
+                    reviews={agencyReviews || []}
                     googleReviews={googleReviews || []}
-                    clinicRating={clinic.rating ? Number(clinic.rating) : undefined}
-                    clinicReviewCount={clinic.review_count || 0}
-                    gmbConnected={isGmbConnected}
-                    clinicSlug={clinic.slug}
-                    clinicId={clinic.id}
+                    agencyRating={clinic.rating ? Number(clinic.rating) : undefined}
+                    agencyReviewCount={clinic.review_count || 0}
+                    agencySlug={clinic.slug}
+                    agencyId={clinic.id}
                   />
                 </div>
               </TabsContent>
@@ -600,18 +622,19 @@ const ClinicPage = () => {
 
           <div className="space-y-6">
             <div className="lg:sticky lg:top-24">
-              <ClinicStickyBooking
-                clinicId={clinic.id}
-                clinicName={clinic.name}
-                clinicPhone={clinic.phone}
-                clinicRating={clinic.rating ? Number(clinic.rating) : undefined}
-                clinicReviewCount={clinic.review_count || 0}
-                clinicArea={clinic.area?.name || clinic.city?.name}
-                clinicLatitude={clinic.latitude ? Number(clinic.latitude) : undefined}
-                clinicLongitude={clinic.longitude ? Number(clinic.longitude) : undefined}
-                clinicAddress={clinic.address || undefined}
+              <AgencyStickyContact
+                agencyId={clinic.id}
+                agencyName={clinic.name}
+                agencyPhone={clinic.phone}
+                agencyRating={clinic.rating ? Number(clinic.rating) : undefined}
+                agencyReviewCount={clinic.review_count || 0}
+                agencyArea={clinic.city?.name || clinic.area?.name}
+                agencyLatitude={clinic.latitude ? Number(clinic.latitude) : undefined}
+                agencyLongitude={clinic.longitude ? Number(clinic.longitude) : undefined}
+                agencyAddress={clinic.address || undefined}
+                agencyWebsite={clinic.website}
+                agencyGoogleMapsUrl={clinic.google_maps_url}
                 hours={hours || []}
-                teamMembers={teamMembers || []}
                 isClaimed={isClaimed}
               />
               
@@ -649,8 +672,8 @@ const ClinicPage = () => {
         </div>
 
         <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur border-t border-border z-40">
-          <Button className="w-full rounded-xl font-bold h-12 text-base" size="lg" onClick={() => handleBookClick()}>
-            <Calendar className="h-5 w-5 mr-2" /> Make Enquiry
+          <Button className="w-full rounded-xl font-bold h-12 text-base bg-teal hover:bg-teal/90" size="lg" onClick={() => handleEnquiryClick()}>
+            <HandHeart className="h-5 w-5 mr-2" /> Make an Enquiry
           </Button>
         </div>
       </Section>
@@ -672,21 +695,6 @@ const ClinicPage = () => {
           rating: clinic.rating || clinic.average_rating,
           reviewCount: clinic.review_count || clinic.total_reviews,
         })}
-      />
-
-      <MultiStepBookingModal
-        open={bookingOpen}
-        onOpenChange={setBookingOpen}
-        profileId={selectedDentistId || clinic.id}
-        profileName={selectedDentistId 
-          ? teamMembers?.find(d => d.id === selectedDentistId)?.name || clinic.name
-          : clinic.name
-        }
-        profileType={selectedDentistId ? "dentist" : "clinic"}
-        clinicId={clinic.id}
-        clinicLatitude={clinic.latitude ? Number(clinic.latitude) : undefined}
-        clinicLongitude={clinic.longitude ? Number(clinic.longitude) : undefined}
-        clinicAddress={clinic.address || undefined}
       />
     </PageLayout>
   );

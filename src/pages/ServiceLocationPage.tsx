@@ -1,43 +1,23 @@
-import { useState } from "react";
-import { useParams, Link, Navigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, supabaseAdmin } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
-import { SearchBox } from "@/components/SearchBox";
-import { AgencyListFrame, LocationQuickLinks } from "@/components/location";
-import { SEOContentBlock } from "@/components/seo/SEOContentBlock";
-import { PageIntroSection } from "@/components/seo/PageIntroSection";
-import { GeographicLinkBlock } from "@/components/seo/GeographicLinkBlock";
-import { useProfiles } from "@/hooks/useProfiles";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { SyncStructuredData } from "@/components/seo/SyncStructuredData";
-import { InternalLinkBlock, generateServiceLocationInternalLinks } from "@/components/seo/InternalLinkBlock";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { useState as useStateData, useCity, useCitiesByStateSlug } from "@/hooks/useLocations";
-import { useSeoPageContent, parseMarkdownContent, parseFaqFromContent } from "@/hooks/useSeoPageContent";
+import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
 import { normalizeStateSlug } from "@/lib/slug/normalizeStateSlug";
-import { RichContentSections } from "@/components/seo/RichContentSections";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { 
-  Users,
-  Shield,
-  Clock,
-  Star,
-  Building2
+  Heart, Shield, Users, MapPin, ArrowRight, Star, Search, ChevronRight, CheckCircle
 } from "lucide-react";
-
-const MIN_PROFILE_COUNT = 2;
 
 const ServiceLocationPage = () => {
   const { stateSlug, citySlug, serviceSlug } = useParams();
@@ -48,114 +28,72 @@ const ServiceLocationPage = () => {
   const { data: city } = useCity(citySlug || '', normalizedStateSlug || '');
 
   const seoSlug = `${normalizedStateSlug || ""}/${citySlug || ""}/${serviceSlug || ""}`;
-  const {
-    data: seoContent,
-    isLoading: seoContentLoading,
-    isFetching: seoContentFetching,
-  } = useSeoPageContent(seoSlug);
+  const { data: seoContent, isLoading: seoContentLoading } = useSeoPageContent(seoSlug);
 
-  const isSeoContentPending = !seoContent && (seoContentLoading || seoContentFetching);
-
-  const { data: treatment, isLoading: treatmentLoading, isFetching: treatmentFetching } = useQuery({
+  const { data: treatment, isLoading: treatmentLoading } = useQuery({
     queryKey: ["treatment", service],
     queryFn: async () => {
-      const { data } = await supabase
-        .from("treatments")
-        .select("*")
-        .eq("slug", service)
-        .maybeSingle();
+      const { data } = await supabase.from("treatments").select("id, name, slug, description").eq("slug", service).maybeSingle();
       return data;
     },
     enabled: !!service,
   });
 
-  const { data: profiles, isLoading: profilesLoading } = useProfiles({
-    cityId: city?.id,
-    treatmentId: treatment?.id,
-    limit: 50,
-  });
-
-  const { data: relatedServices, isLoading: relatedServicesLoading } = useQuery({
-    queryKey: ["related-services", service],
+  const { data: profiles, isLoading: profilesLoading } = useQuery({
+    queryKey: ['service-location-profiles', city?.id, treatment?.id],
     queryFn: async () => {
-      const { data } = await supabase
-        .from("treatments")
-        .select("*")
-        .eq("is_active", true)
-        .neq("slug", service)
-        .order("display_order")
-        .limit(6);
-      return data || [];
+      if (!city) return [];
+      const { data } = await supabaseAdmin
+        .from('agencies')
+        .select(`*`)
+        .ilike('city', `%${city.name}%`)
+        .order('rating', { ascending: false })
+        .limit(30);
+      return (data || []) as any[];
     },
+    enabled: !!city,
   });
 
-  const { data: nearbyCities, isLoading: nearbyCitiesLoading } = useCitiesByStateSlug(normalizedStateSlug || '');
+  const { data: nearbyCities } = useCitiesByStateSlug(normalizedStateSlug || '');
 
-  const isDataReady =
-    !!state &&
-    !!city &&
-    !profilesLoading &&
-    !relatedServicesLoading &&
-    !nearbyCitiesLoading &&
-    !treatmentLoading &&
-    !treatmentFetching &&
-    !seoContentLoading &&
-    !seoContentFetching;
-  usePrerenderReady(isDataReady, { delay: 600 });
+  usePrerenderReady(!profilesLoading && !treatmentLoading);
 
-  const locationName = city?.name || citySlug?.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()) || '';
-  const stateName = state?.name || '';
-  const stateAbbr = state?.abbreviation || '';
-  const treatmentName = treatment?.name || service.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
-  const locationDisplay = stateName ? `${locationName}, ${stateName}` : locationName;
-
-  if (stateSlug && normalizedStateSlug && stateSlug !== normalizedStateSlug && citySlug && serviceSlug) {
-    return <Navigate to={`/${normalizedStateSlug}/${citySlug}/${serviceSlug}/`} replace />;
+  if (!state || !city || !treatment) {
+    return (
+      <PageLayout>
+        <div className="container py-20">
+          <Skeleton className="h-16 w-full mb-6 rounded-xl" />
+          <Skeleton className="h-48 w-full rounded-xl" />
+        </div>
+      </PageLayout>
+    );
   }
 
+  const treatmentName = treatment.name;
+  const locationName = city.name;
+  const stateName = state.name;
+  const stateAbbr = state.abbreviation;
+  
+  const pageTitle = `${treatmentName} Agencies in ${locationName} | Find Fostering`;
+  const pageDescription = `Find ${treatmentName.toLowerCase()} fostering agencies in ${locationName}, ${stateName}. Browse verified agencies and start your journey.`;
+  
   const breadcrumbs = [
     { label: "Home", href: "/" },
-    ...(normalizedStateSlug && stateName ? [{ label: stateName, href: `/${normalizedStateSlug}/` }] : []),
-    ...(citySlug && normalizedStateSlug ? [{ label: locationName, href: `/${normalizedStateSlug}/${citySlug}/` }] : []),
+    { label: stateName, href: `/${normalizedStateSlug}/` },
+    { label: locationName, href: `/${normalizedStateSlug}/${citySlug}/` },
     { label: treatmentName },
   ];
 
-  const parsedContent = seoContent?.content ? parseMarkdownContent(seoContent.content) : null;
-  const seoFaqs = seoContent?.faqs && Array.isArray(seoContent.faqs) && seoContent.faqs.length > 0
-    ? seoContent.faqs
-    : seoContent?.content ? parseFaqFromContent(seoContent.content) : [];
+  const shouldNoIndex = !profilesLoading && (!profiles || profiles.length < 2);
+  const avgRating = profiles?.length ? (profiles.reduce((sum, p) => sum + (p.rating || 0), 0) / profiles.length).toFixed(1) : "0";
 
-  const pageTitle = seoContent?.meta_title || `${treatmentName} in ${locationDisplay} - Find Agencies`;
-  const pageDescription = seoContent?.meta_description || `Find the best ${treatmentName.toLowerCase()} agencies in ${locationDisplay}. Compare ${profiles?.length || 0}+ verified agencies.`;
-  const pageH1 = seoContent?.h1 || `${treatmentName} in ${locationDisplay}`;
-
-  const faqs = seoFaqs.length > 0 ? seoFaqs.map(f => ({ q: f.question, a: f.answer })) : [
-    {
-      q: `Where can I find ${treatmentName} agencies in ${locationName}?`,
-      a: `We have ${profiles?.length || 0}+ verified ${treatmentName.toLowerCase()} agencies in ${locationName}. Browse our directory above to compare ratings and submit enquiries.`,
-    },
-    {
-      q: `What support do ${treatmentName} carers get in ${locationName}?`,
-      a: `${treatmentName} carers in ${locationName} receive comprehensive training, 24/7 support, and competitive fostering allowances. Specific support varies by agency — check individual profiles for details.`,
-    },
-    {
-      q: `Are the ${treatmentName} agencies in ${locationName} Ofsted registered?`,
-      a: `All agencies on our platform are Ofsted-registered. Profiles with the "Verified" badge have completed our additional verification process.`,
-    },
-    {
-      q: `How do I enquire about ${treatmentName} in ${locationName}?`,
-      a: `Browse the agencies above, click "Enquire" on any profile, and fill in your details. The agency will contact you to discuss the next steps in your fostering journey.`,
-    },
+  const faqs = [
+    { q: `What is ${treatmentName}?`, a: `${treatmentName} is a specialised form of fostering care for children with specific needs. Contact agencies to learn more.` },
+    { q: `How do I find ${treatmentName} agencies in ${locationName}?`, a: `Browse our directory of ${profiles?.length || 0} agencies offering ${treatmentName.toLowerCase()} in ${locationName}.` },
+    { q: `What support do agencies provide?`, a: `All agencies provide full training, ongoing support, and competitive fostering allowances. Contact agencies for specific details.` },
   ];
 
-  const shouldNoIndex = !profilesLoading && (!profiles || profiles.length < MIN_PROFILE_COUNT);
-
-  const nearbyLocations = (nearbyCities || [])
-    .filter(c => c.slug !== citySlug)
-    .slice(0, 5)
-    .map(c => ({ name: c.name, slug: c.slug }));
-
-  const relatedTreatments = (relatedServices || []).map(t => ({ name: t.name, slug: t.slug }));
+  const nearbyLocations = (nearbyCities || []).filter(c => c.slug !== citySlug).slice(0, 8);
 
   return (
     <PageLayout>
@@ -163,180 +101,257 @@ const ServiceLocationPage = () => {
         title={pageTitle}
         description={pageDescription}
         canonical={`/${normalizedStateSlug}/${citySlug}/${service}/`}
-        keywords={[`${treatmentName} ${locationName}`, `${treatmentName} agency`, `best ${treatmentName} agency`]}
+        keywords={[`${treatmentName} ${locationName}`, `fostering ${locationName}`, `${treatmentName.toLowerCase()} agency`]}
         noindex={shouldNoIndex}
+        ogImage={`https://fostercareuk.com/og/${service}-${normalizedStateSlug}-${citySlug}.png`}
       />
       <SyncStructuredData
         data={[
-          {
-            type: 'breadcrumb',
-            items: [
-              { name: 'Home', url: '/' },
-              ...(normalizedStateSlug && stateName ? [{ name: stateName, url: `/${normalizedStateSlug}/` }] : []),
-              ...(citySlug && normalizedStateSlug ? [{ name: locationName, url: `/${normalizedStateSlug}/${citySlug}/` }] : []),
-              { name: treatmentName, url: `/${normalizedStateSlug}/${citySlug}/${service}/` },
-            ],
-          },
-          {
-            type: 'faq',
-            questions: faqs.map(f => ({ question: f.q, answer: f.a })),
-          },
-          {
-            type: 'itemList',
-            name: `${treatmentName} Agencies in ${locationName}`,
-            description: `Top-rated ${treatmentName.toLowerCase()} agencies in ${locationName}`,
-            items: (profiles || []).slice(0, 10).map((p, i) => ({
-              name: p.name,
-              url: `/clinic/${p.slug}/`,
-              position: i + 1,
-              image: p.image,
-            })),
-          },
+          { type: 'breadcrumb', items: [
+            { name: 'Home', url: 'https://fostercareuk.com/' },
+            { name: stateName, url: `https://fostercareuk.com/${normalizedStateSlug}/` },
+            { name: locationName, url: `https://fostercareuk.com/${normalizedStateSlug}/${citySlug}/` },
+            { name: treatmentName, url: `https://fostercareuk.com/${normalizedStateSlug}/${citySlug}/${service}/` },
+          ]},
+          { type: 'place', name: locationName, description: pageDescription, url: `/${normalizedStateSlug}/${citySlug}/${service}/`, addressLocality: locationName, addressRegion: stateName, addressCountry: 'GB' },
+          { type: 'faq', questions: faqs.map(f => ({ question: f.q, answer: f.a })) },
         ]}
         id="service-location-schema"
       />
-      
+
       {/* Hero */}
-      <section className="py-12 md:py-18 bg-muted/30">
-        <div className="container px-4">
-          <div className="flex justify-center mb-4">
-            <Breadcrumbs items={breadcrumbs} />
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-slate-950">
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-teal-500/30 rounded-full blur-[120px]" />
           </div>
-          <div className="max-w-3xl mx-auto text-center">
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-              className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">
-              Ofsted Registered Agencies
-            </motion.p>
-            <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight mb-3 text-foreground">
-              {pageH1.includes(locationName) ? (
-                <>{pageH1.split(locationName)[0]}<span className="text-primary">{locationName}</span>{pageH1.split(locationName)[1] || ''}</>
-              ) : (
-                pageH1
-              )}
-            </motion.h1>
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}
-              className="text-sm md:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto mb-5">
-              Find and enquire with top-rated {treatmentName.toLowerCase()} agencies in {locationName}.
-            </motion.p>
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-              className="max-w-xl md:max-w-2xl mx-auto mb-5">
-              <SearchBox variant="hero" stateSlug={stateSlug} defaultCity={`${citySlug}|${stateSlug}`} defaultTreatment={service} />
-            </motion.div>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-              className="flex flex-wrap justify-center gap-2">
-              {[
-                { icon: Users, text: `${profiles?.length || 0}+ Agencies` },
-                { icon: Star, text: "4.8 Rating" },
-                { icon: Shield, text: "Ofsted Verified" },
-              ].map((s, i) => (
-                <div key={i} className="flex items-center gap-1.5 bg-card border border-border rounded-lg px-3 py-2">
-                  <s.icon className="h-3.5 w-3.5 text-primary" />
-                  <span className="font-semibold text-sm">{s.text}</span>
+        </div>
+
+        <div className="container relative z-10 px-4 py-12 md:py-16">
+          <Breadcrumbs items={breadcrumbs} className="mb-6 text-white/70 [&_a]:text-white/80" />
+          
+          <div className="max-w-3xl">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+              <Badge variant="secondary" className="mb-3 bg-teal-500/20 text-teal-300 border-teal-500/30">
+                <Heart className="h-3 w-3 mr-1" /> {treatmentName}
+              </Badge>
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
+                {treatmentName} in <span className="text-teal-400">{locationName}</span>
+              </h1>
+              <p className="text-white/70 text-lg mb-6">
+                Find agencies offering {treatmentName.toLowerCase()} in {locationName}, {stateName}. 
+                Browse verified agencies and connect directly.
+              </p>
+
+              {/* Stats */}
+              <div className="flex flex-wrap gap-3">
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
+                  <Users className="h-5 w-5 text-teal-400" />
+                  <span className="font-semibold text-white">{profiles?.length || 0} Agencies</span>
                 </div>
-              ))}
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
+                  <Star className="h-5 w-5 text-amber-400 fill-amber-400" />
+                  <span className="font-semibold text-white">{avgRating} Avg</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
+                  <Shield className="h-5 w-5 text-teal-400" />
+                  <span className="font-semibold text-white">Ofsted Verified</span>
+                </div>
+              </div>
             </motion.div>
           </div>
         </div>
+
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 80" fill="none" className="w-full h-12 md:h-16" preserveAspectRatio="none">
+            <path d="M0 80V40C240 10 480 0 720 20C960 40 1200 50 1440 30V80H0Z" className="fill-background" />
+          </svg>
+        </div>
       </section>
 
-      {/* Page Intro Section */}
-      <PageIntroSection
-        title={parsedContent?.sections?.[0]?.heading || `${treatmentName} Services in ${locationName}`}
-        content={(seoContent as any)?.page_intro || parsedContent?.intro || parsedContent?.sections?.[0]?.content || `Find the best ${treatmentName.toLowerCase()} agencies in ${locationDisplay}. Our directory features Ofsted-registered agencies with proven expertise in ${treatmentName.toLowerCase()}.`}
-        isLoading={isSeoContentPending}
-      />
+      {/* About This Fostering Type */}
+      <Section size="md">
+        <div className="container px-4">
+          <Card className="bg-muted/30 border-0">
+            <CardContent className="p-6 md:p-8">
+              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                <Heart className="h-5 w-5 text-teal-600" />
+                About {treatmentName}
+              </h2>
+              <p className="text-muted-foreground">
+                {treatment.description || `${treatmentName} provides specialised care for children with specific needs. 
+                Agencies offering this type of fostering provide additional training, support, and resources to help foster carers succeed.`}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </Section>
 
-      {/* Main Content */}
+      {/* Agencies */}
       <Section size="lg">
         <div className="container px-4">
-          <div className="max-w-5xl mx-auto space-y-8">
-            <AgencyListFrame
-              profiles={profiles || []}
-              isLoading={profilesLoading}
-              locationName={locationName}
-              emptyMessage={`We're still adding ${treatmentName.toLowerCase()} agencies in ${locationName}.`}
-              maxHeight={700}
-              initialCount={10}
-            />
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold">Agencies in {locationName}</h2>
+            <p className="text-muted-foreground">{profiles?.length || 0} results</p>
+          </div>
 
-            <SEOContentBlock
-              variant="service-location"
-              locationName={locationName}
-              stateName={stateName}
-              stateAbbr={stateAbbr}
-              stateSlug={stateSlug || ''}
-              citySlug={citySlug || ''}
-              treatmentName={treatmentName}
-              treatmentSlug={service}
-              clinicCount={profiles?.length || 0}
-              parsedContent={parsedContent}
-              nearbyLocations={nearbyLocations}
-              isLoading={isSeoContentPending}
-            />
-
-            <GeographicLinkBlock
-              pageType="service-location"
-              stateSlug={normalizedStateSlug || ''}
-              stateName={stateName}
-              citySlug={citySlug}
-              cityName={locationName}
-              serviceSlug={service}
-              serviceName={treatmentName}
-              nearbyCities={nearbyLocations}
-              services={relatedTreatments}
-            />
-
-            {/* Rich SEO Content Sections */}
-            <RichContentSections
-              pageType="service-location"
-              cityName={locationName}
-              regionName={stateName}
-              serviceName={treatmentName}
-              agencyCount={profiles?.length || 0}
-              stateSlug={normalizedStateSlug}
-              citySlug={citySlug}
-              serviceSlug={service}
-            />
-
-            {nearbyLocations.length > 0 && (
-              <LocationQuickLinks
-                variant="nearby"
-                stateSlug={normalizedStateSlug || stateSlug}
-                items={nearbyLocations}
-                title={`${treatmentName} in Nearby Cities`}
-              />
+          <div className="grid gap-4">
+            {profilesLoading ? (
+              [...Array(3)].map((_, i) => <Skeleton key={i} className="h-28 rounded-xl" />)
+            ) : profiles && profiles.length > 0 ? (
+              profiles.map((agency, i) => (
+                <motion.div key={agency.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+                  <Link to={`/agency/${agency.slug}/`}>
+                    <Card className="hover:border-teal-500/50 hover:bg-teal-500/5 transition-all duration-300 group">
+                      <CardContent className="p-5 flex items-center gap-4">
+                        <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-teal-500/20 to-teal-600/20 flex items-center justify-center shrink-0">
+                          {agency.cover_image_url ? (
+                            <img src={agency.cover_image_url} alt={agency.name} className="w-full h-full object-cover rounded-xl" />
+                          ) : (
+                            <span className="text-xl font-bold text-teal-600">{agency.name.charAt(0)}</span>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-bold text-foreground group-hover:text-teal-600 transition-colors">{agency.name}</h3>
+                          <p className="text-sm text-muted-foreground flex items-center gap-1">
+                            <MapPin className="h-3 w-3" /> {locationName}, {stateAbbr}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          {(agency.rating || 0) > 0 && (
+                            <div className="flex items-center gap-1">
+                              <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
+                              <span className="font-semibold text-sm">{agency.rating?.toFixed(1)}</span>
+                            </div>
+                          )}
+                          <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-teal-600 group-hover:translate-x-1 transition-all" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </motion.div>
+              ))
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">No agencies found for this type in {locationName}.</p>
+                <Link to={`/${normalizedStateSlug}/${citySlug}/`}>
+                  <Button variant="outline" className="mt-4">View All Agencies</Button>
+                </Link>
+              </div>
             )}
           </div>
         </div>
       </Section>
 
-      {/* FAQ Section */}
-      <Section size="lg" className="bg-muted/30">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-8">
-            <span className="inline-block text-xs font-bold text-primary uppercase tracking-widest mb-2">Have Questions?</span>
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground">
-              Frequently Asked <span className="text-primary">Questions</span>
-            </h2>
-          </div>
-          
-          <Accordion type="single" collapsible className="space-y-3">
-            {faqs.map((faq, i) => (
-              <AccordionItem
-                key={i}
-                value={`faq-${i}`}
-                className="bg-card border border-border rounded-2xl px-5 data-[state=open]:border-primary/30"
-              >
-                <AccordionTrigger className="text-left font-bold hover:no-underline py-4 text-sm md:text-base">
-                  {faq.q}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pb-4 text-sm">
-                  {faq.a}
-                </AccordionContent>
-              </AccordionItem>
+      {/* Other Areas */}
+      <Section size="md" className="bg-muted/30">
+        <div className="container px-4">
+          <h2 className="text-lg font-semibold mb-4">Other Areas in {stateName}</h2>
+          <div className="flex flex-wrap gap-2">
+            {nearbyLocations.map((loc) => (
+              <Link key={loc.id} to={`/${normalizedStateSlug}/${loc.slug}/${service}/`}>
+                <Button variant="outline" size="sm" className="rounded-full">
+                  {loc.name}
+                </Button>
+              </Link>
             ))}
-          </Accordion>
+          </div>
+        </div>
+      </Section>
+
+      {/* SEO Content Section for organic ranking */}
+      <Section size="lg">
+        <div className="container px-4">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-8">
+              <Badge variant="outline" className="mb-3">Your Guide</Badge>
+              <h2 className="text-2xl font-bold">
+                About <span className="text-teal-600">{treatmentName}</span> in {locationName}
+              </h2>
+            </div>
+
+            <Card className="mb-6">
+              <CardContent className="p-6">
+                <h3 className="font-bold text-lg mb-3">What is {treatmentName}?</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {treatment.description || `${treatmentName} is a specialised form of fostering that provides care for children with specific needs. 
+                  In ${locationName}, several agencies offer this type of fostering with additional training and support packages. 
+                  This type of fostering requires additional training but offers higher allowances and rewarding experiences.`}
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="mb-6">
+              <CardContent className="p-6">
+                <h3 className="font-bold text-lg mb-3">How to Find {treatmentName} Agencies</h3>
+                <p className="text-muted-foreground leading-relaxed mb-4">
+                  When searching for "{treatmentName.toLowerCase()} fostering {locationName.toLowerCase()}" or 
+                  "{treatmentName.toLowerCase()} agencies {locationName.toLowerCase()}", consider:
+                </p>
+                <ul className="space-y-2 text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-5 w-5 text-teal-600 shrink-0 mt-0.5" />
+                    <span>Check their Ofsted rating and reviews from current carers</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-5 w-5 text-teal-600 shrink-0 mt-0.5" />
+                    <span>Ask about training packages and ongoing support</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-5 w-5 text-teal-600 shrink-0 mt-0.5" />
+                    <span>Inquire about allowances and any additional payments</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-5 w-5 text-teal-600 shrink-0 mt-0.5" />
+                    <span>Ask about respite options and peer support networks</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* Keywords for this page */}
+            <Card className="bg-teal-500/5 border-teal-500/20">
+              <CardContent className="p-6">
+                <h3 className="font-bold text-lg mb-3">Popular Searches</h3>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="secondary">{treatmentName.toLowerCase()} fostering {locationName.toLowerCase()}</Badge>
+                  <Badge variant="secondary">{treatmentName.toLowerCase()} agency {locationName.toLowerCase()}</Badge>
+                  <Badge variant="secondary">fostering {locationName.toLowerCase()}</Badge>
+                  <Badge variant="secondary">become foster carrier {locationName.toLowerCase()}</Badge>
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="mt-8 flex flex-wrap gap-3 justify-center">
+              <Link to="/search">
+                <Button variant="outline" className="rounded-full">Browse All Agencies</Button>
+              </Link>
+              <Link to="/faq">
+                <Button variant="outline" className="rounded-full">Fostering FAQ</Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </Section>
+
+      {/* CTA */}
+      <Section size="lg">
+        <div className="container px-4">
+          <Card className="bg-gradient-to-r from-teal-600 to-teal-800 border-0">
+            <CardContent className="p-8 text-center text-white">
+              <h2 className="text-2xl font-bold mb-3">Interested in {treatmentName}?</h2>
+              <p className="text-white/80 mb-6">
+                Contact agencies in {locationName} that specialise in {treatmentName.toLowerCase()}. 
+                They'll provide full information about the process.
+              </p>
+              <Link to="/search">
+                <Button size="lg" className="bg-white text-teal-700 hover:bg-white/90 font-semibold rounded-xl">
+                  <Search className="mr-2 h-4 w-4" />
+                  Find Agencies
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
         </div>
       </Section>
     </PageLayout>

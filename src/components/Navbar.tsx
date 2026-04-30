@@ -37,7 +37,7 @@ export function Navbar() {
               <Heart className="h-[18px] w-[18px]" />
             </div>
             <span className="text-[15px] font-extrabold text-foreground tracking-tight">
-              Foster<span className="text-primary">Connect</span>
+              Foster<span className="text-primary">Care</span>
             </span>
           </Link>
 

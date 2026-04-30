@@ -33,6 +33,7 @@ function validateContentStudioWrite(fields: string[]): { valid: boolean; blocked
 interface ContentRequest {
   action: "generate_content" | "preview_content" | "apply_content" | "manual_edit" | "rollback_version";
   page_id?: string;
+  slug?: string;
   version_id?: string;
   config?: {
     word_count?: number;
@@ -61,7 +62,10 @@ interface ContentRequest {
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { 
+      status: 200,
+      headers: corsHeaders 
+    });
   }
 
   try {
@@ -70,9 +74,12 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const AIMLAPI_KEY = Deno.env.get("AIMLAPI_KEY");
 
+    // Debug: Check if AIMLAPI_KEY is available
+    console.log("AIMLAPI_KEY available:", !!AIMLAPI_KEY);
+
     if (!AIMLAPI_KEY) {
       return new Response(
-        JSON.stringify({ success: false, error: "AIMLAPI_KEY not configured" }),
+        JSON.stringify({ success: false, error: "AIMLAPI_KEY not configured in Vault" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -696,27 +703,42 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
     switch (action) {
       case "generate_content":
       case "preview_content": {
-        if (!page_id) {
-          return new Response(JSON.stringify({ error: "page_id required" }), {
+        // Support both page_id and slug for lookup
+        let page = null;
+        let pageError = null;
+        
+        if (page_id) {
+          const { data, error } = await supabaseAdmin
+            .from("seo_pages")
+            .select("*")
+            .eq("id", page_id)
+            .single();
+          page = data;
+          pageError = error;
+        } else if (body.slug) {
+          const { data, error } = await supabaseAdmin
+            .from("seo_pages")
+            .select("*")
+            .eq("slug", body.slug)
+            .single();
+          page = data;
+          pageError = error;
+        } else {
+          return new Response(JSON.stringify({ error: "page_id or slug required" }), {
             status: 400,
             headers: { ...corsHeaders, "Content-Type": "application/json" },
           });
         }
 
-        // Get page data
-        const { data: page, error: pageError } = await supabaseAdmin
-          .from("seo_pages")
-          .select("*")
-          .eq("id", page_id)
-          .single();
-
         if (pageError || !page) {
-          return new Response(JSON.stringify({ error: "Page not found" }), {
+          return new Response(JSON.stringify({ error: "Page not found", debug: { page_id, slug: body.slug, error: pageError } }), {
             status: 404,
             headers: { ...corsHeaders, "Content-Type": "application/json" },
           });
         }
 
+        // Use page.id for updates (works whether looked up by page_id or slug)
+        const pageIdForUpdate = page.id;
         const wordCount = config?.word_count || 800;
         
         // For clinic pages, fetch additional clinic data for better content
@@ -765,7 +787,7 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
         // For generate_content, save it
         if (!config?.save_as_draft) {
           // Save version for rollback
-          await saveContentVersion(page_id, {
+          await saveContentVersion(pageIdForUpdate, {
             meta_title: page.meta_title,
             meta_description: page.meta_description,
             h1: page.h1,
@@ -774,7 +796,7 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
           }, "ai_backup", "Auto-backup before AI generation");
 
           // Check uniqueness before saving
-          const uniquenessResult = await checkContentUniqueness(fullContent, page_id, page.page_type);
+          const uniquenessResult = await checkContentUniqueness(fullContent, pageIdForUpdate, page.page_type);
           
           // Update the page with uniqueness info
           // STRICT SEPARATION: Content Studio does NOT write to meta_title, meta_description, or faqs
@@ -790,7 +812,12 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
             internal_links_intro: generated.internal_links_intro || null,
             content: fullContent,
             word_count: actualWordCount,
-            is_thin_content: actualWordCount < 800,
+            // Content status thresholds:
+            // - No content: < 400 words
+            // - Thin content: 400-799 words  
+            // - Has content: 800-1299 words
+            // - Optimal: 1300+ words (target)
+            is_thin_content: actualWordCount >= 400 && actualWordCount < 800,
             is_optimized: true,
             optimized_at: now,
             updated_at: now,
@@ -815,7 +842,7 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
           const { error: updateError } = await supabaseAdmin
             .from("seo_pages")
             .update(updateData)
-            .eq("id", page_id);
+            .eq("id", pageIdForUpdate);
 
           if (updateError) {
             console.error("Update error:", updateError);
@@ -830,12 +857,12 @@ CRITICAL: This content MUST be 100% unique. Do not reuse any phrases, structures
             user_id: userId,
             action: "generate_content",
             entity_type: "seo_page",
-            entity_id: page_id,
+            entity_id: pageIdForUpdate,
             new_values: { word_count: actualWordCount, h1: generated.h1, is_unique: !page.is_duplicate },
           });
 
           // Save new version - ONLY body content fields (no meta, no faqs)
-          await saveContentVersion(page_id, {
+          await saveContentVersion(pageIdForUpdate, {
             h1: generated.h1,
             content: fullContent,
             seo_score: generated.seo_score,

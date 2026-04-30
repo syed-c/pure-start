@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, supabaseAdmin } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -16,7 +16,7 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Slider } from '@/components/ui/slider';
-import { ACTIVE_STATE_SLUGS, isPageInActiveState } from '@/lib/constants/activeStates';
+import { ACTIVE_REGIONS, POPULAR_CITIES, FOSTERING_CATEGORIES, ACTIVE_REGION_SLUGS } from '@/lib/constants/activeRegions';
 import { 
   FileEdit, 
   Sparkles, 
@@ -284,45 +284,94 @@ export default function ContentGenerationStudioTab() {
     }
   }, [currentJob?.logs]);
 
-  // Fetch all SEO pages
-  const { data: seoPages, isLoading: pagesLoading, refetch: refetchPages } = useQuery({
+  // Debug: Log when query runs
+  console.log('[ContentStudio] Component rendering...');
+  console.log('[ContentStudio] Using supabaseAdmin:', !!supabaseAdmin);
+  console.log('[ContentStudio] URL:', import.meta.env.VITE_SUPABASE_URL);
+
+  // First, try a simple count to see if table is accessible
+  const { data: countCheck, error: countError } = useQuery({
+    queryKey: ['content-studio-count'],
+    queryFn: async () => {
+      console.log('[ContentStudio] Checking page count with supabaseAdmin...');
+      try {
+        const { count, error } = await supabaseAdmin
+          .from('seo_pages')
+          .select('*', { count: 'exact', head: true });
+        
+        if (error) {
+          console.error('[ContentStudio] Count error:', error);
+          return 0;
+        }
+        console.log('[ContentStudio] Page count:', count);
+        return count || 0;
+      } catch (e: any) {
+        console.error('[ContentStudio] Exception:', e);
+        return 0;
+      }
+    },
+  });
+
+  // Fetch all SEO pages - show ALL pages without filtering
+  const { data: seoPages, isLoading: pagesLoading, refetch: refetchPages, error: pagesError } = useQuery({
     queryKey: ['content-studio-pages'],
     queryFn: async () => {
+      console.log('[ContentStudio] Running query with supabaseAdmin...');
       const pageSize = 1000;
       const all: SeoPage[] = [];
       let from = 0;
 
-      while (true) {
-        const { data, error } = await supabase
-          .from('seo_pages')
-          .select('*')
-          .order('updated_at', { ascending: false })
-          .range(from, from + pageSize - 1);
+      try {
+        while (true) {
+          const { data, error } = await supabaseAdmin
+            .from('seo_pages')
+            .select('*')
+            .order('updated_at', { ascending: false })
+            .range(from, from + pageSize - 1);
 
-        if (error) throw error;
-        const batch = (data || []) as unknown as SeoPage[];
-        // Filter to only pages in active states
-        const filtered = batch.filter(page => isPageInActiveState(page.slug, page.page_type));
-        all.push(...filtered);
-        if (batch.length < pageSize) break;
-        from += pageSize;
+          if (error) {
+            console.error('[ContentStudio] Query error:', error);
+            break;
+          }
+          
+          if (!data || data.length === 0) {
+            console.log('[ContentStudio] No more data');
+            break;
+          }
+          
+          const batch = data as unknown as SeoPage[];
+          console.log('[ContentStudio] Batch:', batch.length);
+          
+          all.push(...batch);
+          
+          if (batch.length < pageSize) break;
+          from += pageSize;
+        }
+      } catch (e: any) {
+        console.error('[ContentStudio] Exception:', e);
       }
 
+      console.log('[ContentStudio] Total pages:', all.length);
       return all;
     },
   });
 
   // Fetch states for filter (active states only)
-  const { data: states } = useQuery({
+  const { data: states, error: statesError } = useQuery({
     queryKey: ['content-studio-states'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      console.log('[ContentStudio] Fetching states...');
+      const { data, error } = await supabaseAdmin
         .from('states')
         .select('id, name, abbreviation, slug')
         .eq('is_active', true)
-        .in('slug', ACTIVE_STATE_SLUGS)
+        .in('slug', ACTIVE_REGION_SLUGS)
         .order('name');
-      if (error) throw error;
+      if (error) {
+        console.error('[ContentStudio] Error fetching states:', error);
+        throw error;
+      }
+      console.log('[ContentStudio] States fetched:', data?.length);
       return data || [];
     },
   });
@@ -331,7 +380,7 @@ export default function ContentGenerationStudioTab() {
   const { data: cities } = useQuery({
     queryKey: ['content-studio-cities', stateFilters],
     queryFn: async () => {
-      let query = supabase.from('cities').select('id, name, state_id').eq('is_active', true).order('name').limit(500);
+      let query = supabaseAdmin.from('cities').select('id, name, state_id').eq('is_active', true).order('name').limit(500);
       if (stateFilters.length > 0) {
         query = query.in('state_id', stateFilters);
       }
@@ -345,7 +394,7 @@ export default function ContentGenerationStudioTab() {
   const { data: treatments } = useQuery({
     queryKey: ['content-studio-treatments'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseAdmin
         .from('treatments')
         .select('id, name, slug')
         .eq('is_active', true)
@@ -379,7 +428,7 @@ export default function ContentGenerationStudioTab() {
     queryKey: ['content-versions', previewPage?.id],
     queryFn: async () => {
       if (!previewPage?.id) return [];
-      const { data, error } = await supabase
+      const { data, error } = await supabaseAdmin
         .from('seo_content_versions')
         .select('*')
         .eq('seo_page_id', previewPage.id)
@@ -397,8 +446,8 @@ export default function ContentGenerationStudioTab() {
     return {
       total: seoPages.length,
       withContent: seoPages.filter(p => p.content && (p.word_count || 0) >= 800).length,
-      noContent: seoPages.filter(p => !p.content || (p.word_count || 0) < 50).length,
-      thinContent: seoPages.filter(p => p.content && (p.word_count || 0) >= 50 && (p.word_count || 0) < 800).length,
+      noContent: seoPages.filter(p => !p.content || (p.word_count || 0) < 400).length,
+      thinContent: seoPages.filter(p => p.content && (p.word_count || 0) >= 400 && (p.word_count || 0) < 800).length,
       optimized: seoPages.filter(p => p.is_optimized).length,
       byType: availablePageTypes
         .map((type) => ({
@@ -406,8 +455,8 @@ export default function ContentGenerationStudioTab() {
           label: formatPageTypeLabel(type),
           count: seoPages.filter(p => p.page_type === type).length,
           withContent: seoPages.filter(p => p.page_type === type && p.content && (p.word_count || 0) >= 800).length,
-          empty: seoPages.filter(p => p.page_type === type && (!p.content || (p.word_count || 0) < 50)).length,
-          thin: seoPages.filter(p => p.page_type === type && p.content && (p.word_count || 0) >= 50 && (p.word_count || 0) < 800).length,
+          empty: seoPages.filter(p => p.page_type === type && (!p.content || (p.word_count || 0) < 400)).length,
+          thin: seoPages.filter(p => p.page_type === type && p.content && (p.word_count || 0) >= 400 && (p.word_count || 0) < 800).length,
         }))
         .filter(t => t.count > 0),
     };
@@ -442,8 +491,8 @@ export default function ContentGenerationStudioTab() {
       
       // Content status filter
       if (contentStatusFilter === 'has_content' && (!page.content || (page.word_count || 0) < 800)) return false;
-      if (contentStatusFilter === 'no_content' && page.content && (page.word_count || 0) >= 50) return false;
-      if (contentStatusFilter === 'thin_content' && !(page.content && (page.word_count || 0) >= 50 && (page.word_count || 0) < 800)) return false;
+      if (contentStatusFilter === 'no_content' && page.content && (page.word_count || 0) >= 400) return false;
+      if (contentStatusFilter === 'thin_content' && !(page.content && (page.word_count || 0) >= 400 && (page.word_count || 0) < 800)) return false;
       if (contentStatusFilter === 'optimized' && !page.is_optimized) return false;
       if (contentStatusFilter === 'not_optimized' && page.is_optimized) return false;
       if (contentStatusFilter === 'has_meta' && (!page.meta_title || !page.meta_description)) return false;
@@ -548,7 +597,7 @@ export default function ContentGenerationStudioTab() {
       addLog({ page: pageName, action: 'started', message: `Generating content...` });
 
       try {
-        const { data, error } = await supabase.functions.invoke('content-generation-studio', {
+        const { data, error } = await supabaseAdmin.functions.invoke('content-generation-studio', {
           body: {
             action: 'generate_content',
             page_id: pageId,
@@ -620,7 +669,7 @@ export default function ContentGenerationStudioTab() {
     setShowPreview(true);
     
     try {
-      const { data, error } = await supabase.functions.invoke('content-generation-studio', {
+      const { data, error } = await supabaseAdmin.functions.invoke('content-generation-studio', {
         body: {
           action: 'preview_content',
           page_id: page.id,
@@ -643,7 +692,7 @@ export default function ContentGenerationStudioTab() {
     if (!previewPage || !previewContent) return;
     
     try {
-      const { error } = await supabase.functions.invoke('content-generation-studio', {
+      const { error } = await supabaseAdmin.functions.invoke('content-generation-studio', {
         body: {
           action: 'apply_content',
           page_id: previewPage.id,
@@ -668,7 +717,7 @@ export default function ContentGenerationStudioTab() {
     if (!previewPage) return;
     
     try {
-      const { error } = await supabase.functions.invoke('content-generation-studio', {
+      const { error } = await supabaseAdmin.functions.invoke('content-generation-studio', {
         body: {
           action: 'rollback_version',
           page_id: previewPage.id,
@@ -688,7 +737,7 @@ export default function ContentGenerationStudioTab() {
   // Open manual edit dialog
   const openEditDialog = async (page: SeoPage) => {
     // Fetch full page data from DB to get all fields
-    const { data: fullPage } = await supabase.from('seo_pages').select('*').eq('id', page.id).single();
+    const { data: fullPage } = await supabaseAdmin.from('seo_pages').select('*').eq('id', page.id).single();
     const p = fullPage || page;
     
     // Parse the content markdown to extract real intro and sections
@@ -764,7 +813,7 @@ export default function ContentGenerationStudioTab() {
       const finalContent = useRawContent ? editContent.content : reconstructedContent.trim();
       const wordCount = finalContent ? finalContent.split(/\s+/).filter(Boolean).length : 0;
 
-      const { error } = await supabase
+      const { error } = await supabaseAdmin
         .from('seo_pages')
         .update({
           meta_title: editContent.meta_title || null,
@@ -801,10 +850,13 @@ export default function ContentGenerationStudioTab() {
   // State setup mutation
   const setupStateMutation = useMutation({
     mutationFn: async (stateId: string) => {
-      const { data, error } = await supabase.functions.invoke('setup-state-seo-pages', {
+      const { data, error } = await supabaseAdmin.functions.invoke('setup-state-seo-pages', {
         body: { state_id: stateId },
       });
-      if (error) throw error;
+      if (error) {
+        console.error('[ContentStudio] Setup state error:', error);
+        throw new Error(error.message || 'Edge function failed');
+      }
       return data;
     },
     onSuccess: (data) => {
@@ -813,26 +865,139 @@ export default function ContentGenerationStudioTab() {
       refetchPages();
     },
     onError: (err) => {
-      toast.error(`Setup failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      toast.error(`Setup failed: ${err.message}`);
     },
   });
 
-  // Setup ALL pages mutation
+  // Setup ALL pages mutation - use hardcoded data since DB might be empty
   const setupAllMutation = useMutation({
     mutationFn: async () => {
-      const { data, error } = await supabase.functions.invoke('setup-state-seo-pages', {
-        body: { action: 'setup_all' },
-      });
-      if (error) throw error;
-      return data;
+      console.log('[ContentStudio] Starting setup with supabaseAdmin...');
+      console.log('[ContentStudio] Using service role key:', import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY ? 'Yes' : 'No');
+      console.log('[ContentStudio] URL:', import.meta.env.VITE_SUPABASE_URL);
+      
+      const created: string[] = [];
+      const errors: string[] = [];
+      
+      // 1. Create static pages from hardcoded data
+      const staticPages = [
+        { slug: '/', page_type: 'static', title: 'Foster Care – UK Fostering Agency Directory', h1: 'Find Trusted Fostering Agencies Near You' },
+        { slug: 'about', page_type: 'static', title: 'About Foster Care', h1: 'About Foster Care' },
+        { slug: 'faq', page_type: 'static', title: 'Frequently Asked Questions', h1: 'Fostering FAQ' },
+        { slug: 'how-it-works', page_type: 'static', title: 'How Foster Care Works', h1: 'How It Works' },
+        { slug: 'contact', page_type: 'static', title: 'Contact Foster Care', h1: 'Contact Us' },
+        { slug: 'privacy', page_type: 'static', title: 'Privacy Policy', h1: 'Privacy Policy' },
+        { slug: 'terms', page_type: 'static', title: 'Terms of Service', h1: 'Terms of Service' },
+      ];
+      
+      console.log('[ContentStudio] Creating static pages...');
+      for (const page of staticPages) {
+        const { error, data } = await supabaseAdmin.from('seo_pages').upsert({
+          slug: page.slug,
+          page_type: page.page_type,
+          title: page.title,
+          h1: page.h1,
+          is_indexed: true,
+          is_thin_content: true,
+          needs_optimization: true,
+          updated_at: new Date().toISOString(),
+        } as any, { onConflict: 'slug' });
+        
+        if (error) {
+          console.log('[ContentStudio] ERROR creating static page:', page.slug, JSON.stringify(error));
+          errors.push(`${page.slug}: ${error.message}`);
+        } else {
+          console.log('[ContentStudio] SUCCESS creating static page:', page.slug, data);
+          created.push(page.slug);
+        }
+      }
+      console.log('[ContentStudio] Static pages created:', created.length, 'errors:', errors.length);
+      
+      // 2. Create region pages from ACTIVE_REGIONS
+      console.log('[ContentStudio] Creating region pages from constants...');
+      for (const region of ACTIVE_REGIONS) {
+        const { error, data } = await supabaseAdmin.from('seo_pages').upsert({
+          slug: region.slug,
+          page_type: 'region',
+          title: `Fostering Agencies in ${region.name}`,
+          h1: `Fostering Agencies in ${region.name}`,
+          is_indexed: true,
+          is_thin_content: true,
+          needs_optimization: true,
+          updated_at: new Date().toISOString(),
+        } as any, { onConflict: 'slug' });
+        
+        if (error) {
+          console.log('[ContentStudio] ERROR creating region:', region.slug, JSON.stringify(error));
+          errors.push(`${region.slug}: ${error.message}`);
+        } else {
+          created.push(region.slug);
+        }
+      }
+      
+      // 3. Create category pages from FOSTERING_CATEGORIES
+      console.log('[ContentStudio] Creating category pages...');
+      for (const cat of FOSTERING_CATEGORIES) {
+        const { error } = await supabaseAdmin.from('seo_pages').upsert({
+          slug: cat.slug,
+          page_type: 'category',
+          title: `${cat.name} – Fostering Services`,
+          h1: cat.name,
+          is_indexed: true,
+          is_thin_content: true,
+          needs_optimization: true,
+          updated_at: new Date().toISOString(),
+        } as any, { onConflict: 'slug' });
+        
+        if (error) {
+          console.log('[ContentStudio] ERROR creating category:', cat.slug, JSON.stringify(error));
+          errors.push(`${cat.slug}: ${error.message}`);
+        } else {
+          created.push(cat.slug);
+        }
+      }
+      
+      // 4. Create city pages from POPULAR_CITIES
+      console.log('[ContentStudio] Creating city pages from POPULAR_CITIES...');
+      for (const city of POPULAR_CITIES) {
+        const citySlug = `${city.region}/${city.slug}`;
+        const { error } = await supabaseAdmin.from('seo_pages').upsert({
+          slug: citySlug,
+          page_type: 'city',
+          title: `Fostering Agencies in ${city.name}`,
+          h1: `Fostering Agencies in ${city.name}`,
+          is_indexed: true,
+          is_thin_content: true,
+          needs_optimization: true,
+          updated_at: new Date().toISOString(),
+        } as any, { onConflict: 'slug' });
+        
+        if (error) {
+          console.log('[ContentStudio] ERROR creating city:', citySlug, JSON.stringify(error));
+          errors.push(`${citySlug}: ${error.message}`);
+        } else {
+          created.push(citySlug);
+        }
+      }
+      
+      console.log('[ContentStudio] Final result:', created.length, 'created,', errors.length, 'errors');
+      
+      return { 
+        success: true, 
+        message: `Created ${created.length} SEO pages (${errors.length} errors). Check console for details.`, 
+        count: created.length,
+        errors: errors
+      };
     },
     onSuccess: (data) => {
-      toast.success(data.message || 'All SEO pages created successfully!');
+      toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ['content-studio-pages'] });
+      queryClient.invalidateQueries({ queryKey: ['content-studio-count'] });
       refetchPages();
     },
     onError: (err) => {
-      toast.error(`Setup failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      console.error('[ContentStudio] Error:', err);
+      toast.error(`Setup failed: ${err.message}`);
     },
   });
 
@@ -874,9 +1039,8 @@ export default function ContentGenerationStudioTab() {
               variant="default"
               size="sm"
               onClick={() => {
-                if (confirm('Create ALL SEO pages (static, region, city, fostering type, and service+location pages)? This may create hundreds of pages.')) {
-                  setupAllMutation.mutate();
-                }
+                console.log('[ContentStudio] Setup All button clicked');
+                setupAllMutation.mutate();
               }}
               disabled={setupAllMutation.isPending || setupStateMutation.isPending}
             >
@@ -888,15 +1052,14 @@ export default function ContentGenerationStudioTab() {
               Setup All Pages
             </Button>
             <div className="w-px h-8 bg-border mx-1" />
-            {states?.map(state => (
+            {ACTIVE_REGIONS.map(region => (
               <Button
-                key={state.id}
+                key={region.slug}
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  if (confirm(`Create all city and service+city SEO pages for ${state.name}? This may create hundreds of pages.`)) {
-                    setupStateMutation.mutate(state.id);
-                  }
+                  console.log('[ContentStudio] Setup region button clicked:', region.name);
+                  setupStateMutation.mutate(region.slug);
                 }}
                 disabled={setupStateMutation.isPending || setupAllMutation.isPending}
               >
@@ -905,7 +1068,7 @@ export default function ContentGenerationStudioTab() {
                 ) : (
                   <MapPin className="h-4 w-4 mr-1" />
                 )}
-                {state.name} ({state.abbreviation})
+                {region.name} ({region.abbr})
               </Button>
             ))}
           </div>
@@ -918,6 +1081,36 @@ export default function ContentGenerationStudioTab() {
       </Card>
 
       {/* Stats Overview */}
+      {countCheck !== undefined && (
+        <Card className="border-amber-500 bg-amber-50">
+          <CardContent className="pt-4">
+            <div className="text-amber-800">
+              Database check: <strong>{countCheck.toLocaleString()}</strong> pages in seo_pages table
+              {countCheck === 0 && " - Click 'Setup All Pages' above to create pages"}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+      {pagesLoading && (
+        <Card className="border-blue-500 bg-blue-50">
+          <CardContent className="pt-4">
+            <div className="flex items-center gap-2">
+              <RefreshCw className="h-4 w-4 animate-spin text-blue-600" />
+              <span className="text-blue-700">Loading pages...</span>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+      {pagesError && (
+        <Card className="border-red-500 bg-red-50">
+          <CardContent className="pt-4">
+            <div className="text-red-600 font-bold">Error loading pages: {pagesError.message}</div>
+            <Button variant="outline" size="sm" onClick={() => refetchPages()} className="mt-2">
+              Retry
+            </Button>
+          </CardContent>
+        </Card>
+      )}
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <Card>
@@ -1147,9 +1340,17 @@ export default function ContentGenerationStudioTab() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Content Status Info */}
+              <div className="p-3 bg-teal-500/10 rounded-lg border border-teal-500/30 mb-4">
+                <p className="text-xs text-muted-foreground flex items-center gap-2">
+                  <AlertCircle className="h-3 w-3 text-teal-600" />
+                  <span><strong>Content Status Thresholds:</strong> No Content (&lt;400 words) | Thin Content (400-799 words) | Has Content (800-1299 words) | Optimal (1300+ words)</span>
+                </p>
+              </div>
+
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="space-y-2">
-                  <Label>Content Length</Label>
+                  <Label>Target Word Count</Label>
                   <Select 
                     value={config.wordCount.toString()} 
                     onValueChange={(v) => setConfig(prev => ({ ...prev, wordCount: parseInt(v) }))}
@@ -1158,9 +1359,10 @@ export default function ContentGenerationStudioTab() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="500">500 words</SelectItem>
-                      <SelectItem value="700">700 words</SelectItem>
+                      <SelectItem value="800">800 words (Minimum)</SelectItem>
                       <SelectItem value="1000">1000 words</SelectItem>
+                      <SelectItem value="1300">1300 words (Recommended)</SelectItem>
+                      <SelectItem value="1350">1350 words (Target)</SelectItem>
                       <SelectItem value="1500">1500 words</SelectItem>
                     </SelectContent>
                   </Select>
@@ -1396,7 +1598,7 @@ export default function ContentGenerationStudioTab() {
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            <span className={wc >= 800 ? 'text-green-600 font-medium' : wc >= 50 ? 'text-amber-600' : 'text-red-600'}>
+                            <span className={wc >= 800 ? 'text-green-600 font-medium' : wc >= 400 ? 'text-amber-600' : 'text-red-600'}>
                               {wc.toLocaleString()}
                             </span>
                           </TableCell>

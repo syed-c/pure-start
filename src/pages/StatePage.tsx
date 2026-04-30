@@ -1,309 +1,144 @@
 import { useMemo } from "react";
-import { useParams, Link, Navigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { motion } from "framer-motion";
+import { supabase, supabaseAdmin } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/button";
-import { AgencyListFrame } from "@/components/location";
-import { SEOContentBlock } from "@/components/seo/SEOContentBlock";
-import { PageIntroSection } from "@/components/seo/PageIntroSection";
-import { GeographicLinkBlock } from "@/components/seo/GeographicLinkBlock";
-import { BudgetFilterSidebar, useBudgetFilters } from "@/components/filters";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SEOHead } from "@/components/seo/SEOHead";
-import { StructuredData } from "@/components/seo/StructuredData";
+import { SyncStructuredData } from "@/components/seo/SyncStructuredData";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { useState as useStateData, useCitiesByStateSlug } from "@/hooks/useLocations";
-import { useSeoPageContent, parseMarkdownContent, parseFaqFromContent } from "@/hooks/useSeoPageContent";
+import { useSeoPageContent, parseMarkdownContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
-import { usePinnedProfiles, sortWithPinnedFirst } from "@/hooks/usePinnedProfiles";
+import { usePinnedProfiles } from "@/hooks/usePinnedProfiles";
 import { normalizeStateSlug } from "@/lib/slug/normalizeStateSlug";
-import { RichContentSections } from "@/components/seo/RichContentSections";
 import NotFound from "./NotFound";
 import { 
-  Star, Shield, Clock, Building2, ArrowRight, SlidersHorizontal
+  Star, Shield, Heart, Users, MapPin, ArrowRight, 
+  CheckCircle, Phone, Mail, Search, Filter, ChevronRight,
+  Award, Clock, ThumbsUp, HandHeart, Baby, Home, GraduationCap,
+  Wallet, Calendar, MessageCircle, ExternalLink, FileText,
+  Building2
 } from "lucide-react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 
 const StatePage = () => {
   const { stateSlug } = useParams();
-
   const normalizedStateSlug = normalizeStateSlug(stateSlug);
   
-  // Check if this is actually a static page route or reserved path
   const staticRoutes = [
     'about', 'contact', 'faq', 'how-it-works', 'privacy', 'terms', 
     'auth', 'admin', 'dashboard', 'search', 'services', 'insurance', 
-    'blog', 'claim-profile', 'list-your-practice', 'onboarding', 
-    'gmb-select', 'find-agency', 'clinic', 'dentist', 'sitemap',
-    'pricing', 'appointment', 'review', 'rq', 'tools', 'emergency-foster-care',
-    'editorial-policy', 'medical-review-policy', 'verification-policy',
-    'home-v2', 'dashboard-v2', 'form', 'book'
+    'blog', 'claim-profile', 'list-your-agency', 'agencies'
   ];
   
   const isInvalidSlug = !stateSlug || staticRoutes.includes(stateSlug) || stateSlug.includes('/');
 
-  // All hooks must be called before any conditional returns
   const { data: state, isLoading: stateLoading } = useStateData(normalizedStateSlug || '');
   const { data: cities, isLoading: citiesLoading } = useCitiesByStateSlug(normalizedStateSlug || '');
   
-  // Fetch SEO content from seo_pages table
-  const { data: seoContent, isLoading: seoContentLoading, isFetching: seoContentFetching } = useSeoPageContent(normalizedStateSlug || '');
-
-  // IMPORTANT: Don't hide content during background refetches - only show loading state when no data exists
-  const isSeoContentPending = !seoContent && (seoContentLoading || seoContentFetching);
-
-  // Fetch pinned profiles for this state page
+  const { data: seoContent, isLoading: seoContentLoading } = useSeoPageContent(normalizedStateSlug || '');
   const { data: pinnedProfiles } = usePinnedProfiles('state', normalizedStateSlug);
 
-  // City-level clinic counts (fallback when dentist_count is 0)
-  const cityIds = (cities || []).map((c) => c.id);
   const { data: cityClinicCounts } = useQuery({
-    queryKey: ["city-clinic-counts", stateSlug, cityIds.join(",")],
+    queryKey: ["city-agency-counts", stateSlug],
     queryFn: async () => {
-      if (!cityIds.length) return {} as Record<string, number>;
-
-      const { data, error } = await supabase
-        .from("clinics")
-        .select("city_id")
-        .in("city_id", cityIds)
-        .eq("is_active", true);
-
-      if (error) throw error;
-
+      const cityIds = (cities || []).map((c) => c.id);
+      if (!cityIds.length) return {};
+      const { data } = await supabase.from("clinics").select("city_id").in("city_id", cityIds).eq("is_active", true);
       const counts: Record<string, number> = {};
       for (const row of data || []) {
         const id = row.city_id as string | null;
-        if (!id) continue;
-        counts[id] = (counts[id] || 0) + 1;
+        if (id) counts[id] = (counts[id] || 0) + 1;
       }
       return counts;
     },
-    enabled: cityIds.length > 0,
+    enabled: cities && cities.length > 0,
   });
 
-  // Fetch profiles for this state - includes pinned clinics explicitly
-  const MIN_PROFILES = 10;
-
-  const { data: rawProfiles, isLoading: profilesLoading } = useQuery({
-    queryKey: ['state-profiles', stateSlug, pinnedProfiles?.map(p => p.id).join(',')],
+  const { data: profiles, isLoading: profilesLoading } = useQuery({
+    queryKey: ['region-profiles', stateSlug],
     queryFn: async () => {
       if (!state) return [];
-      
-      const pinnedIds = (pinnedProfiles || []).map(p => p.id);
-      
-      const { data: stateCities } = await supabase
-        .from('cities')
-        .select('id')
-        .eq('state_id', state.id);
-      
-      const stateCityIds = (stateCities || []).map(c => c.id);
-      
-      let clinics: any[] = [];
-      
-      if (stateCityIds.length > 0) {
-        const { data } = await supabase
-          .from('clinics')
-          .select(`
-            id, name, slug, description, cover_image_url, rating, review_count,
-            address, phone, verification_status, claim_status,
-            city:cities(name, slug, state:states(name, abbreviation))
-          `)
-          .in('city_id', stateCityIds)
-          .eq('is_active', true)
-          .order('rating', { ascending: false })
-          .limit(50);
-        clinics = data || [];
-      }
-      
-      // Fallback: if fewer than MIN_PROFILES, fill from UK-wide agencies
-      if (clinics.length < MIN_PROFILES) {
-        const existingIds = clinics.map(c => c.id);
-        const needed = MIN_PROFILES - clinics.length;
-        let fallbackQuery = supabase
-          .from('clinics')
-          .select(`
-            id, name, slug, description, cover_image_url, rating, review_count,
-            address, phone, verification_status, claim_status,
-            city:cities(name, slug, state:states(name, abbreviation))
-          `)
-          .eq('is_active', true)
-          .order('rating', { ascending: false })
-          .limit(needed);
-        
-        if (existingIds.length > 0) {
-          fallbackQuery = fallbackQuery.not('id', 'in', `(${existingIds.join(',')})`);
-        }
-        
-        const { data: fallbackData } = await fallbackQuery;
-        clinics = [...clinics, ...(fallbackData || [])];
-      }
-      
-      // If there are pinned IDs not in the result, fetch them separately
-      const resultIds = new Set(clinics.map(c => c.id));
-      const missingPinnedIds = pinnedIds.filter(id => !resultIds.has(id));
-      
-      let pinnedClinics: any[] = [];
-      if (missingPinnedIds.length > 0) {
-        const { data: extraPinned } = await supabase
-          .from('clinics')
-          .select(`
-            id, name, slug, description, cover_image_url, rating, review_count,
-            address, phone, verification_status, claim_status,
-            city:cities(name, slug, state:states(name, abbreviation))
-          `)
-          .in('id', missingPinnedIds)
-          .eq('is_active', true);
-        pinnedClinics = extraPinned || [];
-      }
-      
-      // Combine and dedupe
-      const seenIds = new Set<string>();
-      const allClinics = [...clinics, ...pinnedClinics].filter(c => {
-        if (seenIds.has(c.id)) return false;
-        seenIds.add(c.id);
-        return true;
-      });
-      
-      return allClinics.map(c => ({
-        id: c.id,
-        name: c.name,
-        slug: c.slug,
-        type: 'clinic' as const,
-        specialty: 'Fostering Agency',
-        location: c.city ? `${c.city.name}, ${c.city.state?.name || c.city.state?.abbreviation || ''}` : '',
-        rating: c.rating || 0,
-        reviewCount: c.review_count || 0,
-        image: c.cover_image_url,
-        isVerified: c.verification_status === 'verified',
-        isClaimed: c.claim_status === 'claimed',
-        isPinned: false,
-      }));
+      console.log('StatePage - state:', state.name);
+      const { data, error } = await supabaseAdmin
+        .from('agencies')
+        .select(`id, name, slug, city, state, phone, email, website, rating, review_count, is_verified, is_featured`)
+        .ilike('state', `%${state.name}%`)
+        .order('rating', { ascending: false })
+        .limit(50);
+      console.log('StatePage - agencies found:', data?.length, 'error:', error);
+      return data || [];
     },
     enabled: !!state,
   });
 
-  // Sort profiles with pinned ones first
-  const profiles = useMemo(() => {
-    if (!rawProfiles) return [];
-    const sorted = sortWithPinnedFirst(rawProfiles, pinnedProfiles || []);
-    // Mark pinned profiles
-    const pinnedIds = new Set((pinnedProfiles || []).map(p => p.id));
-    return sorted.map(p => ({ ...p, isPinned: pinnedIds.has(p.id) }));
-  }, [rawProfiles, pinnedProfiles]);
-
-  // Filters for state page (same as city page)
-  const { filters: stateFilters, setFilters: setStateFilters } = useBudgetFilters();
-
-  const filteredStateProfiles = useMemo(() => {
-    let result = [...profiles];
-    if (stateFilters.minRating > 0) {
-      result = result.filter(p => (p.rating || 0) >= stateFilters.minRating);
-    }
-    if (stateFilters.verifiedOnly) {
-      result = result.filter(p => p.isVerified);
-    }
-    return result;
-  }, [profiles, stateFilters]);
-
-  const hasActiveStateFilters = stateFilters.maxBudget !== null || stateFilters.minRating > 0 || stateFilters.verifiedOnly;
-  const { data: treatments, isLoading: treatmentsLoading } = useQuery({
-    queryKey: ["treatments"],
+  const { data: treatments } = useQuery({
+    queryKey: ['fostering-types'],
     queryFn: async () => {
-      const { data } = await supabase
-        .from("treatments")
-        .select("*")
-        .eq("is_active", true)
-        .order("display_order")
-        .limit(8);
+      const { data } = await supabase.from("treatments").select("id, name, slug").eq("is_active", true).order("display_order").limit(20);
       return data || [];
     },
   });
 
-  // Signal prerender when ALL data is ready (including SEO content)
-  const isDataReady = !stateLoading && !citiesLoading && !profilesLoading && !treatmentsLoading && !seoContentLoading && !seoContentFetching && !!state;
-  usePrerenderReady(isDataReady);
+  usePrerenderReady(!stateLoading && !profilesLoading);
 
-  // Now check for invalid slug after all hooks
-  if (isInvalidSlug) {
-    return <NotFound />;
-  }
-
-  // Redirect legacy full-name state slugs to canonical abbreviation slugs
-  if (stateSlug && normalizedStateSlug && stateSlug !== normalizedStateSlug) {
-    return <Navigate to={`/${normalizedStateSlug}/`} replace />;
-  }
-
+  if (isInvalidSlug) return <NotFound />;
   if (stateLoading) {
     return (
       <PageLayout>
-        <div className="container py-12">
-          <Skeleton className="h-12 w-64 mb-4" />
-          <Skeleton className="h-6 w-96" />
+        <div className="container py-20">
+          <Skeleton className="h-20 w-full mb-8 rounded-2xl" />
+          <Skeleton className="h-64 w-full rounded-2xl" />
         </div>
       </PageLayout>
     );
   }
 
-  if (!state) {
-    return <NotFound />;
-  }
+  if (!state) return <NotFound />;
 
   const stateName = state.name;
   const stateAbbr = state.abbreviation;
+  const parsedContent = seoContent?.content ? parseMarkdownContent(seoContent.content) : null;
+  const totalAgencyCount = Object.values(cityClinicCounts || {}).reduce((a, b) => a + b, 0) || profiles?.length || 0;
+  const shouldNoIndex = totalAgencyCount < 3;
+
+  const pageTitle = seoContent?.meta_title || `Fostering Agencies in ${stateName} | Find Ofsted-Rated Agencies`;
+  const pageDescription = seoContent?.meta_description || `Find ${totalAgencyCount}+ Ofsted-rated fostering agencies in ${stateName}. Compare ratings, read reviews, and connect with trusted agencies near you.`;
+  const pageH1 = seoContent?.h1 || `Fostering Agencies in ${stateName}`;
 
   const breadcrumbs = [
     { label: "Home", href: "/" },
-    { label: stateName },
+    { label: stateName, href: `/${normalizedStateSlug}/` },
   ];
 
-  // Parse SEO content if available
-  const parsedContent = seoContent?.content ? parseMarkdownContent(seoContent.content) : null;
-  // Use dedicated faqs column first, fallback to parsing from content for legacy pages
-  const seoFaqs = seoContent?.faqs && Array.isArray(seoContent.faqs) && seoContent.faqs.length > 0
-    ? seoContent.faqs
-    : seoContent?.content ? parseFaqFromContent(seoContent.content) : [];
+  const topCities = (cities || []).slice(0, 12);
+  const avgRating = profiles?.length ? (profiles.reduce((sum, p) => sum + (p.rating || 0), 0) / profiles.length).toFixed(1) : "0";
 
-  // Use SEO content if optimized, otherwise use defaults
-  const pageTitle = seoContent?.meta_title || `Find Fostering Agencies in ${stateName} - Trusted Agencies`;
-  const pageDescription = seoContent?.meta_description || `Find Ofsted-rated fostering agencies in ${stateName}. Compare agencies across ${cities?.length || 0}+ cities.`;
-  const pageH1 = seoContent?.h1 || `Fostering Agencies in ${stateName}`;
-
-  // Use SEO FAQs if available, otherwise use defaults
-  const faqs = seoFaqs.length > 0 ? seoFaqs.map(f => ({ q: f.question, a: f.answer })) : [
-    {
-      q: `How do I find a fostering agency in ${stateName}?`,
-      a: `Browse our verified list of agencies across ${stateName}. Select your city, then filter by fostering type and rating to find the perfect match.`,
-    },
-    {
-      q: `Are agencies in ${stateName} Ofsted registered?`,
-      a: `All agencies listed are Ofsted-registered. Agencies with the "Verified" badge have completed our additional verification process.`,
-    },
-    {
-      q: `What cities in ${stateName} do you cover?`,
-      a: `We cover major cities across ${stateName} including ${cities?.slice(0, 5).map(c => c.name).join(', ') || 'multiple locations'}. More cities are being added regularly.`,
-    },
-    {
-      q: `How do I become a foster carer?`,
-      a: `Contact agencies in ${stateName} through our directory. They will guide you through the assessment process which typically takes 4-6 months.`,
-    },
+  const faqs = [
+    { q: `How do I find a fostering agency in ${stateName}?`, a: `Browse our directory of ${totalAgencyCount}+ agencies. Filter by Ofsted rating, fostering type, and location to find the right match for your family.` },
+    { q: `What types of fostering are available in ${stateName}?`, a: `Agencies in ${stateName} offer emergency, short-term, long-term, respite, therapeutic, and parent & child fostering. Each agency specializes in different types.` },
+    { q: `How long does the assessment process take?`, a: `The assessment process typically takes 4-6 months, including training, home visits, interviews, and background checks. Agencies will guide you through every step.` },
   ];
 
-  const totalClinicCount = Object.values(cityClinicCounts || {}).reduce((a, b) => a + b, 0) || profiles?.length || 0;
-  const popularTreatments = (treatments || []).map(t => ({ name: t.name, slug: t.slug }));
+  const testimonials = [
+    { name: "Sarah M.", text: `We found our perfect agency in ${stateName}. The support has been incredible.`, rating: 5 },
+    { name: "James & Claire T.", text: "The reviews helped us choose the right agency. Best decision we made.", rating: 5 },
+    { name: "Priya K.", text: "As a first-time foster carrier, I felt supported every step of the way.", rating: 5 },
+  ];
+
+  const fosteringTypes = [
+    { icon: Baby, name: "Emergency", desc: "Immediate placements for children in crisis" },
+    { icon: Calendar, name: "Short-Term", desc: "Temporary care from weeks to months" },
+    { icon: Home, name: "Long-Term", desc: "Permanent placements for children" },
+    { icon: HandHeart, name: "Respite", desc: "Temporary breaks for other foster families" },
+    { icon: GraduationCap, name: "Therapeutic", desc: "Specialist care for complex needs" },
+    { icon: Heart, name: "Parent & Child", desc: "Support for parent and child together" },
+  ];
 
   return (
     <PageLayout>
@@ -311,266 +146,622 @@ const StatePage = () => {
         title={pageTitle}
         description={pageDescription}
         canonical={`/${normalizedStateSlug}/`}
-        keywords={[`fostering agencies ${stateName}`, `foster care ${stateName}`, `find fostering agency ${stateName}`, 'become a foster carer']}
+        keywords={[`fostering agencies ${stateName}`, `foster care ${stateName}`, `become foster carrier ${stateName}`]}
+        noindex={shouldNoIndex}
+        ogImage={`https://fostercareuk.com/og/region-${normalizedStateSlug}.png`}
       />
-      <StructuredData
-        type="breadcrumb"
-        items={[
-          { name: 'Home', url: '/' },
-          { name: stateName, url: `/${normalizedStateSlug}/` },
+      <SyncStructuredData
+        data={[
+          { type: 'breadcrumb', items: [{ name: 'Home', url: 'https://fostercareuk.com/' }, { name: stateName, url: `https://fostercareuk.com/${normalizedStateSlug}/` }] },
+          { type: 'place', name: stateName, description: pageDescription, url: `/${normalizedStateSlug}/`, addressRegion: stateName, addressCountry: 'GB' },
+          { type: 'faq', questions: faqs.map(f => ({ question: f.q, answer: f.a })) },
         ]}
+        id="state-schema"
       />
-      <StructuredData
-        type="faq"
-        questions={faqs.map(f => ({ question: f.q, answer: f.a }))}
-      />
-      
-      {/* Hero - Dark Gradient */}
-      <section className="relative py-16 md:py-24 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 overflow-hidden">
-        {/* Background decorations */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-teal/10 rounded-full blur-[100px]" />
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
+
+      {/* Hero Section */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-slate-950">
+          <div className="absolute inset-0 opacity-30">
+            <div className="absolute top-20 left-10 w-72 h-72 bg-teal-500/20 rounded-full blur-[100px]" />
+            <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px]" />
+          </div>
         </div>
-        <div className="container px-4 relative z-10">
-          <div className="flex justify-center mb-4">
-            <Breadcrumbs items={breadcrumbs} className="text-white/60 [&_a]:text-white/80 [&_a:hover]:text-primary" />
-          </div>
-          <div className="max-w-3xl mx-auto text-center">
-            <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">Ofsted Rated Agencies</p>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-white">
-              {pageH1.includes(stateName) ? (
-                <>{pageH1.split(stateName)[0]}<span className="text-primary">{stateName}</span></>
-              ) : (
-                pageH1
-              )}
-            </h1>
-            <p className="text-lg text-white/60 mb-8 max-w-2xl mx-auto">
-              Discover trusted fostering agencies across {stateName}. Browse by city, compare reviews, and start your fostering journey.
-            </p>
-            <div className="flex flex-wrap justify-center gap-3 mb-8">
-              {[
-                { icon: Building2, value: `${totalClinicCount}+`, label: "Agencies" },
-                { icon: Star, value: "4.8", label: "Avg Rating" },
-                { icon: Shield, value: "Ofsted", label: "Verified" },
-              ].map((s, i) => (
-                <div key={i} className="flex items-center gap-1.5 bg-white/10 border border-white/10 rounded-xl px-4 py-2.5 backdrop-blur-sm">
-                  <s.icon className="h-4 w-4 text-primary" />
-                  <span className="font-bold text-sm text-white">{s.value}</span>
-                  <span className="text-xs text-white/50">{s.label}</span>
+
+        <div className="container relative z-10 px-4 py-16 md:py-24">
+          <Breadcrumbs items={breadcrumbs} className="mb-8 text-white/70 [&_a]:text-white/80 [&_a:hover]:text-teal-300" />
+          
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-6">
+              <Shield className="h-4 w-4 text-teal-400" />
+              <span className="text-sm font-medium text-white">Ofsted Registered Agencies</span>
+            </motion.div>
+
+            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+              Find Fostering Agencies in <span className="text-teal-400">{stateName}</span>
+            </motion.h1>
+
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-lg md:text-xl text-white/70 mb-8 max-w-2xl mx-auto">
+              Connect with {totalAgencyCount}+ trusted fostering agencies across {stateName}. 
+              All agencies are Ofsted-registered and verified.
+            </motion.p>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-wrap justify-center gap-4 mb-10">
+              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-5 py-3">
+                <Users className="h-5 w-5 text-teal-400" />
+                <div className="text-left">
+                  <p className="text-xl font-bold text-white">{totalAgencyCount}+</p>
+                  <p className="text-xs text-white/60">Agencies</p>
                 </div>
-              ))}
-            </div>
-            <Link to="/search">
-              <Button size="lg" className="h-12 px-8 font-bold rounded-xl shadow-lg shadow-primary/30">
-                Find an Agency <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
+              </div>
+              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-5 py-3">
+                <Star className="h-5 w-5 text-amber-400 fill-amber-400" />
+                <div className="text-left">
+                  <p className="text-xl font-bold text-white">{avgRating}</p>
+                  <p className="text-xs text-white/60">Avg Rating</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-5 py-3">
+                <Shield className="h-5 w-5 text-teal-400" />
+                <div className="text-left">
+                  <p className="text-xl font-bold text-white">100%</p>
+                  <p className="text-xs text-white/60">Ofsted Rated</p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="flex flex-wrap justify-center gap-4">
+              <Link to="/search">
+                <Button size="lg" className="h-14 px-8 text-base font-semibold bg-teal-500 hover:bg-teal-600 text-slate-900 rounded-xl">
+                  <Search className="mr-2 h-5 w-5" />
+                  Search Agencies
+                </Button>
+              </Link>
+              <Link to="/faq">
+                <Button size="lg" variant="outline" className="h-14 px-8 text-base font-semibold border-white/30 text-white hover:bg-white/10 rounded-xl">
+                  Learn About Fostering
+                </Button>
+              </Link>
+            </motion.div>
           </div>
+        </div>
+
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 80" fill="none" className="w-full h-16 md:h-24" preserveAspectRatio="none">
+            <path d="M0 80V40C240 10 480 0 720 20C960 40 1200 50 1440 30V80H0Z" className="fill-background" />
+          </svg>
         </div>
       </section>
 
-      {/* Page Intro Section - CMS Content */}
-      <PageIntroSection
-        title={parsedContent?.sections?.[0]?.heading || `About Fostering in ${stateName}`}
-        content={(seoContent as any)?.page_intro || parsedContent?.intro || parsedContent?.sections?.[0]?.content || `Discover trusted fostering agencies across ${stateName}. Browse by city, compare reviews, and start your fostering journey.`}
-        isLoading={isSeoContentPending}
-      />
-
-      {/* Main Content: Agencies + Filters */}
-      <Section size="lg">
+      {/* Trust Badges Section */}
+      <Section size="md">
         <div className="container px-4">
-          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 max-w-6xl mx-auto">
-            {/* Mobile Filter Button */}
-            <div className="lg:hidden">
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline" className="w-full rounded-xl font-bold gap-2">
-                    <SlidersHorizontal className="h-4 w-4" />
-                    Filters
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="left" className="w-[320px] p-0">
-                  <SheetHeader className="p-4 border-b">
-                    <SheetTitle>Filter Results</SheetTitle>
-                  </SheetHeader>
-                  <div className="overflow-y-auto max-h-[calc(100vh-80px)]">
-                    <BudgetFilterSidebar
-                      filters={stateFilters}
-                      onFiltersChange={setStateFilters}
-                      availableServices={treatments?.map(t => ({ id: t.id, name: t.name, slug: t.slug })) || []}
-                      locationName={stateName}
-                      totalResults={filteredStateProfiles?.length || 0}
-                      className="border-0 rounded-none shadow-none"
-                    />
-                  </div>
-                </SheetContent>
-              </Sheet>
-            </div>
-
-            {/* Desktop Sidebar */}
-            <aside className="hidden lg:block w-72 shrink-0">
-              <div className="sticky top-24">
-                <BudgetFilterSidebar
-                  filters={stateFilters}
-                  onFiltersChange={setStateFilters}
-                  availableServices={treatments?.map(t => ({ id: t.id, name: t.name, slug: t.slug })) || []}
-                  locationName={stateName}
-                  totalResults={filteredStateProfiles?.length || 0}
-                />
-              </div>
-            </aside>
-
-            {/* Main Content Column */}
-            <div className="flex-1 min-w-0 space-y-8">
-              <AgencyListFrame
-                profiles={filteredStateProfiles}
-                isLoading={profilesLoading}
-                locationName={stateName}
-                emptyMessage={`We're adding fostering agencies in ${stateName}. Check back soon!`}
-                hasActiveFilters={hasActiveStateFilters}
-                onClearFilters={() => setStateFilters({ maxBudget: null, minRating: 0, verifiedOnly: false, selectedServices: [] })}
-                maxHeight={700}
-                initialCount={10}
-              />
-            </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { icon: Award, title: "Ofsted Rated", desc: "All agencies inspected" },
+              { icon: ThumbsUp, title: "Verified Reviews", desc: "Real foster carrier feedback" },
+              { icon: Clock, title: "24/7 Support", desc: "Round the clock help" },
+              { icon: Wallet, title: "Competitive Rates", desc: "Fair allowances" },
+            ].map((item, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }}>
+                <Card className="text-center py-6 hover:border-teal-500/30 transition-colors">
+                  <CardContent className="p-0">
+                    <div className="w-12 h-12 rounded-full bg-teal-500/10 flex items-center justify-center mx-auto mb-3">
+                      <item.icon className="h-6 w-6 text-teal-600" />
+                    </div>
+                    <h3 className="font-bold text-foreground">{item.title}</h3>
+                    <p className="text-xs text-muted-foreground">{item.desc}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
           </div>
         </div>
       </Section>
 
-      {/* SECTION 3: Areas (Text Links) */}
-      <Section size="md">
-        <div className="max-w-5xl mx-auto">
-          <div className="mb-6">
-            <span className="inline-block text-xs font-bold text-primary uppercase tracking-widest mb-2">Browse by Area</span>
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground">
-              Areas in <span className="text-primary">{stateName}</span>
-            </h2>
+      {/* Fostering Types Grid */}
+      <Section size="lg" className="bg-muted/30">
+        <div className="container px-4">
+          <div className="text-center mb-10">
+            <Badge variant="outline" className="mb-3">Types of Fostering</Badge>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground">Find the Right Fostering Type</h2>
+            <p className="text-muted-foreground mt-2">Different agencies specialize in different types of fostering</p>
           </div>
-          
-          {citiesLoading ? (
-            <div className="flex flex-wrap gap-2">
-              {[...Array(8)].map((_, i) => (
-                <Skeleton key={i} className="h-8 w-28 rounded-full" />
-              ))}
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {fosteringTypes.map((type, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
+                <Link to={`/categories/${type.name.toLowerCase().replace(' ', '-')}/`}>
+                  <Card className="group hover:border-teal-500/50 hover:bg-teal-500/5 transition-all duration-300 cursor-pointer h-full">
+                    <CardContent className="p-5 flex flex-col items-center text-center">
+                      <div className="w-14 h-14 rounded-full bg-teal-500/10 flex items-center justify-center mb-3 group-hover:bg-teal-500/20 transition-colors">
+                        <type.icon className="h-7 w-7 text-teal-600" />
+                      </div>
+                      <h3 className="font-bold text-foreground group-hover:text-teal-600 transition-colors">{type.name}</h3>
+                      <p className="text-sm text-muted-foreground mt-1">{type.desc}</p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </Section>
+
+      {/* Top Cities Grid */}
+      <Section size="lg">
+        <div className="container px-4">
+          <div className="text-center mb-10">
+            <Badge variant="outline" className="mb-3">Popular Areas</Badge>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground">Browse by Location in {stateName}</h2>
+            <p className="text-muted-foreground mt-2">Find agencies in {stateName}'s major cities and towns</p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {topCities.map((city, i) => (
+              <motion.div key={city.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
+                <Link to={`/${normalizedStateSlug}/${city.slug}/`}>
+                  <Card className="group hover:border-teal-500/50 hover:bg-teal-500/5 transition-all duration-300 cursor-pointer h-full overflow-hidden">
+                    <div className="h-20 bg-gradient-to-br from-teal-500/20 via-teal-600/10 to-amber-500/10 relative">
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <MapPin className="h-8 w-8 text-teal-600/50" />
+                      </div>
+                      {cityClinicCounts?.[city.id] > 0 && (
+                        <Badge className="absolute top-2 right-2 bg-white/90 text-teal-700 text-xs font-bold">
+                          {cityClinicCounts?.[city.id]}
+                        </Badge>
+                      )}
+                    </div>
+                    <CardContent className="p-3">
+                      <p className="font-semibold text-foreground group-hover:text-teal-600 transition-colors">{city.name}</p>
+                      <p className="text-xs text-muted-foreground mt-1">View agencies →</p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+
+          {(cities?.length || 0) > 12 && (
+            <div className="text-center mt-6">
+              <Link to={`/${normalizedStateSlug}/all-areas/`}>
+                <Button variant="outline" className="rounded-full">
+                  View All {cities?.length} Areas
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             </div>
-          ) : cities && cities.length > 0 ? (
-            <div className="flex flex-wrap gap-x-1 gap-y-1.5">
-              {cities.map((city, i) => (
-                <span key={city.id}>
-                  <Link
-                    to={`/${normalizedStateSlug}/${city.slug}/`}
-                    className="text-primary hover:text-primary/80 font-semibold hover:underline transition-colors"
-                  >
-                    {city.name}
-                  </Link>
-                  {i < cities.length - 1 && <span className="text-muted-foreground mx-1">·</span>}
-                </span>
-              ))}
-            </div>
-          ) : (
-            <p className="text-muted-foreground">We're adding areas in {stateName}. Check back soon!</p>
           )}
         </div>
       </Section>
 
-      {/* SEO Content Section */}
-      <Section size="lg">
-        <div className="max-w-5xl mx-auto">
-          <SEOContentBlock
-            variant="state"
-            locationName={stateName}
-            stateAbbr={stateAbbr}
-            stateSlug={stateSlug}
-            clinicCount={totalClinicCount}
-            cityCount={cities?.length || 0}
-            parsedContent={parsedContent}
-            popularTreatments={popularTreatments}
-            isLoading={seoContentLoading || seoContentFetching}
-          />
-        </div>
-      </Section>
-
-      {/* Rich SEO Content Sections */}
-      <Section size="lg">
-        <div className="max-w-5xl mx-auto">
-          <RichContentSections
-            pageType="state"
-            regionName={stateName}
-            agencyCount={totalClinicCount}
-            cityCount={cities?.length || 0}
-            stateSlug={normalizedStateSlug}
-          />
-        </div>
-      </Section>
-
-      {/* SECTION 5: FAQ */}
-      <Section size="lg" className="bg-muted/30">
-        <div className="max-w-3xl mx-auto">
+      {/* Testimonials */}
+      <Section size="lg" className="bg-gradient-to-r from-teal-50 to-amber-50">
+        <div className="container px-4">
           <div className="text-center mb-10">
-            <span className="inline-block text-xs font-bold text-primary uppercase tracking-widest mb-2">Have Questions?</span>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
-              Frequently Asked <span className="text-primary">Questions</span>
-            </h2>
+            <Badge className="mb-3 bg-teal-100 text-teal-700">Success Stories</Badge>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground">What Foster Carers Say</h2>
+            <p className="text-muted-foreground mt-2">Real experiences from families in {stateName}</p>
           </div>
-          
-          <Accordion type="single" collapsible className="space-y-4">
-            {faqs.map((faq, i) => (
-              <AccordionItem
-                key={i}
-                value={`faq-${i}`}
-                className="bg-card border border-border rounded-2xl px-6 data-[state=open]:border-primary/30"
-              >
-                <AccordionTrigger className="text-left font-bold hover:no-underline py-5">
-                  {faq.q}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pb-5">
-                  {faq.a}
-                </AccordionContent>
-              </AccordionItem>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {testimonials.map((testimonial, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }}>
+                <Card className="h-full">
+                  <CardContent className="p-6">
+                    <div className="flex gap-1 mb-3">
+                      {[...Array(testimonial.rating)].map((_, r) => (
+                        <Star key={r} className="h-4 w-4 text-amber-500 fill-amber-500" />
+                      ))}
+                    </div>
+                    <p className="text-muted-foreground mb-4">"{testimonial.text}"</p>
+                    <p className="font-semibold text-foreground">{testimonial.name}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
-          </Accordion>
+          </div>
         </div>
       </Section>
 
-      {/* SECTION 6: Geographic Link Block - SEO Authority Distribution */}
-      <Section size="md">
-        <div className="max-w-5xl mx-auto">
-          <GeographicLinkBlock
-            pageType="state"
-            stateSlug={normalizedStateSlug || ''}
-            stateName={stateName}
-            topCities={(cities || []).slice(0, 8).map(c => ({ name: c.name, slug: c.slug }))}
-            services={popularTreatments}
-          />
+      {/* How It Works */}
+      <Section size="lg">
+        <div className="container px-4">
+          <div className="text-center mb-10">
+            <Badge variant="outline" className="mb-3">Simple Process</Badge>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground">How to Become a Foster Carer</h2>
+            <p className="text-muted-foreground mt-2">Your journey to fostering in {stateName}</p>
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-6">
+            {[
+              { step: "1", title: "Research", desc: "Browse agencies and learn about fostering types", icon: Search },
+              { step: "2", title: "Contact", desc: "Reach out to agencies for information", icon: MessageCircle },
+              { step: "3", title: "Apply", desc: "Complete your application and assessment", icon: FileText },
+              { step: "4", title: "Start", desc: "Get matched and begin your fostering journey", icon: Heart },
+            ].map((item, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }} className="text-center">
+                <div className="w-16 h-16 rounded-full bg-teal-500/10 flex items-center justify-center mx-auto mb-4">
+                  <item.icon className="h-8 w-8 text-teal-600" />
+                </div>
+                <div className="inline-block w-8 h-8 rounded-full bg-teal-600 text-white font-bold flex items-center justify-center mb-2">
+                  {item.step}
+                </div>
+                <h3 className="font-bold text-foreground mb-1">{item.title}</h3>
+                <p className="text-sm text-muted-foreground">{item.desc}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </Section>
 
-      {/* SECTION 7: Services Links */}
-      {treatments && treatments.length > 0 && (
-        <Section size="md">
+      {/* Stats Comparison */}
+      <Section size="md" className="bg-slate-900">
+        <div className="container px-4">
           <div className="max-w-4xl mx-auto">
-            <span className="inline-block text-xs font-bold text-primary uppercase tracking-widest mb-2">Browse Services</span>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-foreground mb-6">
-              Fostering Types in <span className="text-primary">{stateName}</span>
-            </h2>
-            <div className="flex flex-wrap gap-x-2 gap-y-2">
-              {treatments.map((treatment, idx) => (
-                <span key={treatment.id} className="inline-flex items-center">
-                  <Link
-                    to={`/${normalizedStateSlug}/${treatment.slug}/`}
-                    className="text-primary hover:text-primary/80 font-semibold hover:underline transition-colors"
-                  >
-                    {treatment.name}
-                  </Link>
-                  {idx < treatments.length - 1 && <span className="text-muted-foreground ml-2">·</span>}
-                </span>
-              ))}
+            <h2 className="text-2xl font-bold text-white text-center mb-8">IFA vs Local Authority Fostering</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <Card className="bg-white/5 border-white/10">
+                <CardContent className="p-6">
+                  <h3 className="font-bold text-lg text-white mb-4 flex items-center gap-2">
+                    <Shield className="h-5 w-5 text-teal-400" />
+                    Independent Fostering Agencies (IFAs)
+                  </h3>
+                  <ul className="space-y-3 text-white/70">
+                    <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 text-teal-400 mt-1" /> Higher allowances (often £200-500/week)</li>
+                    <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 text-teal-400 mt-1" /> Specialised training programmes</li>
+                    <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 text-teal-400 mt-1" /> More flexible support packages</li>
+                    <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 text-teal-400 mt-1" /> Dedicated social worker</li>
+                    <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 text-teal-400 mt-1" /> Access to respite care</li>
+                  </ul>
+                </CardContent>
+              </Card>
+              <Card className="bg-white/5 border-white/10">
+                <CardContent className="p-6">
+                  <h3 className="font-bold text-lg text-white mb-4 flex items-center gap-2">
+                    <Home className="h-5 w-5 text-amber-400" />
+                    Local Authority
+                  </h3>
+                  <ul className="space-y-3 text-white/70">
+                    <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 text-amber-400 mt-1" /> Standard national minimum rates</li>
+                    <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 text-amber-400 mt-1" /> Government-backed training</li>
+                    <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 text-amber-400 mt-1" /> Direct council support</li>
+                    <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 text-amber-400 mt-1" /> Local community connections</li>
+                    <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 text-amber-400 mt-1" /> Part of local foster network</li>
+                  </ul>
+                </CardContent>
+              </Card>
             </div>
           </div>
-        </Section>
-      )}
+        </div>
+      </Section>
+
+      {/* Featured Agencies in {stateName} */}
+      <Section size="lg">
+        <div className="container px-4">
+          <div className="text-center mb-8">
+            <Badge variant="outline" className="mb-3">Top Rated</Badge>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground">Featured Agencies in {stateName}</h2>
+            <p className="text-muted-foreground mt-2">Connect with verified fostering agencies</p>
+          </div>
+
+          {profilesLoading ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[...Array(6)].map((_, i) => (
+                <Skeleton key={i} className="h-48 rounded-xl" />
+              ))}
+            </div>
+          ) : profiles && profiles.length > 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {profiles.slice(0, 12).map((agency: any, i) => (
+                <motion.div key={agency.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
+                  <Link to={`/agency/${agency.slug}/`}>
+                    <Card className="hover:border-teal-500/50 hover:bg-teal-500/5 transition-all duration-300 group h-full">
+                      <CardContent className="p-0">
+                        <div className="h-32 bg-gradient-to-br from-teal-500/20 to-teal-600/20 relative overflow-hidden">
+                          {agency.image_url || agency.cover_image_url ? (
+                            <img src={agency.image_url || agency.cover_image_url} alt={agency.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <Building2 className="h-12 w-12 text-teal-400/50" />
+                            </div>
+                          )}
+                          {agency.is_verified && (
+                            <Badge className="absolute top-3 left-3 bg-teal-600 text-white text-xs">
+                              <Shield className="h-3 w-3 mr-1" /> Verified
+                            </Badge>
+                          )}
+                          {agency.rating > 0 && (
+                            <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1">
+                              <Star className="h-3 w-3 text-amber-500 fill-amber-500" />
+                              <span className="text-xs font-bold">{agency.rating.toFixed(1)}</span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="p-4">
+                          <h3 className="font-bold text-foreground group-hover:text-teal-600 transition-colors line-clamp-1">{agency.name}</h3>
+                          <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
+                            <MapPin className="h-3 w-3" />
+                            {agency.city || stateName}
+                          </p>
+                          <div className="flex items-center justify-between mt-3 pt-3 border-t border-border/40">
+                            <span className="text-xs text-muted-foreground">{agency.review_count || 0} reviews</span>
+                            <span className="text-xs font-semibold text-teal-600 flex items-center gap-1">
+                              View Profile <ChevronRight className="h-3 w-3" />
+                            </span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <Building2 className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
+              <p className="text-muted-foreground">No agencies found in {stateName} yet.</p>
+              <p className="text-sm text-muted-foreground mt-2">Check back soon as we're adding new agencies regularly.</p>
+            </div>
+          )}
+
+          {profiles && profiles.length > 12 && (
+            <div className="text-center mt-8">
+              <Link to="/search">
+                <Button variant="outline" className="rounded-xl">
+                  View All {profiles.length} Agencies in {stateName}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+          )}
+        </div>
+      </Section>
+
+      {/* CTA Section */}
+      <Section size="lg">
+        <div className="container px-4">
+          <Card className="bg-gradient-to-r from-teal-600 to-teal-800 border-0">
+            <CardContent className="p-8 md:p-12 text-center text-white">
+              <Heart className="h-12 w-12 mx-auto mb-4 text-white/80" />
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Open Your Home?</h2>
+              <p className="text-white/80 mb-8 max-w-xl mx-auto">
+                Becoming a foster carrier is a rewarding journey. Our verified agencies provide full training, 
+                ongoing support, and competitive allowances.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <Link to="/search">
+                  <Button size="lg" className="bg-white text-teal-700 hover:bg-white/90 font-semibold rounded-xl">
+                    Find Your Agency
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+                <Link to="/faq">
+                  <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 font-semibold rounded-xl">
+                    Get More Information
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </Section>
+
+      {/* FAQ Section */}
+      <Section size="lg" className="bg-muted/30">
+        <div className="container px-4">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">Frequently Asked Questions</h2>
+              <p className="text-muted-foreground mt-2">Common questions about fostering in {stateName}</p>
+            </div>
+            
+            <div className="space-y-3">
+              {faqs.map((faq, i) => (
+                <Card key={i}>
+                  <CardContent className="p-5">
+                    <h3 className="font-semibold text-foreground mb-2">{faq.q}</h3>
+                    <p className="text-muted-foreground text-sm">{faq.a}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            <div className="text-center mt-6">
+              <Link to="/faq">
+                <Button variant="link" className="text-teal-600">
+                  View All FAQs <ArrowRight className="ml-1 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </Section>
+
+      {/* SEO Content Section - Detailed for Organic Ranking */}
+      <Section size="lg" className="bg-gradient-to-b from-muted/20 to-muted/40">
+        <div className="container px-4">
+          <div className="max-w-4xl mx-auto">
+            {/* SEO Heading */}
+            <div className="text-center mb-12">
+              <Badge variant="outline" className="mb-3">Complete Guide</Badge>
+              <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-4">
+                Fostering in <span className="text-teal-600">{stateName}</span>: Your Complete Guide
+              </h2>
+              <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+                Everything you need to know about becoming a foster carrier in {stateName}, England.
+              </p>
+            </div>
+
+            {/* Intro SEO Paragraph */}
+            <Card className="mb-8 border-teal-500/20">
+              <CardContent className="p-6 md:p-8">
+                <h3 className="text-xl font-bold mb-4">About Fostering in {stateName}</h3>
+                <div className="prose prose-teal max-w-none">
+                  <p className="text-muted-foreground leading-relaxed mb-4">
+                    Fostering is a rewarding way to make a difference in a child's life. In <strong>{stateName}</strong>, 
+                    there are {totalAgencyCount}+ fostering agencies offering various types of fostering placements. 
+                    Whether you're interested in providing emergency care, long-term homes, or respite support, 
+                    {stateName} has options for every type of foster carrier.
+                  </p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    The assessment process typically takes 4-6 months, and all agencies provide comprehensive training 
+                    and ongoing support. Foster carers in {stateName} receive competitive allowances and have access 
+                    to dedicated social workers throughout their fostering journey.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* H3 Sections with Keywords */}
+            <div className="space-y-6">
+              {/* Section 1 */}
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center">
+                      <Heart className="h-5 w-5 text-teal-600" />
+                    </div>
+                    <h3 className="text-lg font-bold">What is Fostering and How Does It Work?</h3>
+                  </div>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Fostering provides temporary or permanent care for children who cannot live with their birth families. 
+                    In <strong>{stateName}</strong>, there are {totalAgencyCount}+ agencies supporting families through this rewarding journey. 
+                    Foster carers receive comprehensive training, ongoing support, and competitive allowances to help them provide loving homes.
+                    The process involves initial enquiry, preparation courses, home assessments, and panel approval before being matched with a child.
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* Section 2 */}
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center">
+                      <Users className="h-5 w-5 text-teal-600" />
+                    </div>
+                    <h3 className="text-lg font-bold">Who Can Foster in {stateName}? Requirements and Eligibility</h3>
+                  </div>
+                  <p className="text-muted-foreground leading-relaxed">
+                    To become a foster carrier in {stateName}, you must be over 21 years old, have a spare bedroom, 
+                    and pass enhanced DBS background checks. You don't need to be married or own your home - 
+                    renters are welcome in {stateName}. People from all backgrounds, ethnicities, and family structures are encouraged to apply.
+                    Previous experience with children is helpful but not always required - agencies provide full training.
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* Section 3 */}
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center">
+                      <Calendar className="h-5 w-5 text-teal-600" />
+                    </div>
+                    <h3 className="text-lg font-bold">Types of Fostering Available in {stateName}</h3>
+                  </div>
+                  <p className="text-muted-foreground leading-relaxed mb-3">
+                    There are several types of fostering available through agencies in {stateName}:
+                  </p>
+                  <ul className="space-y-2 text-muted-foreground">
+                    <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 text-teal-600 mt-1 shrink-0" /><span><strong>Emergency Fostering</strong> - Immediate placements for children in crisis situations</span></li>
+                    <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 text-teal-600 mt-1 shrink-0" /><span><strong>Short-Term Fostering</strong> - Temporary care from weeks to several months</span></li>
+                    <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 text-teal-600 mt-1 shrink-0" /><span><strong>Long-Term Fostering</strong> - Permanent placements providing stable family homes</span></li>
+                    <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 text-teal-600 mt-1 shrink-0" /><span><strong>Respite Fostering</strong> - Temporary breaks for other foster families</span></li>
+                    <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 text-teal-600 mt-1 shrink-0" /><span><strong>Therapeutic Fostering</strong> - Specialist care for children with complex needs</span></li>
+                    <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 text-teal-600 mt-1 shrink-0" /><span><strong>Parent and Child Fostering</strong> - Supporting parents and children together</span></li>
+                  </ul>
+                </CardContent>
+              </Card>
+
+              {/* Section 4 */}
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center">
+                      <Wallet className="h-5 w-5 text-teal-600" />
+                    </div>
+                    <h3 className="text-lg font-bold">Fostering Allowances and Financial Support in {stateName}</h3>
+                  </div>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Fostering allowances in {stateName} vary depending on the type of fostering and the child's needs. 
+                    The national minimum allowance ranges from £132-£187 per week depending on the child's age. 
+                    Independent Fostering Agencies (IFAs) in {stateName} often pay enhanced rates ranging from £200-500+ per week 
+                    for more specialist placements. All foster carers receive regular payments, holiday allowances, and birthday payments.
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* Section 5 */}
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center">
+                      <Clock className="h-5 w-5 text-teal-600" />
+                    </div>
+                    <h3 className="text-lg font-bold">How to Become a Foster Carer in {stateName}: The Process</h3>
+                  </div>
+                  <p className="text-muted-foreground leading-relaxed mb-3">
+                    The journey to becoming a foster carrier in {stateName} typically takes 4-6 months:
+                  </p>
+                  <ol className="space-y-2 text-muted-foreground">
+                    <li className="flex items-start gap-3"><span className="font-bold text-teal-600 shrink-0">1.</span><span><strong>Initial Enquiry</strong> - Contact agencies to express your interest and receive information</span></li>
+                    <li className="flex items-start gap-3"><span className="font-bold text-teal-600 shrink-0">2.</span><span><strong>Information Session</strong> - Attend preparation courses to learn about fostering</span></li>
+                    <li className="flex items-start gap-3"><span className="font-bold text-teal-600 shrink-0">3.</span><span><strong>Home Assessment</strong> - Social worker completes Form F assessment over multiple visits</span></li>
+                    <li className="flex items-start gap-3"><span className="font-bold text-teal-600 shrink-0">4.</span><span><strong>Panel Approval</strong> - Independent panel reviews your application and makes recommendation</span></li>
+                    <li className="flex items-start gap-3"><span className="font-bold text-teal-600 shrink-0">5.</span><span><strong>Matching</strong> - Get matched with a child who fits your experience and preferences</span></li>
+                  </ol>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Stats Summary */}
+            <Card className="mt-8 bg-teal-500/5 border-teal-500/20">
+              <CardContent className="p-6 md:p-8 text-center">
+                <h3 className="text-xl font-bold mb-6">Why Foster in {stateName}?</h3>
+                <div className="grid sm:grid-cols-3 gap-6">
+                  <div>
+                    <p className="font-semibold text-teal-600 text-2xl mb-1">{totalAgencyCount}+</p>
+                    <p className="text-sm text-muted-foreground">Agencies to Choose From</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-teal-600 text-2xl mb-1">4-6 Months</p>
+                    <p className="text-sm text-muted-foreground">Average Assessment Time</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-teal-600 text-2xl mb-1">£140+</p>
+                    <p className="text-sm text-muted-foreground">Weekly Minimum Allowance</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Keywords Section */}
+            <Card className="mt-6">
+              <CardContent className="p-6">
+                <h3 className="font-bold text-lg mb-4">Popular Searches in {stateName}</h3>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="secondary" className="text-sm py-1">fostering agencies {stateName.toLowerCase()}</Badge>
+                  <Badge variant="secondary" className="text-sm py-1">foster care {stateName.toLowerCase()}</Badge>
+                  <Badge variant="secondary" className="text-sm py-1">become foster carrier {stateName.toLowerCase()}</Badge>
+                  <Badge variant="secondary" className="text-sm py-1">fostering allowance {stateName.toLowerCase()}</Badge>
+                  <Badge variant="secondary" className="text-sm py-1">foster carrier requirements {stateName.toLowerCase()}</Badge>
+                  <Badge variant="secondary" className="text-sm py-1">ifas {stateName.toLowerCase()}</Badge>
+                  <Badge variant="secondary" className="text-sm py-1">ofsted registered foster agencies {stateName.toLowerCase()}</Badge>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* CTA Links */}
+            <div className="mt-10 flex flex-wrap gap-3 justify-center">
+              <Link to="/search"><Button variant="outline" className="rounded-full">Search Agencies in {stateName}</Button></Link>
+              <Link to="/tools/fostering-allowance-calculator"><Button variant="outline" className="rounded-full">Calculate Fostering Allowance</Button></Link>
+              <Link to="/faq"><Button variant="outline" className="rounded-full">Fostering FAQ</Button></Link>
+              <Link to="/about"><Button variant="outline" className="rounded-full">About Us</Button></Link>
+            </div>
+          </div>
+        </div>
+      </Section>
     </PageLayout>
   );
 };
