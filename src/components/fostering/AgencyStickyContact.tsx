@@ -1,10 +1,10 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Clock, ChevronDown, ChevronUp, Phone, Star, MapPin, Globe, ExternalLink, HandHeart, Home, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAnalytics } from "@/hooks/useAnalytics";
-import { EnquiryModal } from "./EnquiryModal";
 
 interface AgencyHour {
   day_of_week: number;
@@ -50,7 +50,6 @@ export function AgencyStickyContact({
   className,
 }: AgencyStickyContactProps) {
   const [showHours, setShowHours] = useState(false);
-  const [enquiryOpen, setEnquiryOpen] = useState(false);
   const { trackPhoneClick } = useAnalytics();
   
   const today = new Date().getDay();
@@ -115,10 +114,11 @@ export function AgencyStickyContact({
         <div className="p-4 space-y-3">
           <Button 
             className="w-full rounded-xl font-bold bg-teal hover:bg-teal/90"
-            onClick={() => setEnquiryOpen(true)}
           >
-            <HandHeart className="h-4 w-4 mr-2" />
-            Make an Enquiry
+            <a href="/contact">
+              <HandHeart className="h-4 w-4 mr-2" />
+              Make an Enquiry
+            </a>
           </Button>
           
           <Button 
@@ -208,13 +208,6 @@ export function AgencyStickyContact({
           </div>
         )}
       </div>
-
-      <EnquiryModal
-        open={enquiryOpen}
-        onOpenChange={setEnquiryOpen}
-        agencyId={agencyId}
-        agencyName={agencyName}
-      />
     </div>
   );
 }
