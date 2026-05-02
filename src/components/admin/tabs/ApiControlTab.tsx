@@ -111,7 +111,7 @@ export default function ApiControlTab() {
         const { error } = await supabase
           .from('global_settings')
           .update({ value: jsonValue })
-          .eq('id', existing.id);
+          .eq('key', key);
         if (error) throw error;
       } else {
         const { error } = await supabase
@@ -146,11 +146,8 @@ export default function ApiControlTab() {
       if (existing) {
         const { error } = await supabase
           .from('global_settings')
-          .update({ 
-            value: newValue as { [key: string]: string | number | boolean | null }, 
-            updated_at: new Date().toISOString() 
-          })
-          .eq('id', existing.id);
+          .update({ value: newValue as { [key: string]: string | number | boolean | null } })
+          .eq('key', key);
         if (error) throw error;
       } else {
         const { error } = await supabase
