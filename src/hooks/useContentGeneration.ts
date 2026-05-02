@@ -56,15 +56,18 @@ export function useGenerateContentBrief() {
         .eq('key', API_KEY)
         .single();
 
-      const configValue = config?.value as Record<string, unknown> || {};
-      const apiKey = configValue.api_key as string;
-      
-      if (!apiKey) {
+      if (!config?.value) {
         throw new Error('Gemini API not configured. Go to API Control to configure.');
       }
 
-      const model = (configValue.model as string) || 'gemini-1.5-flash';
+      const valueObj = config.value as unknown;
+      const apiKey = typeof valueObj === 'object' && valueObj ? (valueObj as Record<string, unknown>).api_key as string : '';
+      const model = typeof valueObj === 'object' && valueObj ? (valueObj as Record<string, unknown>).model as string : 'gemini-1.5-flash';
       
+      if (!apiKey) {
+        throw new Error('API key not found. Go to API Control to configure.');
+      }
+
       const locationContext = params.location ? ` for ${params.location}, UK` : '';
       const serviceContext = params.service ? ` about ${params.service}` : '';
       
