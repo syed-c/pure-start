@@ -167,7 +167,6 @@ const AppointmentTypesTab = lazyRetry(() => import('@/components/agency/Appointm
 const MigrationControlTab = lazyRetry(() => import('@/components/admin/tabs/MigrationControlTab').then(m => ({ default: m.MigrationControlTab })));
 const DataRecoveryTab = lazyRetry(() => import('@/components/admin/tabs/DataRecoveryTab'));
 const AdminRevertTab = lazyRetry(() => import('@/components/admin/tabs/AdminRevertTab'));
-const ContentCommandCenterTab = lazyRetry(() => import('@/components/admin/tabs/ContentCommandCenterTab'));
 const InternalLinkingHubTab = lazyRetry(() => import('@/components/admin/tabs/InternalLinkingHubTab'));
 const QualityIdentityTab = lazyRetry(() => import('@/components/admin/tabs/QualityIdentityTab'));
 const ContentStrategyTab = lazyRetry(() => import('@/components/admin/tabs/ContentStrategyTab'));
@@ -261,7 +260,7 @@ const adminTabGroups = [
   {
     label: 'Discovery & SEO',
     tabs: [
-      { id: 'content-command-center', label: 'Content Hub', icon: Wand2, highlight: true },
+      { id: 'content-intelligence', label: 'Content Intelligence', icon: Brain, highlight: true },
       { id: 'content-studio', label: 'Content Studio', icon: Sparkles, highlight: true },
       { id: 'ranking-control', label: 'Ranking Control', icon: TrendingUp, highlight: true },
       { id: 'seo-command-center', label: 'SEO Command Center', icon: Search },
@@ -309,7 +308,6 @@ const adminTabGroups = [
     label: 'Content Management',
     tabs: [
       { id: 'content-intelligence', label: 'Content Intelligence', icon: Brain, highlight: true },
-      { id: 'content-command-center', label: 'Content Hub', icon: Wand2 },
       { id: 'content-studio', label: 'Content Studio', icon: Sparkles },
       { id: 'content-audit', label: 'Content Audit', icon: SearchCode },
       { id: 'faq-studio', label: 'FAQ Studio', icon: MessageSquare },
@@ -582,7 +580,6 @@ export default function AdminDashboard() {
       case 'tools-management': return <ToolsManagementTab />;
       case 'faq-studio': return <FAQGenerationStudioTab />;
       case 'content-audit': return <ContentAuditBotTab />;
-      case 'content-command-center': return <ContentCommandCenterTab />;
       case 'content-intelligence': return <ContentIntelligenceCenterTab />;
       case 'quality-identity': return <QualityIdentityTab />;
       case 'internal-linking': return <InternalLinkingHubTab />;
