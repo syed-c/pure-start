@@ -26,11 +26,8 @@
     { "source": "/sitemap-static.xml", "destination": "/sitemap-static.xml" },
     { "source": "/sitemap-categories.xml", "destination": "/sitemap-categories.xml" },
     { "source": "/sitemap-cities.xml", "destination": "/sitemap-cities.xml" },
-    { "source": "/sitemap-agencies.xml", "destination": "/sitemap-agencies.xml" },
-    { "source": "/sitemap-posts.xml", "destination": "/sitemap-posts.xml" },
     { "source": "/robots.txt", "destination": "/robots.txt" },
     { "source": "/llms.txt", "destination": "/llms.txt" },
-    { "source": "/llms-full.txt", "destination": "/llms-full.txt" },
     { "source": "/api/stripe-webhook", "destination": "https://vcvvtklbyvdbysfdbnfp.supabase.co/functions/v1/stripe-webhook" },
     { "source": "/api/whatsapp-webhook", "destination": "https://vcvvtklbyvdbysfdbnfp.supabase.co/functions/v1/whatsapp-webhook" },
     {
