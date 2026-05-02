@@ -19,6 +19,7 @@ import {
   UserPlus,
   FileText,
   BookOpen,
+  BookAudio,
   Search,
   Bot,
   Lock,
@@ -51,6 +52,8 @@ import {
   Heart,
   Home,
   UserCheck,
+  ExternalLink,
+  SearchCode,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -256,7 +259,7 @@ const adminTabGroups = [
   {
     label: 'Discovery & SEO',
     tabs: [
-      { id: 'content-command-center', label: 'Content Hub', icon: Bot, highlight: true },
+      { id: 'content-command-center', label: 'Content Hub', icon: Wand2, highlight: true },
       { id: 'content-studio', label: 'Content Studio', icon: Sparkles, highlight: true },
       { id: 'ranking-control', label: 'Ranking Control', icon: TrendingUp, highlight: true },
       { id: 'seo-command-center', label: 'SEO Command Center', icon: Search },
@@ -264,7 +267,7 @@ const adminTabGroups = [
       { id: 'seo-health', label: 'SEO Health', icon: Activity },
       { id: 'meta-optimizer', label: 'Meta Optimizer', icon: FileText },
       { id: 'structured-data', label: 'Schema Markup', icon: Database },
-      { id: 'internal-linking', label: 'Internal Linking', icon: Link },
+      { id: 'internal-linking', label: 'Internal Linking', icon: Globe },
     ],
   },
   {
@@ -303,12 +306,12 @@ const adminTabGroups = [
   {
     label: 'Content Management',
     tabs: [
-      { id: 'content-command-center', label: 'Content Hub', icon: Bot, highlight: true },
+      { id: 'content-command-center', label: 'Content Hub', icon: Wand2, highlight: true },
       { id: 'content-studio', label: 'Content Studio', icon: Sparkles, highlight: true },
-      { id: 'content-audit', label: 'Content Audit', icon: Search, highlight: true },
-      { id: 'faq-studio', label: 'FAQ Studio', icon: HelpCircle },
-      { id: 'blog', label: 'Blog Engine', icon: FileText },
-      { id: 'static-pages', label: 'Static Pages', icon: FileJson },
+      { id: 'content-audit', label: 'Content Audit', icon: SearchCode, highlight: true },
+      { id: 'faq-studio', label: 'FAQ Studio', icon: MessageSquare },
+      { id: 'blog', label: 'Blog Engine', icon: BookOpen },
+      { id: 'static-pages', label: 'Static Pages', icon: FileText },
       { id: 'clinic-enrichment', label: 'Agency Enrichment', icon: Wand2 },
       { id: 'content-strategy', label: 'Content Strategy', icon: Target },
     ],
