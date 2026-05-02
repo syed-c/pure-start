@@ -44,21 +44,21 @@ export default function FounderWeeklyTab() {
         { count: leadsThisWeek }, { count: leadsLastWeek },
         { count: activeAgencies },
       ] = await Promise.all([
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).gte('created_at', weekStart.toISOString()),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).gte('created_at', lastWeekStart.toISOString()).lt('created_at', weekStart.toISOString()),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed').gte('claimed_at', weekStart.toISOString()),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed').gte('claimed_at', lastWeekStart.toISOString()).lt('claimed_at', weekStart.toISOString()),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('verification_status', 'verified').gte('updated_at', weekStart.toISOString()),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('verification_status', 'verified').gte('updated_at', lastWeekStart.toISOString()).lt('updated_at', weekStart.toISOString()),
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).gte('created_at', weekStart.toISOString()),
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).gte('created_at', lastWeekStart.toISOString()).lt('created_at', weekStart.toISOString()),
-        supabase.from('leads').select('*', { count: 'exact', head: true }).gte('created_at', weekStart.toISOString()),
-        supabase.from('leads').select('*', { count: 'exact', head: true }).gte('created_at', lastWeekStart.toISOString()).lt('created_at', weekStart.toISOString()),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed').gte('updated_at', thirtyDaysAgo),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).gte('created_at', weekStart.toISOString()),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).gte('created_at', lastWeekStart.toISOString()).lt('created_at', weekStart.toISOString()),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed').gte('claimed_at', weekStart.toISOString()),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed').gte('claimed_at', lastWeekStart.toISOString()).lt('claimed_at', weekStart.toISOString()),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('verification_status', 'verified').gte('updated_at', weekStart.toISOString()),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('verification_status', 'verified').gte('updated_at', lastWeekStart.toISOString()).lt('updated_at', weekStart.toISOString()),
+        supabase.from('fostering_enquiries').select('*', { count: 'exact', head: true }).gte('created_at', weekStart.toISOString()),
+        supabase.from('fostering_enquiries').select('*', { count: 'exact', head: true }).gte('created_at', lastWeekStart.toISOString()).lt('created_at', weekStart.toISOString()),
+        supabase.from('fostering_enquiries').select('*', { count: 'exact', head: true }).gte('created_at', weekStart.toISOString()),
+        supabase.from('fostering_enquiries').select('*', { count: 'exact', head: true }).gte('created_at', lastWeekStart.toISOString()).lt('created_at', weekStart.toISOString()),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed').gte('updated_at', thirtyDaysAgo),
       ]);
 
       const calcChange = (curr: number, prev: number) => prev ? Math.round(((curr - prev) / prev) * 100) : curr > 0 ? 100 : 0;
-      const totalClaimed = (await supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed')).count || 0;
+      const totalClaimed = (await supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed')).count || 0;
       const retentionRate = totalClaimed ? Math.round(((activeAgencies || 0) / totalClaimed) * 100) : 0;
 
       return {
@@ -80,10 +80,10 @@ export default function FounderWeeklyTab() {
         { count: totalImported }, { count: totalClaimed }, { count: totalVerified },
         { count: totalActive }, { count: totalWithRevenue },
       ] = await Promise.all([
-        supabase.from('clinics').select('*', { count: 'exact', head: true }),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed'),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('verification_status', 'verified'),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed').eq('is_active', true),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed'),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('verification_status', 'verified'),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed').eq('is_active', true),
         supabase.from('clinic_subscriptions').select('*', { count: 'exact', head: true }).eq('status', 'active'),
       ]);
       return { imported: totalImported || 0, claimed: totalClaimed || 0, verified: totalVerified || 0, active: totalActive || 0, revenue: totalWithRevenue || 0 };
@@ -102,12 +102,12 @@ export default function FounderWeeklyTab() {
     queryKey: ['action-tasks'],
     queryFn: async () => {
       const tasks: { priority: 'high' | 'medium' | 'low'; task: string; impact: string }[] = [];
-      const { count: unclaimed } = await supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('claim_status', 'unclaimed');
+      const { count: unclaimed } = await supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('claim_status', 'unclaimed');
       if ((unclaimed || 0) > 10) tasks.push({ priority: 'high', task: `${unclaimed} unclaimed agencies need outreach`, impact: 'Increase claimed rate by 20%' });
       const { count: pendingClaims } = await supabase.from('claim_requests').select('*', { count: 'exact', head: true }).eq('status', 'pending');
       if ((pendingClaims || 0) > 0) tasks.push({ priority: 'high', task: `${pendingClaims} claim requests awaiting review`, impact: 'Faster onboarding' });
       const thirtyDaysAgo = subDays(today, 30).toISOString();
-      const { count: stale } = await supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed').lt('updated_at', thirtyDaysAgo);
+      const { count: stale } = await supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed').lt('updated_at', thirtyDaysAgo);
       if ((stale || 0) > 5) tasks.push({ priority: 'medium', task: `${stale} claimed profiles haven't updated in 30d`, impact: 'Re-engagement opportunity' });
       const { count: negative } = await supabase.from('review_funnel_events').select('*', { count: 'exact', head: true }).eq('event_type', 'thumbs_down').gte('created_at', subDays(today, 7).toISOString());
       if ((negative || 0) > 5) tasks.push({ priority: 'medium', task: `${negative} negative feedback this week`, impact: 'Review quality issues' });

@@ -154,10 +154,16 @@ export const Footer = forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>
                   </Link>
                 ))}
               </div>
-              <p className="text-[11px] text-background/15 text-center md:text-right max-w-lg">
-                Foster Care is a directory service. Information displayed is for guidance only. Agency registration is verified with Ofsted and relevant UK regulatory bodies.
-              </p>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 text-[11px] text-background/30">
+                  <span className="px-2 py-1 bg-background/5 rounded">Ofsted Verified</span>
+                  <span className="px-2 py-1 bg-background/5 rounded">SSL Secure</span>
+                </div>
+              </div>
             </div>
+            <p className="text-[11px] text-background/15 text-center md:text-right max-w-lg mt-2">
+              Foster Care is a directory service. Information displayed is for guidance only. Agency registration is verified with Ofsted and relevant UK regulatory bodies.
+            </p>
           </div>
         </div>
       </div>

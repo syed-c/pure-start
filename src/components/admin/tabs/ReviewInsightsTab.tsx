@@ -126,7 +126,7 @@ export default function ReviewInsightsTab() {
     queryKey: ['top-clinics'],
     queryFn: async () => {
       const { data } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name, slug, rating, review_count, city:cities(name)')
         .gt('review_count', 0)
         .order('rating', { ascending: false })

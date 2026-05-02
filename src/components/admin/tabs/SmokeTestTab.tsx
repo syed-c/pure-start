@@ -50,7 +50,7 @@ export default function SmokeTestTab() {
   const { data: treatments } = useQuery({
     queryKey: ['smoke-test-treatments'],
     queryFn: async () => {
-      const { data } = await supabase.from('treatments').select('slug, name').eq('is_active', true).limit(5);
+      const { data } = await supabase.from('fostering_categories').select('slug, name').eq('is_active', true).limit(5);
       return data || [];
     },
   });
@@ -59,7 +59,7 @@ export default function SmokeTestTab() {
     queryKey: ['smoke-test-clinics'],
     queryFn: async () => {
       const { data } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('slug, name')
         .eq('is_active', true)
         .limit(10);
@@ -70,7 +70,7 @@ export default function SmokeTestTab() {
   const { data: agencies } = useQuery({
     queryKey: ['smoke-test-agencies'],
     queryFn: async () => {
-      const { data } = await supabase.from('dentists').select('slug, name').eq('is_active', true).limit(5);
+      const { data } = await supabase.from('foster_carers').select('slug, name').eq('is_active', true).limit(5);
       return data || [];
     },
   });

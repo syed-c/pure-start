@@ -207,7 +207,7 @@ export default function ServiceLocationEnrichmentSection() {
     queryKey: ['enrichment-treatments-filter'],
     queryFn: async () => {
       const { data } = await supabase
-        .from('treatments')
+        .from('fostering_categories')
         .select('id, name, slug')
         .eq('is_active', true)
         .order('name');
@@ -242,7 +242,7 @@ export default function ServiceLocationEnrichmentSection() {
 
       // Get treatments
       let treatmentQuery = supabase
-        .from('treatments')
+        .from('fostering_categories')
         .select('id, name, slug')
         .eq('is_active', true);
       

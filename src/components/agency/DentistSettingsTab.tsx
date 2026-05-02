@@ -33,7 +33,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import GMBConnectionCard from '@/components/reputation/GMBConnectionCard';
-import GMBBookingLinkCard from '@/components/dentist/GMBBookingLinkCard';
+import GMBBookingLinkCard from '@/components/agency/GMBBookingLinkCard';
 import {
   AlertDialog,
   AlertDialogAction,

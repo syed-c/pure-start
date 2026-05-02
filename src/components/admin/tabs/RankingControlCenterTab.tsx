@@ -57,37 +57,35 @@ function GaugeCard({ title, score, icon: Icon, subtitle, benchmark }: {
 // ─── Main Hook: Fetch all ranking data ───
 function useRankingData() {
   // Entity graph health
-  const clinics = useQuery({
-    queryKey: ['ranking-clinics-health'],
+  const agencies = useQuery({
+    queryKey: ['ranking-agencies-health'],
     queryFn: async () => {
-      const { count: total } = await supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('is_active', true);
-      const { count: withCity } = await supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('is_active', true).not('city_id', 'is', null);
-      const { count: withArea } = await supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('is_active', true).not('area_id', 'is', null);
-      const { count: withPhone } = await supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('is_active', true).not('phone', 'is', null);
-      const { count: withDesc } = await supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('is_active', true).not('description', 'is', null);
-      const { count: verified } = await supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('verification_status', 'verified');
-      const { count: claimed } = await supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed');
-      const { count: featured } = await supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('is_featured', true);
+      const { count: total } = await supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('is_active', true);
+      const { count: withCity } = await supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('is_active', true).not('city_id', 'is', null);
+      const { count: withArea } = await supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('is_active', true).not('area_id', 'is', null);
+      const { count: withPhone } = await supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('is_active', true).not('phone', 'is', null);
+      const { count: withDesc } = await supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('is_active', true).not('description', 'is', null);
+      const { count: verified } = await supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('verification_status', 'verified');
+      const { count: claimed } = await supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed');
+      const { count: featured } = await supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('is_featured', true);
       return { total: total || 0, withCity: withCity || 0, withArea: withArea || 0, withPhone: withPhone || 0, withDesc: withDesc || 0, verified: verified || 0, claimed: claimed || 0, featured: featured || 0 };
     },
   });
 
-  const treatments = useQuery({
-    queryKey: ['ranking-treatments-count'],
+  const categories = useQuery({
+    queryKey: ['ranking-categories-count'],
     queryFn: async () => {
-      const { count } = await supabase.from('treatments').select('*', { count: 'exact', head: true }).eq('is_active', true);
-      const { count: linked } = await supabase.from('clinic_treatments').select('*', { count: 'exact', head: true });
-      return { total: count || 0, linked: linked || 0 };
+      const { count } = await supabase.from('fostering_categories').select('*', { count: 'exact', head: true }).eq('is_active', true);
+      return { total: count || 0, linked: 0 };
     },
   });
 
   const locations = useQuery({
     queryKey: ['ranking-locations'],
     queryFn: async () => {
-      const { data: states } = await supabase.from('states').select('id, name, slug, abbreviation, clinic_count, is_active').order('name');
-      const { data: cities } = await supabase.from('cities').select('id, name, slug, state_id, dentist_count, is_active, seo_status').order('name');
+      const { data: cities } = await supabase.from('cities').select('id, name, slug, agency_count, is_active, seo_status').order('name');
       const { count: areaCount } = await supabase.from('areas').select('*', { count: 'exact', head: true }).eq('is_active', true);
-      return { states: states || [], cities: cities || [], areaCount: areaCount || 0 };
+      return { cities: cities || [], areaCount: areaCount || 0 };
     },
   });
 
@@ -117,26 +115,26 @@ function useRankingData() {
     },
   });
 
-  const agencies = useQuery({
-    queryKey: ['ranking-agencies'],
+  const fosterCarers = useQuery({
+    queryKey: ['ranking-foster-carers'],
     queryFn: async () => {
-      const { count } = await supabase.from('dentists').select('*', { count: 'exact', head: true }).eq('is_active', true);
+      const { count } = await supabase.from('foster_carers').select('*', { count: 'exact', head: true }).eq('is_active', true);
       return { total: count || 0 };
     },
   });
 
-  return { clinics, treatments, locations, seoPages, insurances, reviews, agencies };
+  return { agencies, categories, locations, seoPages, insurances, reviews, fosterCarers };
 }
 
 // ─── Compute Scores ───
 function computeScores(data: ReturnType<typeof useRankingData>) {
-  const c = data.clinics.data;
-  const t = data.treatments.data;
+  const c = data.agencies.data;
+  const t = data.categories.data;
   const l = data.locations.data;
   const s = data.seoPages.data;
   const ins = data.insurances.data;
   const r = data.reviews.data;
-  const _d = data.agencies.data;
+  const fc = data.fosterCarers.data;
 
   // 1. Entity Graph Health
   const entityFactors = c ? [

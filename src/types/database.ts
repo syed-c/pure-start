@@ -284,8 +284,7 @@ export interface Agency {
   city_id: string | null;
   area_id: string | null;
   address: string | null;
-  city: string | null;
-  state: string | null;
+  region: string | null;
   postcode: string | null;
   latitude: number | null;
   longitude: number | null;

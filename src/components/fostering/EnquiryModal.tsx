@@ -51,17 +51,17 @@ export function EnquiryModal({ open, onOpenChange, agencyId, agencyName }: Enqui
 
   const mutation = useMutation({
     mutationFn: async (data: typeof formData) => {
-      const { error } = await supabase.from("enquiries").insert({
+      const { error } = await supabase.from("fostering_enquiries").insert({
         agency_id: agencyId,
-        full_name: data.full_name,
-        email: data.email,
-        phone: data.phone,
+        enquirer_name: data.full_name,
+        enquirer_email: data.email,
+        enquirer_phone: data.phone,
         postcode: data.postcode,
         city: data.city,
-        enquiry_type: data.enquiry_type,
-        fostering_type: data.fostering_type,
+        interest_type: data.enquiry_type,
+        child_age_group: data.fostering_type,
         message: data.message,
-        status: "pending",
+        status: "new",
       });
       if (error) throw error;
     },

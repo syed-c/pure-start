@@ -51,32 +51,32 @@ export default function ContentCommandCenterTab() {
     queryKey: ['content-command-stats'],
     queryFn: async () => {
       const [
-        clinicsRes,
-        clinicsDescRes,
+        agenciesRes,
+        agenciesDescRes,
         seoPagesRes,
         seoContentRes,
         blogRes,
         publishedBlogRes,
-        treatmentsRes,
+        categoriesRes,
         citiesRes,
         areasRes,
       ] = await Promise.all([
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('is_active', true),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('is_active', true).not('description', 'is', null),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('is_active', true),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('is_active', true).not('description', 'is', null),
         supabase.from('seo_pages').select('*', { count: 'exact', head: true }),
         supabase.from('seo_pages').select('*', { count: 'exact', head: true }).gt('word_count', 500),
         supabase.from('blog_posts').select('*', { count: 'exact', head: true }),
         supabase.from('blog_posts').select('*', { count: 'exact', head: true }).eq('status', 'published'),
-        supabase.from('treatments').select('*', { count: 'exact', head: true }).eq('is_active', true),
+        supabase.from('fostering_categories').select('*', { count: 'exact', head: true }).eq('is_active', true),
         supabase.from('cities').select('*', { count: 'exact', head: true }).eq('is_active', true),
         supabase.from('areas').select('*', { count: 'exact', head: true }).eq('is_active', true),
       ]);
 
       return {
-        clinics: { total: clinicsRes.count || 0, withDesc: clinicsDescRes.count || 0 },
+        agencies: { total: agenciesRes.count || 0, withDesc: agenciesDescRes.count || 0 },
         seoPages: { total: seoPagesRes.count || 0, withContent: seoContentRes.count || 0 },
         blog: { total: blogRes.count || 0, published: publishedBlogRes.count || 0 },
-        treatments: treatmentsRes.count || 0,
+        categories: categoriesRes.count || 0,
         cities: citiesRes.count || 0,
         areas: areasRes.count || 0,
         faqs: 0,
@@ -87,10 +87,10 @@ export default function ContentCommandCenterTab() {
   const [showAuditPicker, setShowAuditPicker] = useState(false);
 
   const auditScopes = [
-    { id: 'full-audit', label: 'Full Platform Audit', desc: 'All pages, clinics, blog, FAQs' },
-    { id: 'location-profiles', label: 'Location Profile Pages', desc: 'State & city pages coverage' },
-    { id: 'service-location', label: 'Service-Location Pages', desc: 'Treatment + city combinations' },
-    { id: 'clinics', label: 'Clinic Descriptions', desc: 'Missing or thin clinic content' },
+    { id: 'full-audit', label: 'Full Platform Audit', desc: 'All pages, agencies, blog, FAQs' },
+    { id: 'location-profiles', label: 'Location Profile Pages', desc: 'City pages coverage' },
+    { id: 'service-location', label: 'Service-Location Pages', desc: 'Category + city combinations' },
+    { id: 'agencies', label: 'Agency Profiles', desc: 'Missing or thin agency content' },
     { id: 'seo-pages', label: 'SEO Pages Quality', desc: 'Word count, meta tags, thin content' },
     { id: 'blog', label: 'Blog Coverage', desc: 'Topic gaps and publishing status' },
   ];
@@ -119,21 +119,21 @@ export default function ContentCommandCenterTab() {
 
   const overallScore = useMemo(() => {
     if (!platformStats) return 0;
-    const clinicScore = platformStats.clinics.total > 0 
-      ? (platformStats.clinics.withDesc / platformStats.clinics.total) * 25 : 0;
+    const agencyScore = platformStats.agencies.total > 0 
+      ? (platformStats.agencies.withDesc / platformStats.agencies.total) * 25 : 0;
     const seoScore = platformStats.seoPages.total > 0 
       ? (platformStats.seoPages.withContent / platformStats.seoPages.total) * 25 : 0;
     const blogScore = Math.min((platformStats.blog.published / 50) * 25, 25);
     const faqScore = Math.min((platformStats.faqs / 100) * 25, 25);
-    return Math.round(clinicScore + seoScore + blogScore + faqScore);
+    return Math.round(agencyScore + seoScore + blogScore + faqScore);
   }, [platformStats]);
 
   const sections = [
     { id: 'brain', label: 'AI Brain', icon: Brain, highlight: true },
-    { id: 'services', label: 'Services', icon: Stethoscope },
+    { id: 'categories', label: 'Categories', icon: Stethoscope },
     { id: 'locations', label: 'Locations', icon: MapPin },
     { id: 'blog', label: 'Blog Engine', icon: BookOpen },
-    { id: 'clinics', label: 'Clinic Content', icon: Globe },
+    { id: 'agencies', label: 'Agency Profiles', icon: Globe },
     { id: 'faq', label: 'FAQ Studio', icon: Zap },
     { id: 'studio', label: 'Content Studio', icon: Sparkles },
     { id: 'audit', label: 'Content Audit', icon: Activity },
@@ -178,10 +178,10 @@ export default function ContentCommandCenterTab() {
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
         {[
-          { label: 'Clinics', value: platformStats?.clinics.withDesc || 0, total: platformStats?.clinics.total || 0, color: 'text-primary' },
+          { label: 'Agencies', value: platformStats?.agencies.withDesc || 0, total: platformStats?.agencies.total || 0, color: 'text-primary' },
           { label: 'SEO Pages', value: platformStats?.seoPages.withContent || 0, total: platformStats?.seoPages.total || 0, color: 'text-teal' },
           { label: 'Blog Posts', value: platformStats?.blog.published || 0, total: platformStats?.blog.total || 0, color: 'text-purple' },
-          { label: 'Treatments', value: platformStats?.treatments || 0, total: null, color: 'text-gold' },
+          { label: 'Categories', value: platformStats?.categories || 0, total: null, color: 'text-gold' },
           { label: 'Cities', value: platformStats?.cities || 0, total: null, color: 'text-coral' },
           { label: 'Areas', value: platformStats?.areas || 0, total: null, color: 'text-primary' },
           { label: 'FAQs', value: platformStats?.faqs || 0, total: null, color: 'text-teal' },

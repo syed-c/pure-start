@@ -37,7 +37,7 @@ import {
   BookOpen,
 } from 'lucide-react';
 import { LocationSelectionModal } from '@/components/LocationSelectionModal';
-import { AddPracticeModal } from '@/components/dentist/AddPracticeModal';
+import { AddPracticeModal } from '@/components/agency/AddPracticeModal';
 import {
   HeroStatsGrid,
   CommandStrip,
@@ -47,9 +47,9 @@ import {
   OutreachImpactCard,
   ActivityFeed,
 } from '@/components/dashboard';
-import NotificationSettingsCard from '@/components/dentist/NotificationSettingsCard';
-import AIInsightsCard from '@/components/dentist/AIInsightsCard';
-import DashboardWidgets from '@/components/dentist/DashboardWidgets';
+import NotificationSettingsCard from '@/components/agency/NotificationSettingsCard';
+import AIInsightsCard from '@/components/agency/AIInsightsCard';
+import DashboardWidgets from '@/components/agency/DashboardWidgets';
 
 function VerificationPaymentButton({ clinicId }: { clinicId: string }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -139,7 +139,7 @@ export default function AgencyDashboardTab() {
     queryKey: ['dentist-profile', user?.id],
     queryFn: async (): Promise<ClinicProfile | null> => {
       const { data: clinics } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select(`
           id, name, slug, address, phone, email, website, rating, review_count,
           verification_status, claim_status, location_verified, location_pending_approval, 
@@ -201,7 +201,7 @@ export default function AgencyDashboardTab() {
       if (!clinic?.id) return { total: 0, pending: 0, confirmed: 0, completed: 0 };
       
       const { data } = await supabase
-        .from('appointments')
+        .from('fostering_enquiries')
         .select('status')
         .eq('clinic_id', clinic.id);
       
@@ -243,7 +243,7 @@ export default function AgencyDashboardTab() {
     queryFn: async () => {
       if (!clinic?.id) return 0;
       const { count } = await supabase
-        .from('patients')
+        .from('foster_carers')
         .select('*', { count: 'exact', head: true })
         .eq('clinic_id', clinic.id);
       return count || 0;

@@ -249,11 +249,11 @@ export function SearchBox({
 
   if (variant === "hero") {
     return (
-      <div className="bg-card/90 backdrop-blur-xl border border-border/20 rounded-[1.75rem] p-5 md:p-7 shadow-2xl shadow-black/25">
+      <div className="bg-white/95 backdrop-blur-xl border border-white/20 rounded-[1.75rem] p-5 md:p-7 shadow-2xl shadow-black/25">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-2.5 block px-1" style={{ fontFamily: headingFont }}>
-              📍 Location
+            <label className="text-xs font-bold text-slate-600 uppercase tracking-widest mb-2.5 block px-1">
+              Location
             </label>
             <SmartSearchInput
               placeholder="City, town, or region..."
@@ -264,8 +264,8 @@ export function SearchBox({
             />
           </div>
           <div>
-            <label className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-2.5 block px-1" style={{ fontFamily: headingFont }}>
-              🏠 Fostering Type
+            <label className="text-xs font-bold text-slate-600 uppercase tracking-widest mb-2.5 block px-1">
+              Fostering Type
             </label>
             <SmartSearchInput
               placeholder="All fostering types..."
@@ -279,10 +279,9 @@ export function SearchBox({
         <Button
           onClick={handleSearch}
           size="lg"
-          className="w-full h-16 mt-5 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-black text-lg gap-3 shadow-xl shadow-primary/30 transition-all hover:shadow-2xl hover:shadow-primary/40 hover:scale-[1.01] active:scale-[0.99]"
-          style={{ fontFamily: headingFont }}
+          className="w-full h-16 mt-5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-lg gap-3 shadow-xl transition-all hover:scale-[1.01] active:scale-[0.99]"
         >
-          <Search className="h-6 w-6" />
+          <Search className="h-5 w-5" />
           Find Fostering Agencies
         </Button>
       </div>
@@ -291,14 +290,14 @@ export function SearchBox({
 
   // Default/Compact variant
   return (
-    <div className="bg-card border border-border rounded-2xl p-4 shadow-lg">
+    <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-lg">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
         <div>
-          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 block px-1">Location</label>
+          <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 block px-1">Location</label>
           <SmartSearchInput placeholder="Search city or town..." options={cityOptions} value={city} onChange={(val, label) => { setCity(val); setCityLabel(label); }} icon={MapPin} />
         </div>
         <div>
-          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 block px-1">Fostering Type</label>
+          <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 block px-1">Fostering Type</label>
           <SmartSearchInput placeholder="All types..." options={categoryOptions} value={category} onChange={(val, label) => { setCategory(val); setCategoryLabel(label); }} icon={Heart} />
         </div>
         <div className="flex items-end">

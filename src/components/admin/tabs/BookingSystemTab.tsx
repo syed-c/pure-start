@@ -93,7 +93,7 @@ async function fetchAllClinics(): Promise<ClinicWithSettings[]> {
 
   while (hasMore) {
     const { data, error } = await supabase
-      .from('clinics')
+      .from('agencies')
       .select(`
         id, name, slug, claim_status, is_active, gmb_connected,
         city:cities(name, state:states(abbreviation)),
@@ -142,14 +142,14 @@ export default function BookingSystemTab() {
       const month = format(subDays(new Date(), 30), 'yyyy-MM-dd');
       
       const [totalRes, pendingRes, confirmedRes, todayRes, weekRes, cancelledRes, noShowRes, monthRes] = await Promise.all([
-        supabase.from('appointments').select('*', { count: 'exact', head: true }),
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('status', 'confirmed'),
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('preferred_date', today),
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).gte('created_at', week),
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('status', 'cancelled'),
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('status', 'no_show'),
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).gte('created_at', month),
+        supabase.from('fostering_enquiries').select('*', { count: 'exact', head: true }),
+        supabase.from('fostering_enquiries').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+        supabase.from('fostering_enquiries').select('*', { count: 'exact', head: true }).eq('status', 'confirmed'),
+        supabase.from('fostering_enquiries').select('*', { count: 'exact', head: true }).eq('preferred_date', today),
+        supabase.from('fostering_enquiries').select('*', { count: 'exact', head: true }).gte('created_at', week),
+        supabase.from('fostering_enquiries').select('*', { count: 'exact', head: true }).eq('status', 'cancelled'),
+        supabase.from('fostering_enquiries').select('*', { count: 'exact', head: true }).eq('status', 'no_show'),
+        supabase.from('fostering_enquiries').select('*', { count: 'exact', head: true }).gte('created_at', month),
       ]);
 
       return {
@@ -217,7 +217,7 @@ export default function BookingSystemTab() {
         dayEnd.setHours(23, 59, 59, 999);
 
         const { count } = await supabase
-          .from('appointments')
+          .from('fostering_enquiries')
           .select('*', { count: 'exact', head: true })
           .gte('created_at', dayStart.toISOString())
           .lte('created_at', dayEnd.toISOString());
@@ -243,7 +243,7 @@ export default function BookingSystemTab() {
     queryKey: ['recent-appointments'],
     queryFn: async () => {
       const { data } = await supabase
-        .from('appointments')
+        .from('fostering_enquiries')
         .select('id, patient_name, status, preferred_date, preferred_time, created_at, source, clinic:clinics(name)')
         .order('created_at', { ascending: false })
         .limit(25);

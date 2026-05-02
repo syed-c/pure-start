@@ -27,10 +27,14 @@ const Auth = lazyRetry(() => import("./pages/Auth"));
 const AuthCallback = lazyRetry(() => import("./pages/AuthCallback"));
 const AdminDashboard = lazyRetry(() => import("./pages/admin/AdminDashboard"));
 const AgencyDashboardV2 = lazyRetry(() => import("./components/dashboard-v2/AgencyDashboardV2"));
+const FosterCarerDashboard = lazyRetry(() => import("./components/foster-carer/FosterCarerDashboard"));
+const ApplicantDashboard = lazyRetry(() => import("./components/applicant/ApplicantDashboard"));
+const TrainerDashboard = lazyRetry(() => import("./components/trainer/TrainerDashboard"));
+const LocalAuthorityDashboard = lazyRetry(() => import("./components/local-authority/LADashboard"));
 
 // Public Pages - lazy loaded
 const AboutPage = lazyRetry(() => import("./pages/AboutPage"));
-const ContactPage = lazyRetry(() => import("./pages/DentistPage"));
+const ContactPage = lazyRetry(() => import("./pages/ContactPage"));
 const FAQPage = lazyRetry(() => import("./pages/FAQPage"));
 const HowItWorksPage = lazyRetry(() => import("./pages/HowItWorksPage"));
 const PrivacyPage = lazyRetry(() => import("./pages/PrivacyPage"));
@@ -212,6 +216,34 @@ const App = () => (
                 <Route path="/dashboard-v2" element={
                   <ProtectedRoute allowedRoles={['super_admin', 'agency_admin', 'agency_staff']}>
                     <AgencyDashboardV2 />
+                  </ProtectedRoute>
+                } />
+                
+                {/* Foster Carer Dashboard */}
+                <Route path="/carer" element={
+                  <ProtectedRoute allowedRoles={['foster_carer']}>
+                    <FosterCarerDashboard />
+                  </ProtectedRoute>
+                } />
+
+                {/* Applicant Dashboard */}
+                <Route path="/applicant" element={
+                  <ProtectedRoute allowedRoles={['applicant']}>
+                    <ApplicantDashboard />
+                  </ProtectedRoute>
+                } />
+                
+                {/* Trainer Dashboard */}
+                <Route path="/trainer" element={
+                  <ProtectedRoute allowedRoles={['trainer']}>
+                    <TrainerDashboard />
+                  </ProtectedRoute>
+                } />
+
+                {/* Local Authority Dashboard */}
+                <Route path="/la" element={
+                  <ProtectedRoute allowedRoles={['local_authority']}>
+                    <LocalAuthorityDashboard />
                   </ProtectedRoute>
                 } />
                 

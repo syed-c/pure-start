@@ -77,10 +77,10 @@ function CostCalculatorManager() {
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [filterTreatment, setFilterTreatment] = useState('all');
 
-  const { data: treatments } = useQuery({
-    queryKey: ['admin-treatments'],
+  const { data: categories } = useQuery({
+    queryKey: ['admin-categories'],
     queryFn: async () => {
-      const { data } = await supabase.from('treatments').select('id, name, slug').eq('is_active', true).order('name');
+      const { data } = await supabase.from('fostering_categories').select('id, name, slug').eq('is_active', true).order('name');
       return data || [];
     },
   });
@@ -412,7 +412,7 @@ function EmergencyManager() {
     queryKey: ['admin-emergency-stats'],
     queryFn: async () => {
       const { count: totalClinics } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id', { count: 'exact', head: true })
         .eq('is_active', true)
         .not('phone', 'is', null);
@@ -441,7 +441,7 @@ function EmergencyManager() {
     queryKey: ['admin-city-clinic-coverage'],
     queryFn: async () => {
       const { data } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('city_id, cities(name, states(abbreviation))')
         .eq('is_active', true)
         .not('phone', 'is', null);

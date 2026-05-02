@@ -90,7 +90,7 @@ export default function TopAgenciesTab() {
     queryKey: ['clinics-for-pinning', selectedCity, selectedArea],
     queryFn: async () => {
       let query = supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name, slug, rating, review_count, verification_status, claim_status, area:areas(name)')
         .eq('city_id', selectedCity)
         .eq('is_active', true);

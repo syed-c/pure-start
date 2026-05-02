@@ -111,15 +111,15 @@ export default function SeoCopilotTab() {
   const { data: pageStats } = useQuery({
     queryKey: ['page-stats'],
     queryFn: async () => {
-      const { data: clinics, count: clinicCount } = await supabase.from('clinics').select('id', { count: 'exact' });
-      const { data: treatments, count: treatmentCount } = await supabase.from('treatments').select('id', { count: 'exact' });
+      const { data: agencies, count: agencyCount } = await supabase.from('agencies').select('id', { count: 'exact' });
+      const { data: categories, count: categoryCount } = await supabase.from('fostering_categories').select('id', { count: 'exact' });
       const { data: cities, count: cityCount } = await supabase.from('cities').select('id', { count: 'exact' });
       const { data: blogs, count: blogCount } = await supabase.from('blog_posts').select('id', { count: 'exact' }).eq('status', 'published');
       
       return {
-        totalPages: (clinicCount || 0) + (treatmentCount || 0) + (cityCount || 0) + (blogCount || 0) + 1,
-        clinics: clinicCount || 0,
-        treatments: treatmentCount || 0,
+        totalPages: (agencyCount || 0) + (categoryCount || 0) + (cityCount || 0) + (blogCount || 0) + 1,
+        agencies: agencyCount || 0,
+        categories: categoryCount || 0,
         cities: cityCount || 0,
         blogs: blogCount || 0,
       };

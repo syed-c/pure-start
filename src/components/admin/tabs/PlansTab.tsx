@@ -246,7 +246,7 @@ export default function PlansTab() {
 
       while (hasMore) {
         const { data, error } = await supabase
-          .from('clinics')
+          .from('agencies')
           .select('id, name, slug, city:cities(name, state:states(name))')
           .order('name')
           .range(from, from + batchSize - 1);
@@ -369,7 +369,7 @@ export default function PlansTab() {
   const submitCustomRequest = useMutation({
     mutationFn: async () => {
       const { error } = await supabase
-        .from('leads')
+        .from('fostering_enquiries')
         .insert({
           patient_name: customRequest.clinicName,
           patient_email: customRequest.contactEmail,

@@ -203,17 +203,17 @@ const AgencyProfilePage = () => {
     }
     
     try {
-      const { error } = await supabase.from("enquiries").insert({
+      const { error } = await supabase.from("fostering_enquiries").insert({
         agency_id: agency.id,
-        full_name: enquiryForm.full_name,
-        email: enquiryForm.email,
-        phone: enquiryForm.phone,
+        enquirer_name: enquiryForm.full_name,
+        enquirer_email: enquiryForm.email,
+        enquirer_phone: enquiryForm.phone,
         postcode: enquiryForm.postcode,
         city: enquiryForm.city,
-        enquiry_type: enquiryForm.enquiry_type,
-        fostering_type: enquiryForm.fostering_type,
+        interest_type: enquiryForm.enquiry_type,
+        child_age_group: enquiryForm.fostering_type,
         message: enquiryForm.message,
-        status: "pending",
+        status: "new",
       });
       
       if (error) throw error;

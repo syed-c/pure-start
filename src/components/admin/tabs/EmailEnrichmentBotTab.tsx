@@ -189,15 +189,15 @@ export default function EmailEnrichmentBotTab() {
       // Run all count queries in parallel for efficiency
       const [totalResult, withEmailResult, withoutEmailResult, withWebsiteResult, withWebsiteNoEmailResult] = await Promise.all([
         // Total clinics
-        buildQuery(supabase.from('clinics').select('id', { count: 'exact', head: true })),
+        buildQuery(supabase.from('agencies').select('id', { count: 'exact', head: true })),
         // With email
-        buildQuery(supabase.from('clinics').select('id', { count: 'exact', head: true })).not('email', 'is', null),
+        buildQuery(supabase.from('agencies').select('id', { count: 'exact', head: true })).not('email', 'is', null),
         // Without email  
-        buildQuery(supabase.from('clinics').select('id', { count: 'exact', head: true })).is('email', null),
+        buildQuery(supabase.from('agencies').select('id', { count: 'exact', head: true })).is('email', null),
         // With website
-        buildQuery(supabase.from('clinics').select('id', { count: 'exact', head: true })).not('website', 'is', null),
+        buildQuery(supabase.from('agencies').select('id', { count: 'exact', head: true })).not('website', 'is', null),
         // With website but no email
-        buildQuery(supabase.from('clinics').select('id', { count: 'exact', head: true })).not('website', 'is', null).is('email', null),
+        buildQuery(supabase.from('agencies').select('id', { count: 'exact', head: true })).not('website', 'is', null).is('email', null),
       ]);
 
       return {

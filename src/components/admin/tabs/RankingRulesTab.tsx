@@ -118,7 +118,7 @@ export default function RankingRulesTab() {
     queryKey: ['ranking-preview', previewCity],
     queryFn: async () => {
       let query = supabase
-        .from('clinics')
+        .from('agencies')
         .select(`
           id, name, slug, address, claim_status, verification_status,
           rating, review_count,

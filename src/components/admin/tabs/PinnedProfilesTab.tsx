@@ -79,7 +79,7 @@ export default function PinnedProfilesTab() {
     queryKey: ['admin-treatments'],
     queryFn: async () => {
       const { data } = await supabase
-        .from('treatments')
+        .from('fostering_categories')
         .select('id, name, slug')
         .eq('is_active', true)
         .order('display_order');
@@ -159,7 +159,7 @@ export default function PinnedProfilesTab() {
 
     while (hasMore) {
       let query = supabase
-        .from('clinics')
+        .from('agencies')
         .select(`
           id, name, slug, rating, review_count, verification_status, claim_status,
           city:cities(id, name, slug, state:states(id, name, slug, abbreviation))

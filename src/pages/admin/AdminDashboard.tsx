@@ -103,23 +103,27 @@ const EnquiriesTab = lazyRetry(() => import('@/components/admin/tabs/EnquiriesTa
 const AgencyClaimsTab = lazyRetry(() => import('@/components/admin/tabs/AgencyClaimsTab'));
 const PinnedProfilesTab = lazyRetry(() => import('@/components/admin/tabs/PinnedProfilesTab'));
 const AgencyDashboardTab = lazyRetry(() => import('@/components/admin/tabs/DentistDashboardTab'));
-const ProfileEditorTab = lazyRetry(() => import('@/components/dentist/ProfileEditorTab'));
-const ServicesTab = lazyRetry(() => import('@/components/dentist/ServicesTab'));
-const AgencyReviewsTab = lazyRetry(() => import('@/components/dentist/DentistReviewsTab'));
-const AgencyEnquiriesTab = lazyRetry(() => import('@/components/dentist/DentistAppointmentsTab'));
-const PatientsTab = lazyRetry(() => import('@/components/dentist/PatientsTab'));
-const MessagesTab = lazyRetry(() => import('@/components/dentist/MessagesTab'));
-const OperationsTab = lazyRetry(() => import('@/components/dentist/OperationsTab'));
-const ReviewRequestsTab = lazyRetry(() => import('@/components/dentist/ReviewRequestsTab'));
-const ReputationGrowthTab = lazyRetry(() => import('@/components/dentist/ReputationGrowthTab'));
+const ProfileEditorTab = lazyRetry(() => import('@/components/agency/ProfileEditorTab'));
+const ServicesTab = lazyRetry(() => import('@/components/agency/ServicesTab'));
+const AgencyReviewsTab = lazyRetry(() => import('@/components/agency/DentistReviewsTab'));
+const AgencyEnquiriesTab = lazyRetry(() => import('@/components/agency/DentistAppointmentsTab'));
+const PatientsTab = lazyRetry(() => import('@/components/agency/PatientsTab'));
+const MessagesTab = lazyRetry(() => import('@/components/agency/MessagesTab'));
+const OperationsTab = lazyRetry(() => import('@/components/agency/OperationsTab'));
+const ReviewRequestsTab = lazyRetry(() => import('@/components/agency/ReviewRequestsTab'));
+const ReputationGrowthTab = lazyRetry(() => import('@/components/agency/ReputationGrowthTab'));
 const AgencyReputationHub = lazyRetry(() => import('@/components/reputation/DentistReputationHub'));
 const AdminReputationHub = lazyRetry(() => import('@/components/reputation/AdminReputationHub'));
-const SupportTicketsTab = lazyRetry(() => import('@/components/dentist/SupportTicketsTab'));
-const TeamManagementTab = lazyRetry(() => import('@/components/dentist/TeamManagementTab'));
-const AgencySettingsTab = lazyRetry(() => import('@/components/dentist/DentistSettingsTab'));
-const TemplatesTab = lazyRetry(() => import('@/components/dentist/TemplatesTab'));
-const InsuranceManagementTab = lazyRetry(() => import('@/components/dentist/InsuranceManagementTab'));
-const IntakeFormsTab = lazyRetry(() => import('@/components/dentist/IntakeFormsTab'));
+const SupportTicketsTab = lazyRetry(() => import('@/components/agency/SupportTicketsTab'));
+const TeamManagementTab = lazyRetry(() => import('@/components/agency/TeamManagementTab'));
+const AgencySettingsTab = lazyRetry(() => import('@/components/agency/DentistSettingsTab'));
+const TemplatesTab = lazyRetry(() => import('@/components/agency/TemplatesTab'));
+const InsuranceManagementTab = lazyRetry(() => import('@/components/agency/InsuranceManagementTab'));
+const IntakeFormsTab = lazyRetry(() => import('@/components/agency/IntakeFormsTab'));
+
+// Fostering tabs (use the new ones)
+// FosterCarersTab is defined below at line 173
+const FosterApplicantsTab = lazyRetry(() => import('@/components/fostering/ApplicantsTab'));
 const AIControlsTab = lazyRetry(() => import('@/components/admin/tabs/AIControlsTab'));
 const AISearchControlTab = lazyRetry(() => import('@/components/admin/tabs/AISearchControlTab').then(m => ({ default: m.AISearchControlTab })));
 const ApiControlTab = lazyRetry(() => import('@/components/admin/tabs/ApiControlTab'));
@@ -154,8 +158,8 @@ const GeoExpansionTab = lazyRetry(() => import('@/components/admin/tabs/GeoExpan
 const MicroLocationCoverageTab = lazyRetry(() => import('@/components/admin/tabs/MicroLocationCoverageTab'));
 const StructuredDataTab = lazyRetry(() => import('@/components/admin/tabs/StructuredDataTab'));
 const ToolsManagementTab = lazyRetry(() => import('@/components/admin/tabs/ToolsManagementTab'));
-const AvailabilityManagementTab = lazyRetry(() => import('@/components/dentist/AvailabilityManagementTab'));
-const AppointmentTypesTab = lazyRetry(() => import('@/components/dentist/AppointmentTypesTab'));
+const AvailabilityManagementTab = lazyRetry(() => import('@/components/agency/AvailabilityManagementTab'));
+const AppointmentTypesTab = lazyRetry(() => import('@/components/agency/AppointmentTypesTab'));
 const MigrationControlTab = lazyRetry(() => import('@/components/admin/tabs/MigrationControlTab').then(m => ({ default: m.MigrationControlTab })));
 const DataRecoveryTab = lazyRetry(() => import('@/components/admin/tabs/DataRecoveryTab'));
 const AdminRevertTab = lazyRetry(() => import('@/components/admin/tabs/AdminRevertTab'));
@@ -189,23 +193,23 @@ const agencyTabGroups = [
     label: 'People',
     tabs: [
       { id: 'my-team', label: 'Staff', icon: Users, highlight: true },
-      { id: 'my-patients', label: 'Foster Carers', icon: Heart },
-      { id: 'my-intake-forms', label: 'Applicants', icon: UserCheck },
+      { id: 'fc-carers', label: 'Foster Carers', icon: Heart },
+      { id: 'fc-applicants', label: 'Applicants', icon: UserCheck },
     ],
   },
   {
     label: 'Operations',
     tabs: [
-      { id: 'my-appointments', label: 'Enquiries', icon: Calendar, highlight: true },
-      { id: 'my-availability', label: 'Placements', icon: Home },
-      { id: 'my-appointment-types', label: 'Fostering Types', icon: Stethoscope },
-      { id: 'my-operations', label: 'Training', icon: BookOpen },
+      { id: 'fc-enquiries', label: 'Enquiries', icon: Calendar, highlight: true },
+      { id: 'fc-placements', label: 'Placements', icon: Home },
+      { id: 'fc-training', label: 'Training', icon: BookOpen },
+      { id: 'fc-compliance', label: 'Compliance', icon: Shield },
     ],
   },
   {
     label: 'Records',
     tabs: [
-      { id: 'my-documents', label: 'Documents', icon: FileText },
+      { id: 'fc-documents', label: 'Documents', icon: FileText },
       { id: 'my-messages', label: 'Messages', icon: Inbox },
     ],
   },
@@ -242,7 +246,7 @@ const adminTabGroups = [
       { id: 'agencies', label: 'Fostering Agencies', icon: Building2 },
       { id: 'users', label: 'Users', icon: Users },
       { id: 'claims', label: 'Claims', icon: Shield },
-      { id: 'treatments', label: 'Fostering Categories', icon: Stethoscope },
+      { id: 'fostering-categories', label: 'Fostering Categories', icon: Stethoscope },
       { id: 'locations', label: 'Locations', icon: MapPin },
       { id: 'geo-expansion', label: 'Geo Expansion', icon: Globe, highlight: true },
       { id: 'ranking-rules', label: 'Ranking Rules', icon: TrendingUp },
@@ -252,14 +256,15 @@ const adminTabGroups = [
   {
     label: 'Discovery & SEO',
     tabs: [
-      { id: 'content-admin', label: 'Content Admin', icon: Wand2, highlight: true },
+      { id: 'content-command-center', label: 'Content Hub', icon: Bot, highlight: true },
+      { id: 'content-studio', label: 'Content Studio', icon: Sparkles, highlight: true },
       { id: 'ranking-control', label: 'Ranking Control', icon: TrendingUp, highlight: true },
-      { id: 'seo-command-center', label: 'SEO Command Center', icon: Sparkles },
-      { id: 'seo-operations', label: 'SEO Operations', icon: Sparkles },
+      { id: 'seo-command-center', label: 'SEO Command Center', icon: Search },
+      { id: 'seo-operations', label: 'SEO Operations', icon: Zap },
       { id: 'seo-health', label: 'SEO Health', icon: Activity },
-      { id: 'meta-optimizer', label: 'Meta Optimizer', icon: Search },
+      { id: 'meta-optimizer', label: 'Meta Optimizer', icon: FileText },
       { id: 'structured-data', label: 'Schema Markup', icon: Database },
-      { id: 'internal-linking', label: 'Internal Linking', icon: Globe },
+      { id: 'internal-linking', label: 'Internal Linking', icon: Link },
     ],
   },
   {
@@ -300,10 +305,12 @@ const adminTabGroups = [
     tabs: [
       { id: 'content-command-center', label: 'Content Hub', icon: Bot, highlight: true },
       { id: 'content-studio', label: 'Content Studio', icon: Sparkles, highlight: true },
-      { id: 'faq-studio', label: 'FAQ Studio', icon: Search, highlight: true },
-      { id: 'blog', label: 'Blog Engine', icon: BookOpen },
-      { id: 'static-pages', label: 'Static Pages', icon: Globe },
-      { id: 'clinic-enrichment', label: 'Agency Enrichment', icon: Sparkles },
+      { id: 'content-audit', label: 'Content Audit', icon: Search, highlight: true },
+      { id: 'faq-studio', label: 'FAQ Studio', icon: HelpCircle },
+      { id: 'blog', label: 'Blog Engine', icon: FileText },
+      { id: 'static-pages', label: 'Static Pages', icon: FileJson },
+      { id: 'clinic-enrichment', label: 'Agency Enrichment', icon: Wand2 },
+      { id: 'content-strategy', label: 'Content Strategy', icon: Target },
     ],
   },
   {
@@ -506,6 +513,13 @@ export default function AdminDashboard() {
       case 'my-availability': return <AvailabilityManagementTab />;
       case 'my-appointment-types': return <AppointmentTypesTab />;
       case 'my-patients': return <FosterCarersTab />;
+      case 'fc-carers': return <FosterCarersTab />;
+      case 'fc-applicants': return <FosterApplicantsTab />;
+      case 'fc-enquiries': return <AgencyEnquiriesTab />;
+      case 'fc-placements': return <AvailabilityManagementTab />;
+      case 'fc-training': return <OperationsTab />;
+      case 'fc-compliance': return <SupportTicketsTab />;
+      case 'fc-documents': return <MessagesTab />;
       case 'my-messages': return <MessagesTab />;
       case 'my-operations': return <OperationsTab />;
       case 'my-intake-forms': return <ApplicantsTab />;
@@ -534,7 +548,7 @@ export default function AdminDashboard() {
       case 'clinics': return <FosteringAgenciesTab />;
       case 'users': return <UsersManagementTab />;
       case 'locations': return <LocationsManagementTab />;
-      case 'treatments': return <FosteringCategoriesTab />;
+      case 'fostering-categories': return <FosteringCategoriesTab />;
       case 'claims': return <AgencyClaimsTab />;
       case 'booking-system': return <BookingSystemTab />;
       case 'appointments': return <AppointmentsTab />;

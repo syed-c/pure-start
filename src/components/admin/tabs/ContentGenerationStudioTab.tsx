@@ -147,11 +147,11 @@ const PAGE_TYPE_LABELS: Record<string, string> = {
   state: 'Region Pages',
   region: 'Region Pages',
   city: 'City Pages',
-  treatment: 'Fostering Type Pages',
-  service: 'Fostering Type Pages',
-  service_location: 'Fostering Type + Location',
-  'service-location': 'Fostering Type + Location',
-  city_treatment: 'City + Fostering Type',
+  treatment: 'Fostering Category Pages',
+  service: 'Fostering Category Pages',
+  service_location: 'Category + Location',
+  'service-location': 'Category + Location',
+  city_treatment: 'City + Category',
   city_category: 'City + Category',
   'city-category': 'City + Category',
   clinic: 'Agency Profiles',
@@ -390,12 +390,12 @@ export default function ContentGenerationStudioTab() {
     },
   });
 
-  // Fetch treatments/services for filter
-  const { data: treatments } = useQuery({
-    queryKey: ['content-studio-treatments'],
+  // Fetch fostering categories for filter
+  const { data: categories } = useQuery({
+    queryKey: ['content-studio-categories'],
     queryFn: async () => {
       const { data, error } = await supabaseAdmin
-        .from('treatments')
+        .from('fostering_categories')
         .select('id, name, slug')
         .eq('is_active', true)
         .order('name');
@@ -481,10 +481,10 @@ export default function ContentGenerationStudioTab() {
         if (!matchesAnyState) return false;
       }
       
-      // Service filter (check slug pattern)
+      // Category filter (check slug pattern)
       if (serviceFilter !== '__all__') {
-        const treatment = treatments?.find(t => t.id === serviceFilter);
-        if (treatment && !page.slug.toLowerCase().includes(treatment.slug.toLowerCase())) {
+        const category = categories?.find(c => c.id === serviceFilter);
+        if (category && !page.slug.toLowerCase().includes(category.slug.toLowerCase())) {
           return false;
         }
       }
@@ -514,7 +514,7 @@ export default function ContentGenerationStudioTab() {
       
       return true;
     });
-  }, [seoPages, pageTypeFilter, stateFilters, serviceFilter, contentStatusFilter, wordCountRange, searchQuery, states, treatments]);
+  }, [seoPages, pageTypeFilter, stateFilters, serviceFilter, contentStatusFilter, wordCountRange, searchQuery, states, categories]);
 
   // Select all filtered
   const selectAllFiltered = () => {
@@ -1237,15 +1237,15 @@ export default function ContentGenerationStudioTab() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Fostering Type</Label>
+                  <Label>Fostering Category</Label>
                   <Select value={serviceFilter} onValueChange={setServiceFilter}>
                     <SelectTrigger>
-                      <SelectValue placeholder="All Fostering Types" />
+                      <SelectValue placeholder="All Categories" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="__all__">All Fostering Types</SelectItem>
-                      {treatments?.map(t => (
-                        <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
+                      <SelectItem value="__all__">All Categories</SelectItem>
+                      {categories?.map(c => (
+                        <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>

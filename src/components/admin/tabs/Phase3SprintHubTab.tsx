@@ -172,7 +172,7 @@ export default function Phase3SprintHubTab() {
     queryKey: ['unclaimed-clinics-count'],
     queryFn: async () => {
       const { count, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id', { count: 'exact', head: true })
         .eq('claim_status', 'unclaimed')
         .not('email', 'is', null);

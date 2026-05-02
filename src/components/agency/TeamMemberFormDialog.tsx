@@ -18,17 +18,18 @@ import { toast } from 'sonner';
 import { Loader2, Plus, Upload, Users } from 'lucide-react';
 
 export const PROFESSIONAL_TYPES = [
-  { value: 'dentist', label: 'Dentist' },
+  { value: 'social_worker', label: 'Social Worker' },
   { value: 'therapeutic specialist', label: 'Therapeutic Specialist' },
   { value: 'placement coordinator', label: 'Placement Coordinator' },
   { value: 'family support worker', label: 'Family Support Worker' },
   { value: 'rehabilitation specialist', label: 'Rehabilitation Specialist' },
   { value: 'care_specialist', label: 'Care Specialist' },
   { value: 'childrens_specialist', label: "Children's Fostering Specialist" },
-  { value: 'hygienist', label: 'Support Worker' },
-  { value: 'assistant', label: 'Care Assistant' },
-  { value: 'receptionist', label: 'Receptionist' },
-  { value: 'practice_manager', label: 'Practice Manager' },
+  { value: 'fostering_assessor', label: 'Fostering Assessor' },
+  { value: 'team_leader', label: 'Team Leader' },
+  { value: 'supervising_social_worker', label: 'Supervising Social Worker' },
+  { value: 'independent_reviewing_officer', label: 'Independent Reviewing Officer' },
+  { value: 'panel_member', label: 'Panel Member' },
 ];
 
 export interface TeamMemberFormData {

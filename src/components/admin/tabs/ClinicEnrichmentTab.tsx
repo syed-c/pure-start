@@ -102,18 +102,18 @@ export default function ClinicEnrichmentTab() {
     queryKey: ['clinic-enrichment-stats'],
     queryFn: async () => {
       const { count: totalCount } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('*', { count: 'exact', head: true })
         .eq('is_active', true);
       
       const { count: noDescCount } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('*', { count: 'exact', head: true })
         .eq('is_active', true)
         .is('description', null);
 
       const { count: noImageCount } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('*', { count: 'exact', head: true })
         .eq('is_active', true)
         .is('cover_image_url', null);
@@ -133,7 +133,7 @@ export default function ClinicEnrichmentTab() {
     queryKey: ['clinics-needing-description', searchTerm],
     queryFn: async () => {
       let query = supabase
-        .from('clinics')
+        .from('agencies')
         .select(`
           id, name, slug, description, address, cover_image_url,
           city:cities(name, state:states(abbreviation))
@@ -163,7 +163,7 @@ export default function ClinicEnrichmentTab() {
 
       while (true) {
         let query = supabase
-          .from('clinics')
+          .from('agencies')
           .select(`
             id, name, slug, description, address, cover_image_url,
             city:cities(name, state:states(abbreviation))
@@ -285,7 +285,7 @@ export default function ClinicEnrichmentTab() {
   const updateDescriptionMutation = useMutation({
     mutationFn: async ({ clinicId, description }: { clinicId: string; description: string }) => {
       const { error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .update({ description, updated_at: new Date().toISOString() })
         .eq('id', clinicId);
       
@@ -339,7 +339,7 @@ export default function ClinicEnrichmentTab() {
     try {
       // Update all clinics without cover images
       const { data: clinicsWithoutImages } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id')
         .is('cover_image_url', null)
         .eq('is_active', true);
@@ -359,7 +359,7 @@ export default function ClinicEnrichmentTab() {
       for (const clinic of clinicsWithoutImages) {
         const randomImage = placeholderImages[Math.floor(Math.random() * placeholderImages.length)];
         const { error } = await supabase
-          .from('clinics')
+          .from('agencies')
           .update({ cover_image_url: randomImage })
           .eq('id', clinic.id);
         

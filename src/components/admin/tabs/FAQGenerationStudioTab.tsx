@@ -247,12 +247,12 @@ export default function FAQGenerationStudioTab() {
     },
   });
 
-  // Fetch treatments/services for filter
-  const { data: treatments } = useQuery({
-    queryKey: ['faq-studio-treatments'],
+  // Fetch fostering categories for filter
+  const { data: categories } = useQuery({
+    queryKey: ['faq-studio-categories'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('treatments')
+        .from('fostering_categories')
         .select('id, name, slug')
         .eq('is_active', true)
         .order('name');

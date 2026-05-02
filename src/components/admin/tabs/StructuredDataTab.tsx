@@ -354,14 +354,14 @@ export default function StructuredDataTab() {
       const samples: Record<string, { slug: string; name: string }[]> = {};
       
       const { data: clinics } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('slug, name')
         .eq('is_active', true)
         .limit(5);
       samples.clinic = clinics?.map(c => ({ slug: `/clinic/${c.slug}`, name: c.name })) || [];
       
       const { data: agencies } = await supabase
-        .from('dentists')
+        .from('foster_carers')
         .select('slug, name')
         .eq('is_active', true)
         .limit(5);
@@ -388,7 +388,7 @@ export default function StructuredDataTab() {
       samples.state = states?.map(s => ({ slug: `/${s.slug}`, name: s.name })) || [];
       
       const { data: treatments } = await supabase
-        .from('treatments')
+        .from('fostering_categories')
         .select('slug, name')
         .eq('is_active', true)
         .limit(5);

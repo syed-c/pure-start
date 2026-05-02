@@ -58,7 +58,7 @@ export default function AppointmentsTab() {
   const { data: agencies } = useQuery({
     queryKey: ['filter-clinics'],
     queryFn: async () => {
-      const { data } = await supabase.from('clinics').select('id, name, slug').eq('is_active', true).order('name').limit(100);
+      const { data } = await supabase.from('agencies').select('id, name, slug').eq('is_active', true).order('name').limit(100);
       return data || [];
     },
   });
@@ -66,7 +66,7 @@ export default function AppointmentsTab() {
   const { data: contacts } = useQuery({
     queryKey: ['filter-agencies'],
     queryFn: async () => {
-      const { data } = await supabase.from('dentists').select('id, name').eq('is_active', true).order('name').limit(100);
+      const { data } = await supabase.from('foster_carers').select('id, name').eq('is_active', true).order('name').limit(100);
       return data || [];
     },
   });
@@ -74,7 +74,7 @@ export default function AppointmentsTab() {
   const { data: fosteringTypes } = useQuery({
     queryKey: ['filter-treatments'],
     queryFn: async () => {
-      const { data } = await supabase.from('treatments').select('id, name').eq('is_active', true).order('display_order');
+      const { data } = await supabase.from('fostering_categories').select('id, name').eq('is_active', true).order('display_order');
       return data || [];
     },
   });

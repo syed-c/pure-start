@@ -25,16 +25,17 @@ import {
 } from 'lucide-react';
 
 const PROFESSIONAL_TYPES_CONFIG = [
-  { value: 'dentist', label: 'Dentist', icon: Stethoscope, color: 'bg-primary/10 text-primary' },
+  { value: 'social_worker', label: 'Social Worker', icon: Stethoscope, color: 'bg-primary/10 text-primary' },
   { value: 'therapeutic specialist', label: 'Therapeutic Specialist', icon: Award, color: 'bg-purple-light text-purple' },
   { value: 'placement coordinator', label: 'Placement Coordinator', icon: Award, color: 'bg-coral-light text-coral' },
   { value: 'family support worker', label: 'Family Support Worker', icon: Award, color: 'bg-blue-light text-blue-custom' },
   { value: 'rehabilitation specialist', label: 'Rehabilitation Specialist', icon: Award, color: 'bg-gold-light text-gold' },
-  { value: 'care_specialist', label: 'Specialist', icon: Award, color: 'bg-teal-light text-teal' },
-  { value: 'childrens_specialist', label: 'Children\'s Specialist', icon: Award, color: 'bg-pink-100 text-pink-600' },
-  { value: 'hygienist', label: 'Support Worker', icon: UserCheck, color: 'bg-teal-light text-teal' },
-  { value: 'assistant', label: 'Care Assistant', icon: Users, color: 'bg-blue-light text-blue-custom' },
-  { value: 'receptionist', label: 'Receptionist', icon: Phone, color: 'bg-gold-light text-gold' },
+  { value: 'care_specialist', label: 'Care Specialist', icon: Award, color: 'bg-teal-light text-teal' },
+  { value: 'childrens_specialist', label: "Children's Specialist", icon: Award, color: 'bg-pink-100 text-pink-600' },
+  { value: 'fostering_assessor', label: 'Fostering Assessor', icon: UserCheck, color: 'bg-teal-light text-teal' },
+  { value: 'team_leader', label: 'Team Leader', icon: Users, color: 'bg-blue-light text-blue-custom' },
+  { value: 'supervising_social_worker', label: 'Supervising SW', icon: Award, color: 'bg-gold-light text-gold' },
+  { value: 'panel_member', label: 'Panel Member', icon: Award, color: 'bg-purple-light text-purple' },
   { value: 'practice_manager', label: 'Agency Manager', icon: Building2, color: 'bg-purple-light text-purple' },
 ];
 

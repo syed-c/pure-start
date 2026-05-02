@@ -9,18 +9,22 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm",
-        outline: "border border-border/50 bg-background hover:bg-muted/50 hover:border-border",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border/30",
-        ghost: "hover:bg-muted/50 hover:text-foreground",
+        default: "bg-primary text-white hover:bg-primary/90 shadow-sm hover:shadow-md",
+        destructive: "bg-destructive text-white hover:bg-destructive/90 shadow-sm",
+        outline: "border-2 border-slate-300 bg-white text-slate-800 hover:bg-slate-100 hover:border-slate-400",
+        "outline-primary": "border-2 border-primary bg-transparent text-primary hover:bg-primary/10",
+        "outline-white": "border-2 border-white/50 bg-black/30 text-white hover:bg-white/20 backdrop-blur-sm",
+        secondary: "bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-200",
+        ghost: "hover:bg-slate-100 hover:text-slate-900",
         link: "text-primary underline-offset-4 hover:underline",
-        hero: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg hover:shadow-xl hover:-translate-y-0.5",
+        hero: "bg-primary text-white hover:bg-primary/90 shadow-lg hover:shadow-xl hover:-translate-y-0.5",
+        dark: "bg-slate-900 text-white hover:bg-slate-800 shadow-sm",
       },
       size: {
         default: "h-10 px-5 py-2",
         sm: "h-9 rounded-xl px-4 text-xs",
         lg: "h-12 rounded-xl px-8 text-base",
+        xl: "h-14 rounded-2xl px-10 text-lg",
         icon: "h-10 w-10 rounded-xl",
       },
     },

@@ -6,8 +6,8 @@ interface SEOContentSectionProps {
   stateName?: string;
   variant: 'location' | 'service' | 'service-location' | 'listing';
   relatedLinks?: { label: string; href: string }[];
-  dentistCount?: number;
-  clinicCount?: number;
+  agencyCount?: number;
+  fosterCarerCount?: number;
 }
 
 export function SEOContentSection({ 
@@ -16,8 +16,8 @@ export function SEOContentSection({
   stateName,
   variant, 
   relatedLinks,
-  dentistCount = 0,
-  clinicCount = 0
+  agencyCount = 0,
+  fosterCarerCount = 0
 }: SEOContentSectionProps) {
   
   const renderLocationContent = () => (
@@ -27,7 +27,7 @@ export function SEOContentSection({
           Finding the Best Fostering Agency in {locationName}{stateName ? `, ${stateName}` : ''}
         </h2>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          {locationName} is home to {clinicCount > 0 ? `over ${clinicCount}` : 'numerous'} Ofsted-registered fostering agencies 
+          {locationName} is home to {agencyCount > 0 ? `over ${agencyCount}` : 'numerous'} Ofsted-registered fostering agencies 
           offering a comprehensive range of fostering services. Whether you need short-term, long-term, emergency, or specialist fostering care, 
           our directory connects you with licensed agencies who meet the highest standards of care.
         </p>
@@ -45,54 +45,54 @@ export function SEOContentSection({
 
       <section>
         <h2 className="text-2xl font-bold text-foreground mb-4">
-          Why Choose a Dentist in {locationName}?
+          Why Choose a Fostering Agency in {locationName}?
         </h2>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          Selecting a local dentist in {locationName} offers numerous advantages for your oral health journey. 
-          Proximity to your fostering care provider means easier access for routine visits, emergency appointments, 
-          and follow-up care, which are all essential for maintaining optimal dental health.
+          Selecting a local fostering agency in {locationName} offers numerous advantages for your fostering journey. 
+          Proximity means easier access for face-to-face consultations, training sessions, 
+          and ongoing support visits, which are all essential for a successful fostering placement.
         </p>
         <ul className="space-y-3 text-muted-foreground">
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Convenient neighborhood locations with easy parking and public transit access</span>
+            <span>Convenient local offices with easy parking and public transit access</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>State-of-the-art dental technology including digital imaging and laser dentistry</span>
+            <span>Ofsted-registered agencies with verified credentials and ratings</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Experienced dental teams serving diverse patient populations and family needs</span>
+            <span>Experienced social workers and supervising social workers supporting diverse family needs</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Flexible scheduling with evening and weekend appointments available at many practices</span>
+            <span>Flexible consultation times including evenings and weekends at many agencies</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Direct insurance billing with most major dental insurance providers accepted</span>
+            <span>Competitive fostering allowances and comprehensive support packages</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Emergency dental services for urgent fostering care needs</span>
+            <span>Emergency support services for urgent placement needs</span>
           </li>
         </ul>
       </section>
 
       <section>
         <h2 className="text-2xl font-bold text-foreground mb-4">
-          What to Look for When Choosing a Dentist
+          What to Look for When Choosing a Fostering Agency
         </h2>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          Finding the right dentist involves considering several important factors. Look for practitioners with 
-          strong educational backgrounds, relevant specializations, and positive patient testimonials. 
-          Consider whether the practice offers the specific services you need, from preventive care to cosmetic procedures.
+          Finding the right fostering agency involves considering several important factors. Look for agencies with 
+          strong Ofsted ratings, relevant specialisations, and positive testimonials from existing foster carers. 
+          Consider whether the agency offers the specific types of fostering you can provide, from temporary care to long-term placements.
         </p>
         <p className="text-muted-foreground leading-relaxed">
-          Don't hesitate to schedule a consultation to tour the facility, meet the dental team, and discuss your 
-          treatment goals. A good dentist-patient relationship is built on trust, communication, and shared 
-          commitment to your oral health.
+          Don't hesitate to request a information pack, attend an information evening, or speak directly with a supervising 
+          social worker to discuss your circumstances. A good agency-carer relationship is built on trust, communication, and shared 
+          commitment to the child's wellbeing.
         </p>
       </section>
 
@@ -102,8 +102,8 @@ export function SEOContentSection({
             Explore Nearby Areas
           </h2>
           <p className="text-muted-foreground leading-relaxed mb-4">
-            Can't find exactly what you're looking for in {locationName}? Explore agencies in neighboring communities 
-            to find the perfect match for your fostering care needs.
+            Can't find exactly what you're looking for in {locationName}? Explore agencies in neighbouring communities 
+            to find the perfect match for your fostering care capabilities.
           </p>
           <div className="flex flex-wrap gap-2">
             {relatedLinks.map((link) => (
@@ -125,22 +125,22 @@ export function SEOContentSection({
     <div className="space-y-8">
       <section>
         <h2 className="text-2xl font-bold text-foreground mb-4">
-          Understanding {serviceName}
+          Understanding {serviceName} Fostering
         </h2>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          {serviceName} is one of the most sought-after dental treatments across the United States. Our network of 
-          verified dental specialists offers this procedure using the latest techniques and technology to ensure 
-          optimal results and maximum patient comfort throughout the treatment process.
+          {serviceName} is one of the most sought-after types of fostering across the United Kingdom. Our network of 
+          verified fostering agencies offers comprehensive support using the latest approaches and training to ensure 
+          the best outcomes for both foster carers and the children in your care.
         </p>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          Whether you're considering {serviceName?.toLowerCase()} for the first time or seeking a second opinion from 
-          another qualified professional, our comprehensive directory connects you with experienced dental practitioners 
+          Whether you're considering {serviceName?.toLowerCase()} for the first time or seeking further information from 
+          another qualified agency, our comprehensive directory connects you with experienced fostering professionals 
           who can guide you through every step of the process.
         </p>
         <p className="text-muted-foreground leading-relaxed">
-          Modern {serviceName?.toLowerCase()} procedures have advanced significantly in recent years, with improved 
-          materials, techniques, and outcomes. Many patients report minimal discomfort and are impressed by the 
-          natural-looking results achieved by today's skilled dental professionals.
+          Modern {serviceName?.toLowerCase()} fostering has evolved significantly in recent years, with improved 
+          training, support mechanisms, and outcomes. Many foster carers report feeling well-supported and are impressed by the 
+          rewards achieved through providing loving care to children in need.
         </p>
       </section>
 
@@ -149,57 +149,57 @@ export function SEOContentSection({
           Benefits of {serviceName}
         </h2>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          Patients who undergo {serviceName?.toLowerCase()} treatment often experience significant improvements in both 
-          their oral health and overall quality of life. Here are some of the key benefits you can expect:
+          Foster carers who provide {serviceName?.toLowerCase()} care often experience significant improvements in both 
+          their personal wellbeing and the lives of the children they care for. Here are some of the key benefits you can expect:
         </p>
         <ul className="space-y-3 text-muted-foreground">
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Improved oral health, dental function, and bite alignment</span>
+            <span>Improved wellbeing for children through dedicated, specialised care</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Enhanced smile aesthetics and increased self-confidence</span>
+            <span>Comprehensive training and ongoing professional development</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Long-lasting results with proper care and regular dental maintenance</span>
+            <span>Competitive allowances with regular reviews and enhancements</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Personalized treatment plans tailored to your unique dental needs</span>
+            <span>Personalised support plans tailored to your unique circumstances</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Prevention of future dental problems and complications</span>
+            <span>24/7 access to therapeutic teams and specialist support</span>
           </li>
         </ul>
       </section>
 
       <section>
         <h2 className="text-2xl font-bold text-foreground mb-4">
-          Preparing for Your {serviceName} Appointment
+          Preparing for Your {serviceName} Journey
         </h2>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          Before your {serviceName?.toLowerCase()} procedure, your dentist will conduct a thorough examination and 
-          discuss your treatment options. This may include X-rays, dental impressions, or digital scans to create 
-          a customized treatment plan.
+          Before beginning your {serviceName?.toLowerCase()} journey, your agency will conduct a thorough assessment and 
+          discuss your options. This may include home visits, background checks, and preparation training to create 
+          a customized plan that matches your capabilities with children's needs.
         </p>
         <p className="text-muted-foreground leading-relaxed">
-          Be sure to discuss any medications you're taking, your complete medical history, and any concerns you 
-          have about the procedure. Your dental team is there to ensure you feel comfortable and informed throughout 
-          your treatment journey.
+          Be sure to discuss your family circumstances, your motivations for fostering, and any questions you 
+          have about the process. Your agency team is there to ensure you feel comfortable and informed throughout 
+          your fostering journey.
         </p>
       </section>
 
       {relatedLinks && relatedLinks.length > 0 && (
         <section>
           <h2 className="text-2xl font-bold text-foreground mb-4">
-            Related Dental Services
+            Related Fostering Types
           </h2>
           <p className="text-muted-foreground leading-relaxed mb-4">
-            Explore other dental treatments that may complement your {serviceName?.toLowerCase()} procedure 
-            or address additional oral health needs.
+            Explore other types of fostering that may complement your {serviceName?.toLowerCase()} experience 
+            or suit your circumstances better.
           </p>
           <div className="flex flex-wrap gap-2">
             {relatedLinks.map((link) => (
@@ -225,18 +225,18 @@ export function SEOContentSection({
         </h2>
         <p className="text-muted-foreground leading-relaxed mb-4">
           Looking for {serviceName?.toLowerCase()} specialists in {locationName}? Our comprehensive directory features 
-          {dentistCount > 0 ? ` ${dentistCount}+` : ''} verified dental professionals who specialize in this treatment 
-          and proudly serve patients throughout the {locationName} area and surrounding communities.
+          {agencyCount > 0 ? ` ${agencyCount}+` : ''} verified fostering agencies who specialise in this type of care 
+          and proudly support families throughout the {locationName} area and surrounding communities.
         </p>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          Each dentist in our network has been carefully vetted for their credentials, experience, and commitment to 
-          patient satisfaction. You can compare ratings based on authentic patient reviews, view treatment photos, 
-          and book your consultation with complete confidence.
+          Each agency in our network has been carefully vetted for their Ofsted registration, experience, and commitment to 
+          foster carer support. You can compare ratings based on authentic reviews, view agency profiles, 
+          and make enquiries with complete confidence.
         </p>
         <p className="text-muted-foreground leading-relaxed">
-          {serviceName} treatments in {locationName} are performed using the latest dental technology and techniques. 
-          Many local practices offer financing options and accept a wide range of dental insurance plans to make 
-          quality care accessible to all patients.
+          {serviceName} in {locationName} is supported by experienced agencies using comprehensive approaches and training. 
+          Many local agencies offer guidance sessions, comprehensive training programmes, and flexible support options to make 
+          fostering accessible to all suitable families.
         </p>
       </section>
 
@@ -245,47 +245,47 @@ export function SEOContentSection({
           Why Choose {locationName} for {serviceName}?
         </h2>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          {locationName} has become a destination for quality fostering care, with practices equipped with 
-          cutting-edge technology and staffed by highly trained professionals. Here's why patients choose 
-          local providers for their {serviceName?.toLowerCase()} needs:
+          {locationName} has become a destination for quality fostering care, with agencies equipped with 
+          trained professionals and comprehensive support systems. Here's why families choose 
+          local providers for their {serviceName?.toLowerCase()} journey:
         </p>
         <ul className="space-y-3 text-muted-foreground">
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Access to top-rated {serviceName?.toLowerCase()} specialists in your local community</span>
+            <span>Access to top-rated {serviceName?.toLowerCase()} agencies in your local community</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Convenient appointment times including early morning, evening, and weekend options</span>
+            <span>Convenient information sessions including daytime, evenings, and weekend options</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Competitive pricing with transparent cost estimates and flexible payment plans</span>
+            <span>Transparent information about allowances and support packages</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Comprehensive follow-up care and ongoing support close to your home</span>
+            <span>Comprehensive follow-up support and ongoing training close to your home</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Modern facilities with the latest dental equipment and sterilization protocols</span>
+            <span>Modern agencies with dedicated support teams and therapeutic services</span>
           </li>
         </ul>
       </section>
 
       <section>
         <h2 className="text-2xl font-bold text-foreground mb-4">
-          What to Expect During Your {serviceName} Consultation
+          What to Expect During Your {serviceName} Enquiry
         </h2>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          Your first {serviceName?.toLowerCase()} consultation in {locationName} will typically include a comprehensive 
-          oral examination, discussion of your treatment goals, and a detailed explanation of your options. 
-          Many agencies offer complimentary consultations for major procedures.
+          Your first {serviceName?.toLowerCase()} enquiry in {locationName} will typically include a friendly conversation 
+          about your circumstances, discussion of your fostering goals, and a detailed explanation of what's involved. 
+          Many agencies offer information evenings and open days for prospective foster carers.
         </p>
         <p className="text-muted-foreground leading-relaxed">
-          During your visit, don't hesitate to ask about the dentist's experience with {serviceName?.toLowerCase()}, 
-          view before-and-after photos of previous patients, and discuss the timeline and recovery process. 
-          A good dentist will take the time to address all your questions and concerns.
+          During your enquiry, don't hesitate to ask about the agency's experience with {serviceName?.toLowerCase()}, 
+          speak with current foster carers, and discuss the timeline and preparation process. 
+          A good agency will take the time to address all your questions and concerns.
         </p>
       </section>
     </div>
@@ -295,81 +295,81 @@ export function SEOContentSection({
     <div className="space-y-8">
       <section>
         <h2 className="text-2xl font-bold text-foreground mb-4">
-          How to Choose the Right Dentist
+          How to Choose the Right Fostering Agency
         </h2>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          Finding the right dentist is one of the most important decisions you can make for your oral health and 
-          overall wellbeing. Our platform simplifies this process by allowing you to compare verified dental 
-          professionals based on their expertise, patient reviews, location, and availability.
+          Choosing the right fostering agency is one of the most important decisions you can make for your fostering journey. 
+          Our platform simplifies this process by allowing you to compare verified agencies based on their Ofsted ratings, 
+          services offered, location, and support available.
         </p>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          Look for agencies with consistently strong patient ratings, relevant specializations for your needs, 
-          convenient office locations, and appointment times that fit your schedule. Consider factors like 
-          insurance acceptance, payment options, and the range of services offered.
+          Look for agencies with consistently strong Ofsted ratings, relevant specialisations for your circumstances, 
+          convenient office locations, and support availability that fits your schedule. Consider factors like 
+          training provision, allowance packages, and the range of fostering types offered.
         </p>
         <p className="text-muted-foreground leading-relaxed">
-          All profiles on our platform include verified credentials, authentic patient feedback, and detailed 
-          information about each practice. You can view photos, read reviews, and even take virtual tours of 
-          many agency offices before scheduling your first appointment.
+          All profiles on our platform include verified credentials, authentic testimonials, and detailed 
+          information about each agency. You can view photos, read reviews, and request information packs from 
+          many agencies before making your first enquiry.
         </p>
       </section>
 
       <section>
         <h2 className="text-2xl font-bold text-foreground mb-4">
-          What to Expect from Your Dental Visit
+          What to Expect as a Prospective Foster Carer
         </h2>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          Whether you're scheduling a routine cleaning or a specialized procedure, knowing what to expect 
-          can help you feel more comfortable and prepared for your dental appointment.
+          Whether you're just starting to consider fostering or ready to take the next step, knowing what to expect 
+          can help you feel more comfortable and prepared for your journey.
         </p>
         <ul className="space-y-3 text-muted-foreground">
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>A professional, welcoming environment focused on patient comfort and care</span>
+            <span>A welcoming, supportive environment focused on your family's needs</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Thorough examination with personalized treatment recommendations</span>
+            <span>Comprehensive assessment with personalised guidance</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Clear communication about all treatment options, procedures, and costs</span>
+            <span>Clear communication about all options, processes, and allowances</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Easy online booking and convenient appointment management tools</span>
+            <span>Easy online enquiry forms and responsive contact options</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Follow-up care instructions and scheduling for any necessary treatments</span>
+            <span>Ongoing support, training, and access to support networks</span>
           </li>
         </ul>
       </section>
 
       <section>
         <h2 className="text-2xl font-bold text-foreground mb-4">
-          Questions to Ask Your New Dentist
+          Questions to Ask Your New Agency
         </h2>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          When meeting with a new dentist, it's important to ask the right questions to ensure they're 
-          the right fit for your fostering care needs. Consider asking about:
+          When meeting with a new agency, it's important to ask the right questions to ensure they're 
+          the right fit for your fostering goals. Consider asking about:
         </p>
         <ul className="space-y-3 text-muted-foreground">
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Their experience and training in specific procedures you may need</span>
+            <span>Their experience and training in specific types of fostering you can provide</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Emergency care availability and after-hours contact information</span>
+            <span>24/7 support availability and your assigned worker's contact details</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Insurance acceptance and available payment or financing options</span>
+            <span>Fostering allowances, fees, and available financial support</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary font-bold">•</span>
-            <span>Their approach to preventive care and patient education</span>
+            <span>Their approach to Training, support groups, and peer networks</span>
           </li>
         </ul>
       </section>

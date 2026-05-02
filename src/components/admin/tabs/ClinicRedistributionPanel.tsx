@@ -91,7 +91,7 @@ export default function ClinicRedistributionPanel() {
       
       for (const city of missingCities || []) {
         const { count } = await supabase
-          .from('clinics')
+          .from('agencies')
           .select('*', { count: 'exact', head: true })
           .eq('city_id', city.id)
           .eq('is_active', true);

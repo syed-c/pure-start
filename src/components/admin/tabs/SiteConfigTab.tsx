@@ -82,12 +82,12 @@ export default function SiteConfigTab() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('header');
 
-  // Fetch treatments (services) for link selection
-  const { data: treatments = [] } = useQuery({
-    queryKey: ['treatments-for-links'],
+  // Fetch fostering categories for link selection
+  const { data: categories = [] } = useQuery({
+    queryKey: ['categories-for-links'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('treatments')
+        .from('fostering_categories')
         .select('id, name, slug')
         .eq('is_active', true)
         .order('name');

@@ -108,7 +108,7 @@ function useFosteringTypes() {
     queryKey: ["search-fostering-types"],
     queryFn: async () => {
       const { data } = await supabase
-        .from("treatments")
+        .from("fostering_categories")
         .select("id, name, slug")
         .eq("is_active", true)
         .order("name");

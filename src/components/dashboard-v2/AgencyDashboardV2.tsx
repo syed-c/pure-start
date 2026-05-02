@@ -12,22 +12,22 @@ import MyPracticePage from './MyPracticePage';
 import AppointmentsPageV2 from './AppointmentsPageV2';
 
 // Import existing tabs that we're keeping
-import AvailabilityManagementTab from '@/components/dentist/AvailabilityManagementTab';
-import AppointmentTypesTab from '@/components/dentist/AppointmentTypesTab';
-import PatientsTab from '@/components/dentist/PatientsTab';
-import MessagesTab from '@/components/dentist/MessagesTab';
-import IntakeFormsTab from '@/components/dentist/IntakeFormsTab';
-import OperationsTab from '@/components/dentist/OperationsTab';
-import ProfileEditorTab from '@/components/dentist/ProfileEditorTab';
-import TeamManagementTab from '@/components/dentist/TeamManagementTab';
-import ServicesTab from '@/components/dentist/ServicesTab';
-import InsuranceManagementTab from '@/components/dentist/InsuranceManagementTab';
+import AvailabilityManagementTab from '@/components/agency/AvailabilityManagementTab';
+import AppointmentTypesTab from '@/components/agency/AppointmentTypesTab';
+import PatientsTab from '@/components/agency/PatientsTab';
+import MessagesTab from '@/components/agency/MessagesTab';
+import IntakeFormsTab from '@/components/agency/IntakeFormsTab';
+import OperationsTab from '@/components/agency/OperationsTab';
+import ProfileEditorTab from '@/components/agency/ProfileEditorTab';
+import TeamManagementTab from '@/components/agency/TeamManagementTab';
+import ServicesTab from '@/components/agency/ServicesTab';
+import InsuranceManagementTab from '@/components/agency/InsuranceManagementTab';
 import AgencyReputationHub from '@/components/reputation/DentistReputationHub';
-import TemplatesTab from '@/components/dentist/TemplatesTab';
-import AgencySettingsTab from '@/components/dentist/DentistSettingsTab';
-import SupportTicketsTab from '@/components/dentist/SupportTicketsTab';
-import NotificationPreferencesTab from '@/components/dentist/NotificationPreferencesTab';
-import FormWorkflowTab from '@/components/dentist/FormWorkflowTab';
+import TemplatesTab from '@/components/agency/TemplatesTab';
+import AgencySettingsTab from '@/components/agency/DentistSettingsTab';
+import SupportTicketsTab from '@/components/agency/SupportTicketsTab';
+import NotificationPreferencesTab from '@/components/agency/NotificationPreferencesTab';
+import FormWorkflowTab from '@/components/agency/FormWorkflowTab';
 
 export default function AgencyDashboardV2() {
   const [searchParams, setSearchParams] = useSearchParams();

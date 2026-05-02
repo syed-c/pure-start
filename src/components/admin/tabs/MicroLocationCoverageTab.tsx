@@ -124,7 +124,7 @@ export default function MicroLocationCoverageTab() {
 
       // Get clinic counts per city
       const { data: clinicCounts } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('city_id')
         .eq('is_active', true);
 

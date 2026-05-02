@@ -47,7 +47,7 @@ async function fetchAllClinics(): Promise<Clinic[]> {
 
   while (hasMore) {
     const { data, error } = await supabase
-      .from('clinics')
+      .from('agencies')
       .select('id, name, slug, is_active, city:cities(name, state:states(name))')
       .order('name')
       .range(from, from + batchSize - 1);

@@ -87,20 +87,20 @@ export default function Phase4SprintHubTab() {
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-      // Get appointments (conversions)
+      // Get enquiries (conversions)
       const { count: totalConversions } = await supabase
-        .from('appointments')
+        .from('fostering_enquiries')
         .select('*', { count: 'exact', head: true })
         .gte('created_at', thirtyDaysAgo.toISOString());
 
-      // Get leads count as sessions proxy
-      const { count: totalLeads } = await supabase
-        .from('leads')
+      // Get fostering_enquiries count as sessions proxy
+      const { count: totalEnquiries } = await supabase
+        .from('fostering_enquiries')
         .select('*', { count: 'exact', head: true })
         .gte('created_at', thirtyDaysAgo.toISOString());
 
       // Estimate sessions and pageviews from available data
-      const sessions = (totalLeads || 0) * 10; // Estimate
+      const sessions = (totalEnquiries || 0) * 10; // Estimate
       const pageviews = sessions * 3; // Avg pages per session
       const profileViews = (totalConversions || 0) * 5; // Estimate
 

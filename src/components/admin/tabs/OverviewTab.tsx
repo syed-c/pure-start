@@ -93,10 +93,10 @@ export default function OverviewTab() {
         const dayEnd = endOfDay(subDays(new Date(), i));
         
         const [leadsResult, enquiriesResult, viewsResult] = await Promise.all([
-          supabase.from('leads').select('id', { count: 'exact', head: true })
+          supabase.from('fostering_enquiries').select('id', { count: 'exact', head: true })
             .gte('created_at', dayStart.toISOString())
             .lte('created_at', dayEnd.toISOString()),
-          supabase.from('appointments').select('id', { count: 'exact', head: true })
+          supabase.from('fostering_enquiries').select('id', { count: 'exact', head: true })
             .gte('created_at', dayStart.toISOString())
             .lte('created_at', dayEnd.toISOString()),
           supabase.from('page_views').select('id', { count: 'exact', head: true })
@@ -131,7 +131,7 @@ export default function OverviewTab() {
     queryFn: async () => {
       const twentyFourHoursAgo = subHours(new Date(), 24).toISOString();
       const { count } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('*', { count: 'exact', head: true })
         .gte('claimed_at', twentyFourHoursAgo);
       return count || 0;
@@ -143,7 +143,7 @@ export default function OverviewTab() {
     queryKey: ['verified-agency-count'],
     queryFn: async () => {
       const { count } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('*', { count: 'exact', head: true })
         .eq('verification_status', 'verified');
       return count || 0;
@@ -222,8 +222,8 @@ export default function OverviewTab() {
     queryKey: ['system-uptime'],
     queryFn: async () => {
       const [lastEnquiry, lastLead, lastSession] = await Promise.all([
-        supabase.from('appointments').select('created_at').order('created_at', { ascending: false }).limit(1),
-        supabase.from('leads').select('created_at').order('created_at', { ascending: false }).limit(1),
+        supabase.from('fostering_enquiries').select('created_at').order('created_at', { ascending: false }).limit(1),
+        supabase.from('fostering_enquiries').select('created_at').order('created_at', { ascending: false }).limit(1),
         supabase.from('visitor_sessions').select('created_at').order('created_at', { ascending: false }).limit(1),
       ]);
 
@@ -325,12 +325,12 @@ export default function OverviewTab() {
     );
   }
 
-  const claimRate = stats?.clinics?.total 
-    ? Math.round(((stats.clinics.claimed || 0) / stats.clinics.total) * 100) 
+  const claimRate = stats?.agencies?.total 
+    ? Math.round(((stats.agencies.claimed || 0) / stats.agencies.total) * 100) 
     : 0;
 
-  const verificationRate = stats?.clinics?.claimed 
-    ? Math.round(((stats.clinics.verified || 0) / stats.clinics.claimed) * 100) 
+  const verificationRate = stats?.agencies?.claimed 
+    ? Math.round(((stats.agencies.verified || 0) / stats.agencies.claimed) * 100) 
     : 0;
 
   // Quick actions - Fostering Platform
@@ -347,9 +347,9 @@ export default function OverviewTab() {
 
   // Pie chart data for agency distribution
   const pieData = [
-    { name: 'Verified', value: stats?.clinics?.verified || 0 },
-    { name: 'Claimed', value: (stats?.clinics?.claimed || 0) - (stats?.clinics?.verified || 0) },
-    { name: 'Unclaimed', value: stats?.clinics?.unclaimed || 0 },
+    { name: 'Verified', value: stats?.agencies?.verified || 0 },
+    { name: 'Claimed', value: (stats?.agencies?.claimed || 0) - (stats?.agencies?.verified || 0) },
+    { name: 'Unclaimed', value: stats?.agencies?.unclaimed || 0 },
   ].filter(d => d.value > 0);
 
   // Task items for project list - Fostering specific

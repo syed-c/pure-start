@@ -67,7 +67,7 @@ export default function UnassignedQueriesTab() {
     queryKey: ['unassigned-appointments', statusFilter],
     queryFn: async () => {
       let query = supabase
-        .from('appointments')
+        .from('fostering_enquiries')
         .select(`
           *,
           clinic:clinics!appointments_clinic_id_fkey(id, name, city_id),
@@ -94,7 +94,7 @@ export default function UnassignedQueriesTab() {
 
       // Get clinics with active subscriptions in the same city
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select(`
           id,
           name,
@@ -118,13 +118,13 @@ export default function UnassignedQueriesTab() {
   const routeAppointment = useMutation({
     mutationFn: async ({ appointmentId, newClinicId, notes }: { appointmentId: string; newClinicId: string; notes: string }) => {
       const { data: oldData } = await supabase
-        .from('appointments')
+        .from('fostering_enquiries')
         .select('*')
         .eq('id', appointmentId)
         .single();
 
       const { error } = await supabase
-        .from('appointments')
+        .from('fostering_enquiries')
         .update({
           original_clinic_id: oldData?.clinic_id,
           clinic_id: newClinicId,
@@ -170,7 +170,7 @@ export default function UnassignedQueriesTab() {
   const closeAppointment = useMutation({
     mutationFn: async ({ appointmentId, reason }: { appointmentId: string; reason: string }) => {
       const { error } = await supabase
-        .from('appointments')
+        .from('fostering_enquiries')
         .update({
           status: 'cancelled',
           admin_notes: reason,

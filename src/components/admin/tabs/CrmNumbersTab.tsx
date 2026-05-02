@@ -90,7 +90,7 @@ export default function CrmNumbersTab() {
     queryKey: ['clinics-for-assignment'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name')
         .eq('claim_status', 'claimed')
         .order('name');

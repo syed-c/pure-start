@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 export interface AdminStats {
   locations: { countries: number; cities: number; areas: number };
   services: { total: number; parents: number; children: number };
-  clinics: { // agencies (DB table still named clinics)
+  agencies: { 
     total: number; 
     unclaimed: number; 
     claimed: number; 
@@ -18,10 +18,10 @@ export interface AdminStats {
     gmbImported: number;
     manual: number;
   };
-  agencies: { total: number; active: number; featured: number }; // contacts
-  patients: { total: number }; // carers
+  agencies: { total: number; active: number; featured: number };
+  patients: { total: number }; // foster_carers
   leads: { today: number; week: number; month: number; total: number };
-  appointments: { pending: number; confirmed: number; completed: number; cancelled: number; noShow: number }; // enquiries
+  appointments: { pending: number; confirmed: number; completed: number; cancelled: number; noShow: number };
   reviews: { pending: number; approved: number; rejected: number };
   revenue: { activeSubscriptions: number; monthlyRevenue: number; yearlyRevenue: number };
   claims: { pending: number; approved: number; rejected: number };
@@ -42,85 +42,55 @@ export function useAdminStats() {
         { count: countriesCount },
         { count: citiesCount },
         { count: areasCount },
-        // Services
+        // Services (fostering_categories)
         { count: totalTreatments },
-        // Clinics
-        { count: totalClinics },
-        { count: unclaimedClinics },
-        { count: claimedClinics },
-        { count: verifiedClinics },
-        { count: duplicateClinics },
-        { count: activeClinics },
-        { count: pausedClinics },
-        { count: gmbImportedClinics },
-        { count: manualClinics },
         // Agencies
         { count: totalAgencies },
+        { count: unclaimedAgencies },
+        { count: claimedAgencies },
+        { count: verifiedAgencies },
+        { count: duplicateAgencies },
         { count: activeAgencies },
-        // Patients
-        { count: totalPatients },
-        // Leads
-        { count: leadsToday },
-        { count: leadsWeek },
-        { count: leadsMonth },
-        { count: leadsTotal },
-        // Appointments
-        { count: pendingAppointments },
-        { count: confirmedAppointments },
-        { count: completedAppointments },
-        { count: cancelledAppointments },
-        { count: noShowAppointments },
-        // Claims
-        { count: pendingClaims },
-        { count: approvedClaims },
-        { count: rejectedClaims },
+        { count: pausedAgencies },
+        { count: gmbImportedAgencies },
+        { count: manualAgencies },
+        // Foster Carers
+        { count: totalFosterCarers },
+        // Enquiries
+        { count: enquiriesToday },
+        { count: enquiriesWeek },
+        { count: enquiriesMonth },
+        { count: enquiriesTotal },
         // Alerts
         { count: unresolvedAlerts },
         { count: criticalAlerts },
-        // Subscriptions
-        { count: activeSubscriptions },
       ] = await Promise.all([
         // Locations
         supabase.from('countries').select('*', { count: 'exact', head: true }),
         supabase.from('cities').select('*', { count: 'exact', head: true }),
         supabase.from('areas').select('*', { count: 'exact', head: true }),
-        // Services
-        supabase.from('treatments').select('*', { count: 'exact', head: true }),
-        // Clinics
-        supabase.from('clinics').select('*', { count: 'exact', head: true }),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('claim_status', 'unclaimed'),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed'),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('verification_status', 'verified'),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('is_duplicate', true),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('is_active', true),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('is_active', false),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('source', 'gmb'),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('source', 'manual'),
+        // Services (fostering_categories)
+        supabase.from('fostering_categories').select('*', { count: 'exact', head: true }),
         // Agencies
-        supabase.from('dentists').select('*', { count: 'exact', head: true }),
-        supabase.from('dentists').select('*', { count: 'exact', head: true }).eq('is_active', true),
-        // Patients
-        supabase.from('patients').select('*', { count: 'exact', head: true }),
-        // Leads
-        supabase.from('leads').select('*', { count: 'exact', head: true }).gte('created_at', today.toISOString()),
-        supabase.from('leads').select('*', { count: 'exact', head: true }).gte('created_at', weekAgo.toISOString()),
-        supabase.from('leads').select('*', { count: 'exact', head: true }).gte('created_at', monthAgo.toISOString()),
-        supabase.from('leads').select('*', { count: 'exact', head: true }),
-        // Appointments
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('status', 'confirmed'),
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('status', 'completed'),
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('status', 'cancelled'),
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('status', 'no_show'),
-        // Claims
-        supabase.from('claim_requests').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
-        supabase.from('claim_requests').select('*', { count: 'exact', head: true }).eq('status', 'approved'),
-        supabase.from('claim_requests').select('*', { count: 'exact', head: true }).eq('status', 'rejected'),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('claim_status', 'unclaimed'),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed'),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('verification_status', 'verified'),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('is_duplicate', true),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('is_active', true),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('is_active', false),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('source', 'gmb'),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('source', 'manual'),
+        // Foster Carers
+        supabase.from('foster_carers').select('*', { count: 'exact', head: true }),
+        // Enquiries
+        supabase.from('fostering_enquiries').select('*', { count: 'exact', head: true }).gte('created_at', today.toISOString()),
+        supabase.from('fostering_enquiries').select('*', { count: 'exact', head: true }).gte('created_at', weekAgo.toISOString()),
+        supabase.from('fostering_enquiries').select('*', { count: 'exact', head: true }).gte('created_at', monthAgo.toISOString()),
+        supabase.from('fostering_enquiries').select('*', { count: 'exact', head: true }),
         // Alerts
         supabase.from('platform_alerts').select('*', { count: 'exact', head: true }).eq('is_read', false),
         supabase.from('platform_alerts').select('*', { count: 'exact', head: true }).eq('severity', 'critical').eq('is_read', false),
-        // Subscriptions
-        supabase.from('clinic_subscriptions').select('*', { count: 'exact', head: true }).eq('status', 'active'),
       ]);
 
       return {
@@ -134,38 +104,33 @@ export function useAdminStats() {
           parents: 0,
           children: 0,
         },
-        clinics: {
-          total: totalClinics || 0,
-          unclaimed: unclaimedClinics || 0,
-          claimed: claimedClinics || 0,
-          verified: verifiedClinics || 0,
-          duplicates: duplicateClinics || 0,
-          suspended: 0,
-          active: activeClinics || 0,
-          paused: pausedClinics || 0,
-          gmbImported: gmbImportedClinics || 0,
-          manual: manualClinics || 0,
-        },
         agencies: {
           total: totalAgencies || 0,
+          unclaimed: unclaimedAgencies || 0,
+          claimed: claimedAgencies || 0,
+          verified: verifiedAgencies || 0,
+          duplicates: duplicateAgencies || 0,
+          suspended: 0,
           active: activeAgencies || 0,
-          featured: 0,
+          paused: pausedAgencies || 0,
+          gmbImported: gmbImportedAgencies || 0,
+          manual: manualAgencies || 0,
         },
-        patients: {
-          total: totalPatients || 0,
+        fosterCarers: {
+          total: totalFosterCarers || 0,
         },
         leads: {
-          today: leadsToday || 0,
-          week: leadsWeek || 0,
-          month: leadsMonth || 0,
-          total: leadsTotal || 0,
+          today: enquiriesToday || 0,
+          week: enquiriesWeek || 0,
+          month: enquiriesMonth || 0,
+          total: enquiriesTotal || 0,
         },
         appointments: {
-          pending: pendingAppointments || 0,
-          confirmed: confirmedAppointments || 0,
-          completed: completedAppointments || 0,
-          cancelled: cancelledAppointments || 0,
-          noShow: noShowAppointments || 0,
+          pending: 0,
+          confirmed: 0,
+          completed: 0,
+          cancelled: 0,
+          noShow: 0,
         },
         reviews: {
           pending: 0,
@@ -173,14 +138,14 @@ export function useAdminStats() {
           rejected: 0,
         },
         revenue: {
-          activeSubscriptions: activeSubscriptions || 0,
+          activeSubscriptions: 0,
           monthlyRevenue: 0,
           yearlyRevenue: 0,
         },
         claims: {
-          pending: pendingClaims || 0,
-          approved: approvedClaims || 0,
-          rejected: rejectedClaims || 0,
+          pending: 0,
+          approved: 0,
+          rejected: 0,
         },
         alerts: {
           unresolved: unresolvedAlerts || 0,

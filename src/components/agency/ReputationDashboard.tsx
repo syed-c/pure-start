@@ -30,7 +30,7 @@ import ReputationKPIHero, { ReputationKPIs } from '@/components/reputation/Reput
 import UnifiedReviewsInbox from '@/components/reputation/UnifiedReviewsInbox';
 import ReviewRequestManager from '@/components/reputation/ReviewRequestManager';
 import GMBConnectionCard from '@/components/reputation/GMBConnectionCard';
-import QRCodeGenerator from '@/components/dentist/QRCodeGenerator';
+import QRCodeGenerator from '@/components/agency/QRCodeGenerator';
 import { useHasFeature, useClinicSubscription } from '@/hooks/useClinicFeatures';
 
 export default function ReputationDashboard() {

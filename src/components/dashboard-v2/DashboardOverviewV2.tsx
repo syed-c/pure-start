@@ -41,7 +41,7 @@ import {
   StatusBadge,
 } from './DesignSystem';
 import { AnimatedKPICard } from './AnimatedKPICard';
-import { NoPracticeLinked } from '@/components/dentist/NoPracticeLinked';
+import { NoPracticeLinked } from '@/components/agency/NoPracticeLinked';
 
 interface DashboardOverviewV2Props {
   onNavigate: (tab: string) => void;

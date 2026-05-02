@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Building2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import ReputationSuiteNew from '@/components/dentist/ReputationSuiteNew';
+import ReputationSuiteNew from '@/components/agency/ReputationSuiteNew';
 
 /**
  * Wrapper component for the ReputationSuiteNew that injects the dentist's clinic ID.

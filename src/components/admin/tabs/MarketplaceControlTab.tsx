@@ -98,7 +98,7 @@ export default function MarketplaceControlTab() {
 
     while (hasMore) {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select(`
           id, name, slug, gmb_connected, verification_status, claimed_by,
           dentist_settings (booking_enabled)

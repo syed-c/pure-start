@@ -44,10 +44,18 @@ export default function ClinicsTab() {
   const [selectedCityId, setSelectedCityId] = useState('');
   const { data: areas } = useAdminAreas(selectedCityId || undefined);
   
-  const { data: totalAgencyCount = 0 } = useQuery({
-    queryKey: ['total-clinic-count'],
+const { data: totalAgencyCount = 0 } = useQuery({
+    queryKey: ['total-agency-count'],
     queryFn: async () => {
-      const { count } = await supabase.from('clinics').select('*', { count: 'exact', head: true });
+      const { count } = await supabase.from('agencies').select('*', { count: 'exact', head: true });
+      return count || 0;
+    },
+  });
+  
+  const { data: totalCarerCount = 0 } = useQuery({
+    queryKey: ['total-carer-count'],
+    queryFn: async () => {
+      const { count } = await supabase.from('foster_carers').select('*', { count: 'exact', head: true });
       return count || 0;
     },
   });
@@ -55,7 +63,7 @@ export default function ClinicsTab() {
   const { data: totalContactCount = 0 } = useQuery({
     queryKey: ['total-dentist-count'],
     queryFn: async () => {
-      const { count } = await supabase.from('dentists').select('*', { count: 'exact', head: true });
+      const { count } = await supabase.from('foster_carers').select('*', { count: 'exact', head: true });
       return count || 0;
     },
   });

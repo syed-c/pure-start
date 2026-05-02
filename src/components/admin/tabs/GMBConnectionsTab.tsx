@@ -57,7 +57,7 @@ export default function GMBConnectionsTab() {
     queryKey: ['gmb-connections'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select(`
           id, name, slug, google_place_id, gmb_connected, rating, review_count, claim_status, verification_status, is_active, source,
           oauth_tokens:clinic_oauth_tokens(gmb_connected, gmb_location_id, gmb_last_sync_at, gmb_account_email, gmb_data)
