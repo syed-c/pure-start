@@ -11,6 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   Globe,
   Zap,
@@ -278,45 +279,54 @@ export default function ApiControlTab() {
                 <div>
                   <p className="font-medium text-violet-900">AI/ML API Gateway (Primary AI Service)</p>
                   <p className="text-sm text-violet-700 mt-1">
-                    This is the primary AI gateway used for all AI features including SEO, content generation, review analysis, and more.
+                    This is the primary AI gateway used for content generation, SEO, review analysis, and more. Enter your API key below.
                   </p>
                 </div>
               </div>
             </div>
             
             <div className="space-y-4">
-              <div className="p-4 rounded-lg bg-teal/10 border border-teal/20">
-                <div className="flex items-center gap-2 mb-2">
-                  <CheckCircle className="h-4 w-4 text-teal" />
-                  <span className="font-medium text-teal">AIMLAPI_KEY</span>
+              <div className="space-y-2">
+                <Label>API Key</Label>
+                <div className="relative">
+                  <Input
+                    type={showSecrets[editingApi] ? 'text' : 'password'}
+                    value={apiForm[`${editingApi}_api_key`] ?? (currentSettings.api_key as string) ?? ''}
+                    onChange={(e) => setApiForm({ ...apiForm, [`${editingApi}_api_key`]: e.target.value })}
+                    placeholder="Enter Gemini API key..."
+                    className="pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-1 top-1 h-7 w-7 p-0"
+                    onClick={() => setShowSecrets({ ...showSecrets, [editingApi]: !showSecrets[editingApi] })}
+                  >
+                    {showSecrets[editingApi] ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  API key is securely stored in Lovable Cloud secrets and used by all edge functions for AI processing.
+                <p className="text-xs text-muted-foreground">
+                  Get your API key from Google AI Studio or Google Cloud Console
                 </p>
               </div>
               
-              <Separator />
-              
-              <div className="space-y-3">
-                <Label className="font-medium">Supported Models</Label>
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div className="p-2 rounded bg-muted/50">gemini-2.0-flash</div>
-                  <div className="p-2 rounded bg-muted/50">gemini-2.5-pro</div>
-                  <div className="p-2 rounded bg-muted/50">gpt-4o</div>
-                  <div className="p-2 rounded bg-muted/50">claude-3-5-sonnet</div>
-                </div>
-              </div>
-              
-              <div className="space-y-3">
-                <Label className="font-medium">Used By</Label>
-                <div className="flex flex-wrap gap-2">
-                  <Badge variant="secondary">SEO Expert</Badge>
-                  <Badge variant="secondary">SEO Bot</Badge>
-                  <Badge variant="secondary">Content Optimizer</Badge>
-                  <Badge variant="secondary">AI Assistant</Badge>
-                  <Badge variant="secondary">Review Sentiment</Badge>
-                  <Badge variant="secondary">AI Reply Generator</Badge>
-                </div>
+              <div className="space-y-2">
+                <Label>Model (Optional)</Label>
+                <Select 
+                  value={apiForm[`${editingApi}_model`] ?? (currentSettings.model as string) ?? 'gemini-1.5-flash'}
+                  onValueChange={(val) => setApiForm({ ...apiForm, [`${editingApi}_model`]: val })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="gemini-1.5-flash">Gemini 1.5 Flash (Free)</SelectItem>
+                    <SelectItem value="gemini-1.5-pro">Gemini 1.5 Pro</SelectItem>
+                    <SelectItem value="gemini-2.0-flash">Gemini 2.0 Flash</SelectItem>
+                    <SelectItem value="gemini-2.5-pro">Gemini 2.5 Pro</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               
               <div className="flex items-center gap-2">
@@ -324,7 +334,7 @@ export default function ApiControlTab() {
                   checked={apiForm.aimlapi_enabled === 'true' || (apiForm.aimlapi_enabled === undefined && ((currentSettings.enabled as boolean) ?? true))}
                   onCheckedChange={(checked) => setApiForm({ ...apiForm, aimlapi_enabled: checked ? 'true' : 'false' })}
                 />
-                <Label>Enable AI/ML API Integration</Label>
+                <Label>Enable AI Integration</Label>
               </div>
             </div>
             
@@ -333,8 +343,8 @@ export default function ApiControlTab() {
               <Button onClick={() => updateApiSetting.mutate({
                 key: 'aimlapi',
                 value: {
-                  uses_secrets: true,
-                  secret_key_configured: true,
+                  api_key: apiForm[`${editingApi}_api_key`] || currentSettings.api_key || '',
+                  model: apiForm[`${editingApi}_model`] || currentSettings.model || 'gemini-1.5-flash',
                   enabled: apiForm.aimlapi_enabled === 'true' || (apiForm.aimlapi_enabled === undefined && ((currentSettings.enabled as boolean) ?? true)),
                 }
               })}>
