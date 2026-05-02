@@ -2,6 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
+const API_KEY = 'aimlapi';
+
 interface ContentBriefParams {
   contentType: string;
   targetKeyword: string;
@@ -51,13 +53,18 @@ export function useGenerateContentBrief() {
       const { data: config } = await supabase
         .from('global_settings')
         .select('value')
-        .eq('key', 'gemini_api')
+        .eq('key', API_KEY)
         .single();
 
-      if (!config?.value?.api_key) {
+      const configValue = config?.value as Record<string, unknown> || {};
+      const apiKey = configValue.api_key as string;
+      
+      if (!apiKey) {
         throw new Error('Gemini API not configured. Go to API Control to configure.');
       }
 
+      const model = (configValue.model as string) || 'gemini-1.5-flash';
+      
       const locationContext = params.location ? ` for ${params.location}, UK` : '';
       const serviceContext = params.service ? ` about ${params.service}` : '';
       
@@ -85,7 +92,7 @@ Return ONLY valid JSON with this exact structure:
 }`;
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${config.value.model || 'gemini-1.5-flash'}:generateContent?key=${config.value.api_key}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -129,7 +136,7 @@ export function useGenerateContent() {
       const { data: config } = await supabase
         .from('global_settings')
         .select('value')
-        .eq('key', 'gemini_api')
+        .eq('key', API_KEY)
         .single();
 
       if (!config?.value?.api_key) {
@@ -169,7 +176,7 @@ Return ONLY valid JSON:
 }`;
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${config.value.model || 'gemini-1.5-flash'}:generateContent?key=${config.value.api_key}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -214,7 +221,7 @@ export function useOptimizeContent() {
       const { data: config } = await supabase
         .from('global_settings')
         .select('value')
-        .eq('key', 'gemini_api')
+        .eq('key', API_KEY)
         .single();
 
       if (!config?.value?.api_key) {
@@ -240,7 +247,7 @@ Return ONLY valid JSON with improvements:
 }`;
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${config.value.model || 'gemini-1.5-flash'}:generateContent?key=${config.value.api_key}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -282,7 +289,7 @@ export function useAnalyzeCompetitors() {
       const { data: config } = await supabase
         .from('global_settings')
         .select('value')
-        .eq('key', 'gemini_api')
+        .eq('key', API_KEY)
         .single();
 
       if (!config?.value?.api_key) {
@@ -305,7 +312,7 @@ Return ONLY valid JSON:
 }`;
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${config.value.model || 'gemini-1.5-flash'}:generateContent?key=${config.value.api_key}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
