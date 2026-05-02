@@ -6,8 +6,9 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// UK Fostering Platform ONLY - No dental/dentist/UAE/USA references
 const BASE_URL = "https://www.foster-care.co.uk";
-const CHUNK_SIZE = 2500; // Max URLs per sitemap chunk
+const CHUNK_SIZE = 2500;
 
 interface SitemapUrl {
   loc: string;
@@ -16,7 +17,6 @@ interface SitemapUrl {
   changefreq: string;
 }
 
-// Escape XML special characters
 function escapeXml(text: string): string {
   return text
     .replace(/&/g, '&amp;')
@@ -26,91 +26,47 @@ function escapeXml(text: string): string {
     .replace(/'/g, '&apos;');
 }
 
-// Normalize URL - ensure trailing slash (canonical format) and no double slashes
 function normalizeUrl(path: string): string {
-  // Remove leading slash if present (we'll add BASE_URL)
   let cleanPath = path.startsWith('/') ? path : `/${path}`;
-  
-  // Remove double slashes
   cleanPath = cleanPath.replace(/\/+/g, '/');
-  
-  // Add trailing slash (canonical: WITH trailing slash)
-  // Exception: root path stays as /
   if (cleanPath !== '/' && !cleanPath.endsWith('/')) {
     cleanPath = cleanPath + '/';
   }
-  
   return `${BASE_URL}${cleanPath}`;
 }
 
-// Validate URL - must not have double slashes (except after protocol)
 function isValidSitemapUrl(loc: string): boolean {
   if (!loc || loc.length < 10) return false;
-  // Check for double slashes after the protocol
   const afterProtocol = loc.replace('https://', '');
   if (afterProtocol.includes('//')) return false;
-  // Check for empty path segments
   if (loc.endsWith('//')) return false;
   return true;
 }
 
-// Generate individual sitemap XML (no XSL for cleaner parsing)
 function generateSitemapXml(urls: SitemapUrl[]): string {
-  // Filter out invalid URLs
   const validUrls = urls.filter(url => isValidSitemapUrl(url.loc));
   
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${validUrls
-  .map(
-    (url) => `  <url>
+${validUrls.map((url) => `  <url>
     <loc>${escapeXml(url.loc)}</loc>
     ${url.lastmod ? `<lastmod>${new Date(url.lastmod).toISOString().split("T")[0]}</lastmod>\n    ` : ""}<changefreq>${url.changefreq}</changefreq>
     <priority>${url.priority}</priority>
-  </url>`
-  )
-  .join("\n")}
+  </url>`).join("\n")}
 </urlset>`;
 }
 
-// Generate sitemap index dynamically based on URL counts
-function generateSitemapIndex(clinicChunks: number, serviceLocationChunks: number, cityChunks: number = 1): string {
+function generateSitemapIndex(sitemaps: string[]): string {
   const today = new Date().toISOString().split("T")[0];
-  const sitemaps: string[] = [
-    "sitemap-static.xml",
-    "sitemap-states.xml",
-  ];
-  
-  for (let i = 1; i <= cityChunks; i++) {
-    sitemaps.push(cityChunks > 1 ? `sitemap-cities-${i}.xml` : "sitemap-cities.xml");
-  }
-  
-  sitemaps.push("sitemap-services.xml");
-  
-  for (let i = 1; i <= serviceLocationChunks; i++) {
-    sitemaps.push(`sitemap-service-locations-${i}.xml`);
-  }
-  
-  for (let i = 1; i <= clinicChunks; i++) {
-    sitemaps.push(`sitemap-profiles-${i}.xml`);
-  }
-  
-  sitemaps.push("sitemap-agencies.xml", "sitemap-posts.xml", "sitemap-insurance.xml");
-  
   return `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${sitemaps
-  .map(
-    (sitemap) => `  <sitemap>
+${sitemaps.map((sitemap) => `  <sitemap>
     <loc>${BASE_URL}/${sitemap}</loc>
     <lastmod>${today}</lastmod>
-  </sitemap>`
-  )
-  .join("\n")}
+  </sitemap>`).join("\n")}
 </sitemapindex>`;
 }
 
-// Helper to fetch all rows with pagination (Supabase has 1000 row limit)
 async function fetchAllRows(supabase: any, table: string, selectQuery: string, filters: Record<string, any> = {}) {
   const allRows: any[] = [];
   let offset = 0;
@@ -141,27 +97,17 @@ async function fetchAllRows(supabase: any, table: string, selectQuery: string, f
   return allRows;
 }
 
-// Get chunk of URLs
 function getChunk(urls: SitemapUrl[], chunkIndex: number): SitemapUrl[] {
   const start = (chunkIndex - 1) * CHUNK_SIZE;
-  const end = start + CHUNK_SIZE;
-  return urls.slice(start, end);
+  return urls.slice(start, start + CHUNK_SIZE);
 }
 
-// Calculate number of chunks needed
-function getChunkCount(totalUrls: number): number {
-  return Math.ceil(totalUrls / CHUNK_SIZE);
-}
-
-// Return response (skip compression for edge function compatibility)
-function xmlResponse(xml: string, headers: Record<string, string>) {
+function xmlResponse(xml: string) {
   return new Response(xml, {
     headers: {
-      ...headers,
+      ...corsHeaders,
       "Content-Type": "application/xml; charset=utf-8",
-      "Cache-Control": "public, max-age=3600, s-maxage=3600",
-      "Surrogate-Control": "max-age=3600",
-      "X-Robots-Tag": "noindex",
+      "Cache-Control": "public, max-age=3600",
     },
   });
 }
@@ -176,331 +122,160 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Check URL for specific sitemap type and chunk
     const url = new URL(req.url);
     const sitemapType = url.searchParams.get("type") || "index";
-    const chunkParam = url.searchParams.get("chunk");
-    const chunk = chunkParam ? parseInt(chunkParam, 10) : null;
+    const chunk = url.searchParams.get("chunk") ? parseInt(url.searchParams.get("chunk")!, 10) : null;
 
     console.log(`Generating sitemap type: ${sitemapType}, chunk: ${chunk}`);
 
-    // STATIC PAGES SITEMAP
+    // === SITEMAP INDEX ===
+    if (sitemapType === "index") {
+      const sitemaps = [
+        "sitemap-static.xml",
+        "sitemap-categories.xml",
+        "sitemap-cities.xml",
+        "sitemap-agencies.xml",
+        "sitemap-posts.xml",
+      ];
+      return xmlResponse(generateSitemapIndex(sitemaps));
+    }
+
+    // === STATIC PAGES (UK Fostering Platform) ===
     if (sitemapType === "static") {
       const staticPages = [
         { path: "/", priority: 1.0, changefreq: "daily" },
-        { path: "/services", priority: 0.9, changefreq: "weekly" },
-        { path: "/insurance", priority: 0.8, changefreq: "weekly" },
-        { path: "/blog", priority: 0.8, changefreq: "daily" },
-        { path: "/about", priority: 0.5, changefreq: "monthly" },
-        { path: "/contact", priority: 0.5, changefreq: "monthly" },
+        { path: "/search", priority: 0.9, changefreq: "daily" },
+        { path: "/categories", priority: 0.8, changefreq: "weekly" },
+        { path: "/about", priority: 0.7, changefreq: "monthly" },
+        { path: "/contact", priority: 0.6, changefreq: "monthly" },
         { path: "/faq", priority: 0.6, changefreq: "monthly" },
-        { path: "/how-it-works", priority: 0.6, changefreq: "monthly" },
-        { path: "/pricing", priority: 0.6, changefreq: "monthly" },
-        { path: "/sitemap", priority: 0.4, changefreq: "weekly" },
+        { path: "/how-it-works", priority: 0.7, changefreq: "weekly" },
+        { path: "/become-foster-carer", priority: 0.9, changefreq: "daily" },
+        { path: "/blog", priority: 0.7, changefreq: "weekly" },
+        { path: "/sitemap", priority: 0.3, changefreq: "weekly" },
         { path: "/privacy", priority: 0.3, changefreq: "yearly" },
         { path: "/terms", priority: 0.3, changefreq: "yearly" },
-        { path: "/editorial-policy", priority: 0.3, changefreq: "yearly" },
-        { path: "/medical-review-policy", priority: 0.3, changefreq: "yearly" },
         { path: "/verification-policy", priority: 0.3, changefreq: "yearly" },
+        { path: "/list-your-agency", priority: 0.8, changefreq: "weekly" },
+        { path: "/claim-profile", priority: 0.7, changefreq: "weekly" },
       ];
 
-      const urls: SitemapUrl[] = staticPages.map((page) => ({
-        loc: normalizeUrl(page.path),
-        priority: page.priority,
-        changefreq: page.changefreq,
-      }));
-
-      console.log(`Static sitemap: ${urls.length} URLs`);
-      return xmlResponse(generateSitemapXml(urls), corsHeaders);
+      return xmlResponse(generateSitemapXml(staticPages.map(p => ({
+        loc: normalizeUrl(p.path),
+        priority: p.priority,
+        changefreq: p.changefreq,
+      }))));
     }
 
-    // STATES SITEMAP (NEW - Dedicated)
-    if (sitemapType === "states") {
+    // === FOSTERING CATEGORIES (Services) ===
+    if (sitemapType === "categories") {
       const urls: SitemapUrl[] = [];
 
-      // Fetch active states
-      const states = await fetchAllRows(supabase, "states", "id, slug, name, updated_at", { is_active: true });
+      // Try fostering_categories first
+      let categories = await fetchAllRows(supabase, "fostering_categories", "slug, updated_at", { is_active: true });
+      
+      // Fallback to agencies if no categories
+      if (categories.length === 0) {
+        console.log("No fostering_categories, using agencies_type from agencies table");
+        const agencies = await fetchAllRows(supabase, "agencies", "id, type, updated_at", { is_active: true });
+        const typeSet = new Set(agencies.map(a => a.type).filter(Boolean));
+        categories = Array.from(typeSet).map(type => ({ slug: type?.toLowerCase().replace(/\s+/g, '-'), updated_at: new Date().toISOString() }));
+      }
 
-      for (const state of states) {
-        if (!state.slug || state.slug.trim() === '') continue;
+      for (const cat of categories) {
+        if (!cat.slug || cat.slug.trim() === '') continue;
         urls.push({
-        loc: normalizeUrl(`/${state.slug}`),
-          lastmod: state.updated_at,
-          priority: 0.9,
+          loc: normalizeUrl(`/categories/${cat.slug}`),
+          lastmod: cat.updated_at,
+          priority: 0.7,
           changefreq: "weekly",
         });
       }
 
-      console.log(`States sitemap: ${urls.length} URLs`);
-      return xmlResponse(generateSitemapXml(urls), corsHeaders);
+      console.log(`Categories sitemap: ${urls.length} URLs`);
+      return xmlResponse(generateSitemapXml(urls));
     }
 
-    // CITIES/AREAS SITEMAP - Include ALL active areas
+    // === CITIES (UK Locations) ===
     if (sitemapType === "cities") {
-      const allUrls: SitemapUrl[] = [];
-
-      // Include all active cities/areas regardless of clinic count
-      const cities = await fetchAllRows(supabase, "cities", "id, slug, updated_at, state_id, states(slug)", { is_active: true });
-
-      for (const city of cities) {
-        if (!city.slug || city.slug.trim() === '') continue;
-        
-        const stateData = Array.isArray(city.states) ? city.states[0] : city.states;
-        if (stateData?.slug) {
-          allUrls.push({
-            loc: normalizeUrl(`/${stateData.slug}/${city.slug}`),
-            lastmod: city.updated_at,
-            priority: 0.85,
-            changefreq: "weekly",
-          });
-        }
-      }
-
-      // If chunk specified, return that chunk
-      if (chunk !== null && chunk > 0) {
-        const chunkUrls = getChunk(allUrls, chunk);
-        console.log(`Cities sitemap chunk ${chunk}: ${chunkUrls.length} URLs (total: ${allUrls.length})`);
-        return xmlResponse(generateSitemapXml(chunkUrls), corsHeaders);
-      }
-
-      console.log(`Cities sitemap: ${allUrls.length} URLs`);
-      return xmlResponse(generateSitemapXml(allUrls), corsHeaders);
-    }
-
-    // LOCATIONS SITEMAP (Legacy - redirects to cities for backwards compatibility)
-    if (sitemapType === "locations") {
-      // Redirect to cities sitemap for backwards compatibility
-      console.log("Redirecting locations to cities sitemap");
       const urls: SitemapUrl[] = [];
 
-      // Fetch active states
-      const states = await fetchAllRows(supabase, "states", "id, slug, updated_at", { is_active: true });
-
-      for (const state of states) {
-        if (!state.slug || state.slug.trim() === '') continue;
-        urls.push({
-          loc: normalizeUrl(`/${state.slug}`),
-          lastmod: state.updated_at,
-          priority: 0.9,
-          changefreq: "weekly",
-        });
-      }
-
-      // Cities with state relationship - only include cities with at least 1 clinic
-      const cities = await fetchAllRows(supabase, "cities", "id, slug, updated_at, state_id, states(slug)", { is_active: true });
-
-      // Get all active clinics to count per city
-      const clinics = await fetchAllRows(supabase, "clinics", "city_id", { is_active: true, is_duplicate: false });
-
-      const cityClinicMap: Record<string, number> = {};
-      for (const c of clinics) {
-        if (c.city_id) {
-          cityClinicMap[c.city_id] = (cityClinicMap[c.city_id] || 0) + 1;
-        }
-      }
-
-      for (const city of cities) {
-        // Skip cities with no clinics (would be thin content / soft 404)
-        if (!cityClinicMap[city.id] || cityClinicMap[city.id] < 1) continue;
-        if (!city.slug || city.slug.trim() === '') continue;
-        
-        const stateData = Array.isArray(city.states) ? city.states[0] : city.states;
-        if (stateData?.slug) {
-          urls.push({
-            loc: normalizeUrl(`/${stateData.slug}/${city.slug}`),
-            lastmod: city.updated_at,
-            priority: 0.85,
-            changefreq: "weekly",
-          });
-        }
-      }
-
-      console.log(`Locations sitemap (legacy): ${urls.length} URLs`);
-      return xmlResponse(generateSitemapXml(urls), corsHeaders);
-    }
-
-    // SERVICES SITEMAP (Treatments)
-    if (sitemapType === "services") {
-      const urls: SitemapUrl[] = [];
-
-      const treatments = await fetchAllRows(supabase, "treatments", "slug, updated_at", { is_active: true });
-
-      for (const treatment of treatments) {
-        if (!treatment.slug || treatment.slug.trim() === '') continue;
-        urls.push({
-          loc: normalizeUrl(`/services/${treatment.slug}`),
-          lastmod: treatment.updated_at,
-          priority: 0.8,
-          changefreq: "weekly",
-        });
-      }
-
-      console.log(`Services sitemap: ${urls.length} URLs`);
-      return xmlResponse(generateSitemapXml(urls), corsHeaders);
-    }
-
-    // SERVICE-LOCATION COMBINATIONS SITEMAP (CHUNKED)
-    // Include ALL emirate/area/service combinations for comprehensive coverage
-    if (sitemapType === "service-locations") {
-      const allUrls: SitemapUrl[] = [];
-
-      // Get all active areas (cities) with their emirate (state) relationship
-      const cities = await fetchAllRows(supabase, "cities", "id, slug, states(slug)", { is_active: true });
-      const treatments = await fetchAllRows(supabase, "treatments", "slug", { is_active: true });
+      // Fetch active cities
+      const cities = await fetchAllRows(supabase, "cities", "slug, updated_at", { is_active: true });
 
       for (const city of cities) {
         if (!city.slug || city.slug.trim() === '') continue;
-        
-        const stateData = Array.isArray(city.states) ? city.states[0] : city.states;
-        if (stateData?.slug) {
-          for (const treatment of treatments) {
-            if (!treatment.slug || treatment.slug.trim() === '') continue;
-            allUrls.push({
-              loc: normalizeUrl(`/${stateData.slug}/${city.slug}/${treatment.slug}`),
-              priority: 0.7,
-              changefreq: "weekly",
-            });
-          }
-        }
-      }
-
-      // If chunk specified, return that chunk
-      if (chunk !== null && chunk > 0) {
-        const chunkUrls = getChunk(allUrls, chunk);
-        console.log(`Service-locations sitemap chunk ${chunk}: ${chunkUrls.length} URLs (total: ${allUrls.length})`);
-        return xmlResponse(generateSitemapXml(chunkUrls), corsHeaders);
-      }
-
-      // Otherwise return full
-      console.log(`Service-locations sitemap (full): ${allUrls.length} URLs`);
-      return xmlResponse(generateSitemapXml(allUrls), corsHeaders);
-    }
-
-    // PROFILES SITEMAP (Clinics - CHUNKED) - Renamed for SEO clarity
-    if (sitemapType === "profiles" || sitemapType === "clinics") {
-      const allUrls: SitemapUrl[] = [];
-
-      const clinicsData = await fetchAllRows(supabase, "clinics", "slug, updated_at, description", { is_active: true, is_duplicate: false });
-
-      for (const clinic of clinicsData) {
-        // Skip clinics with invalid slugs
-        if (!clinic.slug || clinic.slug.trim() === '') continue;
-        
-        const hasThinContent = !clinic.description || clinic.description.length < 50;
-        allUrls.push({
-          loc: normalizeUrl(`/clinic/${clinic.slug}`),
-          lastmod: clinic.updated_at,
-          priority: hasThinContent ? 0.5 : 0.7,
+        urls.push({
+          loc: normalizeUrl(`/england/${city.slug}`),
+          lastmod: city.updated_at,
+          priority: 0.7,
           changefreq: "weekly",
         });
       }
 
-      // If chunk specified, return that chunk
-      if (chunk !== null && chunk > 0) {
-        const chunkUrls = getChunk(allUrls, chunk);
-        console.log(`Profiles sitemap chunk ${chunk}: ${chunkUrls.length} URLs (total: ${allUrls.length})`);
-        return xmlResponse(generateSitemapXml(chunkUrls), corsHeaders);
-      }
-
-      // Otherwise return full (for backwards compatibility)
-      console.log(`Profiles sitemap (full): ${allUrls.length} URLs`);
-      return xmlResponse(generateSitemapXml(allUrls), corsHeaders);
+      console.log(`Cities sitemap: ${urls.length} URLs`);
+      return xmlResponse(generateSitemapXml(urls));
     }
 
-    // DENTISTS SITEMAP
+    // === AGENCIES (Fostering Agencies) ===
     if (sitemapType === "agencies") {
-      const urls: SitemapUrl[] = [];
+      const allUrls: SitemapUrl[] = [];
 
-      const agencies = await fetchAllRows(supabase, "agencies", "slug, updated_at, bio", { is_active: true });
+      const agencies = await fetchAllRows(supabase, "agencies", "slug, updated_at", { is_active: true });
 
-      for (const dentist of agencies) {
-        // Skip agencies with invalid slugs
-        if (!dentist.slug || dentist.slug.trim() === '') continue;
-        
-        const hasThinContent = !dentist.bio || dentist.bio.length < 50;
-        urls.push({
-          loc: normalizeUrl(`/dentist/${dentist.slug}`),
-          lastmod: dentist.updated_at,
-          priority: hasThinContent ? 0.4 : 0.6,
+      for (const agency of agencies) {
+        if (!agency.slug || agency.slug.trim() === '') continue;
+        allUrls.push({
+          loc: normalizeUrl(`/agency/${agency.slug}`),
+          lastmod: agency.updated_at,
+          priority: 0.6,
           changefreq: "weekly",
         });
       }
 
-      console.log(`Agencies sitemap: ${urls.length} URLs`);
-      return xmlResponse(generateSitemapXml(urls), corsHeaders);
+      // Handle chunking
+      if (chunk && chunk > 1) {
+        const chunkUrls = getChunk(allUrls, chunk);
+        console.log(`Agencies sitemap chunk ${chunk}: ${chunkUrls.length} URLs`);
+        return xmlResponse(generateSitemapXml(chunkUrls));
+      }
+
+      console.log(`Agencies sitemap: ${allUrls.length} URLs`);
+      return xmlResponse(generateSitemapXml(allUrls));
     }
 
-    // BLOG POSTS SITEMAP
+    // === BLOG POSTS ===
     if (sitemapType === "posts") {
       const urls: SitemapUrl[] = [];
 
-      const posts = await fetchAllRows(supabase, "blog_posts", "slug, updated_at, published_at", { status: "published" });
+      const posts = await fetchAllRows(supabase, "blog_posts", "slug, updated_at", { status: "published" });
 
       for (const post of posts) {
         if (!post.slug || post.slug.trim() === '') continue;
         urls.push({
           loc: normalizeUrl(`/blog/${post.slug}`),
-          lastmod: post.updated_at || post.published_at || undefined,
+          lastmod: post.updated_at,
           priority: 0.6,
           changefreq: "monthly",
         });
       }
 
       console.log(`Posts sitemap: ${urls.length} URLs`);
-      return xmlResponse(generateSitemapXml(urls), corsHeaders);
+      return xmlResponse(generateSitemapXml(urls));
     }
 
-    // INSURANCE SITEMAP
-    if (sitemapType === "insurance") {
-      const urls: SitemapUrl[] = [];
+    // Default: Return index
+    const sitemaps = [
+      "sitemap-static.xml",
+      "sitemap-categories.xml",
+      "sitemap-cities.xml",
+      "sitemap-agencies.xml",
+      "sitemap-posts.xml",
+    ];
+    return xmlResponse(generateSitemapIndex(sitemaps));
 
-      const insurances = await fetchAllRows(supabase, "insurances", "id, slug, name, updated_at", { is_active: true });
-
-      for (const ins of insurances) {
-        if (!ins.slug || ins.slug.trim() === '') continue;
-        urls.push({
-          loc: normalizeUrl(`/insurance/${ins.slug}`),
-          lastmod: ins.updated_at,
-          priority: 0.7,
-          changefreq: "weekly",
-        });
-      }
-
-      // Also generate insurance + emirate combinations
-      const states = await fetchAllRows(supabase, "states", "id, slug", { is_active: true });
-      for (const ins of insurances) {
-        if (!ins.slug || ins.slug.trim() === '') continue;
-        for (const state of states) {
-          if (!state.slug || state.slug.trim() === '') continue;
-          urls.push({
-            loc: normalizeUrl(`/insurance/${ins.slug}/${state.slug}`),
-            priority: 0.6,
-            changefreq: "weekly",
-          });
-        }
-      }
-
-      console.log(`Insurance sitemap: ${urls.length} URLs`);
-      return xmlResponse(generateSitemapXml(urls), corsHeaders);
-    }
-
-    // DEFAULT: Return sitemap index with statically defined chunks
-    // This avoids fetching ALL data just to count rows (which caused timeouts/processing errors in GSC)
-    console.log("Generating sitemap index with static chunk estimates");
-    
-    // Use generous static estimates - extra chunks that return empty sitemaps are harmless
-    // but missing chunks means missing URLs from the index
-    const clinicChunks = 1;  // ~1172 clinics fits in 1 chunk of 2500
-    const serviceLocationChunks = 1; // ~1380 combos fits in 1 chunk
-    const cityChunks = 1; // ~69 cities fits in 1 chunk
-    
-    return xmlResponse(generateSitemapIndex(clinicChunks, serviceLocationChunks, cityChunks), corsHeaders);
-  } catch (err) {
-    const error = err as Error;
-    console.error("Sitemap generation error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+  } catch (error) {
+    console.error("Sitemap error:", error);
+    return new Response("Error generating sitemap", { status: 500 });
   }
 });

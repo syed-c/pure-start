@@ -31,8 +31,9 @@ const SitemapPage = () => {
   const { data: agenciesData, isLoading: agenciesLoading } = useQuery({
     queryKey: ['sitemap-agencies'],
     queryFn: async () => {
-      const { count } = await supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('is_active', true).eq('is_duplicate', false);
-      const { data } = await supabase.from('clinics').select('name, slug, city:cities(name)').eq('is_active', true).eq('is_duplicate', false).order('name').limit(100);
+      // Updated to use agencies table
+      const { count } = await supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('is_active', true).eq('is_duplicate', false);
+      const { data } = await supabase.from('agencies').select('name, slug, city:cities(name)').eq('is_active', true).eq('is_duplicate', false).order('name').limit(100);
       return { agencies: data || [], count: count || 0 };
     }
   });

@@ -54,6 +54,7 @@ import {
   UserCheck,
   ExternalLink,
   SearchCode,
+  Brain,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -170,6 +171,7 @@ const ContentCommandCenterTab = lazyRetry(() => import('@/components/admin/tabs/
 const InternalLinkingHubTab = lazyRetry(() => import('@/components/admin/tabs/InternalLinkingHubTab'));
 const QualityIdentityTab = lazyRetry(() => import('@/components/admin/tabs/QualityIdentityTab'));
 const ContentStrategyTab = lazyRetry(() => import('@/components/admin/tabs/ContentStrategyTab'));
+const ContentIntelligenceCenterTab = lazyRetry(() => import('@/components/admin/tabs/ContentIntelligenceCenterTab'));
 const PriceComparisonControlTab = lazyRetry(() => import('@/components/admin/tabs/PriceComparisonControlTab'));
 const ReportsTab = lazyRetry(() => import('@/components/admin/tabs/ReportsTab'));
 const GooglePlacesImportTab = lazyRetry(() => import('@/components/admin/tabs/GooglePlacesImportTab'));
@@ -306,13 +308,14 @@ const adminTabGroups = [
   {
     label: 'Content Management',
     tabs: [
-      { id: 'content-command-center', label: 'Content Hub', icon: Wand2, highlight: true },
-      { id: 'content-studio', label: 'Content Studio', icon: Sparkles, highlight: true },
-      { id: 'content-audit', label: 'Content Audit', icon: SearchCode, highlight: true },
+      { id: 'content-intelligence', label: 'Content Intelligence', icon: Brain, highlight: true },
+      { id: 'content-command-center', label: 'Content Hub', icon: Wand2 },
+      { id: 'content-studio', label: 'Content Studio', icon: Sparkles },
+      { id: 'content-audit', label: 'Content Audit', icon: SearchCode },
       { id: 'faq-studio', label: 'FAQ Studio', icon: MessageSquare },
       { id: 'blog', label: 'Blog Engine', icon: BookOpen },
       { id: 'static-pages', label: 'Static Pages', icon: FileText },
-      { id: 'clinic-enrichment', label: 'Agency Enrichment', icon: Wand2 },
+      { id: 'clinic-enrichment', label: 'Agency Enrichment', icon: Building2 },
       { id: 'content-strategy', label: 'Content Strategy', icon: Target },
     ],
   },
@@ -580,6 +583,7 @@ export default function AdminDashboard() {
       case 'faq-studio': return <FAQGenerationStudioTab />;
       case 'content-audit': return <ContentAuditBotTab />;
       case 'content-command-center': return <ContentCommandCenterTab />;
+      case 'content-intelligence': return <ContentIntelligenceCenterTab />;
       case 'quality-identity': return <QualityIdentityTab />;
       case 'internal-linking': return <InternalLinkingHubTab />;
       case 'content-strategy': return <ContentStrategyTab />;
