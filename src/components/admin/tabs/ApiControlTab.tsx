@@ -110,7 +110,7 @@ export default function ApiControlTab() {
       if (existing) {
         const { error } = await supabase
           .from('global_settings')
-          .update({ value: jsonValue, updated_at: new Date().toISOString() })
+          .update({ value: jsonValue })
           .eq('id', existing.id);
         if (error) throw error;
       } else {
