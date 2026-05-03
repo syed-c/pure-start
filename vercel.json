@@ -24,6 +24,7 @@
   "rewrites": [
     { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
     { "source": "/sitemap-static.xml", "destination": "/sitemap-static.xml" },
+    { "source": "/sitemap-locations.xml", "destination": "/sitemap-locations.xml" },
     { "source": "/sitemap-categories.xml", "destination": "/sitemap-categories.xml" },
     { "source": "/sitemap-cities.xml", "destination": "/sitemap-cities.xml" },
     { "source": "/robots.txt", "destination": "/robots.txt" },
