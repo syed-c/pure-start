@@ -12,4 +12,8 @@
     <loc>https://www.foster-care.co.uk/sitemap-categories.xml</loc>
     <lastmod>2026-05-04</lastmod>
   </sitemap>
+  <sitemap>
+    <loc>https://www.foster-care.co.uk/sitemap-agencies.xml</loc>
+    <lastmod>2026-05-04</lastmod>
+  </sitemap>
 </sitemapindex>

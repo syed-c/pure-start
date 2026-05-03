@@ -27,6 +27,7 @@
     { "source": "/sitemap-locations.xml", "destination": "/sitemap-locations.xml" },
     { "source": "/sitemap-categories.xml", "destination": "/sitemap-categories.xml" },
     { "source": "/sitemap-cities.xml", "destination": "/sitemap-cities.xml" },
+    { "source": "/sitemap-agencies.xml", "destination": "/sitemap-agencies.xml" },
     { "source": "/robots.txt", "destination": "/robots.txt" },
     { "source": "/llms.txt", "destination": "/llms.txt" },
     { "source": "/api/stripe-webhook", "destination": "https://vcvvtklbyvdbysfdbnfp.supabase.co/functions/v1/stripe-webhook" },
