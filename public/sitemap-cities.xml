@@ -1,47 +1,88 @@
-<?xml version="1.0" encoding="UTF-8"?php
-// Placeholder - these should be dynamically generated from the database
-// For now, key UK cities are listed
-header('Content-Type: application/xml');
-echo '<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.foster-care.co.uk/england/london/</loc>
+    <loc>https://www.foster-care.co.uk/fostering-agencies/london/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.foster-care.co.uk/england/birmingham/</loc>
+    <loc>https://www.foster-care.co.uk/fostering-agencies/birmingham/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.foster-care.co.uk/england/manchester/</loc>
+    <loc>https://www.foster-care.co.uk/fostering-agencies/manchester/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.foster-care.co.uk/england/leeds/</loc>
+    <loc>https://www.foster-care.co.uk/fostering-agencies/leeds/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.foster-care.co.uk/england/liverpool/</loc>
+    <loc>https://www.foster-care.co.uk/fostering-agencies/liverpool/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.foster-care.co.uk/england/bristol/</loc>
+    <loc>https://www.foster-care.co.uk/fostering-agencies/bristol/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.foster-care.co.uk/england/sheffield/</loc>
+    <loc>https://www.foster-care.co.uk/fostering-agencies/newcastle/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.foster-care.co.uk/england/newcastle/</loc>
+    <loc>https://www.foster-care.co.uk/fostering-agencies/sheffield/</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.6</priority>
   </url>
-</urlset>';
+  <url>
+    <loc>https://www.foster-care.co.uk/fostering-agencies/nottingham/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.foster-care.co.uk/fostering-agencies/southampton/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.foster-care.co.uk/fostering-agencies/portsmouth/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.foster-care.co.uk/fostering-agencies/oxford/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.foster-care.co.uk/fostering-agencies/cambridge/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.foster-care.co.uk/fostering-agencies/edinburgh/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.foster-care.co.uk/fostering-agencies/glasgow/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.foster-care.co.uk/fostering-agencies/cardiff/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.foster-care.co.uk/fostering-agencies/belfast/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>
