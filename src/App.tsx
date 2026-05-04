@@ -50,6 +50,8 @@ const CityPage = lazyRetry(() => import("./pages/CityPage"));
 const ServicePage = lazyRetry(() => import("./pages/ServicePage"));
 const ServicesPage = lazyRetry(() => import("./pages/ServicesPage"));
 const ServiceLocationPage = lazyRetry(() => import("./pages/ServiceLocationPage"));
+const FosteringCategoryLocationPage = lazyRetry(() => import("./pages/FosteringCategoryLocationPage"));
+const FosteringLocationPage = lazyRetry(() => import("./pages/FosteringLocationPage"));
 const AgencyPage = lazyRetry(() => import("./pages/AgencyProfilePage"));
 
 // Blog Pages - lazy loaded
@@ -168,6 +170,17 @@ const App = () => (
                 <Route path="/agency/:agencySlug" element={<AgencyPage />} />
                 <Route path="/agency/:agencySlug/" element={<AgencyPage />} />
                 <Route path="/agency/:agencySlug/*" element={<NotFound />} />
+                
+                {/* Fostering Directory main page */}
+                <Route path="/fostering-agencies" element={<FosteringLocationPage />} />
+                <Route path="/fostering-agencies/" element={<FosteringLocationPage />} />
+                
+                {/* Fostering Category + Location Pages (new SEO structure) */}
+                <Route path="/fostering-agencies/:locationSlug" element={<FosteringLocationPage />} />
+                <Route path="/fostering-agencies/:locationSlug/" element={<FosteringLocationPage />} />
+                <Route path="/fostering-agencies/:locationSlug/:categorySlug" element={<FosteringCategoryLocationPage />} />
+                <Route path="/fostering-agencies/:locationSlug/:categorySlug/" element={<FosteringCategoryLocationPage />} />
+                
                 {/* Legacy clinic route - redirect to agency */}
                 <Route path="/clinic/:clinicSlug" element={<Navigate to="/agency" replace />} />
 

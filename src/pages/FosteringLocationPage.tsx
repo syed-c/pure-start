@@ -1,0 +1,324 @@
+import { useParams, Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { supabase, supabaseAdmin } from "@/integrations/supabase/client";
+import { PageLayout } from "@/components/layout/PageLayout";
+import { Section } from "@/components/layout/Section";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { SEOHead } from "@/components/seo/SEOHead";
+import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
+import { useSeoPageContent } from "@/hooks/useSeoPageContent";
+import { usePrerenderReady } from "@/hooks/usePrerenderReady";
+import { Heart, Shield, Users, MapPin, Star, ArrowRight, Search } from "lucide-react";
+
+const FosteringLocationPage = () => {
+  const { locationSlug } = useParams();
+  const locationSlugLower = locationSlug?.toLowerCase() || '';
+
+  const locationNameMap: Record<string, string> = {
+    'england': 'England',
+    'scotland': 'Scotland', 
+    'wales': 'Wales',
+    'northern-ireland': 'Northern Ireland',
+    'greater-london': 'Greater London',
+    'london': 'London',
+    'birmingham': 'Birmingham',
+    'manchester': 'Manchester',
+    'leeds': 'Leeds',
+    'liverpool': 'Liverpool',
+    'bristol': 'Bristol',
+    'newcastle': 'Newcastle',
+    'sheffield': 'Sheffield',
+    'nottingham': 'Nottingham',
+    'southampton': 'Southampton',
+    'edinburgh': 'Edinburgh',
+    'glasgow': 'Glasgow',
+    'cardiff': 'Cardiff',
+    'belfast': 'Belfast',
+  };
+
+  const fallbackLocation = locationNameMap[locationSlugLower]
+    ? { 
+        id: `fallback-${locationSlugLower}`, 
+        name: locationNameMap[locationSlugLower], 
+        slug: locationSlugLower, 
+        type: locationSlugLower.length > 2 ? "city" as const : "state" as const 
+      }
+    : null;
+
+  const { data: location, isLoading: locationLoading } = useQuery({
+    queryKey: ["location-by-slug", locationSlug],
+    queryFn: async () => {
+      if (fallbackLocation) return fallbackLocation;
+      
+      const { data: cityData } = await supabase
+        .from("cities")
+        .select("id, name, slug, state_id, country")
+        .eq("slug", locationSlugLower)
+        .eq("is_active", true)
+        .maybeSingle();
+      
+      if (cityData) return { ...cityData, type: "city" as const };
+      
+      const { data: stateData } = await supabase
+        .from("states")
+        .select("id, name, slug, abbreviation")
+        .eq("slug", locationSlugLower)
+        .eq("is_active", true)
+        .maybeSingle();
+      
+      if (stateData) return { ...stateData, type: "state" as const };
+      
+      return fallbackLocation;
+    },
+    enabled: !!locationSlug,
+  });
+
+  const { data: treatments } = useQuery({
+    queryKey: ["active-treatments"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("treatments")
+        .select("id, name, slug")
+        .eq("is_active", true)
+        .order("display_order", { ascending: true })
+        .limit(10);
+      return data || [];
+    },
+  });
+
+  const { data: agencies, isLoading: agenciesLoading } = useQuery({
+    queryKey: ["location-agencies", location?.name],
+    queryFn: async () => {
+      if (!location) return [];
+      const { data } = await supabaseAdmin
+        .from("agencies")
+        .select("*")
+        .ilike("city", `%${location.name}%`)
+        .order("rating", { ascending: false })
+        .limit(30);
+      return (data || []) as any[];
+    },
+    enabled: !!location,
+  });
+
+  const { data: nearbyLocations } = useQuery({
+    queryKey: ["nearby-locations", locationSlug],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("cities")
+        .select("id, name, slug")
+        .eq("is_active", true)
+        .neq("slug", locationSlug)
+        .order("name")
+        .limit(10);
+      return (data || []).slice(0, 8);
+    },
+    enabled: !!locationSlug,
+  });
+
+  const isLoading = locationLoading || agenciesLoading;
+  usePrerenderReady(!isLoading);
+
+  if (isLoading) {
+    return (
+      <PageLayout>
+        <div className="container py-20">
+          <Skeleton className="h-16 w-full mb-6 rounded-xl" />
+          <Skeleton className="h-48 w-full mb-6 rounded-xl" />
+          <Skeleton className="h-32 w-full rounded-xl" />
+        </div>
+      </PageLayout>
+    );
+  }
+
+  if (!location) {
+    return (
+      <PageLayout>
+        <div className="container py-20">
+          <h1 className="text-2xl font-bold">Page Not Found</h1>
+          <p className="mt-2 text-gray-600">
+            The location you're looking for doesn't exist.
+          </p>
+          <Link to="/">
+            <Button className="mt-4">Go Home</Button>
+          </Link>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  const locationName = location.name;
+  const pageTitle = `Fostering Agencies in ${locationName} | Find Foster Care`;
+  const pageDescription = `Find rated fostering agencies in ${locationName}. Browse verified agencies, compare services, and contact them directly.`;
+  const canonicalUrl = `https://www.foster-care.co.uk/fostering-agencies/${locationSlug}/`;
+
+  const breadcrumbs = [
+    { label: "Home", href: "/" },
+    { label: "Fostering Agencies", href: "/fostering-agencies" },
+    { label: locationName, href: canonicalUrl },
+  ];
+
+  return (
+    <PageLayout>
+      <SEOHead
+        title={pageTitle}
+        description={pageDescription}
+        canonical={canonicalUrl}
+      />
+
+      <div className="container py-8">
+        <Breadcrumbs items={breadcrumbs} />
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-6"
+        >
+          <h1 className="text-4xl font-bold text-gray-900">
+            Fostering Agencies in {locationName}
+          </h1>
+          <p className="mt-4 text-xl text-gray-600 max-w-3xl">
+            Find verified fostering agencies in {locationName}. Browse approved agencies, compare services, and contact them directly to start your fostering journey.
+          </p>
+        </motion.div>
+
+        {treatments && treatments.length > 0 && (
+          <Section className="mt-8">
+            <h2 className="text-2xl font-bold mb-4">Fostering Services in {locationName}</h2>
+            <div className="flex flex-wrap gap-3">
+              {treatments.map((treatment: any) => (
+                <Link key={treatment.id} to={`/fostering-agencies/${locationSlug}/${treatment.slug}`}>
+                  <Badge variant="outline" className="cursor-pointer hover:bg-gray-100 py-2 px-4">
+                    {treatment.name}
+                  </Badge>
+                </Link>
+              ))}
+            </div>
+          </Section>
+        )}
+
+        <Section className="mt-12">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold">Available Agencies</h2>
+            <Badge variant="outline">{agencies?.length || 0} agencies found</Badge>
+          </div>
+
+          {agenciesLoading ? (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} className="h-64 rounded-xl" />
+              ))}
+            </div>
+          ) : agencies && agencies.length > 0 ? (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {agencies.map((agency: any) => (
+                <Card key={agency.id} className="hover:shadow-lg transition-shadow">
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="font-semibold text-lg">{agency.name}</h3>
+                        <div className="flex items-center mt-1 text-sm text-gray-500">
+                          <MapPin className="w-4 h-4 mr-1" />
+                          {agency.city}
+                        </div>
+                      </div>
+                      {agency.rating && (
+                        <div className="flex items-center">
+                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
+                          <span className="font-medium">{agency.rating.toFixed(1)}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-4 flex gap-2">
+                      <Link to={`/agency/${agency.slug}`}>
+                        <Button size="sm">View Profile</Button>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <Users className="w-12 h-12 mx-auto text-gray-400" />
+              <h3 className="mt-4 text-lg font-medium">No agencies found</h3>
+              <p className="mt-2 text-gray-600">
+                No agencies currently available in {locationName}.
+              </p>
+            </div>
+          )}
+        </Section>
+
+        <Section className="mt-12">
+          <h2 className="text-2xl font-bold mb-6">Fostering in {locationName}</h2>
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card>
+              <CardContent className="p-6">
+                <Shield className="w-8 h-8 text-blue-600" />
+                <h3 className="font-semibold mt-4">Local Support</h3>
+                <p className="mt-2 text-gray-600">
+                  Agencies in {locationName} provide 24/7 support, training, and access to local social services.
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <Heart className="w-8 h-8 text-red-600" />
+                <h3 className="font-semibold mt-4">Allowances</h3>
+                <p className="mt-2 text-gray-600">
+                  Foster carers receive weekly allowances, holiday pay, and support with expenses.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </Section>
+
+        {nearbyLocations && nearbyLocations.length > 0 && (
+          <Section className="mt-12">
+            <h2 className="text-2xl font-bold mb-6">Nearby Locations</h2>
+            <div className="flex flex-wrap gap-3">
+              {nearbyLocations.map((loc: any) => (
+                <Link key={loc.id} to={`/fostering-agencies/${loc.slug}`}>
+                  <Badge variant="outline" className="cursor-pointer hover:bg-gray-100 py-2 px-4">
+                    {loc.name}
+                  </Badge>
+                </Link>
+              ))}
+            </div>
+          </Section>
+        )}
+
+        <Section className="mt-12">
+          <Card className="bg-blue-50 border-blue-200">
+            <CardContent className="p-8 text-center">
+              <h2 className="text-2xl font-bold">Ready to Start Your Fostering Journey?</h2>
+              <p className="mt-2 text-gray-600">
+                Contact agencies directly or learn more about becoming a foster carers.
+              </p>
+              <div className="mt-6 flex gap-4 justify-center">
+                <Link to="/search">
+                  <Button size="lg">
+                    <Search className="w-4 h-4 mr-2" />
+                    Find Agencies
+                  </Button>
+                </Link>
+                <Link to="/become-foster-carer">
+                  <Button size="lg" variant="outline">
+                    Become a Foster Carer
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </Section>
+      </div>
+    </PageLayout>
+  );
+};
+
+export default FosteringLocationPage;

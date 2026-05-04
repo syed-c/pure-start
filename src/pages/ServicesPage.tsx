@@ -21,6 +21,20 @@ const ServicesPage = () => {
     },
   });
 
+  // Fallback categories if database is empty
+  const fallbackTreatments = [
+    { id: '1', name: 'Short-Term Fostering', slug: 'short-term-fostering', description: 'Temporary care for children' },
+    { id: '2', name: 'Long-Term Fostering', slug: 'long-term-fostering', description: 'Permanent care arrangements' },
+    { id: '3', name: 'Emergency Fostering', slug: 'emergency-fostering', description: 'Immediate placement needed' },
+    { id: '4', name: 'Therapeutic Fostering', slug: 'therapeutic-fostering', description: 'Specialist support for complex needs' },
+    { id: '5', name: 'Respite Fostering', slug: 'respite-fostering', description: 'Short breaks for families' },
+    { id: '6', name: 'Parent & Child Fostering', slug: 'parent-and-child-fostering', description: 'Support for parent and child' },
+    { id: '7', name: 'Disability Fostering', slug: 'disability-fostering', description: 'Care for children with disabilities' },
+    { id: '8', name: 'Kinship Fostering', slug: 'kinship-fostering', description: 'Care by family members' },
+  ];
+
+  const displayTreatments = (treatments && treatments.length > 0) ? treatments : fallbackTreatments;
+
   const { data: states } = useQuery({
     queryKey: ["states-for-services"],
     queryFn: async () => {
@@ -29,8 +43,8 @@ const ServicesPage = () => {
     },
   });
 
-  const popularTreatments = treatments?.slice(0, 8) || [];
-  const allTreatments = treatments || [];
+  const popularTreatments = displayTreatments.slice(0, 8);
+  const allTreatments = displayTreatments;
   const { data: realCounts } = useRealCounts();
   const { data: seoContent } = useSeoPageContent("services");
 

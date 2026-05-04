@@ -154,10 +154,10 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, fosterin
       />
 
       {/* Hero */}
-      <section className="relative overflow-hidden min-h-[45vh] flex items-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <section className="relative overflow-hidden min-h-[45vh] flex items-center bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800">
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-primary/15 rounded-full blur-[120px]" />
-          <div className="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-teal/10 rounded-full blur-[100px]" />
+          <div className="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px]" />
         </div>
 
         <div className="container relative z-10 py-14 md:py-18 px-4">

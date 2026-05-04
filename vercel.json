@@ -28,14 +28,23 @@
     { "source": "/sitemap-categories.xml", "destination": "/sitemap-categories.xml" },
     { "source": "/sitemap-cities.xml", "destination": "/sitemap-cities.xml" },
     { "source": "/sitemap-agencies.xml", "destination": "/sitemap-agencies.xml" },
+    { "source": "/sitemap-service-location.xml", "destination": "/sitemap-service-location.xml" },
     { "source": "/robots.txt", "destination": "/robots.txt" },
     { "source": "/llms.txt", "destination": "/llms.txt" },
+    { "source": "/favicon.png", "destination": "/favicon.png" },
+    { "source": "/:file.svg", "destination": "/:file.svg" },
+    { "source": "/:file.txt", "destination": "/:file.txt" },
+    { "source": "/:file.png", "destination": "/:file.png" },
+    { "source": "/:file.xml", "destination": "/:file.xml" },
+    { "source": "/:file.sql", "destination": "/:file.sql" },
+    { "source": "/:file.webmanifest", "destination": "/:file.webmanifest" },
+    { "source": "/sitemap.xsl", "destination": "/sitemap.xsl" },
     { "source": "/api/stripe-webhook", "destination": "https://vcvvtklbyvdbysfdbnfp.supabase.co/functions/v1/stripe-webhook" },
     { "source": "/api/whatsapp-webhook", "destination": "https://vcvvtklbyvdbysfdbnfp.supabase.co/functions/v1/whatsapp-webhook" },
     {
       "source": "/:path*",
       "has": [
-        { "type": "header", "key": "user-agent", "value": "(?i).*(googlebot|google-inspectiontool|google-extended|google-safety|storebot-google|googleother|bingbot|bingpreview|msnbot|yandex|baiduspider|facebookexternalhit|facebookbot|twitterbot|linkedinbot|discordbot|whatsapp|telegrambot|applebot|ahrefs|semrush|screaming+frog|dotbot|petalbot|bytespider|rogerbot|embedly|quora|pinterest|slackbot|redditbot|flipboard|ia_archiver|archive.org_bot|duckduckbot|ecosia|qwant|gigabot|sogou|exabot|swiftbot|yacybot|seznambot|ccbot|gptbot|chatgpt-user|oai-searchbot|openai|claude-web|claudebot|anthropic-ai|perplexitybot|perplexity-user|cohere-ai|youbot|you.com|meta-externalagent|meta-externalfetcher|amazonbot|adsbot-google).*" }
+        { "type": "header", "key": "user-agent", "value": "(?i).*(googlebot|google-inspectiontool|google-extended|google-safety|storebot-google|googleother|bingbot|bingpreview|msnbot|yandex|baiduspider|facebookexternalhit|facebookbot|twitterbot|linkedinbot|discordbot|whatsapp|telegrambot|applebot|ahrefs|semrush|screaming+frog|dotbot|petalbot|bytespider|rogerbot|embedly|quora|pinterest|slackbot|redditbot|flipboard|flipboard|twitterbot|ia_archiver|archive.org_bot|duckduckbot|ecosia|qwant|gigabot|sogou|exabot|swiftbot|yacybot|seznambot|ccbot|gptbot|chatgpt-user|oai-searchbot|openai|claude-web|claudebot|anthropic-ai|perplexitybot|perplexity-user|cohere-ai|youbot|you.com|meta-externalagent|meta-externalfetcher|amazonbot|adsbot-google).*" }
       ],
       "missing": [
         { "type": "header", "key": "x-prerender-bypass", "value": "true" }

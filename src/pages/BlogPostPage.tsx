@@ -756,12 +756,12 @@ const BlogPostPage = () => {
                   <Search className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg">Find a Dentist</h3>
+                  <h3 className="font-bold text-lg">Find a Fostering Agency</h3>
                   <p className="text-sm text-muted-foreground">Near you</p>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mb-4">
-                Ready to book an appointment? Find verified dental professionals in your city.
+                Ready to start your fostering journey? Find verified agencies in your area.
               </p>
               <Button asChild className="w-full rounded-xl font-bold">
                 <Link to="/search">
@@ -913,15 +913,15 @@ const BlogPostPage = () => {
       <Section variant="primary" size="md">
         <div className="text-center">
           <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
-            Ready to Find Your Perfect Dentist?
+            Ready to Find Your Perfect Fostering Agency?
           </h2>
           <p className="text-primary-foreground/80 mb-8 max-w-xl mx-auto">
-            Browse our directory of verified dental professionals across the UAE.
+            Browse our directory of verified fostering agencies across the UK.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button asChild size="lg" variant="secondary" className="rounded-2xl font-bold">
               <Link to="/search">
-                Find a Dentist
+                Find Fostering Agencies
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>

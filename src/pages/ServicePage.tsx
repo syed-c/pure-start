@@ -52,10 +52,34 @@ const ServicePage = () => {
     },
   });
 
+  // Fallback categories if database is empty
+  const fallbackCategories: Record<string, { name: string; description: string }> = {
+    'short-term-fostering': { name: 'Short-Term Fostering', description: 'Short-term fostering provides temporary care for children who need a safe home for a limited period.' },
+    'long-term-fostering': { name: 'Long-Term Fostering', description: 'Long-term fostering provides permanent care for children who cannot return to their birth family.' },
+    'emergency-fostering': { name: 'Emergency Fostering', description: 'Emergency fostering provides immediate, short-term care for children in crisis situations.' },
+    'therapeutic-fostering': { name: 'Therapeutic Fostering', description: 'Therapeutic fostering provides specialist care for children with complex emotional and behavioral needs.' },
+    'respite-fostering': { name: 'Respite Fostering', description: 'Respite fostering provides short breaks for existing foster families or birth families.' },
+    'parent-and-child-fostering': { name: 'Parent & Child Fostering', description: 'Parent and child fostering allows a parent to live with their child while receiving support.' },
+    'disability-fostering': { name: 'Disability Fostering', description: 'Disability fostering provides care for children with physical or learning disabilities.' },
+    'kinship-fostering': { name: 'Kinship Fostering', description: 'Kinship fostering is care provided by family members or close connections.' },
+  };
+
+  const fallbackTreatment = fallbackCategories[serviceSlug] 
+    ? { id: serviceSlug, name: fallbackCategories[serviceSlug].name, description: fallbackCategories[serviceSlug].description, slug: serviceSlug }
+    : null;
+
   const { data: relatedTreatments } = useQuery({
     queryKey: ["related-treatments", serviceSlug],
     queryFn: async () => {
       const { data } = await supabase.from("treatments").select("*").eq("is_active", true).neq("slug", serviceSlug).order("display_order").limit(6);
+      return data || [];
+    },
+  });
+
+  const { data: cities } = useQuery({
+    queryKey: ["active-cities"],
+    queryFn: async () => {
+      const { data } = await supabase.from("cities").select("id, name, slug").eq("is_active", true).order("name").limit(50);
       return data || [];
     },
   });
@@ -70,7 +94,7 @@ const ServicePage = () => {
     },
   });
 
-  const treatmentName = treatment?.name || serviceSlug.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+  const treatmentName = (treatment?.name || fallbackTreatment?.name || serviceSlug.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()));
 
   const parsedContent = seoContent?.content ? parseMarkdownContent(seoContent.content) : null;
   const seoFaqs = seoContent?.faqs && Array.isArray(seoContent.faqs) && seoContent.faqs.length > 0
@@ -90,7 +114,7 @@ const ServicePage = () => {
   const faqs = seoFaqs.length > 0 ? seoFaqs.map(f => ({ q: f.question, a: f.answer })) : [
     {
       q: `What is ${treatmentName}?`,
-      a: treatment?.description || `${treatmentName} is a specialised type of fostering that provides care for children and young people with specific needs. Browse verified agencies on Foster Care to learn more.`,
+      a: treatmentDesc || `${treatmentName} is a specialised type of fostering that provides care for children and young people with specific needs. Browse verified agencies on Foster Care to learn more.`,
     },
     {
       q: `How do I find ${treatmentName} agencies in the UK?`,
@@ -120,7 +144,7 @@ const ServicePage = () => {
       <StructuredData
         type="service"
         name={`${treatmentName} in the UK`}
-        description={treatment?.description || `Professional ${treatmentName} services across the UK`}
+        description={treatmentDesc || `Professional ${treatmentName} services across the UK`}
         url={`/services/${serviceSlug}/`}
         provider="Foster Care Partner Agencies"
         areaServed="United Kingdom"
@@ -173,7 +197,7 @@ const ServicePage = () => {
               transition={{ delay: 0.2 }}
               className="text-base md:text-lg text-muted-foreground mb-6 max-w-2xl mx-auto px-2"
             >
-              {treatment?.description || `Find the best ${treatmentName.toLowerCase()} agencies across the UK. Compare Ofsted ratings, read reviews, and start your fostering journey.`}
+              const treatmentDesc = treatment?.description || fallbackTreatment?.description || `${treatmentName} is a specialised type of fostering that provides care for children and young people.`;
             </motion.p>
 
             <motion.div 
@@ -220,6 +244,41 @@ const ServicePage = () => {
             />
           </div>
         </section>
+      )}
+
+      {/* Location Linking Section - Find by Location */}
+      {cities && cities.length > 0 && (
+        <Section size="lg">
+          <div className="container px-4">
+            <div className="max-w-5xl mx-auto">
+              <h2 className="text-2xl font-bold mb-6 text-center">
+                Find {treatmentName} Agencies by Location
+              </h2>
+              <p className="text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
+                Browse {treatmentName} agencies across the UK's major cities and regions
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                {cities.slice(0, 20).map((city: any) => (
+                  <Link
+                    key={city.id}
+                    to={`/fostering-agencies/${city.slug}/${serviceSlug}/`}
+                    className="flex items-center justify-center px-3 py-2.5 bg-card border border-border rounded-lg text-sm font-medium text-center hover:bg-primary/5 hover:border-primary/30 hover:text-primary transition-colors"
+                  >
+                    {city.name}
+                  </Link>
+                ))}
+              </div>
+              {cities.length > 20 && (
+                <Link
+                  to="/fostering-agencies"
+                  className="flex items-center justify-center mt-4 text-sm font-medium text-primary hover:underline"
+                >
+                  View all {cities.length} locations →
+                </Link>
+              )}
+            </div>
+          </div>
+        </Section>
       )}
 
       {/* Main Content */}

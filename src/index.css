@@ -5,72 +5,91 @@
 @layer base {
   :root {
     /* ============================================
-       FOSTER CARE UK — PREMIUM DESIGN SYSTEM
-       Professional · Trustworthy · Industry-Leading
+       FOSTER CARE UK — FOSTERING DESIGN SYSTEM
+       Warm · Friendly · Trustworthy · Professional
        ============================================ */
     
-    /* Background & Surface */
-    --background: 0 0% 100%;
-    --foreground: 220 25% 12%;
+    /* Background & Surface - Warm White */
+    --background: 40 30% 97%;
+    --foreground: 35 20% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 25% 12%;
+    --card-foreground: 35 20% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 25% 12%;
+    --popover-foreground: 35 20% 15%;
 
-    /* Primary — Trustworthy teal (brand) */
-    --primary: 162 63% 38%;
+    /* Primary — Warm Trustworthy Coral/Orange (brand) */
+    --primary: 25 90% 55%;
     --primary-foreground: 0 0% 100%;
     
-    /* Secondary — Cool slate */
-    --secondary: 210 20% 96%;
-    --secondary-foreground: 220 25% 12%;
+    /* Teal mapped to primary for colour overrides */
+    --teal: 25 90% 55%;
+    --teal-light: 25 90% 92%;
+    --teal-dark: 25 90% 40%;
+    
+    /* Secondary — Warm Soft Beige */
+    --secondary: 35 20% 94%;
+    --secondary-foreground: 35 20% 15%;
 
-    /* Muted — Neutral grey */
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 10% 46%;
+    /* Muted — Warm Grey */
+    --muted: 35 15% 92%;
+    --muted-foreground: 35 10% 45%;
 
-    /* Accent — Warm gold */
-    --accent: 38 92% 50%;
+    /* Accent — Optimistic Green */
+    --accent: 150 60% 40%;
     --accent-foreground: 0 0% 100%;
 
+    /* Success — Supportive Green */
+    --success: 150 55% 40%;
+    --success-foreground: 0 0% 100%;
+    
+    /* Warning — Growth Gold */
+    --warning: 40 90% 50%;
+    --warning-foreground: 35 20% 15%;
+
     /* Destructive */
-    --destructive: 0 72% 51%;
+    --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
 
     /* Borders & Inputs */
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 162 63% 38%;
+    --border: 35 10% 85%;
+    --input: 35 10% 85%;
+    --ring: 25 90% 55%;
 
     /* Radius */
     --radius: 0.75rem;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(35 20% 15% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(35 20% 15% / 0.1), 0 2px 4px -1px hsl(35 20% 15% / 0.06);
+    --shadow-lg: 0 10px 15px -3px hsl(35 20% 15% / 0.1), 0 4px 6px -2px hsl(35 20% 15% / 0.05);
+    --shadow-glow: 0 0 20px hsl(25 90% 55% / 0.3);
   }
 
   .dark {
-    --background: 220 25% 6%;
-    --foreground: 210 20% 96%;
-    --card: 220 25% 10%;
-    --card-foreground: 210 20% 96%;
-    --popover: 220 25% 10%;
-    --popover-foreground: 210 20% 96%;
-    --primary: 162 55% 48%;
-    --primary-foreground: 220 25% 6%;
-    --secondary: 220 20% 14%;
-    --secondary-foreground: 210 20% 96%;
-    --muted: 220 18% 14%;
-    --muted-foreground: 220 12% 56%;
-    --accent: 220 20% 14%;
-    --accent-foreground: 210 20% 96%;
-    --destructive: 0 55% 45%;
-    --destructive-foreground: 210 20% 96%;
-    --border: 220 18% 16%;
-    --input: 220 18% 16%;
-    --ring: 162 55% 48%;
-    --dark-section: 220 25% 10%;
+    --background: 35 20% 8%;
+    --foreground: 40 20% 95%;
+    --card: 35 18% 12%;
+    --card-foreground: 40 20% 95%;
+    --popover: 35 18% 12%;
+    --popover-foreground: 40 20% 95%;
+    --primary: 25 85% 60%;
+    --primary-foreground: 35 20% 8%;
+    --secondary: 35 15% 18%;
+    --secondary-foreground: 40 20% 95%;
+    --muted: 35 15% 20%;
+    --muted-foreground: 35 10% 60%;
+    --accent: 150 55% 45%;
+    --accent-foreground: 35 20% 8%;
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 40 20% 95%;
+    --border: 35 15% 25%;
+    --input: 35 15% 25%;
+    --ring: 25 85% 60%;
+    --dark-section: 35 20% 10%;
     --dark-section-foreground: 0 0% 100%;
-    --dashboard-bg: 220 25% 6%;
+    --dashboard-bg: 35 20% 8%;
   }
 }
 
@@ -439,4 +458,39 @@
     background: hsl(var(--border));
     border-radius: 3px;
   }
+
+  /* ========================================
+     GLOBAL COLOUR OVERRIDES
+     Replace teal/cyan/emerald with warm fostering primary
+     ======================================== */
+  .text-teal-50, .text-teal-100, .text-teal-200, .text-teal-300, .text-teal-400, .text-teal-500, .text-teal-600, .text-teal-700, .text-teal-800, .text-teal-900, .text-teal { color: hsl(var(--primary)) !important; }
+  .text-teal-950 { color: hsl(var(--primary)) !important; }
+  
+  .bg-teal-50, .bg-teal-100, .bg-teal-200, .bg-teal-300, .bg-teal-400, .bg-teal-500, .bg-teal-600, .bg-teal-700, .bg-teal-800, .bg-teal-900, .bg-teal { background-color: hsl(var(--primary)) !important; }
+  .bg-teal-950 { background-color: hsl(var(--primary)) !important; }
+  .bg-teal\/10, .bg-teal\/20, .bg-teal\/30, .bg-teal\/40, .bg-teal\/5 { background-color: hsl(var(--primary) / 0.15) !important; }
+  .bg-teal-light { background-color: hsl(var(--primary) / 0.15) !important; }
+  
+  /* Hero section gradient overrides */
+  .bg-gradient-to-br.from-slate-900.via-slate-900.to-teal-950 { background: linear-gradient(to bottom right, hsl(40 20% 92%), hsl(var(--background)), hsl(25 90% 94%)) !important; }
+  .bg-gradient-to-br.from-slate-950.via-slate-900.to-slate-950 { background: linear-gradient(to bottom right, hsl(40 20% 92%), hsl(var(--background)), hsl(35 20% 94%)) !important; }
+  .bg-gradient-to-br.from-slate-900, .bg-gradient-to-br.from-slate-950 { background: linear-gradient(to bottom right, hsl(40 20% 92%), hsl(var(--background)), hsl(25 90% 94%)) !important; }
+  .bg-gradient-to-b.from-background.to-muted, .bg-gradient-to-br.from-background.via-background.to-muted { background: linear-gradient(to bottom, hsl(var(--background)), hsl(var(--muted))) !important; }
+  
+  .border-teal-500, .border-teal-400, .border-teal-300, .border-teal-200, .border-teal { border-color: hsl(var(--primary)) !important; }
+  .border-teal\/30, .border-teal\/20 { border-color: hsl(var(--primary) / 0.3) !important; }
+  
+  .from-teal-50, .from-teal-100, .from-teal-200, .from-teal-300, .from-teal-400, .from-teal-500, .from-teal-600, .from-teal-700, .from-teal-800, .from-teal-900, .from-teal { --tw-gradient-from: hsl(var(--primary)) var(--tw-gradient-from-position) !important; }
+  .via-teal-50, .via-teal-100, .via-teal-200, .via-teal-300, .via-teal-400, .via-teal-500, .via-teal-600, .via-teal-700, .via-teal-800, .via-teal-900, .via-teal { --tw-gradient-via: hsl(var(--primary)) var(--tw-gradient-via-position) !important; }
+  .to-teal-50, .to-teal-100, .to-teal-200, .to-teal-300, .to-teal-400, .to-teal-500, .to-teal-600, .to-teal-700, .to-teal-800, .to-teal-900, .to-teal { --tw-gradient-to: hsl(var(--primary)) var(--tw-gradient-to-position) !important; }
+  .to-teal-950 { --tw-gradient-to: hsl(var(--primary)) var(--tw-gradient-to-position) !important; }
+  
+  .ring-teal { --tw-ring-color: hsl(var(--primary)) !important; }
+  .decoration-teal { text-decoration-color: hsl(var(--primary)) !important; }
+  
+  /* Emerald overrides (often used with teal) */
+  .text-emerald-500, .text-emerald-600, .text-emerald { color: hsl(var(--accent)) !important; }
+  .bg-emerald-500, .bg-emerald-600, .bg-emerald { background-color: hsl(var(--accent)) !important; }
+  .from-emerald-500, .from-emerald { --tw-gradient-from: hsl(var(--accent)) var(--tw-gradient-from-position) !important; }
+  .to-emerald-500, .to-emerald { --tw-gradient-to: hsl(var(--accent)) var(--tw-gradient-to-position) !important; }
 }

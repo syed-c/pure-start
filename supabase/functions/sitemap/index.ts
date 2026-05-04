@@ -135,7 +135,6 @@ serve(async (req) => {
         "sitemap-categories.xml",
         "sitemap-cities.xml",
         "sitemap-agencies.xml",
-        "sitemap-posts.xml",
       ];
       return xmlResponse(generateSitemapIndex(sitemaps));
     }
@@ -244,33 +243,12 @@ serve(async (req) => {
       return xmlResponse(generateSitemapXml(allUrls));
     }
 
-    // === BLOG POSTS ===
-    if (sitemapType === "posts") {
-      const urls: SitemapUrl[] = [];
-
-      const posts = await fetchAllRows(supabase, "blog_posts", "slug, updated_at", { status: "published" });
-
-      for (const post of posts) {
-        if (!post.slug || post.slug.trim() === '') continue;
-        urls.push({
-          loc: normalizeUrl(`/blog/${post.slug}`),
-          lastmod: post.updated_at,
-          priority: 0.6,
-          changefreq: "monthly",
-        });
-      }
-
-      console.log(`Posts sitemap: ${urls.length} URLs`);
-      return xmlResponse(generateSitemapXml(urls));
-    }
-
     // Default: Return index
     const sitemaps = [
       "sitemap-static.xml",
       "sitemap-categories.xml",
       "sitemap-cities.xml",
       "sitemap-agencies.xml",
-      "sitemap-posts.xml",
     ];
     return xmlResponse(generateSitemapIndex(sitemaps));
 
