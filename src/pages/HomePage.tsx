@@ -108,7 +108,7 @@ function HomePage() {
               initial={{ opacity: 0, y: 20 }} 
               animate={{ opacity: 1, y: 0 }} 
               transition={{ delay: 0.1 }}
-              className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight"
             >
               Find Trusted <span className="text-teal-400">Fostering Agencies</span> UK
             </motion.h1>
@@ -117,7 +117,7 @@ function HomePage() {
               initial={{ opacity: 0, y: 20 }} 
               animate={{ opacity: 1, y: 0 }} 
               transition={{ delay: 0.2 }}
-              className="text-lg md:text-xl text-white/70 mb-8 max-w-2xl mx-auto"
+              className="text-base md:text-lg text-white/70 mb-6 md:mb-8 max-w-2xl mx-auto"
             >
               Connect with {totalAgencies}+ Ofsted-registered fostering agencies across England, Scotland, Wales, and Northern Ireland. Compare ratings, read reviews, and find your perfect match.
             </motion.p>
@@ -165,19 +165,19 @@ function HomePage() {
               animate={{ opacity: 1, y: 0 }} 
               transition={{ delay: 0.4 }}
               onSubmit={handleSearch}
-              className="max-w-xl mx-auto"
+              className="max-w-xl mx-auto px-2"
             >
-              <div className="flex shadow-2xl">
+              <div className="flex flex-col sm:flex-row shadow-2xl">
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search by city, service, or agency name..."
-                  className="flex-1 px-6 py-4 text-base text-gray-900 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  placeholder="Search by city, service, or agency..."
+                  className="flex-1 px-4 py-3 md:px-6 md:py-4 text-base text-gray-900 rounded-t-xl sm:rounded-l-xl focus:outline-none focus:ring-2 focus:ring-teal-500"
                 />
-                <Button type="submit" size="lg" className="px-8 py-4 bg-teal-500 hover:bg-teal-600 text-slate-900 font-semibold rounded-r-xl">
+                <Button type="submit" size="lg" className="px-6 py-3 md:px-8 md:py-4 bg-teal-500 hover:bg-teal-600 text-slate-900 font-semibold rounded-b-xl sm:rounded-r-xl mt-2 sm:mt-0">
                   <Search className="h-5 w-5 mr-2" />
-                  Search
+                  <span className="hidden sm:inline">Search</span>
                 </Button>
               </div>
             </motion.form>
@@ -240,7 +240,7 @@ function HomePage() {
             <p className="text-slate-400 mt-2">Explore different types of fostering to find what suits your family</p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
             {fosteringServices.map((service, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
                 <Link to={`/categories/${service.slug}/`}>
@@ -278,7 +278,7 @@ function HomePage() {
             <p className="text-slate-400 mt-2">Find fostering agencies in major UK cities and towns</p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4">
             {cities.map((city, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
                 <Link to={`/england/${city.slug}/`}>
