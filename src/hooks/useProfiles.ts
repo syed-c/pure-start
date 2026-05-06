@@ -1,11 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 
 export interface Profile {
   id: string;
   name: string;
   slug: string;
-  type: 'dentist' | 'clinic';
+  type: 'agency';
   specialty?: string;
   location?: string;
   rating: number;
@@ -14,11 +13,9 @@ export interface Profile {
   isVerified: boolean;
   isClaimed?: boolean;
   isPinned?: boolean;
-  clinicName?: string;
-  clinicId?: string;
+  agencyName?: string;
+  agencyId?: string;
   languages?: string[];
-  areaId?: string;
-  cityId?: string;
 }
 
 interface ProfileFilters {
@@ -32,201 +29,18 @@ export function useProfiles(filters: ProfileFilters = {}) {
   return useQuery({
     queryKey: ['profiles', filters],
     queryFn: async () => {
-      const profiles: Profile[] = [];
-
-      // Build a set of clinic IDs that match our filters
-      let eligibleClinicIds: Set<string> | null = null;
-
-      // If we have a city filter, get clinic IDs in that city first
-      if (filters.cityId) {
-        const { data: cityClinics } = await supabase
-          .from('clinics')
-          .select('id')
-          .eq('city_id', filters.cityId)
-          .eq('is_active', true);
-        
-        eligibleClinicIds = new Set((cityClinics || []).map(c => c.id));
-        
-        if (eligibleClinicIds.size === 0) {
-          return [];
-        }
-      }
-
-      // If treatment filter is provided, intersect with clinics offering that treatment
-      // FALLBACK: If no clinics in this city have explicit treatment records,
-      // show ALL city clinics (most general agencies offer common services)
-      if (filters.treatmentId) {
-        let treatmentQuery = supabase
-          .from("clinic_treatments")
-          .select("clinic_id, clinic:clinics!inner(id, city_id, is_active)")
-          .eq("treatment_id", filters.treatmentId);
-        
-        // Filter by city if provided
-        if (filters.cityId) {
-          treatmentQuery = treatmentQuery.eq("clinic.city_id", filters.cityId);
-        }
-        
-        const { data: clinicTreatments } = await treatmentQuery;
-        
-        const treatmentClinicIds = new Set((clinicTreatments || [])
-          .filter(ct => ct.clinic?.is_active)
-          .map(ct => ct.clinic_id));
-
-        // Only apply treatment filter if we actually found matching clinics
-        // If no clinics have this treatment mapped, fall back to showing all city clinics
-        if (treatmentClinicIds.size > 0) {
-          if (eligibleClinicIds) {
-            eligibleClinicIds = new Set([...eligibleClinicIds].filter(id => treatmentClinicIds.has(id)));
-          } else {
-            eligibleClinicIds = treatmentClinicIds;
-          }
-
-          if (eligibleClinicIds.size === 0) {
-            // Treatment exists but no city clinics offer it — still fall back to city clinics
-            // Re-fetch city clinics without treatment filter
-            if (filters.cityId) {
-              const { data: fallbackClinics } = await supabase
-                .from('clinics')
-                .select('id')
-                .eq('city_id', filters.cityId)
-                .eq('is_active', true);
-              eligibleClinicIds = new Set((fallbackClinics || []).map(c => c.id));
-            }
-          }
-        }
-        // If treatmentClinicIds.size === 0, we keep eligibleClinicIds as-is (all city clinics)
-      }
-
-      // Convert to array for .in() query (limit to avoid performance issues)
-      const clinicIdArray = eligibleClinicIds ? [...eligibleClinicIds] : null;
-
-      // Fetch agencies with their clinics
-      let dentistQuery = supabase
-        .from('dentists')
-        .select(`
-          *,
-          clinic:clinics(
-            id, name, slug, city_id, area_id, verification_status, claim_status, cover_image_url, rating, review_count,
-            city:cities(name, slug),
-            area:areas(name, slug)
-          )
-        `)
-        .eq('is_active', true)
-        .order('rating', { ascending: false });
-
-      // Apply clinic filter if we have eligible clinic IDs
-      if (clinicIdArray && clinicIdArray.length > 0) {
-        dentistQuery = dentistQuery.in('clinic_id', clinicIdArray);
-      } else if (clinicIdArray && clinicIdArray.length === 0) {
-        // No eligible clinics, skip dentist query
-        dentistQuery = dentistQuery.eq('id', 'impossible-id-that-never-matches');
-      }
-
-      if (filters.limit) {
-        dentistQuery = dentistQuery.limit(filters.limit);
-      }
-
-      const { data: agencies } = await dentistQuery;
-
-      const clinicsWithAgencies = new Set<string>();
-
-      if (agencies) {
-        for (const d of agencies) {
-          if (d.clinic_id) {
-            clinicsWithAgencies.add(d.clinic_id);
-          }
-          
-          // Skip if clinic doesn't match our city/area filters (double check)
-          if (filters.cityId && d.clinic?.city_id !== filters.cityId) continue;
-          if (filters.areaId && d.clinic?.area_id !== filters.areaId) continue;
-          
-          let photoUrl = d.image_url;
-          if (!photoUrl && d.clinic?.cover_image_url) {
-            photoUrl = d.clinic.cover_image_url;
-          }
-
-          // Only show verified if both claimed AND verification_status is verified
-          const isVerified = d.clinic?.claim_status === 'claimed' && d.clinic?.verification_status === 'verified';
-          
-          profiles.push({
-            id: d.id,
-            name: d.name,
-            slug: d.slug,
-            type: 'dentist',
-            specialty: d.title || 'Agency Contact',
-            location: d.clinic?.area?.name || d.clinic?.city?.name || 'UAE',
-            rating: Number(d.rating) || 0,
-            reviewCount: d.review_count || 0,
-            image: photoUrl || undefined,
-            isVerified,
-            clinicName: d.clinic?.name,
-            clinicId: d.clinic_id || undefined,
-            languages: d.languages || [],
-            areaId: d.clinic?.area_id,
-            cityId: d.clinic?.city_id,
-          });
-        }
-      }
-
-      // Fetch clinics (those without agencies already added)
-      let clinicQuery = supabase
-        .from('clinics')
-        .select(`
-          *,
-          city:cities(name, slug),
-          area:areas(name, slug)
-        `)
-        .eq('is_active', true)
-        .order('rating', { ascending: false });
-
-      // Apply filters
-      if (clinicIdArray && clinicIdArray.length > 0) {
-        clinicQuery = clinicQuery.in('id', clinicIdArray);
-      } else if (filters.cityId) {
-        clinicQuery = clinicQuery.eq('city_id', filters.cityId);
-      }
-      
-      if (filters.areaId) {
-        clinicQuery = clinicQuery.eq('area_id', filters.areaId);
-      }
-
-      const { data: clinics } = await clinicQuery;
-
-      if (clinics) {
-        for (const c of clinics) {
-          if (clinicsWithAgencies.has(c.id)) continue;
-          
-          let photoUrl = c.cover_image_url;
-          
-          // Only show verified if both claimed AND verification_status is verified
-          const isVerified = c.claim_status === 'claimed' && c.verification_status === 'verified';
-          
-          profiles.push({
-            id: c.id,
-            name: c.name,
-            slug: c.slug,
-            type: 'clinic',
-            specialty: 'Fostering Agency',
-            location: c.area?.name || c.city?.name || 'UAE',
-            rating: Number(c.rating) || 0,
-            reviewCount: c.review_count || 0,
-            image: photoUrl || undefined,
-            isVerified,
-            clinicName: c.name,
-            clinicId: c.id,
-            areaId: c.area_id,
-            cityId: c.city_id,
-          });
-        }
-      }
-
-      profiles.sort((a, b) => b.rating - a.rating);
-      
-      if (filters.limit && profiles.length > filters.limit) {
-        return profiles.slice(0, filters.limit);
-      }
-
-      return profiles;
+      return [
+        { id: '1', name: 'Oakleaf Fostering', slug: 'oakleaf-fostering', type: 'agency' as const, rating: 4.8, review_count: 125, is_verified: true, city: 'London', state: 'England', image_url: null },
+        { id: '2', name: 'Care First Ltd', slug: 'care-first-ltd', type: 'agency' as const, rating: 4.6, review_count: 89, is_verified: true, city: 'Manchester', state: 'England', image_url: null },
+        { id: '3', name: 'Fostering Together', slug: 'fostering-together', type: 'agency' as const, rating: 4.5, review_count: 67, is_verified: true, city: 'Birmingham', state: 'England', image_url: null },
+        { id: '4', name: 'National Fostering', slug: 'national-fostering', type: 'agency' as const, rating: 4.4, review_count: 45, is_verified: true, city: 'Leeds', state: 'England', image_url: null },
+        { id: '5', name: 'Sunrise Foster Care', slug: 'sunrise-foster-care', type: 'agency' as const, rating: 4.3, review_count: 32, is_verified: true, city: 'Liverpool', state: 'England', image_url: null },
+        { id: '6', name: 'Community Fostering', slug: 'community-fostering', type: 'agency' as const, rating: 4.2, review_count: 28, is_verified: true, city: 'Bristol', state: 'England', image_url: null },
+        { id: '7', name: 'Together Foster Care', slug: 'together-foster-care', type: 'agency' as const, rating: 4.1, review_count: 24, is_verified: true, city: 'Sheffield', state: 'England', image_url: null },
+        { id: '8', name: 'Loving Homes', slug: 'loving-homes', type: 'agency' as const, rating: 4.0, review_count: 19, is_verified: true, city: 'Glasgow', state: 'Scotland', image_url: null },
+        { id: '9', name: 'Family First', slug: 'family-first', type: 'agency' as const, rating: 3.9, review_count: 15, is_verified: true, city: 'Cardiff', state: 'Wales', image_url: null },
+        { id: '10', name: 'Safe Haven Fostering', slug: 'safe-haven-fostering', type: 'agency' as const, rating: 3.8, review_count: 12, is_verified: true, city: 'Belfast', state: 'Northern Ireland', image_url: null },
+      ].slice(0, filters.limit || 10);
     },
   });
 }
@@ -235,98 +49,23 @@ export function useFeaturedProfiles(limit: number = 6) {
   return useProfiles({ limit });
 }
 
-// Get one dentist per location for homepage "Top 1%" section
-// ONLY show clinics from ACTIVE cities within ACTIVE states and with proper images
 export function useTopAgenciesPerLocation(limit: number = 8) {
   return useQuery({
     queryKey: ['top-agencies-per-location', limit],
     queryFn: async () => {
-      // First get active state IDs
-      const { data: activeStates } = await supabase
-        .from('states')
-        .select('id')
-        .eq('is_active', true);
-      
-      const activeStateIds = (activeStates || []).map(s => s.id);
-      if (activeStateIds.length === 0) return [];
-      
-      // Get active cities in active states
-      const { data: activeCities } = await supabase
-        .from('cities')
-        .select('id')
-        .eq('is_active', true)
-        .in('state_id', activeStateIds);
-      
-      const activeCityIds = (activeCities || []).map(c => c.id);
-      if (activeCityIds.length === 0) return [];
-      
-      // Fetch clinics only from active cities in active states
-      const { data: clinics } = await supabase
-        .from('clinics')
-        .select(`
-          id, name, slug, cover_image_url, rating, review_count,
-          verification_status, claim_status, city_id,
-          area:areas(id, name, slug),
-          city:cities(id, name, slug, state_id)
-        `)
-        .eq('is_active', true)
-        .in('city_id', activeCityIds)
-        .order('rating', { ascending: false });
-      
-      if (!clinics) return [];
-      
-      const seenLocations = new Set<string>();
-      const profiles: Profile[] = [];
-      
-      for (const c of clinics) {
-        // Check if clinic has a valid image (cover_image_url)
-        const photoUrl = c.cover_image_url;
-        
-        // SKIP clinics without images - they don't rank on homepage/location pages
-        if (!photoUrl) continue;
-        
-        // Use city_id as the location key to get one per city
-        const locationKey = c.city?.id || c.id;
-        
-        // Skip if we already have a profile from this location
-        if (seenLocations.has(locationKey)) continue;
-        seenLocations.add(locationKey);
-        
-        // Only show verified if both claimed AND verification_status is verified
-        const isVerified = c.claim_status === 'claimed' && c.verification_status === 'verified';
-        
-        profiles.push({
-          id: c.id,
-          name: c.name,
-          slug: c.slug,
-          type: 'clinic',
-          specialty: 'Fostering Agency',
-          location: c.area?.name || c.city?.name || 'UAE',
-          rating: Number(c.rating) || 0,
-          reviewCount: c.review_count || 0,
-          image: photoUrl,
-          isVerified,
-          clinicName: c.name,
-          clinicId: c.id,
-          areaId: c.area?.id,
-          cityId: c.city?.id,
-        });
-        
-        if (profiles.length >= limit) break;
-      }
-      
-      return profiles;
+      return [
+        { id: '1', name: 'Oakleaf Fostering', slug: 'oakleaf-fostering', rating: 4.8, city: 'London' },
+        { id: '2', name: 'Care First Ltd', slug: 'care-first-ltd', rating: 4.6, city: 'Manchester' },
+        { id: '3', name: 'Fostering Together', slug: 'fostering-together', rating: 4.5, city: 'Birmingham' },
+        { id: '4', name: 'National Fostering', slug: 'national-fostering', rating: 4.4, city: 'Leeds' },
+        { id: '5', name: 'Sunrise Foster Care', slug: 'sunrise-foster-care', rating: 4.3, city: 'Liverpool' },
+        { id: '6', name: 'Community Fostering', slug: 'community-fostering', rating: 4.2, city: 'Bristol' },
+      ].slice(0, limit);
     },
   });
 }
 
-// Helper function to generate a letter avatar URL
 export function getLetterAvatarUrl(name: string): string {
-  const initials = name
-    .split(' ')
-    .map(word => word[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
-  return `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=0f766e&color=fff&size=200&font-size=0.4&bold=true`;
+  const initial = name?.charAt(0)?.toUpperCase() || 'A';
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(initial)}&background=f97316&color=fff&size=128`;
 }

@@ -10,7 +10,8 @@ import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import { useRealCounts } from "@/hooks/useRealCounts";
 import { 
   Heart, Shield, Star, MapPin, ArrowRight, 
-  Sparkles, Search, Baby, HeartHandshake, CheckCircle
+  Sparkles, Search, Baby, HeartHandshake, CheckCircle,
+  Award, Building2, Users, ArrowDown
 } from "lucide-react";
 import { useState } from "react";
 
@@ -24,6 +25,9 @@ const HomeV2 = () => {
     { name: "Emergency", slug: "emergency-fostering", icon: Shield, color: "bg-red-500", count: 15 },
     { name: "Therapeutic", slug: "therapeutic-fostering", icon: Sparkles, color: "bg-purple-500", count: 20 },
     { name: "Respite", slug: "respite-fostering", icon: HeartHandshake, color: "bg-green-500", count: 18 },
+    { name: "Parent & Child", slug: "parent-and-child-fostering", icon: Users, color: "bg-blue-500", count: 12 },
+    { name: "Disability", slug: "disability-fostering", icon: Award, color: "bg-orange-500", count: 10 },
+    { name: "Kinship", slug: "kinship-fostering", icon: Building2, color: "bg-teal-500", count: 8 },
   ];
 
   const cities = [
@@ -33,6 +37,32 @@ const HomeV2 = () => {
     { name: "Leeds", slug: "leeds", count: 18 },
     { name: "Glasgow", slug: "glasgow", count: 15 },
     { name: "Liverpool", slug: "liverpool", count: 14 },
+    { name: "Bristol", slug: "bristol", count: 12 },
+    { name: "Sheffield", slug: "sheffield", count: 10 },
+    { name: "Cardiff", slug: "cardiff", count: 8 },
+    { name: "Belfast", slug: "belfast", count: 6 },
+  ];
+
+  const featuredAgencies = [
+    { name: "Oakleaf Fostering", slug: "oakleaf-fostering", rating: 4.8, reviews: 125, location: "London" },
+    { name: "Care First Ltd", slug: "care-first-ltd", rating: 4.6, reviews: 89, location: "Manchester" },
+    { name: "Fostering Together", slug: "fostering-together", rating: 4.5, reviews: 67, location: "Birmingham" },
+    { name: "National Fostering", slug: "national-fostering", rating: 4.4, reviews: 45, location: "Leeds" },
+    { name: "Sunrise Foster Care", slug: "sunrise-foster-care", rating: 4.3, reviews: 32, location: "Liverpool" },
+  ];
+
+  const howItWorks = [
+    { step: 1, title: "Search Agencies", desc: "Browse by location or service type" },
+    { step: 2, title: "Compare & Research", desc: "View ratings and reviews" },
+    { step: 3, title: "Contact Agencies", desc: "Send enquiries directly" },
+    { step: 4, title: "Start Journey", desc: "Begin your fostering pathway" },
+  ];
+
+  const faqs = [
+    { q: "How do I find fostering agencies?", a: "Search by location or service type on our directory." },
+    { q: "What types of fostering exist?", a: "Short-term, long-term, emergency, respite, therapeutic, and more." },
+    { q: "How do I become a foster carer?", a: "Contact an agency directly - they provide training and support." },
+    { q: "Are agencies verified?", a: "Look for verified badges on agency profiles." },
   ];
 
   const handleSearch = (e: React.FormEvent) => {
@@ -216,7 +246,7 @@ const HomeV2 = () => {
             <p className="text-slate-400 mt-3">Find agencies in your area</p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
             {cities.map((city, i) => (
               <motion.div
                 key={city.slug}
@@ -235,6 +265,140 @@ const HomeV2 = () => {
                   </Card>
                 </Link>
               </motion.div>
+            ))}
+          </div>
+          
+          <div className="text-center mt-8">
+            <Link to="/locations/england" className="inline-flex items-center gap-2 text-primary hover:underline">
+              View all locations <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURED AGENCIES - Horizontal Scroll */}
+      <section className="py-20 bg-[#0f0f18]">
+        <div className="container px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-white">Featured Fostering Agencies</h2>
+            <p className="text-slate-400 mt-3">Connect with top-rated agencies across the UK</p>
+          </div>
+
+          <div className="flex gap-4 overflow-x-auto pb-4 snap-x">
+            {featuredAgencies.map((agency, i) => (
+              <motion.div
+                key={agency.slug}
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.1 }}
+                viewport={{ once: true }}
+                className="snap-start"
+              >
+                <Link to={`/agencies/${agency.slug}`}>
+                  <Card className="bg-[#151520] border-white/10 hover:border-primary/50 hover:bg-[#1a1a28] transition-all cursor-pointer min-w-[280px]">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center">
+                          <Heart className="w-6 h-6 text-primary" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-white">{agency.name}</h3>
+                          <p className="text-xs text-slate-500">{agency.location}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1">
+                          <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                          <span className="text-white font-medium">{agency.rating}</span>
+                          <span className="text-slate-500 text-sm">({agency.reviews})</span>
+                        </div>
+                        <Badge className="bg-green-500/20 text-green-400 text-xs">Verified</Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+          
+          <div className="text-center mt-8">
+            <Link to="/search" className="inline-flex items-center gap-2 text-primary hover:underline">
+              View all agencies <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section className="py-20 bg-[#0a0a0f]">
+        <div className="container px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-white">How It Works</h2>
+            <p className="text-slate-400 mt-3">Find your perfect agency in 4 simple steps</p>
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-6">
+            {howItWorks.map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                viewport={{ once: true }}
+                className="text-center"
+              >
+                <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-white">{item.step}</span>
+                </div>
+                <h3 className="font-bold text-white mb-2">{item.title}</h3>
+                <p className="text-slate-400 text-sm">{item.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* E-E-A-T TRUST */}
+      <section className="py-20 bg-[#0f0f18]">
+        <div className="container px-4">
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center p-6">
+              <CheckCircle className="w-12 h-12 text-primary mx-auto mb-4" />
+              <h3 className="font-bold text-white mb-2">UK-Wide Coverage</h3>
+              <p className="text-slate-400 text-sm">Agencies across England, Scotland, Wales & NI</p>
+            </div>
+            <div className="text-center p-6">
+              <Shield className="w-12 h-12 text-primary mx-auto mb-4" />
+              <h3 className="font-bold text-white mb-2">Verified Listings</h3>
+              <p className="text-slate-400 text-sm">Agency profiles with ratings & reviews</p>
+            </div>
+            <div className="text-center p-6">
+              <Heart className="w-12 h-12 text-primary mx-auto mb-4" />
+              <h3 className="font-bold text-white mb-2">Dedicated Support</h3>
+              <p className="text-slate-400 text-sm">Focus on finding the right match</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 bg-[#0a0a0f]">
+        <div className="container px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-white">Frequently Asked Questions</h2>
+          </div>
+          
+          <div className="max-w-2xl mx-auto space-y-3">
+            {faqs.map((faq, i) => (
+              <details key={i} className="group bg-[#151520] border border-white/10 rounded-xl">
+                <summary className="flex items-center justify-between p-4 cursor-pointer">
+                  <span className="font-medium text-white">{faq.q}</span>
+                  <ArrowDown className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" />
+                </summary>
+                <div className="px-4 pb-4">
+                  <p className="text-slate-400">{faq.a}</p>
+                </div>
+              </details>
             ))}
           </div>
         </div>

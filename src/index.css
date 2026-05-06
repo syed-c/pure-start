@@ -5,91 +5,89 @@
 @layer base {
   :root {
     /* ============================================
-       FOSTER CARE UK — FOSTERING DESIGN SYSTEM
-       Warm · Friendly · Trustworthy · Professional
+       FOSTER CARE UK — DARK FOSTERING DESIGN SYSTEM
+       Dark · Professional · Trustworthy
        ============================================ */
     
-    /* Background & Surface - Warm White */
-    --background: 40 30% 97%;
-    --foreground: 35 20% 15%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 35 20% 15%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 35 20% 15%;
-
-    /* Primary — Warm Trustworthy Coral/Orange (brand) */
-    --primary: 25 90% 55%;
-    --primary-foreground: 0 0% 100%;
+    /* Background & Surface - Dark Slate */
+    --background: 35 20% 8%;
+    --foreground: 40 20% 95%;
     
-    /* Teal mapped to primary for colour overrides */
-    --teal: 25 90% 55%;
-    --teal-light: 25 90% 92%;
-    --teal-dark: 25 90% 40%;
+    --card: 35 18% 12%;
+    --card-foreground: 40 20% 95%;
     
-    /* Secondary — Warm Soft Beige */
-    --secondary: 35 20% 94%;
-    --secondary-foreground: 35 20% 15%;
-
-    /* Muted — Warm Grey */
-    --muted: 35 15% 92%;
-    --muted-foreground: 35 10% 45%;
-
-    /* Accent — Optimistic Green */
-    --accent: 150 60% 40%;
-    --accent-foreground: 0 0% 100%;
-
-    /* Success — Supportive Green */
+    --popover: 35 18% 12%;
+    --popover-foreground: 40 20% 95%;
+    
+    /* Primary — Teal (brand) */
+    --primary: 25 85% 60%;
+    --primary-foreground: 35 20% 8%;
+    
+    /* Teal mapped to primary */
+    --teal: 25 85% 60%;
+    --teal-light: 25 85% 80%;
+    --teal-dark: 25 85% 40%;
+    
+    /* Secondary — Dark Grey */
+    --secondary: 35 15% 18%;
+    --secondary-foreground: 40 20% 95%;
+    
+    /* Muted — Dark Grey */
+    --muted: 35 15% 20%;
+    --muted-foreground: 35 10% 60%;
+    
+    /* Accent — Teal */
+    --accent: 150 55% 45%;
+    --accent-foreground: 35 20% 8%;
+    
+    /* Success — Green */
     --success: 150 55% 40%;
     --success-foreground: 0 0% 100%;
     
-    /* Warning — Growth Gold */
+    /* Warning — Gold */
     --warning: 40 90% 50%;
     --warning-foreground: 35 20% 15%;
-
+    
     /* Destructive */
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 0 0% 100%;
-
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 40 20% 95%;
+    
     /* Borders & Inputs */
-    --border: 35 10% 85%;
-    --input: 35 10% 85%;
-    --ring: 25 90% 55%;
-
+    --border: 35 15% 25%;
+    --input: 35 15% 25%;
+    --ring: 25 85% 60%;
+    
     /* Radius */
     --radius: 0.75rem;
     
     /* Shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(35 20% 15% / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(35 20% 15% / 0.1), 0 2px 4px -1px hsl(35 20% 15% / 0.06);
-    --shadow-lg: 0 10px 15px -3px hsl(35 20% 15% / 0.1), 0 4px 6px -2px hsl(35 20% 15% / 0.05);
-    --shadow-glow: 0 0 20px hsl(25 90% 55% / 0.3);
+    --shadow-sm: 0 1px 2px 0 hsl(35 20% 8% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(35 20% 8% / 0.1), 0 2px 4px -1px hsl(35 20% 8% / 0.06);
+    --shadow-lg: 0 10px 15px -3px hsl(35 20% 8% / 0.1), 0 4px 6px -2px hsl(35 20% 8% / 0.05);
+    --shadow-glow: 0 0 20px hsl(25 85% 60% / 0.3);
   }
 
-  .dark {
-    --background: 35 20% 8%;
-    --foreground: 40 20% 95%;
-    --card: 35 18% 12%;
-    --card-foreground: 40 20% 95%;
-    --popover: 35 18% 12%;
-    --popover-foreground: 40 20% 95%;
-    --primary: 25 85% 60%;
-    --primary-foreground: 35 20% 8%;
-    --secondary: 35 15% 18%;
-    --secondary-foreground: 40 20% 95%;
-    --muted: 35 15% 20%;
-    --muted-foreground: 35 10% 60%;
-    --accent: 150 55% 45%;
-    --accent-foreground: 35 20% 8%;
-    --destructive: 0 65% 50%;
-    --destructive-foreground: 40 20% 95%;
-    --border: 35 15% 25%;
-    --input: 35 15% 25%;
-    --ring: 25 85% 60%;
-    --dark-section: 35 20% 10%;
-    --dark-section-foreground: 0 0% 100%;
-    --dashboard-bg: 35 20% 8%;
+  /* Light theme (rarely used) */
+  .light {
+    --background: 40 30% 97%;
+    --foreground: 35 20% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 35 20% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 35 20% 15%;
+    --primary: 25 90% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 35 20% 94%;
+    --secondary-foreground: 35 20% 15%;
+    --muted: 35 15% 92%;
+    --muted-foreground: 35 10% 45%;
+    --accent: 150 60% 40%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 35 10% 85%;
+    --input: 35 10% 85%;
+    --ring: 25 90% 55%;
   }
 }
 
@@ -97,6 +95,15 @@
   * {
     @apply border-border;
     -webkit-tap-highlight-color: transparent;
+  }
+
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .animate-scroll {
+    animation: scroll 30s linear infinite;
   }
 
   html {
