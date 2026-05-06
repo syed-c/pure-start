@@ -115,6 +115,9 @@ export default function GooglePlacesImportTab() {
   const [currentCityIndex, setCurrentCityIndex] = useState<number>(0);
   const [processedCities, setProcessedCities] = useState<string[]>([]);
   
+  // Track searched place_ids to avoid duplicates in same session
+  const [searchedPlaceIds, setSearchedPlaceIds] = useState<Set<string>>(new Set());
+  
   // Fetch cities for selected state
   const { data: cities } = useQuery({
     queryKey: ['cities-by-state', selectedStateId],
@@ -193,7 +196,15 @@ export default function GooglePlacesImportTab() {
     return new Set((existingAgencies || []).map(a => a.place_id).filter(Boolean));
   }, [existingAgencies]);
 
-  // Mark results as already imported - use data from search results
+  // Clear results and start fresh
+  const clearResults = () => {
+    setResults([]);
+    setProcessedCities([]);
+    setSelectedPlaces(new Set());
+    setSearchedPlaceIds(new Set());
+    setCurrentCityIndex(0);
+    setImportLog([]);
+  };
   const resultsWithImportStatus = useMemo(() => {
     return results.map(r => ({
       ...r,
@@ -217,10 +228,14 @@ export default function GooglePlacesImportTab() {
     setResults([]);
     setProcessedCities([]);
     setCurrentCityIndex(0);
+    setSearchedPlaceIds(new Set()); // Refresh searched place_ids for new search
     setSearchProgress('Starting search...');
     
     let allResults: PlaceResult[] = [];
     const citiesToSearch = selectedCityIds.length > 0 ? selectedCityIds : (cities?.map(c => c.id) || []);
+    
+    // Deduplicate place_ids across all results
+    const seenPlaceIds = new Set<string>();
     
     try {
       for (let i = 0; i < citiesToSearch.length; i++) {
@@ -250,12 +265,21 @@ export default function GooglePlacesImportTab() {
           const data = await response.json();
           
           if (data.success && data.results) {
-            const cityResults = data.results.map((r: PlaceResult) => ({
+            // Filter out duplicates based on place_id
+            const uniqueResults = data.results.filter((r: PlaceResult) => {
+              if (seenPlaceIds.has(r.place_id)) {
+                return false;
+              }
+              seenPlaceIds.add(r.place_id);
+              return true;
+            }).map((r: PlaceResult) => ({
               ...r,
               city: city.name,
             }));
-            allResults = [...allResults, ...cityResults];
+            
+            allResults = [...allResults, ...uniqueResults];
             setProcessedCities(prev => [...prev, city.name]);
+            setSearchedPlaceIds(new Set(seenPlaceIds)); // Track for next cities
             setResults([...allResults]);
             setSearchProgress(`Found ${allResults.length} agencies from ${processedCities.length + 1} cities`);
           }
@@ -265,7 +289,7 @@ export default function GooglePlacesImportTab() {
         }
       }
       
-      setSearchProgress(`Complete! Found ${allResults.length} agencies from ${citiesToSearch.length} cities`);
+      setSearchProgress(`Complete! Found ${allResults.length} foster care agencies from ${citiesToSearch.length} cities`);
       toast.success(`Found ${allResults.length} foster care agencies from ${citiesToSearch.length} cities`);
     } catch (error: any) {
       console.error('Search error:', error);
@@ -562,10 +586,19 @@ export default function GooglePlacesImportTab() {
             <div>
               <CardTitle>Search Results</CardTitle>
               <CardDescription>
-                Found {resultsWithImportStatus.length} places • {newCount} new • {importedCount} already imported
+                Found {resultsWithImportStatus.length} places from {processedCities.length} cities • {newCount} new • {importedCount} already imported
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={clearResults}
+                disabled={results.length === 0}
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Clear
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
@@ -573,7 +606,7 @@ export default function GooglePlacesImportTab() {
                 disabled={isSearching}
               >
                 <RefreshCw className={`h-4 w-4 mr-2 ${isSearching ? 'animate-spin' : ''}`} />
-                Refresh
+                {isSearching ? 'Searching...' : 'Search More'}
               </Button>
               <Button
                 onClick={importSelectedPlaces}
@@ -607,6 +640,7 @@ export default function GooglePlacesImportTab() {
                       />
                     </TableHead>
                     <TableHead>Agency</TableHead>
+                    <TableHead>City</TableHead>
                     <TableHead>Location</TableHead>
                     <TableHead>Rating</TableHead>
                     <TableHead>Data Available</TableHead>
@@ -642,10 +676,16 @@ export default function GooglePlacesImportTab() {
                             <p className="font-medium">{place.name}</p>
                             <p className="text-xs text-muted-foreground">{place.types?.slice(0, 2).join(', ')}</p>
                           </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1 text-sm">
+</div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-1 text-sm">
+                            <MapPin className="h-3 w-3 text-teal" />
+                            {(place as any).city || 'N/A'}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-1 text-sm">
                           <MapPin className="h-3 w-3 text-muted-foreground" />
                           {place.address?.split(',').slice(0, 2).join(',') || 'N/A'}
                         </div>
