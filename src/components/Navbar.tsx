@@ -155,7 +155,7 @@ export function Navbar() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden pb-6 border-t border-slate-800 animate-fade-in">
+          <div className="lg:hidden pb-6 border-t border-slate-800 animate-fade-in max-h-[80vh] overflow-y-auto">
             <div className="pt-4 space-y-4">
               {/* Search Box */}
               <button

@@ -408,32 +408,30 @@ export default function GooglePlacesImportTab() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
         <div>
-          <h2 className="text-2xl font-bold">Google Places Import</h2>
-          <p className="text-muted-foreground">Import foster care agencies from Google My Business</p>
+          <h2 className="text-xl sm:text-2xl font-bold">Google Places Import</h2>
+          <p className="text-muted-foreground text-sm">Import foster care agencies from Google</p>
         </div>
-        <div className="flex items-center gap-2">
-          <Badge variant="outline" className="bg-teal/10 text-teal border-teal/20">
-            <Building2 className="h-3 w-3 mr-1" />
-            Foster Care Mode
-          </Badge>
-        </div>
+        <Badge variant="outline" className="bg-teal/10 text-teal border-teal/20">
+          <Building2 className="h-3 w-3 mr-1" />
+          Foster Care
+        </Badge>
       </div>
 
       {/* Search Configuration */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-2 text-lg">
             <Search className="h-5 w-5" />
-            Search Configuration
+            Search Setup
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-sm">
             Select cities to search for foster care agencies
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             <div className="space-y-2">
               <Label>State / Region</Label>
               <Select value={selectedStateId} onValueChange={(v) => { setSelectedStateId(v); setSelectedCityIds([]); setProcessedCities([]); }}>
@@ -451,19 +449,19 @@ export default function GooglePlacesImportTab() {
             </div>
 
             <div className="space-y-2 lg:col-span-2">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between flex-wrap gap-2">
                 <Label>Cities ({selectedCityIds.length} selected)</Label>
                 <div className="flex gap-2">
                   <Button variant="outline" size="sm" onClick={selectAllCities} disabled={!cities?.length}>
-                    Select All
+                    All
                   </Button>
                   <Button variant="outline" size="sm" onClick={clearAllCities}>
                     Clear
                   </Button>
                 </div>
               </div>
-              <ScrollArea className="h-32 border rounded-lg p-2">
-                <div className="grid grid-cols-2 gap-2">
+              <ScrollArea className="h-24 md:h-32 border rounded-lg p-2">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   {cities?.map(city => (
                     <div key={city.id} className="flex items-center gap-2">
                       <Checkbox 
@@ -628,8 +626,61 @@ export default function GooglePlacesImportTab() {
             </div>
           </CardHeader>
           <CardContent>
-            {/* Results Table */}
-            <div className="rounded-md border">
+            {/* Results as Cards - Mobile Friendly */}
+            <div className="block lg:hidden space-y-3">
+              {resultsWithImportStatus.slice(0, 50).map((place) => (
+                <div 
+                  key={place.place_id} 
+                  className={`p-3 rounded-lg border ${
+                    place.already_imported ? 'bg-muted/30 border-border' : 'bg-card border-border'
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <Checkbox
+                      checked={selectedPlaces.has(place.place_id)}
+                      onCheckedChange={() => togglePlace(place.place_id)}
+                      disabled={place.already_imported && importType !== 'update' && importType !== 'sync'}
+                      className="mt-1"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        {place.photo_url ? (
+                          <img 
+                            src={place.photo_url} 
+                            alt={place.name}
+                            className="h-10 w-10 rounded-lg object-cover"
+                          />
+                        ) : (
+                          <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                            <Building2 className="h-5 w-5 text-primary" />
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-sm truncate">{place.name}</p>
+                          <p className="text-xs text-muted-foreground truncate">{(place as any).city}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 mt-2 text-xs">
+                        {place.rating && (
+                          <div className="flex items-center gap-1">
+                            <Star className="h-3 w-3 text-gold fill-gold" />
+                            <span>{place.rating.toFixed(1)}</span>
+                          </div>
+                        )}
+                        {place.already_imported ? (
+                          <span className="text-green-600 font-medium">Imported</span>
+                        ) : (
+                          <span className="text-blue-600">New</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Results as Table - Desktop */}
+            <div className="hidden lg:block rounded-md border">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -804,7 +855,7 @@ export default function GooglePlacesImportTab() {
       )}
 
       {/* Stats - Existing Agencies */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
         <Card className="bg-gradient-to-br from-primary/5 to-primary/10">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">

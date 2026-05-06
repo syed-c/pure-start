@@ -501,3 +501,129 @@
   .from-emerald-500, .from-emerald { --tw-gradient-from: hsl(var(--accent)) var(--tw-gradient-from-position) !important; }
   .to-emerald-500, .to-emerald { --tw-gradient-to: hsl(var(--accent)) var(--tw-gradient-to-position) !important; }
 }
+
+/* ========================================
+   MOBILE RESPONSIVE STYLES
+   ======================================== */
+@media (max-width: 640px) {
+  /* Mobile containers */
+  .container-mobile {
+    @apply px-3 w-full max-w-full;
+  }
+  
+  /* Reduce padding on mobile */
+  .section-mobile {
+    @apply px-3 py-6;
+  }
+  
+  /* Mobile-friendly hero text */
+  .hero-display {
+    @apply text-4xl;
+  }
+  
+  .hero-display-sm {
+    @apply text-3xl;
+  }
+  
+  /* Mobile-friendly text sizes */
+  .text-7xl { @apply text-4xl; }
+  .text-6xl { @apply text-3xl; }
+  .text-5xl { @apply text-2xl; }
+  .text-4xl { @apply text-2xl; }
+  .text-3xl { @apply text-xl; }
+  .text-2xl { @apply text-lg; }
+  
+  /* Mobile-friendly grids */
+  .grid-cols-1 { @apply grid-cols-1; }
+  .grid-cols-2 { @apply grid-cols-1; }
+  .grid-cols-3 { @apply grid-cols-1; }
+  .grid-cols-4 { @apply grid-cols-2; }
+  
+  /* Mobile-friendly flex */
+  .flex-col { @apply flex-col; }
+  .sm\:flex-row { @apply flex-col; }
+  
+  /* Mobile scrollable tables */
+  .table-mobile {
+    @apply block overflow-x-auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .table-mobile thead {
+    @apply hidden;
+  }
+  
+  .table-mobile tbody {
+    @apply block;
+  }
+  
+  .table-mobile tr {
+    @apply block border border-border rounded-lg mb-3 p-3;
+    background: hsl(var(--card));
+  }
+  
+  .table-mobile td {
+    @apply block py-2 px-0;
+  }
+  
+  .table-mobile td::before {
+    content: attr(data-label);
+    @apply font-bold text-sm text-muted-foreground block mb-1;
+  }
+  
+  /* Mobile-friendly cards */
+  .card-mobile {
+    @apply p-3 rounded-lg;
+  }
+  
+  /* Mobile-friendly buttons */
+  .btn-mobile {
+    @apply w-full py-3 text-base;
+  }
+  
+  /* Mobile nav adjustments */
+  .nav-mobile {
+    @apply px-2 py-1 text-sm;
+  }
+  
+  /* Mobile spacing */
+  .gap-4 { @apply gap-2; }
+  .gap-6 { @apply gap-3; }
+  .gap-8 { @apply gap-4; }
+  
+  /* Mobile mt/mb adjustments */
+  .mt-8 { @apply mt-4; }
+  .mb-8 { @apply mb-4; }
+  .mt-12 { @apply mt-6; }
+  .mb-12 { @apply mb-6; }
+  
+  /* Hide on mobile */
+  .hidden-mobile {
+    @apply hidden;
+  }
+  
+  /* Show only on mobile */
+  .block-mobile {
+    @apply block;
+  }
+  
+  /* Full width on mobile */
+  .w-full-mobile {
+    @apply w-full;
+  }
+  
+  /* Mobile-friendly input */
+  input-mobile {
+    @apply text-base py-3 px-3;
+  }
+}
+
+/* Tablet responsive */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .tablet-container {
+    @apply px-4;
+  }
+  
+  .grid-cols-3 { @apply grid-cols-2; }
+  .grid-cols-4 { @apply grid-cols-3; }
+}
