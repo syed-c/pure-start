@@ -108,9 +108,25 @@ export default function GooglePlacesImportTab() {
   });
   
   const [selectedStateId, setSelectedStateId] = useState<string>('');
+  const [selectedCityId, setSelectedCityId] = useState<string>('');
   const [category, setCategory] = useState<string>('fostering agency');
   const [importType, setImportType] = useState<string>('new');
   const [activeTab, setActiveTab] = useState<string>('search');
+  
+  // Fetch cities for selected state
+  const { data: cities } = useQuery({
+    queryKey: ['cities-by-state', selectedStateId],
+    queryFn: async () => {
+      if (!selectedStateId) return [];
+      const { data } = await supabase
+        .from('cities')
+        .select('*')
+        .eq('state_id', selectedStateId)
+        .order('name');
+      return data || [];
+    },
+    enabled: !!selectedStateId,
+  });
 
   // Fetch import jobs history
   const { data: importJobs } = useQuery({
@@ -347,7 +363,7 @@ export default function GooglePlacesImportTab() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="space-y-2">
               <Label>State / Region</Label>
-              <Select value={selectedStateId} onValueChange={setSelectedStateId}>
+              <Select value={selectedStateId} onValueChange={(v) => { setSelectedStateId(v); setSelectedCityId(''); }}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select state" />
                 </SelectTrigger>
@@ -357,6 +373,29 @@ export default function GooglePlacesImportTab() {
                       {state.name} ({state.abbreviation})
                     </SelectItem>
                   ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>City / Area</Label>
+              <Select value={selectedCityId} onValueChange={setSelectedCityId} disabled={!cities?.length}>
+                <SelectTrigger>
+                  <SelectValue placeholder={selectedStateId ? "Select city" : "Select state first"} />
+                </SelectTrigger>
+                <SelectContent className="max-h-64 overflow-auto">
+                  <ScrollArea className="h-64">
+                    {cities?.map(city => (
+                      <SelectItem key={city.id} value={city.id}>
+                        {city.name}
+                      </SelectItem>
+                    ))}
+                    {cities?.length === 0 && selectedStateId && (
+                      <div className="p-4 text-sm text-muted-foreground text-center">
+                        No cities found. Search without city filter.
+                      </div>
+                    )}
+                  </ScrollArea>
                 </SelectContent>
               </Select>
             </div>
