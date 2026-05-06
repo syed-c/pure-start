@@ -108,10 +108,12 @@ export default function GooglePlacesImportTab() {
   });
   
   const [selectedStateId, setSelectedStateId] = useState<string>('');
-  const [selectedCityId, setSelectedCityId] = useState<string>('');
+  const [selectedCityIds, setSelectedCityIds] = useState<string[]>([]);
   const [category, setCategory] = useState<string>('fostering agency');
   const [importType, setImportType] = useState<string>('new');
   const [activeTab, setActiveTab] = useState<string>('search');
+  const [currentCityIndex, setCurrentCityIndex] = useState<number>(0);
+  const [processedCities, setProcessedCities] = useState<string[]>([]);
   
   // Fetch cities for selected state
   const { data: cities } = useQuery({
@@ -127,6 +129,28 @@ export default function GooglePlacesImportTab() {
     },
     enabled: !!selectedStateId,
   });
+
+  const toggleCity = (cityId: string) => {
+    setSelectedCityIds(prev => 
+      prev.includes(cityId) 
+        ? prev.filter(id => id !== cityId)
+        : [...prev, cityId]
+    );
+  };
+
+  const selectAllCities = () => {
+    if (cities) {
+      setSelectedCityIds(cities.map(c => c.id));
+    }
+  };
+
+  const clearAllCities = () => {
+    setSelectedCityIds([]);
+    setProcessedCities([]);
+    setCurrentCityIndex(0);
+  };
+
+  const selectedCities = cities?.filter(c => selectedCityIds.includes(c.id)) || [];
 
   // Fetch import jobs history
   const { data: importJobs } = useQuery({
@@ -184,40 +208,65 @@ export default function GooglePlacesImportTab() {
   const lowConfidenceCount = resultsWithImportStatus.filter(r => r.confidence === 'low').length;
 
   const searchGooglePlaces = async () => {
-    if (!selectedState) {
-      toast.error('Please select a state/region');
+    if (!selectedState && selectedCityIds.length === 0) {
+      toast.error('Please select a state or at least one city');
       return;
     }
 
     setIsSearching(true);
     setResults([]);
-    setSearchProgress('Initializing...');
+    setProcessedCities([]);
+    setCurrentCityIndex(0);
+    setSearchProgress('Starting search...');
+    
+    let allResults: PlaceResult[] = [];
+    const citiesToSearch = selectedCityIds.length > 0 ? selectedCityIds : (cities?.map(c => c.id) || []);
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/gmb-import`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY}`,
-        },
-        body: JSON.stringify({
-          action: 'search',
-          category,
-          city: searchQuery || selectedState.name,
-          state: selectedState.abbreviation,
-          maxPages,
-        }),
-      });
+      for (let i = 0; i < citiesToSearch.length; i++) {
+        const cityId = citiesToSearch[i];
+        const city = cities?.find(c => c.id === cityId);
+        if (!city) continue;
+        
+        setCurrentCityIndex(i + 1);
+        setSearchProgress(`Searching ${city.name} (${i + 1}/${citiesToSearch.length})...`);
+        
+        try {
+          const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/gmb-import`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY}`,
+            },
+            body: JSON.stringify({
+              action: 'search',
+              category,
+              city: city.name,
+              state: selectedState?.abbreviation || 'ENG',
+              maxPages,
+            }),
+          });
 
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.error || 'Search failed');
+          const data = await response.json();
+          
+          if (data.success && data.results) {
+            const cityResults = data.results.map((r: PlaceResult) => ({
+              ...r,
+              city: city.name,
+            }));
+            allResults = [...allResults, ...cityResults];
+            setProcessedCities(prev => [...prev, city.name]);
+            setResults([...allResults]);
+            setSearchProgress(`Found ${allResults.length} agencies from ${processedCities.length + 1} cities`);
+          }
+        } catch (cityError) {
+          console.error(`Error searching ${city.name}:`, cityError);
+          setSearchProgress(`Error in ${city.name}, continuing...`);
+        }
       }
-
-      setResults(data.results || []);
-      setSearchProgress(`Found ${data.total_found || 0} places`);
-      toast.success(`Found ${data.total_found || 0} foster care agencies`);
+      
+      setSearchProgress(`Complete! Found ${allResults.length} agencies from ${citiesToSearch.length} cities`);
+      toast.success(`Found ${allResults.length} foster care agencies from ${citiesToSearch.length} cities`);
     } catch (error: any) {
       console.error('Search error:', error);
       toast.error(error.message || 'Failed to search Google Places');
@@ -356,14 +405,14 @@ export default function GooglePlacesImportTab() {
             Search Configuration
           </CardTitle>
           <CardDescription>
-            Configure your search parameters to find foster care agencies
+            Select cities to search for foster care agencies
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="space-y-2">
               <Label>State / Region</Label>
-              <Select value={selectedStateId} onValueChange={(v) => { setSelectedStateId(v); setSelectedCityId(''); }}>
+              <Select value={selectedStateId} onValueChange={(v) => { setSelectedStateId(v); setSelectedCityIds([]); setProcessedCities([]); }}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select state" />
                 </SelectTrigger>
@@ -377,22 +426,38 @@ export default function GooglePlacesImportTab() {
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label>City / Area</Label>
-              <Select value={selectedCityId} onValueChange={setSelectedCityId} disabled={!cities?.length}>
-                <SelectTrigger>
-                  <SelectValue placeholder={selectedStateId ? "Select city" : "Select state first"} />
-                </SelectTrigger>
-                <SelectContent className="max-h-64 overflow-auto">
-                  <ScrollArea className="h-64">
-                    {cities?.map(city => (
-                      <SelectItem key={city.id} value={city.id}>
+            <div className="space-y-2 lg:col-span-2">
+              <div className="flex items-center justify-between">
+                <Label>Cities ({selectedCityIds.length} selected)</Label>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" onClick={selectAllCities} disabled={!cities?.length}>
+                    Select All
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={clearAllCities}>
+                    Clear
+                  </Button>
+                </div>
+              </div>
+              <ScrollArea className="h-32 border rounded-lg p-2">
+                <div className="grid grid-cols-2 gap-2">
+                  {cities?.map(city => (
+                    <div key={city.id} className="flex items-center gap-2">
+                      <Checkbox 
+                        id={city.id}
+                        checked={selectedCityIds.includes(city.id)}
+                        onCheckedChange={() => toggleCity(city.id)}
+                      />
+                      <label htmlFor={city.id} className="text-sm cursor-pointer">
                         {city.name}
-                      </SelectItem>
-                    ))}
-                    {cities?.length === 0 && selectedStateId && (
-                      <div className="p-4 text-sm text-muted-foreground text-center">
-                        No cities found. Search without city filter.
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Category</Label>
                       </div>
                     )}
                   </ScrollArea>
