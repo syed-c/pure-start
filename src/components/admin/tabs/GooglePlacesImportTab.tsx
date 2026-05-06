@@ -460,7 +460,7 @@ export default function GooglePlacesImportTab() {
                   </Button>
                 </div>
               </div>
-              <ScrollArea className="h-24 md:h-32 border rounded-lg p-2">
+<ScrollArea className="h-24 md:h-32 border rounded-lg p-2">
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   {cities?.map(city => (
                     <div key={city.id} className="flex items-center gap-2">
@@ -476,19 +476,6 @@ export default function GooglePlacesImportTab() {
                   ))}
                 </div>
               </ScrollArea>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Category</Label>
-                      </div>
-                    )}
-                  </ScrollArea>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Category</Label>
               <Select value={category} onValueChange={setCategory}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select category" />
