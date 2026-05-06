@@ -47,8 +47,10 @@ const ServicePage = () => {
   const { data: treatment, isLoading: treatmentLoading } = useQuery({
     queryKey: ["treatment", serviceSlug],
     queryFn: async () => {
-      const { data } = await supabase.from("treatments").select("*").eq("slug", serviceSlug).maybeSingle();
-      return data;
+      // treatments table may not exist, use fallback
+      return fallbackCategories[serviceSlug] 
+        ? { id: serviceSlug, name: fallbackCategories[serviceSlug].name, description: fallbackCategories[serviceSlug].description, slug: serviceSlug }
+        : null;
     },
   });
 
@@ -95,6 +97,7 @@ const ServicePage = () => {
   });
 
   const treatmentName = (treatment?.name || fallbackTreatment?.name || serviceSlug.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()));
+  const treatmentDesc = treatment?.description || fallbackTreatment?.description || `${treatmentName} is a specialised type of fostering that provides care for children and young people.`;
 
   const parsedContent = seoContent?.content ? parseMarkdownContent(seoContent.content) : null;
   const seoFaqs = seoContent?.faqs && Array.isArray(seoContent.faqs) && seoContent.faqs.length > 0
@@ -197,7 +200,7 @@ const ServicePage = () => {
               transition={{ delay: 0.2 }}
               className="text-base md:text-lg text-muted-foreground mb-6 max-w-2xl mx-auto px-2"
             >
-              const treatmentDesc = treatment?.description || fallbackTreatment?.description || `${treatmentName} is a specialised type of fostering that provides care for children and young people.`;
+              {treatmentDesc}
             </motion.p>
 
             <motion.div 
