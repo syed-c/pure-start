@@ -526,7 +526,7 @@ const FosteringLocationPage = () => {
               ))}
             </div>
           ) : agencies && agencies.length > 0 ? (
-            <div className="flex gap-4 overflow-x-auto pb-4">
+<div className="flex gap-4 overflow-x-auto pb-4">
               {agencies.map((agency: any) => (
                 <Card key={agency.id} className="hover:shadow-lg transition-shadow shrink-0 w-72">
                   <CardContent className="p-5">
@@ -546,24 +546,6 @@ const FosteringLocationPage = () => {
                       )}
                     </div>
                     <div className="mt-3 flex gap-2">
-                      <Link to={`/agency/${agency.slug}`}>
-                        <Button size="sm">View Profile</Button>
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <Users className="w-12 h-12 mx-auto text-gray-400" />
-                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
-                          <span className="font-medium">{agency.rating.toFixed(1)}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="mt-4 flex gap-2">
                       <Link to={`/agency/${agency.slug}`}>
                         <Button size="sm">View Profile</Button>
                       </Link>
