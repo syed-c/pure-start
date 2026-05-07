@@ -333,7 +333,7 @@ function HomePage() {
 
           <div className="relative overflow-hidden">
             <div className="flex animate-scroll gap-6" style={{ animation: 'scroll 40s linear infinite' }}>
-              {[...topAgenciesByCity, ...topAgenciesByCity, ...topAgenciesByCity].map((agency, i) => (
+              {[...featuredAgencies, ...featuredAgencies, ...featuredAgencies].map((agency: any, i: number) => (
                 <Link key={`${agency.id}-${i}`} to={`/agency/${agency.slug}/`} className="shrink-0 w-80">
                   <Card className="group bg-slate-800/50 border-slate-700 hover:border-teal-500/50 hover:shadow-xl hover:shadow-teal-500/10 transition-all duration-300 cursor-pointer overflow-hidden">
                     <div className="aspect-video relative overflow-hidden bg-slate-700">
@@ -341,7 +341,8 @@ function HomePage() {
                         src={agency.image_url || agency.cover_image_url || getLetterAvatarUrl(agency.name)}
                         alt={agency.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        onError={(e) => { 
+                        loading="lazy"
+                        onError={(e: any) => { 
                           e.currentTarget.src = getLetterAvatarUrl(agency.name); 
                         }}
                       />
