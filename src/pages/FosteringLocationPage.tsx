@@ -549,7 +549,7 @@ const FosteringLocationPage = () => {
 
         {/* View More */}
         {agencies && agencies.length > 10 && (
-          <div className="mt-4 text-center">
+          <div className="py-3 text-center">
             <Link to="/search">
               <Button variant="outline" size="sm">View All {agencies.length} Agencies</Button>
             </Link>
@@ -558,12 +558,12 @@ const FosteringLocationPage = () => {
 
         {/* Nearby Locations */}
         {nearbyLocations && nearbyLocations.length > 0 && (
-          <Section className="mt-8">
-            <h2 className="text-xl font-bold mb-3">Nearby Locations</h2>
+          <Section className="py-4">
+            <h2 className="text-base font-semibold text-gray-900 mb-2">Nearby Locations</h2>
             <div className="flex flex-wrap gap-2">
-              {nearbyLocations.slice(0, 8).map((loc: any) => (
+              {nearbyLocations.slice(0, 6).map((loc: any) => (
                 <Link key={loc.id} to={`/fostering-agencies/${loc.slug}`}>
-                  <Badge variant="outline" className="cursor-pointer hover:bg-teal-50 text-xs py-1.5 px-3">
+                  <Badge variant="outline" className="cursor-pointer hover:bg-teal-50 text-xs py-1 px-2.5">
                     {loc.name}
                   </Badge>
                 </Link>
@@ -574,14 +574,13 @@ const FosteringLocationPage = () => {
 
         {/* Services in Location */}
         {treatments && treatments.length > 0 && (
-          <Section className="mt-8">
-            <h2 className="text-2xl font-bold mb-4">Explore Fostering Services in {locationName}</h2>
-            <p className="text-gray-600 mb-4">Find specific types of fostering agencies in {locationName}:</p>
-            <div className="flex flex-wrap gap-3">
-              {treatments.slice(0, 5).map((treatment: any) => (
+          <Section className="py-4">
+            <h2 className="text-base font-semibold text-gray-900 mb-2">Fostering Services in {locationName}</h2>
+            <div className="flex flex-wrap gap-2">
+              {treatments.slice(0, 4).map((treatment: any) => (
                 <Link key={treatment.id} to={`/fostering-agencies/${locationSlug}/${treatment.slug}`}>
-                  <Badge className="cursor-pointer bg-teal-100 hover:bg-teal-200 text-teal-800 py-2 px-4">
-                    {treatment.name} in {locationName}
+                  <Badge className="cursor-pointer bg-teal-100 hover:bg-teal-200 text-teal-800 text-xs py-1 px-2.5">
+                    {treatment.name}
                   </Badge>
                 </Link>
               ))}
@@ -591,21 +590,21 @@ const FosteringLocationPage = () => {
 
         {/* Content Section - From Page Manager */}
         {seoContent?.content ? (
-          <Section className="mt-8">
-            <Card>
+          <Section className="py-6">
+            <Card className="border border-gray-200 shadow-sm">
               <CardContent className="p-5">
-                <h2 className="text-lg font-bold mb-3">{seoContent.title || `About Fostering in ${locationName}`}</h2>
-                <div className="text-sm text-gray-600 prose prose-sm max-w-none" 
+                <h2 className="text-lg font-bold text-gray-900 mb-3">{seoContent.title || `About Fostering in ${locationName}`}</h2>
+                <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-line" 
                   dangerouslySetInnerHTML={{ __html: seoContent.content.replace(/\n/g, '<br>') }} />
               </CardContent>
             </Card>
           </Section>
         ) : (
-          <Section className="mt-8">
-            <Card>
+          <Section className="py-6">
+            <Card className="border border-gray-200 shadow-sm">
               <CardContent className="p-5">
-                <h2 className="text-lg font-bold mb-3">About Fostering in {locationName}</h2>
-                <p className="text-sm text-gray-600">
+                <h2 className="text-lg font-bold text-gray-900 mb-3">About Fostering in {locationName}</h2>
+                <p className="text-sm text-gray-700 leading-relaxed">
                   {locationName} has several Ofsted-registered fostering agencies. Find verified agencies offering emergency, short-term, long-term, and specialist placements.
                 </p>
               </CardContent>
@@ -614,17 +613,17 @@ const FosteringLocationPage = () => {
         )}
 
         {/* CTA Section */}
-        <Section className="mt-8">
-          <Card className="bg-gradient-to-r from-teal-600 via-teal-500 to-teal-600 border-0 shadow-xl shadow-teal-500/20">
-            <CardContent className="p-6 text-center text-white">
-              <h2 className="text-xl font-bold">Find the Right Agency in {locationName}</h2>
-              <p className="text-sm text-white/70 mt-1 mb-4">Connect with verified fostering agencies today</p>
+        <Section className="py-6">
+          <Card className="bg-gradient-to-r from-teal-600 via-teal-500 to-teal-600 border-0 shadow-lg">
+            <CardContent className="p-5 text-center text-white">
+              <h2 className="text-lg font-bold">Find the Right Agency in {locationName}</h2>
+              <p className="text-sm text-white/80 mt-1 mb-4">Connect with verified fostering agencies today</p>
               <div className="flex gap-3 justify-center">
                 <Link to="/search">
-                  <Button size="lg" className="bg-white text-teal-700 hover:bg-gray-100 rounded-xl px-6">Find Agencies</Button>
+                  <Button size="md" className="bg-white text-teal-700 hover:bg-gray-100 rounded-lg px-5">Find Agencies</Button>
                 </Link>
                 <Link to="/become-foster-carer">
-                  <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10 rounded-xl px-6">Become a Carer</Button>
+                  <Button size="md" variant="outline" className="text-white border-white hover:bg-white/10 rounded-lg px-5">Become a Carer</Button>
                 </Link>
               </div>
             </CardContent>
