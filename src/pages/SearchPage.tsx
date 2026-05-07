@@ -139,35 +139,30 @@ function useSearchResults(filters: SearchFilters, page: number) {
         console.error('Count error:', countError.message, countError);
       }
 
-      // Now select all agencies with all needed fields including fostering types
+// Now select all agencies with all needed fields including fostering types
       console.log('Fetching all agencies...');
-      const { data: allAgencies, error: allError } = await supabaseAdmin
-        .from("agencies")
-        .select("id, name, slug, city, state, phone, email, website, rating, review_count, is_verified, is_featured, is_claimed, image_url, cover_image_url, fostering_types")
-        .order('rating', { ascending: false })
-        .limit(200);
+      let agenciesData = allAgencies;
       
-      console.log('All agencies query result:', { count: allAgencies?.length, error: allError, errorMsg: allError?.message });
-      
-      if (allError) {
-        console.error('Error fetching agencies:', allError.message, allError);
-        // Try without order and limit as fallback
-        const { data: fallbackData, error: fallbackError } = await supabaseAdmin.from("agencies").select("*").limit(100);
+      if (!allAgencies || allAgencies.length === 0 || allError) {
+        console.log('Trying fallback query...');
+        const { data: fallbackData, error: fallbackError } = await supabaseAdmin.from("agencies").select("*").limit(200);
         console.log('Fallback query result:', { count: fallbackData?.length, error: fallbackError });
-        if (fallbackError) return { results: [], total: 0 };
-        allAgencies = fallbackData as any;
+        if (fallbackError) {
+          console.error('Fallback error:', fallbackError);
+          return { results: [], total: 0 };
+        }
+        agenciesData = fallbackData;
       }
       
-      if (!allAgencies || allAgencies.length === 0) {
-        console.log('No agencies found in database at all');
+      if (!agenciesData || agenciesData.length === 0) {
+        console.log('No agencies found in database');
         return { results: [], total: 0 };
       }
+
+      console.log('Total agencies found:', agenciesData.length);
       
-      console.log('Total agencies found:', allAgencies.length);
-      console.log('First 3 agencies:', allAgencies.slice(0, 3).map((a: any) => ({ name: a.name, slug: a.slug, image: a.image_url })));
-      
-      // Map to results - use any type to bypass TS issues
-      for (const a of allAgencies as any[]) {
+      // Map to results
+      for (const a of agenciesData as any[]) {
         const isVerified = a.is_verified === true;
         if (filters.verifiedOnly && !isVerified) continue;
         
