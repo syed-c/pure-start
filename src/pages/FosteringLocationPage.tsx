@@ -12,7 +12,6 @@ import { SEOHead } from "@/components/seo/SEOHead";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
-import { getLetterAvatarUrl } from "@/hooks/useProfiles";
 import { POPULAR_CITIES, FOSTERING_CATEGORIES } from "@/lib/constants/activeRegions";
 import { Heart, Shield, Users, MapPin, Star, ArrowRight, Search } from "lucide-react";
 
@@ -415,30 +414,23 @@ const FosteringLocationPage = () => {
           ) : agencies && agencies.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {agencies.map((agency: any) => (
-                <Card key={agency.id} className="hover:shadow-lg transition-shadow overflow-hidden">
-                  <div className="h-32 bg-gradient-to-r from-teal-500 to-teal-600 flex items-center justify-center">
-                    <img 
-                      src={agency.image_url || getLetterAvatarUrl(agency.name)}
-                      alt={agency.name}
-                      className="h-full w-full object-cover"
-                      onError={(e: any) => { e.currentTarget.style.display = 'none'; }}
-                    />
-                    {!agency.image_url && (
-                      <h3 className="text-3xl font-bold text-white">{agency.name?.charAt(0)}</h3>
-                    )}
-                  </div>
+                <Card key={agency.id} className="hover:shadow-lg transition-shadow">
                   <CardContent className="p-6">
-                    <h3 className="font-semibold text-lg">{agency.name}</h3>
-                    <div className="flex items-center mt-1 text-sm text-gray-500">
-                      <MapPin className="w-4 h-4 mr-1" />
-                      {agency.city || locationName}
-                    </div>
-                    {agency.rating && (
-                      <div className="flex items-center mt-2">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
-                        <span className="font-medium">{agency.rating.toFixed(1)}</span>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="font-semibold text-lg">{agency.name}</h3>
+                        <div className="flex items-center mt-1 text-sm text-gray-500">
+                          <MapPin className="w-4 h-4 mr-1" />
+                          {agency.city || locationName}
+                        </div>
                       </div>
-                    )}
+                      {agency.rating && (
+                        <div className="flex items-center">
+                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
+                          <span className="font-medium">{agency.rating.toFixed(1)}</span>
+                        </div>
+                      )}
+                    </div>
 
                     <div className="mt-4 flex gap-2">
                       <Link to={`/agency/${agency.slug}`}>
