@@ -14,16 +14,16 @@ import { Section } from "@/components/layout/Section";
 import { useRealCounts } from "@/hooks/useRealCounts";
 
 const topAgenciesByCity = [
-  { id: '1', name: 'Oakleaf Fostering', slug: 'oakleaf-fostering', rating: 4.8, review_count: 125, is_verified: true, city: 'London', state: 'England', image_url: 'https://images.unsplash.com/photo-1606092195730-5d7b9af1ef4d?w=400&h=300&fit=crop' },
-  { id: '2', name: 'Care First Ltd', slug: 'care-first-ltd', rating: 4.6, review_count: 89, is_verified: true, city: 'Manchester', state: 'England', image_url: 'https://images.unsplash.com/photo-1557804506-669a67965ba1?w=400&h=300&fit=crop' },
-  { id: '3', name: 'Fostering Together', slug: 'fostering-together', rating: 4.5, review_count: 67, is_verified: true, city: 'Birmingham', state: 'England', image_url: 'https://images.unsplash.com/photo-1581579438745-1dc61e5a951d?w=400&h=300&fit=crop' },
-  { id: '4', name: 'National Fostering', slug: 'national-fostering', rating: 4.4, review_count: 45, is_verified: true, city: 'Leeds', state: 'England', image_url: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd1d?w=400&h=300&fit=crop' },
-  { id: '5', name: 'Sunrise Foster Care', slug: 'sunrise-foster-care', rating: 4.3, review_count: 32, is_verified: true, city: 'Liverpool', state: 'England', image_url: 'https://images.unsplash.com/photo-1505751172876-fa1926c9d06f?w=400&h=300&fit=crop' },
-  { id: '6', name: 'Community Fostering', slug: 'community-fostering', rating: 4.2, review_count: 28, is_verified: true, city: 'Bristol', state: 'England', image_url: 'https://images.unsplash.com/photo-1576091160399-9ba3efc7fca1?w=400&h=300&fit=crop' },
-  { id: '7', name: 'Together Foster Care', slug: 'together-foster-care', rating: 4.7, review_count: 52, is_verified: true, city: 'Sheffield', state: 'England', image_url: 'https://images.unsplash.com/photo-1551836026-a9d6f2ab03d7?w=400&h=300&fit=crop' },
-  { id: '8', name: 'Loving Homes', slug: 'loving-homes', rating: 4.5, review_count: 38, is_verified: true, city: 'Glasgow', state: 'Scotland', image_url: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=400&h=300&fit=crop' },
-  { id: '9', name: 'Family First', slug: 'family-first', rating: 4.4, review_count: 25, is_verified: true, city: 'Cardiff', state: 'Wales', image_url: 'https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=400&h=300&fit=crop' },
-  { id: '10', name: 'Safe Haven', slug: 'safe-haven-fostering', rating: 4.3, review_count: 18, is_verified: true, city: 'Belfast', state: 'N. Ireland', image_url: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&h=300&fit=crop' },
+  { id: '1', name: 'Oakleaf Fostering', slug: 'oakleaf-fostering', rating: 4.8, review_count: 125, is_verified: true, city: 'London', state: 'England', image_url: '' },
+  { id: '2', name: 'Care First Ltd', slug: 'care-first-ltd', rating: 4.6, review_count: 89, is_verified: true, city: 'Manchester', state: 'England', image_url: '' },
+  { id: '3', name: 'Fostering Together', slug: 'fostering-together', rating: 4.5, review_count: 67, is_verified: true, city: 'Birmingham', state: 'England', image_url: '' },
+  { id: '4', name: 'National Fostering', slug: 'national-fostering', rating: 4.4, review_count: 45, is_verified: true, city: 'Leeds', state: 'England', image_url: '' },
+  { id: '5', name: 'Sunrise Foster Care', slug: 'sunrise-foster-care', rating: 4.3, review_count: 32, is_verified: true, city: 'Liverpool', state: 'England', image_url: '' },
+  { id: '6', name: 'Community Fostering', slug: 'community-fostering', rating: 4.2, review_count: 28, is_verified: true, city: 'Bristol', state: 'England', image_url: '' },
+  { id: '7', name: 'Together Foster Care', slug: 'together-foster-care', rating: 4.7, review_count: 52, is_verified: true, city: 'Sheffield', state: 'England', image_url: '' },
+  { id: '8', name: 'Loving Homes', slug: 'loving-homes', rating: 4.5, review_count: 38, is_verified: true, city: 'Glasgow', state: 'Scotland', image_url: '' },
+  { id: '9', name: 'Family First', slug: 'family-first', rating: 4.4, review_count: 25, is_verified: true, city: 'Cardiff', state: 'Wales', image_url: '' },
+  { id: '10', name: 'Safe Haven', slug: 'safe-haven-fostering', rating: 4.3, review_count: 18, is_verified: true, city: 'Belfast', state: 'N. Ireland', image_url: '' },
 ];
 
 const fosteringServices = [
@@ -323,12 +323,14 @@ function HomePage() {
               {[...topAgenciesByCity, ...topAgenciesByCity, ...topAgenciesByCity].map((agency, i) => (
                 <Link key={`${agency.id}-${i}`} to={`/agency/${agency.slug}/`} className="shrink-0 w-80">
                   <Card className="group bg-slate-800/50 border-slate-700 hover:border-teal-500/50 hover:shadow-xl hover:shadow-teal-500/10 transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div className="aspect-video relative overflow-hidden">
+                    <div className="aspect-video relative overflow-hidden bg-slate-700">
                       <img 
-                        src={agency.image_url} 
+                        src={agency.image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(agency.name)}&background=0d9488&color=fff&size=400`}
                         alt={agency.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                        onError={(e) => { 
+                          e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(agency.name)}&background=0d9488&color=fff&size=400`; 
+                        }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent" />
                       <div className="absolute top-3 right-3">
