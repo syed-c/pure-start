@@ -244,24 +244,24 @@ const FosteringLocationPage = () => {
             </div>
           </div>
 
-          <div className="container relative z-10 px-4 py-16 md:py-24">
+          <div className="container relative z-10 px-4 py-12 md:py-16">
             <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Fostering Agencies", href: "/fostering-agencies" }]} />
             
-            <div className="max-w-4xl mx-auto text-center">
+            <div className="max-w-3xl mx-auto text-center">
               <motion.div 
                 initial={{ opacity: 0, y: 20 }} 
                 animate={{ opacity: 1, y: 0 }}
-                className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-6"
+                className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-3 py-1.5 mb-4"
               >
-                <Shield className="h-4 w-4 text-teal-400" />
-                <span className="text-sm font-medium text-white">UK's Leading Fostering Directory</span>
+                <Shield className="h-3.5 w-3.5 text-teal-400" />
+                <span className="text-xs font-medium text-white">UK's Leading Fostering Directory</span>
               </motion.div>
 
               <motion.h1 
                 initial={{ opacity: 0, y: 20 }} 
                 animate={{ opacity: 1, y: 0 }} 
                 transition={{ delay: 0.1 }}
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight"
+                className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 leading-tight"
               >
                 Find Trusted <span className="text-teal-400">Fostering Agencies</span> UK
               </motion.h1>
@@ -270,37 +270,26 @@ const FosteringLocationPage = () => {
                 initial={{ opacity: 0, y: 20 }} 
                 animate={{ opacity: 1, y: 0 }} 
                 transition={{ delay: 0.2 }}
-                className="text-base md:text-lg text-white/70 mb-6 md:mb-8 max-w-2xl mx-auto"
+                className="text-sm text-white/70 mb-5 max-w-lg mx-auto"
               >
-                Connect with Ofsted-registered fostering agencies across England, Scotland, Wales, and Northern Ireland. Compare ratings, read reviews, and find your perfect match.
+                Connect with Ofsted-registered fostering agencies across the UK.
               </motion.p>
 
               <motion.div 
                 initial={{ opacity: 0, y: 20 }} 
                 animate={{ opacity: 1, y: 0 }} 
                 transition={{ delay: 0.3 }}
-                className="flex flex-wrap justify-center gap-4"
+                className="flex justify-center gap-5"
               >
-                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-5 py-3">
-                  <Users className="h-5 w-5 text-teal-400" />
-                  <div className="text-left">
-                    <p className="text-xl font-bold text-white">500+</p>
-                    <p className="text-xs text-white/60">Agencies</p>
-                  </div>
+                <div className="flex items-center gap-1.5">
+                  <Users className="h-4 w-4 text-teal-400" />
+                  <span className="text-sm font-semibold text-white">500+</span>
+                  <span className="text-xs text-white/60">Agencies</span>
                 </div>
-                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-5 py-3">
-                  <MapPin className="h-5 w-5 text-teal-400" />
-                  <div className="text-left">
-                    <p className="text-xl font-bold text-white">100+</p>
-                    <p className="text-xs text-white/60">Cities</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-5 py-3">
-                  <Shield className="h-5 w-5 text-teal-400" />
-                  <div className="text-left">
-                    <p className="text-xl font-bold text-white">100%</p>
-                    <p className="text-xs text-white/60">Ofsted Rated</p>
-                  </div>
+                <div className="flex items-center gap-1.5">
+                  <MapPin className="h-4 w-4 text-teal-400" />
+                  <span className="text-sm font-semibold text-white">100+</span>
+                  <span className="text-xs text-white/60">Cities</span>
                 </div>
               </motion.div>
             </div>
@@ -434,24 +423,24 @@ const FosteringLocationPage = () => {
           </div>
         </div>
 
-        <div className="container relative z-10 px-4 py-16 md:py-24">
+        <div className="container relative z-10 px-4 py-12 md:py-16">
           <Breadcrumbs items={breadcrumbs} />
           
-          <div className="max-w-4xl mx-auto text-center">
+          <div className="max-w-3xl mx-auto text-center">
             <motion.div 
               initial={{ opacity: 0, y: 20 }} 
               animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-6"
+              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-3 py-1.5 mb-4"
             >
-              <Shield className="h-4 w-4 text-teal-400" />
-              <span className="text-sm font-medium text-white">Fostering Agencies in {locationName}</span>
+              <Shield className="h-3.5 w-3.5 text-teal-400" />
+              <span className="text-xs font-medium text-white">Fostering Agencies in {locationName}</span>
             </motion.div>
 
             <motion.h1 
               initial={{ opacity: 0, y: 20 }} 
               animate={{ opacity: 1, y: 0 }} 
               transition={{ delay: 0.1 }}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight"
+              className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 leading-tight"
             >
               Find Trusted <span className="text-teal-400">Fostering Agencies</span> in {locationName}
             </motion.h1>
@@ -460,38 +449,27 @@ const FosteringLocationPage = () => {
               initial={{ opacity: 0, y: 20 }} 
               animate={{ opacity: 1, y: 0 }} 
               transition={{ delay: 0.2 }}
-              className="text-base md:text-lg text-white/70 mb-6 md:mb-8 max-w-2xl mx-auto"
+              className="text-sm md:text-base text-white/70 mb-6 max-w-xl mx-auto"
             >
-              Connect with {agencies?.length || 0} Ofsted-registered fostering agencies in {locationName}. Compare ratings, read reviews, and find your perfect match.
+              {agencies?.length || 0} verified fostering agencies in {locationName}. Find your perfect match today.
             </motion.p>
 
-            {/* Stats Cards */}
+            {/* Compact Stats */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }} 
               animate={{ opacity: 1, y: 0 }} 
               transition={{ delay: 0.3 }}
-              className="flex flex-wrap justify-center gap-4 mb-10"
+              className="flex justify-center gap-6"
             >
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-5 py-3">
-                <Users className="h-5 w-5 text-teal-400" />
-                <div className="text-left">
-                  <p className="text-xl font-bold text-white">{agencies?.length || 0}</p>
-                  <p className="text-xs text-white/60">Agencies</p>
-                </div>
+              <div className="flex items-center gap-1.5">
+                <Users className="h-4 w-4 text-teal-400" />
+                <span className="text-sm font-semibold text-white">{agencies?.length || 0}</span>
+                <span className="text-xs text-white/60">Agencies</span>
               </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-5 py-3">
-                <Star className="h-5 w-5 text-amber-400 fill-amber-400" />
-                <div className="text-left">
-                  <p className="text-xl font-bold text-white">4.8</p>
-                  <p className="text-xs text-white/60">Avg Rating</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-5 py-3">
-                <MapPin className="h-5 w-5 text-teal-400" />
-                <div className="text-left">
-                  <p className="text-xl font-bold text-white">{locationName}</p>
-                  <p className="text-xs text-white/60">Location</p>
-                </div>
+              <div className="flex items-center gap-1.5">
+                <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
+                <span className="text-sm font-semibold text-white">4.8</span>
+                <span className="text-xs text-white/60">Avg Rating</span>
               </div>
             </motion.div>
           </div>
@@ -520,99 +498,69 @@ const FosteringLocationPage = () => {
           <h2 className="text-2xl font-bold mb-6">Available Fostering Agencies</h2>
           
           {agenciesLoading ? (
-            <div className="space-y-4">
+            <div className="space-y-3">
               {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className="h-24 w-full rounded-xl" />
+                <Skeleton key={i} className="h-20 w-full rounded-lg" />
               ))}
             </div>
           ) : agencies && agencies.length > 0 ? (
-            <div className="space-y-0 divide-y divide-gray-200">
-              {agencies.map((agency: any) => (
-                <div key={agency.id} className="flex items-center gap-4 py-4 px-4 -mx-4 hover:bg-gray-50 transition-colors">
+            <div className="space-y-0 divide-y divide-gray-100">
+              {agencies.slice(0, 10).map((agency: any) => (
+                <div key={agency.id} className="flex items-center gap-4 py-3 px-3 -mx-3 hover:bg-gray-50 transition-colors rounded-lg">
                   {/* Left: Logo */}
-                  <div className="w-16 h-16 shrink-0 rounded-lg bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
-                    <span className="text-2xl font-bold text-white">{agency.name?.charAt(0)}</span>
+                  <div className="w-12 h-12 shrink-0 rounded-lg bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
+                    <span className="text-lg font-bold text-white">{agency.name?.charAt(0)}</span>
                   </div>
                   
                   {/* Middle: Info */}
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-lg">{agency.name}</h3>
-                    <div className="flex items-center gap-2 mt-1 text-sm text-gray-500">
+                    <h3 className="font-semibold">{agency.name}</h3>
+                    <div className="flex items-center gap-2 mt-0.5 text-xs text-gray-500">
                       <MapPin className="w-3 h-3" />
                       <span>{agency.city || locationName}</span>
                     </div>
-                    <p className="text-sm text-gray-600 mt-1 line-clamp-1">Providing foster care services including short-term, long-term, and emergency placements.</p>
                   </div>
                   
                   {/* Right: Rating + CTA */}
-                  <div className="flex items-center gap-3 shrink-0">
+                  <div className="flex items-center gap-2 shrink-0">
                     {agency.rating && (
                       <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span className="font-medium">{agency.rating.toFixed(1)}</span>
+                        <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
+                        <span className="text-sm font-medium">{agency.rating.toFixed(1)}</span>
                       </div>
                     )}
                     <Link to={`/agency/${agency.slug}`}>
-                      <Button size="sm">View Profile</Button>
+                      <Button size="sm" variant="outline" className="text-xs">View</Button>
                     </Link>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-12">
-              <Users className="w-12 h-12 mx-auto text-gray-400" />
-              <h3 className="mt-4 text-lg font-medium">No agencies found</h3>
-              <p className="mt-2 text-gray-600">
-                No agencies currently available in {locationName}.
-              </p>
+            <div className="text-center py-8">
+              <Users className="w-10 h-10 mx-auto text-gray-400" />
+              <h3 className="mt-3 text-base font-medium">No agencies found</h3>
             </div>
           )}
         </Section>
 
-        <Section className="mt-12">
-          <h2 className="text-2xl font-bold mb-6">Fostering in {locationName}</h2>
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card>
-              <CardContent className="p-6">
-                <Shield className="w-8 h-8 text-blue-600" />
-                <h3 className="font-semibold mt-4">Local Support</h3>
-                <p className="mt-2 text-gray-600">
-                  Agencies in {locationName} provide 24/7 support, training, and access to local social services.
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-6">
-                <Heart className="w-8 h-8 text-red-600" />
-                <h3 className="font-semibold mt-4">Allowances</h3>
-                <p className="mt-2 text-gray-600">
-                  Foster carers receive weekly allowances, holiday pay, and support with expenses.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </Section>
-
-        {/* Pagination */}
+        {/* View More */}
         {agencies && agencies.length > 10 && (
-          <Section className="mt-8">
-            <div className="flex justify-center gap-2">
-              <Button variant="outline" size="sm" disabled>Previous</Button>
-              <Button variant="outline" size="sm">1</Button>
-              <Button variant="outline" size="sm" disabled>Next</Button>
-            </div>
-          </Section>
+          <div className="mt-4 text-center">
+            <Link to="/search">
+              <Button variant="outline" size="sm">View All {agencies.length} Agencies</Button>
+            </Link>
+          </div>
         )}
 
         {/* Nearby Locations */}
         {nearbyLocations && nearbyLocations.length > 0 && (
-          <Section className="mt-12">
-            <h2 className="text-2xl font-bold mb-6">Nearby Locations</h2>
-            <div className="flex flex-wrap gap-3">
-              {nearbyLocations.map((loc: any) => (
+          <Section className="mt-8">
+            <h2 className="text-xl font-bold mb-3">Nearby Locations</h2>
+            <div className="flex flex-wrap gap-2">
+              {nearbyLocations.slice(0, 8).map((loc: any) => (
                 <Link key={loc.id} to={`/fostering-agencies/${loc.slug}`}>
-                  <Badge variant="outline" className="cursor-pointer hover:bg-teal-50 hover:border-teal-300 py-2 px-4">
+                  <Badge variant="outline" className="cursor-pointer hover:bg-teal-50 text-xs py-1.5 px-3">
                     {loc.name}
                   </Badge>
                 </Link>
@@ -621,9 +569,9 @@ const FosteringLocationPage = () => {
           </Section>
         )}
 
-        {/* Internal Linking: Fostering Services */}
+        {/* Services in Location */}
         {treatments && treatments.length > 0 && (
-          <Section className="mt-12">
+          <Section className="mt-8">
             <h2 className="text-2xl font-bold mb-4">Explore Fostering Services in {locationName}</h2>
             <p className="text-gray-600 mb-4">Find specific types of fostering agencies in {locationName}:</p>
             <div className="flex flex-wrap gap-3">
@@ -639,66 +587,28 @@ const FosteringLocationPage = () => {
         )}
 
         {/* Content Section */}
-        <Section className="mt-12">
+        <Section className="mt-8">
           <Card>
-            <CardContent className="p-6">
-              <h2 className="text-2xl font-bold mb-4">About Fostering in {locationName}</h2>
-              <div className="space-y-4 text-gray-600">
-                <p>
-                  {locationName} has several Ofsted-registered fostering agencies that provide support for children and young people in need of foster care. 
-                  These agencies offer various fostering services including emergency placements, short-term care, long-term foster homes, and specialist placements.
-                </p>
-                <p>
-                  When choosing a fostering agency in {locationName}, consider their experience, the services they offer, and the support available to foster carers. 
-                  All agencies listed are verified and regulated by Ofsted.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </Section>
-
-        {/* FAQ Section */}
-        <Section className="mt-12">
-          <Card>
-            <CardContent className="p-6">
-              <h2 className="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-semibold">How do I find fostering agencies in {locationName}?</h3>
-                  <p className="text-gray-600 mt-1">Browse the agencies listed above or use our search tool to find verified fostering agencies in {locationName}.</p>
-                </div>
-                <div>
-                  <h3 className="font-semibold">What services are available in {locationName}?</h3>
-                  <p className="text-gray-600 mt-1">Agencies in {locationName} offer emergency, short-term, long-term, and specialist fostering services.</p>
-                </div>
-                <div>
-                  <h3 className="font-semibold">How do I become a foster carer?</h3>
-                  <p className="text-gray-600 mt-1">Contact any agency directly or visit our "Become a Foster Carer" page to learn more.</p>
-                </div>
-              </div>
+            <CardContent className="p-5">
+              <h2 className="text-lg font-bold mb-3">About Fostering in {locationName}</h2>
+              <p className="text-sm text-gray-600">
+                {locationName} has several Ofsted-registered fostering agencies. Find verified agencies offering emergency, short-term, long-term, and specialist placements.
+              </p>
             </CardContent>
           </Card>
         </Section>
 
         {/* CTA Section */}
-        <Section className="mt-12">
+        <Section className="mt-8">
           <Card className="bg-gradient-to-r from-teal-600 to-teal-700 border-0">
-            <CardContent className="p-8 text-center text-white">
-              <h2 className="text-2xl font-bold">Find the Right Fostering Agency in {locationName}</h2>
-              <p className="mt-2 text-white/80">
-                Contact agencies directly or learn more about becoming a foster carers.
-              </p>
-              <div className="mt-6 flex gap-4 justify-center">
+            <CardContent className="p-5 text-center text-white">
+              <h2 className="text-lg font-bold">Find the Right Agency in {locationName}</h2>
+              <div className="mt-3 flex gap-3 justify-center">
                 <Link to="/search">
-                  <Button size="lg" className="bg-white text-teal-700 hover:bg-gray-100">
-                    <Search className="w-4 h-4 mr-2" />
-                    Find Agencies
-                  </Button>
+                  <Button size="sm" className="bg-white text-teal-700 hover:bg-gray-100">Find Agencies</Button>
                 </Link>
                 <Link to="/become-foster-carer">
-                  <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10">
-                    Become a Foster Carer
-                  </Button>
+                  <Button size="sm" variant="outline" className="text-white border-white hover:bg-white/10">Become a Carer</Button>
                 </Link>
               </div>
             </CardContent>
