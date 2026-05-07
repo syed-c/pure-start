@@ -417,30 +417,30 @@ const FosteringLocationPage = () => {
       {/* Hero Section - Homepage Style */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-teal-950">
-          <div className="absolute inset-0 opacity-30">
-            <div className="absolute top-20 left-10 w-72 h-72 bg-teal-500/20 rounded-full blur-[100px]" />
-            <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px]" />
+          <div className="absolute inset-0 opacity-40">
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-teal-500/30 rounded-full blur-[120px]" />
+            <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-amber-500/20 rounded-full blur-[100px]" />
           </div>
         </div>
 
-        <div className="container relative z-10 px-4 py-12 md:py-16">
+        <div className="container relative z-10 px-4 py-16 md:py-20">
           <Breadcrumbs items={breadcrumbs} />
           
           <div className="max-w-3xl mx-auto text-center">
             <motion.div 
               initial={{ opacity: 0, y: 20 }} 
               animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-3 py-1.5 mb-4"
+              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl px-4 py-2 mb-5"
             >
-              <Shield className="h-3.5 w-3.5 text-teal-400" />
-              <span className="text-xs font-medium text-white">Fostering Agencies in {locationName}</span>
+              <Shield className="h-4 w-4 text-teal-400" />
+              <span className="text-xs font-semibold text-white">Fostering Agencies in {locationName}</span>
             </motion.div>
 
             <motion.h1 
               initial={{ opacity: 0, y: 20 }} 
               animate={{ opacity: 1, y: 0 }} 
               transition={{ delay: 0.1 }}
-              className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 leading-tight"
+              className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 leading-tight"
             >
               Find Trusted <span className="text-teal-400">Fostering Agencies</span> in {locationName}
             </motion.h1>
@@ -449,26 +449,26 @@ const FosteringLocationPage = () => {
               initial={{ opacity: 0, y: 20 }} 
               animate={{ opacity: 1, y: 0 }} 
               transition={{ delay: 0.2 }}
-              className="text-sm md:text-base text-white/70 mb-6 max-w-xl mx-auto"
+              className="text-base md:text-lg text-white/80 mb-8 max-w-xl mx-auto"
             >
               {agencies?.length || 0} verified fostering agencies in {locationName}. Find your perfect match today.
             </motion.p>
 
-            {/* Compact Stats */}
+            {/* Modern Stats */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }} 
               animate={{ opacity: 1, y: 0 }} 
               transition={{ delay: 0.3 }}
-              className="flex justify-center gap-6"
+              className="flex justify-center gap-4"
             >
-              <div className="flex items-center gap-1.5">
-                <Users className="h-4 w-4 text-teal-400" />
-                <span className="text-sm font-semibold text-white">{agencies?.length || 0}</span>
+              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl px-5 py-2.5">
+                <Users className="h-5 w-5 text-teal-400" />
+                <span className="text-base font-bold text-white">{agencies?.length || 0}</span>
                 <span className="text-xs text-white/60">Agencies</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
-                <span className="text-sm font-semibold text-white">4.8</span>
+              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl px-5 py-2.5">
+                <Star className="h-5 w-5 text-amber-400 fill-amber-400" />
+                <span className="text-base font-bold text-white">4.8</span>
                 <span className="text-xs text-white/60">Avg Rating</span>
               </div>
             </motion.div>
@@ -600,15 +600,16 @@ const FosteringLocationPage = () => {
 
         {/* CTA Section */}
         <Section className="mt-8">
-          <Card className="bg-gradient-to-r from-teal-600 to-teal-700 border-0">
-            <CardContent className="p-5 text-center text-white">
-              <h2 className="text-lg font-bold">Find the Right Agency in {locationName}</h2>
-              <div className="mt-3 flex gap-3 justify-center">
+          <Card className="bg-gradient-to-r from-teal-600 via-teal-500 to-teal-600 border-0 shadow-xl shadow-teal-500/20">
+            <CardContent className="p-6 text-center text-white">
+              <h2 className="text-xl font-bold">Find the Right Agency in {locationName}</h2>
+              <p className="text-sm text-white/70 mt-1 mb-4">Connect with verified fostering agencies today</p>
+              <div className="flex gap-3 justify-center">
                 <Link to="/search">
-                  <Button size="sm" className="bg-white text-teal-700 hover:bg-gray-100">Find Agencies</Button>
+                  <Button size="lg" className="bg-white text-teal-700 hover:bg-gray-100 rounded-xl px-6">Find Agencies</Button>
                 </Link>
                 <Link to="/become-foster-carer">
-                  <Button size="sm" variant="outline" className="text-white border-white hover:bg-white/10">Become a Carer</Button>
+                  <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10 rounded-xl px-6">Become a Carer</Button>
                 </Link>
               </div>
             </CardContent>
