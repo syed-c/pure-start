@@ -515,43 +515,48 @@ const FosteringLocationPage = () => {
           </Section>
         )}
 
-        {/* Agencies - Horizontal Line Format */}
+        {/* Agencies - Horizontal Row Format */}
         <Section className="mt-12">
           <h2 className="text-2xl font-bold mb-6">Available Fostering Agencies</h2>
           
           {agenciesLoading ? (
-            <div className="flex gap-4 overflow-x-auto pb-4">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <Skeleton key={i} className="h-32 w-72 shrink-0 rounded-xl" />
+            <div className="space-y-4">
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} className="h-24 w-full rounded-xl" />
               ))}
             </div>
           ) : agencies && agencies.length > 0 ? (
-<div className="flex gap-4 overflow-x-auto pb-4">
+            <div className="space-y-0 divide-y divide-gray-200">
               {agencies.map((agency: any) => (
-                <Card key={agency.id} className="hover:shadow-lg transition-shadow shrink-0 w-72">
-                  <CardContent className="p-5">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-lg truncate">{agency.name}</h3>
-                        <div className="flex items-center mt-1 text-sm text-gray-500">
-                          <MapPin className="w-4 h-4 mr-1 shrink-0" />
-                          <span className="truncate">{agency.city || locationName}</span>
-                        </div>
+                <div key={agency.id} className="flex items-center gap-4 py-4 px-4 -mx-4 hover:bg-gray-50 transition-colors">
+                  {/* Left: Logo */}
+                  <div className="w-16 h-16 shrink-0 rounded-lg bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
+                    <span className="text-2xl font-bold text-white">{agency.name?.charAt(0)}</span>
+                  </div>
+                  
+                  {/* Middle: Info */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-lg">{agency.name}</h3>
+                    <div className="flex items-center gap-2 mt-1 text-sm text-gray-500">
+                      <MapPin className="w-3 h-3" />
+                      <span>{agency.city || locationName}</span>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1 line-clamp-1">Providing foster care services including short-term, long-term, and emergency placements.</p>
+                  </div>
+                  
+                  {/* Right: Rating + CTA */}
+                  <div className="flex items-center gap-3 shrink-0">
+                    {agency.rating && (
+                      <div className="flex items-center gap-1">
+                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                        <span className="font-medium">{agency.rating.toFixed(1)}</span>
                       </div>
-                      {agency.rating && (
-                        <div className="flex items-center shrink-0 ml-2">
-                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
-                          <span className="font-medium">{agency.rating.toFixed(1)}</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="mt-3 flex gap-2">
-                      <Link to={`/agency/${agency.slug}`}>
-                        <Button size="sm">View Profile</Button>
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
+                    )}
+                    <Link to={`/agency/${agency.slug}`}>
+                      <Button size="sm">View Profile</Button>
+                    </Link>
+                  </div>
+                </div>
               ))}
             </div>
           ) : (
@@ -589,13 +594,25 @@ const FosteringLocationPage = () => {
           </div>
         </Section>
 
+        {/* Pagination */}
+        {agencies && agencies.length > 10 && (
+          <Section className="mt-8">
+            <div className="flex justify-center gap-2">
+              <Button variant="outline" size="sm" disabled>Previous</Button>
+              <Button variant="outline" size="sm">1</Button>
+              <Button variant="outline" size="sm" disabled>Next</Button>
+            </div>
+          </Section>
+        )}
+
+        {/* Nearby Locations */}
         {nearbyLocations && nearbyLocations.length > 0 && (
           <Section className="mt-12">
             <h2 className="text-2xl font-bold mb-6">Nearby Locations</h2>
             <div className="flex flex-wrap gap-3">
               {nearbyLocations.map((loc: any) => (
                 <Link key={loc.id} to={`/fostering-agencies/${loc.slug}`}>
-                  <Badge variant="outline" className="cursor-pointer hover:bg-gray-100 py-2 px-4">
+                  <Badge variant="outline" className="cursor-pointer hover:bg-teal-50 hover:border-teal-300 py-2 px-4">
                     {loc.name}
                   </Badge>
                 </Link>
@@ -604,22 +621,82 @@ const FosteringLocationPage = () => {
           </Section>
         )}
 
+        {/* Internal Linking: Fostering Services */}
+        {treatments && treatments.length > 0 && (
+          <Section className="mt-12">
+            <h2 className="text-2xl font-bold mb-4">Explore Fostering Services in {locationName}</h2>
+            <p className="text-gray-600 mb-4">Find specific types of fostering agencies in {locationName}:</p>
+            <div className="flex flex-wrap gap-3">
+              {treatments.slice(0, 5).map((treatment: any) => (
+                <Link key={treatment.id} to={`/fostering-agencies/${locationSlug}/${treatment.slug}`}>
+                  <Badge className="cursor-pointer bg-teal-100 hover:bg-teal-200 text-teal-800 py-2 px-4">
+                    {treatment.name} in {locationName}
+                  </Badge>
+                </Link>
+              ))}
+            </div>
+          </Section>
+        )}
+
+        {/* Content Section */}
         <Section className="mt-12">
-          <Card className="bg-blue-50 border-blue-200">
-            <CardContent className="p-8 text-center">
-              <h2 className="text-2xl font-bold">Ready to Start Your Fostering Journey?</h2>
-              <p className="mt-2 text-gray-600">
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-2xl font-bold mb-4">About Fostering in {locationName}</h2>
+              <div className="space-y-4 text-gray-600">
+                <p>
+                  {locationName} has several Ofsted-registered fostering agencies that provide support for children and young people in need of foster care. 
+                  These agencies offer various fostering services including emergency placements, short-term care, long-term foster homes, and specialist placements.
+                </p>
+                <p>
+                  When choosing a fostering agency in {locationName}, consider their experience, the services they offer, and the support available to foster carers. 
+                  All agencies listed are verified and regulated by Ofsted.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </Section>
+
+        {/* FAQ Section */}
+        <Section className="mt-12">
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-semibold">How do I find fostering agencies in {locationName}?</h3>
+                  <p className="text-gray-600 mt-1">Browse the agencies listed above or use our search tool to find verified fostering agencies in {locationName}.</p>
+                </div>
+                <div>
+                  <h3 className="font-semibold">What services are available in {locationName}?</h3>
+                  <p className="text-gray-600 mt-1">Agencies in {locationName} offer emergency, short-term, long-term, and specialist fostering services.</p>
+                </div>
+                <div>
+                  <h3 className="font-semibold">How do I become a foster carer?</h3>
+                  <p className="text-gray-600 mt-1">Contact any agency directly or visit our "Become a Foster Carer" page to learn more.</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </Section>
+
+        {/* CTA Section */}
+        <Section className="mt-12">
+          <Card className="bg-gradient-to-r from-teal-600 to-teal-700 border-0">
+            <CardContent className="p-8 text-center text-white">
+              <h2 className="text-2xl font-bold">Find the Right Fostering Agency in {locationName}</h2>
+              <p className="mt-2 text-white/80">
                 Contact agencies directly or learn more about becoming a foster carers.
               </p>
               <div className="mt-6 flex gap-4 justify-center">
                 <Link to="/search">
-                  <Button size="lg">
+                  <Button size="lg" className="bg-white text-teal-700 hover:bg-gray-100">
                     <Search className="w-4 h-4 mr-2" />
                     Find Agencies
                   </Button>
                 </Link>
                 <Link to="/become-foster-carer">
-                  <Button size="lg" variant="outline">
+                  <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10">
                     Become a Foster Carer
                   </Button>
                 </Link>
