@@ -39,7 +39,7 @@ export function Navbar() {
     { name: "Northern Ireland", slug: "northern-ireland" },
   ];
 
-  const topCities = POPULAR_CITIES.slice(0, 8);
+  const topCities = POPULAR_CITIES.slice(0, 16);
 
   return (
     <nav className={`sticky top-0 z-50 transition-all duration-300 ${
@@ -98,7 +98,7 @@ export function Navbar() {
                 <DropdownMenuSeparator className="bg-slate-700" />
                 {regions.map((region) => (
                   <DropdownMenuItem key={region.slug} asChild className="rounded-lg cursor-pointer py-2.5 px-3 hover:bg-slate-700 hover:text-teal-400">
-                    <Link to={`/${region.slug}`} className="flex items-center gap-3">
+                    <Link to={`/fostering-agencies`} className="flex items-center gap-3">
                       <MapPin className="h-4 w-4 text-teal-500" />
                       <span className="font-semibold">{region.name}</span>
                     </Link>
@@ -109,9 +109,15 @@ export function Navbar() {
                 <DropdownMenuSeparator className="bg-slate-700" />
                 {topCities.map((city) => (
                   <DropdownMenuItem key={city.slug} asChild className="rounded-lg cursor-pointer py-2 px-3 text-slate-300 hover:bg-slate-700 hover:text-white">
-                    <Link to={`/england/${city.slug}`}>{city.name}</Link>
+                    <Link to={`/fostering-agencies/${city.slug}`}>{city.name}</Link>
                   </DropdownMenuItem>
                 ))}
+                <DropdownMenuSeparator className="bg-slate-700 my-2" />
+                <DropdownMenuItem asChild className="rounded-lg cursor-pointer py-2.5 px-3 bg-slate-700/50 hover:bg-slate-700 text-teal-400 font-semibold">
+                  <Link to="/fostering-agencies" className="flex items-center justify-between w-full">
+                    View All Locations <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -186,7 +192,7 @@ export function Navbar() {
                 {regions.map((region) => (
                   <Link
                     key={region.slug}
-                    to={`/${region.slug}`}
+                    to={`/fostering-agencies`}
                     className="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-200 hover:bg-slate-800 rounded-lg"
                     onClick={() => setMobileMenuOpen(false)}
                   >

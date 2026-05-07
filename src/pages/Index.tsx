@@ -334,7 +334,7 @@ const Index = () => {
                 {[...popularCities, ...popularCities].map((city, idx) => (
                   <Link
                     key={`${city.slug}-${idx}`}
-                    to={`/england/${city.slug}`}
+                    to={`/fostering-agencies/${city.slug}`}
                     className="group flex flex-col items-center gap-3 text-center shrink-0"
                   >
                     <div className="h-28 w-28 md:h-32 md:w-32 rounded-full border-2 border-teal-500/30 overflow-hidden group-hover:scale-110 group-hover:border-teal-500 group-hover:shadow-xl group-hover:shadow-teal-500/20 transition-all duration-300 relative">

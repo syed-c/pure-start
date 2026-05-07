@@ -73,15 +73,13 @@ const NotFound = () => {
             <span className="text-muted-foreground/30">•</span>
             <Link to="/south-east/" className="text-xs text-primary hover:underline">South East</Link>
             <span className="text-muted-foreground/30">•</span>
-            <Link to="/north-west/" className="text-xs text-primary hover:underline">North West</Link>
+            <Link to="/fostering-agencies/london" className="text-xs text-primary hover:underline">London</Link>
             <span className="text-muted-foreground/30">•</span>
-            <Link to="/west-midlands/" className="text-xs text-primary hover:underline">West Midlands</Link>
+            <Link to="/fostering-agencies/manchester" className="text-xs text-primary hover:underline">Manchester</Link>
             <span className="text-muted-foreground/30">•</span>
-            <Link to="/yorkshire/" className="text-xs text-primary hover:underline">Yorkshire</Link>
+            <Link to="/fostering-agencies/birmingham" className="text-xs text-primary hover:underline">Birmingham</Link>
             <span className="text-muted-foreground/30">•</span>
-            <Link to="/scotland/" className="text-xs text-primary hover:underline">Scotland</Link>
-            <span className="text-muted-foreground/30">•</span>
-            <Link to="/wales/" className="text-xs text-primary hover:underline">Wales</Link>
+            <Link to="/fostering-agencies" className="text-xs text-primary hover:underline">All Locations</Link>
           </div>
         </div>
       </div>

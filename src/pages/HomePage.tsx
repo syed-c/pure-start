@@ -49,6 +49,11 @@ const cities = [
   { name: "Sheffield", slug: "sheffield", count: 15, region: "England" },
   { name: "Cardiff", slug: "cardiff", count: 12, region: "Wales" },
   { name: "Belfast", slug: "belfast", count: 10, region: "Northern Ireland" },
+  { name: "Newcastle", slug: "newcastle", count: 12, region: "England" },
+  { name: "Nottingham", slug: "nottingham", count: 10, region: "England" },
+  { name: "Southampton", slug: "southampton", count: 8, region: "England" },
+  { name: "Kent", slug: "kent", count: 8, region: "England" },
+  { name: "Edinburgh", slug: "edinburgh", count: 8, region: "Scotland" },
 ];
 
 const testimonials = [
@@ -204,7 +209,7 @@ function HomePage() {
               <Link to="/categories" className="text-white/60 hover:text-teal-400 text-sm transition-colors">
                 Browse Services →
               </Link>
-              <Link to="/england/london" className="text-white/60 hover:text-teal-400 text-sm transition-colors">
+              <Link to="/fostering-agencies/london" className="text-white/60 hover:text-teal-400 text-sm transition-colors">
                 London Agencies →
               </Link>
               <Link to="/become-foster-carer" className="text-white/60 hover:text-teal-400 text-sm transition-colors">
@@ -293,7 +298,7 @@ function HomePage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4">
             {cities.map((city, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
-                <Link to={`/england/${city.slug}/`}>
+                <Link to={`/fostering-agencies/${city.slug}/`}>
                   <Card className="group bg-slate-800/50 border-slate-700 hover:border-teal-500/50 hover:bg-teal-500/10 transition-all duration-300 cursor-pointer">
                     <CardContent className="p-4 flex items-center justify-between">
                       <div>

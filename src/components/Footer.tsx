@@ -26,19 +26,19 @@ const legal = [
 ];
 
 const regions = [
-  { name: "England", path: "/england" },
-  { name: "Scotland", path: "/scotland" },
-  { name: "Wales", path: "/wales" },
-  { name: "Northern Ireland", path: "/northern-ireland" },
+  { name: "England", path: "/fostering-agencies" },
+  { name: "Scotland", path: "/fostering-agencies/glasgow" },
+  { name: "Wales", path: "/fostering-agencies/cardiff" },
+  { name: "Northern Ireland", path: "/fostering-agencies/belfast" },
 ];
 
 const popularCities = [
-  { name: "London", path: "/england/london" },
-  { name: "Birmingham", path: "/england/birmingham" },
-  { name: "Manchester", path: "/england/manchester" },
-  { name: "Leeds", path: "/england/leeds" },
-  { name: "Glasgow", path: "/scotland/glasgow" },
-  { name: "Liverpool", path: "/england/liverpool" },
+  { name: "London", path: "/fostering-agencies/london" },
+  { name: "Birmingham", path: "/fostering-agencies/birmingham" },
+  { name: "Manchester", path: "/fostering-agencies/manchester" },
+  { name: "Leeds", path: "/fostering-agencies/leeds" },
+  { name: "Glasgow", path: "/fostering-agencies/glasgow" },
+  { name: "Liverpool", path: "/fostering-agencies/liverpool" },
 ];
 
 export const Footer = forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
