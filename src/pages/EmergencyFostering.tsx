@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { getLetterAvatarUrl } from '@/hooks/useProfiles';
 import { 
   Zap, Phone, MapPin, Clock, AlertTriangle, 
   Navigation, Search, CheckCircle, Star, Shield,
@@ -186,8 +187,20 @@ export default function EmergencyFosteringFinder() {
                   Agencies Found ({agencies.length})
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {agencies.map((agency: any) => (
-                    <Card key={agency.id} className="rounded-2xl hover:border-primary/30 transition-all">
+                  {agencies.map((agency: any) => {
+                    const avatarUrl = agency.image_url || agency.cover_image_url || getLetterAvatarUrl(agency.name);
+                    return (
+                    <Card key={agency.id} className="rounded-2xl hover:border-primary/30 transition-all overflow-hidden">
+                      <div className="h-24 bg-gradient-to-r from-teal-500 to-teal-600 relative overflow-hidden">
+                        <img src={avatarUrl} alt={agency.name}
+                          className="w-full h-full object-cover"
+                          loading="lazy" onError={(e: any) => { e.currentTarget.style.display = 'none'; }} />
+                        {!agency.image_url && (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <h3 className="text-3xl font-bold text-white">{agency.name?.charAt(0)}</h3>
+                          </div>
+                        )}
+                      </div>
                       <CardContent className="p-5">
                         <div className="flex items-start justify-between mb-3">
                           <div>
@@ -220,7 +233,8 @@ export default function EmergencyFosteringFinder() {
                         </div>
                       </CardContent>
                     </Card>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             ) : !isLoading ? (
