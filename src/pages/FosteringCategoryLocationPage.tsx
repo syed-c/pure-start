@@ -12,6 +12,7 @@ import { SEOHead } from "@/components/seo/SEOHead";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
+import { getLetterAvatarUrl } from "@/hooks/useProfiles";
 import { Heart, Shield, Users, MapPin, Star, ArrowRight } from "lucide-react";
 
 const FosteringCategoryLocationPage = () => {
@@ -235,7 +236,35 @@ const FosteringCategoryLocationPage = () => {
             <h2 className="text-2xl font-bold">Available Agencies</h2>
             <Badge variant="outline">{agencies?.length || 0}</Badge>
           </div>
-          {agenciesLoading ? <div className="grid gap-6 md:grid-cols-3">{[1,2,3].map(i => <Skeleton key={i} className="h-64 rounded-xl" />)}</div> : agencies && agencies.length > 0 ? <div className="grid gap-6 md:grid-cols-3">{agencies.map((a: any) => <Card key={a.id}><CardContent className="p-6"><div className="flex justify-between"><h3 className="font-semibold">{a.name}</h3>{a.rating && <Star className="w-4 h-4 fill-yellow-400" />}</div><Link to={`/agency/${a.slug}`}><Button size="sm" className="mt-4">View</Button></Link></CardContent></Card>)}</div> : <div className="text-center py-12"><Users className="w-12 h-12 mx-auto text-muted" /><p className="mt-4">No agencies found</p></div>}
+          {agenciesLoading ? <div className="grid gap-6 md:grid-cols-3">{[1,2,3].map(i => <Skeleton key={i} className="h-64 rounded-xl" />)}</div> : agencies && agencies.length > 0 ? <div className="grid gap-6 md:grid-cols-3">{agencies.map((a: any) => (
+                <Card key={a.id} className="hover:shadow-lg transition-shadow overflow-hidden">
+                  <div className="h-32 bg-gradient-to-r from-teal-500 to-teal-600 flex items-center justify-center">
+                    <img 
+                      src={a.image_url || getLetterAvatarUrl(a.name)}
+                      alt={a.name}
+                      className="h-full w-full object-cover"
+                      onError={(e: any) => { e.currentTarget.style.display = 'none'; }}
+                    />
+                    {!a.image_url && (
+                      <h3 className="text-3xl font-bold text-white">{a.name?.charAt(0)}</h3>
+                    )}
+                  </div>
+                  <CardContent className="p-6">
+                    <h3 className="font-semibold text-lg">{a.name}</h3>
+                    <div className="flex items-center mt-1 text-sm text-gray-500">
+                      <MapPin className="w-4 h-4 mr-1" />
+                      {a.city || locationName}
+                    </div>
+                    {a.rating && (
+                      <div className="flex items-center mt-2">
+                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
+                        <span className="font-medium">{a.rating.toFixed(1)}</span>
+                      </div>
+                    )}
+                    <Link to={`/agency/${a.slug}`}><Button size="sm" className="mt-4">View Profile</Button></Link>
+                  </CardContent>
+                </Card>
+              ))}</div> : <div className="text-center py-12"><Users className="w-12 h-12 mx-auto text-muted" /><p className="mt-4">No agencies found</p></div>}
         </Section>
         <Section className="mt-12">
           <div className="flex gap-4">

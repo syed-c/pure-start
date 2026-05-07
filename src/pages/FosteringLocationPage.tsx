@@ -12,11 +12,14 @@ import { SEOHead } from "@/components/seo/SEOHead";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
+import { getLetterAvatarUrl } from "@/hooks/useProfiles";
+import { POPULAR_CITIES, FOSTERING_CATEGORIES } from "@/lib/constants/activeRegions";
 import { Heart, Shield, Users, MapPin, Star, ArrowRight, Search } from "lucide-react";
 
 const FosteringLocationPage = () => {
   const { locationSlug } = useParams();
   const locationSlugLower = locationSlug?.toLowerCase() || '';
+  const isIndexPage = !locationSlug;
 
   const locationNameMap: Record<string, string> = {
     // Regions
@@ -223,6 +226,102 @@ const FosteringLocationPage = () => {
   const isLoading = locationLoading || agenciesLoading;
   usePrerenderReady(!isLoading);
 
+  // INDEX PAGE: /fostering-agencies (no location slug)
+  if (isIndexPage) {
+    return (
+      <PageLayout>
+        <SEOHead
+          title="Find Fostering Agencies UK | Directory"
+          description="Browse all UK fostering agencies. Find rated agencies by location, compare services, and contact them directly."
+          canonical="https://www.foster-care.co.uk/fostering-agencies"
+        />
+
+        <div className="container py-8">
+          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Fostering Agencies", href: "/fostering-agencies" }]} />
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-6"
+          >
+            <h1 className="text-4xl font-bold text-gray-900">
+              Find Fostering Agencies UK
+            </h1>
+            <p className="mt-4 text-xl text-gray-600 max-w-3xl">
+              Browse verified fostering agencies across England, Scotland, Wales, and Northern Ireland. Find the right agency for your family.
+            </p>
+          </motion.div>
+
+          <Section className="mt-12">
+            <h2 className="text-2xl font-bold mb-6">Browse by Location</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              {POPULAR_CITIES.slice(0, 20).map((city: any) => (
+                <Link key={city.slug} to={`/fostering-agencies/${city.slug}`}>
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                    <CardContent className="p-4 text-center">
+                      <MapPin className="w-5 h-5 mx-auto text-teal-600 mb-2" />
+                      <h3 className="font-semibold">{city.name}</h3>
+                      <p className="text-sm text-gray-500">{city.region}</p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+            <div className="mt-6 text-center">
+              <Link to="/locations">
+                <Button variant="outline">View All Locations</Button>
+              </Link>
+            </div>
+          </Section>
+
+          <Section className="mt-12">
+            <h2 className="text-2xl font-bold mb-6">Browse by Fostering Type</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+              {FOSTERING_CATEGORIES.slice(0, 6).map((cat: any) => (
+                <Link key={cat.slug} to={`/categories/${cat.slug}`}>
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                    <CardContent className="p-4 text-center">
+                      <h3 className="font-semibold">{cat.name}</h3>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+            <div className="mt-6 text-center">
+              <Link to="/categories">
+                <Button variant="outline">View All Services</Button>
+              </Link>
+            </div>
+          </Section>
+
+          <Section className="mt-12">
+            <Card className="bg-blue-50 border-blue-200">
+              <CardContent className="p-8 text-center">
+                <h2 className="text-2xl font-bold">Ready to Find Your Perfect Agency?</h2>
+                <p className="mt-2 text-gray-600">
+                  Search and compare fostering agencies across the UK.
+                </p>
+                <div className="mt-6 flex gap-4 justify-center">
+                  <Link to="/search">
+                    <Button size="lg">
+                      <Search className="w-4 h-4 mr-2" />
+                      Search Agencies
+                    </Button>
+                  </Link>
+                  <Link to="/become-foster-carer">
+                    <Button size="lg" variant="outline">
+                      Become a Foster Carer
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+          </Section>
+        </div>
+      </PageLayout>
+    );
+  }
+
   if (isLoading) {
     return (
       <PageLayout>
@@ -316,23 +415,30 @@ const FosteringLocationPage = () => {
           ) : agencies && agencies.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {agencies.map((agency: any) => (
-                <Card key={agency.id} className="hover:shadow-lg transition-shadow">
+                <Card key={agency.id} className="hover:shadow-lg transition-shadow overflow-hidden">
+                  <div className="h-32 bg-gradient-to-r from-teal-500 to-teal-600 flex items-center justify-center">
+                    <img 
+                      src={agency.image_url || getLetterAvatarUrl(agency.name)}
+                      alt={agency.name}
+                      className="h-full w-full object-cover"
+                      onError={(e: any) => { e.currentTarget.style.display = 'none'; }}
+                    />
+                    {!agency.image_url && (
+                      <h3 className="text-3xl font-bold text-white">{agency.name?.charAt(0)}</h3>
+                    )}
+                  </div>
                   <CardContent className="p-6">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h3 className="font-semibold text-lg">{agency.name}</h3>
-                        <div className="flex items-center mt-1 text-sm text-gray-500">
-                          <MapPin className="w-4 h-4 mr-1" />
-                          {agency.city}
-                        </div>
-                      </div>
-                      {agency.rating && (
-                        <div className="flex items-center">
-                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
-                          <span className="font-medium">{agency.rating.toFixed(1)}</span>
-                        </div>
-                      )}
+                    <h3 className="font-semibold text-lg">{agency.name}</h3>
+                    <div className="flex items-center mt-1 text-sm text-gray-500">
+                      <MapPin className="w-4 h-4 mr-1" />
+                      {agency.city || locationName}
                     </div>
+                    {agency.rating && (
+                      <div className="flex items-center mt-2">
+                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
+                        <span className="font-medium">{agency.rating.toFixed(1)}</span>
+                      </div>
+                    )}
 
                     <div className="mt-4 flex gap-2">
                       <Link to={`/agency/${agency.slug}`}>

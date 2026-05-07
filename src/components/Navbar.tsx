@@ -87,37 +87,63 @@ export function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Locations Dropdown */}
+            {/* Locations Dropdown - Mega Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all rounded-lg outline-none">
                 Locations
                 <ChevronDown className="h-4 w-4 text-slate-500" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-64 rounded-xl p-2 bg-slate-800 border-slate-700 shadow-xl shadow-black/30 z-50">
-                <DropdownMenuLabel className="text-xs font-bold text-slate-400 uppercase tracking-wider px-3 py-2">UK Regions</DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-slate-700" />
-                {regions.map((region) => (
-                  <DropdownMenuItem key={region.slug} asChild className="rounded-lg cursor-pointer py-2.5 px-3 hover:bg-slate-700 hover:text-teal-400">
-                    <Link to={`/fostering-agencies`} className="flex items-center gap-3">
-                      <MapPin className="h-4 w-4 text-teal-500" />
-                      <span className="font-semibold">{region.name}</span>
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-                <DropdownMenuSeparator className="bg-slate-700 my-2" />
-                <DropdownMenuLabel className="text-xs font-bold text-slate-400 uppercase tracking-wider px-3 py-2">Popular Cities</DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-slate-700" />
-                {topCities.map((city) => (
-                  <DropdownMenuItem key={city.slug} asChild className="rounded-lg cursor-pointer py-2 px-3 text-slate-300 hover:bg-slate-700 hover:text-white">
-                    <Link to={`/fostering-agencies/${city.slug}`}>{city.name}</Link>
-                  </DropdownMenuItem>
-                ))}
-                <DropdownMenuSeparator className="bg-slate-700 my-2" />
-                <DropdownMenuItem asChild className="rounded-lg cursor-pointer py-2.5 px-3 bg-slate-700/50 hover:bg-slate-700 text-teal-400 font-semibold">
-                  <Link to="/fostering-agencies" className="flex items-center justify-between w-full">
-                    View All Locations <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </DropdownMenuItem>
+              <DropdownMenuContent className="w-[700px] max-w-[90vw] rounded-xl p-4 bg-slate-800 border-slate-700 shadow-xl shadow-black/30 z-50">
+                <div className="grid grid-cols-4 gap-6">
+                  {/* Column 1: UK Nations */}
+                  <div>
+                    <DropdownMenuLabel className="text-xs font-bold text-teal-400 uppercase tracking-wider px-3 pb-2">UK Nations</DropdownMenuLabel>
+                    <DropdownMenuSeparator className="bg-slate-700 mb-2" />
+                    {regions.map((region) => (
+                      <DropdownMenuItem key={region.slug} asChild className="rounded-lg cursor-pointer py-2 px-3 hover:bg-slate-700 hover:text-teal-400">
+                        <Link to={`/fostering-agencies`} className="flex items-center gap-2">
+                          <MapPin className="h-4 w-4 text-teal-500" />
+                          <span className="font-semibold">{region.name}</span>
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </div>
+
+                  {/* Column 2: Major Cities */}
+                  <div>
+                    <DropdownMenuLabel className="text-xs font-bold text-teal-400 uppercase tracking-wider px-3 pb-2">Major Cities</DropdownMenuLabel>
+                    <DropdownMenuSeparator className="bg-slate-700 mb-2" />
+                    {topCities.slice(0, 8).map((city) => (
+                      <DropdownMenuItem key={city.slug} asChild className="rounded-lg cursor-pointer py-1.5 px-3 text-slate-300 hover:bg-slate-700 hover:text-white">
+                        <Link to={`/fostering-agencies/${city.slug}`}>{city.name}</Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </div>
+
+                  {/* Column 3: More Cities */}
+                  <div>
+                    <DropdownMenuLabel className="text-xs font-bold text-teal-400 uppercase tracking-wider px-3 pb-2">More Cities</DropdownMenuLabel>
+                    <DropdownMenuSeparator className="bg-slate-700 mb-2" />
+                    {topCities.slice(8, 16).map((city) => (
+                      <DropdownMenuItem key={city.slug} asChild className="rounded-lg cursor-pointer py-1.5 px-3 text-slate-300 hover:bg-slate-700 hover:text-white">
+                        <Link to={`/fostering-agencies/${city.slug}`}>{city.name}</Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </div>
+
+                  {/* Column 4: CTA */}
+                  <div className="bg-slate-700/30 rounded-lg p-4 flex flex-col justify-between">
+                    <div>
+                      <DropdownMenuLabel className="text-xs font-bold text-teal-400 uppercase tracking-wider">Explore All</DropdownMenuLabel>
+                      <p className="text-sm text-slate-400 mt-2">Find agencies in cities across the UK</p>
+                    </div>
+                    <DropdownMenuItem asChild className="rounded-lg cursor-pointer py-2.5 px-3 bg-teal-600 hover:bg-teal-500 text-white font-semibold mt-2">
+                      <Link to="/fostering-agencies" className="flex items-center justify-between w-full">
+                        View All Locations <ArrowRight className="h-4 w-4" />
+                      </Link>
+                    </DropdownMenuItem>
+                  </div>
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -199,6 +225,22 @@ export function Navbar() {
                     <MapPin className="h-4 w-4 text-teal-500" /> {region.name}
                   </Link>
                 ))}
+                {topCities.slice(0, 6).map((city) => (
+                  <Link
+                    key={city.slug}
+                    to={`/fostering-agencies/${city.slug}`}
+                    className="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-200 hover:bg-slate-800 rounded-lg"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {city.name}
+                  </Link>
+                ))}
+                
+                <div className="h-px bg-slate-800 my-3" />
+                
+                <Link to="/fostering-agencies" className="flex px-3 py-3 text-sm font-semibold text-teal-400 hover:bg-slate-800 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
+                  View All Locations →
+                </Link>
                 
                 <div className="h-px bg-slate-800 my-3" />
                 
