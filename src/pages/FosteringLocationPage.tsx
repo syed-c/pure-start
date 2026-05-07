@@ -591,20 +591,20 @@ const FosteringLocationPage = () => {
         {/* Content Section - From Page Manager */}
         {seoContent?.content ? (
           <Section className="py-6">
-            <Card className="border border-gray-200 shadow-sm">
+            <Card className="bg-slate-50 border-slate-200 shadow-sm">
               <CardContent className="p-5">
                 <h2 className="text-lg font-bold text-gray-900 mb-3">{seoContent.title || `About Fostering in ${locationName}`}</h2>
-                <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-line" 
+                <div className="text-sm text-gray-800 leading-relaxed whitespace-pre-line font-medium" 
                   dangerouslySetInnerHTML={{ __html: seoContent.content.replace(/\n/g, '<br>') }} />
               </CardContent>
             </Card>
           </Section>
         ) : (
           <Section className="py-6">
-            <Card className="border border-gray-200 shadow-sm">
+            <Card className="bg-slate-50 border-slate-200 shadow-sm">
               <CardContent className="p-5">
                 <h2 className="text-lg font-bold text-gray-900 mb-3">About Fostering in {locationName}</h2>
-                <p className="text-sm text-gray-700 leading-relaxed">
+                <p className="text-sm text-gray-800 leading-relaxed font-medium">
                   {locationName} has several Ofsted-registered fostering agencies. Find verified agencies offering emergency, short-term, long-term, and specialist placements.
                 </p>
               </CardContent>
