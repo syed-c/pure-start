@@ -25,7 +25,6 @@ const topAgenciesByCity = [
   { id: '9', name: 'Family First', slug: 'family-first', rating: 4.4, review_count: 25, is_verified: true, city: 'Cardiff', state: 'Wales', image_url: 'https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=400&h=300&fit=crop' },
   { id: '10', name: 'Safe Haven', slug: 'safe-haven-fostering', rating: 4.3, review_count: 18, is_verified: true, city: 'Belfast', state: 'N. Ireland', image_url: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&h=300&fit=crop' },
 ];
-import { useRealCounts } from "@/hooks/useRealCounts";
 
 const fosteringServices = [
   { name: "Emergency Fostering", slug: "emergency-fostering", icon: Baby, description: "Immediate placements for children in crisis", color: "bg-red-500" },
