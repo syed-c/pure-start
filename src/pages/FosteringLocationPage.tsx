@@ -235,22 +235,30 @@ const FosteringLocationPage = () => {
           canonical="https://www.foster-care.co.uk/fostering-agencies"
         />
 
+        {/* Dark Hero Section */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+          <div className="absolute inset-0 opacity-30">
+            <div className="absolute top-10 left-10 w-72 h-72 bg-teal-500/20 rounded-full blur-[100px]" />
+            <div className="absolute bottom-10 right-10 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px]" />
+          </div>
+          <div className="container relative z-10 px-4 py-16">
+            <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Fostering Agencies", href: "/fostering-agencies" }]} />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-6"
+            >
+              <h1 className="text-4xl md:text-5xl font-bold text-white">
+                Find Fostering Agencies UK
+              </h1>
+              <p className="mt-4 text-xl text-white/80 max-w-3xl">
+                Browse verified fostering agencies across England, Scotland, Wales, and Northern Ireland. Find the right agency for your family.
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
         <div className="container py-8">
-          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Fostering Agencies", href: "/fostering-agencies" }]} />
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-6"
-          >
-            <h1 className="text-4xl font-bold text-gray-900">
-              Find Fostering Agencies UK
-            </h1>
-            <p className="mt-4 text-xl text-gray-600 max-w-3xl">
-              Browse verified fostering agencies across England, Scotland, Wales, and Northern Ireland. Find the right agency for your family.
-            </p>
-          </motion.div>
-
           <Section className="mt-12">
             <h2 className="text-2xl font-bold mb-6">Browse by Location</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -368,22 +376,30 @@ const FosteringLocationPage = () => {
         canonical={canonicalUrl}
       />
 
+      {/* Dark Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-10 left-10 w-72 h-72 bg-teal-500/20 rounded-full blur-[100px]" />
+          <div className="absolute bottom-10 right-10 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px]" />
+        </div>
+        <div className="container relative z-10 px-4 py-16">
+          <Breadcrumbs items={breadcrumbs} />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-6"
+          >
+            <h1 className="text-4xl md:text-5xl font-bold text-white">
+              Fostering Agencies in {locationName}
+            </h1>
+            <p className="mt-4 text-xl text-white/80 max-w-3xl">
+              Find verified fostering agencies in {locationName}. Browse approved agencies, compare services, and contact them directly to start your fostering journey.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
       <div className="container py-8">
-        <Breadcrumbs items={breadcrumbs} />
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-6"
-        >
-          <h1 className="text-4xl font-bold text-gray-900">
-            Fostering Agencies in {locationName}
-          </h1>
-          <p className="mt-4 text-xl text-gray-600 max-w-3xl">
-            Find verified fostering agencies in {locationName}. Browse approved agencies, compare services, and contact them directly to start your fostering journey.
-          </p>
-        </motion.div>
-
         {treatments && treatments.length > 0 && (
           <Section className="mt-8">
             <h2 className="text-2xl font-bold mb-4">Fostering Services in {locationName}</h2>
