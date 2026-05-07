@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { supabaseAdmin } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
