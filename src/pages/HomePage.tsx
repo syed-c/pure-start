@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { supabaseAdmin } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+import { getLetterAvatarUrl } from "@/hooks/useProfiles";
 import { 
   Search, Shield, Star, Users, MapPin, ArrowRight, 
   Heart, Baby, Calendar, Home, HandHeart, GraduationCap, Award, CheckCircle,
@@ -14,16 +18,16 @@ import { Section } from "@/components/layout/Section";
 import { useRealCounts } from "@/hooks/useRealCounts";
 
 const topAgenciesByCity = [
-  { id: '1', name: 'Oakleaf Fostering', slug: 'oakleaf-fostering', rating: 4.8, review_count: 125, is_verified: true, city: 'London', state: 'England', image_url: '' },
-  { id: '2', name: 'Care First Ltd', slug: 'care-first-ltd', rating: 4.6, review_count: 89, is_verified: true, city: 'Manchester', state: 'England', image_url: '' },
-  { id: '3', name: 'Fostering Together', slug: 'fostering-together', rating: 4.5, review_count: 67, is_verified: true, city: 'Birmingham', state: 'England', image_url: '' },
-  { id: '4', name: 'National Fostering', slug: 'national-fostering', rating: 4.4, review_count: 45, is_verified: true, city: 'Leeds', state: 'England', image_url: '' },
-  { id: '5', name: 'Sunrise Foster Care', slug: 'sunrise-foster-care', rating: 4.3, review_count: 32, is_verified: true, city: 'Liverpool', state: 'England', image_url: '' },
-  { id: '6', name: 'Community Fostering', slug: 'community-fostering', rating: 4.2, review_count: 28, is_verified: true, city: 'Bristol', state: 'England', image_url: '' },
-  { id: '7', name: 'Together Foster Care', slug: 'together-foster-care', rating: 4.7, review_count: 52, is_verified: true, city: 'Sheffield', state: 'England', image_url: '' },
-  { id: '8', name: 'Loving Homes', slug: 'loving-homes', rating: 4.5, review_count: 38, is_verified: true, city: 'Glasgow', state: 'Scotland', image_url: '' },
-  { id: '9', name: 'Family First', slug: 'family-first', rating: 4.4, review_count: 25, is_verified: true, city: 'Cardiff', state: 'Wales', image_url: '' },
-  { id: '10', name: 'Safe Haven', slug: 'safe-haven-fostering', rating: 4.3, review_count: 18, is_verified: true, city: 'Belfast', state: 'N. Ireland', image_url: '' },
+  { id: '1', name: 'Oakleaf Fostering', slug: 'oakleaf-fostering', rating: 4.8, review_count: 125, is_verified: true, city: 'London', state: 'England', image_url: '', cover_image_url: '' },
+  { id: '2', name: 'Care First Ltd', slug: 'care-first-ltd', rating: 4.6, review_count: 89, is_verified: true, city: 'Manchester', state: 'England', image_url: '', cover_image_url: '' },
+  { id: '3', name: 'Fostering Together', slug: 'fostering-together', rating: 4.5, review_count: 67, is_verified: true, city: 'Birmingham', state: 'England', image_url: '', cover_image_url: '' },
+  { id: '4', name: 'National Fostering', slug: 'national-fostering', rating: 4.4, review_count: 45, is_verified: true, city: 'Leeds', state: 'England', image_url: '', cover_image_url: '' },
+  { id: '5', name: 'Sunrise Foster Care', slug: 'sunrise-foster-care', rating: 4.3, review_count: 32, is_verified: true, city: 'Liverpool', state: 'England', image_url: '', cover_image_url: '' },
+  { id: '6', name: 'Community Fostering', slug: 'community-fostering', rating: 4.2, review_count: 28, is_verified: true, city: 'Bristol', state: 'England', image_url: '', cover_image_url: '' },
+  { id: '7', name: 'Together Foster Care', slug: 'together-foster-care', rating: 4.7, review_count: 52, is_verified: true, city: 'Sheffield', state: 'England', image_url: '', cover_image_url: '' },
+  { id: '8', name: 'Loving Homes', slug: 'loving-homes', rating: 4.5, review_count: 38, is_verified: true, city: 'Glasgow', state: 'Scotland', image_url: '', cover_image_url: '' },
+  { id: '9', name: 'Family First', slug: 'family-first', rating: 4.4, review_count: 25, is_verified: true, city: 'Cardiff', state: 'Wales', image_url: '', cover_image_url: '' },
+  { id: '10', name: 'Safe Haven', slug: 'safe-haven-fostering', rating: 4.3, review_count: 18, is_verified: true, city: 'Belfast', state: 'N. Ireland', image_url: '', cover_image_url: '' },
 ];
 
 const fosteringServices = [
@@ -66,6 +70,15 @@ function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const { counts } = useRealCounts();
 
+  // Fetch real agencies from database
+  const { data: dbAgencies } = useQuery({
+    queryKey: ['featured-agencies'],
+    queryFn: async () => {
+      const { data } = await supabaseAdmin.from('agencies').select('id, name, slug, rating, review_count, is_verified, city, state, image_url, cover_image_url').order('rating', { ascending: false }).limit(10);
+      return data || [];
+    },
+  });
+
   useEffect(() => {
     window.prerenderReady = true;
   }, []);
@@ -77,7 +90,8 @@ function HomePage() {
     }
   };
 
-  const featuredAgencies = topAgenciesByCity;
+  // Use real agencies from DB, fallback to sample data
+  const featuredAgencies = dbAgencies && dbAgencies.length > 0 ? dbAgencies : topAgenciesByCity;
   const totalAgencies = counts?.agencies || 500;
   const totalCities = counts?.cities || 50;
 
@@ -325,11 +339,11 @@ function HomePage() {
                   <Card className="group bg-slate-800/50 border-slate-700 hover:border-teal-500/50 hover:shadow-xl hover:shadow-teal-500/10 transition-all duration-300 cursor-pointer overflow-hidden">
                     <div className="aspect-video relative overflow-hidden bg-slate-700">
                       <img 
-                        src={agency.image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(agency.name)}&background=0d9488&color=fff&size=400`}
+                        src={agency.image_url || agency.cover_image_url || getLetterAvatarUrl(agency.name)}
                         alt={agency.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         onError={(e) => { 
-                          e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(agency.name)}&background=0d9488&color=fff&size=400`; 
+                          e.currentTarget.src = getLetterAvatarUrl(agency.name); 
                         }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent" />
