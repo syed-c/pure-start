@@ -179,6 +179,9 @@ const FosteringLocationPage = () => {
     enabled: !!locationSlug,
   });
 
+  // Fetch SEO content from database
+  const { data: seoContent } = useSeoPageContent(locationSlug ? `fostering-agencies/${locationSlug}` : 'fostering-agencies');
+
   const { data: treatments } = useQuery({
     queryKey: ["active-treatments"],
     queryFn: async () => {
@@ -442,7 +445,7 @@ const FosteringLocationPage = () => {
               transition={{ delay: 0.1 }}
               className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 leading-tight"
             >
-              Find Trusted <span className="text-teal-400">Fostering Agencies</span> in {locationName}
+              {seoContent?.h1 || `Find Trusted Fostering Agencies in ${locationName}`}
             </motion.h1>
 
             <motion.p 
@@ -451,7 +454,7 @@ const FosteringLocationPage = () => {
               transition={{ delay: 0.2 }}
               className="text-base md:text-lg text-white/80 mb-8 max-w-xl mx-auto"
             >
-              {agencies?.length || 0} verified fostering agencies in {locationName}. Find your perfect match today.
+              {seoContent?.meta_description || `${agencies?.length || 0} verified fostering agencies in ${locationName}. Find your perfect match today.`}
             </motion.p>
 
             {/* Modern Stats */}
@@ -586,17 +589,29 @@ const FosteringLocationPage = () => {
           </Section>
         )}
 
-        {/* Content Section */}
-        <Section className="mt-8">
-          <Card>
-            <CardContent className="p-5">
-              <h2 className="text-lg font-bold mb-3">About Fostering in {locationName}</h2>
-              <p className="text-sm text-gray-600">
-                {locationName} has several Ofsted-registered fostering agencies. Find verified agencies offering emergency, short-term, long-term, and specialist placements.
-              </p>
-            </CardContent>
-          </Card>
-        </Section>
+        {/* Content Section - From Page Manager */}
+        {seoContent?.content ? (
+          <Section className="mt-8">
+            <Card>
+              <CardContent className="p-5">
+                <h2 className="text-lg font-bold mb-3">{seoContent.title || `About Fostering in ${locationName}`}</h2>
+                <div className="text-sm text-gray-600 prose prose-sm max-w-none" 
+                  dangerouslySetInnerHTML={{ __html: seoContent.content.replace(/\n/g, '<br>') }} />
+              </CardContent>
+            </Card>
+          </Section>
+        ) : (
+          <Section className="mt-8">
+            <Card>
+              <CardContent className="p-5">
+                <h2 className="text-lg font-bold mb-3">About Fostering in {locationName}</h2>
+                <p className="text-sm text-gray-600">
+                  {locationName} has several Ofsted-registered fostering agencies. Find verified agencies offering emergency, short-term, long-term, and specialist placements.
+                </p>
+              </CardContent>
+            </Card>
+          </Section>
+        )}
 
         {/* CTA Section */}
         <Section className="mt-8">
