@@ -317,7 +317,7 @@ function HomePage() {
           </div>
 
           <div className="text-center mt-8">
-            <Link to="/locations">
+            <Link to="/fostering-agencies">
               <Button variant="outline" size="lg" className="border-teal-500 text-teal-400 hover:bg-teal-500/20">
                 View All Locations
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -384,7 +384,7 @@ function HomePage() {
           </div>
 
           <div className="text-center mt-8">
-            <Link to="/agencies">
+            <Link to="/search">
               <Button variant="outline" size="lg" className="border-teal-500 text-teal-400 hover:bg-teal-500/20">
                 View All Agencies
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -468,7 +468,7 @@ function HomePage() {
                   </Button>
                 </Link>
                 <Link to="/become-foster-carer">
-                  <Button size="lg" variant="outline" className="h-14 px-8 text-base font-semibold border-white/30 text-white hover:bg-white/10 rounded-xl">
+                  <Button size="lg" className="h-14 px-8 text-base font-semibold border-2 border-white/40 bg-white/10 text-white hover:bg-white/20 rounded-xl backdrop-blur-sm">
                     Learn More
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
