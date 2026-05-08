@@ -128,12 +128,13 @@ function useSearchResults(filters: SearchFilters, page: number) {
       
       const results: SearchResultItem[] = [];
       
-      // Fetch agencies from database
+      // Fetch agencies from database - real data only, no fallback
       console.log('Fetching agencies from database...');
       const { data: agenciesData, error: dbError } = await supabaseAdmin
         .from("agencies")
-        .select("*")
-        .limit(200);
+        .select("id, name, slug, rating, review_count, is_verified, city, state, main_image_url, cover_image_url, is_duplicate")
+        .eq("is_duplicate", false)
+        .limit(500);
       
       console.log('Database query result:', { count: agenciesData?.length, error: dbError });
       
@@ -141,25 +142,14 @@ function useSearchResults(filters: SearchFilters, page: number) {
         console.error('Database error:', dbError.message);
       }
       
-      // If no database results, use sample data
+      // If no database results, return empty (not sample data)
       let sourceData = agenciesData;
       if (!sourceData || sourceData.length === 0) {
-        console.log('Using sample agencies fallback');
-        sourceData = [
-          { id: '1', name: 'Oakleaf Fostering', slug: 'oakleaf-fostering', rating: 4.8, review_count: 125, is_verified: true, city: 'London', state: 'England', image_url: null },
-          { id: '2', name: 'Care First Ltd', slug: 'care-first-ltd', rating: 4.6, review_count: 89, is_verified: true, city: 'Manchester', state: 'England', image_url: null },
-          { id: '3', name: 'Fostering Together', slug: 'fostering-together', rating: 4.5, review_count: 67, is_verified: true, city: 'Birmingham', state: 'England', image_url: null },
-          { id: '4', name: 'National Fostering', slug: 'national-fostering', rating: 4.4, review_count: 45, is_verified: true, city: 'Leeds', state: 'England', image_url: null },
-          { id: '5', name: 'Sunrise Foster Care', slug: 'sunrise-foster-care', rating: 4.3, review_count: 32, is_verified: true, city: 'Liverpool', state: 'England', image_url: null },
-          { id: '6', name: 'Community Fostering', slug: 'community-fostering', rating: 4.2, review_count: 28, is_verified: true, city: 'Bristol', state: 'England', image_url: null },
-          { id: '7', name: 'Together Foster Care', slug: 'together-foster-care', rating: 4.1, review_count: 24, is_verified: true, city: 'Sheffield', state: 'England', image_url: null },
-          { id: '8', name: 'Loving Homes', slug: 'loving-homes', rating: 4.0, review_count: 19, is_verified: true, city: 'Glasgow', state: 'Scotland', image_url: null },
-          { id: '9', name: 'Family First', slug: 'family-first', rating: 3.9, review_count: 15, is_verified: true, city: 'Cardiff', state: 'Wales', image_url: null },
-          { id: '10', name: 'Safe Haven Fostering', slug: 'safe-haven-fostering', rating: 3.8, review_count: 12, is_verified: true, city: 'Belfast', state: 'Northern Ireland', image_url: null },
-        ];
+        console.log('No agencies in database yet');
+        return { results: [], total: 0 };
       }
       
-console.log('Total agencies to process:', sourceData.length);
+      console.log('Total agencies to process:', sourceData.length);
        
       // Map to results - only process sourceData once
       for (const a of sourceData as any[]) {
@@ -182,18 +172,7 @@ console.log('Total agencies to process:', sourceData.length);
         });
       }
       
-      // Fallback sample agencies if no results
-      if (results.length === 0) {
-        console.log('Using sample agencies fallback');
-        results.push(
-          { id: '1', name: 'Oakleaf Fostering', slug: 'oakleaf-fostering', type: 'agency', title: 'Fostering Agency', rating: 4.8, reviewCount: 125, isVerified: true, agencyName: 'Oakleaf Fostering', agencySlug: 'oakleaf-fostering', regionName: 'England', cityName: 'London', fosteringTypes: ['Short Term', 'Long Term'] },
-          { id: '2', name: 'Care First Ltd', slug: 'care-first-ltd', type: 'agency', title: 'Fostering Agency', rating: 4.6, reviewCount: 89, isVerified: true, agencyName: 'Care First Ltd', agencySlug: 'care-first-ltd', regionName: 'England', cityName: 'Manchester', fosteringTypes: ['Emergency', 'Short Term'] },
-          { id: '3', name: 'Fostering Together', slug: 'fostering-together', type: 'agency', title: 'Fostering Agency', rating: 4.5, reviewCount: 67, isVerified: true, agencyName: 'Fostering Together', agencySlug: 'fostering-together', regionName: 'England', cityName: 'Birmingham', fosteringTypes: ['Long Term', 'Therapeutic'] },
-          { id: '4', name: 'National Fostering', slug: 'national-fostering', type: 'agency', title: 'Fostering Agency', rating: 4.4, reviewCount: 45, isVerified: true, agencyName: 'National Fostering', agencySlug: 'national-fostering', regionName: 'England', cityName: 'Leeds', fosteringTypes: ['Short Term', 'Respite'] },
-          { id: '5', name: 'Sunrise Foster Care', slug: 'sunrise-foster-care', type: 'agency', title: 'Fostering Agency', rating: 4.3, reviewCount: 32, isVerified: true, agencyName: 'Sunrise Foster Care', agencySlug: 'sunrise-foster-care', regionName: 'England', cityName: 'Liverpool', fosteringTypes: ['Parent Child', 'Disability'] }
-        );
-      }
-       
+      // No fallback sample data - use real database results only
       console.log('Total results after mapping:', results.length);
 
       // Apply filters to results

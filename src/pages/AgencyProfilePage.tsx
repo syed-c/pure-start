@@ -103,15 +103,7 @@ const AgencyProfilePage = () => {
   const seoSlug = `agency/${slug}`;
   const { data: seoContent } = useSeoPageContent(seoSlug);
 
-  const sampleAgencies: Record<string, any> = {
-    'oakleaf-fostering': { id: '1', name: 'Oakleaf Fostering', slug: 'oakleaf-fostering', city: 'London', state: 'England', rating: 4.8, review_count: 125, is_verified: true, phone: '020 7946 0123', email: 'contact@oakleaf-fostering.co.uk', address: '123 Foster Street, London', description: 'Oakleaf Fostering provides comprehensive fostering services across London and the South East. We support children and families with dedicated care and expertise.', services: ['Emergency Fostering', 'Short-Term', 'Long-Term', 'Respite'],cover_image_url: 'https://images.unsplash.com/photo-1606092195730-5d7b9af1ef4d?w=800&h=400&fit=crop' },
-    'care-first-ltd': { id: '2', name: 'Care First Ltd', slug: 'care-first-ltd', city: 'Manchester', state: 'England', rating: 4.6, review_count: 89, is_verified: true, phone: '0161 234 5678', email: 'info@carefirst.co.uk', address: '456 Care Road, Manchester', description: 'Care First Ltd has been providing quality fostering services in Manchester for over 20 years.', services: ['Short-Term', 'Long-Term', 'Parent & Child'],cover_image_url: 'https://images.unsplash.com/photo-1557804506-669a67965ba1?w=800&h=400&fit=crop' },
-    'fostering-together': { id: '3', name: 'Fostering Together', slug: 'fostering-together', city: 'Birmingham', state: 'England', rating: 4.5, review_count: 67, is_verified: true, phone: '0121 234 5678', email: 'hello@fosteringtogether.org', address: '789 Together Ave, Birmingham', description: 'Fostering Together is a leading fostering agency in Birmingham, committed to finding loving homes for children.', services: ['Emergency Fostering', 'Therapeutic', 'Sibling Groups'],cover_image_url: 'https://images.unsplash.com/photo-1581579438745-1dc61e5a951d?w=800&h=400&fit=crop' },
-    'national-fostering': { id: '4', name: 'National Fostering', slug: 'national-fostering', city: 'Leeds', state: 'England', rating: 4.4, review_count: 45, is_verified: true, phone: '0113 234 5678', contact: 'nationalfostering.co.uk', address: '101 National Plaza, Leeds', description: 'National Fostering provides fostering services across Yorkshire and the North of England.', services: ['Short-Term', 'Long-Term', 'Respite'],cover_image_url: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd1d?w=800&h=400&fit=crop' },
-    'sunrise-foster-care': { id: '5', name: 'Sunrise Foster Care', slug: 'sunrise-foster-care', city: 'Liverpool', state: 'England', rating: 4.3, review_count: 32, is_verified: true, phone: '0151 234 5678', email: 'enquiries@sunrisefostercare.co.uk', address: '202 Sunrise Lane, Liverpool', description: 'Sunrise Foster Care brings hope to children across Merseyside with dedicated foster carers.', services: ['Emergency Fostering', 'Short-Term', 'Parent & Child'],cover_image_url: 'https://images.unsplash.com/photo-1505751172876-fa1926c9d06f?w=800&h=400&fit=crop' },
-    'community-fostering': { id: '6', name: 'Community Fostering', slug: 'community-fostering', city: 'Bristol', state: 'England', rating: 4.2, review_count: 28, is_verified: true, phone: '0117 234 5678', email: 'community@fosteringbristol.org', address: '303 Community Way, Bristol', description: 'Community Fostering serves the Bristol area with compassionate fostering solutions.', services: ['Long-Term', 'Respite', 'Therapeutic'],cover_image_url: 'https://images.unsplash.com/photo-1576091160399-9ba3efc7fca1?w=800&h=400&fit=crop' },
-  };
-
+  // Fetch agency from database only - no hardcoded fallback
   const { data: agency, isLoading } = useQuery<any>({
     queryKey: ["agency", slug],
     queryFn: async () => {
@@ -127,11 +119,7 @@ const AgencyProfilePage = () => {
         console.error('Error fetching agency:', error);
       }
       
-      if (data) return data;
-      
-      if (sampleAgencies[slug]) return sampleAgencies[slug];
-      
-      return null;
+      return data || null;
     },
     enabled: !!slug && !slug.includes('/'),
   });

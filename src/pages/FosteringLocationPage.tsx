@@ -199,10 +199,12 @@ const FosteringLocationPage = () => {
     queryKey: ["location-agencies", location?.name],
     queryFn: async () => {
       if (!location) return [];
+      // Use proper filtering - exclude duplicates and filter by city
       const { data } = await supabaseAdmin
         .from("agencies")
-        .select("*")
+        .select("id, name, slug, rating, review_count, is_verified, city, state, main_image_url, cover_image_url, description")
         .ilike("city", `%${location.name}%`)
+        .eq("is_duplicate", false)
         .order("rating", { ascending: false })
         .limit(30);
       return (data || []) as any[];
