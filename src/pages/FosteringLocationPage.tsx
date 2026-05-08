@@ -13,7 +13,7 @@ import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
 import { POPULAR_CITIES, FOSTERING_CATEGORIES } from "@/lib/constants/activeRegions";
-import { Heart, Shield, Users, MapPin, Star, ArrowRight, Search } from "lucide-react";
+import { Heart, Shield, Users, MapPin, Star, ArrowRight, Search, UserPlus } from "lucide-react";
 
 const FosteringLocationPage = () => {
   const { locationSlug } = useParams();
@@ -414,9 +414,34 @@ const FosteringLocationPage = () => {
   return (
     <PageLayout>
       <SEOHead
-        title={pageTitle}
-        description={pageDescription}
+        title={seoContent?.meta_title || pageTitle}
+        description={seoContent?.meta_description || pageDescription}
         canonical={canonicalUrl}
+        keywords={[`fostering agencies ${locationName}`, `foster care ${locationName}`, `Ofsted registered fostering ${locationName}`, `foster carer ${locationName}`]}
+        openGraph={{
+          title: seoContent?.meta_title || pageTitle,
+          description: seoContent?.meta_description || pageDescription,
+          url: canonicalUrl,
+          type: 'website',
+        }}
+      />
+      
+      {/* Structured Data for LocalBusiness */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": `Fostering Agencies in ${locationName}`,
+            "description": pageDescription,
+            "url": canonicalUrl,
+            "publisher": {
+              "@type": "Organization",
+              "name": "Foster Care UK",
+            },
+          }),
+        }}
       />
 
       {/* Hero Section - Homepage Style */}
@@ -576,14 +601,15 @@ const FosteringLocationPage = () => {
           </div>
         )}
 
-        {/* Nearby Locations */}
+        {/* Nearby Locations - Enhanced */}
         {nearbyLocations && nearbyLocations.length > 0 && (
-          <Section className="py-4">
-            <h2 className="text-base font-semibold text-gray-900 mb-2">Nearby Locations</h2>
+          <Section className="py-6 bg-slate-900/30 -mx-4 px-4 rounded-xl">
+            <h2 className="text-lg font-bold text-white mb-3">Nearby Locations</h2>
+            <p className="text-sm text-white/60 mb-4">Explore agencies in nearby cities</p>
             <div className="flex flex-wrap gap-2">
-              {nearbyLocations.slice(0, 6).map((loc: any) => (
+              {nearbyLocations.slice(0, 8).map((loc: any) => (
                 <Link key={loc.id} to={`/fostering-agencies/${loc.slug}`}>
-                  <Badge variant="outline" className="cursor-pointer hover:bg-teal-50 text-xs py-1 px-2.5">
+                  <Badge className="cursor-pointer bg-slate-800 border-slate-700 hover:bg-teal-600 hover:border-teal-500 hover:text-white text-slate-300 py-2 px-4 text-sm transition-all">
                     {loc.name}
                   </Badge>
                 </Link>
@@ -594,12 +620,13 @@ const FosteringLocationPage = () => {
 
         {/* Services in Location */}
         {treatments && treatments.length > 0 && (
-          <Section className="py-4">
-            <h2 className="text-base font-semibold text-gray-900 mb-2">Fostering Services in {locationName}</h2>
+          <Section className="py-6">
+            <h2 className="text-lg font-bold text-foreground mb-3">Fostering Services in {locationName}</h2>
+            <p className="text-sm text-muted-foreground mb-4">Find agencies by service type</p>
             <div className="flex flex-wrap gap-2">
-              {treatments.slice(0, 4).map((treatment: any) => (
+              {treatments.slice(0, 6).map((treatment: any) => (
                 <Link key={treatment.id} to={`/fostering-agencies/${locationSlug}/${treatment.slug}`}>
-                  <Badge className="cursor-pointer bg-teal-100 hover:bg-teal-200 text-teal-800 text-xs py-1 px-2.5">
+                  <Badge className="cursor-pointer bg-teal-500/10 border-teal-500/30 hover:bg-teal-500 hover:text-white text-teal-400 py-2 px-4 text-sm transition-all">
                     {treatment.name}
                   </Badge>
                 </Link>
@@ -608,42 +635,52 @@ const FosteringLocationPage = () => {
           </Section>
         )}
 
-        {/* Content Section - From Page Manager */}
+        {/* Content Section - From Page Manager - Styled */}
         {seoContent?.content ? (
-          <Section className="py-6">
-            <Card className="bg-slate-50 border-slate-200 shadow-sm">
-              <CardContent className="p-5">
-                <h2 className="text-lg font-bold text-gray-900 mb-3">{seoContent.title || `About Fostering in ${locationName}`}</h2>
-                <div className="text-sm text-gray-800 leading-relaxed whitespace-pre-line font-medium" 
+          <Section className="py-8 bg-slate-900 rounded-xl -mx-4 px-4">
+            <Card className="bg-transparent border-0 shadow-none">
+              <CardContent className="p-0">
+                <h2 className="text-xl font-bold text-white mb-4">{seoContent.title || `About Fostering in ${locationName}`}</h2>
+                <div className="text-sm text-white/70 leading-relaxed whitespace-pre-line" 
                   dangerouslySetInnerHTML={{ __html: seoContent.content.replace(/\n/g, '<br>') }} />
               </CardContent>
             </Card>
           </Section>
         ) : (
-          <Section className="py-6">
-            <Card className="bg-slate-50 border-slate-200 shadow-sm">
-              <CardContent className="p-5">
-                <h2 className="text-lg font-bold text-gray-900 mb-3">About Fostering in {locationName}</h2>
-                <p className="text-sm text-gray-800 leading-relaxed font-medium">
-                  {locationName} has several Ofsted-registered fostering agencies. Find verified agencies offering emergency, short-term, long-term, and specialist placements.
+          <Section className="py-8 bg-slate-900 rounded-xl -mx-4 px-4">
+            <Card className="bg-transparent border-0 shadow-none">
+              <CardContent className="p-0">
+                <h2 className="text-xl font-bold text-white mb-3">About Fostering in {locationName}</h2>
+                <p className="text-sm text-white/70 leading-relaxed">
+                  {locationName} has several Ofsted-registered fostering agencies. Find verified agencies offering emergency, short-term, long-term, and specialist placements. Browse our directory to compare services, ratings, and connect directly with agencies in your area.
                 </p>
               </CardContent>
             </Card>
           </Section>
         )}
 
-        {/* CTA Section */}
-        <Section className="py-6">
-          <Card className="bg-gradient-to-r from-teal-600 via-teal-500 to-teal-600 border-0 shadow-lg">
-            <CardContent className="p-5 text-center text-white">
-              <h2 className="text-lg font-bold">Find the Right Agency in {locationName}</h2>
-              <p className="text-sm text-white/80 mt-1 mb-4">Connect with verified fostering agencies today</p>
-              <div className="flex gap-3 justify-center">
+        {/* CTA Section - Enhanced */}
+        <Section className="py-10">
+          <Card className="bg-gradient-to-r from-teal-900 via-slate-900 to-amber-900/30 border-teal-800/50 shadow-2xl overflow-hidden relative">
+            <div className="absolute inset-0 opacity-20">
+              <div className="absolute top-0 left-0 w-64 h-64 bg-teal-500/30 rounded-full blur-[80px]" />
+              <div className="absolute bottom-0 right-0 w-64 h-64 bg-amber-500/20 rounded-full blur-[80px]" />
+            </div>
+            <CardContent className="p-8 text-center relative z-10">
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Ready to Find Your Perfect Agency?</h2>
+              <p className="text-base text-white/70 mb-6 max-w-xl mx-auto">Connect with verified fostering agencies in {locationName} today. Start your journey to becoming a foster carer.</p>
+              <div className="flex flex-wrap gap-4 justify-center">
                 <Link to="/search">
-                  <Button size="md" className="bg-white text-teal-700 hover:bg-gray-100 rounded-lg px-5">Find Agencies</Button>
+                  <Button size="xl" className="bg-teal-500 hover:bg-teal-600 text-white font-bold px-8 h-14 text-base rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">
+                    <Search className="mr-2 h-5 w-5" />
+                    Find Agencies
+                  </Button>
                 </Link>
                 <Link to="/become-foster-carer">
-                  <Button size="md" variant="outline" className="text-white border-white hover:bg-white/10 rounded-lg px-5">Become a Carer</Button>
+                  <Button size="xl" variant="outline" className="border-2 border-white/40 bg-white/10 hover:bg-white/20 text-white font-bold px-8 h-14 text-base rounded-xl backdrop-blur-sm transition-all">
+                    <UserPlus className="mr-2 h-5 w-5" />
+                    Become a Carer
+                  </Button>
                 </Link>
               </div>
             </CardContent>
