@@ -241,28 +241,42 @@ const FosteringCategoryLocationPage = () => {
             <h2 className="text-2xl font-bold">Available Agencies</h2>
             <Badge variant="outline">{agencies?.length || 0}</Badge>
           </div>
-          {agenciesLoading ? <div className="grid gap-6 md:grid-cols-3">{[1,2,3].map(i => <Skeleton key={i} className="h-64 rounded-xl" />)}</div> : agencies && agencies.length > 0 ? <div className="grid gap-6 md:grid-cols-3">{agencies.map((a: any) => (
-                <Card key={a.id} className="hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h3 className="font-semibold text-lg">{a.name}</h3>
-                        <div className="flex items-center mt-1 text-sm text-gray-500">
-                          <MapPin className="w-4 h-4 mr-1" />
-                          {a.city || locationName}
-                        </div>
-                      </div>
-                      {a.rating && (
-                        <div className="flex items-center">
-                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
-                          <span className="font-medium">{a.rating.toFixed(1)}</span>
+          {agenciesLoading ? <div className="grid gap-6 md:grid-cols-3">{[1,2,3].map(i => <Skeleton key={i} className="h-72 rounded-xl" />)}</div> : agencies && agencies.length > 0 ? <div className="grid gap-6 md:grid-cols-3">{agencies.map((a: any) => {
+              const agencyImage = a.main_image_url || a.cover_image_url;
+              return (
+                <Link key={a.id} to={`/agency/${a.slug}`}>
+                  <Card className="h-full overflow-hidden hover:shadow-lg transition-all hover:border-teal-500/50">
+                    <div className="relative h-32 bg-gradient-to-br from-teal-500/20 to-amber-500/20">
+                      {agencyImage ? (
+                        <img src={agencyImage} alt={a.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-teal-600 to-slate-800">
+                          <span className="text-3xl font-bold text-white/30">{a.name?.charAt(0)}</span>
                         </div>
                       )}
+                      {a.is_verified && <Badge className="absolute top-2 left-2 bg-teal-500 text-white text-xs"><Shield className="w-3 h-3 mr-1" />Verified</Badge>}
                     </div>
-                    <Link to={`/agency/${a.slug}`}><Button size="sm" className="mt-4">View Profile</Button></Link>
-                  </CardContent>
-                </Card>
-              ))}</div> : <div className="text-center py-12"><Users className="w-12 h-12 mx-auto text-muted" /><p className="mt-4">No agencies found</p></div>}
+                    <CardContent className="p-4">
+                      <h3 className="font-semibold text-lg line-clamp-1">{a.name}</h3>
+                      <div className="flex items-center mt-1 text-sm text-muted-foreground">
+                        <MapPin className="w-4 h-4 mr-1" />
+                        {a.city || locationName}
+                      </div>
+                      <div className="flex items-center justify-between mt-3">
+                        {a.rating && (
+                          <div className="flex items-center">
+                            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
+                            <span className="font-medium">{a.rating.toFixed(1)}</span>
+                            <span className="text-xs text-muted-foreground ml-1">({a.review_count || 0})</span>
+                          </div>
+                        )}
+                        <Button size="sm">View</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              );
+            })}</div> : <div className="text-center py-12 bg-muted/30 rounded-xl"><Users className="w-12 h-12 mx-auto text-muted-foreground/40" /><p className="mt-4 font-medium">No agencies found</p><p className="text-sm text-muted-foreground">We're still adding agencies for this service.</p></div>}
         </Section>
         <Section className="mt-12">
           <div className="flex gap-4">

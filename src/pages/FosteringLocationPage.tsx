@@ -498,62 +498,80 @@ const FosteringLocationPage = () => {
           </Section>
         )}
 
-        {/* Agencies - Horizontal Row Format */}
+        {/* Agencies - Grid Format with Images */}
         <Section className="mt-12">
           <h2 className="text-2xl font-bold mb-6">Available Fostering Agencies</h2>
           
           {agenciesLoading ? (
-            <div className="space-y-3">
-              {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className="h-20 w-full rounded-lg" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Skeleton key={i} className="h-64 w-full rounded-xl" />
               ))}
             </div>
           ) : agencies && agencies.length > 0 ? (
-            <div className="space-y-0 divide-y divide-gray-100">
-              {agencies.slice(0, 10).map((agency: any) => (
-                <div key={agency.id} className="flex items-center gap-4 py-3 px-3 -mx-3 hover:bg-gray-50 transition-colors rounded-lg">
-                  {/* Left: Logo */}
-                  <div className="w-12 h-12 shrink-0 rounded-lg bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
-                    <span className="text-lg font-bold text-white">{agency.name?.charAt(0)}</span>
-                  </div>
-                  
-                  {/* Middle: Info */}
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold">{agency.name}</h3>
-                    <div className="flex items-center gap-2 mt-0.5 text-xs text-gray-500">
-                      <MapPin className="w-3 h-3" />
-                      <span>{agency.city || locationName}</span>
-                    </div>
-                  </div>
-                  
-                  {/* Right: Rating + CTA */}
-                  <div className="flex items-center gap-2 shrink-0">
-                    {agency.rating && (
-                      <div className="flex items-center gap-1">
-                        <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-                        <span className="text-sm font-medium">{agency.rating.toFixed(1)}</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {agencies.slice(0, 12).map((agency: any) => {
+                const agencyImage = agency.main_image_url || agency.cover_image_url;
+                return (
+                  <Link key={agency.id} to={`/agency/${agency.slug}`} className="group">
+                    <Card className="h-full overflow-hidden hover:shadow-lg transition-all duration-300 hover:border-teal-500/50">
+                      {/* Image */}
+                      <div className="relative h-40 bg-gradient-to-br from-teal-500/20 to-amber-500/20 overflow-hidden">
+                        {agencyImage ? (
+                          <img 
+                            src={agencyImage} 
+                            alt={agency.name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-teal-600 to-slate-800">
+                            <span className="text-4xl font-bold text-white/30">{agency.name?.charAt(0)}</span>
+                          </div>
+                        )}
+                        {agency.is_verified && (
+                          <Badge className="absolute top-3 left-3 bg-teal-500 text-white text-xs">
+                            <Shield className="w-3 h-3 mr-1" /> Verified
+                          </Badge>
+                        )}
                       </div>
-                    )}
-                    <Link to={`/agency/${agency.slug}`}>
-                      <Button size="sm" variant="outline" className="text-xs">View</Button>
-                    </Link>
-                  </div>
-                </div>
-              ))}
+                      
+                      <CardContent className="p-4">
+                        <h3 className="font-semibold text-foreground group-hover:text-teal-600 transition-colors line-clamp-1">
+                          {agency.name}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mt-1 line-clamp-1">
+                          {agency.city || locationName}
+                        </p>
+                        {agency.rating && (
+                          <div className="flex items-center gap-1 mt-2">
+                            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                            <span className="text-sm font-medium">{agency.rating.toFixed(1)}</span>
+                            <span className="text-xs text-muted-foreground">({agency.review_count || 0})</span>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </Link>
+                );
+              })}
             </div>
           ) : (
-            <div className="text-center py-8">
-              <Users className="w-10 h-10 mx-auto text-gray-400" />
-              <h3 className="mt-3 text-base font-medium">No agencies found</h3>
+            <div className="text-center py-12 bg-muted/30 rounded-xl">
+              <Users className="w-12 h-12 mx-auto text-muted-foreground/40" />
+              <h3 className="mt-3 text-lg font-medium">No agencies found in {locationName}</h3>
+              <p className="text-sm text-muted-foreground mt-1">We're still adding agencies for this location.</p>
             </div>
           )}
         </Section>
 
         {/* View More */}
-        {agencies && agencies.length > 10 && (
-          <div className="py-3 text-center">
-            <Link to="/search">
-              <Button variant="outline" size="sm">View All {agencies.length} Agencies</Button>
+        {agencies && agencies.length > 12 && (
+          <div className="py-6 text-center">
+            <Link to={`/search?location=${locationSlug}`}>
+              <Button size="lg" variant="outline" className="border-teal-500 text-teal-600 hover:bg-teal-500/10">
+                View All {agencies.length} Agencies in {locationName}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
             </Link>
           </div>
         )}
