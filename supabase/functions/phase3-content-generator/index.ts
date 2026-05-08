@@ -288,11 +288,28 @@ serve(async (req) => {
     const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const AIMLAPI_KEY = Deno.env.get("AIMLAPI_KEY");
+    
+    // If not in env, try to get from global_settings
+    if (!AIMLAPI_KEY) {
+      const adminClient = createClient(supabaseUrl, supabaseServiceKey);
+      const { data: settingsData } = await adminClient
+        .from('global_settings')
+        .select('value')
+        .eq('key', 'aimlapi')
+        .maybeSingle();
+      
+      if (settingsData?.value) {
+        const settingsValue = typeof settingsData.value === 'string' 
+          ? JSON.parse(settingsData.value) 
+          : settingsData.value;
+        AIMLAPI_KEY = settingsValue?.api_key || settingsValue?.key || settingsValue;
+      }
+    }
 
     if (!AIMLAPI_KEY) {
       return new Response(
-        JSON.stringify({ success: false, error: "AIMLAPI_KEY not configured" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ success: false, error: "AI API key not configured. Please add AIMLAPI_KEY to secrets or configure in API Control." }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" }
       );
     }
 

@@ -274,9 +274,9 @@ export default function ApiControlTab() {
               <div className="flex items-start gap-3">
                 <Zap className="h-5 w-5 text-violet-600 mt-0.5" />
                 <div>
-                  <p className="font-medium text-violet-900">AI/ML API Gateway (Primary AI Service)</p>
+                  <p className="font-medium text-violet-900">AIML API Gateway (Primary AI Service)</p>
                   <p className="text-sm text-violet-700 mt-1">
-                    This is the primary AI gateway used for content generation, SEO, review analysis, and more. Enter your API key below.
+                    This is the AI gateway used for content generation. Enter your AIML API key below.
                   </p>
                 </div>
               </div>
@@ -284,13 +284,13 @@ export default function ApiControlTab() {
             
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label>API Key</Label>
+                <Label>AIML API Key</Label>
                 <div className="relative">
                   <Input
                     type={showSecrets[editingApi] ? 'text' : 'password'}
                     value={apiForm[`${editingApi}_api_key`] ?? (currentSettings.api_key as string) ?? ''}
                     onChange={(e) => setApiForm({ ...apiForm, [`${editingApi}_api_key`]: e.target.value })}
-                    placeholder="Enter Gemini API key..."
+                    placeholder="Enter AIML API key..."
                     className="pr-10"
                   />
                   <Button
@@ -304,24 +304,52 @@ export default function ApiControlTab() {
                   </Button>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Get your API key from Google AI Studio or Google Cloud Console
+                  Enter your AIML API key to enable AI content generation
                 </p>
+                <Button 
+                  className="mt-2" 
+                  variant="secondary"
+                  onClick={async () => {
+                    const key = apiForm.aimlapi_api_key || currentSettings.api_key || '';
+                    if (!key) {
+                      toast.error('Please enter an API key first');
+                      return;
+                    }
+                    try {
+                      const { error } = await supabase
+                        .from('global_settings')
+                        .upsert({ 
+                          key: 'aimlapi', 
+                          value: { api_key: key, model: 'gpt-4o-mini', enabled: true },
+                          updated_at: new Date().toISOString()
+                        }, { onConflict: 'key' });
+                      if (error) throw error;
+                      toast.success('API key saved successfully!');
+                      refetchSettings();
+                    } catch (err: any) {
+                      toast.error(err.message || 'Failed to save API key');
+                    }
+                  }}
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  Save API Key
+                </Button>
               </div>
               
               <div className="space-y-2">
                 <Label>Model (Optional)</Label>
                 <Select 
-                  value={apiForm[`${editingApi}_model`] ?? (currentSettings.model as string) ?? 'gemini-1.5-flash'}
+                  value={apiForm[`${editingApi}_model`] ?? (currentSettings.model as string) ?? 'gpt-4o-mini'}
                   onValueChange={(val) => setApiForm({ ...apiForm, [`${editingApi}_model`]: val })}
                 >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="gemini-1.5-flash">Gemini 1.5 Flash (Free)</SelectItem>
-                    <SelectItem value="gemini-1.5-pro">Gemini 1.5 Pro</SelectItem>
-                    <SelectItem value="gemini-2.0-flash">Gemini 2.0 Flash</SelectItem>
-                    <SelectItem value="gemini-2.5-pro">Gemini 2.5 Pro</SelectItem>
+                    <SelectItem value="gpt-4o-mini">GPT-4o Mini (Fast)</SelectItem>
+                    <SelectItem value="gpt-4o">GPT-4o</SelectItem>
+                    <SelectItem value="o1-mini">O1 Mini (Reasoning)</SelectItem>
+                    <SelectItem value="o1">O1 (Advanced)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

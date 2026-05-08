@@ -78,7 +78,7 @@ function HomePage() {
   const { data: dbAgencies } = useQuery({
     queryKey: ['featured-agencies'],
     queryFn: async () => {
-      const { data } = await supabaseAdmin.from('agencies').select('id, name, slug, rating, review_count, is_verified, city, state, image_url, cover_image_url').order('rating', { ascending: false }).limit(10);
+      const { data } = await supabaseAdmin.from('agencies').select('id, name, slug, rating, review_count, is_verified, city, state, main_image_url, cover_image_url').order('rating', { ascending: false }).limit(10);
       return data || [];
     },
   });
@@ -343,7 +343,7 @@ function HomePage() {
                   <Card className="group bg-slate-800/50 border-slate-700 hover:border-teal-500/50 hover:shadow-xl hover:shadow-teal-500/10 transition-all duration-300 cursor-pointer overflow-hidden">
                     <div className="aspect-video relative overflow-hidden bg-slate-700">
                       <img 
-                        src={agency.image_url || agency.cover_image_url || getLetterAvatarUrl(agency.name)}
+                        src={agency.main_image_url || agency.cover_image_url || getLetterAvatarUrl(agency.name)}
                         alt={agency.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         loading="lazy"

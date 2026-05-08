@@ -78,7 +78,7 @@ const IMPORT_TYPES = [
   { value: 'update', label: 'Update Existing', description: 'Update agencies that already exist', icon: '🔄' },
   { value: 'sync', label: 'Sync All', description: 'Import new and update existing', icon: '🔃' },
   { value: 'photos', label: 'Import Missing Photos', description: 'Only import missing photos', icon: '📷' },
-  { value: 'hours', label: 'Import Business Hours', description: 'Only import/update opening hours', icon: '🕐' },
+  { value: 'business_hours', label: 'Import Business Hours', description: 'Only import/update opening hours', icon: '🕐' },
   { value: 'reviews', label: 'Import Reviews', description: 'Only import Google reviews', icon: '⭐' },
 ];
 
@@ -117,6 +117,9 @@ export default function GooglePlacesImportTab() {
   
   // Track searched place_ids to avoid duplicates in same session
   const [searchedPlaceIds, setSearchedPlaceIds] = useState<Set<string>>(new Set());
+  
+  // Track city assignment per placeId for proper city assignment
+  const [cityAssignments, setCityAssignments] = useState<Map<string, string>>(new Map());
   
   // Fetch cities for selected state
   const { data: cities } = useQuery({
@@ -204,6 +207,7 @@ export default function GooglePlacesImportTab() {
     setSearchedPlaceIds(new Set());
     setCurrentCityIndex(0);
     setImportLog([]);
+    setCityAssignments(new Map());
   };
   const resultsWithImportStatus = useMemo(() => {
     return results.map(r => ({
@@ -218,7 +222,7 @@ export default function GooglePlacesImportTab() {
   const mediumConfidenceCount = resultsWithImportStatus.filter(r => r.confidence === 'medium').length;
   const lowConfidenceCount = resultsWithImportStatus.filter(r => r.confidence === 'low').length;
 
-  const searchGooglePlaces = async () => {
+  const searchAndAutoImport = async () => {
     if (!selectedState && selectedCityIds.length === 0) {
       toast.error('Please select a state or at least one city');
       return;
@@ -228,14 +232,14 @@ export default function GooglePlacesImportTab() {
     setResults([]);
     setProcessedCities([]);
     setCurrentCityIndex(0);
-    setSearchedPlaceIds(new Set()); // Refresh searched place_ids for new search
+    setSearchedPlaceIds(new Set());
     setSearchProgress('Starting search...');
+    setImportLog([]);
     
     let allResults: PlaceResult[] = [];
     const citiesToSearch = selectedCityIds.length > 0 ? selectedCityIds : (cities?.map(c => c.id) || []);
-    
-    // Deduplicate place_ids across all results
     const seenPlaceIds = new Set<string>();
+    const newCityAssignments = new Map<string, string>();
     
     try {
       for (let i = 0; i < citiesToSearch.length; i++) {
@@ -265,12 +269,12 @@ export default function GooglePlacesImportTab() {
           const data = await response.json();
           
           if (data.success && data.results) {
-            // Filter out duplicates based on place_id
             const uniqueResults = data.results.filter((r: PlaceResult) => {
               if (seenPlaceIds.has(r.place_id)) {
                 return false;
               }
               seenPlaceIds.add(r.place_id);
+              newCityAssignments.set(r.place_id, city.name);
               return true;
             }).map((r: PlaceResult) => ({
               ...r,
@@ -279,7 +283,7 @@ export default function GooglePlacesImportTab() {
             
             allResults = [...allResults, ...uniqueResults];
             setProcessedCities(prev => [...prev, city.name]);
-            setSearchedPlaceIds(new Set(seenPlaceIds)); // Track for next cities
+            setSearchedPlaceIds(new Set(seenPlaceIds));
             setResults([...allResults]);
             setSearchProgress(`Found ${allResults.length} agencies from ${processedCities.length + 1} cities`);
           }
@@ -291,12 +295,101 @@ export default function GooglePlacesImportTab() {
       
       setSearchProgress(`Complete! Found ${allResults.length} foster care agencies from ${citiesToSearch.length} cities`);
       toast.success(`Found ${allResults.length} foster care agencies from ${citiesToSearch.length} cities`);
+
+      setCityAssignments(newCityAssignments);
+
+      if (allResults.length === 0) {
+        setIsSearching(false);
+        return;
+      }
+
+      setImportLog(prev => [...prev, `Starting auto-import for ${importType} mode...`]);
+      setSearchProgress('Auto-importing...');
+      
+      const placeIdsToImport = allResults.map(r => r.place_id);
+      const imported: any[] = [];
+      const errors: string[] = [];
+      const skipped: string[] = [];
+
+      // Convert Map to object for JSON serialization
+      const cityAssignmentsObj = Object.fromEntries(cityAssignments);
+
+      setImportLog(prev => [...prev, `Starting auto-import for ${importType} mode...`]);
+      setSearchProgress('Auto-importing...');
+      
+      try {
+        const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/gmb-import`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY}`,
+          },
+          body: JSON.stringify({
+            action: 'import',
+            placeIds: placeIdsToImport,
+            city: selectedState?.name,
+            state: selectedState?.abbreviation,
+            importType,
+            cityAssignments: cityAssignmentsObj,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status} ${response.statusText}`);
+        }
+        
+        const importData = await response.json();
+        
+        if (!importData.success) {
+          throw new Error(importData.error || 'Import failed');
+        }
+        imported.push(...(importData.imported_agencies || []));
+        skipped.push(...(importData.skipped_agencies || []));
+        errors.push(...(importData.error_messages || []));
+        
+        setImportLog(prev => [...prev, `✓ Imported: ${imported.length} agencies`]);
+        if (skipped.length > 0) setImportLog(prev => [...prev, `- Skipped: ${skipped.length}`]);
+        if (errors.length > 0) setImportLog(prev => [...prev, `✗ Errors: ${errors.length}`]);
+        
+        if (imported.length > 0) {
+          setImportLog(prev => [...prev, `Successfully imported:`]);
+          imported.forEach((agency: any) => {
+            setImportLog(prev => [...prev, `  ✓ ${agency.name} (${agency.city || 'N/A'})`]);
+          });
+        }
+        
+        if (errors.length > 0) {
+          setImportLog(prev => [...prev, `Errors:`]);
+          errors.forEach((err: string) => {
+            setImportLog(prev => [...prev, `  ✗ ${err}`]);
+          });
+        }
+
+        const importTypeLabels: Record<string, string> = {
+          'new': 'New agencies imported',
+          'update': 'Existing agencies updated', 
+          'sync': 'Sync complete',
+          'photos': 'Photos imported',
+          'business_hours': 'Business hours updated',
+          'reviews': 'Reviews imported',
+        };
+        
+        toast.success(`${importTypeLabels[importType] || 'Import'}: ${imported.length} imported, ${skipped.length} skipped, ${errors.length} errors`);
+      } catch (error: any) {
+        console.error('Auto-import error:', error);
+        setImportLog(prev => [...prev, `✗ Import failed: ${error.message}`]);
+      }
+      
+      queryClient.invalidateQueries({ queryKey: ['existing-agencies-place-ids'] });
+      queryClient.invalidateQueries({ queryKey: ['import-jobs'] });
+      
     } catch (error: any) {
-      console.error('Search error:', error);
-      toast.error(error.message || 'Failed to search Google Places');
-      setSearchProgress('Error occurred');
+      console.error('Search/Import error:', error);
+      toast.error(error.message || 'Failed to search or import');
+      setImportLog(prev => [...prev, `✗ Error: ${error.message}`]);
     } finally {
       setIsSearching(false);
+      setSearchProgress('');
     }
   };
 
@@ -331,6 +424,7 @@ export default function GooglePlacesImportTab() {
           city: selectedState?.name,
           state: selectedState?.abbreviation,
           importType,
+          cityAssignments: Object.fromEntries(cityAssignments),
         }),
       });
 
@@ -367,11 +461,7 @@ export default function GooglePlacesImportTab() {
       queryClient.invalidateQueries({ queryKey: ['existing-agencies-place-ids'] });
       queryClient.invalidateQueries({ queryKey: ['import-jobs'] });
       
-      // Clear selection after successful import
       setSelectedPlaces(new Set());
-      
-      // Re-search to update import status
-      await searchGooglePlaces();
       
     } catch (error: any) {
       console.error('Import error:', error);
@@ -535,31 +625,33 @@ export default function GooglePlacesImportTab() {
             </div>
           </div>
 
-          <div className="mt-4 flex items-center gap-4">
+          <div className="mt-4 flex flex-wrap items-center gap-4">
             <Button 
-              onClick={searchGooglePlaces} 
+              onClick={searchAndAutoImport} 
               disabled={isSearching || !selectedStateId}
               className="bg-primary"
             >
               {isSearching ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Searching...
+                  {searchProgress || 'Processing...'}
                 </>
               ) : (
                 <>
                   <Search className="h-4 w-4 mr-2" />
-                  Search Google Places
+                  Search & Auto-Import
                 </>
               )}
             </Button>
             
-            {isSearching && (
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span>{searchProgress}</span>
-              </div>
-            )}
+            <Badge variant="outline" className="bg-teal/10 text-teal border-teal/20">
+              {importType === 'new' && 'New Only'}
+              {importType === 'update' && 'Update Existing'}
+              {importType === 'sync' && 'Sync All'}
+              {importType === 'photos' && 'Import Photos'}
+              {importType === 'business_hours' && 'Import Hours'}
+              {importType === 'reviews' && 'Import Reviews'}
+            </Badge>
           </div>
         </CardContent>
       </Card>
@@ -582,33 +674,7 @@ export default function GooglePlacesImportTab() {
                 disabled={results.length === 0}
               >
                 <Trash2 className="h-4 w-4 mr-2" />
-                Clear
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={searchGooglePlaces}
-                disabled={isSearching}
-              >
-                <RefreshCw className={`h-4 w-4 mr-2 ${isSearching ? 'animate-spin' : ''}`} />
-                {isSearching ? 'Searching...' : 'Search More'}
-              </Button>
-              <Button
-                onClick={importSelectedPlaces}
-                disabled={selectedPlaces.size === 0 || isImporting}
-                className="bg-teal hover:bg-teal/90"
-              >
-                {isImporting ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Importing...
-                  </>
-                ) : (
-                  <>
-                    <Download className="h-4 w-4 mr-2" />
-                    Import Selected ({selectedPlaces.size})
-                  </>
-                )}
+                Clear Results
               </Button>
             </div>
           </CardHeader>
@@ -626,7 +692,7 @@ export default function GooglePlacesImportTab() {
                     <Checkbox
                       checked={selectedPlaces.has(place.place_id)}
                       onCheckedChange={() => togglePlace(place.place_id)}
-                      disabled={place.already_imported && importType !== 'update' && importType !== 'sync'}
+                      disabled={place.already_imported && !['update', 'sync', 'photos', 'reviews', 'business_hours'].includes(importType)}
                       className="mt-1"
                     />
                     <div className="flex-1 min-w-0">
@@ -694,7 +760,7 @@ export default function GooglePlacesImportTab() {
                         <Checkbox
                           checked={selectedPlaces.has(place.place_id)}
                           onCheckedChange={() => togglePlace(place.place_id)}
-                          disabled={place.already_imported && importType !== 'update' && importType !== 'sync'}
+                          disabled={place.already_imported && !['update', 'sync', 'photos', 'reviews', 'business_hours'].includes(importType)}
                         />
                       </TableCell>
                       <TableCell>

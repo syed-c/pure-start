@@ -105,6 +105,11 @@ export default function ContentIntelligenceCenterTab() {
   const [bulkTarget, setBulkTarget] = useState('');
   const [bulkResults, setBulkResults] = useState<any[]>([]);
   const [isRunningBulk, setIsRunningBulk] = useState(false);
+  
+  // Multi-page selection for generator
+  const [selectedPageIds, setSelectedPageIds] = useState<string[]>([]);
+  const [isBulkGenerating, setIsBulkGenerating] = useState(false);
+  const [bulkGenProgress, setBulkGenProgress] = useState({ current: 0, total: 0, results: [] as any[] });
 
   const [competitorPageId, setCompetitorPageId] = useState('');
   const [competitorUrls, setCompetitorUrls] = useState('');
@@ -284,6 +289,60 @@ export default function ContentIntelligenceCenterTab() {
     } finally {
       setIsGeneratingContent(false);
     }
+  };
+
+  const runBulkContentGeneration = async () => {
+    if (selectedPageIds.length === 0) {
+      toast.error('Please select pages to generate content');
+      return;
+    }
+    
+    setIsBulkGenerating(true);
+    setBulkGenProgress({ current: 0, total: selectedPageIds.length, results: [] });
+    const results: any[] = [];
+    
+    for (let i = 0; i < selectedPageIds.length; i++) {
+      const pageId = selectedPageIds[i];
+      const page = seoPages?.find((p: SeoPage) => p.id === pageId);
+      if (!page) continue;
+      
+      setBulkGenProgress(prev => ({ ...prev, current: i + 1 }));
+      
+      try {
+        const content = await generateContent.mutateAsync({
+          pageId: page.id,
+          pageType: page.page_type,
+          targetKeyword: page.title || page.slug,
+          tone: genTone,
+          wordCount: parseInt(genWordCount),
+          existingContent: page.content || undefined
+        });
+        
+        // Save to page
+        await supabase.from('seo_pages').update({
+          content: content.content,
+          meta_title: content.metaTitle,
+          meta_description: content.metaDescription,
+          h1: content.h1,
+          word_count: content.wordCount,
+          is_optimized: true,
+          updated_at: new Date().toISOString()
+        }).eq('id', page.id);
+        
+        results.push({ title: page.title || page.slug, success: true });
+      } catch (error: any) {
+        results.push({ title: page.title || page.slug, success: false, error: error.message });
+      }
+      
+      // Rate limiting between requests
+      if (i < selectedPageIds.length - 1) {
+        await new Promise(r => setTimeout(r, 1500));
+      }
+    }
+    
+    setBulkGenProgress(prev => ({ ...prev, results }));
+    setIsBulkGenerating(false);
+    toast.success(`Generated content for ${results.filter(r => r.success).length} pages`);
   };
 
   const handleSaveGeneratedContent = async () => {
@@ -764,15 +823,95 @@ export default function ContentIntelligenceCenterTab() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><Wand2 className="h-5 w-5 text-teal-600" />Content Generator</CardTitle>
-              <CardDescription>Generate unique content using Gemini AI</CardDescription>
+              <CardDescription>Generate content for single or multiple pages using AI</CardDescription>
             </CardHeader>
             <CardContent>
+              {/* Bulk Generate Section */}
+              <div className="mb-6 p-4 border rounded-lg bg-slate-800/50">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-semibold text-slate-200">Bulk Generate</h4>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => {
+                      if (selectedPageIds.length === seoPages?.length) {
+                        setSelectedPageIds([]);
+                      } else {
+                        setSelectedPageIds(seoPages?.map((p: SeoPage) => p.id) || []);
+                      }
+                    }}
+                  >
+                    {selectedPageIds.length === seoPages?.length ? 'Deselect All' : 'Select All'} ({selectedPageIds.length}/{seoPages?.length || 0})
+                  </Button>
+                </div>
+                <div className="flex gap-2 flex-wrap mb-3">
+                  <Select value={genTone} onValueChange={setGenTone}>
+                    <SelectTrigger className="w-[140px]"><SelectValue placeholder="Tone" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="professional">Professional</SelectItem>
+                      <SelectItem value="warm">Warm</SelectItem>
+                      <SelectItem value="trust-focused">Trust-focused</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={genWordCount} onValueChange={setGenWordCount}>
+                    <SelectTrigger className="w-[140px]"><SelectValue placeholder="Words" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="500">500 words</SelectItem>
+                      <SelectItem value="900">900 words</SelectItem>
+                      <SelectItem value="1400">1400 words</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button 
+                    variant="default"
+                    onClick={runBulkContentGeneration}
+                    disabled={isBulkGenerating || selectedPageIds.length === 0}
+                  >
+                    {isBulkGenerating ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Zap className="h-4 w-4 mr-2" />}
+                    Generate ({selectedPageIds.length})
+                  </Button>
+                </div>
+                
+                {isBulkGenerating && (
+                  <div className="mt-3 space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Generating content...</span>
+                      <span>{bulkGenProgress.current}/{bulkGenProgress.total}</span>
+                    </div>
+                    <Progress value={(bulkGenProgress.current / bulkGenProgress.total) * 100} />
+                  </div>
+                )}
+                
+                {bulkGenProgress.results.length > 0 && (
+                  <div className="mt-3 max-h-40 overflow-y-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Page</TableHead>
+                          <TableHead>Status</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {bulkGenProgress.results.slice(0, 10).map((r: any, i: number) => (
+                          <TableRow key={i}>
+                            <TableCell className="text-sm">{r.title}</TableCell>
+                            <TableCell>
+                              <Badge variant={r.success ? 'default' : 'destructive'}>{r.success ? 'Generated' : 'Failed'}</Badge>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </div>
+
+              {/* Single Page Generate */}
               <div className="space-y-4">
                 <div className="flex gap-2 flex-wrap">
                   <Select value={genPageId} onValueChange={setGenPageId}>
-                    <SelectTrigger className="w-[250px]"><SelectValue placeholder="Select page" /></SelectTrigger>
+                    <SelectTrigger className="w-[250px]"><SelectValue placeholder="Select single page" /></SelectTrigger>
                     <SelectContent>
-                      {seoPages?.slice(0, 30).map((p: SeoPage) => (
+                      {seoPages?.slice(0, 50).map((p: SeoPage) => (
                         <SelectItem key={p.id} value={p.id}>{p.title || p.slug}</SelectItem>
                       ))}
                     </SelectContent>

@@ -50,7 +50,7 @@ function generateSitemapXml(urls: SitemapUrl[]): string {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${validUrls.map((url) => `  <url>
     <loc>${escapeXml(url.loc)}</loc>
-    ${url.lastmod ? `<lastmod>${new Date(url.lastmod).toISOString().split("T")[0]}</lastmod>\n    ` : ""}<changefreq>${url.changefreq}</changefreq>
+    ${url.lastmod ? `<lastmod>${url.lastmod.split('T')[0]}</lastmod>\n    ` : `<lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n    `}<changefreq>${url.changefreq}</changefreq>
     <priority>${url.priority}</priority>
   </url>`).join("\n")}
 </urlset>`;

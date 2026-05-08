@@ -109,7 +109,7 @@ serve(async (req) => {
     }
 
     const body = await req.json();
-    const { action, category, city, state, placeIds, cityId, maxPages, importType = 'new' } = body;
+    const { action, category, city, state, placeIds, cityId, maxPages, importType = 'new', cityAssignments } = body;
 
     // =============================================================================
     // SEARCH ACTION - Search for places
@@ -246,6 +246,14 @@ serve(async (req) => {
       const errors: string[] = [];
       const skipped: string[] = [];
 
+      // Create city mapping from placeIds - allow per-agency city assignment
+      const cityMap = new Map<string, string>();
+      if (cityAssignments && typeof cityAssignments === 'object') {
+        Object.entries(cityAssignments).forEach(([placeId, c]) => {
+          cityMap.set(placeId, c as string);
+        });
+      }
+
       for (const placeId of placeIds) {
         try {
           // Check if already exists
@@ -255,14 +263,20 @@ serve(async (req) => {
             .eq('place_id', placeId)
             .maybeSingle();
           
+          // Handle different import types
           if (existing) {
-            if (importType === 'update' || importType === 'sync') {
-              // Update existing - handled below
-              console.log(`Updating existing: ${existing.name}`);
-            } else {
-              skipped.push(`${placeId}: Already exists as ${existing.name}`);
+            if (importType === 'new') {
+              skipped.push(`${placeId}: Already exists as ${existing.name} (skipped - new only)`);
               continue;
             }
+            // For 'update', 'sync', 'photos', 'reviews', 'business_hours' - continue with update
+            console.log(`Found existing: ${existing.name} (import type: ${importType})`);
+          } else {
+            if (importType === 'update' || importType === 'photos' || importType === 'reviews' || importType === 'business_hours') {
+              skipped.push(`${placeId}: Not found (skipped - update only)`);
+              continue;
+            }
+            // For 'new' or 'sync' - continue with insert
           }
 
           // Get place details with all available fields
@@ -322,14 +336,24 @@ serve(async (req) => {
           const weekdayText = place.regularOpeningHours?.weekdayDescriptions || [];
           const openNow = place.regularOpeningHours?.currentOpeningHours?.openNow;
 
-          // Prepare agency data
-          const agencyData = {
+          // Prepare agency data - selective based on import type
+          const isPartialUpdate = importType === 'photos' || importType === 'reviews' || importType === 'business_hours';
+          
+          const baseData = {
             name: placeName,
             slug,
             place_id: extractPlaceId(place.id),
             google_place_id: extractPlaceId(place.id),
+          };
+          
+          // Only include full data for new/update/sync
+          // Use city from cityMap if available, otherwise fallback to parsed address or default
+          const assignedCity = cityMap.get(placeId) || addressParts.city || city || '';
+          
+          const fullData = {
+            ...baseData,
             address: place.formattedAddress,
-            city: addressParts.city || city || '',
+            city: assignedCity,
             state: addressParts.county || state || '',
             postcode: addressParts.postcode || '',
             phone: place.nationalPhoneNumber || place.internationalPhoneNumber || null,
@@ -363,6 +387,40 @@ serve(async (req) => {
             imported_at: new Date().toISOString(),
             last_synced_at: new Date().toISOString(),
           };
+          
+          // Partial updates only include specific fields
+          const photoData = {
+            main_image_url: mainImageUrl,
+            cover_image_url: coverImageUrl || mainImageUrl,
+            last_synced_at: new Date().toISOString(),
+          };
+          
+          const reviewData = {
+            review_count: place.userRatingCount || 0,
+            rating: place.rating || 0,
+            last_synced_at: new Date().toISOString(),
+          };
+          
+          const hoursData = {
+            editorial_summary: place.shortFormattedAddress || null,
+            last_synced_at: new Date().toISOString(),
+          };
+          
+          let agencyData;
+          if (isPartialUpdate) {
+            // For partial updates, merge the appropriate partial data
+            if (importType === 'photos') {
+              agencyData = { ...baseData, ...photoData };
+            } else if (importType === 'reviews') {
+              agencyData = { ...baseData, ...reviewData };
+            } else if (importType === 'business_hours') {
+              agencyData = { ...baseData, ...hoursData };
+            } else {
+              agencyData = fullData;
+            }
+          } else {
+            agencyData = fullData;
+          }
 
           let agencyId: string;
 
@@ -397,9 +455,10 @@ serve(async (req) => {
             console.log(`✓ Imported: ${placeName}`);
           }
 
-          // Store photos in agency_photos table (if table exists)
-          try {
-            if (place.photos && place.photos.length > 0) {
+          // Store photos in agency_photos table (only for full imports or photo imports)
+          const shouldImportPhotos = ['new', 'update', 'sync', 'photos'].includes(importType);
+          if (shouldImportPhotos && place.photos && place.photos.length > 0) {
+            try {
               console.log(`  └─ Attempting to store ${place.photos.length} photos for agency ${agencyId}`);
               
               const photoInserts = place.photos.map((photo: any, index: number) => ({
@@ -426,9 +485,9 @@ serve(async (req) => {
               } else {
                 console.log(`  └─ Stored ${photoInserts.length} photos, data:`, photoData);
               }
+            } catch (photoErr) {
+              console.log(`  └─ Photo storage exception: ${photoErr instanceof Error ? photoErr.message : String(photoErr)}`);
             }
-          } catch (photoErr) {
-            console.log(`  └─ Photo storage exception: ${photoErr instanceof Error ? photoErr.message : String(photoErr)}`);
           }
 
           // Store opening hours in agency_opening_hours table (if table exists)

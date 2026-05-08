@@ -57,15 +57,15 @@ export function useGenerateContentBrief() {
         .single();
 
       if (!config?.value) {
-        throw new Error('Gemini API not configured. Go to API Control to configure.');
+        throw new Error('AIML API not configured. Go to API Control to add your AIML API key.');
       }
 
-      const valueObj = config.value as unknown;
+      const valueObj = typeof config.value === 'string' ? JSON.parse(config.value) : config.value as unknown;
       const apiKey = typeof valueObj === 'object' && valueObj ? (valueObj as Record<string, unknown>).api_key as string : '';
-      const model = typeof valueObj === 'object' && valueObj ? (valueObj as Record<string, unknown>).model as string : 'gemini-1.5-flash';
+      const model = typeof valueObj === 'object' && valueObj ? (valueObj as Record<string, unknown>).model as string : 'gpt-4o-mini';
       
       if (!apiKey) {
-        throw new Error('API key not found. Go to API Control to configure.');
+        throw new Error('API key not found. Go to API Control to add your AIML API key.');
       }
 
       const locationContext = params.location ? ` for ${params.location}, UK` : '';
@@ -95,16 +95,21 @@ Return ONLY valid JSON with this exact structure:
 }`;
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        `https://api.aimlapi.com/v1/chat/completions`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: {
-              maxOutputTokens: 4096,
-              temperature: 0.7,
-            }
+            model: model,
+            messages: [
+              { role: 'system', content: `You are an expert UK fostering content writer. Return ONLY valid JSON.` },
+              { role: 'user', content: prompt }
+            ],
+            max_tokens: 4096,
+            temperature: 0.7,
           })
         }
       );
@@ -115,12 +120,30 @@ Return ONLY valid JSON with this exact structure:
       }
 
       const data = await response.json();
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      let text = data.choices?.[0]?.message?.content || '';
       
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) throw new Error('Could not parse AI response');
+      // Try to extract JSON from response
+      if (!text) {
+        throw new Error('Empty AI response');
+      }
       
-      return JSON.parse(jsonMatch[0]);
+      // Try to find JSON in the response
+      let jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        // Try array format
+        jsonMatch = text.match(/\[[\s\S]*\]/);
+      }
+      if (!jsonMatch) {
+        console.error('Unable to parse AI response:', text);
+        throw new Error('Could not parse AI response. The model may have returned invalid JSON.');
+      }
+      
+      try {
+        return JSON.parse(jsonMatch[0]);
+      } catch (e) {
+        console.error('JSON parse error:', jsonMatch[0]);
+        throw new Error('Invalid JSON in AI response');
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['content-briefs'] });
@@ -142,8 +165,12 @@ export function useGenerateContent() {
         .eq('key', API_KEY)
         .single();
 
-      if (!config?.value?.api_key) {
-        throw new Error('Gemini API not configured');
+      const valueObj = config?.value as unknown;
+      const apiKey = typeof valueObj === 'object' && valueObj ? (valueObj as Record<string, unknown>).api_key as string : '';
+      const model = typeof valueObj === 'object' && valueObj ? (valueObj as Record<string, unknown>).model as string : 'gpt-4o-mini';
+
+      if (!apiKey) {
+        throw new Error('AIML API not configured. Go to API Control to add your AIML API key.');
       }
 
       const locationInfo = params.location ? `Location: ${params.location}, UK. ` : '';
@@ -179,32 +206,54 @@ Return ONLY valid JSON:
 }`;
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        `https://api.aimlapi.com/v1/chat/completions`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: {
-              maxOutputTokens: 8192,
-              temperature: 0.7,
-            }
+            model: model,
+            messages: [
+              { role: 'system', content: `You are an expert UK fostering content writer. Your response must be ONLY valid JSON - no explanations, no markdown, no text before or after. Start with { and end with }.` },
+              { role: 'user', content: prompt }
+            ],
+            max_tokens: 8192,
+            temperature: 0.7,
           })
         }
       );
 
       if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.error?.message || 'Failed to generate content');
+        const errText = await response.text();
+        console.error('API error:', errText);
+        throw new Error(`API error: ${response.status}`);
       }
 
       const data = await response.json();
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      let text = data.choices?.[0]?.message?.content || '';
       
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) throw new Error('Could not parse AI response');
+      if (!text) {
+        throw new Error('Empty AI response');
+      }
       
-      return JSON.parse(jsonMatch[0]);
+      let jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        jsonMatch = text.match(/\[[\s\S]*\]/);
+      }
+      if (!jsonMatch) {
+        console.error('Parse error, response:', text);
+        throw new Error('Could not parse AI response');
+      }
+      
+      try {
+        const result = JSON.parse(jsonMatch[0]);
+        return result;
+      } catch (e) {
+        console.error('JSON error:', jsonMatch[0]);
+        throw new Error('Invalid JSON from AI');
+      }
     },
     onSuccess: (data, params) => {
       queryClient.invalidateQueries({ queryKey: ['seo-pages'] });
@@ -227,8 +276,12 @@ export function useOptimizeContent() {
         .eq('key', API_KEY)
         .single();
 
-      if (!config?.value?.api_key) {
-        throw new Error('Gemini API not configured');
+      const valueObj = typeof config?.value === 'string' ? JSON.parse(config?.value) : config?.value as unknown;
+      const apiKey = typeof valueObj === 'object' && valueObj ? (valueObj as Record<string, unknown>).api_key as string : '';
+      const model = typeof valueObj === 'object' && valueObj ? (valueObj as Record<string, unknown>).model as string : 'gpt-4o-mini';
+
+      if (!apiKey) {
+        throw new Error('AIML API not configured. Go to API Control to add your AIML API key.');
       }
 
       const focusList = params.focus.join(', ');
@@ -250,16 +303,21 @@ Return ONLY valid JSON with improvements:
 }`;
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        `https://api.aimlapi.com/v1/chat/completions`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: {
-              maxOutputTokens: 2048,
-              temperature: 0.5,
-            }
+            model: model,
+messages: [
+              { role: 'system', content: `You are an expert UK fostering content writer. Your response must be ONLY valid JSON - no explanations, no markdown, no text before or after. Start with { and end with }.` },
+              { role: 'user', content: prompt }
+            ],
+            max_tokens: 2048,
+            temperature: 0.5,
           })
         }
       );
@@ -295,8 +353,12 @@ export function useAnalyzeCompetitors() {
         .eq('key', API_KEY)
         .single();
 
-      if (!config?.value?.api_key) {
-        throw new Error('Gemini API not configured');
+      const valueObj = typeof config?.value === 'string' ? JSON.parse(config?.value) : config?.value as unknown;
+      const apiKey = typeof valueObj === 'object' && valueObj ? (valueObj as Record<string, unknown>).api_key as string : '';
+      const model = typeof valueObj === 'object' && valueObj ? (valueObj as Record<string, unknown>).model as string : 'gpt-4o-mini';
+
+      if (!apiKey) {
+        throw new Error('AIML API not configured. Go to API Control to add your AIML API key.');
       }
 
       const prompt = `Analyze competitor content for gaps and opportunities. Do NOT copy content.
@@ -315,16 +377,21 @@ Return ONLY valid JSON:
 }`;
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        `https://api.aimlapi.com/v1/chat/completions`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: {
-              maxOutputTokens: 2048,
-              temperature: 0.6,
-            }
+            model: model,
+            messages: [
+              { role: 'system', content: `You are an expert SEO competitor analyst. Return ONLY valid JSON.` },
+              { role: 'user', content: prompt }
+            ],
+            max_tokens: 2048,
+            temperature: 0.6,
           })
         }
       );
