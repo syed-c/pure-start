@@ -16,19 +16,6 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
 import { useRealCounts } from "@/hooks/useRealCounts";
 
-const topAgenciesByCity = [
-  { id: '1', name: 'Oakleaf Fostering', slug: 'oakleaf-fostering', rating: 4.8, review_count: 125, is_verified: true, city: 'London', state: 'England', image_url: '', cover_image_url: '' },
-  { id: '2', name: 'Care First Ltd', slug: 'care-first-ltd', rating: 4.6, review_count: 89, is_verified: true, city: 'Manchester', state: 'England', image_url: '', cover_image_url: '' },
-  { id: '3', name: 'Fostering Together', slug: 'fostering-together', rating: 4.5, review_count: 67, is_verified: true, city: 'Birmingham', state: 'England', image_url: '', cover_image_url: '' },
-  { id: '4', name: 'National Fostering', slug: 'national-fostering', rating: 4.4, review_count: 45, is_verified: true, city: 'Leeds', state: 'England', image_url: '', cover_image_url: '' },
-  { id: '5', name: 'Sunrise Foster Care', slug: 'sunrise-foster-care', rating: 4.3, review_count: 32, is_verified: true, city: 'Liverpool', state: 'England', image_url: '', cover_image_url: '' },
-  { id: '6', name: 'Community Fostering', slug: 'community-fostering', rating: 4.2, review_count: 28, is_verified: true, city: 'Bristol', state: 'England', image_url: '', cover_image_url: '' },
-  { id: '7', name: 'Together Foster Care', slug: 'together-foster-care', rating: 4.7, review_count: 52, is_verified: true, city: 'Sheffield', state: 'England', image_url: '', cover_image_url: '' },
-  { id: '8', name: 'Loving Homes', slug: 'loving-homes', rating: 4.5, review_count: 38, is_verified: true, city: 'Glasgow', state: 'Scotland', image_url: '', cover_image_url: '' },
-  { id: '9', name: 'Family First', slug: 'family-first', rating: 4.4, review_count: 25, is_verified: true, city: 'Cardiff', state: 'Wales', image_url: '', cover_image_url: '' },
-  { id: '10', name: 'Safe Haven', slug: 'safe-haven-fostering', rating: 4.3, review_count: 18, is_verified: true, city: 'Belfast', state: 'N. Ireland', image_url: '', cover_image_url: '' },
-];
-
 const fosteringServices = [
   { name: "Emergency Fostering", slug: "emergency-fostering", icon: Baby, description: "Immediate placements for children in crisis", color: "bg-red-500" },
   { name: "Short-Term", slug: "short-term-fostering", icon: Calendar, description: "Temporary care from weeks to months", color: "bg-blue-500" },
@@ -36,24 +23,6 @@ const fosteringServices = [
   { name: "Respite", slug: "respite-fostering", icon: HandHeart, description: "Temporary breaks for families", color: "bg-purple-500" },
   { name: "Therapeutic", slug: "therapeutic-fostering", icon: GraduationCap, description: "Specialist support for complex needs", color: "bg-amber-500" },
   { name: "Parent & Child", slug: "parent-and-child-fostering", icon: Heart, description: "Support for parent and child together", color: "bg-pink-500" },
-];
-
-const cities = [
-  { name: "London", slug: "london", count: 85, region: "England" },
-  { name: "Birmingham", slug: "birmingham", count: 42, region: "England" },
-  { name: "Manchester", slug: "manchester", count: 38, region: "England" },
-  { name: "Leeds", slug: "leeds", count: 28, region: "England" },
-  { name: "Glasgow", slug: "glasgow", count: 24, region: "Scotland" },
-  { name: "Liverpool", slug: "liverpool", count: 22, region: "England" },
-  { name: "Bristol", slug: "bristol", count: 18, region: "England" },
-  { name: "Sheffield", slug: "sheffield", count: 15, region: "England" },
-  { name: "Cardiff", slug: "cardiff", count: 12, region: "Wales" },
-  { name: "Belfast", slug: "belfast", count: 10, region: "Northern Ireland" },
-  { name: "Newcastle", slug: "newcastle", count: 12, region: "England" },
-  { name: "Nottingham", slug: "nottingham", count: 10, region: "England" },
-  { name: "Southampton", slug: "southampton", count: 8, region: "England" },
-  { name: "Kent", slug: "kent", count: 8, region: "England" },
-  { name: "Edinburgh", slug: "edinburgh", count: 8, region: "Scotland" },
 ];
 
 const testimonials = [
@@ -74,11 +43,30 @@ function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const { counts } = useRealCounts();
 
-  // Fetch real agencies from database
+  // Fetch real agencies from database with proper filtering
   const { data: dbAgencies } = useQuery({
     queryKey: ['featured-agencies'],
     queryFn: async () => {
-      const { data } = await supabaseAdmin.from('agencies').select('id, name, slug, rating, review_count, is_verified, city, state, main_image_url, cover_image_url').order('rating', { ascending: false }).limit(10);
+      const { data } = await supabaseAdmin
+        .from('agencies')
+        .select('id, name, slug, rating, review_count, is_verified, city, state, main_image_url, cover_image_url')
+        .eq('is_duplicate', false)
+        .order('rating', { ascending: false })
+        .limit(10);
+      return data || [];
+    },
+  });
+
+  // Fetch real cities with agency counts from database
+  const { data: dbCities } = useQuery({
+    queryKey: ['cities-with-agency-counts'],
+    queryFn: async () => {
+      const { data } = await supabaseAdmin
+        .from('cities')
+        .select('id, name, slug, states!inner(abbreviation)')
+        .eq('states.is_active', true)
+        .order('name')
+        .limit(15);
       return data || [];
     },
   });
@@ -95,7 +83,7 @@ function HomePage() {
   };
 
   // Use real agencies from DB, fallback to sample data
-  const featuredAgencies = dbAgencies && dbAgencies.length > 0 ? dbAgencies : topAgenciesByCity;
+  const featuredAgencies = dbAgencies || [];
   const totalAgencies = counts?.agencies || 500;
   const totalCities = counts?.cities || 50;
 
@@ -296,17 +284,16 @@ function HomePage() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4">
-            {cities.map((city, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
+            {(dbCities || []).map((city: any, i: number) => (
+              <motion.div key={city.id || i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
                 <Link to={`/fostering-agencies/${city.slug}/`}>
                   <Card className="group bg-slate-800/50 border-slate-700 hover:border-teal-500/50 hover:bg-teal-500/10 transition-all duration-300 cursor-pointer">
                     <CardContent className="p-4 flex items-center justify-between">
                       <div>
                         <h3 className="font-semibold text-white group-hover:text-teal-400 transition-colors">{city.name}</h3>
-                        <p className="text-xs text-slate-400">{city.region}</p>
+                        <p className="text-xs text-slate-400">Agencies</p>
                       </div>
                       <div className="flex items-center gap-1 text-teal-400">
-                        <span className="text-sm font-semibold">{city.count}</span>
                         <ChevronRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                       </div>
                     </CardContent>
