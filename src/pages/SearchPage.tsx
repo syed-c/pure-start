@@ -159,25 +159,10 @@ function useSearchResults(filters: SearchFilters, page: number) {
         ];
       }
       
-      console.log('Total agencies to process:', sourceData.length);
-      
-      // Map to results
+console.log('Total agencies to process:', sourceData.length);
+       
+      // Map to results - only process sourceData once
       for (const a of sourceData as any[]) {
-        const isVerified = a.is_verified === true;
-        if (filters.verifiedOnly && !isVerified) continue;
-        
-        results.push({
-          id: a.id, name: a.name, slug: a.slug, type: "agency", title: "Fostering Agency",
-          rating: Number(a.rating) || 0, reviewCount: a.review_count || 0,
-          image: a.image_url || a.cover_image_url || undefined, isVerified,
-          agencyName: a.name, agencySlug: a.slug,
-          regionName: a.state, cityName: a.city,
-          fosteringTypes: a.fostering_types || ['General'],
-        });
-      }
-      
-      console.log('Total results:', results.length);
-      for (const a of agenciesData as any[]) {
         const isVerified = a.is_verified === true;
         if (filters.verifiedOnly && !isVerified) continue;
         
@@ -190,10 +175,10 @@ function useSearchResults(filters: SearchFilters, page: number) {
         results.push({
           id: a.id, name: a.name, slug: a.slug, type: "agency", title: "Fostering Agency",
           rating: Number(a.rating) || 0, reviewCount: a.review_count || 0,
-          image: a.image_url || a.cover_image_url || undefined, isVerified,
+          image: a.main_image_url || a.cover_image_url || a.image_url || undefined, isVerified,
           agencyName: a.name, agencySlug: a.slug,
           regionName: a.state, cityName: a.city,
-          fosteringTypes: fosteringTypesFormatted,
+          fosteringTypes: fosteringTypesFormatted.length > 0 ? fosteringTypesFormatted : ['General'],
         });
       }
       
