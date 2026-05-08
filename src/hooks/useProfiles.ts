@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { supabaseAdmin } from '@/integrations/supabase/client';
 
 export interface Profile {
   id: string;
@@ -29,18 +30,33 @@ export function useProfiles(filters: ProfileFilters = {}) {
   return useQuery({
     queryKey: ['profiles', filters],
     queryFn: async () => {
-      return [
-        { id: '1', name: 'Oakleaf Fostering', slug: 'oakleaf-fostering', type: 'agency' as const, rating: 4.8, review_count: 125, is_verified: true, city: 'London', state: 'England', image_url: null },
-        { id: '2', name: 'Care First Ltd', slug: 'care-first-ltd', type: 'agency' as const, rating: 4.6, review_count: 89, is_verified: true, city: 'Manchester', state: 'England', image_url: null },
-        { id: '3', name: 'Fostering Together', slug: 'fostering-together', type: 'agency' as const, rating: 4.5, review_count: 67, is_verified: true, city: 'Birmingham', state: 'England', image_url: null },
-        { id: '4', name: 'National Fostering', slug: 'national-fostering', type: 'agency' as const, rating: 4.4, review_count: 45, is_verified: true, city: 'Leeds', state: 'England', image_url: null },
-        { id: '5', name: 'Sunrise Foster Care', slug: 'sunrise-foster-care', type: 'agency' as const, rating: 4.3, review_count: 32, is_verified: true, city: 'Liverpool', state: 'England', image_url: null },
-        { id: '6', name: 'Community Fostering', slug: 'community-fostering', type: 'agency' as const, rating: 4.2, review_count: 28, is_verified: true, city: 'Bristol', state: 'England', image_url: null },
-        { id: '7', name: 'Together Foster Care', slug: 'together-foster-care', type: 'agency' as const, rating: 4.1, review_count: 24, is_verified: true, city: 'Sheffield', state: 'England', image_url: null },
-        { id: '8', name: 'Loving Homes', slug: 'loving-homes', type: 'agency' as const, rating: 4.0, review_count: 19, is_verified: true, city: 'Glasgow', state: 'Scotland', image_url: null },
-        { id: '9', name: 'Family First', slug: 'family-first', type: 'agency' as const, rating: 3.9, review_count: 15, is_verified: true, city: 'Cardiff', state: 'Wales', image_url: null },
-        { id: '10', name: 'Safe Haven Fostering', slug: 'safe-haven-fostering', type: 'agency' as const, rating: 3.8, review_count: 12, is_verified: true, city: 'Belfast', state: 'Northern Ireland', image_url: null },
-      ].slice(0, filters.limit || 10);
+      // Fetch real agencies from database - no hardcoded data
+      const { data } = await supabaseAdmin
+        .from('agencies')
+        .select('id, name, slug, rating, review_count, is_verified, city, state, main_image_url, cover_image_url, is_duplicate')
+        .eq('is_duplicate', false)
+        .order('rating', { ascending: false })
+        .limit(filters.limit || 50);
+      
+      if (!data || data.length === 0) {
+        return [];
+      }
+      
+      // Map to Profile format
+      return data.map(agency => ({
+        id: agency.id,
+        name: agency.name,
+        slug: agency.slug,
+        type: 'agency' as const,
+        rating: agency.rating || 0,
+        reviewCount: agency.review_count || 0,
+        image: agency.main_image_url || agency.cover_image_url || undefined,
+        isVerified: agency.is_verified === true,
+        location: agency.city,
+        agencyName: agency.name,
+        isClaimed: false,
+        isPinned: false,
+      }));
     },
   });
 }
@@ -53,14 +69,25 @@ export function useTopAgenciesPerLocation(limit: number = 8) {
   return useQuery({
     queryKey: ['top-agencies-per-location', limit],
     queryFn: async () => {
-      return [
-        { id: '1', name: 'Oakleaf Fostering', slug: 'oakleaf-fostering', rating: 4.8, city: 'London' },
-        { id: '2', name: 'Care First Ltd', slug: 'care-first-ltd', rating: 4.6, city: 'Manchester' },
-        { id: '3', name: 'Fostering Together', slug: 'fostering-together', rating: 4.5, city: 'Birmingham' },
-        { id: '4', name: 'National Fostering', slug: 'national-fostering', rating: 4.4, city: 'Leeds' },
-        { id: '5', name: 'Sunrise Foster Care', slug: 'sunrise-foster-care', rating: 4.3, city: 'Liverpool' },
-        { id: '6', name: 'Community Fostering', slug: 'community-fostering', rating: 4.2, city: 'Bristol' },
-      ].slice(0, limit);
+      const { data } = await supabaseAdmin
+        .from('agencies')
+        .select('id, name, slug, rating, review_count, city, is_verified')
+        .eq('is_duplicate', false)
+        .order('rating', { ascending: false })
+        .limit(limit || 8);
+      
+      if (!data || data.length === 0) {
+        return [];
+      }
+      
+      return data.map(agency => ({
+        id: agency.id,
+        name: agency.name,
+        slug: agency.slug,
+        rating: agency.rating || 0,
+        city: agency.city,
+        isVerified: agency.is_verified === true,
+      }));
     },
   });
 }
