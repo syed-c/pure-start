@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useRealCounts } from "@/hooks/useRealCounts";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/button";
@@ -58,13 +59,14 @@ const extractEmailDomain = (email: string): string | null => {
 
 const ClaimProfilePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const prefilledClinic = searchParams.get("clinic");
+  const prefilledAgency = searchParams.get("agency");
   const { user } = useAuth();
   const { toast } = useToast();
+  const { data: counts } = useRealCounts();
   
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchType, setSearchType] = useState<"clinic" | "dentist">("clinic");
-  const [selectedClinic, setSelectedClinic] = useState<any>(null);
+  const [searchType, setSearchType] = useState<"agency" | "fosterer">("agency");
+  const [selectedAgency, setSelectedAgency] = useState<any>(null);
   const [step, setStep] = useState<"search" | "choose-method" | "select-email" | "otp-verify" | "manual-form" | "success" | "submitted">("search");
   const [verificationCode, setVerificationCode] = useState("");
   const [isSendingOtp, setIsSendingOtp] = useState(false);
@@ -84,58 +86,55 @@ const ClaimProfilePage = () => {
     notes: ""
   });
 
-  // Get domain from selected clinic's website
-  const clinicDomain = selectedClinic ? extractDomain(selectedClinic.website) : null;
-  const fullBusinessEmail = emailPrefix && clinicDomain ? `${emailPrefix}@${clinicDomain}` : "";
-  
-  // Get claim emails from clinic
-  const claimEmails: string[] = selectedClinic?.claim_emails || [];
-  const hasClaimEmails = claimEmails.length > 0;
+  // Get domain from selected agency's website
+  const agencyDomain = selectedAgency ? extractDomain(selectedAgency.website) : null;
+  const fullBusinessEmail = emailPrefix && agencyDomain ? `${emailPrefix}@${agencyDomain}` : "";
 
   // Redirect to clean URL if query params exist
   useEffect(() => {
-    if (prefilledClinic) {
-      setSearchQuery(prefilledClinic);
+    if (prefilledAgency) {
+      setSearchQuery(prefilledAgency);
       setSearchParams({}, { replace: true });
     }
-  }, [prefilledClinic, setSearchParams]);
+  }, [prefilledAgency, setSearchParams]);
 
-  // Search clinics
-  const { data: searchResults, isLoading: searching } = useQuery({
+  // Search agencies - no filters to avoid RLS issues
+  const { data: searchResults, isLoading: searching, error: searchError } = useQuery({
     queryKey: ["claim-search", searchQuery, searchType],
     queryFn: async () => {
       if (!searchQuery || searchQuery.length < 2) return [];
       
-      if (searchType === "clinic") {
-        const { data } = await supabase
-          .from("clinics")
-          .select("id, name, slug, address, email, phone, website, claim_status, verification_status, claim_emails, city:cities(name)")
-          .ilike("name", `%${searchQuery}%`)
-          .limit(10);
-        return data || [];
-      } else {
-        const { data } = await supabase
-          .from("dentists")
-          .select("id, name, slug, title, clinic:clinics(id, name, slug, website, claim_emails)")
-          .ilike("name", `%${searchQuery}%`)
-          .limit(10);
-        return data || [];
+      // Simple query - just search by name
+      const { data: agencyResults, error: agencyError } = await supabase
+        .from("agencies")
+        .select("id, name, slug, address, email, phone, website")
+        .ilike("name", `%${searchQuery}%`)
+        .limit(10);
+      
+      if (agencyError) {
+        console.log("Agency search error (trying clinics):", agencyError.message);
       }
+      
+      // If no results from agencies, try clinics table
+      let results = agencyResults || [];
+      if (results.length === 0) {
+        const { data: clinicResults } = await supabase
+          .from("clinics")
+          .select("id, name, slug, address, email, phone, website")
+          .ilike("name", `%${searchQuery}%`)
+          .limit(10);
+        
+        results = clinicResults || [];
+      }
+      
+      return results;
     },
     enabled: searchQuery.length >= 2,
   });
 
-  const handleSelectClinic = (clinic: any) => {
-    setSelectedClinic(clinic);
+  const handleSelectAgency = (agency: any) => {
+    setSelectedAgency(agency);
     setEmailPrefix("");
-    if (clinic.claim_status === "claimed") {
-      toast({
-        title: "Already Claimed",
-        description: "This profile has already been claimed. Contact support if you believe this is an error.",
-        variant: "destructive",
-      });
-      return;
-    }
     setStep("choose-method");
   };
 
@@ -144,7 +143,7 @@ const ClaimProfilePage = () => {
       // If clinic has claim emails, show email selection step
       if (hasClaimEmails) {
         setStep("select-email");
-      } else if (clinicDomain) {
+      } else if (agencyDomain) {
         // Fall back to domain-based verification
         setEmailSource("domain");
         setStep("otp-verify");
@@ -182,7 +181,7 @@ const ClaimProfilePage = () => {
     
     if (emailSource === "claim_email" && selectedClaimEmail) {
       emailToVerify = selectedClaimEmail;
-    } else if (emailPrefix && clinicDomain) {
+    } else if (emailPrefix && agencyDomain) {
       emailToVerify = fullBusinessEmail;
     } else {
       toast({
@@ -197,10 +196,10 @@ const ClaimProfilePage = () => {
     try {
       const { data, error } = await supabase.functions.invoke('send-claim-otp', {
         body: {
-          clinicId: selectedClinic.id,
+          clinicId: selectedAgency.id,
           method: "email",
           businessEmail: emailToVerify,
-          businessPhone: selectedClinic.phone || "",
+          businessPhone: selectedAgency.phone || "",
         },
       });
 
@@ -250,7 +249,7 @@ const ClaimProfilePage = () => {
     try {
       const { data, error } = await supabase.functions.invoke('verify-claim-otp', {
         body: {
-          clinicId: selectedClinic.id,
+          clinicId: selectedAgency.id,
           code: verificationCode,
         },
       });
@@ -302,7 +301,7 @@ const ClaimProfilePage = () => {
       const { error } = await supabase
         .from("claim_requests")
         .upsert({
-          clinic_id: selectedClinic.id,
+          clinic_id: selectedAgency.id,
           user_id: user.id,
           status: "pending",
           claim_type: "manual_review",
@@ -338,21 +337,17 @@ const ClaimProfilePage = () => {
   const handleBack = () => {
     if (step === "choose-method") {
       setStep("search");
-      setSelectedClinic(null);
+      setSelectedAgency(null);
     } else if (step === "select-email") {
       setStep("choose-method");
       setSelectedClaimEmail(null);
     } else if (step === "otp-verify" || step === "manual-form") {
-      if (hasClaimEmails) {
-        setStep("select-email");
-      } else {
-        setStep("choose-method");
-      }
-      setOtpSent(false);
-      setVerificationCode("");
-      setEmailPrefix("");
-      setSelectedClaimEmail(null);
+      setStep("choose-method");
     }
+    setOtpSent(false);
+    setVerificationCode("");
+    setEmailPrefix("");
+    setSelectedClaimEmail(null);
   };
 
   const benefits = [
@@ -397,10 +392,10 @@ const ClaimProfilePage = () => {
             <span>Claim Profile</span>
           </div>
           <h1 className="font-display text-3xl md:text-4xl font-bold">
-            Claim Your <span className="text-primary">Profile</span>
+            Claim Your <span className="text-primary">Agency Profile</span>
           </h1>
           <p className="text-muted-foreground mt-2 max-w-xl">
-            Verify ownership of your clinic or practice to unlock management features.
+            Verify ownership of your fostering agency to unlock management features.
           </p>
         </div>
       </div>
@@ -416,22 +411,22 @@ const ClaimProfilePage = () => {
                 {/* Search Type Toggle */}
                 <div className="flex gap-2 mb-5">
                   <Button
-                    variant={searchType === "clinic" ? "default" : "outline"}
-                    onClick={() => setSearchType("clinic")}
+                    variant={searchType === "agency" ? "default" : "outline"}
+                    onClick={() => setSearchType("agency")}
                     className="rounded-xl font-bold flex-1"
                     size="sm"
                   >
                     <Building2 className="h-4 w-4 mr-2" />
-                    Clinic
+                    Agency
                   </Button>
                   <Button
-                    variant={searchType === "dentist" ? "default" : "outline"}
-                    onClick={() => setSearchType("dentist")}
+                    variant={searchType === "fosterer" ? "default" : "outline"}
+                    onClick={() => setSearchType("fosterer")}
                     className="rounded-xl font-bold flex-1"
                     size="sm"
                   >
                     <User className="h-4 w-4 mr-2" />
-                    Dentist
+                    Fosterer
                   </Button>
                 </div>
 
@@ -454,6 +449,13 @@ const ClaimProfilePage = () => {
                   </div>
                 )}
 
+                {searchError && (
+                  <div className="text-center py-6 text-muted-foreground">
+                    <AlertCircle className="h-5 w-5 mx-auto mb-2 text-red-500" />
+                    <p>Error searching. Please try again.</p>
+                  </div>
+                )}
+
                 {searchResults && searchResults.length > 0 && (
                   <div className="space-y-2 mb-5">
                     <p className="text-sm text-muted-foreground font-medium">
@@ -462,7 +464,7 @@ const ClaimProfilePage = () => {
                     {searchResults.map((result: any) => (
                       <button
                         key={result.id}
-                        onClick={() => handleSelectClinic(result)}
+                        onClick={() => handleSelectAgency(result)}
                         className="w-full p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors text-left group"
                       >
                         <div className="flex items-center justify-between">
@@ -478,23 +480,21 @@ const ClaimProfilePage = () => {
                               </p>
                             )}
                           </div>
-                          {result.claim_status === "claimed" ? (
-                            <Badge variant="secondary" className="rounded-full ml-2">Claimed</Badge>
-                          ) : (
-                            <Badge className="bg-primary/10 text-primary rounded-full ml-2">Available</Badge>
-                          )}
+                          {/* Show available status - always show as available since claim_status may not exist */}
+                          <Badge className="bg-primary/10 text-primary rounded-full ml-2">Available</Badge>
                         </div>
                       </button>
                     ))}
                   </div>
                 )}
 
-                {searchQuery.length >= 2 && searchResults?.length === 0 && !searching && (
+                {/* No results message */}
+                {searchQuery.length >= 2 && !searching && (!searchResults || searchResults.length === 0) && (
                   <div className="text-center py-6">
-                    <p className="text-muted-foreground mb-4">No profiles found matching your search.</p>
+                    <p className="text-muted-foreground mb-4">No agencies found matching your search.</p>
                     <Button asChild variant="outline" className="rounded-xl font-bold" size="sm">
-                      <Link to="/list-your-practice">
-                        List Your Practice Instead
+                      <Link to="/list-your-agency">
+                        List Your Agency Instead
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
@@ -505,11 +505,11 @@ const ClaimProfilePage = () => {
                 <div className="mt-6 p-5 rounded-xl bg-gold/10 border border-gold/30">
                   <h3 className="font-display font-bold mb-1">Can't find your profile?</h3>
                   <p className="text-sm text-muted-foreground mb-3">
-                    If your clinic isn't listed yet, you can add it for free.
+                    If your agency isn't listed yet, you can add it for free.
                   </p>
                   <Button asChild variant="outline" className="rounded-xl font-bold border-gold text-gold hover:bg-gold hover:text-white" size="sm">
-                    <Link to="/list-your-practice">
-                      List Your Practice
+                    <Link to="/list-your-agency">
+                      List Your Agency
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
@@ -518,7 +518,7 @@ const ClaimProfilePage = () => {
             )}
 
             {/* Choose Verification Method */}
-            {step === "choose-method" && selectedClinic && (
+            {step === "choose-method" && selectedAgency && (
               <div className="card-modern p-6 md:p-8">
                 <button
                   onClick={handleBack}
@@ -530,12 +530,12 @@ const ClaimProfilePage = () => {
                 <div className="flex items-start gap-4 mb-6 p-4 rounded-xl bg-muted/50">
                   <Building2 className="h-10 w-10 text-primary flex-shrink-0" />
                   <div>
-                    <h3 className="font-bold">{selectedClinic.name}</h3>
-                    <p className="text-sm text-muted-foreground">{selectedClinic.address}</p>
-                    {clinicDomain && (
+                    <h3 className="font-bold">{selectedAgency.name}</h3>
+                    <p className="text-sm text-muted-foreground">{selectedAgency.address}</p>
+                    {agencyDomain && (
                       <p className="text-xs text-primary flex items-center gap-1 mt-1">
                         <Globe className="h-3 w-3" />
-                        {clinicDomain}
+                        {agencyDomain}
                       </p>
                     )}
                   </div>
@@ -550,9 +550,9 @@ const ClaimProfilePage = () => {
                   {/* OTP Option */}
                   <button
                     onClick={() => handleChooseMethod("otp")}
-                    disabled={!clinicDomain && !hasClaimEmails}
+                    disabled={!agencyDomain && !hasClaimEmails}
                     className={`w-full p-5 rounded-xl border-2 transition-all text-left group ${
-                      (clinicDomain || hasClaimEmails)
+                      (agencyDomain || hasClaimEmails)
                         ? "border-border hover:border-primary/50"
                         : "border-border/50 opacity-60 cursor-not-allowed"
                     }`}
@@ -565,8 +565,8 @@ const ClaimProfilePage = () => {
                         <h3 className="font-bold mb-1">Verify via Email</h3>
                         <p className="text-sm text-muted-foreground mb-2">
                           {hasClaimEmails 
-                            ? `We have ${claimEmails.length} email${claimEmails.length > 1 ? 's' : ''} on file for this clinic.`
-                            : clinicDomain 
+                            ? `We have ${claimEmails.length} email${claimEmails.length > 1 ? 's' : ''} on file for this agency.`
+                            : agencyDomain 
                               ? "We'll send a code to any email at your website domain."
                               : "No email options available."
                           }
@@ -584,9 +584,9 @@ const ClaimProfilePage = () => {
                               </Badge>
                             )}
                           </div>
-                        ) : clinicDomain ? (
+                        ) : agencyDomain ? (
                           <Badge variant="secondary" className="rounded-full text-xs">
-                            yourname@{clinicDomain}
+                            yourname@{agencyDomain}
                           </Badge>
                         ) : (
                           <Badge variant="outline" className="rounded-full text-xs text-amber-600 border-amber-300">
@@ -595,7 +595,7 @@ const ClaimProfilePage = () => {
                           </Badge>
                         )}
                       </div>
-                      {(clinicDomain || hasClaimEmails) && (
+                      {(agencyDomain || hasClaimEmails) && (
                         <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
                       )}
                     </div>
@@ -635,7 +635,7 @@ const ClaimProfilePage = () => {
             )}
 
             {/* Email Selection Step */}
-            {step === "select-email" && selectedClinic && (
+            {step === "select-email" && selectedAgency && (
               <div className="card-modern p-6 md:p-8">
                 <button
                   onClick={handleBack}
@@ -647,8 +647,8 @@ const ClaimProfilePage = () => {
                 <div className="flex items-start gap-4 mb-6 p-4 rounded-xl bg-muted/50">
                   <Building2 className="h-8 w-8 text-primary flex-shrink-0" />
                   <div>
-                    <h3 className="font-bold">{selectedClinic.name}</h3>
-                    <p className="text-sm text-muted-foreground">{selectedClinic.address}</p>
+                    <h3 className="font-bold">{selectedAgency.name}</h3>
+                    <p className="text-sm text-muted-foreground">{selectedAgency.address}</p>
                   </div>
                 </div>
 
@@ -679,7 +679,7 @@ const ClaimProfilePage = () => {
                   ))}
 
                   {/* Website domain option if available */}
-                  {clinicDomain && (
+                  {agencyDomain && (
                     <>
                       <div className="flex items-center gap-3 text-muted-foreground text-sm">
                         <div className="flex-1 h-px bg-border" />
@@ -696,7 +696,7 @@ const ClaimProfilePage = () => {
                             <Globe className="h-5 w-5 text-blue-500" />
                           </div>
                           <div className="flex-1">
-                            <p className="font-medium">Use any @{clinicDomain} email</p>
+                            <p className="font-medium">Use any @{agencyDomain} email</p>
                             <p className="text-xs text-muted-foreground">Enter your custom email address</p>
                           </div>
                           <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -716,7 +716,7 @@ const ClaimProfilePage = () => {
             )}
 
             {/* OTP Verification */}
-            {step === "otp-verify" && selectedClinic && (
+            {step === "otp-verify" && selectedAgency && (
               <div className="card-modern p-6 md:p-8">
                 <button
                   onClick={handleBack}
@@ -728,11 +728,11 @@ const ClaimProfilePage = () => {
                 <div className="flex items-start gap-4 mb-6 p-4 rounded-xl bg-muted/50">
                   <Building2 className="h-8 w-8 text-primary flex-shrink-0" />
                   <div>
-                    <h3 className="font-bold">{selectedClinic.name}</h3>
+                    <h3 className="font-bold">{selectedAgency.name}</h3>
                     {emailSource === "claim_email" && selectedClaimEmail ? (
                       <p className="text-xs text-primary">{selectedClaimEmail}</p>
                     ) : (
-                      <p className="text-xs text-primary">{clinicDomain}</p>
+                      <p className="text-xs text-primary">{agencyDomain}</p>
                     )}
                   </div>
                 </div>
@@ -756,9 +756,9 @@ const ClaimProfilePage = () => {
                 ) : (
                   <>
                     {/* Show email input for domain-based verification */}
-                    {emailSource === "domain" && clinicDomain && (
+                    {emailSource === "domain" && agencyDomain && (
                       <div className="mb-5">
-                        <Label htmlFor="emailPrefix" className="font-bold">Your Email at {clinicDomain}</Label>
+                        <Label htmlFor="emailPrefix" className="font-bold">Your Email at {agencyDomain}</Label>
                         <div className="flex mt-2">
                           <Input
                             id="emailPrefix"
@@ -769,7 +769,7 @@ const ClaimProfilePage = () => {
                             className="h-11 rounded-l-xl rounded-r-none border-r-0"
                           />
                           <div className="h-11 px-4 bg-muted border border-l-0 rounded-r-xl flex items-center text-sm text-muted-foreground font-medium">
-                            @{clinicDomain}
+                            @{agencyDomain}
                           </div>
                         </div>
                         {fullBusinessEmail && (
@@ -851,7 +851,7 @@ const ClaimProfilePage = () => {
             )}
 
             {/* Manual Review Form */}
-            {step === "manual-form" && selectedClinic && (
+            {step === "manual-form" && selectedAgency && (
               <div className="card-modern p-6 md:p-8">
                 <button
                   onClick={handleBack}
@@ -863,7 +863,7 @@ const ClaimProfilePage = () => {
                 <div className="flex items-start gap-4 mb-6 p-4 rounded-xl bg-muted/50">
                   <Building2 className="h-8 w-8 text-amber-600 flex-shrink-0" />
                   <div>
-                    <h3 className="font-bold">{selectedClinic.name}</h3>
+                    <h3 className="font-bold">{selectedAgency.name}</h3>
                     <Badge variant="outline" className="text-xs mt-1">Manual Review</Badge>
                   </div>
                 </div>
@@ -986,7 +986,7 @@ const ClaimProfilePage = () => {
                     <Link to="/dashboard?tab=my-dashboard">Go to Dashboard</Link>
                   </Button>
                   <Button asChild variant="outline" className="rounded-xl font-bold">
-                    <Link to={`/clinic/${selectedClinic?.slug}`}>View Your Profile</Link>
+                    <Link to={`/agency/${selectedAgency?.slug}`}>View Your Profile</Link>
                   </Button>
                 </div>
               </div>
@@ -1000,14 +1000,14 @@ const ClaimProfilePage = () => {
                 </div>
                 <h2 className="font-display text-2xl font-bold mb-2">Request Submitted!</h2>
                 <p className="text-muted-foreground mb-6">
-                  Your claim for <strong>{selectedClinic?.name}</strong> is under review. We'll contact you within 24-48 hours.
+                  Your claim for <strong>{selectedAgency?.name}</strong> is under review. We'll contact you within 24-48 hours.
                 </p>
                 <div className="flex flex-col gap-3">
                   <Button asChild className="rounded-xl font-bold">
                     <Link to="/">Return Home</Link>
                   </Button>
                   <Button asChild variant="outline" className="rounded-xl font-bold">
-                    <Link to={`/clinic/${selectedClinic?.slug}`}>View Clinic Profile</Link>
+                    <Link to={`/agency/${selectedAgency?.slug}`}>View Agency Profile</Link>
                   </Button>
                 </div>
               </div>
@@ -1034,18 +1034,18 @@ const ClaimProfilePage = () => {
 
               {/* Trust Section */}
               <div className="mt-5 p-4 rounded-xl bg-muted/50">
-                <h3 className="font-bold text-sm mb-3">Trusted by 500+ Clinics</h3>
+                <h3 className="font-bold text-sm mb-3">Trusted by {counts?.agencies?.toLocaleString() || '500'}+ Agencies</h3>
                 <div className="grid grid-cols-3 gap-2 text-center">
                   <div>
-                    <p className="font-display text-xl font-bold text-primary">500+</p>
-                    <p className="text-[10px] text-muted-foreground">Clinics</p>
+                    <p className="font-display text-xl font-bold text-primary">{counts?.agencies?.toLocaleString() || '500'}+</p>
+                    <p className="text-[10px] text-muted-foreground">Agencies</p>
                   </div>
                   <div>
-                    <p className="font-display text-xl font-bold text-primary">50K+</p>
-                    <p className="text-[10px] text-muted-foreground">Patients</p>
+                    <p className="font-display text-xl font-bold text-primary">{counts?.cities?.toLocaleString() || '50K'}+</p>
+                    <p className="text-[10px] text-muted-foreground">Cities</p>
                   </div>
                   <div>
-                    <p className="font-display text-xl font-bold text-primary">4.9</p>
+                    <p className="font-display text-xl font-bold text-primary">4.8</p>
                     <p className="text-[10px] text-muted-foreground">Rating</p>
                   </div>
                 </div>

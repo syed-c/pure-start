@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { supabaseAdmin } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/client';
 
 export interface Profile {
   id: string;
@@ -30,20 +30,34 @@ export function useProfiles(filters: ProfileFilters = {}) {
   return useQuery({
     queryKey: ['profiles', filters],
     queryFn: async () => {
-      // Fetch real agencies from database - no hardcoded data
-      const { data } = await supabaseAdmin
+      // Try agencies table first
+      const { data, error } = await supabase
         .from('agencies')
-        .select('id, name, slug, rating, review_count, is_verified, city, state, main_image_url, cover_image_url, is_duplicate')
-        .eq('is_duplicate', false)
+        .select('id, name, slug, rating, review_count, is_verified, city, state, main_image_url, cover_image_url')
         .order('rating', { ascending: false })
         .limit(filters.limit || 50);
       
-      if (!data || data.length === 0) {
+      if (error) {
+        console.log('Profiles query error:', error.message);
+      }
+      
+      // If no data, try clinics
+      let profilesData = data;
+      if (!profilesData || profilesData.length === 0) {
+        const { data: clinicData } = await supabase
+          .from('clinics')
+          .select('id, name, slug, rating, review_count, is_verified, city, state, main_image_url, cover_image_url')
+          .order('rating', { ascending: false })
+          .limit(filters.limit || 50);
+        profilesData = clinicData;
+      }
+      
+      if (!profilesData || profilesData.length === 0) {
         return [];
       }
       
       // Map to Profile format
-      return data.map(agency => ({
+      return profilesData.map((agency: any) => ({
         id: agency.id,
         name: agency.name,
         slug: agency.slug,
@@ -69,17 +83,22 @@ export function useTopAgenciesPerLocation(limit: number = 8) {
   return useQuery({
     queryKey: ['top-agencies-per-location', limit],
     queryFn: async () => {
-      const { data } = await supabaseAdmin
+      const { data, error } = await supabase
         .from('agencies')
         .select('id, name, slug, rating, review_count, city, is_verified')
         .eq('is_duplicate', false)
+        .eq('is_active', true)
         .order('rating', { ascending: false })
         .limit(limit || 8);
+      
+      if (error) {
+        console.error('useTopAgenciesPerLocation error:', error.message);
+      }
       
       if (!data || data.length === 0) {
         return [];
       }
-      
+
       return data.map(agency => ({
         id: agency.id,
         name: agency.name,

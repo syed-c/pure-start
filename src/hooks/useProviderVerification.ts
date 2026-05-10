@@ -21,22 +21,22 @@ export interface ProviderVerification {
   updated_at: string;
 }
 
-export function useProviderVerifications(clinicId?: string) {
+export function useProviderVerifications(agencyId?: string) {
   return useQuery({
-    queryKey: ['provider-verifications', clinicId],
+    queryKey: ['provider-verifications', agencyId],
     queryFn: async () => {
-      if (!clinicId) return [];
+      if (!agencyId) return [];
 
       const { data, error } = await supabase
         .from('provider_verifications')
         .select('*')
-        .eq('clinic_id', clinicId)
+        .eq('clinic_id', agencyId)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
       return data as ProviderVerification[];
     },
-    enabled: !!clinicId,
+    enabled: !!agencyId,
   });
 }
 

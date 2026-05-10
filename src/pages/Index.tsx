@@ -10,6 +10,7 @@ import { SEOHead } from "@/components/seo/SEOHead";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { POPULAR_CITIES, FOSTERING_CATEGORIES } from "@/lib/constants/activeRegions";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
+import { useRealCounts } from "@/hooks/useRealCounts";
 
 import londonImg from "@/assets/regions/london.jpg";
 import birminghamImg from "@/assets/regions/birmingham.jpg";
@@ -83,6 +84,7 @@ const headingFont = "'DM Sans', 'Quicksand', system-ui, sans-serif";
 
 const Index = () => {
   const { data: seoContent } = useSeoPageContent("/");
+  const { data: counts } = useRealCounts();
 
   return (
     <div className="min-h-screen bg-background">
@@ -192,16 +194,10 @@ const Index = () => {
               <SearchBox variant="hero" />
             </motion.div>
 
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10 max-w-2xl mx-auto"
-            >
+{/* Stats */}
               {[
-                { value: "500+", label: "Agencies" },
-                { value: "100+", label: "Cities" },
+                { value: counts?.agencies?.toLocaleString() || "500+", label: "Agencies" },
+                { value: counts?.cities?.toLocaleString() || "100+", label: "Cities" },
                 { value: "4.8★", label: "Rating" },
                 { value: "Free", label: "Search" },
               ].map((stat, i) => (

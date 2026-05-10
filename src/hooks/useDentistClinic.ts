@@ -3,8 +3,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 
 /**
- * Hook to get the clinic owned/claimed by the current dentist user
- * This enforces that agencies can ONLY access their own clinic data
+ * Hook to get the agency owned/claimed by the current fosterer user
+ * This enforces that agencies can ONLY access their own agency data
  */
 export function useAgencyProfile() {
   const { user, isDentist, isAdmin, isSuperAdmin } = useAuth();
@@ -41,52 +41,52 @@ export function useAgencyProfile() {
 /**
  * Hook to get appointments ONLY for the dentist's own clinic
  */
-export function useDentistAppointments() {
-  const { data: clinic } = useAgencyProfile();
+export function useFostererAppointments() {
+  const { data: agency } = useAgencyProfile();
 
   return useQuery({
-    queryKey: ['dentist-appointments', clinic?.id],
+    queryKey: ['fosterer-appointments', agency?.id],
     queryFn: async () => {
-      if (!clinic?.id) return [];
+      if (!agency?.id) return [];
 
       const { data, error } = await supabase
         .from('appointments')
         .select(`
           *,
           treatment:treatments(id, name),
-          dentist:dentists(id, name)
+          fosterer:dentists(id, name)
         `)
-        .eq('clinic_id', clinic.id)
+        .eq('clinic_id', agency.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
       return data || [];
     },
-    enabled: !!clinic?.id,
+    enabled: !!agency?.id,
   });
 }
 
 /**
- * Hook to get reviews ONLY for the dentist's own clinic
+ * Hook to get reviews ONLY for the fosterer's own agency
  */
-export function useDentistReviews() {
-  const { data: clinic } = useAgencyProfile();
+export function useFostererReviews() {
+  const { data: agency } = useAgencyProfile();
 
   return useQuery({
-    queryKey: ['dentist-reviews', clinic?.id],
+    queryKey: ['fosterer-reviews', agency?.id],
     queryFn: async () => {
-      if (!clinic?.id) return { internal: [], google: [] };
+      if (!agency?.id) return { internal: [], google: [] };
 
       const [internalResult, googleResult] = await Promise.all([
         supabase
           .from('internal_reviews')
           .select('*')
-          .eq('clinic_id', clinic.id)
+          .eq('clinic_id', agency.id)
           .order('created_at', { ascending: false }),
         supabase
           .from('google_reviews')
           .select('*')
-          .eq('clinic_id', clinic.id)
+          .eq('clinic_id', agency.id)
           .order('review_time', { ascending: false }),
       ]);
 
@@ -95,68 +95,68 @@ export function useDentistReviews() {
         google: googleResult.data || [],
       };
     },
-    enabled: !!clinic?.id,
+    enabled: !!agency?.id,
   });
 }
 
 /**
- * Hook to get team members (agencies) ONLY for the dentist's own clinic
+ * Hook to get team members (fosterers) ONLY for the fosterer's own agency
  */
-export function useDentistTeam() {
-  const { data: clinic } = useAgencyProfile();
+export function useFostererTeam() {
+  const { data: agency } = useAgencyProfile();
 
   return useQuery({
-    queryKey: ['dentist-team', clinic?.id],
+    queryKey: ['fosterer-team', agency?.id],
     queryFn: async () => {
-      if (!clinic?.id) return [];
+      if (!agency?.id) return [];
 
       const { data, error } = await supabase
         .from('dentists')
         .select('*')
-        .eq('clinic_id', clinic.id)
+        .eq('clinic_id', agency.id)
         .order('is_primary', { ascending: false });
 
       if (error) throw error;
       return data || [];
     },
-    enabled: !!clinic?.id,
+    enabled: !!agency?.id,
   });
 }
 
 /**
- * Hook to get patients ONLY for the dentist's own clinic
+ * Hook to get foster children ONLY for the fosterer's own agency
  */
-export function useDentistPatients() {
-  const { data: clinic } = useAgencyProfile();
+export function useFostererChildren() {
+  const { data: agency } = useAgencyProfile();
 
   return useQuery({
-    queryKey: ['dentist-patients', clinic?.id],
+    queryKey: ['fosterer-children', agency?.id],
     queryFn: async () => {
-      if (!clinic?.id) return [];
+      if (!agency?.id) return [];
 
       const { data, error } = await supabase
         .from('patients')
         .select('*')
-        .eq('clinic_id', clinic.id)
+        .eq('clinic_id', agency.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
       return data || [];
     },
-    enabled: !!clinic?.id,
+    enabled: !!agency?.id,
   });
 }
 
 /**
- * Hook to get messages ONLY for the dentist's own clinic
+ * Hook to get messages ONLY for the fosterer's own agency
  */
-export function useDentistMessages() {
-  const { data: clinic } = useAgencyProfile();
+export function useFostererMessages() {
+  const { data: agency } = useAgencyProfile();
 
   return useQuery({
-    queryKey: ['dentist-messages', clinic?.id],
+    queryKey: ['fosterer-messages', agency?.id],
     queryFn: async () => {
-      if (!clinic?.id) return [];
+      if (!agency?.id) return [];
 
       const { data, error } = await supabase
         .from('clinic_messages')
@@ -164,27 +164,27 @@ export function useDentistMessages() {
           *,
           patient:patients(id, name, phone)
         `)
-        .eq('clinic_id', clinic.id)
+        .eq('clinic_id', agency.id)
         .order('created_at', { ascending: false })
         .limit(100);
 
       if (error) throw error;
       return data || [];
     },
-    enabled: !!clinic?.id,
+    enabled: !!agency?.id,
   });
 }
 
 /**
- * Hook to get leads ONLY for the dentist's own clinic
+ * Hook to get leads ONLY for the fosterer's own agency
  */
-export function useDentistLeads() {
-  const { data: clinic } = useAgencyProfile();
+export function useFostererLeads() {
+  const { data: agency } = useAgencyProfile();
 
   return useQuery({
-    queryKey: ['dentist-leads', clinic?.id],
+    queryKey: ['fosterer-leads', agency?.id],
     queryFn: async () => {
-      if (!clinic?.id) return [];
+      if (!agency?.id) return [];
 
       const { data, error } = await supabase
         .from('leads')
@@ -192,26 +192,26 @@ export function useDentistLeads() {
           *,
           treatment:treatments(id, name)
         `)
-        .eq('clinic_id', clinic.id)
+        .eq('clinic_id', agency.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
       return data || [];
     },
-    enabled: !!clinic?.id,
+    enabled: !!agency?.id,
   });
 }
 
 /**
- * Hook to get clinic stats for the dentist's own clinic only
+ * Hook to get agency stats for the fosterer's own agency only
  */
-export function useDentistStats() {
-  const { data: clinic } = useAgencyProfile();
+export function useFostererStats() {
+  const { data: agency } = useAgencyProfile();
 
   return useQuery({
-    queryKey: ['dentist-stats', clinic?.id],
+    queryKey: ['fosterer-stats', agency?.id],
     queryFn: async () => {
-      if (!clinic?.id) return null;
+      if (!agency?.id) return null;
 
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -224,14 +224,14 @@ export function useDentistStats() {
         { count: confirmedAppointments },
         { count: leadsThisMonth },
         { count: reviewsTotal },
-        { count: patientsTotal },
+        { count: childrenTotal },
       ] = await Promise.all([
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('clinic_id', clinic.id),
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('clinic_id', clinic.id).eq('status', 'pending'),
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('clinic_id', clinic.id).eq('status', 'confirmed'),
-        supabase.from('leads').select('*', { count: 'exact', head: true }).eq('clinic_id', clinic.id).gte('created_at', monthAgo.toISOString()),
-        supabase.from('internal_reviews').select('*', { count: 'exact', head: true }).eq('clinic_id', clinic.id),
-        supabase.from('patients').select('*', { count: 'exact', head: true }).eq('clinic_id', clinic.id),
+        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('clinic_id', agency.id),
+        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('clinic_id', agency.id).eq('status', 'pending'),
+        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('clinic_id', agency.id).eq('status', 'confirmed'),
+        supabase.from('leads').select('*', { count: 'exact', head: true }).eq('clinic_id', agency.id).gte('created_at', monthAgo.toISOString()),
+        supabase.from('internal_reviews').select('*', { count: 'exact', head: true }).eq('clinic_id', agency.id),
+        supabase.from('patients').select('*', { count: 'exact', head: true }).eq('clinic_id', agency.id),
       ]);
 
       return {
@@ -242,12 +242,12 @@ export function useDentistStats() {
         },
         leads: leadsThisMonth || 0,
         reviews: reviewsTotal || 0,
-        patients: patientsTotal || 0,
-        rating: clinic.rating || 0,
-        reviewCount: clinic.review_count || 0,
+        children: childrenTotal || 0,
+        rating: agency.rating || 0,
+        reviewCount: agency.review_count || 0,
       };
     },
-    enabled: !!clinic?.id,
+    enabled: !!agency?.id,
     refetchInterval: 60000, // Refresh every minute
   });
 }

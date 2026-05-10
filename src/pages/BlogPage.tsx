@@ -299,7 +299,7 @@ const BlogPage = () => {
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mb-4">
-                Browse {counts?.clinics?.toLocaleString() || "500+"}+ verified fostering agencies and start your journey today.
+                Browse {counts?.clinics?.toLocaleString() || counts?.agencies?.toLocaleString() || "500+"}+ verified fostering agencies and start your journey today.
               </p>
               <Button asChild className="w-full rounded-xl font-bold">
                 <Link to="/search">

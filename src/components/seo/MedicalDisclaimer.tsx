@@ -12,8 +12,8 @@ export const MedicalDisclaimer = ({
   className 
 }: MedicalDisclaimerProps) => {
   const content = {
-    title: "Medical Disclaimer",
-    text: "The information provided on this website is for general informational purposes only and does not constitute medical advice. Always consult with a qualified healthcare professional before making any decisions about your dental health. Treatment outcomes may vary based on individual circumstances. All dental professionals listed are independently licensed and regulated by the Dubai Health Authority (DHA)."
+    title: "Fostering Disclaimer",
+    text: "The information provided on this website is for general informational purposes only. All fostering agencies and carers listed are independently verified and registered with Ofsted or the relevant regional authority. Foster care decisions should be made in consultation with qualified social workers and fostering professionals. Outcomes may vary based on individual circumstances."
   };
 
   if (variant === "banner") {

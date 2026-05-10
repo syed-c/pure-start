@@ -21,6 +21,15 @@ export interface ClinicData {
 export type AgencyData = ClinicData;
 export type ContactData = DentistData;
 
+/**
+ * Build canonical agency profile URL
+ * Format: /agency/{slug}/
+ */
+export function buildAgencyProfileUrl(agency: AgencyData): string {
+  if (!agency?.slug) return "/";
+  return withTrailingSlash(`/agency/${agency.slug}`);
+}
+
 export interface CityData {
   slug: string;
   state?: { slug: string } | null;
@@ -42,11 +51,11 @@ export function buildContactProfileUrl(dentist: ContactData): string {
 
 /**
  * Build canonical clinic profile URL
- * Format: /clinic/{slug}/
+ * Format: /agency/{slug}/ (canonical for UK fostering)
  */
 export function buildClinicProfileUrl(clinic: ClinicData): string {
   if (!clinic?.slug) return "/";
-  return withTrailingSlash(`/clinic/${clinic.slug}`);
+  return withTrailingSlash(`/agency/${clinic.slug}`);
 }
 
 /**

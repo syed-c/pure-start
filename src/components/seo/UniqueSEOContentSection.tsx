@@ -180,7 +180,7 @@ const OptimizedContent = ({
           </div>
           <div>
             <span className="text-xs font-bold text-primary uppercase tracking-widest">Expert Information</span>
-            <p className="text-sm text-muted-foreground">Verified dental guidance</p>
+            <p className="text-sm text-muted-foreground">Verified fostering guidance</p>
           </div>
         </div>
         
@@ -257,7 +257,7 @@ const StateFallbackContent = ({
       </div>
       
       <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
-        Dental Care in {stateName}
+        Fostering in {stateName}
       </h2>
       
       <p className="text-lg text-muted-foreground leading-relaxed mb-6">
@@ -286,7 +286,7 @@ const StateFallbackContent = ({
           <div>
             <h3 className="font-bold text-foreground mb-1">Advanced Technology</h3>
             <p className="text-muted-foreground text-sm">
-              {stateName} clinics utilize modern equipment including digital imaging and laser dentistry.
+              {stateName} agencies utilize modern approaches including comprehensive assessments and specialized training.
             </p>
           </div>
         </div>
@@ -362,11 +362,11 @@ const CityFallbackContent = ({
       </div>
       
        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
-         Finding a Dentist in {cityName}, {stateName}
+         Finding an Agency in {cityName}, {stateName}
       </h2>
       
       <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-        {cityName} is home to {clinicCount > 0 ? `${clinicCount}+` : 'several'} dental practices serving 
+        {cityName} is home to {clinicCount > 0 ? `${clinicCount}+` : 'several'} fostering agencies serving 
         the local community. Whether you need a family fostering for routine checkups, an therapeutic specialist for 
         braces, or a specialist for fostering placements, {cityName} has qualified professionals ready to help.
       </p>
@@ -381,7 +381,7 @@ const CityFallbackContent = ({
         <div className="bg-muted/50 rounded-2xl p-4 text-center">
           <Building2 className="h-8 w-8 text-primary mx-auto mb-2" />
           <div className="text-2xl font-bold text-foreground">{clinicCount > 0 ? `${clinicCount}+` : '—'}</div>
-          <div className="text-sm text-muted-foreground">Clinics</div>
+          <div className="text-sm text-muted-foreground">Agencies</div>
         </div>
         <div className="bg-muted/50 rounded-2xl p-4 text-center">
           <Star className="h-8 w-8 text-gold mx-auto mb-2" />
@@ -484,17 +484,17 @@ const ServiceLocationFallbackContent = ({
        </h2>
       
       <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-        Looking for {treatmentName.toLowerCase()} specialists in {cityName}? Our directory features 
-        {clinicCount > 0 ? ` ${clinicCount}+` : ''} verified dental professionals in the {cityName}, {stateName} 
-        area who offer {treatmentName.toLowerCase()} services. Compare ratings, read patient reviews, 
-        and book your appointment online.
+        Looking for {treatmentName.toLowerCase()} agencies in {cityName}? Our directory features 
+        {clinicCount > 0 ? ` ${clinicCount}+` : ''} verified fostering agencies in the {cityName}, {stateName} 
+        area who offer {treatmentName.toLowerCase()} services. Compare ratings, read foster carrier reviews, 
+        and contact agencies directly.
       </p>
       
       <p className="text-muted-foreground leading-relaxed mb-6">
-        {treatmentName} is a dental procedure that can significantly improve your oral health and smile. 
-        {cityName} agencies use the latest techniques and technology to ensure comfortable, effective treatment. 
-        Many {cityName} practices accept major dental insurance plans and offer financing options to make 
-        {treatmentName.toLowerCase()} affordable.
+        {treatmentName} is a fostering type that can significantly benefit children in need. 
+        {cityName} agencies provide comprehensive support and training to ensure quality care. 
+        Many {cityName} agencies offer competitive allowances and flexible support options to make 
+        {treatmentName.toLowerCase()} accessible.
       </p>
       
       <div className="grid md:grid-cols-3 gap-4 mt-8">
@@ -527,7 +527,7 @@ const ServiceLocationFallbackContent = ({
           <div>
             <h3 className="font-bold text-foreground mb-1">Flexible Payment</h3>
             <p className="text-muted-foreground text-sm">
-              Insurance accepted. Payment plans available at most {cityName} clinics.
+              Allowances available. Support packages at most {cityName} agencies.
             </p>
           </div>
         </div>
@@ -579,15 +579,15 @@ const ServiceFallbackContent = ({
     </h2>
     
     <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-      {treatmentName} is a dental procedure designed to improve oral health, function, and aesthetics. 
-      Our network includes {clinicCount > 0 ? `${clinicCount}+` : 'numerous'} verified dental professionals 
-      across the United States who offer {treatmentName.toLowerCase()} services.
+      {treatmentName} is a fostering type designed to provide care and support for children. 
+      Our network includes {clinicCount > 0 ? `${clinicCount}+` : 'numerous'} verified fostering agencies 
+      across the UK who offer {treatmentName.toLowerCase()} services.
     </p>
     
     <p className="text-muted-foreground leading-relaxed mb-6">
-      When considering {treatmentName.toLowerCase()}, it's important to consult with a qualified dental 
-      professional who can evaluate your specific needs and recommend the best treatment approach. 
-      Costs, duration, and outcomes vary depending on individual circumstances.
+      When considering {treatmentName.toLowerCase()}, it's important to consult with a qualified fostering 
+      professional who can evaluate your specific situation and recommend the best approach. 
+      Requirements, training, and outcomes vary depending on individual circumstances.
     </p>
     
     <div className="grid md:grid-cols-2 gap-6 mt-8">

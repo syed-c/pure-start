@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { supabaseAdmin } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { getLetterAvatarUrl } from "@/hooks/useProfiles";
 import { 
@@ -43,30 +43,54 @@ function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const { counts } = useRealCounts();
 
-  // Fetch real agencies from database with proper filtering
-  const { data: dbAgencies } = useQuery({
+  // Fetch real agencies from database - try no filters first
+  const { data: dbAgencies, error: agenciesError } = useQuery({
     queryKey: ['featured-agencies'],
     queryFn: async () => {
-      const { data } = await supabaseAdmin
+      // Try agencies table first
+      const { data, error } = await supabase
         .from('agencies')
         .select('id, name, slug, rating, review_count, is_verified, city, state, main_image_url, cover_image_url')
-        .eq('is_duplicate', false)
         .order('rating', { ascending: false })
         .limit(10);
+      
+      if (error) console.error('HomePage agencies error:', error.message);
+      
+      // If no results, try clinics table
+      if (!data || data.length === 0) {
+        const { data: clinicData } = await supabase
+          .from('clinics')
+          .select('id, name, slug, rating, review_count, is_verified, city, state, main_image_url, cover_image_url')
+          .order('rating', { ascending: false })
+          .limit(10);
+        return clinicData || [];
+      }
+      
       return data || [];
     },
   });
 
-  // Fetch real cities with agency counts from database
-  const { data: dbCities } = useQuery({
+  // Fetch real cities from database
+  const { data: dbCities, error: citiesError } = useQuery({
     queryKey: ['cities-with-agency-counts'],
     queryFn: async () => {
-      const { data } = await supabaseAdmin
+      // Try cities table
+      const { data, error } = await supabase
         .from('cities')
         .select('id, name, slug, states!inner(abbreviation)')
-        .eq('states.is_active', true)
         .order('name')
         .limit(15);
+      
+      if (error) {
+        console.error('HomePage cities error:', error.message);
+        // Try with different query
+        const { data: altData } = await supabase
+          .from('cities')
+          .select('id, name, slug')
+          .order('name')
+          .limit(15);
+        return altData || [];
+      }
       return data || [];
     },
   });
@@ -324,60 +348,69 @@ function HomePage() {
           </div>
 
           <div className="relative overflow-hidden">
-            <div className="flex animate-scroll gap-6" style={{ animation: 'scroll 40s linear infinite' }}>
-              {[...featuredAgencies, ...featuredAgencies, ...featuredAgencies].map((agency: any, i: number) => (
-                <Link key={`${agency.id}-${i}`} to={`/agency/${agency.slug}/`} className="shrink-0 w-80">
-                  <Card className="group bg-slate-800/50 border-slate-700 hover:border-teal-500/50 hover:shadow-xl hover:shadow-teal-500/10 transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div className="aspect-video relative overflow-hidden bg-slate-700">
-                      <img 
-                        src={agency.main_image_url || agency.cover_image_url || getLetterAvatarUrl(agency.name)}
-                        alt={agency.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        loading="lazy"
-                        onError={(e: any) => { 
-                          e.currentTarget.src = getLetterAvatarUrl(agency.name); 
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent" />
-                      <div className="absolute top-3 right-3">
-                        {agency.is_verified && (
-                          <Badge className="bg-teal-500 text-white text-xs">
-                            <CheckCircle className="h-3 w-3 mr-1" />
-                            Verified
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between">
-                        <div className="flex items-center gap-1 bg-black/60 backdrop-blur-sm px-2 py-1 rounded-lg">
-                          <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
-                          <span className="text-sm font-bold text-white">{agency.rating}</span>
+            {featuredAgencies.length > 0 ? (
+              <div className="flex animate-scroll gap-6" style={{ animation: 'scroll 40s linear infinite' }}>
+                {[...featuredAgencies, ...featuredAgencies, ...featuredAgencies].map((agency: any, i: number) => (
+                  <Link key={`${agency.id}-${i}`} to={`/agency/${agency.slug}/`} className="shrink-0 w-80">
+                    <Card className="group bg-slate-800/50 border-slate-700 hover:border-teal-500/50 hover:shadow-xl hover:shadow-teal-500/10 transition-all duration-300 cursor-pointer overflow-hidden">
+                      <div className="aspect-video relative overflow-hidden bg-slate-700">
+                        <img 
+                          src={agency.main_image_url || agency.cover_image_url || getLetterAvatarUrl(agency.name)}
+                          alt={agency.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          loading="lazy"
+                          onError={(e: any) => { 
+                            e.currentTarget.src = getLetterAvatarUrl(agency.name); 
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent" />
+                        <div className="absolute top-3 right-3">
+                          {agency.is_verified && (
+                            <Badge className="bg-teal-500 text-white text-xs">
+                              <CheckCircle className="h-3 w-3 mr-1" />
+                              Verified
+                            </Badge>
+                          )}
                         </div>
-                        <span className="text-xs text-white/70 bg-black/40 backdrop-blur-sm px-2 py-1 rounded-lg">
-                          {agency.review_count} reviews
-                        </span>
+                        <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between">
+                          <div className="flex items-center gap-1 bg-black/60 backdrop-blur-sm px-2 py-1 rounded-lg">
+                            <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
+                            <span className="text-sm font-bold text-white">{agency.rating}</span>
+                          </div>
+                          <span className="text-xs text-white/70 bg-black/40 backdrop-blur-sm px-2 py-1 rounded-lg">
+                            {agency.review_count} reviews
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    <CardContent className="p-4 bg-slate-800/50">
-                      <h3 className="font-bold text-lg text-white group-hover:text-teal-400 transition-colors truncate">{agency.name}</h3>
-                      <p className="text-sm text-slate-400 flex items-center gap-1 mt-1">
-                        <MapPin className="h-3 w-3 shrink-0 text-teal-400" />
-                        <span className="truncate">{agency.city}, {agency.state}</span>
-                      </p>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
+                      <CardContent className="p-4 bg-slate-800/50">
+                        <h3 className="font-bold text-lg text-white group-hover:text-teal-400 transition-colors truncate">{agency.name}</h3>
+                        <p className="text-sm text-slate-400 flex items-center gap-1 mt-1">
+                          <MapPin className="h-3 w-3 shrink-0 text-teal-400" />
+                          <span className="truncate">{agency.city}, {agency.state}</span>
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-slate-400 text-lg mb-4">No featured agencies yet</p>
+                <p className="text-slate-500 text-sm">Check back soon for our top-rated fostering agencies</p>
+              </div>
+            )}
           </div>
 
-          <div className="text-center mt-8">
-            <Link to="/search">
-              <Button variant="outline" size="lg" className="border-teal-500 text-teal-400 hover:bg-teal-500/20">
-                View All Agencies
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
+          {featuredAgencies.length > 0 && (
+            <div className="text-center mt-8">
+              <Link to="/search">
+                <Button variant="outline" size="lg" className="border-teal-500 text-teal-400 hover:bg-teal-500/20">
+                  View All Agencies
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
       </Section>
 

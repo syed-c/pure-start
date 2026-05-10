@@ -464,7 +464,7 @@ const AISearchPage = () => {
 function ResultCard({ result, index }: { result: SearchResult; index: number }) {
   return (
     <Link
-      to={`/clinic/${result.slug}`}
+      to={`/agency/${result.slug}`}
       className={cn(
         "block bg-white/5 border border-white/10 rounded-xl md:rounded-2xl p-3 md:p-4 hover:border-primary/50 hover:bg-white/10 transition-all",
         "animate-fade-in-up"

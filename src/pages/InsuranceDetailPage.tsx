@@ -184,7 +184,7 @@ const InsuranceDetailPage = () => {
   if (insuranceLoading) {
     return (
       <PageLayout>
-        <SEOHead title="Loading Insurance Provider" description="Loading dental insurance provider information." canonical={`/insurance/${slug}/`} />
+        <SEOHead title="Loading Insurance Provider" description="Loading fostering allowance information." canonical={`/insurance/${slug}/`} />
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <div className="h-12 w-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
@@ -221,7 +221,7 @@ const InsuranceDetailPage = () => {
         title={`${insurance.name} Agencies${locationSuffix} - Find Providers | UAE`}
         description={`Find ${totalCount}+ fostering agencys accepting ${insurance.name}${locationSuffix}. Direct billing, pre-approval assistance. Book today.`}
         canonical={canonicalUrl}
-        keywords={[`${insurance.name} dental`, `${insurance.name} dentist UAE`, `dental insurance ${locationSuffix}`]}
+        keywords={[`${insurance.name} fostering`, `${insurance.name} allowances UK`, `foster care support ${locationSuffix}`]}
       />
 
       {/* Hero */}
@@ -375,7 +375,7 @@ const InsuranceDetailPage = () => {
             <Building2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="font-bold text-lg mb-2">No Clinics Found</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              {cityFilter ? "No clinics match your filters." : `Adding clinics accepting ${insurance.name}${locationSuffix}.`}
+              {cityFilter ? "No agencies match your filters." : `Adding agencies accepting ${insurance.name}${locationSuffix}.`}
             </p>
             {cityFilter && <Button variant="outline" size="sm" onClick={handleClearFilters}>Clear Filters</Button>}
           </div>
@@ -401,7 +401,7 @@ const InsuranceDetailPage = () => {
         <div className="rounded-2xl p-6 md:p-8 bg-gradient-to-br from-primary/5 to-teal/5 border border-primary/20 text-center">
           <h2 className="font-display text-xl md:text-2xl font-bold mb-2">Need Help Finding Coverage?</h2>
           <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
-            Contact us and we'll help you find clinics that accept your insurance.
+            Contact us and we'll help you find agencies that accept your support.
           </p>
           <Button asChild className="rounded-xl font-bold">
             <Link to="/contact/"><Phone className="h-4 w-4 mr-2" />Contact Us</Link>

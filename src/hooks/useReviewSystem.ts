@@ -101,9 +101,9 @@ export interface ReputationKPI {
 }
 
 // Hooks for Review Requests
-export function useReviewRequests(clinicId?: string) {
+export function useReviewRequests(agencyId?: string) {
   return useQuery({
-    queryKey: ['review-requests', clinicId],
+    queryKey: ['review-requests', agencyId],
     queryFn: async () => {
       let query = supabase
         .from('review_requests')
@@ -113,8 +113,8 @@ export function useReviewRequests(clinicId?: string) {
         `)
         .order('created_at', { ascending: false });
       
-      if (clinicId) {
-        query = query.eq('clinic_id', clinicId);
+      if (agencyId) {
+        query = query.eq('clinic_id', agencyId);
       }
       
       const { data, error } = await query.limit(200);
@@ -202,17 +202,17 @@ export function useUpdateReviewRequest() {
 }
 
 // Hooks for Review Clicks (Tracking)
-export function useReviewClicks(clinicId?: string) {
+export function useReviewClicks(agencyId?: string) {
   return useQuery({
-    queryKey: ['review-clicks', clinicId],
+    queryKey: ['review-clicks', agencyId],
     queryFn: async () => {
       let query = supabase
         .from('review_clicks')
         .select('*')
         .order('created_at', { ascending: false });
       
-      if (clinicId) {
-        query = query.eq('clinic_id', clinicId);
+      if (agencyId) {
+        query = query.eq('clinic_id', agencyId);
       }
       
       const { data, error } = await query.limit(500);
@@ -246,20 +246,17 @@ export function useRecordClick() {
 }
 
 // Hooks for Internal Reviews
-export function useInternalReviews(clinicId?: string, status?: string) {
+export function useInternalReviews(agencyId?: string, status?: string) {
   return useQuery({
-    queryKey: ['internal-reviews', clinicId, status],
+    queryKey: ['internal-reviews', agencyId, status],
     queryFn: async () => {
       let query = supabase
         .from('internal_reviews')
-        .select(`
-          *,
-          clinic:clinics(id, name)
-        `)
+        .select('*, clinic:clinics!inner(id, name, slug)')
         .order('created_at', { ascending: false });
       
-      if (clinicId) {
-        query = query.eq('clinic_id', clinicId);
+      if (agencyId) {
+        query = query.eq('clinic_id', agencyId);
       }
       if (status) {
         query = query.eq('status', status as any);
@@ -328,20 +325,17 @@ export function useUpdateInternalReview() {
 }
 
 // Hooks for Google Reviews
-export function useGoogleReviews(clinicId?: string) {
+export function useGoogleReviews(agencyId?: string) {
   return useQuery({
-    queryKey: ['google-reviews', clinicId],
+    queryKey: ['google-reviews', agencyId],
     queryFn: async () => {
       let query = supabase
         .from('google_reviews')
-        .select(`
-          *,
-          clinic:clinics(id, name)
-        `)
+        .select('*')
         .order('review_time', { ascending: false });
       
-      if (clinicId) {
-        query = query.eq('clinic_id', clinicId);
+      if (agencyId) {
+        query = query.eq('clinic_id', agencyId);
       }
       
       const { data, error } = await query.limit(200);
@@ -352,33 +346,31 @@ export function useGoogleReviews(clinicId?: string) {
 }
 
 // Hooks for Reputation KPIs
-export function useReputationKPIs(clinicId: string, days: number = 30) {
+export function useReputationKPIs(agencyId: string, days: number = 30) {
   return useQuery({
-    queryKey: ['reputation-kpis', clinicId, days],
+    queryKey: ['reputation-kpis', agencyId, days],
     queryFn: async () => {
-      const startDate = new Date();
-      startDate.setDate(startDate.getDate() - days);
+      const startDate = subDays(new Date(), days).toISOString();
       
       const { data, error } = await supabase
-        .from('reputation_kpis')
-        .select('*')
-        .eq('clinic_id', clinicId)
-        .gte('date', startDate.toISOString().split('T')[0])
-        .order('date', { ascending: true });
+        .from('profile_analytics')
+        .select('event_type, created_at')
+        .eq('clinic_id', agencyId)
+        .gte('created_at', startDate)
+        .order('created_at', { ascending: true });
       
       if (error) throw error;
-      return (data || []) as unknown as ReputationKPI[];
+      return data || [];
     },
-    enabled: !!clinicId,
+    enabled: !!agencyId,
   });
 }
 
-// Aggregated KPIs calculation
-export function useAggregatedKPIs(clinicId: string) {
-  const { data: requests } = useReviewRequests(clinicId);
-  const { data: clicks } = useReviewClicks(clinicId);
-  const { data: internalReviews } = useInternalReviews(clinicId);
-  const { data: googleReviews } = useGoogleReviews(clinicId);
+export function useAggregatedKPIs(agencyId: string) {
+  const { data: requests } = useReviewRequests(agencyId);
+  const { data: clicks } = useReviewClicks(agencyId);
+  const { data: internalReviews } = useInternalReviews(agencyId);
+  const { data: googleReviews } = useGoogleReviews(agencyId);
   
   const kpis = {
     // Request metrics

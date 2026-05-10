@@ -129,7 +129,7 @@ export function AISmartSearch({
     if (onResultClick) {
       onResultClick(result);
     } else {
-      navigate(`/clinic/${result.slug}`);
+      navigate(`/agency/${result.slug}`);
     }
     setShowResults(false);
   }, [navigate, onResultClick]);

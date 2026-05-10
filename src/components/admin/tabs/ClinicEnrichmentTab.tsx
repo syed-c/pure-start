@@ -1009,7 +1009,7 @@ export default function ClinicEnrichmentTab() {
                               Write
                             </Button>
                             <Button size="sm" variant="ghost" asChild>
-                              <Link to={`/clinic/${clinic.slug}`} target="_blank">
+                              <Link to={`/agency/${clinic.slug}`} target="_blank">
                                 <ExternalLink className="h-4 w-4" />
                               </Link>
                             </Button>
@@ -1101,7 +1101,7 @@ export default function ClinicEnrichmentTab() {
                               <Edit className="h-4 w-4" />
                             </Button>
                             <Button size="sm" variant="ghost" asChild>
-                              <Link to={`/clinic/${clinic.slug}`} target="_blank">
+                              <Link to={`/agency/${clinic.slug}`} target="_blank">
                                 <Eye className="h-4 w-4" />
                               </Link>
                             </Button>

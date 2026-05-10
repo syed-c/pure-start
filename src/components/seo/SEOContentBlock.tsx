@@ -139,12 +139,12 @@ export const SEOContentBlock = ({
           </h2>
           <p className="text-muted-foreground leading-relaxed" itemProp="articleBody">
             {variant === 'service-location' 
-              ? `Find qualified ${treatmentName?.toLowerCase()} specialists in ${locationName}. Our directory includes verified dental professionals with expertise in ${treatmentName?.toLowerCase()} procedures.`
+              ? `Find qualified ${treatmentName?.toLowerCase()} agencies in ${locationName}. Our directory includes verified fostering agencies with expertise in ${treatmentName?.toLowerCase()}.`
               : variant === 'city'
-              ? `Discover top-rated dental professionals in ${locationName}. Browse verified clinics, compare services, and book appointments online.`
+              ? `Discover top-rated fostering agencies in ${locationName}. Browse verified agencies, compare services, and contact directly.`
               : variant === 'service'
-              ? `Learn about ${treatmentName} and find qualified specialists across the UAE. Compare providers and book consultations.`
-              : `Find trusted fostering care providers in ${locationName}. Our directory features verified clinics with patient reviews and online booking.`
+              ? `Learn about ${treatmentName} and find qualified agencies across the UK. Compare and contact providers.`
+              : `Find trusted fostering care providers in ${locationName}. Our directory features verified agencies with foster carrier reviews.`
             }
           </p>
         </div>
@@ -238,7 +238,7 @@ const OptimizedContentLayout = ({
               <span className="text-xs font-bold text-primary uppercase tracking-widest">
                 {getVariantLabel()}
               </span>
-              <p className="text-sm text-muted-foreground">Verified dental guidance</p>
+              <p className="text-sm text-muted-foreground">Verified fostering guidance</p>
             </div>
           </div>
         </div>

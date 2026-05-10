@@ -37,32 +37,32 @@ interface AvailabilityBlock {
   end_datetime: string;
 }
 
-export function useSlotGeneration(clinicId: string | null, selectedDate: Date | null) {
+export function useSlotGeneration(agencyId: string | null, selectedDate: Date | null) {
   // Fetch availability rules
   const { data: availabilityRules } = useQuery({
-    queryKey: ['availability-rules', clinicId],
+    queryKey: ['availability-rules', agencyId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('dentist_availability_rules')
         .select('*')
-        .eq('clinic_id', clinicId!)
+        .eq('clinic_id', agencyId!)
         .eq('is_active', true);
       
       if (error) throw error;
       return data as AvailabilityRule[];
     },
-    enabled: !!clinicId,
+    enabled: !!agencyId,
   });
 
   // Fetch existing appointments for the date
   const { data: existingAppointments } = useQuery({
-    queryKey: ['booked-appointments', clinicId, selectedDate?.toISOString()],
+    queryKey: ['booked-appointments', agencyId, selectedDate?.toISOString()],
     queryFn: async () => {
       const dateStr = format(selectedDate!, 'yyyy-MM-dd');
       const { data, error } = await supabase
         .from('appointments')
         .select('start_datetime, end_datetime, status')
-        .eq('clinic_id', clinicId!)
+        .eq('clinic_id', agencyId!)
         .gte('start_datetime', `${dateStr}T00:00:00`)
         .lte('start_datetime', `${dateStr}T23:59:59`)
         .in('status', ['pending', 'confirmed']);
@@ -82,7 +82,7 @@ export function useSlotGeneration(clinicId: string | null, selectedDate: Date | 
       const { data, error } = await supabase
         .from('slot_locks')
         .select('start_datetime, end_datetime')
-        .eq('clinic_id', clinicId!)
+        .eq('clinic_id', agencyId!)
         .gte('start_datetime', `${dateStr}T00:00:00`)
         .lte('start_datetime', `${dateStr}T23:59:59`)
         .gt('expires_at', now)
@@ -102,7 +102,7 @@ export function useSlotGeneration(clinicId: string | null, selectedDate: Date | 
       const { data, error } = await supabase
         .from('availability_blocks')
         .select('start_datetime, end_datetime')
-        .eq('clinic_id', clinicId!)
+        .eq('clinic_id', agencyId!)
         .lte('start_datetime', `${dateStr}T23:59:59`)
         .gte('end_datetime', `${dateStr}T00:00:00`);
       
@@ -223,14 +223,14 @@ export function useSlotGeneration(clinicId: string | null, selectedDate: Date | 
   return {
     slots: generateSlots(),
     availabilityRules,
-    isLoading: !availabilityRules && !!clinicId,
+    isLoading: !availabilityRules && !!agencyId,
   };
 }
 
 // Hook to create a slot lock
 export function useSlotLock() {
   const lockSlot = async (
-    clinicId: string,
+    agencyId: string,
     startDatetime: string,
     endDatetime: string,
     userId?: string
@@ -240,7 +240,7 @@ export function useSlotLock() {
     const { data, error } = await supabase
       .from('slot_locks')
       .insert({
-        clinic_id: clinicId,
+        clinic_id: agencyId,
         start_datetime: startDatetime,
         end_datetime: endDatetime,
         locked_by_user_id: userId || null,

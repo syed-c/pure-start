@@ -10,28 +10,28 @@ import { Star, CheckCircle, Building2, Sparkles, Heart, Shield } from 'lucide-re
 import { toast } from 'sonner';
 
 export default function ReviewFunnelPage() {
-  const { clinicId, clinicSlug } = useParams<{ clinicId?: string; clinicSlug?: string }>();
+  const { agencyId, agencySlug } = useParams<{ agencyId?: string; agencySlug?: string }>();
   const [searchParams] = useState(() => new URLSearchParams(window.location.search));
   const source = searchParams.get('source') || 'link';
   
   // Debug: Log what params we received
   useEffect(() => {
-    console.log('[ReviewFunnel] Component mounted with params:', { clinicId, clinicSlug, source });
-  }, [clinicId, clinicSlug]);
+    console.log('[ReviewFunnel] Component mounted with params:', { agencyId, agencySlug, source });
+  }, [agencyId, agencySlug]);
 
   const [step, setStep] = useState<'initial' | 'negative' | 'success'>('initial');
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
-  const [patientName, setPatientName] = useState('');
+  const [fostererName, setFostererName] = useState('');
   const [hoveredRating, setHoveredRating] = useState(0);
   const [isRedirecting, setIsRedirecting] = useState(false);
 
-  // Fetch clinic info
-  const { data: clinic, isLoading } = useQuery({
-    queryKey: ['clinic-review', clinicId || clinicSlug],
+  // Fetch agency info
+  const { data: agency, isLoading } = useQuery({
+    queryKey: ['agency-review', agencyId || agencySlug],
     queryFn: async () => {
-      const identifier = clinicId || clinicSlug;
-      if (!identifier) throw new Error('No clinic identifier provided');
+      const identifier = agencyId || agencySlug;
+      if (!identifier) throw new Error('No agency identifier provided');
       
       const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identifier);
       
@@ -47,23 +47,23 @@ export default function ReviewFunnelPage() {
       if (error) throw error;
       return data;
     },
-    enabled: !!(clinicId || clinicSlug),
+    enabled: !!(agencyId || agencySlug),
   });
   
-  // Debug: Log clinic data when it loads
+  // Debug: Log agency data when it loads
   useEffect(() => {
-    console.log('[ReviewFunnel] Clinic data loaded:', clinic);
-  }, [clinic]);
+    console.log('[ReviewFunnel] Agency data loaded:', agency);
+  }, [agency]);
 
   // Fetch custom review URL from clinic_oauth_tokens
   const { data: oauthData, isLoading: oauthLoading, error: oauthError } = useQuery({
-    queryKey: ['clinic-oauth-review-url', clinic?.id],
+    queryKey: ['clinic-oauth-review-url', agency?.id],
     queryFn: async () => {
-      console.log('[ReviewFunnel] Fetching oauth data for clinic:', clinic!.id);
+      console.log('[ReviewFunnel] Fetching oauth data for agency:', agency!.id);
       const { data, error } = await supabase
         .from('clinic_oauth_tokens')
         .select('gmb_data')
-        .eq('clinic_id', clinic!.id)
+        .eq('clinic_id', agency!.id)
         .maybeSingle();
       if (error) {
         console.error('[ReviewFunnel] Error fetching oauth data:', error);
@@ -72,7 +72,7 @@ export default function ReviewFunnelPage() {
       console.log('[ReviewFunnel] OAuth query returned:', data);
       return data;
     },
-    enabled: !!clinic?.id,
+    enabled: !!agency?.id,
     retry: 2,
     staleTime: 0, // Always fetch fresh data
   });
@@ -80,8 +80,8 @@ export default function ReviewFunnelPage() {
   // Debug: Log OAuth data when it loads  
   useEffect(() => {
     console.log('[ReviewFunnel] OAuth state - data:', oauthData, 'loading:', oauthLoading, 'error:', oauthError);
-    console.log('[ReviewFunnel] Clinic data:', clinic);
-  }, [oauthData, oauthLoading, oauthError, clinic]);
+    console.log('[ReviewFunnel] Agency data:', agency);
+  }, [oauthData, oauthLoading, oauthError, agency]);
 
   const getGoogleReviewUrl = (): string | null => {
     console.log('[ReviewFunnel] getGoogleReviewUrl called');
@@ -112,22 +112,13 @@ export default function ReviewFunnelPage() {
     }
     
     // Priority 2: Google Place ID to construct review URL
-    if (clinic?.google_place_id && clinic.google_place_id.trim()) {
-      const url = `https://search.google.com/local/writereview?placeid=${clinic.google_place_id.trim()}`;
-      console.log('[ReviewFunnel] Using Google Place ID URL:', url);
-      return url;
-    }
-    
-    console.log('[ReviewFunnel] No review URL found - oauth data:', oauthData, 'clinic place id:', clinic?.google_place_id);
-    return null;
-  };
-
-  // Record click
-  const recordClick = useMutation({
-    mutationFn: async (action: string) => {
-      if (!clinic?.id) return;
-      await supabase.from('review_clicks').insert({
-        clinic_id: clinic.id,
+if (agency?.google_place_id && agency.google_place_id.trim()) {
+      const url = `https://search.google.com/local/writereview?placeid=${agency.google_place_id.trim()}`;
+      }
+        clinic_id: agency.id,
+      });
+      const patient_name: patientName || 'Anonymous',
+        clinic_id: agency.id,
         action,
         user_agent: navigator.userAgent,
         metadata: { source, slug: clinicSlug || clinicId },
@@ -206,92 +197,23 @@ export default function ReviewFunnelPage() {
     let googleReviewUrl = getGoogleReviewUrl();
     
     // If no URL found and we have a place ID, construct it directly
-    if (!googleReviewUrl && clinic.google_place_id) {
-      googleReviewUrl = `https://search.google.com/local/writereview?placeid=${clinic.google_place_id}`;
-      console.log('[ReviewFunnel] Using fallback place ID URL:', googleReviewUrl);
+if (!googleReviewUrl && agency.google_place_id) {
+      googleReviewUrl = `https://search.google.com/local/writereview?placeid=${agency.google_place_id}`;
     }
-    
-    console.log('[ReviewFunnel] Thumbs up clicked, final Google URL:', googleReviewUrl);
-    
-    if (googleReviewUrl) {
-      recordClick.mutate('google_redirect');
-      toast.success('Redirecting to Google Reviews...');
-      // Redirect immediately without timeout
-      console.log('[ReviewFunnel] Redirecting now to:', googleReviewUrl);
-      window.location.href = googleReviewUrl;
-    } else {
-      // No Google review URL configured - show thank you page
-      console.warn('[ReviewFunnel] No Google review URL configured for clinic:', clinic.id, clinic.name);
-      toast.info('Thank you for your feedback! Google review link not yet configured.');
-      setStep('success');
-      setIsRedirecting(false);
-    }
-  };
+      console.warn('[ReviewFunnel] No Google review URL configured for agency:', agency.id, agency.name);
 
-  const handleThumbsDown = () => {
-    recordClick.mutate('thumbs_down');
-    setStep('negative');
-  };
-
-  const handleSubmitFeedback = async () => {
-    if (rating === 0) {
-      toast.error('Please select a rating');
-      return;
-    }
-    recordClick.mutate('feedback_submitted');
-    await recordEvent.mutateAsync({
-      event_type: 'thumbs_down',
-      rating,
-      comment: comment.trim() || undefined,
-    });
-    setStep('success');
-    toast.success('Thank you for your feedback');
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
-        <div className="text-center">
-          <div className="relative w-16 h-16 mx-auto mb-4">
-            <div className="absolute inset-0 rounded-full border-4 border-primary/20" />
-            <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-primary animate-spin" />
-          </div>
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!clinic) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
-        <div className="max-w-sm w-full text-center p-8 bg-white rounded-3xl shadow-xl">
-          <div className="h-16 w-16 rounded-2xl bg-destructive/10 flex items-center justify-center mx-auto mb-4">
-            <Building2 className="h-8 w-8 text-destructive" />
-          </div>
-          <h1 className="text-xl font-bold mb-2">Link Not Found</h1>
-          <p className="text-muted-foreground text-sm">This review link is invalid or has expired.</p>
-        </div>
-      </div>
-    );
-  }
-
-  const clinicLogo = clinic.cover_image_url;
+  const agencyLogo = agency.cover_image_url;
+  const agencyName = agency.name;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-primary/5 flex flex-col">
       {/* Compact Header with Branding */}
       <header className="w-full py-4 px-4 flex justify-center">
         <div className="flex items-center gap-3">
-          {clinicLogo ? (
-            <img src={clinicLogo} alt={clinic.name} className="h-10 w-10 rounded-xl object-cover shadow-md" />
-          ) : (
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-teal flex items-center justify-center shadow-md">
-              <Building2 className="h-5 w-5 text-white" />
-            </div>
-          )}
-          <div>
-            <h1 className="text-sm font-bold text-foreground leading-tight">{clinic.name}</h1>
+{agencyLogo ? (
+              <img src={agencyLogo} alt={agencyName} className="h-10 w-10 rounded-xl object-cover shadow-md" />
+            ) : (
+              <h1 className="text-sm font-bold text-foreground leading-tight">{agencyName}</h1>
             <p className="text-[10px] text-muted-foreground flex items-center gap-1">
               <Shield className="h-3 w-3" /> Verified Practice
             </p>

@@ -16,39 +16,39 @@ import { cn } from '@/lib/utils';
 import { startOfMonth } from 'date-fns';
 
 interface OutreachImpactCardProps {
-  clinicId: string;
+  agencyId: string;
 }
 
-export default function OutreachImpactCard({ clinicId }: OutreachImpactCardProps) {
+export default function OutreachImpactCard({ agencyId }: OutreachImpactCardProps) {
   const { data: stats, isLoading } = useQuery({
-    queryKey: ['outreach-impact', clinicId],
+    queryKey: ['outreach-impact', agencyId],
     queryFn: async () => {
       const monthStart = startOfMonth(new Date()).toISOString();
       
-      const [patientsResult, requestsResult, messagesResult, automationResult] = await Promise.all([
-        // Patients added this month
+      const [childrenResult, requestsResult, messagesResult, automationResult] = await Promise.all([
+        // Foster children added this month
         supabase
           .from('patients')
           .select('id', { count: 'exact', head: true })
-          .eq('clinic_id', clinicId)
+          .eq('clinic_id', agencyId)
           .gte('created_at', monthStart),
         // Review requests
         supabase
           .from('review_requests')
           .select('id, status')
-          .eq('clinic_id', clinicId)
+          .eq('clinic_id', agencyId)
           .gte('created_at', monthStart),
         // Messages sent
         supabase
           .from('clinic_messages')
           .select('id, status')
-          .eq('clinic_id', clinicId)
+          .eq('clinic_id', agencyId)
           .gte('created_at', monthStart),
         // Automation settings
         supabase
           .from('clinic_automation_settings')
           .select('*')
-          .eq('clinic_id', clinicId)
+          .eq('clinic_id', agencyId)
           .single(),
       ]);
 
@@ -59,7 +59,7 @@ export default function OutreachImpactCard({ clinicId }: OutreachImpactCardProps
       const completedRequests = requests.filter(r => r.status === 'completed').length;
       
       return {
-        patientsThisMonth: patientsResult.count || 0,
+        childrenThisMonth: childrenResult.count || 0,
         reviewRequestsSent: sentRequests,
         reviewsReceived: completedRequests,
         conversionRate: sentRequests > 0 ? Math.round((completedRequests / sentRequests) * 100) : 0,
@@ -69,7 +69,7 @@ export default function OutreachImpactCard({ clinicId }: OutreachImpactCardProps
         reminderEnabled: automationResult.data?.reminder_1_day || false,
       };
     },
-    enabled: !!clinicId,
+    enabled: !!agencyId,
   });
 
   if (isLoading) {
@@ -104,8 +104,8 @@ export default function OutreachImpactCard({ clinicId }: OutreachImpactCardProps
         <div className="grid grid-cols-2 gap-2">
           <div className="p-3 rounded-xl bg-slate-700/40 border border-slate-600/30">
             <Users className="h-4 w-4 text-purple mb-1" />
-            <p className="text-xl font-extrabold text-white">{stats?.patientsThisMonth || 0}</p>
-            <p className="text-[10px] text-white/50">New patients</p>
+            <p className="text-xl font-extrabold text-white">{stats?.childrenThisMonth || 0}</p>
+            <p className="text-[10px] text-white/50">New foster children</p>
           </div>
           <div className="p-3 rounded-xl bg-slate-700/40 border border-slate-600/30">
             <Send className="h-4 w-4 text-purple mb-1" />

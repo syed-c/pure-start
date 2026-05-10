@@ -174,7 +174,8 @@ export default function PagesTab() {
       case 'service-location':
         return stateSlug && citySlug && slug ? `/${stateSlug}/${citySlug}/${slug}` : `/services/${slug}`;
       case 'clinic':
-        return `/clinic/${slug}`;
+      case 'agency':
+        return `/agency/${slug}`;
       case 'blog':
         return `/blog/${slug}`;
       default:

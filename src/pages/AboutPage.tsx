@@ -40,7 +40,7 @@ const AboutPage = () => {
   ];
 
   const stats = [
-    { value: counts?.clinics?.toLocaleString() || "500+", label: "Verified Agencies", icon: Building2 },
+    { value: counts?.agencies?.toLocaleString() || "500+", label: "Verified Agencies", icon: Building2 },
     { value: counts?.cities?.toLocaleString() || "100+", label: "Cities Covered", icon: Globe },
     { value: "4", label: "UK Nations", icon: Star },
     { value: "4.8", label: "Avg Rating", icon: Award },
@@ -113,7 +113,7 @@ const AboutPage = () => {
                     <TrendingUp className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-2xl font-extrabold text-foreground">{counts?.clinics?.toLocaleString() || "500+"}</p>
+                    <p className="text-2xl font-extrabold text-foreground">{counts?.agencies?.toLocaleString() || "500+"}</p>
                     <p className="text-xs text-muted-foreground">Agencies Listed</p>
                   </div>
                 </div>
@@ -156,7 +156,7 @@ const AboutPage = () => {
                 We believe every child deserves a safe and loving home. Foster Care was founded to bridge the gap between prospective foster carers and trusted, Ofsted-verified fostering agencies across the UK. Our platform makes it simple to search, compare, and connect — all for free.
               </p>
               <p className="text-muted-foreground leading-relaxed mb-8">
-                With over {counts?.clinics?.toLocaleString() || "500"} agencies listed across {counts?.cities?.toLocaleString() || "100"} cities, we're the UK's most comprehensive fostering directory. Every agency on our platform is verified against Ofsted records to ensure you're connecting with legitimate, registered providers.
+                With over {counts?.agencies?.toLocaleString() || "500"} agencies listed across {counts?.cities?.toLocaleString() || "100"} cities, we're the UK's most comprehensive fostering directory. Every agency on our platform is verified against Ofsted records to ensure you're connecting with legitimate, registered providers.
               </p>
               <div className="grid sm:grid-cols-2 gap-3">
                 {["Ofsted Registered Agencies", "Verified Agency Profiles", "Real Carer Reviews", "100% Free to Use", "All Fostering Types", "UK-Wide Coverage"].map((item, i) => (

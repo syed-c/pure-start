@@ -115,14 +115,14 @@ export default function SmokeTestTab() {
       routes.push({ path: `/services/${t.slug}`, type: 'service', name: t.name, status: 'pending' });
     });
 
-    // Clinic pages
+    // Agency pages
     clinics?.forEach(clinic => {
-      routes.push({ path: `/clinic/${clinic.slug}`, type: 'clinic', name: clinic.name, status: 'pending' });
+      routes.push({ path: `/agency/${clinic.slug}`, type: 'agency', name: clinic.name, status: 'pending' });
     });
 
-    // Dentist pages
+    // Fosterer pages
     agencies?.forEach(dentist => {
-      routes.push({ path: `/dentist/${dentist.slug}`, type: 'dentist', name: dentist.name, status: 'pending' });
+      routes.push({ path: `/fosterer/${dentist.slug}`, type: 'fosterer', name: dentist.name, status: 'pending' });
     });
 
     // Blog pages

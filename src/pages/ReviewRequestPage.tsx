@@ -262,7 +262,7 @@ export default function ReviewRequestPage() {
     );
   }
 
-  const clinic = request.clinic;
+  const agency = request.clinic;
   const displayName = request.patient_name || request.recipient_name;
 
   return (
@@ -278,10 +278,10 @@ export default function ReviewRequestPage() {
         <div className="relative z-10">
           {/* Logo/Header */}
           <div className="text-center mb-8">
-            {clinic?.cover_image_url ? (
+            {agency?.cover_image_url ? (
               <img 
-                src={clinic.cover_image_url} 
-                alt={clinic.name}
+                src={agency.cover_image_url} 
+                alt={agency.name}
                 className="h-20 w-20 rounded-2xl object-cover mx-auto mb-4 shadow-lg border-2 border-white"
               />
             ) : (

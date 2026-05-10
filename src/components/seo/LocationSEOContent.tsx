@@ -98,7 +98,7 @@ const StateSEOContent = ({
         Why Choose a Dentist in {stateName}?
       </h2>
       <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-        {stateName} is home to some of the nation's finest dental professionals. With {clinicCount}+ fostering agencys 
+        {stateName} is home to some of the nation's finest foster care agencies. With {clinicCount}+ fostering agencys 
         spread across {cityCount} cities, residents have access to world-class oral healthcare. From routine 
         cleanings to advanced cosmetic procedures, {stateName} agencies combine cutting-edge technology with 
         compassionate patient care.
@@ -120,7 +120,7 @@ const StateSEOContent = ({
           </div>
           <div>
             <h3 className="font-bold text-foreground mb-1">Modern Technology</h3>
-            <p className="text-muted-foreground text-sm">Access to digital X-rays, 3D imaging, laser dentistry, and same-day crown technology.</p>
+            <p className="text-muted-foreground text-sm">Access to modern fostering resources, specialized training programs, and 24/7 support services.</p>
           </div>
         </div>
         <div className="flex gap-4">
@@ -129,7 +129,7 @@ const StateSEOContent = ({
           </div>
           <div>
             <h3 className="font-bold text-foreground mb-1">Insurance Accepted</h3>
-            <p className="text-muted-foreground text-sm">Most clinics accept major dental insurance plans including Delta Dental, Cigna, MetLife, and Aetna.</p>
+            <p className="text-muted-foreground text-sm">Most agencies provide comprehensive support including allowances, training, and 24/7 guidance.</p>
           </div>
         </div>
         <div className="flex gap-4">
@@ -209,34 +209,34 @@ const StateSEOContent = ({
     {/* Tips Section */}
     <div className="bg-card border border-border rounded-3xl p-8 md:p-10">
       <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
-        How to Find the Right Dentist in {stateName}
+        How to Find the Right Fostering Agency in {stateName}
       </h2>
       <p className="text-muted-foreground mb-6">
-        Choosing the right dental provider is an important decision for your oral health. Here are key 
-        factors to consider when selecting a dentist in {stateName}:
+        Choosing the right fostering agency is an important decision for your family. Here are key 
+        factors to consider when selecting an agency in {stateName}:
       </p>
       
       <div className="space-y-4">
         {[
           {
             title: "1. Check Credentials & Experience",
-            desc: `Verify that the dentist is licensed in ${stateName} and has experience with the treatments you need. Look for additional certifications in specialty areas like orthodontics or oral surgery.`
+            desc: `Verify that the agency is Ofsted-registered in ${stateName} and has experience with the fostering types you are interested in. Look for additional certifications in specialist areas like therapeutic care or sibling placements.`
           },
           {
-            title: "2. Read Patient Reviews",
-            desc: "Patient reviews provide valuable insights into the dental experience. Look for consistent positive feedback about bedside manner, wait times, and treatment outcomes."
+            title: "2. Read Foster Carer Reviews",
+            desc: "Foster carer reviews provide valuable insights into the agency experience. Look for consistent positive feedback about support, communication, and training."
           },
           {
-            title: "3. Consider Location & Hours",
-            desc: "Choose a agency office that's convenient to your home or workplace. Many clinics now offer early morning, evening, and Saturday appointments for busy schedules."
+            title: "3. Consider Location & Support",
+            desc: "Choose an agency that's convenient to your home or workplace. Many agencies now offer evening and weekend visits for busy families."
           },
           {
-            title: "4. Verify Insurance & Payment Options",
-            desc: "Confirm that the dentist accepts your insurance plan. Many clinics in the UAE offer direct billing with providers like Daman, AXA, Cigna, and Nextcare, as well as flexible payment plans."
+            title: "4. Verify Allowances & Support",
+            desc: "Confirm the fostering allowances and additional support available. Many agencies in the UK offer competitive rates, training allowances, and flexible payment options."
           },
           {
             title: "5. Visit for a Consultation",
-            desc: "Schedule an initial consultation to meet the dentist, tour the facility, and discuss your oral health goals. This helps ensure you feel comfortable with your choice."
+            desc: "Schedule an initial consultation to meet the team, tour the facility, and discuss your fostering goals. This helps ensure you feel comfortable with your choice."
           }
         ].map((item, i) => (
           <div key={i} className="flex gap-4 items-start">
@@ -276,14 +276,14 @@ const CitySEOContent = ({
         About Dental Care in {cityName}, {stateAbbr}
       </h2>
       <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-        {cityName} residents have access to {clinicCount}+ fostering agencys offering comprehensive oral healthcare 
-        services. From family fosteringry to specialized treatments, {cityName}'s dental professionals are 
+        {cityName} residents have access to {clinicCount}+ fostering agencies offering comprehensive 
+        services. From short-term to long-term care, {cityName}'s foster care providers are 
         committed to helping you achieve and maintain a healthy smile.
       </p>
       <p className="text-muted-foreground leading-relaxed mb-6">
-        Whether you're looking for routine preventive care, emergency dental services, or cosmetic 
+        Whether you're looking for short-term care, emergency placements, or long-term 
         enhancements, you'll find qualified professionals in {cityName} ready to meet your needs. Many 
-        local clinics use the latest dental technology including digital X-rays, intraoral cameras, 
+        local agencies use modern approaches and best practices including comprehensive assessments, 
         and CAD/CAM systems for same-day restorations.
       </p>
       
@@ -323,7 +323,7 @@ const CitySEOContent = ({
             General & Preventive
           </h3>
           <ul className="text-muted-foreground space-y-2 ml-7">
-            <li>• Comprehensive dental exams</li>
+            <li>• Comprehensive care assessments</li>
             <li>• Professional teeth cleaning</li>
             <li>• Dental fillings & sealants</li>
             <li>• Gum disease treatment</li>
@@ -377,29 +377,29 @@ const CitySEOContent = ({
         <div className="flex gap-4 items-start">
           <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold flex-shrink-0">1</div>
           <div>
-            <h3 className="font-bold text-foreground mb-1">Check-in & Paperwork</h3>
-            <p className="text-muted-foreground text-sm">Complete your medical history forms and provide insurance information. Many offices offer online pre-registration.</p>
+            <h3 className="font-bold text-foreground mb-1">Initial Enquiry</h3>
+            <p className="text-muted-foreground text-sm">Complete your enquiry form and provide basic information. Many agencies offer online pre-registration.</p>
           </div>
         </div>
         <div className="flex gap-4 items-start">
           <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold flex-shrink-0">2</div>
           <div>
-            <h3 className="font-bold text-foreground mb-1">Comprehensive Examination</h3>
-            <p className="text-muted-foreground text-sm">Your dentist will perform a thorough oral exam, take X-rays if needed, and check for any signs of decay or disease.</p>
+            <h3 className="font-bold text-foreground mb-1">Assessment Meeting</h3>
+            <p className="text-muted-foreground text-sm">The agency will conduct a thorough home visit, discuss your experience, and assess your suitability for fostering.</p>
           </div>
         </div>
         <div className="flex gap-4 items-start">
           <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold flex-shrink-0">3</div>
           <div>
-            <h3 className="font-bold text-foreground mb-1">Discuss Treatment Options</h3>
-            <p className="text-muted-foreground text-sm">Your dentist will explain findings, discuss treatment options, and answer any questions you have about your oral health.</p>
+            <h3 className="font-bold text-foreground mb-1">Discuss Options</h3>
+            <p className="text-muted-foreground text-sm">The agency will explain available fostering types, matching process, and answer any questions you have about your journey.</p>
           </div>
         </div>
         <div className="flex gap-4 items-start">
           <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold flex-shrink-0">4</div>
           <div>
-            <h3 className="font-bold text-foreground mb-1">Schedule Follow-Up</h3>
-            <p className="text-muted-foreground text-sm">Book your next appointment and any necessary treatments before you leave. Most offices send appointment reminders.</p>
+            <h3 className="font-bold text-foreground mb-1">Next Steps</h3>
+            <p className="text-muted-foreground text-sm">Schedule your next meeting and begin the application process. Most agencies provide regular updates and support.</p>
           </div>
         </div>
       </div>
@@ -458,7 +458,7 @@ const ServiceLocationSEOContent = ({
           About {treatmentName} in {locationName}, {stateAbbr}
         </h2>
         <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-          Looking for {treatmentLower} services in {locationName}? Our network of {clinicCount}+ 
+          Looking for {treatmentLower} care in {locationName}? Our network of {clinicCount}+ 
           verified fostering agencys includes specialists who excel in providing top-quality {treatmentLower} 
           treatments. Whether you're a new patient or seeking a second opinion, you'll find experienced 
           professionals dedicated to your oral health.
@@ -477,8 +477,8 @@ const ServiceLocationSEOContent = ({
             <Shield className="h-8 w-8 text-primary mb-3" />
             <h3 className="font-bold text-foreground mb-2">Quality Guaranteed</h3>
             <p className="text-sm text-muted-foreground">
-              All agencies are licensed in {stateName} and verified on our platform. Many offer 
-              satisfaction guarantees on their work.
+              All agencies are registered in {stateName} and verified on our platform. Many offer 
+              ongoing support guarantees and satisfaction reviews.
             </p>
           </div>
         </div>
@@ -487,38 +487,38 @@ const ServiceLocationSEOContent = ({
       {/* What to Know Section */}
       <div className="bg-card border border-border rounded-3xl p-8 md:p-10">
         <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
-          What to Know Before Getting {treatmentName}
+          What to Know About {treatmentName} Fostering
         </h2>
         <div className="space-y-6">
           <div>
             <h3 className="font-bold text-foreground mb-2">Consultation Process</h3>
             <p className="text-muted-foreground">
-              Most {treatmentLower} treatments begin with a thorough consultation. Your dentist will 
-              examine your teeth, discuss your goals, and create a personalized treatment plan. Many 
-              clinics in {locationName} offer free or low-cost initial consultations.
+              Most {treatmentLower} care begins with a thorough consultation. The agency will 
+              assess your situation, discuss your goals, and create a personalized plan. Many 
+              agencies in {locationName} offer free or low-cost initial consultations.
             </p>
           </div>
           <div>
-            <h3 className="font-bold text-foreground mb-2">Treatment Timeline</h3>
+            <h3 className="font-bold text-foreground mb-2">Timeline</h3>
             <p className="text-muted-foreground">
-              The duration of {treatmentLower} treatment varies based on your specific needs. Some 
-              procedures can be completed in a single visit, while others may require multiple 
-              appointments over several weeks or months.
+              The duration of {treatmentLower} care varies based on your specific situation. Some 
+              placements can begin quickly, while others may require additional assessments 
+              over several weeks or months.
             </p>
           </div>
           <div>
-            <h3 className="font-bold text-foreground mb-2">Cost & Payment Options</h3>
+            <h3 className="font-bold text-foreground mb-2">Allowances & Support</h3>
             <p className="text-muted-foreground">
-              {treatmentName} costs in {locationName} depend on the complexity of your case and the 
-              dentist you choose. Many clinics accept major UAE insurance providers with direct billing, 
-              offer flexible payment plans, and provide transparent pricing in AED.
+              {treatmentName} support in {locationName} depends on the type of care and the 
+              agency you choose. Many agencies provide competitive allowances, 
+              training payments, and comprehensive support packages.
             </p>
           </div>
           <div>
             <h3 className="font-bold text-foreground mb-2">Aftercare & Maintenance</h3>
             <p className="text-muted-foreground">
-              Proper aftercare is essential for long-lasting results. Your dentist will provide specific 
-              instructions and schedule follow-up appointments to ensure your treatment is successful.
+              Proper aftercare is essential for long-lasting results. The agency will provide specific 
+              guidance and schedule follow-up support to ensure your fostering journey is successful.
             </p>
           </div>
         </div>
@@ -527,15 +527,15 @@ const ServiceLocationSEOContent = ({
       {/* Why Choose Local Section */}
       <div className="bg-card border border-border rounded-3xl p-8 md:p-10">
         <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
-          Why Choose a {locationName} {treatmentName} Specialist?
+          Why Choose a {locationName} {treatmentName} Agency?
         </h2>
         <ul className="space-y-3">
           {[
-            `Convenient location for follow-up appointments and ongoing care`,
-            `Familiarity with local dental insurance networks and coverage`,
-            `Strong community reputation and accessible patient reviews`,
-            `Emergency availability when you need urgent care`,
-            `Personalized care from professionals who know your dental history`
+            `Convenient location for regular support visits and ongoing guidance`,
+            `Familiarity with local authority processes and regional requirements`,
+            `Strong community reputation and accessible foster carrier reviews`,
+            `Emergency availability when you need urgent support`,
+            `Personalized care from professionals who understand your family's needs`
           ].map((item, i) => (
             <li key={i} className="flex items-start gap-3">
               <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />

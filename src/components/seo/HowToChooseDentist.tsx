@@ -41,11 +41,11 @@ export function HowToChooseDentist({ locationName, className = "" }: HowToChoose
       <div className="text-center">
         <span className="inline-block text-xs font-bold text-primary uppercase tracking-widest mb-2">Expert Tips</span>
         <h2 className="text-2xl md:text-3xl font-black text-foreground mb-4">
-          How to Choose the Right Dentist{locationName ? ` in ${locationName}` : ''}
+          How to Choose the Right Agency{locationName ? ` in ${locationName}` : ''}
         </h2>
         <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-          Finding the right dentist is an important decision for your oral health. 
-          Here are key factors to consider when choosing a dental professional{locationName ? ` in ${locationName}` : ''}.
+          Finding the right fostering agency is an important decision for your family. 
+          Here are key factors to consider when choosing an agency{locationName ? ` in ${locationName}` : ''}.
         </p>
       </div>
 

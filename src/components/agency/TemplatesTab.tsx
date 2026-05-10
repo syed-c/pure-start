@@ -236,7 +236,7 @@ export default function TemplatesTab() {
         .replace(/{clinic_name}/g, clinic.name)
         .replace(/{clinic_address}/g, clinic.address || '')
         .replace(/{review_link}/g, `${window.location.origin}/review/${clinic.slug}`)
-        .replace(/{booking_link}/g, `${window.location.origin}/clinic/${clinic.slug}`);
+        .replace(/{booking_link}/g, `${window.location.origin}/agency/${agency.slug}`);
 
       const { error } = await supabase.functions.invoke('send-review-request', {
         body: {

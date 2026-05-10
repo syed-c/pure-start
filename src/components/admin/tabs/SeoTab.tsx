@@ -121,9 +121,9 @@ export default function SeoTab() {
       metaOk: true,
     })),
     ...(clinics || []).map(c => ({
-      type: 'clinic',
+      type: 'agency',
       name: c.name,
-      url: `/clinic/${c.slug}/`,
+      url: `/agency/${c.slug}/`,
       hasH1: true,
       h1Count: 1,
       h2Count: 3,
@@ -613,8 +613,9 @@ export default function SeoTab() {
                   { pattern: '/{state}/', description: 'State pages', status: true },
                   { pattern: '/{state}/{city}/', description: 'City pages', status: true },
                   { pattern: '/services/{service}/', description: 'Service pages', status: true },
-                  { pattern: '/clinic/{slug}/', description: 'Clinic pages', status: true },
-                  { pattern: '/contact/{slug}/', description: 'Dentist pages', status: true },
+                  { pattern: '/clinic/{slug}/', description: 'Legacy clinic pages', status: true },
+                  { pattern: '/agency/{slug}/', description: 'Agency pages', status: true },
+                  { pattern: '/contact/{slug}/', description: 'Fosterer pages', status: true },
                   { pattern: '/blog/', description: 'Blog listing', status: true },
                   { pattern: '/blog/{slug}/', description: 'Blog posts', status: true },
                 ].map((item, i) => (

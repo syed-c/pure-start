@@ -372,7 +372,7 @@ export function BookingModal({
                   <FormLabel className="text-micro">Additional Notes (Optional)</FormLabel>
                   <FormControl>
                     <Textarea 
-                      placeholder="Describe your dental concern or any specific requests..." 
+                      placeholder="Describe your fostering enquiry or any specific requests..." 
                       className="rounded-xl resize-none" 
                       rows={3}
                       {...field} 

@@ -70,7 +70,7 @@ export const AgencyListFrame = ({
         </div>
         {/* SEO: Always render semantic content structure for bots */}
         <p className="sr-only" itemProp="description">
-          Browse verified dental professionals in {locationName}. Find ratings, reviews, and book appointments online.
+          Browse verified fostering agencies in {locationName}. Find ratings, reviews, and contact agencies directly.
         </p>
         <div className="p-6 space-y-4">
           {[...Array(4)].map((_, i) => (
@@ -155,30 +155,28 @@ export const AgencyListFrame = ({
                 <meta itemProp="bestRating" content="5" />
                 <meta itemProp="worstRating" content="1" />
               </span>}
-              {profile.slug && <a itemProp="url" href={`https://www.foster-care.co.uk/clinic/${profile.slug}/`}>View Profile</a>}
+{profile.slug && <a itemProp="url" href={`https://www.foster-care.co.uk/agency/${profile.slug}/`}>View Profile</a>}
             </div>
-          ))}
-        </div>
-      </noscript>
-
-      {/* Screen-reader / bot-accessible semantic list (visually hidden but in DOM) */}
-      <div className="sr-only" role="list" aria-label={`${profiles.length} agencies in ${locationName}`}
-        itemScope itemType="https://schema.org/ItemList">
-        <meta itemProp="name" content={`Agencies in ${locationName}`} />
-        <meta itemProp="numberOfItems" content={String(profiles.length)} />
-        {profiles.map((profile, index) => (
-          <div key={profile.id} role="listitem" itemScope itemType="https://schema.org/Organization" itemProp="itemListElement">
-            <meta itemProp="position" content={String(index + 1)} />
-            <span itemProp="name">{profile.name}</span>
-            {profile.location && <span itemProp="address">{profile.location}</span>}
-            {profile.specialty && <span itemProp="medicalSpecialty">{profile.specialty}</span>}
-            {profile.rating && <span itemProp="aggregateRating" itemScope itemType="https://schema.org/AggregateRating">
-              <meta itemProp="ratingValue" content={String(profile.rating)} />
-              <meta itemProp="reviewCount" content={String(profile.review_count || 0)} />
-              <meta itemProp="bestRating" content="5" />
-              <meta itemProp="worstRating" content="1" />
-            </span>}
-            {profile.slug && <a itemProp="url" href={`https://www.foster-care.co.uk/clinic/${profile.slug}/`}>{profile.name}</a>}
+          </noscript>
+        
+          {/* Screen-reader / bot-accessible semantic list (visually hidden but in DOM) */}
+          <div className="sr-only" role="list" aria-label={`${profiles.length} agencies in ${locationName}`}
+            itemScope itemType="https://schema.org/ItemList">
+            <meta itemProp="name" content={`Agencies in ${locationName}`} />
+            <meta itemProp="numberOfItems" content={String(profiles.length)} />
+            {profiles.map((profile, index) => (
+              <div key={profile.id} role="listitem" itemScope itemType="https://schema.org/Organization" itemProp="itemListElement">
+                <meta itemProp="position" content={String(index + 1)} />
+                <span itemProp="name">{profile.name}</span>
+                {profile.location && <span itemProp="address">{profile.location}</span>}
+                {profile.specialty && <span itemProp="medicalSpecialty">{profile.specialty}</span>}
+                {profile.rating && <span itemProp="aggregateRating" itemScope itemType="https://schema.org/AggregateRating">
+                  <meta itemProp="ratingValue" content={String(profile.rating)} />
+                  <meta itemProp="reviewCount" content={String(profile.review_count || 0)} />
+                  <meta itemProp="bestRating" content="5" />
+                  <meta itemProp="worstRating" content="1" />
+                </span>}
+                {profile.slug && <a itemProp="url" href={`https://www.foster-care.co.uk/agency/${profile.slug}/`}>{profile.name}</a>}
           </div>
         ))}
       </div>

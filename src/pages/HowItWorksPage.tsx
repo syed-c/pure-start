@@ -157,7 +157,7 @@ const HowItWorksPage = () => {
                   </div>
                 </div>
                 <div className="text-center">
-                  <p className="text-4xl font-extrabold text-primary mb-1">{counts?.clinics?.toLocaleString() || "500+"}</p>
+                  <p className="text-4xl font-extrabold text-primary mb-1">{counts?.clinics?.toLocaleString() || counts?.agencies?.toLocaleString() || "500+"}</p>
                   <p className="text-sm text-muted-foreground mb-5">Agencies to discover</p>
                   <Button asChild size="lg" className="rounded-xl font-semibold h-12 px-8 shadow-lg shadow-primary/20">
                     <Link to="/search">Find an Agency <ArrowRight className="ml-2 h-4 w-4" /></Link>

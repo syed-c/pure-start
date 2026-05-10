@@ -157,8 +157,8 @@ export function useAutoInternalLinks({
 
         nearbyClinics?.forEach((c, i) => {
           links.push({
-            label: pickAnchor("clinic", c.name, i),
-            href: `/clinic/${c.slug}/`,
+            label: pickAnchor("agency", c.name, i),
+            href: `/agency/${c.slug}/`,
             type: "sibling",
           });
         });

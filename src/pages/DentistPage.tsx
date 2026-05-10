@@ -47,8 +47,8 @@ const ContactPage = () => {
   const { data: seoContent } = useSeoPageContent(`dentist/${slug}`);
 
   // Fetch agency data - only exact slug match
-  const { data: dentist, isLoading, error } = useQuery({
-    queryKey: ["dentist", slug],
+  const { data: fosterer, isLoading, error } = useQuery({
+    queryKey: ["fosterer", slug],
     queryFn: async () => {
       if (!slug || slug.includes('/')) return null;
       const { data, error } = await supabase
@@ -64,27 +64,27 @@ const ContactPage = () => {
 
   // Fetch services via clinic_treatments if agency has a clinic
   const { data: treatments } = useQuery({
-    queryKey: ["agency-profile-treatments", dentist?.clinic_id],
+    queryKey: ["agency-profile-treatments", fosterer?.clinic_id],
     queryFn: async () => {
-      if (!dentist?.clinic_id) return [];
+      if (!fosterer?.clinic_id) return [];
       const { data } = await supabase
         .from("clinic_treatments")
         .select("*, treatment:treatments(*)")
-        .eq("clinic_id", dentist.clinic_id);
+        .eq("clinic_id", fosterer.clinic_id);
       return data || [];
     },
-    enabled: !!dentist?.clinic_id,
+    enabled: !!fosterer?.clinic_id,
   });
 
   // Fetch reviews
   const { data: reviews } = useQuery({
-    queryKey: ["dentist-reviews", dentist?.clinic_id],
+    queryKey: ["fosterer-reviews", fosterer?.clinic_id],
     queryFn: async () => {
-      if (!dentist?.clinic_id) return [];
+      if (!fosterer?.clinic_id) return [];
       const { data } = await supabase
         .from("review_funnel_events")
         .select("*")
-        .eq("clinic_id", dentist.clinic_id)
+        .eq("clinic_id", fosterer.clinic_id)
         .eq("event_type", "rating_submitted")
         .order("created_at", { ascending: false })
         .limit(10);
@@ -96,7 +96,7 @@ const ContactPage = () => {
         created_at: r.created_at,
       }));
     },
-    enabled: !!dentist?.clinic_id,
+    enabled: !!fosterer?.clinic_id,
   });
 
   const handleShare = async () => {
@@ -230,7 +230,7 @@ const ContactPage = () => {
         description={dentist.bio || `${dentist.name} is a verified fostering professional in ${locationDisplay}.`}
         image={dentist.image_url || undefined}
         url={`/dentist/${dentist.slug}/`}
-        worksFor={dentist.clinic ? { name: dentist.clinic.name, url: `/clinic/${dentist.clinic.slug}/` } : undefined}
+        worksFor={dentist.clinic ? { name: dentist.clinic.name, url: `/agency/${dentist.clinic.slug}/` } : undefined}
       />
       {/* Hero Section */}
       <section className="gradient-hero py-12 md:py-16">
@@ -304,7 +304,7 @@ const ContactPage = () => {
                   )}
                   {dentist.clinic && (
                     <Link 
-                      to={`/clinic/${dentist.clinic.slug}`}
+                      to={`/agency/${dentist.clinic.slug}`}
                       className="flex items-center gap-2 text-sm hover:text-primary transition-colors"
                     >
                       <Briefcase className="h-4 w-4 text-primary" />

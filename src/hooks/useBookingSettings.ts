@@ -19,41 +19,41 @@ interface DentistSettings {
   booking_notes: string | null;
 }
 
-export function useBookingSettings(clinicId: string | null) {
+export function useBookingSettings(agencyId: string | null) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
   const { data: settings, isLoading } = useQuery({
-    queryKey: ['dentist-settings', clinicId],
+    queryKey: ['fosterer-settings', agencyId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('dentist_settings')
         .select('*')
-        .eq('clinic_id', clinicId!)
+        .eq('clinic_id', agencyId!)
         .single();
 
       if (error && error.code !== 'PGRST116') throw error;
       return data as DentistSettings | null;
     },
-    enabled: !!clinicId,
+    enabled: !!agencyId,
   });
 
   const updateSettings = useMutation({
     mutationFn: async (updates: Partial<DentistSettings>) => {
-      if (!clinicId) throw new Error('No clinic ID');
+      if (!agencyId) throw new Error('No agency ID');
 
       // Check if settings exist
       const { data: existing } = await supabase
         .from('dentist_settings')
         .select('id')
-        .eq('clinic_id', clinicId)
+        .eq('clinic_id', agencyId)
         .single();
 
       if (existing) {
         const { data, error } = await supabase
           .from('dentist_settings')
           .update(updates)
-          .eq('clinic_id', clinicId)
+          .eq('clinic_id', agencyId)
           .select()
           .single();
 
@@ -62,7 +62,7 @@ export function useBookingSettings(clinicId: string | null) {
       } else {
         const { data, error } = await supabase
           .from('dentist_settings')
-          .insert({ clinic_id: clinicId, ...updates })
+          .insert({ clinic_id: agencyId, ...updates })
           .select()
           .single();
 
@@ -71,14 +71,14 @@ export function useBookingSettings(clinicId: string | null) {
       }
     },
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['dentist-settings', clinicId] });
+      queryClient.invalidateQueries({ queryKey: ['fosterer-settings', agencyId] });
       
       // Log audit event for booking toggle
       if ('booking_enabled' in variables) {
         createAuditLog({
           action: variables.booking_enabled ? 'enable_booking' : 'disable_booking',
           entityType: 'clinic',
-          entityId: clinicId!,
+          entityId: agencyId!,
           newValues: { booking_enabled: variables.booking_enabled },
           oldValues: { booking_enabled: !variables.booking_enabled },
         });

@@ -313,7 +313,7 @@ export default function GMBOnboarding() {
           <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-coral bg-clip-text text-transparent mb-2">
             Foster Care
           </h1>
-          <p className="text-muted-foreground">Your dental practice dashboard</p>
+          <p className="text-muted-foreground">Your agency dashboard</p>
         </div>
 
         {/* Step: Welcome */}
@@ -326,14 +326,14 @@ export default function GMBOnboarding() {
               <CardTitle className="text-2xl">Welcome, {userName}!</CardTitle>
               <CardDescription className="text-base">
                 {listingCreated
-                  ? 'Your practice has been successfully listed!'
+                  ? 'Your agency has been successfully listed!'
                   : isNewSignup && skippedGmb
-                  ? "Let's set up your practice profile manually."
+                  ? "Let's set up your agency profile manually."
                   : isNewSignup
-                  ? "You've successfully signed up. Let's set up your practice profile."
+                  ? "You've successfully signed up. Let's set up your agency profile."
                   : gmbConnected
                   ? 'Your Google Business Profile is now connected!'
-                  : "Welcome back! Let's complete your practice setup."}
+                  : "Welcome back! Let's complete your agency setup."}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -505,9 +505,9 @@ export default function GMBOnboarding() {
                 </div>
               </div>
 
-              {/* US-Only Notice */}
+              {/* UK Notice */}
               <p className="text-xs text-center text-muted-foreground pt-2">
-                Foster Care is currently available for dental practices in California, Massachusetts, and Connecticut.
+                Foster Care UK is available for agencies across England, Scotland, Wales, and Northern Ireland.
               </p>
             </CardContent>
           </Card>

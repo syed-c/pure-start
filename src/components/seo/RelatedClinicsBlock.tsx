@@ -55,13 +55,13 @@ export function RelatedClinicsBlock({
     <div className="card-modern p-6">
       <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
         <Building2 className="h-5 w-5 text-primary" />
-        {cityName ? `Other Clinics in ${cityName}` : "Related Clinics"}
+        {cityName ? `Other Agencies in ${cityName}` : "Related Agencies"}
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {relatedClinics.map((clinic) => (
           <Link
             key={clinic.id}
-            to={`/clinic/${clinic.slug}/`}
+            to={`/agency/${clinic.slug}/`}
             className="flex items-center justify-between p-3 rounded-xl border border-border hover:border-primary/30 hover:bg-accent/30 transition-all group"
           >
             <div className="min-w-0">

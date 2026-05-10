@@ -424,7 +424,7 @@ export function CalendarBookingForm({
                     <FormLabel className="text-sm font-medium">Additional notes (optional)</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Describe your dental concern or any specific requests..."
+                        placeholder="Describe your fostering enquiry or any specific requests..."
                         className="rounded-2xl resize-none border-2 border-border/50 focus:border-primary transition-all"
                         rows={3}
                         {...field}

@@ -51,14 +51,14 @@ import NotificationSettingsCard from '@/components/agency/NotificationSettingsCa
 import AIInsightsCard from '@/components/agency/AIInsightsCard';
 import DashboardWidgets from '@/components/agency/DashboardWidgets';
 
-function VerificationPaymentButton({ clinicId }: { clinicId: string }) {
+function VerificationPaymentButton({ agencyId }: { agencyId: string }) {
   const [isLoading, setIsLoading] = useState(false);
   
   const handlePayment = async () => {
     setIsLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('create-verification-payment', {
-        body: { clinicId },
+        body: { clinicId: agencyId },
       });
       if (error) throw error;
       if (data.url) {
@@ -83,7 +83,7 @@ function VerificationPaymentButton({ clinicId }: { clinicId: string }) {
   );
 }
 
-interface ClinicProfile {
+interface AgencyProfile {
   id: string;
   name: string;
   slug: string;
@@ -134,11 +134,11 @@ export default function AgencyDashboardTab() {
     setSearchParams({ tab });
   };
 
-  // Fetch dentist's clinic - skip for admins
-  const { data: clinic, isLoading: profileLoading } = useQuery({
-    queryKey: ['dentist-profile', user?.id],
-    queryFn: async (): Promise<ClinicProfile | null> => {
-      const { data: clinics } = await supabase
+  // Fetch fosterer's agency - skip for admins
+  const { data: agency, isLoading: profileLoading } = useQuery({
+    queryKey: ['fosterer-profile', user?.id],
+    queryFn: async (): Promise<AgencyProfile | null> => {
+      const { data: agencies } = await supabase
         .from('agencies')
         .select(`
           id, name, slug, address, phone, email, website, rating, review_count,
@@ -150,8 +150,8 @@ export default function AgencyDashboardTab() {
         .eq('claimed_by', user?.id)
         .limit(1);
       
-      if (clinics && clinics.length > 0) {
-        const c = clinics[0];
+      if (agencies && agencies.length > 0) {
+        const c = agencies[0];
         return {
           id: c.id,
           name: c.name,
@@ -180,30 +180,30 @@ export default function AgencyDashboardTab() {
 
   // Fetch subscription plan
   const { data: subscription } = useQuery({
-    queryKey: ['clinic-subscription', clinic?.id],
+    queryKey: ['agency-subscription', agency?.id],
     queryFn: async () => {
-      if (!clinic?.id) return null;
+      if (!agency?.id) return null;
       const { data } = await supabase
         .from('clinic_subscriptions')
         .select('*, plan:subscription_plans(*)')
-        .eq('clinic_id', clinic.id)
+        .eq('clinic_id', agency.id)
         .eq('status', 'active')
         .maybeSingle();
       return data;
     },
-    enabled: !!clinic?.id,
+    enabled: !!agency?.id,
   });
 
   // Fetch appointments stats
   const { data: appointmentStats } = useQuery({
-    queryKey: ['dentist-appointments-stats', clinic?.id],
+    queryKey: ['fosterer-appointments-stats', agency?.id],
     queryFn: async () => {
-      if (!clinic?.id) return { total: 0, pending: 0, confirmed: 0, completed: 0 };
+      if (!agency?.id) return { total: 0, pending: 0, confirmed: 0, completed: 0 };
       
       const { data } = await supabase
         .from('fostering_enquiries')
         .select('status')
-        .eq('clinic_id', clinic.id);
+        .eq('clinic_id', agency.id);
       
       const appointments = data || [];
       return {
@@ -213,19 +213,19 @@ export default function AgencyDashboardTab() {
         completed: appointments.filter(a => a.status === 'completed').length,
       };
     },
-    enabled: !!clinic?.id,
+    enabled: !!agency?.id,
   });
 
   // Fetch funnel stats
   const { data: funnelStats } = useQuery({
-    queryKey: ['dentist-funnel-stats', clinic?.id],
+    queryKey: ['fosterer-funnel-stats', agency?.id],
     queryFn: async () => {
-      if (!clinic?.id) return { thumbsUp: 0, thumbsDown: 0, total: 0 };
+      if (!agency?.id) return { thumbsUp: 0, thumbsDown: 0, total: 0 };
       
       const { data } = await supabase
         .from('review_funnel_events')
         .select('event_type')
-        .eq('clinic_id', clinic.id);
+        .eq('clinic_id', agency.id);
       
       const events = data || [];
       return {
@@ -234,97 +234,89 @@ export default function AgencyDashboardTab() {
         total: events.length,
       };
     },
-    enabled: !!clinic?.id,
+    enabled: !!agency?.id,
   });
 
-  // Fetch patients count
-  const { data: patientsCount } = useQuery({
-    queryKey: ['dentist-patients-count', clinic?.id],
+  // Fetch foster children count
+  const { data: childrenCount } = useQuery({
+    queryKey: ['fosterer-children-count', agency?.id],
     queryFn: async () => {
-      if (!clinic?.id) return 0;
+      if (!agency?.id) return 0;
       const { count } = await supabase
         .from('foster_carers')
         .select('*', { count: 'exact', head: true })
-        .eq('clinic_id', clinic.id);
+        .eq('clinic_id', agency.id);
       return count || 0;
     },
-    enabled: !!clinic?.id,
+    enabled: !!agency?.id,
   });
 
   // ===== FOSTERING-SPECIFIC QUERIES =====
   
-  // Get agency ID from the agency (clinic)
-  const agencyId = clinic?.id;
+  // Get agency ID from the agency
+  const fostererAgencyId = agency?.id;
 
   // Fetch foster carers count
   const { data: fosterCarersCount } = useQuery({
-    queryKey: ['foster-carers-count', agencyId],
+queryKey: ['foster-carers-count', fostererAgencyId],
     queryFn: async () => {
-      if (!agencyId) return { total: 0, active: 0, available: 0 };
+      if (!fostererAgencyId) return { total: 0, active: 0, available: 0 };
       const { data } = await supabase
-        .from('foster_carer_profiles')
-        .select('status')
-        .eq('organisation_id', agencyId);
-      
-      const carers = data || [];
+        .from('foster_carers')
+        .select('*')
+        .eq('organisation_id', fostererAgencyId);
       return {
-        total: carers.length,
-        active: carers.filter(c => c.status === 'active').length,
-        available: carers.filter(c => c.status === 'active').length, // Simplified - can be enhanced
+        total: data?.length || 0,
+        active: data?.filter(f => f.status === 'active').length || 0,
+        available: data?.filter(f => f.availability_status === 'available').length || 0,
       };
     },
-    enabled: !!agencyId,
+    enabled: !!fostererAgencyId,
   });
 
   // Fetch applicants count
   const { data: applicantsCount } = useQuery({
-    queryKey: ['applicants-count', agencyId],
+    queryKey: ['applicants-count', fostererAgencyId],
     queryFn: async () => {
-      if (!agencyId) return { total: 0, inAssessment: 0 };
+      if (!fostererAgencyId) return { total: 0, inAssessment: 0 };
       const { data } = await supabase
-        .from('applicant_profiles')
-        .select('application_stage')
-        .eq('organisation_id', agencyId);
-      
-      const applicants = data || [];
+        .from('foster_applications')
+        .select('*')
+        .eq('organisation_id', fostererAgencyId);
       return {
-        total: applicants.length,
-        inAssessment: applicants.filter(a => a.application_stage === 'assessment').length,
+        total: data?.length || 0,
+        inAssessment: data?.filter(a => a.status === 'in_assessment').length || 0,
       };
     },
-    enabled: !!agencyId,
+    enabled: !!fostererAgencyId,
   });
 
   // Fetch enquiries count
   const { data: enquiriesCount } = useQuery({
-    queryKey: ['enquiries-count', agencyId],
+    queryKey: ['enquiries-count', fostererAgencyId],
     queryFn: async () => {
-      if (!agencyId) return { total: 0, new: 0 };
+      if (!fostererAgencyId) return { total: 0, new: 0 };
       const { data } = await supabase
-        .from('enquiries')
-        .select('status')
-        .eq('agency_id', agencyId);
-      
-      const enquiries = data || [];
+        .from('fostering_enquiries')
+        .select('*')
+        .eq('agency_id', fostererAgencyId);
       return {
-        total: enquiries.length,
-        new: enquiries.filter(e => e.status === 'new').length,
+        total: data?.length || 0,
+        new: data?.filter(e => e.status === 'new').length || 0,
       };
     },
-    enabled: !!agencyId,
+    enabled: !!fostererAgencyId,
   });
 
-  // Fetch compliance alerts (DBS expiring, training overdue, etc.)
+  // Fetch compliance alerts
   const { data: complianceAlerts } = useQuery({
-    queryKey: ['compliance-alerts', agencyId],
+    queryKey: ['compliance-alerts', fostererAgencyId],
     queryFn: async () => {
-      if (!agencyId) return { dbsExpiring: 0, trainingOverdue: 0, documentsExpiring: 0 };
-      
-      // Get foster carers with status for compliance checks
-      const { data: carers } = await supabase
-        .from('foster_carer_profiles')
-        .select('id')
-        .eq('organisation_id', agencyId)
+      if (!fostererAgencyId) return { dbsExpiring: 0, trainingOverdue: 0, documentsExpiring: 0 };
+      const { data } = await supabase
+        .from('foster_carers')
+        .select('*')
+        .eq('organisation_id', fostererAgencyId)
         .eq('status', 'active');
       
       // Simplified - just return counts that can be expanded
@@ -337,78 +329,13 @@ export default function AgencyDashboardTab() {
     enabled: !!agencyId,
   });
 
-  const isVerified = clinic?.verification_status === 'verified' && clinic?.claim_status === 'claimed';
-  const locationNeedsConfirmation = clinic && !clinic.location_verified && !clinic.location_pending_approval;
-  const locationPendingApproval = clinic?.location_pending_approval;
-
-  const positiveRate = funnelStats?.total && funnelStats.total > 0
-    ? Math.round((funnelStats.thumbsUp / funnelStats.total) * 100)
-    : 100;
-
-  if (profileLoading) {
-    return (
-      <div className="space-y-6 p-1">
-        <div className="flex items-center gap-4">
-          <Skeleton className="h-16 w-16 rounded-2xl" />
-          <div className="space-y-2">
-            <Skeleton className="h-6 w-48" />
-            <Skeleton className="h-4 w-32" />
-          </div>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
-          {[...Array(7)].map((_, i) => <Skeleton key={i} className="h-32 rounded-2xl" />)}
-        </div>
-        <div className="grid lg:grid-cols-3 gap-6">
-          <Skeleton className="h-96 rounded-2xl" />
-          <Skeleton className="h-96 rounded-2xl" />
-          <Skeleton className="h-96 rounded-2xl" />
-        </div>
-      </div>
-    );
-  }
-
-  // Allow admins/super_admins to proceed without a clinic
-  if (!clinic && !isAdmin && !isSuperAdmin) {
-    return (
-      <>
-        <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-6">
-          <div className="h-24 w-24 rounded-3xl bg-primary/10 flex items-center justify-center mb-8 animate-bounce-gentle border border-primary/20">
-            <Building2 className="h-12 w-12 text-primary" />
-          </div>
-          <h2 className="text-3xl font-extrabold mb-3 text-foreground">No Practice Linked</h2>
-          <p className="text-muted-foreground mb-8 max-w-md">
-            Your account is not linked to any clinic yet. You can claim an existing profile or add your practice to the directory.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Button asChild size="lg" className="rounded-2xl px-8 bg-primary hover:bg-primary/90">
-              <Link to="/claim-profile">
-                <Shield className="h-5 w-5 mr-2" />
-                Claim Existing Profile
-              </Link>
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="rounded-2xl px-8"
-              onClick={() => setShowAddPracticeModal(true)}
-            >
-              <Plus className="h-5 w-5 mr-2" />
-              Add Your Practice
-            </Button>
-          </div>
-        </div>
-        
-        <AddPracticeModal 
-          open={showAddPracticeModal} 
-          onOpenChange={setShowAddPracticeModal} 
-        />
-      </>
-    );
-  }
-  
-  // Admins without a clinic should not see this tab - skip rendering
-  // They should use admin-specific tabs like Overview, Clinics, etc.
-  if (!clinic && (isAdmin || isSuperAdmin)) {
+const isVerified = agency?.verification_status === 'verified' && agency?.claim_status === 'claimed';
+  const locationNeedsConfirmation = agency && !agency.location_verified && !agency.location_pending_approval;
+  const locationPendingApproval = agency?.location_pending_approval;
+  // Allow admins/super_admins to proceed without an agency
+  if (!agency && !isAdmin && !isSuperAdmin) {
+  // Admins without an agency should not see this tab - skip rendering
+  if (!agency && (isAdmin || isSuperAdmin)) {
     return null;
   }
 
@@ -513,7 +440,7 @@ export default function AgencyDashboardTab() {
               <div className="flex-1">
                 <h3 className="font-bold text-coral text-lg">Action Required</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Your clinic is not publicly listed because your location hasn't been confirmed. Select your location to go live.
+                  Your agency is not publicly listed because your location hasn't been confirmed. Select your location to go live.
                 </p>
                 <Button
                   onClick={() => setShowLocationModal(true)}
@@ -539,7 +466,7 @@ export default function AgencyDashboardTab() {
               <div className="flex-1">
                 <h3 className="font-bold text-gold text-lg">Location Pending</h3>
                 <p className="text-sm text-muted-foreground">
-                  Your area request is pending admin approval. Your clinic will go live once approved (usually within 24 hours).
+                  Your agency request is pending admin approval. Your agency will go live once approved (usually within 24 hours).
                 </p>
               </div>
             </div>
@@ -573,66 +500,16 @@ export default function AgencyDashboardTab() {
             </div>
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-extrabold tracking-tight text-white">{clinic.name}</h1>
-                {isVerified ? (
-                  <Badge className="bg-teal/20 text-teal border border-teal/30 text-[10px] shadow-lg shadow-teal/20">
-                    <CheckCircle className="h-3 w-3 mr-1" />
-                    Verified
-                  </Badge>
-                ) : (
-                  <Badge className="bg-white/10 text-white/60 border border-white/20 text-[10px]">Unverified</Badge>
-                )}
-              </div>
-              <div className="flex items-center gap-3 mt-2">
-                <div className="flex items-center gap-1.5 text-white/70">
-                  <MapPin className="h-3.5 w-3.5" />
-                  <span className="text-sm">{clinic.city?.name || 'Location not set'}{clinic.area?.name ? ` • ${clinic.area.name}` : ''}</span>
-                </div>
-                {subscription?.plan && (
-                  <Badge className="bg-primary/20 text-primary border border-primary/30 text-[10px]">
-                    {subscription.plan.name}
-                  </Badge>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            {/* Quick Stats Pills */}
-            <div className="hidden lg:flex items-center gap-2">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/10">
-                <Star className="h-3.5 w-3.5 text-gold" />
-                <span className="text-sm font-medium text-white">{clinic.rating?.toFixed(1) || 'N/A'}</span>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/10">
-                <Users className="h-3.5 w-3.5 text-teal" />
-                <span className="text-sm font-medium text-white">{clinic.review_count || 0} reviews</span>
-              </div>
-            </div>
-            <Button 
-              variant="outline" 
-              className="rounded-xl bg-white/10 border-white/20 text-white hover:bg-white hover:text-slate-900 transition-all"
-              onClick={() => window.open(`/clinic/${clinic.slug}`, "_blank")}
-            >
-              <Eye className="h-4 w-4 mr-2" />
-              View Profile
-            </Button>
-          </div>
-        </div>
-        
-        {/* Bottom accent line */}
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-teal to-gold" />
-      </div>
-
-      {/* Location Selection Modal */}
-      <LocationSelectionModal
-        open={showLocationModal}
-        onOpenChange={setShowLocationModal}
-        clinicId={clinic.id}
-        detectedCity={clinic.city?.name}
-        detectedCityId={clinic.city_id}
+<h1 className="text-2xl font-extrabold tracking-tight text-white">{agency.name}</h1>
+                  <span className="text-sm">{agency.city?.name || 'Location not set'}{agency.area?.name ? ` • ${agency.area.name}` : ''}</span>
+                  <span className="text-sm font-medium text-white">{agency.rating?.toFixed(1) || 'N/A'}</span>
+                  <span className="text-sm font-medium text-white">{agency.review_count || 0} reviews</span>
+                onClick={() => window.open(`/agency/${agency.slug}`, "_blank")}
+        agencyId={agency.id}
+        detectedCity={agency.city?.name}
+        detectedCityId={agency.city_id}
         onLocationSelected={() => {
-          queryClient.invalidateQueries({ queryKey: ['dentist-profile'] });
+          queryClient.invalidateQueries({ queryKey: ['fosterer-profile'] });
         }}
       />
 
@@ -644,13 +521,13 @@ export default function AgencyDashboardTab() {
 
       {/* Dashboard Widgets (Reputation, Funnel, Today's Appointments) */}
       <DashboardWidgets
-        clinicId={clinic.id}
-        clinicName={clinic.name}
-        clinicSlug={clinic.slug}
-        googlePlaceId={clinic.google_place_id}
-        verificationStatus={clinic.verification_status}
-        rating={clinic.rating}
-        reviewCount={clinic.review_count}
+        agencyId={agency.id}
+        agencyName={agency.name}
+        agencySlug={agency.slug}
+        googlePlaceId={agency.google_place_id}
+        verificationStatus={agency.verification_status}
+        rating={agency.rating}
+        reviewCount={agency.review_count}
         onNavigate={navigateTo}
       />
 
@@ -659,9 +536,9 @@ export default function AgencyDashboardTab() {
         {/* Column 1: Reputation Widget + Plan Cards + Notifications */}
         <div className="space-y-3">
           <ReputationWidget 
-            clinicId={clinic.id}
-            rating={clinic.rating || 0}
-            reviewCount={clinic.review_count || 0}
+            agencyId={agency.id}
+            rating={agency.rating || 0}
+            reviewCount={agency.review_count || 0}
             onViewDetails={() => navigateTo('my-reputation')}
           />
           
@@ -719,44 +596,15 @@ export default function AgencyDashboardTab() {
                     <p className="text-xs text-muted-foreground">3x more bookings</p>
                   </div>
                 </div>
-                <VerificationPaymentButton clinicId={clinic.id} />
-              </CardContent>
-            </Card>
-          )}
-          
-          {/* Notification Settings */}
-          <NotificationSettingsCard clinicId={clinic.id} />
-        </div>
-
-        {/* Column 2: Appointments + Profile Health */}
-        <div className="space-y-3">
-          <AppointmentsTimeline 
-            clinicId={clinic.id}
-            onViewAll={() => navigateTo('my-appointments')}
-          />
-          
-          <ProfileHealthCard 
-            clinicId={clinic.id}
-            verificationStatus={clinic.verification_status}
-            gmbConnected={clinic.gmb_connected}
-            onImprove={() => navigateTo('my-profile')}
-          />
-        </div>
-
-        {/* Column 3: AI Insights + Outreach */}
-        <div className="space-y-3">
-          <AIInsightsCard 
-            clinicId={clinic.id}
-            clinicName={clinic.name}
-            onNavigate={navigateTo}
-          />
-          
-          <OutreachImpactCard clinicId={clinic.id} />
-        </div>
-      </div>
-
-      {/* Activity Feed - Compact */}
-      <ActivityFeed clinicId={clinic.id} maxItems={5} />
+<VerificationPaymentButton agencyId={agency.id} />
+          <NotificationSettingsCard agencyId={agency.id} />
+            agencyId={agency.id}
+            verificationStatus={agency.verification_status}
+            gmbConnected={agency.gmb_connected}
+            agencyId={agency.id}
+            agencyName={agency.name}
+          <OutreachImpactCard agencyId={agency.id} />
+      <ActivityFeed agencyId={agency.id} maxItems={5} />
     </div>
   );
 }

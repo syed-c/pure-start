@@ -283,7 +283,7 @@ export default function InsuranceChecker() {
                       </TableCell>
                       <TableCell>
                         <Button size="sm" variant="ghost" asChild>
-                          <Link to={`/clinic/${clinic.slug || clinic.id}`}>
+                          <Link to={`/agency/${clinic.slug || clinic.id}`}>
                             View <ArrowRight className="h-4 w-4 ml-1" />
                           </Link>
                         </Button>

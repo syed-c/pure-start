@@ -250,20 +250,20 @@ export const generateClinicInternalLinks = (
     });
   }
   
-  // Nearby clinics (top 4)
+  // Nearby agencies (top 4)
   nearbyClinics.slice(0, 4).forEach((c) => {
     links.push({
       label: c.name,
-      href: `/clinic/${c.slug}/`,
-      description: 'View clinic profile',
+      href: `/agency/${c.slug}/`,
+      description: 'View agency profile',
     });
   });
   
   // Service directory
   links.push({
-    label: 'All Dental Services',
-    href: '/services/',
-    description: 'Browse dental treatment categories',
+    label: 'All Fostering Types',
+    href: '/categories/',
+    description: 'Browse fostering categories',
   });
 
   // Insurance directory

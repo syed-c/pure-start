@@ -10,39 +10,39 @@ import { SEOHead } from '@/components/seo/SEOHead';
  * 
  * This page is the target of the "Book Appointment" button on Google Business Profiles.
  * It provides a streamlined booking experience without requiring navigation through
- * the full clinic page.
+ * the full agency page.
  * 
- * URL: /book/:clinicId
+ * URL: /book/:agencyId
  */
 export default function BookDirectPage() {
-  const { clinicId } = useParams<{ clinicId: string }>();
+  const { agencyId } = useParams<{ agencyId: string }>();
 
-  const { data: clinic, isLoading, error } = useQuery({
-    queryKey: ['clinic-booking', clinicId],
+  const { data: agency, isLoading, error } = useQuery({
+    queryKey: ['agency-booking', agencyId],
     queryFn: async () => {
-      if (!clinicId) throw new Error('No clinic ID');
+      if (!agencyId) throw new Error('No agency ID');
 
       const { data, error } = await supabaseAdmin
         .from('agencies')
         .select(`*`)
-        .eq('id', clinicId)
+        .eq('id', agencyId)
         .single();
 
       if (error) throw error;
       return data as any;
     },
-    enabled: !!clinicId,
+    enabled: !!agencyId,
   });
 
   // Track page view for analytics
   useQuery({
-    queryKey: ['track-booking-view', clinicId],
+    queryKey: ['track-booking-view', agencyId],
     queryFn: async () => {
-      if (!clinicId) return null;
+      if (!agencyId) return null;
       
       await supabase.functions.invoke('track-profile-view', {
         body: { 
-          clinicId, 
+          clinicId: agencyId, 
           source: 'gmb_booking_link',
           eventType: 'booking_page_view'
         }
@@ -50,7 +50,7 @@ export default function BookDirectPage() {
       
       return true;
     },
-    enabled: !!clinicId,
+    enabled: !!agencyId,
     staleTime: Infinity, // Only track once per session
   });
 
@@ -66,21 +66,21 @@ export default function BookDirectPage() {
     );
   }
 
-  if (error || !clinic) {
-    // Redirect to home if clinic not found
+  if (error || !agency) {
+    // Redirect to home if agency not found
     return <Navigate to="/" replace />;
   }
 
   const locationDisplay = [
-    (clinic.area as any)?.name,
-    (clinic.city as any)?.name,
+    (agency.area as any)?.name,
+    (agency.city as any)?.name,
   ].filter(Boolean).join(', ');
 
   return (
     <>
       <SEOHead
-        title={`Book Appointment - ${clinic.name}`}
-        description={`Book an appointment online with ${clinic.name}${locationDisplay ? ` in ${locationDisplay}` : ''}. Quick and easy online scheduling.`}
+        title={`Book Appointment - ${agency.name}`}
+        description={`Book an appointment online with ${agency.name}${locationDisplay ? ` in ${locationDisplay}` : ''}. Quick and easy online scheduling.`}
         noindex={true}
       />
       
@@ -89,21 +89,21 @@ export default function BookDirectPage() {
         <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
           <div className="container max-w-lg mx-auto px-4 py-4">
             <div className="flex items-center gap-3">
-              {clinic.cover_image_url ? (
+              {agency.cover_image_url ? (
                 <img 
-                  src={clinic.cover_image_url} 
-                  alt={clinic.name}
+                  src={agency.cover_image_url} 
+                  alt={agency.name}
                   className="h-12 w-12 rounded-full object-cover border-2 border-primary/20"
                 />
               ) : (
                 <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
                   <span className="text-lg font-bold text-primary">
-                    {clinic.name.charAt(0)}
+                    {agency.name.charAt(0)}
                   </span>
                 </div>
               )}
               <div>
-                <h1 className="font-semibold text-foreground">{clinic.name}</h1>
+                <h1 className="font-semibold text-foreground">{agency.name}</h1>
                 {locationDisplay && (
                   <p className="text-sm text-muted-foreground">{locationDisplay}</p>
                 )}
@@ -116,16 +116,15 @@ export default function BookDirectPage() {
         <main className="container max-w-lg mx-auto px-4 py-6">
           <div className="bg-card rounded-2xl border shadow-lg overflow-hidden">
             <CalendarBookingForm
-              profileId={clinic.id}
-              profileName={clinic.name}
-              profileType="clinic"
-              clinicId={clinic.id}
-              clinicLatitude={clinic.latitude}
-              clinicLongitude={clinic.longitude}
-              clinicAddress={clinic.address}
+              profileId={agency.id}
+              profileName={agency.name}
+              profileType="agency"
+              agencyId={agency.id}
+              agencyLatitude={agency.latitude}
+              agencyLongitude={agency.longitude}
+              agencyAddress={agency.address}
               onClose={() => {
-                // Redirect to clinic page after booking
-                window.location.href = `/clinic/${clinic.slug}`;
+                window.location.href = `/agency/${agency.slug}`;
               }}
             />
           </div>

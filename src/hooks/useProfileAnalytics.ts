@@ -17,11 +17,11 @@ export interface AnalyticsSummary {
   eventBreakdown: { type: string; count: number }[];
 }
 
-export function useProfileAnalytics(clinicId?: string, days: number = 30) {
+export function useProfileAnalytics(agencyId?: string, days: number = 30) {
   return useQuery({
-    queryKey: ['profile-analytics', clinicId, days],
+    queryKey: ['profile-analytics', agencyId, days],
     queryFn: async (): Promise<AnalyticsSummary> => {
-      if (!clinicId) throw new Error('Clinic ID required');
+      if (!agencyId) throw new Error('Agency ID required');
 
       const startDate = subDays(new Date(), days);
       const previousStartDate = subDays(startDate, days);
@@ -30,7 +30,7 @@ export function useProfileAnalytics(clinicId?: string, days: number = 30) {
       const { data: currentData, error } = await supabase
         .from('profile_analytics')
         .select('event_type, created_at')
-        .eq('clinic_id', clinicId)
+        .eq('clinic_id', agencyId)
         .gte('created_at', startDate.toISOString())
         .order('created_at', { ascending: true });
 
@@ -40,7 +40,7 @@ export function useProfileAnalytics(clinicId?: string, days: number = 30) {
       const { data: previousData } = await supabase
         .from('profile_analytics')
         .select('event_type')
-        .eq('clinic_id', clinicId)
+        .eq('clinic_id', agencyId)
         .gte('created_at', previousStartDate.toISOString())
         .lt('created_at', startDate.toISOString());
 
@@ -113,24 +113,24 @@ export function useProfileAnalytics(clinicId?: string, days: number = 30) {
         eventBreakdown
       };
     },
-    enabled: !!clinicId,
+    enabled: !!agencyId,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
 // Track a profile view/event
 export async function trackProfileEvent(
-  clinicId: string | undefined,
+  agencyId: string | undefined,
   contactId: string | undefined,
   eventType: 'view' | 'click' | 'booking_start' | 'booking_complete' | 'call' | 'direction' | 'website',
   source?: string,
   metadata?: Record<string, any>
 ) {
-  if (!clinicId && !contactId) return;
+  if (!agencyId && !contactId) return;
 
   try {
     await supabase.functions.invoke('track-profile-view', {
-      body: { clinicId, contactId, eventType, source, metadata }
+      body: { clinicId: agencyId, contactId, eventType, source, metadata }
     });
   } catch (error) {
     console.error('Failed to track event:', error);

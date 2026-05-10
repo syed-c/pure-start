@@ -36,7 +36,7 @@ export function MobileAgencySlider({ profiles, className }: MobileAgencySliderPr
 }
 
 function MobileProfileRow({ profile, style }: { profile: Profile; style?: React.CSSProperties }) {
-  const profileLink = profile.type === "clinic" ? `/clinic/${profile.slug}` : `/dentist/${profile.slug}`;
+  const profileLink = profile.type === "agency" ? `/agency/${profile.slug}` : `/fosterer/${profile.slug}`;
   const displayImage = profile.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=0f766e&color=fff&size=100&font-size=0.35&bold=true`;
 
   return (
@@ -85,7 +85,7 @@ function MobileProfileRow({ profile, style }: { profile: Profile; style?: React.
 }
 
 function DesktopProfileCard({ profile }: { profile: Profile }) {
-  const profileLink = profile.type === "clinic" ? `/clinic/${profile.slug}` : `/dentist/${profile.slug}`;
+  const profileLink = profile.type === "agency" ? `/agency/${profile.slug}` : `/fosterer/${profile.slug}`;
   const displayImage = profile.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=0f766e&color=fff&size=200&font-size=0.35&bold=true`;
 
   return (
