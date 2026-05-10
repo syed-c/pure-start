@@ -42,12 +42,12 @@ export function Navbar() {
   const topCities = POPULAR_CITIES.slice(0, 16);
 
   return (
-    <nav className={`sticky top-0 z-50 transition-all duration-300 ${
+    <nav className={`sticky top-0 z-50 w-full transition-all duration-300 ${
       isScrolled
         ? 'bg-slate-900/95 backdrop-blur-xl shadow-lg shadow-black/20 border-b border-slate-700'
         : 'bg-slate-900/80 backdrop-blur-md border-b border-slate-800'
     }`}>
-      <div className="container">
+      <div className="container mx-auto">
         <div className="flex items-center justify-between h-16 lg:h-[70px]">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
