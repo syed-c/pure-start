@@ -71,7 +71,7 @@ export function AIAssistantWidget({ clinicId, clinicName, className }: AIAssista
         <div className="flex items-center gap-2">
           <Bot className="h-5 w-5" />
           <div>
-            <p className="font-semibold text-sm">{clinicName || 'Panda 🐼'}</p>
+            <p className="font-semibold text-sm">{clinicName || 'Foster Care Assistant'}</p>
             {!isMinimized && (
               <p className="text-xs opacity-80">Your fostering care guide in the UK</p>
             )}
@@ -104,7 +104,7 @@ export function AIAssistantWidget({ clinicId, clinicName, className }: AIAssista
             {messages.length === 0 && (
               <div className="text-center text-muted-foreground py-8">
                 <Bot className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p className="text-sm">Hi! I'm Panda 🐼, your fostering care guide.</p>
+                <p className="text-sm">Hi! I'm your UK fostering care guide.</p>
                 <p className="text-xs mt-1">Ask me about fostering agencies, types of care, allowances, or how to get started in the UK.</p>
               </div>
             )}
