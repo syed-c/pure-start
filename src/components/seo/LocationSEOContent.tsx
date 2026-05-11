@@ -95,13 +95,13 @@ const StateSEOContent = ({
     {/* Why Choose Section */}
     <div className="bg-card border border-border rounded-3xl p-8 md:p-10">
       <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
-        Why Choose a Dentist in {stateName}?
+        Why Choose a Fostering Agency in {stateName}?
       </h2>
       <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-        {stateName} is home to some of the nation's finest foster care agencies. With {clinicCount}+ fostering agencys 
-        spread across {cityCount} cities, residents have access to world-class oral healthcare. From routine 
-        cleanings to advanced cosmetic procedures, {stateName} agencies combine cutting-edge technology with 
-        compassionate patient care.
+        {stateName} is home to some of the nation's finest fostering agencies. With {clinicCount}+ agencies 
+        spread across {cityCount} cities, residents have access to world-class fostering support. From short-term 
+        care to long-term placements, {stateName} agencies combine cutting-edge training with 
+        compassionate support for children and families.
       </p>
       
       <div className="grid md:grid-cols-2 gap-6 mt-8">
@@ -110,8 +110,8 @@ const StateSEOContent = ({
             <Award className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <h3 className="font-bold text-foreground mb-1">Licensed Professionals</h3>
-            <p className="text-muted-foreground text-sm">All agencies are licensed by the {stateName} Board of Dental Examiners and meet strict educational requirements.</p>
+            <h3 className="font-bold text-foreground mb-1">Ofsted Registered</h3>
+            <p className="text-muted-foreground text-sm">All agencies are Ofsted registered and meet strict standards for foster care provision.</p>
           </div>
         </div>
         <div className="flex gap-4">
@@ -119,8 +119,8 @@ const StateSEOContent = ({
             <Stethoscope className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <h3 className="font-bold text-foreground mb-1">Modern Technology</h3>
-            <p className="text-muted-foreground text-sm">Access to modern fostering resources, specialized training programs, and 24/7 support services.</p>
+            <h3 className="font-bold text-foreground mb-1">Specialized Support</h3>
+            <p className="text-muted-foreground text-sm">Access to specialized fostering programs, training, and 24/7 support services.</p>
           </div>
         </div>
         <div className="flex gap-4">
