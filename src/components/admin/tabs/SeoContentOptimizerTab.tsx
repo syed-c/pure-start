@@ -1123,7 +1123,7 @@ export default function SeoContentOptimizerTab() {
                     <SelectItem value="city">City Pages ({seoPages?.filter(p => p.page_type === 'city').length || 0})</SelectItem>
                     <SelectItem value="treatment">Service Pages ({seoPages?.filter(p => p.page_type === 'treatment').length || 0})</SelectItem>
                     <SelectItem value="city_treatment">Service-Location ({seoPages?.filter(p => p.page_type === 'city_treatment').length || 0})</SelectItem>
-                    <SelectItem value="clinic">Clinic Profiles ({seoPages?.filter(p => p.page_type === 'clinic').length || 0})</SelectItem>
+                    <SelectItem value="clinic">Agency Profiles ({seoPages?.filter(p => p.page_type === 'clinic').length || 0})</SelectItem>
                     <SelectItem value="blog">Blog Posts ({seoPages?.filter(p => p.page_type === 'blog').length || 0})</SelectItem>
                   </SelectContent>
                 </Select>
@@ -1552,7 +1552,7 @@ export default function SeoContentOptimizerTab() {
                         <SelectItem value="state">State Pages ({seoPages?.filter(p => p.page_type === 'state').length || 0})</SelectItem>
                         <SelectItem value="city">City Pages ({seoPages?.filter(p => p.page_type === 'city').length || 0})</SelectItem>
                         <SelectItem value="city_treatment">Service-Location ({seoPages?.filter(p => p.page_type === 'city_treatment').length || 0})</SelectItem>
-                        <SelectItem value="clinic">Clinic Profiles ({seoPages?.filter(p => p.page_type === 'clinic').length || 0})</SelectItem>
+                        <SelectItem value="clinic">Agency Profiles ({seoPages?.filter(p => p.page_type === 'clinic').length || 0})</SelectItem>
                         <SelectItem value="treatment">Service Pages ({seoPages?.filter(p => p.page_type === 'treatment').length || 0})</SelectItem>
                         <SelectItem value="static">Static Pages ({seoPages?.filter(p => p.page_type === 'static').length || 0})</SelectItem>
                       </SelectContent>

@@ -98,9 +98,9 @@ const QRCodeGenerator = forwardRef<HTMLDivElement, QRCodeGeneratorProps>(functio
       if (!clinicId) return null;
       
       const { data, error } = await supabase
-        .from('clinic_oauth_tokens')
+        .from('agency_oauth_tokens')
         .select('gmb_data')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .single();
       
       if (error && error.code !== 'PGRST116') throw error;
@@ -120,7 +120,7 @@ const QRCodeGenerator = forwardRef<HTMLDivElement, QRCodeGeneratorProps>(functio
       setSettings({
         ...defaultSettings,
         ...savedSettings,
-        // Keep the clinic name if custom title matches the old clinic name
+        // Keep the agency name if custom title matches the old agency name
         customTitle: savedSettings.customTitle || clinicName,
       });
     }
@@ -135,13 +135,13 @@ const QRCodeGenerator = forwardRef<HTMLDivElement, QRCodeGeneratorProps>(functio
   // Save QR settings mutation
   const saveSettingsMutation = useMutation({
     mutationFn: async (newSettings: QRSettings) => {
-      if (!clinicId) throw new Error('No clinic ID provided');
+      if (!clinicId) throw new Error('No agency ID provided');
       
       // Get existing gmb_data
       const { data: existing } = await supabase
-        .from('clinic_oauth_tokens')
+        .from('agency_oauth_tokens')
         .select('gmb_data')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .single();
 
       const existingData = (existing?.gmb_data as Record<string, unknown>) || {};
@@ -150,13 +150,13 @@ const QRCodeGenerator = forwardRef<HTMLDivElement, QRCodeGeneratorProps>(functio
       // Update with new QR settings - use update if exists, insert if not
       if (existing) {
         const { error } = await supabase
-          .from('clinic_oauth_tokens')
+          .from('agency_oauth_tokens')
           .update({ gmb_data: updatedGmbData } as any)
-          .eq('clinic_id', clinicId);
+          .eq('agency_id', clinicId);
         if (error) throw error;
       } else {
         const { error } = await supabase
-          .from('clinic_oauth_tokens')
+          .from('agency_oauth_tokens')
           .insert({ clinic_id: clinicId, gmb_data: updatedGmbData } as any);
         if (error) throw error;
       }

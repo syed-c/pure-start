@@ -28,10 +28,10 @@ export default function ReputationAlertsTab({ clinicId, isAdmin }: Props) {
       // Check for unreplied reviews > 7 days
       let query = supabase
         .from('google_reviews')
-        .select('id, clinic_id, author_name, rating, created_at, clinic:clinics(name)')
+        .select('id, agency_id, author_name, rating, created_at, agency:agencies(name)')
         .neq('reply_status', 'posted')
         .order('created_at', { ascending: true });
-      if (clinicId) query = query.eq('clinic_id', clinicId);
+      if (clinicId) query = query.eq('agency_id', clinicId);
       const { data: unreplied } = await query.limit(20);
 
       const sevenDaysAgo = new Date();
@@ -55,10 +55,10 @@ export default function ReputationAlertsTab({ clinicId, isAdmin }: Props) {
       // Check for low ratings
       let lowQuery = supabase
         .from('google_reviews')
-        .select('id, clinic_id, author_name, rating, created_at, clinic:clinics(name)')
+        .select('id, agency_id, author_name, rating, created_at, agency:agencies(name)')
         .lte('rating', 2)
         .order('created_at', { ascending: false });
-      if (clinicId) lowQuery = lowQuery.eq('clinic_id', clinicId);
+      if (clinicId) lowQuery = lowQuery.eq('agency_id', clinicId);
       const { data: lowRatings } = await lowQuery.limit(10);
 
       lowRatings?.forEach((r: any) => {

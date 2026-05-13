@@ -237,16 +237,16 @@ export default function FosterCarersTab() {
   const handleEdit = (carer: FosterCarer) => {
     setFormData({
       first_name: carer.first_name,
-      last_name: carers.last_name,
-      email: carers.email || '',
-      phone: carers.phone || '',
-      address: carers.address || '',
-      postcode: carers.postcode || '',
-      status: carers.status,
-      fostering_types: carers.fostering_types || [],
-      age_groups_supported: carers.age_groups_supported || [],
-      availability_status: carers.availability_status,
-      notes: carers.notes || '',
+      last_name: carer.last_name,
+      email: carer.email || '',
+      phone: carer.phone || '',
+      address: carer.address || '',
+      postcode: carer.postcode || '',
+      status: carer.status,
+      fostering_types: carer.fostering_types || [],
+      age_groups_supported: carer.age_groups_supported || [],
+      availability_status: carer.availability_status,
+      notes: carer.notes || '',
     });
     setEditingCarer(carer);
   };

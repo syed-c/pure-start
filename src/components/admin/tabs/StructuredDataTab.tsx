@@ -36,8 +36,8 @@ import {
 // Page types that have structured data
 const PAGE_TYPES = [
   { id: 'homepage', label: 'Homepage', icon: Globe, schemaTypes: ['Organization'] },
-  { id: 'clinic', label: 'Clinics', icon: Building2, schemaTypes: ['LocalBusiness', 'Dentist', 'Breadcrumb'] },
-  { id: 'dentist', label: 'Agencies', icon: User, schemaTypes: ['Person', 'Breadcrumb'] },
+  { id: 'agency', label: 'Agencies', icon: Building2, schemaTypes: ['LocalBusiness', 'Organization', 'Breadcrumb'] },
+  { id: 'carer', label: 'Foster Carers', icon: User, schemaTypes: ['Person', 'Breadcrumb'] },
   { id: 'city', label: 'City Pages', icon: MapPin, schemaTypes: ['Breadcrumb', 'FAQPage'] },
   { id: 'state', label: 'State Pages', icon: MapPin, schemaTypes: ['Breadcrumb', 'FAQPage'] },
   { id: 'service', label: 'Service Pages', icon: FileText, schemaTypes: ['Service', 'FAQPage'] },
@@ -84,12 +84,12 @@ interface SchemaTestResult {
 // ─── Schema Validation Engine Component ───
 const EXPECTED_SCHEMAS: Record<string, string[]> = {
   homepage: ['Organization', 'WebSite', 'SearchAction'],
-  clinic: ['LocalBusiness', 'Dentist', 'MedicalBusiness', 'AggregateRating', 'BreadcrumbList', 'GeoCoordinates'],
-  dentist: ['Dentist', 'Person', 'BreadcrumbList'],
+  agency: ['LocalBusiness', 'Organization', 'AggregateRating', 'BreadcrumbList', 'GeoCoordinates'],
+  carer: ['Person', 'BreadcrumbList'],
   city: ['Place', 'BreadcrumbList', 'FAQPage', 'ItemList'],
   state: ['BreadcrumbList', 'FAQPage'],
-  service: ['MedicalProcedure', 'FAQPage', 'BreadcrumbList'],
-  'service-location': ['MedicalProcedure', 'Place', 'ItemList', 'BreadcrumbList', 'FAQPage'],
+  service: ['Service', 'FAQPage', 'BreadcrumbList'],
+  'service-location': ['Service', 'Place', 'ItemList', 'BreadcrumbList', 'FAQPage'],
   blog: ['Article', 'BreadcrumbList'],
 };
 
@@ -353,19 +353,19 @@ export default function StructuredDataTab() {
     queryFn: async () => {
       const samples: Record<string, { slug: string; name: string }[]> = {};
       
-      const { data: clinics } = await supabase
+      const { data: agenciesData } = await supabase
         .from('agencies')
         .select('slug, name')
         .eq('is_active', true)
         .limit(5);
-      samples.clinic = clinics?.map(c => ({ slug: `/clinic/${c.slug}`, name: c.name })) || [];
+      samples.agency = agenciesData?.map(c => ({ slug: `/agency/${c.slug}`, name: c.name })) || [];
       
-      const { data: agencies } = await supabase
+      const { data: carersData } = await supabase
         .from('foster_carers')
         .select('slug, name')
         .eq('is_active', true)
         .limit(5);
-      samples.dentist = agencies?.map(d => ({ slug: `/dentist/${d.slug}`, name: d.name })) || [];
+      samples.carer = carersData?.map(d => ({ slug: `/foster-carer/${d.slug}`, name: d.name })) || [];
       
       const { data: cities } = await supabase
         .from('cities')
@@ -436,8 +436,8 @@ export default function StructuredDataTab() {
         result.warnings.push('Missing BreadcrumbList schema - recommended for navigation');
       }
       
-      if (pageType === 'clinic' && !expectedSchemas.includes('LocalBusiness')) {
-        result.errors.push('Clinic pages must have LocalBusiness schema');
+      if (pageType === 'agency' && !expectedSchemas.includes('LocalBusiness')) {
+        result.errors.push('Agency pages must have LocalBusiness schema');
       }
       
       if ((pageType === 'city' || pageType === 'service') && !expectedSchemas.includes('FAQPage')) {
@@ -455,9 +455,9 @@ export default function StructuredDataTab() {
 
   const detectPageType = (url: string): string => {
     if (url === '/' || url === '') return 'homepage';
-    if (url.startsWith('/clinic/')) return 'clinic';
-    if (url.startsWith('/contact/')) return 'dentist';
-    if (url.startsWith('/services/')) return 'service';
+    if (url.startsWith('/agency/')) return 'agency';
+    if (url.startsWith('/foster-carer/')) return 'carer';
+    if (url.startsWith('/fostering-types/')) return 'service';
     if (url.startsWith('/blog/')) return 'blog';
     const parts = url.split('/').filter(Boolean);
     if (parts.length === 3) return 'service-location';
@@ -748,7 +748,7 @@ export default function StructuredDataTab() {
                             <Label htmlFor="org-country">Country</Label>
                             <Input
                               id="org-country"
-                              value={orgSettings.address?.addressCountry || 'US'}
+                              value={orgSettings.address?.addressCountry || 'GB'}
                               onChange={(e) => setOrgSettings({ 
                                 ...orgSettings, 
                                 address: { ...orgSettings.address, addressCountry: e.target.value }
@@ -918,7 +918,7 @@ export default function StructuredDataTab() {
                       <div className="flex items-center justify-between">
                         <div>
                           <Label>Enable LocalBusiness Schema</Label>
-                          <p className="text-xs text-muted-foreground">Rich business info for clinic pages</p>
+                          <p className="text-xs text-muted-foreground">Rich business info for agency pages</p>
                         </div>
                         <Switch
                           checked={sitewideSettings.enableLocalBusinessSchema}
@@ -926,7 +926,7 @@ export default function StructuredDataTab() {
                         />
                       </div>
                       <div className="border-t pt-4">
-                        <Label htmlFor="default-rating">Default Rating (for clinics without reviews)</Label>
+                        <Label htmlFor="default-rating">Default Rating (for agencies without reviews)</Label>
                         <Input
                           id="default-rating"
                           type="number"
@@ -1053,7 +1053,7 @@ export default function StructuredDataTab() {
             <CardContent className="space-y-4">
               <div className="flex gap-2">
                 <Input
-                  placeholder="Enter URL path (e.g., /clinic/bright-smile-dental)"
+                  placeholder="Enter URL path (e.g., /agency/bright-futures-fostering)"
                   value={testUrl}
                   onChange={(e) => setTestUrl(e.target.value)}
                   className="flex-1"
@@ -1156,14 +1156,14 @@ export default function StructuredDataTab() {
                 <Button variant="outline" size="sm" onClick={() => { setTestUrl('/'); testStructuredData('/'); }}>
                   Homepage
                 </Button>
-                {samplePages?.clinic?.[0] && (
-                  <Button variant="outline" size="sm" onClick={() => { setTestUrl(samplePages.clinic[0].slug); testStructuredData(samplePages.clinic[0].slug); }}>
-                    Sample Clinic
+                {samplePages?.agency?.[0] && (
+                  <Button variant="outline" size="sm" onClick={() => { setTestUrl(samplePages.agency[0].slug); testStructuredData(samplePages.agency[0].slug); }}>
+                    Sample Agency
                   </Button>
                 )}
-                {samplePages?.dentist?.[0] && (
-                  <Button variant="outline" size="sm" onClick={() => { setTestUrl(samplePages.dentist[0].slug); testStructuredData(samplePages.dentist[0].slug); }}>
-                    Sample Dentist
+                {samplePages?.carer?.[0] && (
+                  <Button variant="outline" size="sm" onClick={() => { setTestUrl(samplePages.carer[0].slug); testStructuredData(samplePages.carer[0].slug); }}>
+                    Sample Carer
                   </Button>
                 )}
                 {samplePages?.city?.[0] && (
@@ -1220,28 +1220,28 @@ export default function StructuredDataTab() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Building2 className="h-5 w-5" />
-                  LocalBusiness/Dentist Schema
+                  LocalBusiness/Organization Schema
                 </CardTitle>
-                <CardDescription>Auto-generated from clinic data</CardDescription>
+                <CardDescription>Auto-generated from agency data</CardDescription>
               </CardHeader>
               <CardContent>
                 <pre className="p-4 rounded-lg bg-muted text-xs overflow-x-auto">
 {`{
   "@context": "https://schema.org",
-  "@type": ["Dentist", "LocalBusiness"],
-  "name": "{{clinic.name}}",
-  "url": "{{clinic.url}}",
-  "telephone": "{{clinic.phone}}",
+  "@type": ["Organization", "LocalBusiness"],
+  "name": "{{agency.name}}",
+  "url": "{{agency.url}}",
+  "telephone": "{{agency.phone}}",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "{{clinic.address}}",
-    "addressLocality": "{{clinic.city}}",
-    "addressCountry": "US"
+    "streetAddress": "{{agency.address}}",
+    "addressLocality": "{{agency.city}}",
+    "addressCountry": "GB"
   },
   "aggregateRating": {
     "@type": "AggregateRating",
-    "ratingValue": "{{clinic.rating}}",
-    "reviewCount": "{{clinic.reviewCount}}"
+    "ratingValue": "{{agency.rating}}",
+    "reviewCount": "{{agency.reviewCount}}"
   }
 }`}
                 </pre>
@@ -1384,11 +1384,11 @@ export default function StructuredDataTab() {
                   </li>
                   <li className="flex items-start gap-2">
                     <Badge variant="outline" className="shrink-0">LocalBusiness</Badge>
-                    <span>name, address (auto-filled from clinic data)</span>
+                    <span>name, address (auto-filled from agency data)</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <Badge variant="outline" className="shrink-0">Person</Badge>
-                    <span>name (auto-filled from dentist data)</span>
+                    <span>name (auto-filled from foster carer data)</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <Badge variant="outline" className="shrink-0">Article</Badge>

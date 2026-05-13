@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { SEOHead } from "@/components/seo/SEOHead";
 import { Home, ArrowLeft, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -25,7 +26,14 @@ const NotFound = () => {
   }, [location.pathname, navigate]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-background to-muted/30">
+    <>
+      <SEOHead
+        title="Page Not Found | Foster Care"
+        description="The page you're looking for doesn't exist or has been moved. Browse our directory of fostering agencies across the UK."
+        canonical={location.pathname}
+        noIndex={true}
+      />
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-background to-muted/30">
       <div className="text-center px-4 max-w-md">
         <div className="mb-6">
           <span className="text-8xl font-black bg-gradient-to-r from-primary to-teal bg-clip-text text-transparent">
@@ -84,6 +92,7 @@ const NotFound = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

@@ -61,7 +61,7 @@ export default function ReputationGrowthTab() {
     queryKey: ['reputation-clinic', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name, slug, google_place_id, rating, review_count, verification_status')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -83,7 +83,7 @@ export default function ReputationGrowthTab() {
       const { data } = await supabase
         .from('review_funnel_events')
         .select('*')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .order('created_at', { ascending: false })
         .limit(200);
       return (data || []) as unknown as ReviewFunnelEvent[];
@@ -98,7 +98,7 @@ export default function ReputationGrowthTab() {
       const { data } = await supabase
         .from('review_requests')
         .select('*')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .order('created_at', { ascending: false })
         .limit(50);
       return data || [];
@@ -198,7 +198,7 @@ export default function ReputationGrowthTab() {
       type: 'tip',
       icon: Lightbulb,
       title: 'Best time to ask for reviews',
-      description: 'Send review requests within 2 hours of appointment completion.',
+      description: 'Send review requests within 2 hours of enquiry completion.',
     },
   ].filter(Boolean).slice(0, 4);
 

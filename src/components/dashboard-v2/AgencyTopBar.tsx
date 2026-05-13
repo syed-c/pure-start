@@ -31,7 +31,7 @@ export default function AgencyTopBar({ pageTitle, pageDescription, breadcrumbs }
   const { data: clinic } = useQuery({
     queryKey: ['topbar-clinic', user?.id],
     queryFn: async () => {
-      const { data } = await supabase.from('clinics').select('id, name').eq('claimed_by', user?.id).limit(1).single();
+      const { data } = await supabase.from('agencies').select('id, name').eq('claimed_by', user?.id).limit(1).single();
       return data;
     },
     enabled: !!user?.id,

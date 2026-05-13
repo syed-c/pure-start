@@ -102,8 +102,8 @@ function CostCalculatorManager() {
     queryFn: async () => {
       const { data } = await supabase
         .from('clinic_treatments')
-        .select('treatment_id, price_aed')
-        .not('price_aed', 'is', null);
+        .select('treatment_id, price_gbp')
+        .not('price_gbp', 'is', null);
       
       const stats: Record<string, { count: number; minPrice: number; maxPrice: number; avgPrice: number }> = {};
       (data || []).forEach((ct: any) => {
@@ -112,9 +112,9 @@ function CostCalculatorManager() {
         }
         const s = stats[ct.treatment_id];
         s.count++;
-        s.minPrice = Math.min(s.minPrice, ct.price_aed);
-        s.maxPrice = Math.max(s.maxPrice, ct.price_aed);
-        s.avgPrice = (s.avgPrice * (s.count - 1) + ct.price_aed) / s.count;
+        s.minPrice = Math.min(s.minPrice, ct.price_gbp);
+        s.maxPrice = Math.max(s.maxPrice, ct.price_gbp);
+        s.avgPrice = (s.avgPrice * (s.count - 1) + ct.price_gbp) / s.count;
       });
       return stats;
     },
@@ -149,7 +149,7 @@ function CostCalculatorManager() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardContent className="pt-4">
-            <p className="text-sm text-muted-foreground">Treatments with Pricing</p>
+            <p className="text-sm text-muted-foreground">Categories with Pricing</p>
             <p className="text-2xl font-bold">{Object.keys(clinicPricingStats || {}).length}</p>
           </CardContent>
         </Card>
@@ -161,7 +161,7 @@ function CostCalculatorManager() {
         </Card>
         <Card>
           <CardContent className="pt-4">
-            <p className="text-sm text-muted-foreground">Clinics with Prices</p>
+            <p className="text-sm text-muted-foreground">Agencies with Pricing</p>
             <p className="text-2xl font-bold">
               {Object.values(clinicPricingStats || {}).reduce((acc: number, s: any) => acc + s.count, 0)}
             </p>
@@ -189,8 +189,8 @@ function CostCalculatorManager() {
             <TableHeader>
               <TableRow>
                 <TableHead>Label</TableHead>
-                <TableHead className="text-right">Min (AED)</TableHead>
-                <TableHead className="text-right">Max (AED)</TableHead>
+                <TableHead className="text-right">Min (GBP)</TableHead>
+                <TableHead className="text-right">Max (GBP)</TableHead>
                 <TableHead className="text-center">Currency</TableHead>
                 <TableHead className="text-center">Status</TableHead>
                 <TableHead></TableHead>
@@ -202,7 +202,7 @@ function CostCalculatorManager() {
                   <TableCell className="font-medium">{range.label}</TableCell>
                   <TableCell className="text-right">{range.min_value}</TableCell>
                   <TableCell className="text-right">{range.max_value}</TableCell>
-                  <TableCell className="text-center">{range.currency || 'AED'}</TableCell>
+                  <TableCell className="text-center">{range.currency || 'GBP'}</TableCell>
                   <TableCell className="text-center">
                     <Badge variant={range.is_active ? 'default' : 'outline'}>
                       {range.is_active ? 'Active' : 'Inactive'}
@@ -250,7 +250,7 @@ function CostCalculatorManager() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {treatments?.filter((t: any) => clinicPricingStats?.[t.id])
+              {categories?.filter((t: any) => clinicPricingStats?.[t.id])
                 .map((t: any) => {
                   const s = clinicPricingStats![t.id];
                   return (
@@ -282,11 +282,11 @@ function CostCalculatorManager() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label>Min Value (AED)</Label>
+                  <Label>Min Value (GBP)</Label>
                   <Input type="number" value={editingRange.min_value} onChange={e => setEditingRange({ ...editingRange, min_value: +e.target.value })} />
                 </div>
                 <div>
-                  <Label>Max Value (AED)</Label>
+                  <Label>Max Value (GBP)</Label>
                   <Input type="number" value={editingRange.max_value} onChange={e => setEditingRange({ ...editingRange, max_value: +e.target.value })} />
                 </div>
               </div>
@@ -354,7 +354,7 @@ function InsuranceManager() {
       <Card>
         <CardHeader>
           <CardTitle>Insurance Providers</CardTitle>
-          <CardDescription>Manage insurance providers shown in the Insurance Checker and clinic profiles</CardDescription>
+          <CardDescription>Manage insurance providers shown in the Insurance Checker and agency profiles</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex gap-2">
@@ -419,7 +419,7 @@ function EmergencyManager() {
 
       const { count: withHours } = await supabase
         .from('clinic_hours')
-        .select('clinic_id', { count: 'exact', head: true });
+        .select('agency_id', { count: 'exact', head: true });
 
       const { data: extendedHours } = await supabase
         .from('clinic_hours')
@@ -485,7 +485,7 @@ function EmergencyManager() {
       <Card>
         <CardHeader>
           <CardTitle>City Coverage</CardTitle>
-          <CardDescription>Top cities by number of clinics available for emergency search</CardDescription>
+          <CardDescription>Top cities by number of agencies available for emergency search</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>

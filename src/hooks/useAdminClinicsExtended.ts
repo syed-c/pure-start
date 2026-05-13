@@ -9,8 +9,8 @@ export function usePauseClinic() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, isPaused }: { id: string; isPaused: boolean }) => {
-      const { data: oldData } = await supabase.from('clinics').select('*').eq('id', id).single();
-      const { error } = await supabase.from('clinics').update({ 
+      const { data: oldData } = await supabase.from('agencies').select('*').eq('id', id).single();
+      const { error } = await supabase.from('agencies').update({ 
         is_active: !isPaused,
         updated_at: new Date().toISOString()
       }).eq('id', id);
@@ -35,8 +35,8 @@ export function useDeleteClinic() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      const { data: oldData } = await supabase.from('clinics').select('*').eq('id', id).single();
-      const { error } = await supabase.from('clinics').delete().eq('id', id);
+      const { data: oldData } = await supabase.from('agencies').select('*').eq('id', id).single();
+      const { error } = await supabase.from('agencies').delete().eq('id', id);
       if (error) throw error;
       await createAuditLog({ 
         action: 'DELETE', 
@@ -57,8 +57,8 @@ export function useVerifyClinic() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, verified }: { id: string; verified: boolean }) => {
-      const { data: oldData } = await supabase.from('clinics').select('*').eq('id', id).single();
-      const { error } = await supabase.from('clinics').update({ 
+      const { data: oldData } = await supabase.from('agencies').select('*').eq('id', id).single();
+      const { error } = await supabase.from('agencies').update({ 
         verification_status: verified ? 'verified' : 'unverified',
         updated_at: new Date().toISOString()
       }).eq('id', id);
@@ -83,10 +83,10 @@ export function useClaimClinic() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, userId }: { id: string; userId: string | null }) => {
-      const { data: oldData } = await supabase.from('clinics').select('*').eq('id', id).single();
+      const { data: oldData } = await supabase.from('agencies').select('*').eq('id', id).single();
       
       // Update clinic claim status
-      const { error } = await supabase.from('clinics').update({ 
+      const { error } = await supabase.from('agencies').update({ 
         claim_status: userId ? 'claimed' : 'unclaimed',
         claimed_by: userId,
         claimed_at: userId ? new Date().toISOString() : null,

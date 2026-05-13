@@ -1096,10 +1096,10 @@ export default function PagesTab() {
                 <p className="text-xs text-muted-foreground">
                   {editingPage?.type === 'static' && 'Core website page - content fully customizable'}
                   {editingPage?.type === 'state' && 'Emirate location page - shows cities in this emirate'}
-                  {editingPage?.type === 'city' && 'City location page - shows clinics in this city'}
-                  {editingPage?.type === 'treatment' && 'Treatment/service page - describes this dental service'}
+                  {editingPage?.type === 'city' && 'City location page - shows agencies in this city'}
+                  {editingPage?.type === 'treatment' && 'Treatment/service page - describes this fostering service'}
                   {editingPage?.type === 'service-location' && 'Service in Location - e.g., "Teeth Whitening in Dubai Marina"'}
-                  {editingPage?.type === 'clinic' && 'Clinic profile page - supplements clinic data'}
+                  {editingPage?.type === 'clinic' && 'Clinic profile page - supplements agency data'}
                   {editingPage?.type === 'blog' && 'Blog post - edit in Blog Manager for full control'}
                 </p>
               </div>

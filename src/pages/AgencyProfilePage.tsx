@@ -19,6 +19,7 @@ import { SyncStructuredData } from "@/components/seo/SyncStructuredData";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { useAnalytics } from "@/hooks/useAnalytics";
 import { toast } from "sonner";
 import {
   Star,
@@ -76,7 +77,7 @@ const ENQUIRY_TYPES = [
 const AgencyProfilePage = () => {
   const { agencySlug } = useParams();
   const slug = agencySlug || "";
-  const { trackProfileView } = useAnalytics();
+  const { trackProfileView, trackEnquirySubmit, trackPhoneClick, trackEmailClick } = useAnalytics();
 
   const [enquiryOpen, setEnquiryOpen] = useState(false);
   const [claimDialogOpen, setClaimDialogOpen] = useState(false);
@@ -218,6 +219,23 @@ const AgencyProfilePage = () => {
       });
       
       if (error) throw error;
+      
+      // Track analytics event
+      trackEnquirySubmit({
+        agency_id: agency.id,
+        agency_name: agency.name,
+        enquiry_type: enquiryForm.enquiry_type as 'general' | 'contact' | 'emergency',
+        service_type: enquiryForm.fostering_type,
+        source: 'agency_profile',
+      });
+      
+      // Facebook Pixel Lead event
+      if (typeof window !== 'undefined' && (window as any).fbq) {
+        (window as any).fbq('track', 'Lead', {
+          content_name: agency.name,
+          content_category: enquiryForm.enquiry_type,
+        });
+      }
       
       toast.success("Enquiry sent successfully!");
       setEnquiryOpen(false);
@@ -438,7 +456,7 @@ const AgencyProfilePage = () => {
               <div className="flex gap-2">
                 {agency.phone && (
                   <Button variant="outline" size="lg" className="rounded-full font-semibold flex-1" asChild>
-                    <a href={`tel:${agency.phone}`}>
+                    <a href={`tel:${agency.phone}`} onClick={() => trackPhoneClick({ agency_id: agency.id, agency_name: agency.name })}>
                       <Phone className="h-4 w-4 mr-1.5" />
                       Call
                     </a>
@@ -459,7 +477,8 @@ const AgencyProfilePage = () => {
       </Section>
 
       {/* Trust Indicators */}
-      <Section size="sm" className="py-4">
+      <Section size="sm" className="py-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-grid opacity-20" />
         <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-3 text-sm">
           {isVerified && (
             <span className="flex items-center gap-2 text-muted-foreground">
@@ -491,7 +510,7 @@ const AgencyProfilePage = () => {
           <div className="lg:col-span-2 space-y-8">
             
             {/* About Section */}
-            <div className="bg-card rounded-2xl border border-border p-6 md:p-8 hover:border-teal-500/30 transition-all duration-300">
+            <div className="bg-card rounded-2xl border border-border p-6 md:p-8 hover:border-teal-500/30 transition-all duration-300 card-depth hover:-translate-y-0.5">
               <h2 className="text-xl md:text-2xl font-bold mb-4 flex items-center gap-2">
                 <Building2 className="h-5 w-5 text-primary" />
                 About This Fostering Agency
@@ -506,7 +525,7 @@ const AgencyProfilePage = () => {
             </div>
 
             {/* Fostering Services Section */}
-            <div className="bg-card rounded-2xl border border-border p-6 md:p-8 hover:border-teal-500/30 transition-all duration-300">
+            <div className="bg-card rounded-2xl border border-border p-6 md:p-8 hover:border-teal-500/30 transition-all duration-300 card-depth hover:-translate-y-0.5">
               <h2 className="text-xl md:text-2xl font-bold mb-6 flex items-center gap-2">
                 <Heart className="h-5 w-5 text-primary" />
                 Fostering Services
@@ -724,7 +743,7 @@ const AgencyProfilePage = () => {
                 <h3 className="font-bold text-lg mb-4">Quick Contact</h3>
                 <div className="space-y-4">
                   {agency.phone && (
-                    <a href={`tel:${agency.phone}`} className="flex items-center gap-3 text-sm hover:text-primary transition-colors">
+                    <a href={`tel:${agency.phone}`} className="flex items-center gap-3 text-sm hover:text-primary transition-colors" onClick={() => trackPhoneClick({ agency_id: agency.id, agency_name: agency.name })}>
                       <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center">
                         <Phone className="h-4 w-4 text-primary" />
                       </div>
@@ -732,7 +751,7 @@ const AgencyProfilePage = () => {
                     </a>
                   )}
                   {agency.email && (
-                    <a href={`mailto:${agency.email}`} className="flex items-center gap-3 text-sm hover:text-primary transition-colors">
+                    <a href={`mailto:${agency.email}`} className="flex items-center gap-3 text-sm hover:text-primary transition-colors" onClick={() => trackEmailClick({ agency_id: agency.id, agency_name: agency.name })}>
                       <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center">
                         <Mail className="h-4 w-4 text-primary" />
                       </div>

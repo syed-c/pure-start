@@ -35,11 +35,11 @@ export function useAdminLeads(filters: LeadsFilters = {}) {
     queryFn: async () => {
       let query = supabase
         .from('leads')
-        .select('*, clinic:clinics(id, name), treatment:treatments(id, name)')
+        .select('*, agency:agencies(id, name), treatment:treatments(id, name)')
         .order('created_at', { ascending: false });
 
       if (filters.status) query = query.eq('status', filters.status as any);
-      if (filters.clinicId) query = query.eq('clinic_id', filters.clinicId);
+      if (filters.clinicId) query = query.eq('agency_id', filters.clinicId);
       if (filters.source) query = query.eq('source', filters.source);
 
       const { data, error } = await query.limit(100);

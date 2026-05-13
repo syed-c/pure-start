@@ -145,17 +145,17 @@ const BecomeFosterCarerPage = () => {
               Every child deserves a safe, loving home. Join thousands of families across the UK who are transforming lives through fostering.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <Link to="/agencies">
-                <Button size="lg" className="rounded-full text-lg px-8">
+              <Button size="lg" className="rounded-full text-lg px-8" asChild>
+                <Link to="/agencies">
                   Find an Agency
                   <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link to="/faq">
-                <Button size="lg" variant="outline" className="rounded-full text-lg px-8">
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" className="rounded-full text-lg px-8" asChild>
+                <Link to="/faq">
                   Learn More
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -250,12 +250,12 @@ const BecomeFosterCarerPage = () => {
           </div>
 
           <div className="text-center mt-12">
-            <Link to="/agencies">
-              <Button size="lg" className="rounded-full">
+            <Button size="lg" className="rounded-full" asChild>
+              <Link to="/agencies">
                 Start Your Journey
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
       </Section>
@@ -316,12 +316,12 @@ const BecomeFosterCarerPage = () => {
           </div>
 
           <div className="text-center mt-8">
-            <Link to="/faq">
-              <Button variant="outline" className="rounded-full">
+            <Button variant="outline" className="rounded-full" asChild>
+              <Link to="/faq">
                 View All FAQs
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
       </Section>
@@ -342,17 +342,17 @@ const BecomeFosterCarerPage = () => {
                 ongoing support, and competitive allowances.
               </p>
               <div className="flex flex-wrap gap-4 justify-center">
-                <Link to="/agencies">
-                  <Button size="lg" className="rounded-full text-lg px-8">
+                <Button size="lg" className="rounded-full text-lg px-8" asChild>
+                  <Link to="/agencies">
                     Search Agencies
                     <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-                <Link to="/compare">
-                  <Button size="lg" variant="outline" className="rounded-full text-lg px-8 border-white text-white hover:bg-white/10">
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" className="rounded-full text-lg px-8 border-white bg-transparent text-white hover:bg-white/10" asChild>
+                  <Link to="/compare">
                     Compare Agencies
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </CardContent>
           </Card>

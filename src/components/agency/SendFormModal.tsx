@@ -102,11 +102,11 @@ export function SendFormModal({
     e.preventDefault();
     
     if (deliveryMethod === 'email' && !patientEmail) {
-      toast.error('Please enter a patient email');
+      toast.error('Please enter a applicant email');
       return;
     }
     if (deliveryMethod === 'sms' && !patientPhone) {
-      toast.error('Please enter a patient phone number');
+      toast.error('Please enter a applicant phone number');
       return;
     }
 
@@ -122,7 +122,7 @@ export function SendFormModal({
             Send Form to Patient
           </DialogTitle>
           <DialogDescription>
-            Send "{template?.name}" to a patient via email or SMS
+            Send "{template?.name}" to a applicant via email or SMS
           </DialogDescription>
         </DialogHeader>
 

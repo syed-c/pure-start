@@ -22,13 +22,13 @@ export function useClinicPaidStatus(clinicId: string | null | undefined) {
       }
 
       const { data, error } = await supabase
-        .from('clinic_subscriptions')
+        .from('agency_subscriptions')
         .select(`
           id,
           status,
           plan:subscription_plans(id, name, slug)
         `)
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .eq('status', 'active')
         .maybeSingle();
 
@@ -58,9 +58,9 @@ export function useClinicPaidStatus(clinicId: string | null | undefined) {
  */
 export async function checkClinicPaidStatus(clinicId: string): Promise<boolean> {
   const { data } = await supabase
-    .from('clinic_subscriptions')
+    .from('agency_subscriptions')
     .select('id')
-    .eq('clinic_id', clinicId)
+    .eq('agency_id', clinicId)
     .eq('status', 'active')
     .maybeSingle();
 

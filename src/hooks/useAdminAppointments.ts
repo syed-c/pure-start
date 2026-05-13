@@ -48,8 +48,8 @@ export function useAdminAppointments(filters: AppointmentsFilters = {}) {
         .order('created_at', { ascending: false });
 
       if (filters.status) query = query.eq('status', filters.status as 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'no_show');
-      if (filters.clinicId) query = query.eq('clinic_id', filters.clinicId);
-      if (filters.dentistId) query = query.eq('dentist_id', filters.dentistId);
+      if (filters.clinicId) query = query.eq('agency_id', filters.clinicId);
+      if (filters.dentistId) query = query.eq('user_id', filters.dentistId);
       if (filters.treatmentId) query = query.eq('treatment_id', filters.treatmentId);
       if (filters.dateFrom) query = query.gte('preferred_date', filters.dateFrom);
       if (filters.dateTo) query = query.lte('preferred_date', filters.dateTo);
@@ -132,7 +132,7 @@ export function useDentistBookingCounts() {
       const { data, error } = await supabase
         .from('appointments')
         .select('dentist_id, dentist:dentists(id, name)')
-        .not('dentist_id', 'is', null);
+        .not('user_id', 'is', null);
       
       if (error) throw error;
       

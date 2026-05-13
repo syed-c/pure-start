@@ -77,7 +77,7 @@ export default function CrmNumbersTab() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('crm_numbers')
-        .select('*, clinic:clinics(id, name)')
+        .select('*, agency:agencies(id, name)')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -85,8 +85,8 @@ export default function CrmNumbersTab() {
     },
   });
 
-  // Fetch clinics for assignment
-  const { data: clinics } = useQuery({
+  // Fetch agencies for assignment
+  const { data: agencies } = useQuery({
     queryKey: ['clinics-for-assignment'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -106,7 +106,7 @@ export default function CrmNumbersTab() {
       const { error } = await supabase.from('crm_numbers').insert({
         phone_number: form.phone_number,
         provider: form.provider,
-        clinic_id: form.clinic_id || null,
+        agency_id: form.agency_id || null,
         is_whatsapp_enabled: form.is_whatsapp_enabled,
         assigned_at: form.clinic_id ? new Date().toISOString() : null,
       });
@@ -132,7 +132,7 @@ export default function CrmNumbersTab() {
         .update({
           phone_number: form.phone_number,
           provider: form.provider,
-          clinic_id: form.clinic_id || null,
+          agency_id: form.agency_id || null,
           is_whatsapp_enabled: form.is_whatsapp_enabled,
           assigned_at: form.clinic_id && !editing.assigned_at 
             ? new Date().toISOString() 
@@ -265,7 +265,7 @@ export default function CrmNumbersTab() {
                   onValueChange={(value) => setForm({ ...form, clinic_id: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select clinic (optional)" />
+                    <SelectValue placeholder="Select agency (optional)" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="">Unassigned</SelectItem>
@@ -368,7 +368,7 @@ export default function CrmNumbersTab() {
       <Card>
         <CardHeader>
           <CardTitle>CRM Phone Numbers</CardTitle>
-          <CardDescription>Virtual numbers for clinic messaging</CardDescription>
+          <CardDescription>Virtual numbers for agency messaging</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <Table>

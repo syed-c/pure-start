@@ -140,7 +140,7 @@ const ClaimProfilePage = () => {
 
   const handleChooseMethod = (method: ClaimMethod) => {
     if (method === "otp") {
-      // If clinic has claim emails, show email selection step
+      // If agency has claim emails, show email selection step
       if (hasClaimEmails) {
         setStep("select-email");
       } else if (agencyDomain) {
@@ -150,7 +150,7 @@ const ClaimProfilePage = () => {
       } else {
         toast({
           title: "No Email Options Available",
-          description: "This clinic doesn't have email records. Please request a manual review instead.",
+          description: "This agency doesn't have email records. Please request a manual review instead.",
           variant: "destructive",
         });
       }
@@ -353,7 +353,7 @@ const ClaimProfilePage = () => {
   const benefits = [
     { icon: BadgeCheck, title: "Verified Badge", description: "Stand out with a verified badge on your profile" },
     { icon: TrendingUp, title: "Higher Ranking", description: "Verified profiles rank higher in search results" },
-    { icon: Star, title: "Collect Reviews", description: "Get patient reviews and build your reputation" },
+    { icon: Star, title: "Collect Reviews", description: "Get applicant reviews and build your reputation" },
     { icon: Shield, title: "Control Your Info", description: "Update your profile, services, and photos" },
   ];
 
@@ -384,8 +384,9 @@ const ClaimProfilePage = () => {
   return (
     <PageLayout>
       {/* Compact Hero */}
-      <div className="bg-gradient-to-b from-primary/5 to-background pt-8 pb-6">
-        <div className="container">
+      <div className="bg-gradient-to-b from-primary/5 to-background pt-8 pb-6 relative">
+        <div className="absolute inset-0 bg-subtle-grid opacity-20 pointer-events-none" />
+        <div className="container relative z-10">
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
             <Link to="/" className="hover:text-foreground">Home</Link>
             <span>/</span>
@@ -400,8 +401,10 @@ const ClaimProfilePage = () => {
         </div>
       </div>
 
-      <Section size="md">
-        <div className="grid lg:grid-cols-5 gap-8">
+      <div className="bg-section-divider-top relative">
+        <div className="absolute inset-0 bg-subtle-dots opacity-10 pointer-events-none" />
+        <Section size="md">
+        <div className="grid lg:grid-cols-5 gap-8 relative z-10">
           {/* Left - Main Content (3 cols) */}
           <div className="lg:col-span-3">
             {step === "search" && (
@@ -1054,6 +1057,7 @@ const ClaimProfilePage = () => {
           </div>
         </div>
       </Section>
+      </div>
     </PageLayout>
   );
 };

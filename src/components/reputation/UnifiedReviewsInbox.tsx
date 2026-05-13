@@ -90,7 +90,7 @@ export default function UnifiedReviewsInbox({ clinicId, googlePlaceId, showAISug
   const { data: clinic } = useQuery({
     queryKey: ['clinic', clinicId],
     queryFn: async () => {
-      const { data } = await supabase.from('clinics').select('name').eq('id', clinicId).single();
+      const { data } = await supabase.from('agencies').select('name').eq('id', clinicId).single();
       return data;
     },
     enabled: !!clinicId,
@@ -103,7 +103,7 @@ export default function UnifiedReviewsInbox({ clinicId, googlePlaceId, showAISug
       const { data, error } = await supabase
         .from('google_reviews')
         .select('*')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .order('review_time', { ascending: false });
       if (error) throw error;
       return (data || []) as unknown as GoogleReview[];
@@ -118,7 +118,7 @@ export default function UnifiedReviewsInbox({ clinicId, googlePlaceId, showAISug
       const { data, error } = await supabase
         .from('internal_reviews')
         .select('*')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .order('created_at', { ascending: false });
       if (error) throw error;
       return (data || []) as unknown as InternalReview[];

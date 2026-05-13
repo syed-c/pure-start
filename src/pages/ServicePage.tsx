@@ -155,8 +155,9 @@ const ServicePage = () => {
       <StructuredData type="faq" questions={faqs.map(f => ({ question: f.q, answer: f.a }))} />
       
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-background via-emerald-light/30 to-background pt-6 pb-10">
+      <section className="relative overflow-hidden bg-gradient-to-b from-background via-primary/[0.03] to-background pt-6 pb-10">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute inset-0 bg-subtle-grid opacity-30" />
           <motion.div 
             className="absolute top-20 left-[10%] w-48 md:w-64 h-48 md:h-64 bg-foreground/5 rounded-full blur-3xl"
             animate={{ scale: [1, 1.1, 1], opacity: [0.05, 0.1, 0.05] }}
@@ -167,7 +168,6 @@ const ServicePage = () => {
             animate={{ scale: [1, 1.15, 1], opacity: [0.1, 0.15, 0.1] }}
             transition={{ duration: 8, repeat: Infinity, delay: 2 }}
           />
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--foreground)/0.02)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--foreground)/0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
         </div>
         
         <div className="container relative z-10 px-4">

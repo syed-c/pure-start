@@ -37,9 +37,9 @@ export default function GMBBookingLinkCard({
     queryKey: ['gmb-booking-link-status', clinicId],
     queryFn: async () => {
       const { data: oauthTokens } = await supabase
-        .from('clinic_oauth_tokens')
+        .from('agency_oauth_tokens')
         .select('gmb_booking_link_enabled, gmb_booking_link_id, gmb_booking_link_set_at')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .single();
 
       return {
@@ -238,7 +238,7 @@ export default function GMBBookingLinkCard({
                 <p className="font-medium text-foreground">Why enable this?</p>
                 <ul className="mt-1 text-muted-foreground space-y-1">
                   <li>• Patients can book directly from Google Maps</li>
-                  <li>• Increases appointment requests by up to 40%</li>
+                  <li>• Increases enquiry requests by up to 40%</li>
                   <li>• Link persists until you disable it</li>
                 </ul>
               </div>

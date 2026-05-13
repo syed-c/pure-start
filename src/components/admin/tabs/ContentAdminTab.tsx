@@ -114,15 +114,13 @@ export default function ContentAdminTab() {
         
         console.log('Session found, calling function...');
         
-        const SUPABASE_URL = "https://vcvvtklbyvdbysfdbnfp.supabase.co";
-        const API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZjdnZ0a2xieXZkYnlzZmRibmZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1NzM4NzQsImV4cCI6MjA3NzE0OTg3NH0.l5AJwHeUHAOS5h3yxDw6287xX3sw1JmFJdFH9cNFRUQ";
+        const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
         
         const response = await fetch(`${SUPABASE_URL}/functions/v1/content-generation-studio`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.access_token}`,
-            'apikey': API_KEY
+            'Authorization': `Bearer ${session.access_token}`
           },
           body: JSON.stringify({
             action: 'generate_content',

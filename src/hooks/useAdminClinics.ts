@@ -61,7 +61,7 @@ export function useAdminClinics(filters: ClinicsFilters = {}) {
     queryKey: ['admin-clinics', filters],
     queryFn: async () => {
       let query = supabase
-        .from('clinics')
+        .from('agencies')
         .select('*, city:cities(id, name, slug), area:areas(id, name, slug)')
         .order('created_at', { ascending: false });
 
@@ -85,7 +85,7 @@ export function useAdminClinic(id: string) {
     queryKey: ['admin-clinic', id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('*, city:cities(*), area:areas(*)')
         .eq('id', id)
         .single();
@@ -100,8 +100,8 @@ export function useUpdateClinic() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: Partial<AdminClinic> }) => {
-      const { data: oldData } = await supabase.from('clinics').select('*').eq('id', id).single();
-      const { error } = await supabase.from('clinics').update(updates as any).eq('id', id);
+      const { data: oldData } = await supabase.from('agencies').select('*').eq('id', id).single();
+      const { error } = await supabase.from('agencies').update(updates as any).eq('id', id);
       if (error) throw error;
       await createAuditLog({ action: 'UPDATE', entityType: 'clinic', entityId: id, oldValues: oldData as any, newValues: updates as any });
     },
@@ -119,10 +119,10 @@ export function useAdminAgencies(clinicId?: string) {
     queryKey: ['admin-agencies', clinicId],
     queryFn: async () => {
       let query = supabase
-        .from('dentists')
+        .from('users')
         .select('*')
         .order('name');
-      if (clinicId) query = query.eq('clinic_id', clinicId);
+      if (clinicId) query = query.eq('agency_id', clinicId);
       const { data, error } = await query.limit(20000);
       if (error) throw error;
       return (data || []) as unknown as AdminDentist[];
@@ -134,7 +134,7 @@ export function useUpdateDentist() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: Partial<AdminDentist> }) => {
-      const { error } = await supabase.from('dentists').update(updates as any).eq('id', id);
+      const { error } = await supabase.from('users').update(updates as any).eq('id', id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -149,7 +149,7 @@ export function useCreateClinic() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (clinic: Record<string, unknown>) => {
-      const { data, error } = await supabase.from('clinics').insert([clinic as never]).select().single();
+      const { data, error } = await supabase.from('agencies').insert([clinic as never]).select().single();
       if (error) throw error;
       await createAuditLog({ action: 'CREATE', entityType: 'clinic', entityId: data.id, newValues: clinic });
       return data;
@@ -166,7 +166,7 @@ export function useCreateDentist() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (dentist: Record<string, unknown>) => {
-      const { data, error } = await supabase.from('dentists').insert([dentist as never]).select().single();
+      const { data, error } = await supabase.from('users').insert([dentist as never]).select().single();
       if (error) throw error;
       await createAuditLog({ action: 'CREATE', entityType: 'dentist', entityId: data.id, newValues: dentist });
       return data;

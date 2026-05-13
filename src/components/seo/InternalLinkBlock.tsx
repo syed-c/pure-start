@@ -138,14 +138,14 @@ export const generateCityInternalLinks = (
   
   // Service directory links
   links.push({
-    label: 'Dental Services',
+    label: 'Fostering Services',
     href: '/services/',
-    description: 'Browse all dental treatment categories',
+    description: 'Browse all fostering service categories',
   });
 
   // Insurance link
   links.push({
-    label: 'Dental Insurance Accepted',
+    label: 'Insurance Accepted',
     href: '/insurance/',
     description: 'Find agencies by insurance provider',
   });

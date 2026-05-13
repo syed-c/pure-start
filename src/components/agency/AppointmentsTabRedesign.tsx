@@ -81,7 +81,7 @@ export default function AppointmentsTabRedesign() {
     queryKey: ['agency-profile-appts-v2', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -99,7 +99,7 @@ export default function AppointmentsTabRedesign() {
       const { data, error } = await supabase
         .from('appointments')
         .select('*, treatment:treatments(id, name)')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .order('created_at', { ascending: false });
       if (error) throw error;
       return data as Appointment[];
@@ -191,7 +191,7 @@ export default function AppointmentsTabRedesign() {
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-display font-bold text-white">Appointments</h1>
-          <p className="text-white/60 mt-1">Manage your patient bookings</p>
+          <p className="text-white/60 mt-1">Manage your enquiries</p>
         </div>
       </div>
 

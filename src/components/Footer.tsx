@@ -15,6 +15,7 @@ const resources = [
   { name: "Browse by Location", path: "/locations" },
   { name: "Fostering Categories", path: "/categories" },
   { name: "Become a Foster Carer", path: "/become-foster-carer" },
+  { name: "Allowance Calculator", path: "/tools/fostering-allowance-calculator" },
   { name: "Claim Your Profile", path: "/claim-profile" },
 ];
 

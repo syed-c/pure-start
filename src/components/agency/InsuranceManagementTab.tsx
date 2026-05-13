@@ -40,7 +40,7 @@ export default function InsuranceManagementTab() {
     queryKey: ['agency-profile-insurance', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name, claim_status')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -74,7 +74,7 @@ export default function InsuranceManagementTab() {
       const { data, error } = await supabase
         .from('clinic_insurances')
         .select('insurance_id')
-        .eq('clinic_id', clinic?.id);
+        .eq('agency_id', clinic?.id);
 
       if (error) throw error;
       
@@ -90,13 +90,13 @@ export default function InsuranceManagementTab() {
   // Save mutation
   const saveInsurances = useMutation({
     mutationFn: async () => {
-      if (!clinic?.id) throw new Error('No clinic found');
+      if (!clinic?.id) throw new Error('No agency found');
 
       // Delete all existing
       const { error: deleteError } = await supabase
         .from('clinic_insurances')
         .delete()
-        .eq('clinic_id', clinic.id);
+        .eq('agency_id', clinic.id);
 
       if (deleteError) throw deleteError;
 

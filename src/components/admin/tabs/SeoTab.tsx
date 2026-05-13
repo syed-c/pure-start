@@ -42,7 +42,7 @@ export default function SeoTab() {
   const { data: seoPages, isLoading, refetch: refetchSeoPages } = useAdminSeoPages({});
   const { data: treatments } = useTreatments();
   const { data: cities } = useAdminCities();
-  const { data: clinics } = useAdminClinics();
+  const { data: agencies } = useAdminClinics();
   const { data: blogPosts } = useAdminBlogPosts();
   const updateSeoPage = useUpdateSeoPage();
   
@@ -613,7 +613,7 @@ export default function SeoTab() {
                   { pattern: '/{state}/', description: 'State pages', status: true },
                   { pattern: '/{state}/{city}/', description: 'City pages', status: true },
                   { pattern: '/services/{service}/', description: 'Service pages', status: true },
-                  { pattern: '/clinic/{slug}/', description: 'Legacy clinic pages', status: true },
+                  { pattern: '/clinic/{slug}/', description: 'Legacy agency pages', status: true },
                   { pattern: '/agency/{slug}/', description: 'Agency pages', status: true },
                   { pattern: '/contact/{slug}/', description: 'Fosterer pages', status: true },
                   { pattern: '/blog/', description: 'Blog listing', status: true },

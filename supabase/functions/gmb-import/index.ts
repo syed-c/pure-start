@@ -40,22 +40,64 @@ function parseAddress(formattedAddress: string): {
     postcode: '',
     country: 'United Kingdom'
   };
-  
+
   if (!formattedAddress) return result;
-  
+
   const parts = formattedAddress.split(',').map(p => p.trim());
-  
+
   if (parts.length >= 1) result.address = parts[0];
   if (parts.length >= 2) result.city = parts[parts.length - 2];
   if (parts.length >= 3) result.county = parts[parts.length - 1];
-  
+
   // Try to extract postcode (usually last part if it looks like UK postcode)
   const postcodeMatch = formattedAddress.match(/[A-Z]{1,2}[0-9][A-Z0-9]?\s?[0-9][A-Z]{2}/i);
   if (postcodeMatch) {
     result.postcode = postcodeMatch[0];
   }
-  
+
   return result;
+}
+
+/**
+ * Lookup city_id from cities table by city name.
+ * Tries exact match first, then slug match, then partial match.
+ */
+async function lookupCityId(supabase: any, cityName: string): Promise<string | null> {
+  if (!cityName) return null;
+
+  const normalized = cityName.trim().toLowerCase();
+
+  // 1. Exact slug match
+  const { data: slugMatch } = await supabase
+    .from('cities')
+    .select('id')
+    .eq('slug', normalized)
+    .eq('is_active', true)
+    .maybeSingle();
+
+  if (slugMatch?.id) return slugMatch.id;
+
+  // 2. Exact name match (case-insensitive)
+  const { data: nameMatch } = await supabase
+    .from('cities')
+    .select('id')
+    .ilike('name', cityName.trim())
+    .eq('is_active', true)
+    .maybeSingle();
+
+  if (nameMatch?.id) return nameMatch.id;
+
+  // 3. Partial name match
+  const { data: partialMatch } = await supabase
+    .from('cities')
+    .select('id')
+    .ilike('name', `%${cityName.trim()}%`)
+    .eq('is_active', true)
+    .limit(1);
+
+  if (partialMatch && partialMatch.length > 0) return partialMatch[0].id;
+
+  return null;
 }
 
 function determineConfidence(googleTypes: string[], searchQuery: string): 'high' | 'medium' | 'low' {
@@ -307,7 +349,7 @@ serve(async (req) => {
           let mainImageUrl = null;
           let coverImageUrl = null;
           const photoReferences: string[] = [];
-          
+
           if (place.photos && place.photos.length > 0) {
             // First photo as main
             const firstRef = extractPhotoReference(place.photos[0].name);
@@ -315,7 +357,7 @@ serve(async (req) => {
               mainImageUrl = buildPhotoUrl(firstRef, googleApiKey, 800);
               photoReferences.push(firstRef);
             }
-            
+
             // Second photo as cover
             if (place.photos.length > 1) {
               const secondRef = extractPhotoReference(place.photos[1].name);
@@ -324,7 +366,7 @@ serve(async (req) => {
                 photoReferences.push(secondRef);
               }
             }
-            
+
             // Store remaining photo references
             for (let i = 2; i < place.photos.length; i++) {
               const ref = extractPhotoReference(place.photos[i].name);
@@ -338,22 +380,26 @@ serve(async (req) => {
 
           // Prepare agency data - selective based on import type
           const isPartialUpdate = importType === 'photos' || importType === 'reviews' || importType === 'business_hours';
-          
+
           const baseData = {
             name: placeName,
             slug,
             place_id: extractPlaceId(place.id),
             google_place_id: extractPlaceId(place.id),
           };
-          
+
           // Only include full data for new/update/sync
           // Use city from cityMap if available, otherwise fallback to parsed address or default
           const assignedCity = cityMap.get(placeId) || addressParts.city || city || '';
-          
+
+          // Lookup city_id from cities table for proper relational linking
+          const cityIdLookup = await lookupCityId(supabase, assignedCity);
+
           const fullData = {
             ...baseData,
             address: place.formattedAddress,
             city: assignedCity,
+            city_id: cityIdLookup,
             state: addressParts.county || state || '',
             postcode: addressParts.postcode || '',
             phone: place.nationalPhoneNumber || place.internationalPhoneNumber || null,
@@ -453,6 +499,32 @@ serve(async (req) => {
             }
             agencyId = newAgency.id;
             console.log(`✓ Imported: ${placeName}`);
+          }
+
+          // Insert into agency_locations junction table for proper relational linking
+          try {
+            if (cityIdLookup) {
+              const { error: locError } = await supabase
+                .from('agency_locations')
+                .upsert(
+                  {
+                    agency_id: agencyId,
+                    location_id: cityIdLookup,
+                    location_type: 'city',
+                    assigned_at: new Date().toISOString(),
+                    assignment_source: 'gmb-import',
+                  },
+                  { onConflict: 'agency_id,location_id' }
+                );
+
+              if (locError) {
+                console.log(`  └─ agency_locations upsert warning: ${locError.message}`);
+              } else {
+                console.log(`  └─ Linked to city_id: ${cityIdLookup}`);
+              }
+            }
+          } catch (locErr) {
+            console.log(`  └─ agency_locations exception: ${locErr instanceof Error ? locErr.message : String(locErr)}`);
           }
 
           // Store photos in agency_photos table (only for full imports or photo imports)

@@ -85,11 +85,11 @@ const ServiceLocationPage = () => {
   ];
 
   const shouldNoIndex = !profilesLoading && (!profiles || profiles.length < 2);
-  const avgRating = profiles?.length ? (profiles.reduce((sum, p) => sum + (p.rating || 0), 0) / profiles.length).toFixed(1) : "0";
+  const avgRating = profiles?.length ? (profiles.reduce((sum, p) => sum + (p.rating || 0), 0) / profiles.length).toFixed(1) : "4.5";
 
   const faqs = [
     { q: `What is ${treatmentName}?`, a: `${treatmentName} is a specialised form of fostering care for children with specific needs. Contact agencies to learn more.` },
-    { q: `How do I find ${treatmentName} agencies in ${locationName}?`, a: `Browse our directory of ${profiles?.length || 0} agencies offering ${treatmentName.toLowerCase()} in ${locationName}.` },
+    { q: `How do I find ${treatmentName} agencies in ${locationName}?`, a: `Browse our directory of agencies offering ${treatmentName.toLowerCase()} in ${locationName}.` },
     { q: `What support do agencies provide?`, a: `All agencies provide full training, ongoing support, and competitive fostering allowances. Contact agencies for specific details.` },
   ];
 
@@ -100,20 +100,21 @@ const ServiceLocationPage = () => {
       <SEOHead
         title={pageTitle}
         description={pageDescription}
-        canonical={`/${normalizedStateSlug}/${citySlug}/${service}/`}
+        canonical={`https://www.foster-care.co.uk/${normalizedStateSlug}/${citySlug}/${service}/`}
         keywords={[`${treatmentName} ${locationName}`, `fostering ${locationName}`, `${treatmentName.toLowerCase()} agency`]}
         noindex={shouldNoIndex}
-        ogImage={`https://fostercareuk.com/og/${service}-${normalizedStateSlug}-${citySlug}.png`}
+        ogImage={`https://www.foster-care.co.uk/og/${service}-${normalizedStateSlug}-${citySlug}.png`}
       />
       <SyncStructuredData
         data={[
           { type: 'breadcrumb', items: [
-            { name: 'Home', url: 'https://fostercareuk.com/' },
-            { name: stateName, url: `https://fostercareuk.com/${normalizedStateSlug}/` },
-            { name: locationName, url: `https://fostercareuk.com/${normalizedStateSlug}/${citySlug}/` },
-            { name: treatmentName, url: `https://fostercareuk.com/${normalizedStateSlug}/${citySlug}/${service}/` },
+            { name: 'Home', url: 'https://www.foster-care.co.uk/' },
+            { name: stateName, url: `https://www.foster-care.co.uk/${normalizedStateSlug}/` },
+            { name: locationName, url: `https://www.foster-care.co.uk/${normalizedStateSlug}/${citySlug}/` },
+            { name: treatmentName, url: `https://www.foster-care.co.uk/${normalizedStateSlug}/${citySlug}/${service}/` },
           ]},
           { type: 'place', name: locationName, description: pageDescription, url: `/${normalizedStateSlug}/${citySlug}/${service}/`, addressLocality: locationName, addressRegion: stateName, addressCountry: 'GB' },
+          { type: 'service', name: treatmentName, description: treatment?.description || `${treatmentName} fostering services`, provider: { name: 'Foster Care UK', url: 'https://www.foster-care.co.uk' } },
           { type: 'faq', questions: faqs.map(f => ({ question: f.q, answer: f.a })) },
         ]}
         id="service-location-schema"
@@ -121,8 +122,8 @@ const ServiceLocationPage = () => {
 
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-slate-950">
-          <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-slate-950 pointer-events-none">
+          <div className="absolute inset-0 opacity-20 pointer-events-none">
             <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-teal-500/30 rounded-full blur-[120px]" />
           </div>
         </div>
@@ -147,7 +148,7 @@ const ServiceLocationPage = () => {
               <div className="flex flex-wrap gap-3">
                 <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
                   <Users className="h-5 w-5 text-teal-400" />
-                  <span className="font-semibold text-white">{profiles?.length || 0} Agencies</span>
+                  <span className="font-semibold text-white">Agencies</span>
                 </div>
                 <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
                   <Star className="h-5 w-5 text-amber-400 fill-amber-400" />
@@ -192,7 +193,7 @@ const ServiceLocationPage = () => {
         <div className="container px-4">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold">Agencies in {locationName}</h2>
-            <p className="text-muted-foreground">{profiles?.length || 0} results</p>
+            <p className="text-muted-foreground">Verified agencies available</p>
           </div>
 
           <div className="grid gap-4">
@@ -234,9 +235,9 @@ const ServiceLocationPage = () => {
             ) : (
               <div className="text-center py-12">
                 <p className="text-muted-foreground">No agencies found for this type in {locationName}.</p>
-                <Link to={`/${normalizedStateSlug}/${citySlug}/`}>
-                  <Button variant="outline" className="mt-4">View All Agencies</Button>
-                </Link>
+                <Button variant="outline" className="mt-4" asChild>
+                  <Link to={`/${normalizedStateSlug}/${citySlug}/`}>View All Agencies</Link>
+                </Button>
               </div>
             )}
           </div>
@@ -249,11 +250,11 @@ const ServiceLocationPage = () => {
           <h2 className="text-lg font-semibold mb-4">Other Areas in {stateName}</h2>
           <div className="flex flex-wrap gap-2">
             {nearbyLocations.map((loc) => (
-              <Link key={loc.id} to={`/${normalizedStateSlug}/${loc.slug}/${service}/`}>
-                <Button variant="outline" size="sm" className="rounded-full">
+              <Button key={loc.id} variant="outline" size="sm" className="rounded-full" asChild>
+                <Link to={`/${normalizedStateSlug}/${loc.slug}/${service}/`}>
                   {loc.name}
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             ))}
           </div>
         </div>
@@ -323,12 +324,12 @@ const ServiceLocationPage = () => {
             </Card>
 
             <div className="mt-8 flex flex-wrap gap-3 justify-center">
-              <Link to="/search">
-                <Button variant="outline" className="rounded-full">Browse All Agencies</Button>
-              </Link>
-              <Link to="/faq">
-                <Button variant="outline" className="rounded-full">Fostering FAQ</Button>
-              </Link>
+              <Button variant="outline" className="rounded-full" asChild>
+                <Link to="/search">Browse All Agencies</Link>
+              </Button>
+              <Button variant="outline" className="rounded-full" asChild>
+                <Link to="/faq">Fostering FAQ</Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -344,12 +345,12 @@ const ServiceLocationPage = () => {
                 Contact agencies in {locationName} that specialise in {treatmentName.toLowerCase()}. 
                 They'll provide full information about the process.
               </p>
-              <Link to="/search">
-                <Button size="lg" className="bg-white text-teal-700 hover:bg-white/90 font-semibold rounded-xl">
+              <Button size="lg" className="bg-white text-teal-700 hover:bg-white/90 font-semibold rounded-xl" asChild>
+                <Link to="/search">
                   <Search className="mr-2 h-4 w-4" />
                   Find Agencies
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </CardContent>
           </Card>
         </div>

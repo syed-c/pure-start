@@ -110,12 +110,12 @@ export default function ProfileEditorTab() {
     }
   }, [searchParams, setSearchParams]);
 
-  // Fetch clinic data
+  // Fetch agency data
   const { data: clinic, isLoading } = useQuery({
     queryKey: ['agency-profile-profile', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select(`
           id, name, slug, description, address, phone, email, website,
           cover_image_url, verification_status, google_place_id,
@@ -144,14 +144,14 @@ export default function ProfileEditorTab() {
     enabled: !!user?.id,
   });
 
-  // Fetch clinic hours
+  // Fetch agency hours
   const { data: clinicHours } = useQuery({
     queryKey: ['clinic-hours', clinic?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinic_hours')
+        .from('agency_hours')
         .select('*')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .order('day_of_week');
 
       if (error) throw error;
@@ -174,14 +174,14 @@ export default function ProfileEditorTab() {
     enabled: !!clinic?.id,
   });
 
-  // Fetch clinic images
+  // Fetch agency images
   const { data: images } = useQuery({
     queryKey: ['clinic-images', clinic?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinic_images')
+        .from('agency_images')
         .select('*')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .order('display_order');
 
       if (error) throw error;
@@ -193,7 +193,7 @@ export default function ProfileEditorTab() {
   // Save profile mutation
   const saveProfile = useMutation({
     mutationFn: async () => {
-      if (!clinic?.id) throw new Error('No clinic found');
+      if (!clinic?.id) throw new Error('No agency found');
 
       const updates = {
         name: formData.name,
@@ -207,7 +207,7 @@ export default function ProfileEditorTab() {
       };
 
       const { error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .update(updates)
         .eq('id', clinic.id);
 
@@ -230,13 +230,13 @@ export default function ProfileEditorTab() {
   // Save hours mutation
   const saveHours = useMutation({
     mutationFn: async () => {
-      if (!clinic?.id) throw new Error('No clinic found');
+      if (!clinic?.id) throw new Error('No agency found');
 
       for (const hour of hours) {
         if (hour.id.startsWith('new-')) {
           // Insert new
           const { error } = await supabase
-            .from('clinic_hours')
+            .from('agency_hours')
             .insert({
               clinic_id: clinic.id,
               day_of_week: hour.day_of_week,
@@ -248,7 +248,7 @@ export default function ProfileEditorTab() {
         } else {
           // Update existing
           const { error } = await supabase
-            .from('clinic_hours')
+            .from('agency_hours')
             .update({
               open_time: hour.open_time,
               close_time: hour.close_time,
@@ -269,10 +269,10 @@ export default function ProfileEditorTab() {
   // Add gallery image mutation
   const addImageMutation = useMutation({
     mutationFn: async (imageUrl: string) => {
-      if (!clinic?.id) throw new Error('No clinic found');
+      if (!clinic?.id) throw new Error('No agency found');
       
       const { error } = await supabase
-        .from('clinic_images')
+        .from('agency_images')
         .insert({
           clinic_id: clinic.id,
           image_url: imageUrl,
@@ -294,7 +294,7 @@ export default function ProfileEditorTab() {
   const deleteImageMutation = useMutation({
     mutationFn: async (imageId: string) => {
       const { error } = await supabase
-        .from('clinic_images')
+        .from('agency_images')
         .delete()
         .eq('id', imageId);
       
@@ -388,7 +388,7 @@ export default function ProfileEditorTab() {
     setIsConnectingGoogle(true);
     try {
       if (!clinic?.id) {
-        throw new Error('No clinic found to connect.');
+        throw new Error('No agency found to connect.');
       }
 
       // Get current session to store before OAuth
@@ -497,7 +497,7 @@ export default function ProfileEditorTab() {
     setIsSavingPlaceId(true);
     try {
       const { error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .update({ 
           google_place_id: manualPlaceId.trim(),
           updated_at: new Date().toISOString() 

@@ -91,7 +91,7 @@ export function LocationSelectionModal({
   const updateClinicLocation = useMutation({
     mutationFn: async ({ cityId, areaId }: { cityId: string; areaId: string | null }) => {
       const { error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .update({
           city_id: cityId,
           area_id: areaId,
@@ -142,7 +142,7 @@ export function LocationSelectionModal({
 
       // Update clinic to mark location as pending
       const { error: clinicError } = await supabase
-        .from('clinics')
+        .from('agencies')
         .update({
           city_id: cityId,
           location_verified: false,

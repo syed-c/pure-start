@@ -219,7 +219,7 @@ export default function SettingsTab() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Verification Fee (USD)</Label>
+                <Label>Verification Fee (GBP)</Label>
                 <Input
                   type="number"
                   value={(getSettingValue('platform')?.verification_fee as number) || 49}
@@ -507,7 +507,7 @@ export default function SettingsTab() {
                 <Textarea
                   value={(getSettingValue('legal')?.footer_text as string) || ''}
                   onChange={(e) => updateFormValue('legal', 'footer_text', e.target.value)}
-                  placeholder="Licensed Dental Professionals Only."
+                  placeholder="Licensed Foster Care Professionals Only."
                   rows={2}
                 />
                 <p className="text-xs text-muted-foreground">Additional legal disclaimer shown after copyright text</p>

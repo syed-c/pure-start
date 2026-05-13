@@ -145,24 +145,6 @@ queryFn: async () => {
         console.log('Agencies query failed:', e);
       }
       
-      // If empty, try clinics table
-      if (sourceData.length === 0) {
-        try {
-          const { data: clinicsData } = await supabase
-            .from("clinics")
-            .select("id, name, slug, rating, review_count, is_verified, city, state, main_image_url, cover_image_url")
-            .limit(500);
-          
-          console.log('Clinics query:', { count: clinicsData?.length });
-          
-          if (clinicsData && clinicsData.length > 0) {
-            sourceData = clinicsData;
-          }
-        } catch (e) {
-          console.log('Clinics query failed:', e);
-        }
-      }
-      
       // If still empty, use sample data for demo
       if (sourceData.length === 0) {
         console.log('Using sample data for demo');
@@ -344,8 +326,9 @@ export default function SearchPage() {
       <Navbar />
 
       {/* Search Header */}
-      <div className="bg-muted/30 border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 py-8 md:py-10">
+      <div className="bg-muted/30 border-b border-border relative">
+        <div className="absolute inset-0 bg-subtle-grid opacity-20 pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-4 py-8 md:py-10 relative z-10">
           <h1 className="text-2xl md:text-3xl font-extrabold text-foreground mb-2">
             Find a Fostering Agency
           </h1>
@@ -354,6 +337,15 @@ export default function SearchPage() {
             {filters.fosteringTypeId && fosteringTypes?.find(t => t.id === filters.fosteringTypeId) && 
               ` offering ${fosteringTypes.find(t => t.id === filters.fosteringTypeId)?.name}`}
           </p>
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <span className="trust-badge-ofsted text-[11px] px-3 py-1 rounded-full font-bold flex items-center gap-1">
+              <Shield className="h-3 w-3" /> Ofsted Registered
+            </span>
+            <span className="trust-badge-verified text-[11px] px-3 py-1 rounded-full font-bold flex items-center gap-1">
+              <Shield className="h-3 w-3" /> DBS Checked
+            </span>
+            <span className="trust-badge text-[11px] px-3 py-1 rounded-full font-bold">Real Reviews</span>
+          </div>
           <div className="flex gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -412,13 +404,16 @@ export default function SearchPage() {
             )}
 
             {!isLoading && searchData?.results.length === 0 && (
-              <div className="text-center py-24">
-                <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
-                  <Search className="h-7 w-7 text-muted-foreground/40" />
+              <div className="text-center py-24 relative">
+                <div className="absolute inset-0 bg-subtle-dots opacity-10" />
+                <div className="relative z-10">
+                  <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
+                    <Search className="h-7 w-7 text-muted-foreground/40" />
+                  </div>
+                  <h3 className="text-lg font-bold text-foreground mb-2">No agencies found</h3>
+                  <p className="text-sm text-muted-foreground mb-5">Try adjusting your filters or search query.</p>
+                  <Button variant="outline" onClick={clearFilters} className="rounded-xl">Clear All Filters</Button>
                 </div>
-                <h3 className="text-lg font-bold text-foreground mb-2">No agencies found</h3>
-                <p className="text-sm text-muted-foreground mb-5">Try adjusting your filters or search query.</p>
-                <Button variant="outline" onClick={clearFilters} className="rounded-xl">Clear All Filters</Button>
               </div>
             )}
 
@@ -427,13 +422,19 @@ export default function SearchPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {searchData.results.map((item) => (<ResultCard key={`${item.type}-${item.id}`} item={item} />))}
                 </div>
-                {totalPages > 1 && (
-                  <div className="flex items-center justify-center gap-3 mt-10">
-                    <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="rounded-lg font-semibold">Previous</Button>
-                    <span className="text-sm text-muted-foreground px-3 font-medium">Page {page} of {totalPages}</span>
-                    <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)} className="rounded-lg font-semibold">Next</Button>
+                {searchData.total > ITEMS_PER_PAGE && (
+                  <div className="bg-section-divider-top relative mt-8 pt-8">
+                    <div className="absolute inset-0 bg-subtle-dots opacity-10" />
+                    <div className="relative z-10">
+                      <div className="flex items-center justify-center gap-3">
+                        <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="rounded-lg font-semibold">Previous</Button>
+                        <span className="text-sm text-muted-foreground px-3 font-medium">Page {page} of {totalPages}</span>
+                        <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)} className="rounded-lg font-semibold">Next</Button>
+                      </div>
+                    </div>
                   </div>
                 )}
+
               </>
             )}
           </div>
@@ -459,7 +460,7 @@ function ResultCard({ item }: { item: SearchResultItem }) {
   const avatarUrl = item.image || getLetterAvatarUrl(item.name);
 
   return (
-    <Link to={linkTo} className="group block bg-card border border-border rounded-xl overflow-hidden hover:shadow-md hover:border-primary/20 transition-all duration-200">
+    <Link to={linkTo} className="group block card-depth border border-border rounded-xl overflow-hidden hover:shadow-md hover:border-primary/20 transition-all duration-200">
       <div className="aspect-[16/10] bg-muted relative overflow-hidden">
         <img src={avatarUrl} alt={item.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"

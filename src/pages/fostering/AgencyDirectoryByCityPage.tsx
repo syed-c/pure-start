@@ -220,19 +220,19 @@ const AgencyDirectoryByCityPage = () => {
           <h2 className="text-2xl font-bold text-center mb-8">Other Cities</h2>
           <div className="flex flex-wrap gap-2 justify-center">
             {POPULAR_CITIES.filter(c => c.slug !== citySlug).slice(0, 8).map((city) => (
-              <Link key={city.slug} to={`/agencies/${city.slug}`}>
-                <Button variant="outline" className="rounded-full">
+              <Button key={city.slug} variant="outline" className="rounded-full" asChild>
+                <Link to={`/agencies/${city.slug}`}>
                   <MapPin className="h-4 w-4 mr-2" />
                   {city.name}
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             ))}
-            <Link to="/agencies">
-              <Button variant="outline" className="rounded-full">
+            <Button variant="outline" className="rounded-full" asChild>
+              <Link to="/agencies">
                 View All
                 <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
       </Section>

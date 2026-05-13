@@ -27,8 +27,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${catName} Agencies in ${cityName} — Compare Ofsted-Rated Agencies`,
     description: `Find ${catName.toLowerCase()} agencies in ${cityName}. Compare Ofsted-rated fostering agencies, ratings, and services. Get contact details and reviews.`,
+    keywords: [`${catName.toLowerCase()} agencies ${cityName}`, 'foster care agency', 'Ofsted registered foster agency', 'fostering agency UK'],
     alternates: {
       canonical: `https://www.foster-care.co.uk/fostering-agencies/${location}/${category}`,
+    },
+    openGraph: {
+      title: `${catName} Agencies in ${cityName} — Compare Ofsted-Rated Agencies`,
+      description: `Find ${catName.toLowerCase()} agencies in ${cityName}. Compare Ofsted-rated fostering agencies.`,
+      url: `https://www.foster-care.co.uk/fostering-agencies/${location}/${category}`,
+      siteName: 'Foster Care UK',
+      locale: 'en_GB',
+      type: 'website',
+      images: [
+        {
+          url: 'https://www.foster-care.co.uk/og-image.jpg',
+          width: 1200,
+          height: 630,
+          alt: `${catName} Agencies in ${cityName}`,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${catName} Agencies in ${cityName}`,
+      description: `Find ${catName.toLowerCase()} agencies in ${cityName}.`,
+      images: ['https://www.foster-care.co.uk/og-image.jpg'],
     },
   };
 }
@@ -44,8 +67,38 @@ export default async function CategoryLocationPage({ params }: Props) {
 
   const displayCat = categoryName.charAt(0).toUpperCase() + categoryName.slice(1);
 
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://www.foster-care.co.uk/',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: `${displayCat} Agencies`,
+        item: `https://www.foster-care.co.uk/fostering-types/${category}`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: cityName,
+        item: `https://www.foster-care.co.uk/fostering-agencies/${location}/${category}`,
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-[#0a0a0f]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <main>
       {/* Hero */}
       <section className="relative py-20 bg-gradient-to-b from-[#0a0a0f] to-[#0f0f14]">
         <div className="container px-4">
@@ -160,6 +213,7 @@ export default async function CategoryLocationPage({ params }: Props) {
           </a>
         </div>
       </section>
+      </main>
     </div>
   );
 }

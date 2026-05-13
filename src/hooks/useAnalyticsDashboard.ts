@@ -66,7 +66,7 @@ export function useAnalyticsDashboard(options: UseAnalyticsDashboardOptions = {}
         .gte('created_at', defaultDateFrom)
         .lte('created_at', defaultDateTo);
 
-      if (clinicId) pageViewsQuery = pageViewsQuery.eq('clinic_id', clinicId);
+      if (clinicId) pageViewsQuery = pageViewsQuery.eq('agency_id', clinicId);
       if (pageType) pageViewsQuery = pageViewsQuery.eq('page_type', pageType);
 
       const { data: pageViews, error: pvError } = await pageViewsQuery;

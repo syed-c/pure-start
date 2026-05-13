@@ -67,7 +67,7 @@ type AutomationLog = {
 const JOB_PRESETS = [
   {
     name: 'GMB Import Job',
-    description: 'Import new clinic listings from Google Business Profile',
+    description: 'Import new agency listings from Google Business Profile',
     rule_type: 'gmb_import',
     trigger_config: { schedule: 'daily', time: '02:00' },
     action_config: { max_per_run: 100, cities: ['los-angeles', 'san-francisco', 'boston'] },
@@ -81,7 +81,7 @@ const JOB_PRESETS = [
   },
   {
     name: 'Duplicate Detection',
-    description: 'Scan for potential duplicate clinic listings',
+    description: 'Scan for potential duplicate agency listings',
     rule_type: 'duplicate_detection',
     trigger_config: { schedule: 'weekly', day: 'monday', time: '03:00' },
     action_config: { similarity_threshold: 0.8 },
@@ -102,7 +102,7 @@ const JOB_PRESETS = [
   },
   {
     name: 'Verification Expiry Reminder',
-    description: 'Remind clinics about expiring verifications',
+    description: 'Remind agencies about expiring verifications',
     rule_type: 'verification_reminder',
     trigger_config: { schedule: 'daily', time: '09:00', days_before_expiry: 30 },
     action_config: { template: 'verification_reminder', max_sends: 20 },

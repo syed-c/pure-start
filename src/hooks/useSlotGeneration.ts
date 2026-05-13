@@ -45,7 +45,7 @@ export function useSlotGeneration(agencyId: string | null, selectedDate: Date | 
       const { data, error } = await supabase
         .from('dentist_availability_rules')
         .select('*')
-        .eq('clinic_id', agencyId!)
+        .eq('agency_id', agencyId!)
         .eq('is_active', true);
       
       if (error) throw error;
@@ -62,7 +62,7 @@ export function useSlotGeneration(agencyId: string | null, selectedDate: Date | 
       const { data, error } = await supabase
         .from('appointments')
         .select('start_datetime, end_datetime, status')
-        .eq('clinic_id', agencyId!)
+        .eq('agency_id', agencyId!)
         .gte('start_datetime', `${dateStr}T00:00:00`)
         .lte('start_datetime', `${dateStr}T23:59:59`)
         .in('status', ['pending', 'confirmed']);
@@ -82,7 +82,7 @@ export function useSlotGeneration(agencyId: string | null, selectedDate: Date | 
       const { data, error } = await supabase
         .from('slot_locks')
         .select('start_datetime, end_datetime')
-        .eq('clinic_id', agencyId!)
+        .eq('agency_id', agencyId!)
         .gte('start_datetime', `${dateStr}T00:00:00`)
         .lte('start_datetime', `${dateStr}T23:59:59`)
         .gt('expires_at', now)
@@ -102,7 +102,7 @@ export function useSlotGeneration(agencyId: string | null, selectedDate: Date | 
       const { data, error } = await supabase
         .from('availability_blocks')
         .select('start_datetime, end_datetime')
-        .eq('clinic_id', agencyId!)
+        .eq('agency_id', agencyId!)
         .lte('start_datetime', `${dateStr}T23:59:59`)
         .gte('end_datetime', `${dateStr}T00:00:00`);
       

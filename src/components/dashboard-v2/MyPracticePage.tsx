@@ -53,7 +53,7 @@ export default function MyPracticePage({ onNavigate }: MyPracticePageProps) {
     queryKey: ['my-practice-clinic', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select(`
           *,
           clinic_hours(*),
@@ -75,9 +75,9 @@ export default function MyPracticePage({ onNavigate }: MyPracticePageProps) {
     queryKey: ['my-practice-team-count', clinic?.id],
     queryFn: async () => {
       const { count } = await supabase
-        .from('dentists')
+        .from('users')
         .select('id', { count: 'exact', head: true })
-        .eq('clinic_id', clinic?.id);
+        .eq('agency_id', clinic?.id);
       return count || 0;
     },
     enabled: !!clinic?.id,
@@ -90,7 +90,7 @@ export default function MyPracticePage({ onNavigate }: MyPracticePageProps) {
       const { count } = await supabase
         .from('clinic_treatments')
         .select('id', { count: 'exact', head: true })
-        .eq('clinic_id', clinic?.id);
+        .eq('agency_id', clinic?.id);
       return count || 0;
     },
     enabled: !!clinic?.id,

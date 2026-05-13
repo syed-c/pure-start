@@ -24,14 +24,14 @@ const STATIC_CITIES: City[] = POPULAR_CITIES.map(c => ({
   id: c.slug,
   name: c.name,
   slug: c.slug,
-  state_id: 'england',
+  state_id: c.region,
   country: 'GB',
   image_url: null,
   agency_count: 0,
   is_active: true,
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString(),
-  state: STATIC_STATES.find(s => s.slug === 'england') || undefined,
+  state: STATIC_STATES.find(s => s.slug === c.region) || undefined,
 }));
 
 export function useStates() {
@@ -118,22 +118,31 @@ export function useCitiesByStateSlug(stateSlug: string) {
     queryKey: ['cities-by-state', normalized],
     queryFn: async () => {
       try {
+        let dbCities: City[] = [];
         const { data: stateData, error: stateError } = await supabase
           .from('states')
           .select('id')
           .eq('slug', normalized)
           .maybeSingle();
-        if (stateError || !stateData) {
-          return STATIC_CITIES.filter(c => c.state_id === normalized);
+        if (!stateError && stateData) {
+          const { data, error } = await supabase
+            .from('cities')
+            .select('*, state:states(*)')
+            .eq('state_id', stateData.id)
+            .eq('is_active', true)
+            .order('name');
+          if (!error && data) dbCities = data as City[];
         }
-        const { data, error } = await supabase
-          .from('cities')
-          .select('*, state:states(*)')
-          .eq('state_id', stateData.id)
-          .eq('is_active', true)
-          .order('name');
-        if (error) return STATIC_CITIES.filter(c => c.state_id === normalized);
-        return data as City[];
+        const staticCities = STATIC_CITIES.filter(c => c.state_id === normalized);
+        const seen = new Set<string>();
+        const merged: City[] = [];
+        for (const city of [...dbCities, ...staticCities]) {
+          if (!seen.has(city.slug)) {
+            seen.add(city.slug);
+            merged.push(city);
+          }
+        }
+        return merged;
       } catch {
         return STATIC_CITIES.filter(c => c.state_id === normalized);
       }

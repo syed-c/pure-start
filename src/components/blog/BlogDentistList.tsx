@@ -4,29 +4,29 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ProfileCard } from '@/components/ProfileCard';
 import type { Profile } from '@/hooks/useProfiles';
 
-interface BlogDentistListProps {
-  clinicIds?: string[];
-  clinicSlugs?: string[];
+interface BlogAgencyListProps {
+  agencyIds?: string[];
+  agencySlugs?: string[];
   locationLabel?: string;
   headingText?: string;
 }
 
-export function BlogDentistList({
-  clinicIds = [],
-  clinicSlugs = [],
+export function BlogAgencyList({
+  agencyIds = [],
+  agencySlugs = [],
   locationLabel,
   headingText,
-}: BlogDentistListProps) {
-  const keyIds = Array.isArray(clinicIds) ? clinicIds.filter(Boolean) : [];
-  const keySlugs = Array.isArray(clinicSlugs) ? clinicSlugs.filter(Boolean) : [];
+}: BlogAgencyListProps) {
+  const keyIds = Array.isArray(agencyIds) ? agencyIds.filter(Boolean) : [];
+  const keySlugs = Array.isArray(agencySlugs) ? agencySlugs.filter(Boolean) : [];
 
   const { data: profiles, isLoading } = useQuery({
-    queryKey: ['blog-top-clinics', { ids: keyIds, slugs: keySlugs }],
+    queryKey: ['blog-top-agencies', { ids: keyIds, slugs: keySlugs }],
     queryFn: async () => {
       if (!keyIds.length && !keySlugs.length) return [] as Profile[];
 
       const query = supabase
-        .from('clinics')
+        .from('agencies')
         .select(
           `
           id,
@@ -59,7 +59,7 @@ export function BlogDentistList({
         const stateAbbr = c.city?.state?.abbreviation;
         const loc = c.city?.name
           ? `${c.city.name}${stateAbbr ? `, ${stateAbbr}` : ''}`
-          : locationLabel || 'United States';
+          : locationLabel || 'United Kingdom';
 
         const isVerified = c.claim_status === 'claimed' && c.verification_status === 'verified';
 
@@ -67,7 +67,7 @@ export function BlogDentistList({
           id: c.id,
           name: c.name,
           slug: c.slug,
-          type: 'clinic',
+          type: 'agency',
           specialty: 'Fostering Agency',
           location: loc,
           rating: Number(c.rating) || 0,

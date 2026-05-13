@@ -40,9 +40,9 @@ export default function ManualGoogleReviewLink({ clinicId, googlePlaceId }: Manu
     const fetchCustomUrl = async () => {
       // First try clinic_oauth_tokens (new secure table)
       const { data: tokenData } = await supabase
-        .from('clinic_oauth_tokens')
+        .from('agency_oauth_tokens')
         .select('gmb_data')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .single();
       
       if (tokenData?.gmb_data && typeof tokenData.gmb_data === 'object') {
@@ -74,16 +74,16 @@ export default function ManualGoogleReviewLink({ clinicId, googlePlaceId }: Manu
     try {
       // Get existing gmb_data from clinic_oauth_tokens
       const { data: existing } = await supabase
-        .from('clinic_oauth_tokens')
+        .from('agency_oauth_tokens')
         .select('gmb_data')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .single();
 
       const existingData = (existing?.gmb_data as Record<string, unknown>) || {};
       
       // Update or insert with custom review URL
       const { error } = await supabase
-        .from('clinic_oauth_tokens')
+        .from('agency_oauth_tokens')
         .upsert({
           clinic_id: clinicId,
           gmb_data: {

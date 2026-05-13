@@ -45,7 +45,7 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     key: 'booking_default_on',
     name: 'Booking Default ON',
-    description: 'New clinics have booking enabled by default. Agencies can opt-out from dashboard.',
+    description: 'New agencies have booking enabled by default. Agencies can opt-out from dashboard.',
     category: 'booking',
     icon: Zap,
     defaultValue: true,

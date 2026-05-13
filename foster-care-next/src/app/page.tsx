@@ -4,9 +4,50 @@ import { getFosteringCategories, getCities } from '@/lib/data';
 export const metadata: Metadata = {
   title: 'Find Fostering Agencies in UK | Foster Care',
   description: 'Connect with verified fostering agencies across England, Scotland, Wales & Northern Ireland. Find your perfect foster agency today.',
+  keywords: ['fostering agencies UK', 'foster care agency', 'become foster car', 'foster child care UK', 'Ofsted registered foster agency'],
   alternates: {
     canonical: 'https://www.foster-care.co.uk/',
   },
+  openGraph: {
+    title: 'Find Fostering Agencies in UK | Foster Care',
+    description: 'Connect with verified fostering agencies across England, Scotland, Wales & Northern Ireland.',
+    url: 'https://www.foster-care.co.uk/',
+    siteName: 'Foster Care UK',
+    locale: 'en_GB',
+    type: 'website',
+    images: [
+      {
+        url: 'https://www.foster-care.co.uk/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Foster Care UK - Find Your Perfect Foster Agency',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Find Fostering Agencies in UK | Foster Care',
+    description: 'Connect with verified fostering agencies across England, Scotland, Wales & Northern Ireland.',
+    images: ['https://www.foster-care.co.uk/og-image.jpg'],
+  },
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Foster Care UK',
+  url: 'https://www.foster-care.co.uk/',
+  description: 'Connect with verified fostering agencies across England, Scotland, Wales & Northern Ireland.',
+  logo: 'https://www.foster-care.co.uk/logo.png',
+  address: {
+    '@type': 'PostalAddress',
+    addressCountry: 'GB',
+  },
+  areaServed: {
+    '@type': 'Country',
+    name: 'United Kingdom',
+  },
+  serviceType: 'Foster Care Services',
 };
 
 export default async function Home() {
@@ -15,6 +56,11 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0f]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <main>
       {/* HERO SECTION */}
       <section className="relative min-h-[85vh] flex items-center overflow-hidden bg-[#0a0a0f]">
         {/* Background Pattern */}
@@ -153,7 +199,8 @@ export default async function Home() {
             Get in Touch
           </a>
         </div>
-      </section>
-    </div>
-  );
+</section>
+    </main>
+  </div>
+);
 }

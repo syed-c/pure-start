@@ -84,7 +84,7 @@ export default function FounderWeeklyTab() {
         supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed'),
         supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('verification_status', 'verified'),
         supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed').eq('is_active', true),
-        supabase.from('clinic_subscriptions').select('*', { count: 'exact', head: true }).eq('status', 'active'),
+        supabase.from('agency_subscriptions').select('*', { count: 'exact', head: true }).eq('status', 'active'),
       ]);
       return { imported: totalImported || 0, claimed: totalClaimed || 0, verified: totalVerified || 0, active: totalActive || 0, revenue: totalWithRevenue || 0 };
     },

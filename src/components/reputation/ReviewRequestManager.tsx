@@ -72,7 +72,7 @@ export default function ReviewRequestManager({ clinicId, clinicSlug }: ReviewReq
       const { data, error } = await supabase
         .from('review_requests')
         .select('*')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .order('created_at', { ascending: false })
         .limit(100);
       if (error) throw error;

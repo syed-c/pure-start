@@ -42,21 +42,21 @@ export default function ActivityFeed({ clinicId, maxItems = 10 }: ActivityFeedPr
         supabase
           .from('appointments')
           .select('id, patient_name, status, created_at')
-          .eq('clinic_id', clinicId)
+          .eq('agency_id', clinicId)
           .gte('created_at', weekAgo.toISOString())
           .order('created_at', { ascending: false })
           .limit(20),
         supabase
           .from('review_funnel_events')
           .select('id, event_type, rating, created_at')
-          .eq('clinic_id', clinicId)
+          .eq('agency_id', clinicId)
           .gte('created_at', weekAgo.toISOString())
           .order('created_at', { ascending: false })
           .limit(20),
         supabase
-          .from('clinic_messages')
+          .from('messages')
           .select('id, recipient_phone, status, channel, created_at')
-          .eq('clinic_id', clinicId)
+          .eq('agency_id', clinicId)
           .gte('created_at', weekAgo.toISOString())
           .order('created_at', { ascending: false })
           .limit(20),

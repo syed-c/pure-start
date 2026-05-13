@@ -30,7 +30,7 @@ export function useClaimRequests(status?: string) {
     queryFn: async () => {
       let query = supabase
         .from('claim_requests')
-        .select('*, clinic:clinics(id, name, slug)')
+        .select('*, agency:agencies(id, name, slug)')
         .order('created_at', { ascending: false });
 
       if (status) query = query.eq('status', status);
@@ -62,7 +62,7 @@ export function useApproveClaim() {
 
       // Update clinic ownership using claimed_by column (not owner_id)
       const { error: clinicError } = await supabase
-        .from('clinics')
+        .from('agencies')
         .update({
           claim_status: 'claimed',
           claimed_by: claim?.user_id,

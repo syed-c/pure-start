@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { SEOHead } from "@/components/seo/SEOHead";
+import { StructuredData } from "@/components/seo/StructuredData";
 import { ArrowRight, Shield, Heart, Building2 } from "lucide-react";
 import { useRealCounts } from "@/hooks/useRealCounts";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
@@ -23,14 +24,78 @@ const ServicesPage = () => {
 
   // Fallback categories if database is empty
   const fallbackTreatments = [
-    { id: '1', name: 'Short-Term Fostering', slug: 'short-term-fostering', description: 'Temporary care for children' },
-    { id: '2', name: 'Long-Term Fostering', slug: 'long-term-fostering', description: 'Permanent care arrangements' },
-    { id: '3', name: 'Emergency Fostering', slug: 'emergency-fostering', description: 'Immediate placement needed' },
-    { id: '4', name: 'Therapeutic Fostering', slug: 'therapeutic-fostering', description: 'Specialist support for complex needs' },
-    { id: '5', name: 'Respite Fostering', slug: 'respite-fostering', description: 'Short breaks for families' },
-    { id: '6', name: 'Parent & Child Fostering', slug: 'parent-and-child-fostering', description: 'Support for parent and child' },
-    { id: '7', name: 'Disability Fostering', slug: 'disability-fostering', description: 'Care for children with disabilities' },
-    { id: '8', name: 'Kinship Fostering', slug: 'kinship-fostering', description: 'Care by family members' },
+    { 
+      id: '1', 
+      name: 'Short-Term Fostering', 
+      slug: 'short-term-fostering', 
+      description: 'Temporary care for children from weeks to several months. Ideal for those who want to help without long-term commitment.',
+      duration: 'Weeks to months',
+      requirements: 'Flexible schedule, spare room',
+      suitable_for: 'Working families, students, retirees'
+    },
+    { 
+      id: '2', 
+      name: 'Long-Term Fostering', 
+      slug: 'long-term-fostering', 
+      description: 'Permanent care arrangements for children who cannot return to their birth family. Building lasting relationships.',
+      duration: 'Ongoing (years)',
+      requirements: 'Stable home, long-term commitment',
+      suitable_for: 'Couples, single carers, experienced fosterers'
+    },
+    { 
+      id: '3', 
+      name: 'Emergency Fostering', 
+      slug: 'emergency-fostering', 
+      description: 'Immediate, 24-hour placements for children in crisis. Often needed at night or on weekends.',
+      duration: 'Immediate to short-term',
+      requirements: 'Quick response, flexible hours',
+      suitable_for: 'Experienced carers, those with flexible schedules'
+    },
+    { 
+      id: '4', 
+      name: 'Therapeutic Fostering', 
+      slug: 'therapeutic-fostering', 
+      description: 'Specialist care for children with complex needs, trauma, or mental health challenges. Additional training required.',
+      duration: 'Medium to long-term',
+      requirements: 'Specialist training, high patience',
+      suitable_for: 'Trained professionals, experienced carers'
+    },
+    { 
+      id: '5', 
+      name: 'Respite Fostering', 
+      slug: 'respite-fostering', 
+      description: 'Short breaks for other foster families. Typically weekends or school holidays. Great for beginners.',
+      duration: 'Weekends, holidays',
+      requirements: 'Flexible occasional availability',
+      suitable_for: 'Anyone with occasional availability'
+    },
+    { 
+      id: '6', 
+      name: 'Parent & Child Fostering', 
+      slug: 'parent-and-child-fostering', 
+      description: 'Support for a parent and their child together. Helps young parents develop parenting skills.',
+      duration: '3-12 months',
+      requirements: 'Large home, teaching skills',
+      suitable_for: 'Experienced parents, teachers'
+    },
+    { 
+      id: '7', 
+      name: 'Disability Fostering', 
+      slug: 'disability-fostering', 
+      description: 'Care for children with physical or learning disabilities. Medical training may be required.',
+      duration: 'Varies',
+      requirements: 'Medical training (some roles)',
+      suitable_for: 'Healthcare professionals, trained carers'
+    },
+    { 
+      id: '8', 
+      name: 'Kinship Fostering', 
+      slug: 'kinship-fostering', 
+      description: 'Care by family members or close connections when parents cannot care for children. Priority given to relatives.',
+      duration: 'Varies',
+      requirements: 'Family connection',
+      suitable_for: 'Family members, close friends'
+    },
   ];
 
   const displayTreatments = (treatments && treatments.length > 0) ? treatments : fallbackTreatments;
@@ -58,9 +123,11 @@ const ServicesPage = () => {
         canonical="/categories/"
         keywords={['fostering types', 'types of foster care', 'emergency fostering', 'therapeutic fostering']}
       />
+      <StructuredData type="organization" />
       
       {/* Hero */}
-      <section className="py-16 md:py-24 bg-muted/30">
+      <section className="py-16 md:py-24 bg-muted/30 relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-grid opacity-20 pointer-events-none" />
         <div className="container">
           <Breadcrumbs items={breadcrumbs} className="mb-6" />
           <div className="max-w-3xl mx-auto text-center">
@@ -90,7 +157,8 @@ const ServicesPage = () => {
       </section>
 
       {/* Popular */}
-      <Section size="lg">
+      <Section size="lg" className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-dots opacity-10 pointer-events-none" />
         <SectionHeader label="Most Popular" title="Popular Fostering" highlight="Categories" />
         {isLoading ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -105,6 +173,11 @@ const ServicesPage = () => {
                 {treatment.description && (
                   <p className="text-sm text-muted-foreground line-clamp-2 mb-2">{treatment.description}</p>
                 )}
+                {treatment.duration && (
+                  <div className="text-xs text-muted-foreground mb-1">
+                    <span className="font-medium">Duration:</span> {treatment.duration}
+                  </div>
+                )}
                 <span className="text-sm font-semibold text-primary flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   View Agencies <ArrowRight className="h-3 w-3" />
                 </span>
@@ -115,7 +188,8 @@ const ServicesPage = () => {
       </Section>
 
       {/* All */}
-      <section className="bg-foreground py-16 md:py-20">
+      <section className="bg-foreground py-16 md:py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-grid opacity-[0.03] pointer-events-none" />
         <div className="container">
           <div className="text-center mb-10">
             <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-2">Full Directory</p>
@@ -135,7 +209,8 @@ const ServicesPage = () => {
       </section>
 
       {/* By Region */}
-      <Section size="lg">
+      <Section size="lg" className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-dots opacity-10 pointer-events-none" />
         <SectionHeader label="By Region" title="Find Agencies" highlight="By Region" />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 max-w-4xl mx-auto">
           {states?.map((state) => (

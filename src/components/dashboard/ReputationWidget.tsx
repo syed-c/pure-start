@@ -39,16 +39,16 @@ export default function ReputationWidget({
         supabase
           .from('review_funnel_events')
           .select('event_type')
-          .eq('clinic_id', clinicId),
+          .eq('agency_id', clinicId),
         supabase
           .from('review_funnel_events')
           .select('event_type')
-          .eq('clinic_id', clinicId)
+          .eq('agency_id', clinicId)
           .gte('created_at', thirtyDaysAgo),
         supabase
           .from('review_funnel_events')
           .select('event_type')
-          .eq('clinic_id', clinicId)
+          .eq('agency_id', clinicId)
           .gte('created_at', sevenDaysAgo),
       ]);
 

@@ -17,7 +17,7 @@ export function InsuranceTab({ clinicId, isClaimed }: InsuranceTabProps) {
       const { data } = await supabase
         .from('clinic_insurances')
         .select('*, insurance:insurances(*)')
-        .eq('clinic_id', clinicId);
+        .eq('agency_id', clinicId);
       return data || [];
     },
     enabled: !!clinicId && isClaimed,

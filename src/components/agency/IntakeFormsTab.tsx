@@ -45,7 +45,7 @@ export default function IntakeFormsTab() {
     queryKey: ['agency-profile-forms', user?.id],
     queryFn: async () => {
       const { data } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -75,7 +75,7 @@ export default function IntakeFormsTab() {
       const { data } = await supabase
         .from('patient_form_submissions')
         .select('*, template:intake_form_templates!template_id(id, name, form_type, fields)')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .order('created_at', { ascending: false })
         .limit(50);
       return data || [];

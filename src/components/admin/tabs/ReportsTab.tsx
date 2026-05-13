@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { BarChart3, TrendingUp, Users, Building2, Heart, Calendar, FileText, Download } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { subDays, format } from 'date-fns';
+import { toast } from 'sonner';
 
 interface ReportData {
   title: string;
@@ -132,7 +133,7 @@ export default function ReportsTab() {
           <h2 className="text-2xl font-bold">Reports & Analytics</h2>
           <p className="text-muted-foreground">Platform-wide fostering metrics and insights</p>
         </div>
-        <Button variant="outline">
+        <Button variant="outline" onClick={() => toast("Export coming soon")}>
           <Download className="h-4 w-4 mr-2" />
           Export All
         </Button>
@@ -224,7 +225,7 @@ export default function ReportsTab() {
         {reportCards.map((report) => {
           const Icon = report.icon;
           return (
-            <Card key={report.title} className="p-6 hover:shadow-md transition-shadow cursor-pointer">
+            <Card key={report.title} className="p-6 hover:shadow-md transition-shadow cursor-pointer" onClick={() => toast("Report detail coming soon")}>
               <div className="flex items-start gap-4">
                 <div className={`p-3 rounded-lg bg-primary/5`}>
                   <Icon className={`h-6 w-6 ${report.color}`} />

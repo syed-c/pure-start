@@ -13,7 +13,7 @@ import {
 import { 
   Building2, Search, Shield, MapPin, Loader2, 
   Edit, X, Check, MoreHorizontal, ChevronLeft, 
-  ChevronRight, Trash2, Archive 
+  ChevronRight, Trash2, Archive, Eye 
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -273,6 +273,20 @@ export default function AgenciesTab() {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => toast("Edit coming soon")}
+                      >
+                        <Edit className="h-4 w-4 text-muted-foreground" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => toast("View coming soon")}
+                      >
+                        <Eye className="h-4 w-4 text-muted-foreground" />
+                      </Button>
                       <Button
                         size="sm"
                         variant="ghost"

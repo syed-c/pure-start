@@ -97,7 +97,7 @@ export default function ReputationSurveysTab({ clinicId, clinicName }: Reputatio
       const { data } = await supabase
         .from('review_funnel_events')
         .select('*')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .eq('event_type', 'thumbs_down')
         .order('created_at', { ascending: false })
         .limit(100);

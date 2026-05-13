@@ -68,7 +68,7 @@ export default function TopAgenciesTab() {
     ? `pinned_clinics_${selectedCity}_${selectedArea}` 
     : `pinned_clinics_${selectedCity}`;
 
-  // Fetch pinned clinics from global_settings
+  // Fetch pinned agencies from global_settings
   const { data: pinnedData } = useQuery({
     queryKey: ['pinned-clinics', settingsKey],
     queryFn: async () => {
@@ -85,7 +85,7 @@ export default function TopAgenciesTab() {
     enabled: !!selectedCity,
   });
 
-  // Fetch clinics for selected city/area
+  // Fetch agencies for selected city/area
   const { data: clinics, isLoading } = useQuery({
     queryKey: ['clinics-for-pinning', selectedCity, selectedArea],
     queryFn: async () => {
@@ -140,7 +140,7 @@ export default function TopAgenciesTab() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pinned-clinics', settingsKey] });
-      toast.success('Pinned clinics saved');
+      toast.success('Pinned agencies saved');
       setHasChanges(false);
     },
     onError: (e) => toast.error('Failed: ' + e.message),
@@ -196,7 +196,7 @@ export default function TopAgenciesTab() {
     const aPinIndex = localPins.indexOf(a.id);
     const bPinIndex = localPins.indexOf(b.id);
     
-    // Pinned clinics come first
+    // Pinned agencies come first
     if (aPinIndex >= 0 && bPinIndex < 0) return -1;
     if (bPinIndex >= 0 && aPinIndex < 0) return 1;
     if (aPinIndex >= 0 && bPinIndex >= 0) return aPinIndex - bPinIndex;
@@ -290,7 +290,7 @@ export default function TopAgenciesTab() {
                 {selectedArea && ` › ${areas?.find(a => a.id === selectedArea)?.name}`}
               </CardTitle>
               <CardDescription>
-                Pinned clinics will appear at the top of search results for this {selectedArea ? 'area' : 'city'}
+                Pinned agencies will appear at the top of search results for this {selectedArea ? 'area' : 'city'}
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">

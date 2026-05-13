@@ -57,7 +57,7 @@ export default function ReputationSetupTab({
       const { data, error } = await supabase
         .from('dentist_settings')
         .select('*')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .maybeSingle();
       if (error) throw error;
       return (data as any) || { funnel_enabled: true, funnel_threshold: 4 };
@@ -69,9 +69,9 @@ export default function ReputationSetupTab({
     queryKey: ['gmb-token-data', clinicId],
     queryFn: async () => {
       const { data } = await supabase
-        .from('clinic_oauth_tokens')
+        .from('agency_oauth_tokens')
         .select('gmb_data')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .maybeSingle();
       return data;
     },
@@ -99,7 +99,7 @@ export default function ReputationSetupTab({
       if (error) throw error;
       await createAuditLog({
         action: 'update_reputation_settings',
-        entityType: 'dentist_settings',
+        entityType: 'agency_settings',
         entityId: clinicId,
         newValues: updates,
       });
@@ -127,16 +127,16 @@ export default function ReputationSetupTab({
     setIsSavingUrl(true);
     try {
       const { data: existing } = await supabase
-        .from('clinic_oauth_tokens')
+        .from('agency_oauth_tokens')
         .select('gmb_data')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .maybeSingle();
 
       const existingData = (existing?.gmb_data as Record<string, unknown>) || {};
-      await supabase.from('clinic_oauth_tokens').upsert({
+      await supabase.from('agency_oauth_tokens').upsert({
         clinic_id: clinicId,
         gmb_data: { ...existingData, custom_review_url: customReviewUrl.trim() },
-      }, { onConflict: 'clinic_id' });
+      }, { onConflict: 'agency_id' });
 
       toast.success('Review link saved');
       queryClient.invalidateQueries({ queryKey: ['gmb-token-data'] });

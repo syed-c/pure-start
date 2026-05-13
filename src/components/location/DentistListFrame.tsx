@@ -157,9 +157,11 @@ export const AgencyListFrame = ({
               </span>}
 {profile.slug && <a itemProp="url" href={`https://www.foster-care.co.uk/agency/${profile.slug}/`}>View Profile</a>}
             </div>
-          </noscript>
-        
-          {/* Screen-reader / bot-accessible semantic list (visually hidden but in DOM) */}
+          ))}
+        </div>
+      </noscript>
+      
+      {/* Screen-reader / bot-accessible semantic list (visually hidden but in DOM) */}
           <div className="sr-only" role="list" aria-label={`${profiles.length} agencies in ${locationName}`}
             itemScope itemType="https://schema.org/ItemList">
             <meta itemProp="name" content={`Agencies in ${locationName}`} />

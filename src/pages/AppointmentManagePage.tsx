@@ -65,7 +65,7 @@ const AppointmentManagePage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [actionCompleted, setActionCompleted] = useState<"cancelled" | "rescheduled" | null>(null);
 
-  // Set noindex for appointment management pages - they should not be indexed
+  // Set noindex for enquiry management pages - they should not be indexed
   useEffect(() => {
     let meta = document.querySelector('meta[name="robots"]');
     if (!meta) {
@@ -121,7 +121,7 @@ const AppointmentManagePage = () => {
       setActionCompleted("cancelled");
       toast({
         title: "Appointment Cancelled",
-        description: "Your appointment has been successfully cancelled.",
+        description: "Your enquiry has been successfully cancelled.",
       });
     },
     onError: (error: Error) => {
@@ -158,7 +158,7 @@ const AppointmentManagePage = () => {
       setActionCompleted("rescheduled");
       toast({
         title: "Appointment Rescheduled",
-        description: "Your appointment has been rescheduled. The clinic will confirm your new time.",
+        description: "Your enquiry has been rescheduled. The agency will confirm your new time.",
       });
     },
     onError: (error: Error) => {
@@ -190,7 +190,7 @@ const AppointmentManagePage = () => {
             <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 animate-pulse">
               <CalendarIcon className="h-8 w-8 text-primary" />
             </div>
-            <p className="text-muted-foreground">Loading appointment details...</p>
+            <p className="text-muted-foreground">Loading enquiry details...</p>
           </div>
         </div>
       </PageLayout>
@@ -207,7 +207,7 @@ const AppointmentManagePage = () => {
             </div>
             <h1 className="text-2xl font-bold text-foreground mb-3">Appointment Not Found</h1>
             <p className="text-muted-foreground">
-              This link may have expired or the appointment doesn't exist. Please contact the clinic directly if you need assistance.
+              This link may have expired or the enquiry doesn't exist. Please contact the agency directly if you need assistance.
             </p>
           </div>
         </div>
@@ -253,8 +253,8 @@ const AppointmentManagePage = () => {
               </h2>
               <p className="text-muted-foreground">
                 {actionCompleted === "cancelled"
-                  ? "Your appointment has been successfully cancelled."
-                  : "Your new appointment request has been sent. The clinic will confirm your time."}
+                  ? "Your enquiry has been successfully cancelled."
+                  : "Your new enquiry request has been sent. The agency will confirm your time."}
               </p>
             </div>
           )}

@@ -45,7 +45,7 @@ const AREA_LOCAL_CONTEXT: Record<string, {
     character: 'premium urban landmark district',
     demographics: 'tourists, luxury residents and business travelers',
     landmarks: ['Burj Khalifa', 'Dubai Mall', 'Dubai Fountain'],
-    narrative: 'world-class premium dental',
+    narrative: 'world-class premium care',
     description: 'the heart of modern Dubai, home to the Burj Khalifa and some of the world\'s most iconic attractions',
   },
   'al-barsha': {
@@ -66,7 +66,7 @@ const AREA_LOCAL_CONTEXT: Record<string, {
     character: 'beachfront leisure and tourism strip',
     demographics: 'tourists, hotel residents and coastal lifestyle',
     landmarks: ['The Walk', 'Bluewaters Island', 'JBR Beach'],
-    narrative: 'resort-style dental experience',
+    narrative: 'resort-style wellness experience',
     description: 'a popular beachfront destination with The Walk promenade and stunning views of Ain Dubai',
   },
   'jlt': {
@@ -94,14 +94,14 @@ const AREA_LOCAL_CONTEXT: Record<string, {
     character: 'affordable multicultural township',
     demographics: 'budget-conscious residents and new immigrants',
     landmarks: ['Dragon Mart', 'Central Park'],
-    narrative: 'budget-friendly community dental',
+    narrative: 'budget-friendly community care',
     description: 'a diverse and affordable community known for Dragon Mart and multicultural living',
   },
   'difc': {
     character: 'premium financial free zone',
     demographics: 'executives, finance professionals and diplomats',
     landmarks: ['Gate Building', 'DIFC Art Nights', 'Gate Avenue'],
-    narrative: 'executive concierge dentistry',
+    narrative: 'executive concierge care',
     description: 'the Middle East\'s leading financial hub, housing global banks and premium lifestyle offerings',
   },
   'discovery-gardens': {
@@ -218,5 +218,5 @@ export function generateAreaIntro(
     ? ` near ${localContent.landmarks[0]}`
     : '';
 
-  return `${areaName} is ${localContent.description}. With ${clinicCount}+ fostering agencys serving ${localContent.demographics}${landmarkMention}, finding the right dentist for your needs has never been easier. Whether you need a routine check-up or specialized treatment, ${areaName}'s dental professionals understand the unique needs of this ${localContent.character} community.`;
+  return `${areaName} is ${localContent.description}. With ${clinicCount}+ fostering agencies serving ${localContent.demographics}${landmarkMention}, finding the right care provider for your needs has never been easier. Whether you need routine support or specialized services, ${areaName}'s care professionals understand the unique needs of this ${localContent.character} community.`;
 }

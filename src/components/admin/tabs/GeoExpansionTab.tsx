@@ -148,8 +148,8 @@ export default function GeoExpansionTab() {
               <div>
                 <h3 className="font-semibold text-lg">Database Population</h3>
                 <p className="text-sm text-muted-foreground max-w-md">
-                  Populate all 51 US states and 1,500+ major cities into the master database. 
-                  This enables agencies to search and list their practice in any US city.
+                  Populate all UK nations and regions with major cities into the master database.
+                  This enables agencies to search and list their practice in any UK city.
                 </p>
                 <div className="flex gap-4 mt-3 text-sm">
                   <span className="flex items-center gap-1">
@@ -184,7 +184,7 @@ export default function GeoExpansionTab() {
               ) : (
                 <>
                   <Database className="h-4 w-4 mr-2" />
-                  Seed All US Locations
+                  Seed All UK Locations
                 </>
               )}
             </Button>
@@ -674,8 +674,8 @@ export default function GeoExpansionTab() {
                   <ul className="text-sm text-amber-700 space-y-1">
                     <li>• "near me" / "nearby"</li>
                     <li>• "best ... in"</li>
-                    <li>• "top ... dentist"</li>
-                    <li>• "#1 dentist"</li>
+                    <li>• "top ... agency"</li>
+                    <li>• "#1 fostering agency"</li>
                     <li>• Fake statistics</li>
                   </ul>
                 </div>

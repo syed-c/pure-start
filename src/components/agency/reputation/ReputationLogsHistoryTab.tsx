@@ -48,7 +48,7 @@ export default function ReputationLogsHistoryTab({ clinicId }: ReputationLogsHis
       const { data } = await supabase
         .from('review_requests')
         .select('*')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .order('created_at', { ascending: false })
         .limit(200);
       return data || [];
@@ -62,7 +62,7 @@ export default function ReputationLogsHistoryTab({ clinicId }: ReputationLogsHis
       const { data } = await supabase
         .from('review_funnel_events')
         .select('*')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .order('created_at', { ascending: false })
         .limit(500);
       return data || [];
@@ -76,7 +76,7 @@ export default function ReputationLogsHistoryTab({ clinicId }: ReputationLogsHis
       const { data } = await supabase
         .from('google_reviews')
         .select('*')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .order('review_time', { ascending: false })
         .limit(100);
       return data || [];
@@ -91,7 +91,7 @@ export default function ReputationLogsHistoryTab({ clinicId }: ReputationLogsHis
         .from('audit_logs')
         .select('*')
         .eq('entity_id', clinicId)
-        .or(`entity_type.eq.clinic,entity_type.eq.dentist_settings`)
+        .or(`entity_type.eq.clinic,entity_type.eq.agency_settings`)
         .order('created_at', { ascending: false })
         .limit(100);
       return data || [];

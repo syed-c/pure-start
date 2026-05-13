@@ -153,9 +153,9 @@ const OptimizedContent = ({
   const getDefaultHeading = () => {
     switch (variant) {
       case "state":
-        return `About Dental Care in ${locationName}`;
+        return `About Fostering in ${locationName}`;
       case "city":
-        return `Dental Services in ${locationName}, ${stateName}`;
+        return `Fostering Services in ${locationName}, ${stateName}`;
       case "service-location":
         return `${treatmentName} Services in ${locationName}`;
       case "service":
@@ -358,7 +358,7 @@ const CityFallbackContent = ({
     <div className="bg-card border border-border rounded-3xl p-8 md:p-12">
       <div className="flex items-center gap-3 mb-6">
         <Sparkles className="h-6 w-6 text-primary" />
-        <span className="text-xs font-bold text-primary uppercase tracking-widest">{cityName} Dental Guide</span>
+        <span className="text-xs font-bold text-primary uppercase tracking-widest">{cityName} Fostering Guide</span>
       </div>
       
        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
@@ -405,7 +405,7 @@ const CityFallbackContent = ({
     {popularTreatments.length > 0 && (
       <div className="bg-card border border-border rounded-3xl p-8 md:p-10">
         <h2 className="text-xl md:text-2xl font-bold text-foreground mb-4">
-          Dental Treatments in {cityName}
+          Fostering Types in {cityName}
         </h2>
         <p className="text-muted-foreground mb-4">
           Find specialists for specific treatments in {cityName}, {stateAbbr}:

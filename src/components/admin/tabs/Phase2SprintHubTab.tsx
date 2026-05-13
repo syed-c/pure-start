@@ -32,8 +32,9 @@ const SPRINT_DEFINITIONS = {
     targetWordCount: 3500,
     maxWordCount: 5000,
     priority: [
-      'fostering-placements', 'teeth-whitening', 'invisalign', 'root-canal', 'dental-crowns',
-      'veneers', 'specialist-fosteringry', 'emergency-dental-care', 'dentures', 'dental-bridges'
+      'fostering-placements', 'short-term-fostering', 'long-term-fostering', 'emergency-fostering',
+      'therapeutic-fostering', 'respite-fostering', 'parent-child-fostering', 'teenage-fostering',
+      'sibling-fostering', 'disability-fostering'
     ],
     template: 'service',
   },
@@ -44,8 +45,8 @@ const SPRINT_DEFINITIONS = {
     targetWordCount: 2500,
     maxWordCount: 3500,
     priority: [
-      'los-angeles', 'san-francisco', 'san-diego', 'boston', 'san-jose',
-      'newark', 'hartford', 'sacramento', 'oakland', 'fresno'
+      'london', 'manchester', 'birmingham', 'leeds', 'liverpool',
+      'bristol', 'sheffield', 'glasgow', 'edinburgh', 'cardiff'
     ],
     template: 'city',
   },

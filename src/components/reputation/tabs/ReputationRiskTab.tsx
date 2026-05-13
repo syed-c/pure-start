@@ -32,7 +32,7 @@ export default function ReputationRiskTab({ clinicId, isAdmin }: Props) {
         .from('google_reviews')
         .select('rating, review_time, reply_status, created_at, text_content, sentiment_label')
         .order('review_time', { ascending: false });
-      if (clinicId) query = query.eq('clinic_id', clinicId);
+      if (clinicId) query = query.eq('agency_id', clinicId);
       const { data, error } = await query.limit(500);
       if (error) throw error;
       return data || [];
@@ -47,7 +47,7 @@ export default function ReputationRiskTab({ clinicId, isAdmin }: Props) {
         .from('review_funnel_events')
         .select('event_type, created_at')
         .order('created_at', { ascending: false });
-      if (clinicId) query = query.eq('clinic_id', clinicId);
+      if (clinicId) query = query.eq('agency_id', clinicId);
       const { data, error } = await query.limit(500);
       if (error) throw error;
       return data || [];

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,13 +10,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Users, Search, Shield, Mail, Loader2, Building2, Heart, GraduationCap, UserPlus, Building, Eye } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// Create service role client to bypass RLS
-const serviceClient = createClient(
-  'https://vcvvtklbyvdbysfdbnfp.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZjdnZ0a2xieXZkYnlzZmRibmZwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MTU3Mzg3NCwiZXhwIjoyMDc3MTQ5ODc0fQ.KV1k56566JlPRlDHs613vsCqSyibpaLG4oY_hTt39fs',
-  { auth: { persistSession: false } }
-);
-
 export default function UsersManagementTab() {
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState<string | null>(null);
@@ -24,7 +17,7 @@ export default function UsersManagementTab() {
   const { data: users, isLoading } = useQuery({
     queryKey: ['admin-users', search, roleFilter],
     queryFn: async () => {
-      let query = serviceClient
+      let query = supabase
         .from('user_profiles')
         .select('id, email, full_name, role, status, organisation_id, created_at')
         .order('created_at', { ascending: false });
@@ -50,7 +43,7 @@ export default function UsersManagementTab() {
       const counts: Record<string, number> = {};
       
       for (const role of roles) {
-        const { count } = await serviceClient
+        const { count } = await supabase
           .from('user_profiles')
           .select('*', { count: 'exact', head: true })
           .eq('role', role);

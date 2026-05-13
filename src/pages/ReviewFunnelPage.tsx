@@ -61,9 +61,9 @@ export default function ReviewFunnelPage() {
     queryFn: async () => {
       console.log('[ReviewFunnel] Fetching oauth data for agency:', agency!.id);
       const { data, error } = await supabase
-        .from('clinic_oauth_tokens')
+        .from('agency_oauth_tokens')
         .select('gmb_data')
-        .eq('clinic_id', agency!.id)
+        .eq('agency_id', agency!.id)
         .maybeSingle();
       if (error) {
         console.error('[ReviewFunnel] Error fetching oauth data:', error);
@@ -114,17 +114,13 @@ export default function ReviewFunnelPage() {
     // Priority 2: Google Place ID to construct review URL
 if (agency?.google_place_id && agency.google_place_id.trim()) {
       const url = `https://search.google.com/local/writereview?placeid=${agency.google_place_id.trim()}`;
-      }
-        clinic_id: agency.id,
-      });
-      const patient_name: patientName || 'Anonymous',
-        clinic_id: agency.id,
-        action,
-        user_agent: navigator.userAgent,
-        metadata: { source, slug: clinicSlug || clinicId },
-      } as any);
-    },
-  });
+      console.log('[ReviewFunnel] Using Google Place ID URL:', url);
+      return url;
+    }
+    
+    console.log('[ReviewFunnel] No valid review URL found');
+    return null;
+  };
 
   // Record funnel event
   const recordEvent = useMutation({
@@ -143,7 +139,7 @@ if (agency?.google_place_id && agency.google_place_id.trim()) {
       if (event.event_type === 'thumbs_down' && event.rating) {
         await supabase.from('internal_reviews').insert({
           clinic_id: clinic.id,
-          patient_name: patientName || 'Anonymous',
+          patient_name: fostererName || 'Anonymous',
           rating: event.rating,
           comment: event.comment || null,
         } as any);
@@ -172,8 +168,8 @@ if (agency?.google_place_id && agency.google_place_id.trim()) {
 
   const handleThumbsUp = async () => {
     if (!clinic) {
-      console.error('[ReviewFunnel] Cannot proceed - clinic data not loaded');
-      toast.error('Please wait while we load clinic information...');
+      console.error('[ReviewFunnel] Cannot proceed - agency data not loaded');
+      toast.error('Please wait while we load agency information...');
       return;
     }
     
@@ -213,11 +209,13 @@ if (!googleReviewUrl && agency.google_place_id) {
 {agencyLogo ? (
               <img src={agencyLogo} alt={agencyName} className="h-10 w-10 rounded-xl object-cover shadow-md" />
             ) : (
-              <h1 className="text-sm font-bold text-foreground leading-tight">{agencyName}</h1>
-            <p className="text-[10px] text-muted-foreground flex items-center gap-1">
-              <Shield className="h-3 w-3" /> Verified Practice
-            </p>
-          </div>
+              <>
+                <h1 className="text-sm font-bold text-foreground leading-tight">{agencyName}</h1>
+                <p className="text-[10px] text-muted-foreground flex items-center gap-1">
+                  <Shield className="h-3 w-3" /> Verified Practice
+                </p>
+              </>
+            )}
         </div>
       </header>
 
@@ -331,8 +329,8 @@ if (!googleReviewUrl && agency.google_place_id) {
                   <Label className="text-sm font-medium mb-1.5 block">Your Name (optional)</Label>
                   <Input
                     placeholder="Enter your name"
-                    value={patientName}
-                    onChange={(e) => setPatientName(e.target.value)}
+                    value={fostererName}
+                    onChange={(e) => setFostererName(e.target.value)}
                     className="rounded-xl"
                   />
                 </div>
@@ -398,4 +396,5 @@ if (!googleReviewUrl && agency.google_place_id) {
       </footer>
     </div>
   );
+}
 }

@@ -126,7 +126,7 @@ export function InsuranceInternalLinks({
         )}
 
         {showServices && filteredServices.length > 0 && (
-          <nav aria-label="Dental services">
+          <nav aria-label="Agency services">
             <h3 className="text-sm font-bold text-primary uppercase tracking-wider mb-3">
               Popular Services
             </h3>

@@ -104,7 +104,7 @@ export default function PatientsTab() {
     queryKey: ['agency-profile-patients', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -120,9 +120,9 @@ export default function PatientsTab() {
     queryKey: ['clinic-patients', clinic?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('patients')
+        .from('foster_carers')
         .select('*')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .or('is_deleted_by_dentist.is.null,is_deleted_by_dentist.eq.false')
         .order('last_visit_at', { ascending: false, nullsFirst: false });
       if (error) throw error;
@@ -131,14 +131,14 @@ export default function PatientsTab() {
     enabled: !!clinic?.id,
   });
 
-  // Add patient mutation
+  // Add applicant mutation
   const addPatient = useMutation({
     mutationFn: async (patient: typeof newPatient) => {
-      if (!clinic?.id) throw new Error('No clinic found');
+      if (!clinic?.id) throw new Error('No agency found');
       if (!patient.name.trim()) throw new Error('Name is required');
       if (!patient.phone.trim()) throw new Error('Phone is required');
 
-      const { error } = await supabase.from('patients').insert({
+      const { error } = await supabase.from('foster_carers').insert({
         clinic_id: clinic.id,
         name: patient.name.trim(),
         phone: patient.phone.trim(),
@@ -170,12 +170,12 @@ export default function PatientsTab() {
     onError: (e: any) => toast.error(e.message || 'Failed to add'),
   });
 
-  // Update patient mutation
+  // Update applicant mutation
   const updatePatient = useMutation({
     mutationFn: async (patient: Partial<Patient> & { id: string }) => {
       const { documents, ...updateData } = patient;
       const { error } = await supabase
-        .from('patients')
+        .from('foster_carers')
         .update({
           ...updateData,
           updated_at: new Date().toISOString(),
@@ -192,11 +192,11 @@ export default function PatientsTab() {
     onError: (e: any) => toast.error(e.message || 'Failed to update'),
   });
 
-  // Soft delete patient mutation (hides from dentist but keeps in DB for super admin)
+  // Soft delete applicant mutation (hides from foster carer but keeps in DB for super admin)
   const softDeletePatient = useMutation({
     mutationFn: async (patientId: string) => {
       const { error } = await supabase
-        .from('patients')
+        .from('foster_carers')
         .update({ 
           is_deleted_by_dentist: true, 
           deleted_at: new Date().toISOString() 
@@ -244,7 +244,7 @@ export default function PatientsTab() {
       }
 
       if (patientsToAdd.length === 0) throw new Error('No valid patients');
-      const { error } = await supabase.from('patients').insert(patientsToAdd);
+      const { error } = await supabase.from('foster_carers').insert(patientsToAdd);
       if (error) throw error;
       return patientsToAdd.length;
     },

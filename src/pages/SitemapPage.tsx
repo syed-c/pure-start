@@ -44,7 +44,7 @@ const SitemapPage = () => {
   const { data: citiesWithAgencies } = useQuery({
     queryKey: ['cities-with-agencies-count'],
     queryFn: async () => {
-      const { data } = await supabase.from('clinics').select('city_id').eq('is_active', true).eq('is_duplicate', false);
+      const { data } = await supabase.from('agencies').select('city_id').eq('is_active', true).eq('is_duplicate', false);
       return new Set(data?.map(c => c.city_id).filter(Boolean)).size;
     }
   });

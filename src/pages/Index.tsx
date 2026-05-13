@@ -195,6 +195,12 @@ const Index = () => {
             </motion.div>
 
 {/* Stats */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto"
+            >
               {[
                 { value: counts?.agencies?.toLocaleString() || "500+", label: "Agencies" },
                 { value: counts?.cities?.toLocaleString() || "100+", label: "Cities" },
@@ -562,7 +568,7 @@ const Index = () => {
           FINAL CTA
           ============================== */}
       <section className="py-24 md:py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pointer-events-none" />
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-1/4 w-[500px] h-[300px] bg-teal-500/15 rounded-full blur-[150px]" />
           <div className="absolute bottom-0 right-1/4 w-[400px] h-[250px] bg-emerald-500/10 rounded-full blur-[120px]" />
@@ -595,7 +601,7 @@ const Index = () => {
                     Find an Agency <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                <Button asChild size="lg" variant="outline" className="rounded-full font-semibold px-10 h-12 text-base border-2 border-white/30 text-white hover:bg-white/10">
+                <Button asChild size="lg" variant="outline" className="rounded-full font-semibold px-10 h-12 text-base border-2 border-white/30 bg-transparent text-white hover:bg-white/10">
                   <Link to="/list-your-agency">
                     <Building2 className="mr-2 h-5 w-5" /> List Your Agency
                   </Link>

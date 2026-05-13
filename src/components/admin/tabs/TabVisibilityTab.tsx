@@ -173,7 +173,7 @@ export default function TabVisibilityTab() {
         .upsert({
           key: 'tab_visibility',
           value: visibility as any,
-          description: 'Tab visibility settings for admin and dentist dashboards',
+          description: 'Tab visibility settings for admin and foster carer dashboards',
           updated_at: new Date().toISOString(),
         }, { onConflict: 'key' });
 

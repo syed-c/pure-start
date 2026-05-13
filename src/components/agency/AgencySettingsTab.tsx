@@ -59,12 +59,12 @@ export default function AgencySettingsTab() {
   const isGoogleUser = user?.app_metadata?.provider === 'google' || 
     (user?.app_metadata?.providers as string[] | undefined)?.includes('google');
 
-  // Fetch clinic (without sensitive gmb fields that are now in clinic_oauth_tokens)
+  // Fetch agency (without sensitive gmb fields that are now in clinic_oauth_tokens)
   const { data: clinic, isLoading: clinicLoading } = useQuery({
     queryKey: ['agency-profile-settings', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name, slug, google_place_id, website, gmb_connected, verification_status')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -75,14 +75,14 @@ export default function AgencySettingsTab() {
     enabled: !!user?.id,
   });
 
-  // Fetch oauth tokens separately (only accessible to clinic owner)
+  // Fetch oauth tokens separately (only accessible to agency owner)
   const { data: oauthTokens } = useQuery({
     queryKey: ['clinic-oauth-tokens', clinic?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinic_oauth_tokens')
+        .from('agency_oauth_tokens')
         .select('gmb_connected, gmb_last_sync_at, gmb_data')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .single();
       if (error && error.code !== 'PGRST116') throw error;
       return data;
@@ -90,7 +90,7 @@ export default function AgencySettingsTab() {
     enabled: !!clinic?.id,
   });
 
-  // Social links state (would be stored in clinic or profile)
+  // Social links state (would be stored in agency or profile)
   const [socialLinks, setSocialLinks] = useState({
     instagram: '',
     facebook: '',
@@ -142,13 +142,13 @@ export default function AgencySettingsTab() {
     try {
       // Delete oauth tokens
       await supabase
-        .from('clinic_oauth_tokens')
+        .from('agency_oauth_tokens')
         .delete()
-        .eq('clinic_id', clinic.id);
+        .eq('agency_id', clinic.id);
 
-      // Update clinic to clear google_place_id and gmb_connected
+      // Update agency to clear google_place_id and gmb_connected
       const { error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .update({
           google_place_id: null,
           gmb_connected: false,
@@ -187,7 +187,7 @@ export default function AgencySettingsTab() {
         currentSession.user.id
       );
 
-      // Mark as relink flow so /gmb-select updates the existing clinic instead of creating a new one
+      // Mark as relink flow so /gmb-select updates the existing agency instead of creating a new one
       localStorage.setItem('gmb_relink_flow', 'true');
       // Mark that we need to restore the original user after GMB OAuth
       localStorage.setItem('gmb_restore_session', 'true');

@@ -28,9 +28,9 @@ export default function ReputationFunnelTab({ clinicId, isAdmin }: Props) {
     queryFn: async () => {
       let query = supabase
         .from('review_funnel_events')
-        .select('*, clinic:clinics(id, name)')
+        .select('*, agency:agencies(id, name)')
         .order('created_at', { ascending: false });
-      if (clinicId) query = query.eq('clinic_id', clinicId);
+      if (clinicId) query = query.eq('agency_id', clinicId);
       const { data, error } = await query;
       if (error) throw error;
       return data || [];
@@ -45,7 +45,7 @@ export default function ReputationFunnelTab({ clinicId, isAdmin }: Props) {
         const { data } = await supabase
           .from('dentist_settings')
           .select('funnel_enabled, funnel_threshold')
-          .eq('clinic_id', clinicId)
+          .eq('agency_id', clinicId)
           .maybeSingle();
         return data || { funnel_enabled: true, funnel_threshold: 4 };
       }
@@ -108,7 +108,7 @@ export default function ReputationFunnelTab({ clinicId, isAdmin }: Props) {
         const { error } = await supabase
           .from('dentist_settings')
           .upsert({
-            clinic_id: clinicId,
+            agency_id: clinicId,
             ...newSettings,
             updated_at: new Date().toISOString(),
           });

@@ -42,34 +42,34 @@ export default function TodaySnapshot({ clinicId }: TodaySnapshotProps) {
         supabase
           .from('appointments')
           .select('id, status')
-          .eq('clinic_id', clinicId)
+          .eq('agency_id', clinicId)
           .gte('created_at', todayStart)
           .lte('created_at', todayEnd),
         // Today's review funnel events
         supabase
           .from('review_funnel_events')
           .select('id, event_type')
-          .eq('clinic_id', clinicId)
+          .eq('agency_id', clinicId)
           .gte('created_at', todayStart)
           .lte('created_at', todayEnd),
         // Today's messages
         supabase
-          .from('clinic_messages')
+          .from('messages')
           .select('id, status')
-          .eq('clinic_id', clinicId)
+          .eq('agency_id', clinicId)
           .gte('created_at', todayStart)
           .lte('created_at', todayEnd),
         // Clinic basic info
         supabase
-          .from('clinics')
+          .from('agencies')
           .select('gmb_connected, rating, review_count')
           .eq('id', clinicId)
           .single(),
         // Clinic OAuth tokens (for gmb_last_sync_at)
         supabase
-          .from('clinic_oauth_tokens')
+          .from('agency_oauth_tokens')
           .select('gmb_connected, gmb_last_sync_at')
-          .eq('clinic_id', clinicId)
+          .eq('agency_id', clinicId)
           .single(),
       ]);
 

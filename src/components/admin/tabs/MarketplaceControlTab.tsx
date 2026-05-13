@@ -76,7 +76,7 @@ interface RankingWeight {
 const DEFAULT_RANKING_WEIGHTS: RankingWeight[] = [
   { key: 'insurance_match', label: 'Insurance Match', description: 'Boost for matching user insurance', weight: 30, maxWeight: 50 },
   { key: 'availability', label: 'Availability Score', description: 'Earlier available slots rank higher', weight: 20, maxWeight: 40 },
-  { key: 'distance', label: 'Distance', description: 'Closer clinics rank higher', weight: 15, maxWeight: 30 },
+  { key: 'distance', label: 'Distance', description: 'Closer agencies rank higher', weight: 15, maxWeight: 30 },
   { key: 'reviews', label: 'Review Score', description: 'Higher ratings boost ranking', weight: 20, maxWeight: 40 },
   { key: 'trust', label: 'Trust Score', description: 'Verified profiles, responsiveness', weight: 10, maxWeight: 20 },
   { key: 'admin_boost', label: 'Admin Boost', description: 'Manual ranking adjustment', weight: 5, maxWeight: 50 },
@@ -89,7 +89,7 @@ export default function MarketplaceControlTab() {
   const [searchQuery, setSearchQuery] = useState('');
   const [rankingWeights, setRankingWeights] = useState<RankingWeight[]>(DEFAULT_RANKING_WEIGHTS);
 
-  // Helper to fetch ALL clinics without limit
+  // Helper to fetch ALL agencies without limit
   const fetchAllMarketplaceClinics = async () => {
     const allClinics: any[] = [];
     let from = 0;
@@ -129,7 +129,7 @@ export default function MarketplaceControlTab() {
     }));
   };
 
-  // Fetch ALL clinics with booking settings - NO LIMIT
+  // Fetch ALL agencies with booking settings - NO LIMIT
   const { data: clinics, isLoading: clinicsLoading } = useQuery({
     queryKey: ['marketplace-clinics-unlimited'],
     queryFn: fetchAllMarketplaceClinics,
@@ -188,20 +188,20 @@ export default function MarketplaceControlTab() {
       const { data: existing } = await supabase
         .from('dentist_settings')
         .select('id')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .single();
 
       if (existing) {
         const { error } = await supabase
           .from('dentist_settings')
           .update({ booking_enabled: enabled })
-          .eq('clinic_id', clinicId);
+          .eq('agency_id', clinicId);
 
         if (error) throw error;
       } else {
         const { error } = await supabase
           .from('dentist_settings')
-          .insert({ clinic_id: clinicId, booking_enabled: enabled });
+          .insert({ agency_id: clinicId, booking_enabled: enabled });
 
         if (error) throw error;
       }
@@ -333,7 +333,7 @@ export default function MarketplaceControlTab() {
               </div>
               <div>
                 <p className="text-2xl font-bold">{clinics?.length || 0}</p>
-                <p className="text-xs text-muted-foreground">Total Clinics</p>
+                <p className="text-xs text-muted-foreground">Total Agencies</p>
               </div>
             </div>
           </CardContent>
@@ -440,7 +440,7 @@ export default function MarketplaceControlTab() {
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search clinics..."
+                    placeholder="Search agencies..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-9"
@@ -525,7 +525,7 @@ export default function MarketplaceControlTab() {
                 Manual Ranking Overrides
               </CardTitle>
               <CardDescription>
-                Pin clinics to top positions or apply permanent boosts
+                Pin agencies to top positions or apply permanent boosts
               </CardDescription>
             </CardHeader>
             <CardContent>

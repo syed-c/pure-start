@@ -29,10 +29,10 @@ export default function ReputationOverviewTab({ clinicId, isAdmin }: Props) {
     queryFn: async () => {
       let query = supabase
         .from('google_reviews')
-        .select('*, clinic:clinics(id, name)')
+        .select('*, agency:agencies(id, name)')
         .order('review_time', { ascending: false })
         .limit(500);
-      if (clinicId) query = query.eq('clinic_id', clinicId);
+      if (clinicId) query = query.eq('agency_id', clinicId);
       const { data, error } = await query;
       if (error) throw error;
       return data || [];
@@ -45,10 +45,10 @@ export default function ReputationOverviewTab({ clinicId, isAdmin }: Props) {
     queryFn: async () => {
       let query = supabase
         .from('internal_reviews')
-        .select('*, clinic:clinics(id, name)')
+        .select('*, agency:agencies(id, name)')
         .order('created_at', { ascending: false })
         .limit(500);
-      if (clinicId) query = query.eq('clinic_id', clinicId);
+      if (clinicId) query = query.eq('agency_id', clinicId);
       const { data, error } = await query;
       if (error) throw error;
       return data || [];
@@ -63,7 +63,7 @@ export default function ReputationOverviewTab({ clinicId, isAdmin }: Props) {
         .from('review_funnel_events')
         .select('*')
         .order('created_at', { ascending: false })
-      if (clinicId) query = query.eq('clinic_id', clinicId);
+      if (clinicId) query = query.eq('agency_id', clinicId);
       const { data, error } = await query;
       if (error) throw error;
       return data || [];

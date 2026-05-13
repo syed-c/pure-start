@@ -38,7 +38,7 @@ interface Clinic {
   city?: { name: string; state?: { name: string } } | null;
 }
 
-// Helper to fetch all clinics using pagination
+// Helper to fetch all agencies using pagination
 async function fetchAllClinics(): Promise<Clinic[]> {
   const allClinics: Clinic[] = [];
   let from = 0;
@@ -84,10 +84,10 @@ export default function PromotionsTab() {
     queryKey: ['admin-promotions'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinic_subscriptions')
+        .from('agency_subscriptions')
         .select(`
           *,
-          clinic:clinics(id, name, slug),
+          agency:agencies(id, name, slug),
           plan:subscription_plans(id, name, slug, price_monthly)
         `)
         .not('expires_at', 'is', null)
@@ -98,8 +98,8 @@ export default function PromotionsTab() {
     },
   });
 
-  // Fetch ALL clinics for selection - NO LIMIT
-  const { data: clinics = [], isLoading: clinicsLoading } = useQuery({
+  // Fetch ALL agencies for selection - NO LIMIT
+  const { data: agencies = [], isLoading: clinicsLoading } = useQuery({
     queryKey: ['all-clinics-promo-unlimited'],
     queryFn: fetchAllClinics,
   });
@@ -117,7 +117,7 @@ export default function PromotionsTab() {
     },
   });
 
-  // Filter clinics based on search
+  // Filter agencies based on search
   const filteredClinics = useMemo(() => {
     if (!clinicSearch.trim()) return clinics;
     const searchLower = clinicSearch.toLowerCase();
@@ -139,7 +139,7 @@ export default function PromotionsTab() {
     );
   }, [promotions, tableSearch]);
 
-  // Get selected clinic name for display
+  // Get selected agency name for display
   const selectedClinic = useMemo(() => {
     return clinics.find(c => c.id === form.clinic_id);
   }, [clinics, form.clinic_id]);
@@ -163,14 +163,14 @@ export default function PromotionsTab() {
       }
 
       const { data: existing } = await supabase
-        .from('clinic_subscriptions')
+        .from('agency_subscriptions')
         .select('id, plan_id')
-        .eq('clinic_id', data.clinic_id)
+        .eq('agency_id', data.clinic_id)
         .maybeSingle();
 
       if (existing) {
         const { error } = await supabase
-          .from('clinic_subscriptions')
+          .from('agency_subscriptions')
           .update({ 
             plan_id: data.plan_id, 
             status: 'active',
@@ -179,13 +179,13 @@ export default function PromotionsTab() {
             stripe_subscription_id: 'promotion',
             updated_at: new Date().toISOString()
           })
-          .eq('clinic_id', data.clinic_id);
+          .eq('agency_id', data.clinic_id);
         if (error) throw error;
       } else {
         const { error } = await supabase
-          .from('clinic_subscriptions')
+          .from('agency_subscriptions')
           .insert({ 
-            clinic_id: data.clinic_id, 
+            agency_id: data.agency_id, 
             plan_id: data.plan_id,
             status: 'active',
             starts_at: startsAt.toISOString(),
@@ -217,7 +217,7 @@ export default function PromotionsTab() {
   const revokePromotion = useMutation({
     mutationFn: async (subscriptionId: string) => {
       const { error } = await supabase
-        .from('clinic_subscriptions')
+        .from('agency_subscriptions')
         .update({ 
           status: 'expired',
           expires_at: new Date().toISOString(),
@@ -290,17 +290,17 @@ export default function PromotionsTab() {
                   Grant Free Plan Access
                 </DialogTitle>
                 <DialogDescription>
-                  Select from {clinics.length.toLocaleString()} clinics and grant promotional access
+                  Select from {clinics.length.toLocaleString()} agencies and grant promotional access
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-5 py-4">
                 {/* Clinic Selection with Search */}
                 <div className="space-y-3">
-                  <Label className="text-sm font-bold text-foreground">Select Clinic</Label>
+                  <Label className="text-sm font-bold text-foreground">Select Agency</Label>
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
-                      placeholder="Search by clinic name, city, or state..."
+                      placeholder="Search by agency name, city, or state..."
                       value={clinicSearch}
                       onChange={(e) => setClinicSearch(e.target.value)}
                       className="pl-10 h-11 border-2 focus:border-purple-500"
@@ -312,7 +312,7 @@ export default function PromotionsTab() {
                         <div className="text-center py-6 text-muted-foreground">Loading clinics...</div>
                       ) : filteredClinics.length === 0 ? (
                         <div className="text-center py-6 text-muted-foreground">
-                          {clinicSearch ? 'No clinics found matching your search' : 'No clinics available'}
+                          {clinicSearch ? 'No agencies found matching your search' : 'No agencies available'}
                         </div>
                       ) : (
                         filteredClinics.map((c) => (
@@ -349,7 +349,7 @@ export default function PromotionsTab() {
                     <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-xl p-3 flex items-center gap-3">
                       <Building2 className="h-5 w-5 text-purple-600" />
                       <div>
-                        <p className="text-xs text-purple-600 font-medium">Selected Clinic</p>
+                        <p className="text-xs text-purple-600 font-medium">Selected Agency</p>
                         <p className="font-bold text-purple-800">{selectedClinic.name}</p>
                       </div>
                     </div>
@@ -444,7 +444,7 @@ export default function PromotionsTab() {
                     <Textarea
                       value={form.reason}
                       onChange={(e) => setForm({ ...form, reason: e.target.value })}
-                      placeholder="e.g., Partner clinic, VIP onboarding..."
+                      placeholder="e.g., Partner agency, VIP onboarding..."
                       rows={2}
                       className="resize-none border-2"
                     />
@@ -528,7 +528,7 @@ export default function PromotionsTab() {
             <div className="relative w-80">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <Input
-                placeholder="Search by clinic or plan..."
+                placeholder="Search by agency or plan..."
                 value={tableSearch}
                 onChange={(e) => setTableSearch(e.target.value)}
                 className="pl-10 border-2 border-slate-200 focus:border-purple-500"

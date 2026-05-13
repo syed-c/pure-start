@@ -21,7 +21,7 @@ export function useAdminTreatments() {
     queryKey: ['admin-treatments'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('treatments')
+        .from('fostering_categories')
         .select('*')
         .order('display_order')
         .order('name');
@@ -35,7 +35,7 @@ export function useCreateTreatment() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (treatment: Record<string, unknown>) => {
-      const { data, error } = await supabase.from('treatments').insert([treatment as never]).select().single();
+      const { data, error } = await supabase.from('fostering_categories').insert([treatment as never]).select().single();
       if (error) throw error;
       await createAuditLog({ action: 'CREATE', entityType: 'treatment', entityId: data.id, newValues: treatment });
       return data;
@@ -52,8 +52,8 @@ export function useUpdateTreatment() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: Partial<Treatment> }) => {
-      const { data: old } = await supabase.from('treatments').select('*').eq('id', id).single();
-      const { error } = await supabase.from('treatments').update(updates as any).eq('id', id);
+      const { data: old } = await supabase.from('fostering_categories').select('*').eq('id', id).single();
+      const { error } = await supabase.from('fostering_categories').update(updates as any).eq('id', id);
       if (error) throw error;
       await createAuditLog({ action: 'UPDATE', entityType: 'treatment', entityId: id, oldValues: old, newValues: updates });
     },
@@ -69,8 +69,8 @@ export function useDeleteTreatment() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      const { data: old } = await supabase.from('treatments').select('*').eq('id', id).single();
-      const { error } = await supabase.from('treatments').delete().eq('id', id);
+      const { data: old } = await supabase.from('fostering_categories').select('*').eq('id', id).single();
+      const { error } = await supabase.from('fostering_categories').delete().eq('id', id);
       if (error) throw error;
       await createAuditLog({ action: 'DELETE', entityType: 'treatment', entityId: id, oldValues: old });
     },

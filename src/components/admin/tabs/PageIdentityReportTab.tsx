@@ -116,7 +116,7 @@ export default function PageIdentityReportTab() {
           },
           apply_mode: 'auto_apply',
           quality_threshold: 50,
-          custom_prompt: 'Rewrite to be completely unique, human-sounding, locally relevant to UAE/Dubai. Remove AI patterns, add specific details, pricing ranges in AED, neighborhood references, and practical patient guidance.',
+          custom_prompt: 'Rewrite to be completely unique, human-sounding, locally relevant to UAE/Dubai. Remove AI patterns, add specific details, pricing ranges in AED, neighborhood references, and practical applicant guidance.',
         },
       });
       if (error) throw error;
@@ -154,7 +154,7 @@ export default function PageIdentityReportTab() {
           },
           apply_mode: 'auto_apply',
           quality_threshold: 50,
-          custom_prompt: 'Rewrite to be completely unique, human-sounding, locally relevant to UAE/Dubai. Remove AI patterns, add specific details, pricing ranges in AED, neighborhood references, and practical patient guidance.',
+          custom_prompt: 'Rewrite to be completely unique, human-sounding, locally relevant to UAE/Dubai. Remove AI patterns, add specific details, pricing ranges in AED, neighborhood references, and practical applicant guidance.',
         },
       });
       if (error) throw error;

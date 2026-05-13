@@ -4,9 +4,40 @@ import { getBlogPosts } from '@/lib/data';
 export const metadata: Metadata = {
   title: 'Foster Care Blog | Tips, Guides & News',
   description: 'Read the latest articles about fostering in the UK. Tips for foster parents, guides for agencies, and news about foster care.',
+  keywords: ['foster care blog UK', 'foster parenting tips', 'foster care news', 'becoming a foster car'],
   alternates: {
     canonical: 'https://www.foster-care.co.uk/blog',
   },
+  openGraph: {
+    title: 'Foster Care Blog | Tips, Guides & News',
+    description: 'Read the latest articles about fostering in the UK.',
+    url: 'https://www.foster-care.co.uk/blog',
+    siteName: 'Foster Care UK',
+    locale: 'en_GB',
+    type: 'website',
+    images: [
+      {
+        url: 'https://www.foster-care.co.uk/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Foster Care UK Blog',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Foster Care Blog | Tips, Guides & News',
+    description: 'Read the latest articles about fostering in the UK.',
+    images: ['https://www.foster-care.co.uk/og-image.jpg'],
+  },
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: 'Foster Care UK Blog',
+  description: 'Tips, guides and news about fostering in the UK',
+  url: 'https://www.foster-care.co.uk/blog',
 };
 
 export default async function BlogPage() {
@@ -14,6 +45,11 @@ export default async function BlogPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0f]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <main>
       <section className="py-20 bg-gradient-to-b from-[#0a0a0f] to-[#0f0f14]">
         <div className="container px-4">
           <h1 className="text-4xl md:text-5xl font-bold text-white text-center">Foster Care Blog</h1>
@@ -50,6 +86,7 @@ export default async function BlogPage() {
           )}
         </div>
       </section>
+      </main>
     </div>
   );
 }

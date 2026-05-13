@@ -86,56 +86,10 @@ export const SEOContentBlock = ({
           <div className="p-6 md:p-8 space-y-4">
             {/* SEO: Keep semantic headings visible for crawlers */}
             <h2 className="sr-only" itemProp="headline">
-              {variant === 'service-location' ? `${treatmentName} in ${locationName}` : 
-               variant === 'city' ? `Dental Care in ${locationName}` :
+{variant === 'service-location' ? `${treatmentName} in ${locationName}` : 
+               variant === 'city' ? `Fostering in ${locationName}` :
                variant === 'service' ? `About ${treatmentName}` :
-               `Agencies in ${locationName}`}
-            </h2>
-            <div className="h-4 w-full bg-muted rounded" />
-            <div className="h-4 w-5/6 bg-muted rounded" />
-            <div className="h-4 w-4/5 bg-muted rounded" />
-            <div className="h-4 w-3/4 bg-muted rounded" />
-          </div>
-        </div>
-      </article>
-    );
-  }
-
-  const hasOptimizedContent =
-    !!parsedContent &&
-    (parsedContent.intro.trim().length > 0 || (parsedContent.sections?.length ?? 0) > 0);
-
-  if (hasOptimizedContent) {
-    return (
-      <OptimizedContentLayout 
-        parsedContent={parsedContent} 
-        variant={variant}
-        locationName={locationName}
-        stateName={stateName}
-        treatmentName={treatmentName}
-        stateSlug={stateSlug}
-        citySlug={citySlug}
-        treatmentSlug={treatmentSlug}
-        popularTreatments={popularTreatments}
-        nearbyLocations={nearbyLocations}
-      />
-    );
-  }
-
-  // Even without optimized content, render minimal semantic structure for SEO
-  return (
-    <article 
-      className="space-y-6"
-      itemScope 
-      itemType="https://schema.org/Article"
-    >
-      <div className="bg-card border border-border rounded-3xl overflow-hidden shadow-sm">
-        <div className="p-6 md:p-8">
-          <h2 className="text-xl font-bold text-foreground mb-3" itemProp="headline">
-            {variant === 'service-location' ? `About ${treatmentName} in ${locationName}` : 
-             variant === 'city' ? `Dental Care in ${locationName}` :
-             variant === 'service' ? `About ${treatmentName}` :
-             `Dental Services in ${locationName}`}
+               `Fostering Services in ${locationName}`}
           </h2>
           <p className="text-muted-foreground leading-relaxed" itemProp="articleBody">
             {variant === 'service-location' 
@@ -151,6 +105,7 @@ export const SEOContentBlock = ({
       </div>
     </article>
   );
+  }
 };
 
 // Optimized content from database - clean, professional layout
@@ -195,9 +150,9 @@ const OptimizedContentLayout = ({
   const getVariantLabel = () => {
     switch (variant) {
       case "state":
-        return `${locationName} Dental Guide`;
+        return `${locationName} Fostering Guide`;
       case "city":
-        return `${locationName} Dental Care`;
+        return `${locationName} Fostering`;
       case "service-location":
         return `${treatmentName} in ${locationName}`;
       case "service":
@@ -289,7 +244,7 @@ const OptimizedContentLayout = ({
         >
           <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
             <Stethoscope className="h-4 w-4 text-primary" />
-            Popular Treatments
+            Popular Fostering Types
           </h3>
           <nav className="flex flex-wrap gap-2" aria-label="Related treatments">
             {popularTreatments.slice(0, 8).map((t) => (

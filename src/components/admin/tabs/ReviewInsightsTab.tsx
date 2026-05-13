@@ -69,7 +69,7 @@ export default function ReviewInsightsTab() {
         .from('review_funnel_events')
         .select(`
           id, rating, comment, source, created_at,
-          clinic:clinics(id, name, slug)
+          agency:agencies(id, name, slug)
         `)
         .eq('event_type', 'thumbs_down')
         .order('created_at', { ascending: false })
@@ -85,8 +85,8 @@ export default function ReviewInsightsTab() {
       const { data } = await supabase
         .from('internal_reviews')
         .select(`
-          id, patient_name, patient_email, rating, comment, status, created_at, sentiment_score, ai_suggested_response, resolution_notes, resolved_at,
-          clinic:clinics(id, name, slug)
+          id, enquirer_name, enquirer_email, rating, comment, status, created_at, sentiment_score, ai_suggested_response, resolution_notes, resolved_at,
+          agency:agencies(id, name, slug)
         `)
         .order('created_at', { ascending: false })
         .limit(50);
@@ -94,19 +94,19 @@ export default function ReviewInsightsTab() {
     },
   });
 
-  // Fetch clinics with most negative feedback
+  // Fetch agencies with most negative feedback
   const { data: problemClinics } = useQuery({
     queryKey: ['problem-clinics-funnel'],
     queryFn: async () => {
       const { data: events } = await supabase
         .from('review_funnel_events')
         .select(`
-          clinic_id,
-          clinic:clinics(id, name, slug, city:cities(name))
+          agency_id,
+          agency:agencies(id, name, slug, city:cities(name))
         `)
         .eq('event_type', 'thumbs_down');
       
-      // Count per clinic
+      // Count per agency
       const counts: Record<string, { count: number; clinic: any }> = {};
       events?.forEach((e: any) => {
         if (!counts[e.clinic_id]) {
@@ -329,7 +329,7 @@ export default function ReviewInsightsTab() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <p className="font-bold text-lg">Review Funnel Performance</p>
-              <p className="text-sm text-muted-foreground">% of patients redirected to Google reviews</p>
+              <p className="text-sm text-muted-foreground">% of applicants redirected to Google reviews</p>
             </div>
             <div className="text-right">
               <p className="text-4xl font-bold bg-gradient-to-r from-primary to-teal bg-clip-text text-transparent">{positiveRate}%</p>
@@ -435,7 +435,7 @@ export default function ReviewInsightsTab() {
                   <p className="text-4xl font-bold">{funnelStats?.negative || 0}</p>
                   <p className="text-muted-foreground">Total Private Complaints</p>
                   <p className="mt-4 text-sm text-muted-foreground max-w-xs mx-auto">
-                    These are patients who chose "thumbs down" and provided private feedback instead of public reviews.
+                    These are applicants who chose "thumbs down" and provided private feedback instead of public reviews.
                   </p>
                 </div>
               </CardContent>
@@ -483,9 +483,9 @@ export default function ReviewInsightsTab() {
                       </TableCell>
                       <TableCell>
                         <div>
-                          <p className="font-medium">{review.patient_name || 'Anonymous'}</p>
-                          {review.patient_email && (
-                            <p className="text-xs text-muted-foreground">{review.patient_email}</p>
+                          <p className="font-medium">{review.enquirer_name || 'Anonymous'}</p>
+                          {review.enquirer_email && (
+                            <p className="text-xs text-muted-foreground">{review.enquirer_email}</p>
                           )}
                         </div>
                       </TableCell>
@@ -616,7 +616,7 @@ export default function ReviewInsightsTab() {
                 <Flag className="h-5 w-5 text-coral" />
                 Clinics with Most Negative Feedback
               </CardTitle>
-              <CardDescription>These clinics have received the most private complaints</CardDescription>
+              <CardDescription>These agencies have received the most private complaints</CardDescription>
             </CardHeader>
             <CardContent className="p-0">
               <Table>
@@ -661,8 +661,8 @@ export default function ReviewInsightsTab() {
                     <TableRow>
                       <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
                         <TrendingUp className="h-12 w-12 mx-auto mb-3 text-teal opacity-50" />
-                        <p className="font-medium">No problem clinics identified</p>
-                        <p className="text-sm">All clinics are performing well!</p>
+                        <p className="font-medium">No problem agencies identified</p>
+                        <p className="text-sm">All agencies are performing well!</p>
                       </TableCell>
                     </TableRow>
                   )}
@@ -724,7 +724,7 @@ export default function ReviewInsightsTab() {
                     <TableRow>
                       <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
                         <Building2 className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                        <p className="font-medium">No clinic data available</p>
+                        <p className="font-medium">No agency data available</p>
                       </TableCell>
                     </TableRow>
                   )}

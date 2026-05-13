@@ -20,6 +20,7 @@ import {
   Navigation, Layers, Target, Activity, BarChart3
 } from 'lucide-react';
 import { format, subDays } from 'date-fns';
+import { toast } from 'sonner';
 
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--teal))', 'hsl(var(--coral))', 'hsl(var(--gold))', 'hsl(var(--purple))'];
 
@@ -85,7 +86,7 @@ export default function VisitorAnalyticsTab() {
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={() => toast("Export coming soon")}>
             <Download className="h-4 w-4 mr-2" />
             Export
           </Button>
@@ -445,7 +446,7 @@ export default function VisitorAnalyticsTab() {
                 <Target className="h-5 w-5 text-primary" />
                 Appointment Booking Sources
               </CardTitle>
-              <CardDescription>Where appointments are booked from</CardDescription>
+              <CardDescription>Where enquiries are booked from</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
@@ -469,7 +470,7 @@ export default function VisitorAnalyticsTab() {
                   {(!analytics?.appointmentSources || analytics.appointmentSources.length === 0) && (
                     <TableRow>
                       <TableCell colSpan={3} className="text-center text-muted-foreground py-8">
-                        No appointment source data yet
+                        No enquiry source data yet
                       </TableCell>
                     </TableRow>
                   )}

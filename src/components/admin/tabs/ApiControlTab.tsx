@@ -75,7 +75,7 @@ export default function ApiControlTab() {
   const { testApi, testResults, isTesting } = useApiStatus();
 
   // Fetch API settings from global_settings
-  const { data: settings, isLoading } = useQuery({
+  const { data: settings, isLoading, refetch: refetchSettings } = useQuery({
     queryKey: ['api-settings'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -439,7 +439,7 @@ export default function ApiControlTab() {
               <div className="space-y-2">
                 <Label>Verify Token (for webhook)</Label>
                 <Input
-                  value={apiForm.whatsapp_verify_token ?? (currentSettings.verify_token as string) ?? 'DUBAI_DENTAL_WHATSAPP_VERIFY'}
+                  value={apiForm.whatsapp_verify_token ?? (currentSettings.verify_token as string) ?? 'FOSTER_CARE_UK_WHATSAPP_VERIFY'}
                   onChange={(e) => setApiForm({ ...apiForm, whatsapp_verify_token: e.target.value })}
                   placeholder="Webhook verification token"
                 />
@@ -488,7 +488,7 @@ export default function ApiControlTab() {
                   access_token: apiForm.whatsapp_token || currentSettings.access_token || '',
                   phone_number_id: apiForm.whatsapp_phone_id || currentSettings.phone_number_id || '',
                   business_account_id: apiForm.whatsapp_business_id || currentSettings.business_account_id || '',
-                  verify_token: apiForm.whatsapp_verify_token || currentSettings.verify_token || 'DUBAI_DENTAL_WHATSAPP_VERIFY',
+                  verify_token: apiForm.whatsapp_verify_token || currentSettings.verify_token || 'FOSTER_UK_WHATSAPP_VERIFY',
                   enabled: apiForm.whatsapp_enabled === 'true' || (apiForm.whatsapp_enabled === undefined && currentSettings.enabled),
                 }
               })}>

@@ -77,7 +77,7 @@ export default function ReputationSuiteRedesign() {
     queryKey: ['reputation-clinic-v2', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name, slug, google_place_id, rating, review_count')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -95,7 +95,7 @@ export default function ReputationSuiteRedesign() {
       const { data, error } = await supabase
         .from('review_funnel_events')
         .select('*')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .order('created_at', { ascending: false })
         .limit(500);
       if (error) throw error;
@@ -109,9 +109,9 @@ export default function ReputationSuiteRedesign() {
     queryKey: ['reputation-patients-v2', clinic?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('patients')
+        .from('foster_carers')
         .select('id, name, phone, email')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .order('name')
         .limit(200);
       if (error) throw error;
@@ -152,7 +152,7 @@ export default function ReputationSuiteRedesign() {
   };
 
   const handlePatientSelect = (patientId: string) => {
-    const patient = patients.find((p) => p.id === patientId);
+    const applicant = patients.find((p) => p.id === patientId);
     if (patient) {
       setSelectedPatientId(patientId);
       setRecipientName(patient.name);
@@ -378,7 +378,7 @@ export default function ReputationSuiteRedesign() {
           <div className="flex flex-col lg:flex-row lg:items-center gap-4">
             <div className="flex-1">
               <h3 className="text-lg font-semibold text-white mb-1">Your Review Collection Link</h3>
-              <p className="text-sm text-white/50">Share this link to collect patient feedback</p>
+              <p className="text-sm text-white/50">Share this link to collect applicant feedback</p>
             </div>
             <div className="flex gap-2 flex-1">
               <Input

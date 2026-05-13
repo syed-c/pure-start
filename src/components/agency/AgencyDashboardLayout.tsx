@@ -104,12 +104,12 @@ export default function AgencyDashboardLayout({
   const [collapsed, setCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Fetch clinic data
+  // Fetch agency data
   const { data: clinic, isLoading: clinicLoading } = useQuery({
     queryKey: ['agency-profile-layout', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name, slug, cover_image_url, verification_status, rating, review_count')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -127,7 +127,7 @@ export default function AgencyDashboardLayout({
       const { count } = await supabase
         .from('appointments')
         .select('id', { count: 'exact', head: true })
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .eq('status', 'pending');
       return count || 0;
     },
@@ -225,7 +225,7 @@ export default function AgencyDashboardLayout({
                   <Skeleton className="h-3 w-16 mt-1 bg-white/10" />
                 </div>
               </div>
-            ) : clinic ? (
+            ) : agency ? (
               <div className="flex items-center gap-3">
                 <Avatar className="h-10 w-10 rounded-lg border-2 border-primary/30">
                   <AvatarImage src={clinic.cover_image_url || undefined} />
@@ -251,7 +251,7 @@ export default function AgencyDashboardLayout({
                 </div>
               </div>
             ) : (
-              <p className="text-xs text-white/50 text-center py-2">No clinic linked</p>
+              <p className="text-xs text-white/50 text-center py-2">No agency linked</p>
             )}
           </div>
         </div>

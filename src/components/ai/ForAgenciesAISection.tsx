@@ -11,23 +11,23 @@ interface ForAgenciesAISectionProps {
 const benefits = [
   {
     icon: Target,
-    title: "Right Patients, Not Random Traffic",
-    description: "AI matches patients with clinics based on services, budget, and location — bringing you qualified leads who are ready to book.",
+    title: "Right Agencies, Not Random Traffic",
+    description: "AI matches agencies with clients based on services, budget, and location — bringing you qualified leads who are ready to engage.",
   },
   {
     icon: Users,
-    title: "Better Patient Fit",
-    description: "Patients who match your services, accept your pricing, and prefer your availability. Less back-and-forth, more confirmed appointments.",
+    title: "Better Client Fit",
+    description: "Clients who match your services, accept your pricing, and prefer your availability. Less back-and-forth, more confirmed placements.",
   },
   {
     icon: TrendingUp,
     title: "Smarter Visibility",
-    description: "Your profile appears to patients actively searching for what you offer. No wasted impressions on unqualified viewers.",
+    description: "Your profile appears to clients actively searching for what you offer. No wasted impressions on unqualified viewers.",
   },
   {
     icon: Zap,
     title: "Automated Efficiency",
-    description: "AI handles initial patient matching, freeing your staff to focus on care delivery instead of qualifying leads.",
+    description: "AI handles initial client matching, freeing your staff to focus on care delivery instead of qualifying leads.",
   },
 ];
 
@@ -65,7 +65,7 @@ export const ForAgenciesAISection = ({ className, variant = "full" }: ForAgencie
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 bg-primary/20 border border-primary/30 rounded-full px-4 py-2 mb-4">
               <Sparkles className="h-4 w-4 text-primary" />
-              <span className="text-sm font-bold text-primary">For Dental Practices</span>
+              <span className="text-sm font-bold text-primary">For Fostering Agencies</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-black text-white mb-4">
               AI That Works <span className="text-primary">For You</span>
@@ -100,7 +100,7 @@ export const ForAgenciesAISection = ({ className, variant = "full" }: ForAgencie
               </Link>
             </Button>
             <p className="mt-4 text-white/40 text-sm">
-              No technical terms. No AI jargon. Just better patient connections.
+              No technical terms. No AI jargon. Just better agency connections.
             </p>
           </div>
         </div>

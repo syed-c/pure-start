@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SEOHead } from "@/components/seo/SEOHead";
+import { StructuredData } from "@/components/seo/StructuredData";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
@@ -205,7 +206,7 @@ const FosteringCategoryLocationPage = () => {
   }
 
   if (!location || !category) {
-    return <PageLayout><div className="container py-20"><h1 className="text-2xl font-bold">Page Not Found</h1><p className="mt-2 text-muted-foreground">The category or location doesn't exist.</p><Link to="/"><Button className="mt-4">Go Home</Button></Link></div></PageLayout>;
+    return <PageLayout><div className="container py-20"><h1 className="text-2xl font-bold">Page Not Found</h1><p className="mt-2 text-muted-foreground">The category or location doesn't exist.</p><Button className="mt-4" asChild><Link to="/">Go Home</Link></Button></div></PageLayout>;
   }
 
   const categoryName = category.name;
@@ -213,6 +214,7 @@ const FosteringCategoryLocationPage = () => {
   const pageTitle = `${categoryName} Agencies in ${locationName} | Find Foster Care`;
   const pageDescription = `Find ${categoryName.toLowerCase()} fostering agencies in ${locationName}.`;
   const canonicalUrl = `https://www.foster-care.co.uk/fostering-agencies/${locationSlug}/${categorySlug}/`;
+  const shouldNoIndex = !agenciesLoading && (!agencies || agencies.length === 0);
 
   const breadcrumbs = [
     { label: "Home", href: "/" },
@@ -223,7 +225,24 @@ const FosteringCategoryLocationPage = () => {
 
   return (
     <PageLayout>
-      <SEOHead title={seoContent?.meta_title || pageTitle} description={seoContent?.meta_description || pageDescription} canonical={canonicalUrl} />
+      <SEOHead 
+        title={seoContent?.meta_title || pageTitle} 
+        description={seoContent?.meta_description || pageDescription} 
+        canonical={canonicalUrl}
+        keywords={[`${categoryName} agencies ${locationName}`, 'foster care agency', 'fostering type UK']}
+        noIndex={shouldNoIndex}
+      />
+      <StructuredData type="breadcrumb" items={[
+        { name: "Home", url: "/" },
+        { name: categoryName, url: `/fostering-types/${categorySlug}` },
+        { name: locationName, url: `/fostering-agencies/${locationSlug}` }
+      ]} />
+      <StructuredData type="organization" />
+      <StructuredData type="faq" questions={[
+        { question: `What is ${categoryName}?`, answer: `${categoryName} is a specialised form of fostering care.` },
+        { question: `How do I find ${categoryName} agencies in ${locationName}?`, answer: `Browse our directory of verified agencies.` },
+        { question: `What support is available?`, answer: `All agencies provide full training and support for foster carers.` },
+      ]} />
       <section className="relative overflow-hidden min-h-[40vh] flex items-center bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-20 -right-20 w-[300px] h-[300px] bg-primary/15 rounded-full blur-[100px]" />
@@ -239,7 +258,7 @@ const FosteringCategoryLocationPage = () => {
         <Section>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold">Available Agencies</h2>
-            <Badge variant="outline">{agencies?.length || 0}</Badge>
+            <Badge variant="outline">Agencies</Badge>
           </div>
           {agenciesLoading ? <div className="grid gap-6 md:grid-cols-3">{[1,2,3].map(i => <Skeleton key={i} className="h-72 rounded-xl" />)}</div> : agencies && agencies.length > 0 ? <div className="grid gap-6 md:grid-cols-3">{agencies.map((a: any) => {
               const agencyImage = a.main_image_url || a.cover_image_url;
@@ -280,7 +299,7 @@ const FosteringCategoryLocationPage = () => {
         </Section>
         <Section className="mt-12">
           <div className="flex gap-4">
-            <Link to={`/categories/${categorySlug}`} className="text-primary hover:underline flex items-center gap-2"><ArrowRight className="w-4 h-4 rotate-180" />All {categoryName}</Link>
+            <Link to={`/fostering-types/${categorySlug}`} className="text-primary hover:underline flex items-center gap-2"><ArrowRight className="w-4 h-4 rotate-180" />All {categoryName}</Link>
             <Link to={`/fostering-agencies/${locationSlug}`} className="text-primary hover:underline">All in {locationName}</Link>
           </div>
         </Section>
@@ -290,8 +309,8 @@ const FosteringCategoryLocationPage = () => {
             <CardContent className="p-8 text-center text-white">
               <h2 className="text-2xl font-bold">Ready to Start?</h2>
               <div className="mt-4 flex gap-4 justify-center">
-                <Link to="/search"><Button size="lg">Find Agencies</Button></Link>
-                <Link to="/become-foster-carer"><Button size="lg" variant="outline">Become Carer</Button></Link>
+                <Button size="lg" asChild><Link to="/search">Find Agencies</Link></Button>
+                <Button size="lg" variant="outline" asChild><Link to="/become-foster-carer">Become Carer</Link></Button>
               </div>
             </CardContent>
           </Card>

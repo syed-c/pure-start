@@ -44,7 +44,7 @@ export default function ReviewRequestsTab() {
     queryKey: ['agency-profile', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name, slug, google_place_id')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -60,9 +60,9 @@ export default function ReviewRequestsTab() {
     queryKey: ['clinic-patients-for-review', clinic?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('patients')
+        .from('foster_carers')
         .select('id, name, phone, email, last_visit_at, is_opted_in_sms, is_opted_in_whatsapp')
-        .eq('clinic_id', clinic!.id)
+        .eq('agency_id', clinic!.id)
         .eq('is_opted_in_sms', true)
         .order('last_visit_at', { ascending: false })
         .limit(100);
@@ -79,7 +79,7 @@ export default function ReviewRequestsTab() {
       const { data, error } = await supabase
         .from('review_requests')
         .select('*')
-        .eq('clinic_id', clinic!.id)
+        .eq('agency_id', clinic!.id)
         .order('created_at', { ascending: false })
         .limit(50);
       if (error) throw error;
@@ -126,7 +126,7 @@ export default function ReviewRequestsTab() {
     onError: (e) => toast.error('Failed to send: ' + e.message),
   });
 
-  // Toggle patient selection
+  // Toggle applicant selection
   const togglePatient = (patientId: string) => {
     setSelectedPatients(prev => 
       prev.includes(patientId) 
@@ -226,7 +226,7 @@ export default function ReviewRequestsTab() {
             <div className="p-4 rounded-xl bg-background border">
               <Users className="h-6 w-6 text-primary mb-2" />
               <h4 className="font-semibold text-sm">Patient Selection</h4>
-              <p className="text-xs text-muted-foreground">Choose from your patient list or add manually</p>
+              <p className="text-xs text-muted-foreground">Choose from your applicant list or add manually</p>
             </div>
           </div>
         </CardContent>

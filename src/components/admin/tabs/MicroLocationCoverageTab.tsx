@@ -111,7 +111,7 @@ export default function MicroLocationCoverageTab() {
   const [searchTerm, setSearchTerm] = useState('');
   const [emirateFilter, setEmirateFilter] = useState<string>('all');
 
-  // Fetch all areas with their clinic counts and SEO status
+  // Fetch all areas with their agency counts and SEO status
   const { data: areasData, isLoading } = useQuery({
     queryKey: ['micro-location-coverage'],
     queryFn: async () => {
@@ -122,7 +122,7 @@ export default function MicroLocationCoverageTab() {
         .eq('is_active', true)
         .order('name');
 
-      // Get clinic counts per city
+      // Get agency counts per city
       const { data: clinicCounts } = await supabase
         .from('agencies')
         .select('city_id')
@@ -134,7 +134,7 @@ export default function MicroLocationCoverageTab() {
         .select('slug, is_published, is_thin_content')
         .eq('page_type', 'city');
 
-      // Count clinics per city
+      // Count agencies per city
       const clinicCountMap: Record<string, number> = {};
       (clinicCounts || []).forEach(c => {
         if (c.city_id) {
@@ -229,7 +229,7 @@ export default function MicroLocationCoverageTab() {
       <div>
         <h1 className="text-3xl font-display font-bold text-foreground">Micro-Location Coverage</h1>
         <p className="text-muted-foreground text-sm">
-          Area-level SEO health across all Emirates — clinic density, content status & local context coverage
+          Area-level SEO health across all Emirates — agency density, content status & local context coverage
         </p>
       </div>
 
@@ -246,7 +246,7 @@ export default function MicroLocationCoverageTab() {
           <CardContent className="p-4 text-center">
             <Building2 className="h-5 w-5 text-teal mx-auto mb-1" />
             <p className="text-2xl font-display font-bold">{stats.totalClinics}</p>
-            <p className="text-xs text-muted-foreground">Total Clinics</p>
+            <p className="text-xs text-muted-foreground">Total Agencies</p>
           </CardContent>
         </Card>
         <Card>
@@ -441,7 +441,7 @@ export default function MicroLocationCoverageTab() {
                 <AlertTriangle className="h-4 w-4 text-gold" />
                 Priority Content Gaps
               </CardTitle>
-              <CardDescription>Areas with clinics but no SEO content — biggest missed opportunities</CardDescription>
+              <CardDescription>Areas with agencies but no SEO content — biggest missed opportunities</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">

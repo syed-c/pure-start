@@ -80,7 +80,7 @@ export default function BookDirectPage() {
     <>
       <SEOHead
         title={`Book Appointment - ${agency.name}`}
-        description={`Book an appointment online with ${agency.name}${locationDisplay ? ` in ${locationDisplay}` : ''}. Quick and easy online scheduling.`}
+        description={`Book an enquiry online with ${agency.name}${locationDisplay ? ` in ${locationDisplay}` : ''}. Quick and easy online scheduling.`}
         noindex={true}
       />
       

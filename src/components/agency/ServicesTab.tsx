@@ -67,7 +67,7 @@ export default function ServicesTab() {
     queryKey: ['agency-profile-services', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -84,7 +84,7 @@ export default function ServicesTab() {
     queryKey: ['all-treatments'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('treatments')
+        .from('fostering_categories')
         .select('*')
         .eq('is_active', true)
         .order('display_order')
@@ -105,7 +105,7 @@ export default function ServicesTab() {
           id, clinic_id, treatment_id, price_from, price_to,
           treatment:treatments(id, name, slug, description, icon)
         `)
-        .eq('clinic_id', clinic?.id);
+        .eq('agency_id', clinic?.id);
 
       if (error) throw error;
       return (data || []).map((ct: any) => ({

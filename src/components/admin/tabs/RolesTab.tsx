@@ -112,7 +112,7 @@ const DEFAULT_ROLE_PERMISSIONS: Record<string, string[]> = {
 const ALL_ROLES = [
   { value: 'super_admin', label: 'Super Admin', color: 'purple' },
   { value: 'district_manager', label: 'District Manager', color: 'blue-custom' },
-  { value: 'dentist', label: 'Dentist', color: 'primary' },
+  { value: 'dentist', label: 'Agency Staff', color: 'primary' },
   { value: 'seo_team', label: 'SEO Team', color: 'teal' },
   { value: 'content_team', label: 'Content Team', color: 'gold' },
   { value: 'marketing_team', label: 'Marketing Team', color: 'coral' },

@@ -148,7 +148,7 @@ const generateOrganizationSchema = (settings?: any) => {
     name: 'Foster Care',
     url: BASE_URL,
     logo: `${BASE_URL}/logo.png`,
-    description: 'Find and book appointments with top-rated dental professionals across the UAE.',
+    description: 'Find and book appointments with top-rated foster care agencies across the UK.',
   };
 
   return {
@@ -160,7 +160,7 @@ const generateOrganizationSchema = (settings?: any) => {
     description: org.description,
     address: {
       '@type': 'PostalAddress',
-      addressCountry: 'AE',
+      addressCountry: 'GB',
     },
     ...(org.email && { email: org.email }),
     ...(org.phone && { telephone: org.phone }),
@@ -254,7 +254,7 @@ const generateAgencySchema = (data: DentistSchemaData) => ({
       streetAddress: data.address,
       addressLocality: data.city,
       addressRegion: data.state,
-      addressCountry: 'AE',
+      addressCountry: 'GB',
     },
   }),
   ...(data.phone && { telephone: data.phone }),

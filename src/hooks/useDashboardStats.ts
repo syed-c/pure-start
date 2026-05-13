@@ -19,11 +19,11 @@ export function useDashboardStats() {
         { count: verifiedClinics },
         { count: duplicateClinics },
       ] = await Promise.all([
-        supabase.from('clinics').select('*', { count: 'exact', head: true }),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('claim_status', 'unclaimed'),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed'),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('verification_status', 'verified'),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('is_duplicate', true),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('claim_status', 'unclaimed'),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed'),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('verification_status', 'verified'),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('is_duplicate', true),
       ]);
 
       // Fetch lead stats

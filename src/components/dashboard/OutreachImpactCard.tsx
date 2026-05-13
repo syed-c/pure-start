@@ -28,27 +28,27 @@ export default function OutreachImpactCard({ agencyId }: OutreachImpactCardProps
       const [childrenResult, requestsResult, messagesResult, automationResult] = await Promise.all([
         // Foster children added this month
         supabase
-          .from('patients')
+          .from('foster_carers')
           .select('id', { count: 'exact', head: true })
-          .eq('clinic_id', agencyId)
+          .eq('agency_id', agencyId)
           .gte('created_at', monthStart),
         // Review requests
         supabase
           .from('review_requests')
           .select('id, status')
-          .eq('clinic_id', agencyId)
+          .eq('agency_id', agencyId)
           .gte('created_at', monthStart),
         // Messages sent
         supabase
-          .from('clinic_messages')
+          .from('messages')
           .select('id, status')
-          .eq('clinic_id', agencyId)
+          .eq('agency_id', agencyId)
           .gte('created_at', monthStart),
         // Automation settings
         supabase
-          .from('clinic_automation_settings')
+          .from('agency_automation_settings')
           .select('*')
-          .eq('clinic_id', agencyId)
+          .eq('agency_id', agencyId)
           .single(),
       ]);
 

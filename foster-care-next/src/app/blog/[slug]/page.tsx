@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { getBlogPosts, getBlogPost } from '@/lib/data';
-
+ 
 interface Props {
   params: Promise<{ slug: string }>;
 }
@@ -23,8 +23,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${post.title} | Foster Care UK`,
     description: post.excerpt || post.content.slice(0, 160),
+    keywords: [post.title.toLowerCase(), 'foster care UK', 'fostering'],
     alternates: {
       canonical: `https://www.foster-care.co.uk/blog/${slug}`,
+    },
+    openGraph: {
+      title: `${post.title} | Foster Care UK`,
+      description: post.excerpt || post.content.slice(0, 160),
+      url: `https://www.foster-care.co.uk/blog/${slug}`,
+      siteName: 'Foster Care UK',
+      locale: 'en_GB',
+      type: 'article',
+      publishedTime: post.published_at,
+      modifiedTime: post.updated_at || post.published_at,
+      images: [
+        {
+          url: 'https://www.foster-care.co.uk/og-image.jpg',
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${post.title} | Foster Care UK`,
+      description: post.excerpt || post.content.slice(0, 160),
+      images: ['https://www.foster-care.co.uk/og-image.jpg'],
     },
   };
 }
@@ -45,8 +70,37 @@ export default async function BlogPostPage({ params }: Props) {
     );
   }
 
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.excerpt || post.content.slice(0, 160),
+    url: `https://www.foster-care.co.uk/blog/${slug}`,
+    datePublished: post.published_at,
+    dateModified: post.updated_at || post.published_at,
+    author: {
+      '@type': 'Organization',
+      name: 'Foster Care UK',
+      url: 'https://www.foster-care.co.uk/',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Foster Care UK',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://www.foster-care.co.uk/logo.png',
+      },
+    },
+    image: 'https://www.foster-care.co.uk/og-image.jpg',
+  };
+
   return (
     <div className="min-h-screen bg-[#0a0a0f]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <main>
       <article>
         <header className="py-20 bg-gradient-to-b from-[#0a0a0f] to-[#0f0f14]">
           <div className="container px-4 max-w-3xl mx-auto">
@@ -88,6 +142,7 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         </div>
       </section>
+      </main>
     </div>
   );
 }

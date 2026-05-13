@@ -48,7 +48,7 @@ export const LocationQuickLinks = ({
   const getDefaultTitle = () => {
     switch (variant) {
       case "treatments":
-        return `Dental Services${locationName ? ` in ${locationName}` : ''}`;
+        return `Fostering Services${locationName ? ` in ${locationName}` : ''}`;
       case "nearby":
         return "Nearby Cities";
       case "services":

@@ -80,7 +80,7 @@ export default function AppointmentsPageV2({ onNavigate }: AppointmentsPageV2Pro
     queryKey: ['appointments-v2-clinic', user?.id],
     queryFn: async () => {
       const { data } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -97,7 +97,7 @@ export default function AppointmentsPageV2({ onNavigate }: AppointmentsPageV2Pro
       let query = supabase
         .from('appointments')
         .select('*, treatment:treatments(name)')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .order('preferred_time', { ascending: true });
 
       // Date filter based on view mode

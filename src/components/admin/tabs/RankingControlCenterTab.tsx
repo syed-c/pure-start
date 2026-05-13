@@ -211,7 +211,7 @@ export default function RankingControlCenterTab() {
   const data = useRankingData();
   const isLoading = Object.values(data).some(q => q.isLoading);
   const scores = useMemo(() => computeScores(data), [
-    data.clinics.data, data.treatments.data, data.locations.data,
+    data.agencies.data, data.categories.data, data.locations.data,
     data.seoPages.data, data.insurances.data, data.reviews.data, data.agencies.data,
   ]);
 
@@ -290,7 +290,7 @@ export default function RankingControlCenterTab() {
               <p className="text-white/60 text-sm font-medium">Overall Ranking Readiness</p>
               <p className="text-5xl font-display font-black mt-1">{Math.round(scores.overall)}%</p>
               <p className="text-white/50 text-xs mt-1">
-                Based on 8 ranking factors • {data.clinics.data?.total || 0} clinics • {data.seoPages.data?.total || 0} SEO pages
+                Based on 8 ranking factors • {data.agencies.data?.total || 0} agencies • {data.seoPages.data?.total || 0} SEO pages
               </p>
             </div>
             <div className="grid grid-cols-4 gap-4">
@@ -340,11 +340,11 @@ export default function RankingControlCenterTab() {
                 <CardTitle className="text-sm">Clinics</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 text-sm">
-                <div className="flex justify-between"><span className="text-muted-foreground">Total Active</span><span className="font-bold">{data.clinics.data?.total || 0}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Verified</span><span className="font-bold text-teal">{data.clinics.data?.verified || 0}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Claimed</span><span className="font-bold">{data.clinics.data?.claimed || 0}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Featured</span><span className="font-bold">{data.clinics.data?.featured || 0}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">With Description</span><span className="font-bold">{data.clinics.data?.withDesc || 0}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Total Active</span><span className="font-bold">{data.agencies.data?.total || 0}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Verified</span><span className="font-bold text-teal">{data.agencies.data?.verified || 0}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Claimed</span><span className="font-bold">{data.agencies.data?.claimed || 0}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Featured</span><span className="font-bold">{data.agencies.data?.featured || 0}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">With Description</span><span className="font-bold">{data.agencies.data?.withDesc || 0}</span></div>
               </CardContent>
             </Card>
             <Card>
@@ -353,7 +353,7 @@ export default function RankingControlCenterTab() {
               </CardHeader>
               <CardContent className="space-y-2 text-sm">
                 <div className="flex justify-between"><span className="text-muted-foreground">SEO Pages</span><span className="font-bold">{data.seoPages.data?.total || 0}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Treatments</span><span className="font-bold">{data.treatments.data?.total || 0}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Treatments</span><span className="font-bold">{data.categories.data?.total || 0}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Agencies</span><span className="font-bold">{data.agencies.data?.total || 0}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Insurances</span><span className="font-bold">{data.insurances.data?.total || 0}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Reviews</span><span className="font-bold">{data.reviews.data?.total || 0}</span></div>
@@ -386,10 +386,10 @@ export default function RankingControlCenterTab() {
                 {[
                   { action: 'Fix thin/duplicate SEO pages', impact: 'Critical', score: scores.uniquenessScore, target: 95 },
                   { action: 'Increase schema coverage on all pages', impact: 'High', score: scores.schemaScore, target: 90 },
-                  { action: 'Get more clinics verified & claimed', impact: 'High', score: scores.trustScore, target: 70 },
+                  { action: 'Get more agencies verified & claimed', impact: 'High', score: scores.trustScore, target: 70 },
                   { action: 'Expand Dubai micro-location areas', impact: 'High', score: scores.localScore, target: 80 },
                   { action: 'Strengthen internal linking depth', impact: 'Medium', score: scores.linkingScore, target: 80 },
-                  { action: 'Complete clinic entity data (phone, desc)', impact: 'Medium', score: scores.entityHealth, target: 85 },
+                  { action: 'Complete agency entity data (phone, desc)', impact: 'Medium', score: scores.entityHealth, target: 85 },
                   { action: 'Publish & index more SEO pages', impact: 'Medium', score: scores.indexScore, target: 90 },
                 ].sort((a, b) => a.score - b.score).map((item, i) => (
                   <div key={i} className="flex items-center gap-4 p-3 rounded-lg bg-muted/30 border">
@@ -561,11 +561,11 @@ export default function RankingControlCenterTab() {
                 <CardTitle className="text-sm">Clinic Entity Completeness</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                {data.clinics.data && [
-                  { label: 'Has City', value: data.clinics.data.withCity, total: data.clinics.data.total },
-                  { label: 'Has Area', value: data.clinics.data.withArea, total: data.clinics.data.total },
-                  { label: 'Has Phone', value: data.clinics.data.withPhone, total: data.clinics.data.total },
-                  { label: 'Has Description', value: data.clinics.data.withDesc, total: data.clinics.data.total },
+                {data.agencies.data && [
+                  { label: 'Has City', value: data.agencies.data.withCity, total: data.agencies.data.total },
+                  { label: 'Has Area', value: data.agencies.data.withArea, total: data.agencies.data.total },
+                  { label: 'Has Phone', value: data.agencies.data.withPhone, total: data.agencies.data.total },
+                  { label: 'Has Description', value: data.agencies.data.withDesc, total: data.agencies.data.total },
                 ].map(item => (
                   <div key={item.label}>
                     <div className="flex justify-between text-xs mb-1">
@@ -583,10 +583,10 @@ export default function RankingControlCenterTab() {
               </CardHeader>
               <CardContent className="space-y-3">
                 {[
-                  { label: 'Clinic ↔ Treatment Links', value: data.treatments.data?.linked || 0, benchmark: 'Target: 5 per clinic' },
-                  { label: 'Clinic ↔ Insurance Links', value: data.insurances.data?.linked || 0, benchmark: 'Target: 3 per clinic' },
-                  { label: 'Approved Reviews', value: data.reviews.data?.approved || 0, benchmark: 'Target: 5 per clinic' },
-                  { label: 'Active Dentist Profiles', value: data.agencies.data?.total || 0, benchmark: 'Target: 1 per clinic' },
+                  { label: 'Clinic ↔ Treatment Links', value: data.categories.data?.linked || 0, benchmark: 'Target: 5 per agency' },
+                  { label: 'Clinic ↔ Insurance Links', value: data.insurances.data?.linked || 0, benchmark: 'Target: 3 per agency' },
+                  { label: 'Approved Reviews', value: data.reviews.data?.approved || 0, benchmark: 'Target: 5 per agency' },
+                  { label: 'Active Agency Staff Profiles', value: data.agencies.data?.total || 0, benchmark: 'Target: 1 per agency' },
                 ].map(item => (
                   <div key={item.label} className="flex justify-between items-center p-2 rounded bg-muted/30">
                     <div>

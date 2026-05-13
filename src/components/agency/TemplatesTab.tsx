@@ -189,12 +189,12 @@ export default function TemplatesTab() {
   const [customMessage, setCustomMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
 
-  // Fetch clinic - skip for admins
+  // Fetch agency - skip for admins
   const { data: clinic, isLoading: clinicLoading } = useQuery({
     queryKey: ['agency-profile-templates', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name, slug, address')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -210,9 +210,9 @@ export default function TemplatesTab() {
     queryKey: ['clinic-patients-templates', clinic?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('patients')
+        .from('foster_carers')
         .select('id, name, phone, email')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .eq('is_deleted_by_dentist', false)
         .order('name')
         .limit(200);
@@ -227,8 +227,8 @@ export default function TemplatesTab() {
     mutationFn: async () => {
       if (!sendTemplate || !clinic) throw new Error('No template selected');
       
-      const patient = patients.find(p => p.id === selectedPatientId);
-      if (!patient) throw new Error('No patient selected');
+      const applicant = patients.find(p => p.id === selectedPatientId);
+      if (!patient) throw new Error('No applicant selected');
 
       // Replace variables in message
       const message = (customMessage || sendTemplate.message)
@@ -511,7 +511,7 @@ export default function TemplatesTab() {
               <Label>Send Via</Label>
               <div className="grid grid-cols-3 gap-2 mt-1">
                 {sendTemplate?.channels.map(channel => {
-                  const patient = patients.find(p => p.id === selectedPatientId);
+                  const applicant = patients.find(p => p.id === selectedPatientId);
                   const disabled = channel === 'email' ? !patient?.email : !patient?.phone;
                   
                   return (

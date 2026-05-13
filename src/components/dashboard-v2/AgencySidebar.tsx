@@ -61,7 +61,7 @@ export default function AgencySidebar({ activeTab, onTabChange, collapsed, onCol
   const { data: clinic } = useQuery({
     queryKey: ['sidebar-clinic', user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase.from('clinics').select('id, name, slug, cover_image_url, verification_status, rating, review_count').eq('claimed_by', user?.id).limit(1).single();
+      const { data, error } = await supabase.from('agencies').select('id, name, slug, cover_image_url, verification_status, rating, review_count').eq('claimed_by', user?.id).limit(1).single();
       if (error && error.code !== 'PGRST116') throw error;
       return data;
     },
@@ -71,7 +71,7 @@ export default function AgencySidebar({ activeTab, onTabChange, collapsed, onCol
   const { data: pendingCount = 0 } = useQuery({
     queryKey: ['sidebar-pending-count', clinic?.id],
     queryFn: async () => {
-      const { count } = await supabase.from('appointments').select('id', { count: 'exact', head: true }).eq('clinic_id', clinic?.id).eq('status', 'pending');
+      const { count } = await supabase.from('appointments').select('id', { count: 'exact', head: true }).eq('agency_id', clinic?.id).eq('status', 'pending');
       return count || 0;
     },
     enabled: !!clinic?.id,

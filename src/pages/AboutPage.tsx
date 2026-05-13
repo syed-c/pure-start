@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Button } from "@/components/ui/button";
 import { SEOHead } from "@/components/seo/SEOHead";
+import { StructuredData } from "@/components/seo/StructuredData";
 import { useRealCounts } from "@/hooks/useRealCounts";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import {
@@ -61,11 +62,12 @@ const AboutPage = () => {
         canonical="/about/"
         keywords={['about foster connect', 'fostering directory', 'find fostering agency', 'foster care platform']}
       />
+      <StructuredData type="organization" />
 
       {/* ───── Hero ───── */}
       <section className="relative py-20 md:py-32 overflow-hidden">
         {/* Background decorations */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-background to-muted/30" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-background to-muted/30 pointer-events-none" />
         <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-primary/[0.06] rounded-full blur-3xl" />
         <div className="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-accent/[0.08] rounded-full blur-3xl" />
         
@@ -124,7 +126,8 @@ const AboutPage = () => {
       </section>
 
       {/* ───── Stats Bar ───── */}
-      <section className="border-y border-border bg-muted/20 py-10">
+      <section className="border-y border-border bg-muted/20 py-10 relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-grid opacity-20 pointer-events-none" />
         <div className="container">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, i) => (
@@ -141,7 +144,8 @@ const AboutPage = () => {
       </section>
 
       {/* ───── Mission ───── */}
-      <section className="py-20 md:py-28">
+      <section className="py-20 md:py-28 relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-dots opacity-10 pointer-events-none" />
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div {...fadeUp} className="order-2 lg:order-1">
@@ -185,7 +189,8 @@ const AboutPage = () => {
       </section>
 
       {/* ───── Our Story Timeline ───── */}
-      <section className="py-20 md:py-28 bg-muted/30">
+      <section className="py-20 md:py-28 bg-muted/30 relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-grid opacity-20 pointer-events-none" />
         <div className="container">
           <motion.div {...fadeUp} className="text-center mb-16">
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-4">
@@ -217,7 +222,8 @@ const AboutPage = () => {
       </section>
 
       {/* ───── Values ───── */}
-      <section className="py-20 md:py-28">
+      <section className="py-20 md:py-28 relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-dots opacity-10 pointer-events-none" />
         <div className="container">
           <motion.div {...fadeUp} className="text-center mb-16">
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-4">
@@ -278,7 +284,7 @@ const AboutPage = () => {
 
       {/* ───── CTA ───── */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary/80" />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary/80 pointer-events-none" />
         <div className="absolute -top-20 -right-20 w-60 h-60 bg-white/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-white/5 rounded-full blur-3xl" />
         <div className="container relative text-center">

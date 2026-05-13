@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { getLetterAvatarUrl } from "@/hooks/useProfiles";
+import { SEOHead } from "@/components/seo/SEOHead";
+import { StructuredData } from "@/components/seo/StructuredData";
 import { 
   Search, Shield, Star, Users, MapPin, ArrowRight, 
   Heart, Baby, Calendar, Home, HandHeart, GraduationCap, Award, CheckCircle,
@@ -15,6 +17,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
 import { useRealCounts } from "@/hooks/useRealCounts";
+import { POPULAR_CITIES } from "@/lib/constants/activeRegions";
 
 const fosteringServices = [
   { name: "Emergency Fostering", slug: "emergency-fostering", icon: Baby, description: "Immediate placements for children in crisis", color: "bg-red-500" },
@@ -30,6 +33,14 @@ const testimonials = [
   { name: "James & Claire T.", location: "Manchester", text: "The reviews helped us choose the right agency. Best decision we made for our family.", rating: 5 },
   { name: "Priya K.", location: "Birmingham", text: "As a first-time foster carrier, I felt supported every step of the way.", rating: 5 },
   { name: "Michael R.", location: "Leeds", text: "Excellent directory with verified agencies. Made the process so much easier.", rating: 5 },
+];
+
+const trustCredentials = [
+  { label: "Ofsted Registered", description: "All agencies verified against Ofsted records" },
+  { label: "DBS Checked", description: "Agencies meet safeguarding standards" },
+  { label: "Data Protection", description: "ICO-registered, GDPR compliant" },
+  { label: "Verified Reviews", description: "Real feedback from foster carers" },
+  { label: "Free Service", description: "100% free for prospective carers" },
 ];
 
 const trustBadges = [
@@ -55,16 +66,6 @@ function HomePage() {
         .limit(10);
       
       if (error) console.error('HomePage agencies error:', error.message);
-      
-      // If no results, try clinics table
-      if (!data || data.length === 0) {
-        const { data: clinicData } = await supabase
-          .from('clinics')
-          .select('id, name, slug, rating, review_count, is_verified, city, state, main_image_url, cover_image_url')
-          .order('rating', { ascending: false })
-          .limit(10);
-        return clinicData || [];
-      }
       
       return data || [];
     },
@@ -111,12 +112,33 @@ function HomePage() {
   const totalAgencies = counts?.agencies || 500;
   const totalCities = counts?.cities || 50;
 
+  // Use DB cities or fallback to POPULAR_CITIES constant
+  const displayCities = (dbCities || []).length > 0
+    ? dbCities
+    : POPULAR_CITIES.map(c => ({ id: c.slug, name: c.name, slug: c.slug }));
+
   return (
-    <PageLayout>
-      {/* Hero Section - Exact copy from StatePage */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-teal-950">
-          <div className="absolute inset-0 opacity-30">
+    <>
+      <SEOHead
+        title="Find Fostering Agencies in UK | Foster Care Directory"
+        description="Browse verified Ofsted-registered fostering agencies across England, Scotland, Wales, and Northern Ireland. Compare ratings, read reviews, and connect with agencies."
+        canonical="/"
+        keywords={['fostering agencies UK', 'foster care directory', 'become foster carrier', 'Ofsted registered agencies', 'UK fostering', 'foster agencies near me']}
+      />
+      <StructuredData type="organization" />
+      <PageLayout>
+      {/* Hero Section */}
+      <section className="relative overflow-hidden min-h-[600px] flex items-center">
+        <div className="absolute inset-0 pointer-events-none">
+          <img
+            src="https://images.unsplash.com/photo-1581579186916-5ac1fad4c010?w=1600&q=80"
+            alt="Family spending time together"
+            className="w-full h-full object-cover"
+            loading="eager"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-950/95 via-slate-900/95 to-teal-950/95 pointer-events-none" />
+          <div className="absolute inset-0 opacity-30 pointer-events-none">
             <div className="absolute top-20 left-10 w-72 h-72 bg-teal-500/20 rounded-full blur-[100px]" />
             <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px]" />
           </div>
@@ -240,18 +262,19 @@ function HomePage() {
       </section>
 
       {/* Trust Badges Section - Dark Background */}
-      <Section size="md" className="bg-slate-900">
-        <div className="container px-4">
+      <Section size="md" className="bg-slate-900 relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-dots opacity-30 pointer-events-none" />
+        <div className="relative">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {trustBadges.map((item, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }}>
-                <Card className="text-center py-6 bg-slate-800/50 border-slate-700 hover:border-teal-500/30 transition-colors">
+                <Card className="text-center py-6 bg-slate-800/50 border-slate-700 hover:border-teal-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-teal-500/5 hover:-translate-y-1">
                   <CardContent className="p-0">
-                    <div className="w-12 h-12 rounded-full bg-teal-500/10 flex items-center justify-center mx-auto mb-3">
-                      <item.icon className="h-6 w-6 text-teal-400" />
+                    <div className="w-14 h-14 rounded-full bg-teal-500/10 flex items-center justify-center mx-auto mb-3 group-hover:bg-teal-500/20 transition-colors">
+                      <item.icon className="h-7 w-7 text-teal-400" />
                     </div>
                     <h3 className="font-bold text-white">{item.title}</h3>
-                    <p className="text-xs text-slate-400">{item.desc}</p>
+                    <p className="text-xs text-slate-400 mt-1">{item.desc}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -261,8 +284,10 @@ function HomePage() {
       </Section>
 
       {/* Fostering Types Section - Dark Background */}
-      <Section size="lg" className="bg-slate-900">
-        <div className="container px-4">
+      <div className="bg-section-divider-top relative">
+      <Section size="lg" className="bg-slate-900 relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-grid opacity-20 pointer-events-none" />
+        <div>
           <div className="text-center mb-10">
             <Badge className="mb-3 bg-teal-500/20 text-teal-400 border-teal-500/30">Types of Fostering</Badge>
             <h2 className="text-2xl md:text-3xl font-bold text-white">Find the Right Fostering Type</h2>
@@ -288,19 +313,20 @@ function HomePage() {
           </div>
 
           <div className="text-center mt-8">
-            <Link to="/categories">
-              <Button variant="outline" size="lg" className="border-teal-500 text-teal-400 hover:bg-teal-500/20">
+            <Button variant="outline" size="lg" className="border-teal-500 text-teal-400 hover:bg-teal-500/20" asChild>
+              <Link to="/categories">
                 View All Services
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
-      </Section>
+      </Section></div>
 
       {/* Browse by City Section - Dark Background */}
-      <Section size="lg" className="bg-slate-900">
-        <div className="container px-4">
+      <Section size="lg" className="bg-slate-900 relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-dots opacity-20 pointer-events-none" />
+        <div>
           <div className="text-center mb-10">
             <Badge className="mb-3 bg-teal-500/20 text-teal-400 border-teal-500/30">Popular Locations</Badge>
             <h2 className="text-2xl md:text-3xl font-bold text-white">Browse Agencies by City</h2>
@@ -308,7 +334,7 @@ function HomePage() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4">
-            {(dbCities || []).map((city: any, i: number) => (
+            {displayCities.map((city: any, i: number) => (
               <motion.div key={city.id || i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
                 <Link to={`/fostering-agencies/${city.slug}/`}>
                   <Card className="group bg-slate-800/50 border-slate-700 hover:border-teal-500/50 hover:bg-teal-500/10 transition-all duration-300 cursor-pointer">
@@ -328,19 +354,21 @@ function HomePage() {
           </div>
 
           <div className="text-center mt-8">
-            <Link to="/fostering-agencies">
-              <Button variant="outline" size="lg" className="border-teal-500 text-teal-400 hover:bg-teal-500/20">
+            <Button variant="outline" size="lg" className="border-teal-500 text-teal-400 hover:bg-teal-500/20" asChild>
+              <Link to="/fostering-agencies">
                 View All Locations
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
 </Section>
 
       {/* Featured Agencies - Auto-scrolling Carousel with Images */}
-      <Section size="lg" className="bg-slate-900 overflow-hidden">
-        <div className="container px-4">
+      <div className="bg-section-divider-top relative">
+      <Section size="lg" className="bg-slate-900 overflow-hidden relative">
+        <div className="absolute inset-0 bg-subtle-grid opacity-10 pointer-events-none" />
+        <div>
           <div className="text-center mb-10">
             <Badge className="mb-3 bg-teal-500/20 text-teal-400 border-teal-500/30">Top Rated</Badge>
             <h2 className="text-2xl md:text-3xl font-bold text-white">Featured Fostering Agencies</h2>
@@ -403,63 +431,121 @@ function HomePage() {
 
           {featuredAgencies.length > 0 && (
             <div className="text-center mt-8">
-              <Link to="/search">
-                <Button variant="outline" size="lg" className="border-teal-500 text-teal-400 hover:bg-teal-500/20">
+              <Button variant="outline" size="lg" className="border-teal-500 text-teal-400 hover:bg-teal-500/20" asChild>
+                <Link to="/search">
                   View All Agencies
                   <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           )}
         </div>
-      </Section>
+      </Section></div>
+
+      {/* Testimonials Section */}
+      <section className="relative overflow-hidden bg-slate-950 py-20">
+        <div className="absolute inset-0 bg-subtle-dots-lg opacity-20 pointer-events-none" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-teal-500/20 to-transparent" />
+        <div className="container relative px-4">
+          <div className="text-center mb-12">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-500/10 text-teal-400 border border-teal-500/20 text-xs font-bold uppercase tracking-wider mb-4">
+              <Star className="h-3.5 w-3.5" /> Success Stories
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">Trusted by Foster Carers Across the UK</h2>
+            <p className="text-slate-400 max-w-2xl mx-auto">Hear from real carers who found their perfect agency through our directory</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-6xl mx-auto">
+            {testimonials.map((t, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="bg-slate-900/60 border border-slate-700/50 rounded-2xl p-6 hover:border-teal-500/30 hover:shadow-xl hover:shadow-teal-500/5 transition-all duration-300 relative group"
+              >
+                <div className="absolute top-4 right-4 text-4xl text-teal-500/10 font-serif leading-none select-none">"</div>
+                <div className="flex gap-1 mb-4">
+                  {[...Array(t.rating)].map((_, r) => (
+                    <Star key={r} className="h-4 w-4 text-amber-500 fill-amber-500" />
+                  ))}
+                </div>
+                <p className="text-slate-300 text-sm leading-relaxed mb-4 relative z-10">"{t.text}"</p>
+                <div className="border-t border-slate-700/50 pt-3 mt-auto">
+                  <p className="font-bold text-white text-sm">{t.name}</p>
+                  <p className="text-xs text-slate-500">{t.location}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Credentials Bar */}
+      <section className="relative bg-slate-950 border-t border-slate-800/50">
+        <div className="container px-4 py-8">
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-3">
+            {trustCredentials.map((cred, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className={`flex items-center gap-2 ${cred.label === "Ofsted Registered" ? "trust-badge-ofsted px-3 py-1.5 rounded-full" : ""}`}
+              >
+                <Shield className={`h-4 w-4 shrink-0 ${cred.label === "Ofsted Registered" ? "text-primary" : "text-teal-400"}`} />
+                <div>
+                  <span className={`text-sm font-bold ${cred.label === "Ofsted Registered" ? "text-primary" : "text-white"}`}>{cred.label}</span>
+                  <span className="text-xs text-slate-500 ml-2 hidden sm:inline">{cred.description}</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* SEO Content Section - About Fostering */}
-      <Section size="lg" className="bg-slate-950">
-        <div className="container px-4">
+      <Section size="lg" className="bg-slate-950 relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-grid opacity-10 pointer-events-none" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-teal-500/15 to-transparent" />
+        <div>
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-8">
               <Badge className="mb-3 bg-teal-500/20 text-teal-400 border-teal-500/30">Why Foster Care UK?</Badge>
               <h2 className="text-2xl md:text-3xl font-bold text-white">Find Your Perfect Fostering Agency</h2>
             </div>
             
-            <div className="grid md:grid-cols-2 gap-8">
-              <Card className="bg-slate-900/50 border-slate-800">
-                <CardContent className="p-6">
-                  <Shield className="h-10 w-10 text-teal-400 mb-4" />
-                  <h3 className="text-lg font-bold text-white mb-2">Ofsted Registered Agencies</h3>
-                  <p className="text-sm text-slate-400">
-                    All fostering agencies on our platform are Ofsted-registered and verified. We help you find trusted foster care services across England, Scotland, Wales, and Northern Ireland.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="bg-slate-900/50 border-slate-800">
-                <CardContent className="p-6">
-                  <Star className="h-10 w-10 text-teal-400 mb-4" />
-                  <h3 className="text-lg font-bold text-white mb-2">Honest Reviews & Ratings</h3>
-                  <p className="text-sm text-slate-400">
-                    Read genuine reviews from foster carers. Our directory features ratings and feedback to help you choose the best fostering agency for your family.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="bg-slate-900/50 border-slate-800">
-                <CardContent className="p-6">
-                  <MapPin className="h-10 w-10 text-teal-400 mb-4" />
-                  <h3 className="text-lg font-bold text-white mb-2">Local Fostering Agencies</h3>
-                  <p className="text-sm text-slate-400">
-                    Find fostering agencies near you. We list local foster care providers in every UK city and region, making it easy to find support in your community.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="bg-slate-900/50 border-slate-800">
-                <CardContent className="p-6">
-                  <Heart className="h-10 w-10 text-teal-400 mb-4" />
-                  <h3 className="text-lg font-bold text-white mb-2">Support Every Step</h3>
-                  <p className="text-sm text-slate-400">
-                    From your first enquiry to becoming a foster carer, find agencies that provide comprehensive support, training, and allowance guidance.
-                  </p>
-                </CardContent>
-              </Card>
+            <div className="grid md:grid-cols-2 gap-6">
+              {[
+                { icon: Shield, title: "Ofsted Registered Agencies", desc: "All fostering agencies on our platform are Ofsted-registered and verified. We help you find trusted foster care services across England, Scotland, Wales, and Northern Ireland." },
+                { icon: Star, title: "Honest Reviews & Ratings", desc: "Read genuine reviews from foster carers. Our directory features ratings and feedback to help you choose the best fostering agency for your family." },
+                { icon: MapPin, title: "Local Fostering Agencies", desc: "Find fostering agencies near you. We list local foster care providers in every UK city and region, making it easy to find support in your community." },
+                { icon: Heart, title: "Support Every Step", desc: "From your first enquiry to becoming a foster carer, find agencies that provide comprehensive support, training, and allowance guidance." },
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                >
+                  <Card className="bg-slate-900/60 border-slate-800/80 hover:border-teal-500/30 transition-all duration-300 group card-depth">
+                    <CardContent className="p-6 md:p-7">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-teal-500/10 flex items-center justify-center shrink-0 group-hover:bg-teal-500/20 transition-colors">
+                          <item.icon className="h-6 w-6 text-teal-400" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-bold text-white group-hover:text-teal-400 transition-colors mb-2">{item.title}</h3>
+                          <p className="text-sm text-slate-400 leading-relaxed">{item.desc}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>
@@ -467,13 +553,13 @@ function HomePage() {
 
       {/* CTA Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-teal-950 via-slate-900 to-teal-950">
-        <div className="absolute inset-0 opacity-30">
+        <div className="absolute inset-0 opacity-30 pointer-events-none">
           <div className="absolute top-20 left-10 w-72 h-72 bg-teal-500/20 rounded-full blur-[100px]" />
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px]" />
         </div>
         
         <Section size="lg">
-          <div className="container relative z-10 px-4">
+          <div className="relative z-10 px-4">
             <div className="max-w-3xl mx-auto text-center">
               <Badge className="mb-4 bg-teal-500 text-white">Get Started</Badge>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to Foster?</h2>
@@ -481,25 +567,26 @@ function HomePage() {
                 Take the first step towards becoming a foster carrier. Our directory makes it easy to find the right agency for your family.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
-                <Link to="/search">
-                  <Button size="lg" className="h-14 px-8 text-base font-semibold bg-teal-500 hover:bg-teal-600 text-slate-900 rounded-xl">
+                <Button size="lg" className="h-14 px-8 text-base font-semibold bg-teal-500 hover:bg-teal-600 text-slate-900 rounded-xl" asChild>
+                  <Link to="/search">
                     <Search className="mr-2 h-5 w-5" />
                     Find Agencies
-                  </Button>
-                </Link>
-                <Link to="/become-foster-carer">
-                  <Button size="lg" className="h-14 px-8 text-base font-semibold border-2 border-white/40 bg-white/10 text-white hover:bg-white/20 rounded-xl backdrop-blur-sm">
+                  </Link>
+                </Button>
+                <Button size="lg" className="h-14 px-8 text-base font-semibold border-2 border-white/40 bg-white/10 text-white hover:bg-white/20 rounded-xl backdrop-blur-sm" asChild>
+                  <Link to="/become-foster-carer">
                     Learn More
                     <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </Section>
-      </section>
-    </PageLayout>
-  );
+                  </Link>
+                </Button>
+               </div>
+               </div>
+             </div>
+           </Section>
+         </section>
+       </PageLayout>
+      </>  
+    );
 }
 
 export default HomePage;

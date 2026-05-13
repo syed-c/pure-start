@@ -61,9 +61,9 @@ export default function NotificationSettingsCard({ clinicId }: NotificationSetti
     queryKey: ['clinic-automation-settings', clinicId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinic_automation_settings')
+        .from('agency_automation_settings')
         .select('*')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .maybeSingle();
       if (error && error.code !== 'PGRST116') throw error;
       return data;
@@ -105,13 +105,13 @@ export default function NotificationSettingsCard({ clinicId }: NotificationSetti
       // Check if record exists
       if (automationSettings) {
         const { error } = await supabase
-          .from('clinic_automation_settings')
+          .from('agency_automation_settings')
           .update(updateData)
-          .eq('clinic_id', clinicId);
+          .eq('agency_id', clinicId);
         if (error) throw error;
       } else {
         const { error } = await supabase
-          .from('clinic_automation_settings')
+          .from('agency_automation_settings')
           .insert(updateData);
         if (error) throw error;
       }

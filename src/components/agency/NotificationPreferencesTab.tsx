@@ -64,13 +64,13 @@ export default function NotificationPreferencesTab() {
     confirmation_email_enabled: true,
   });
 
-  const { data: dentistSettings, isLoading: settingsLoading } = useQuery({
-    queryKey: ['dentist-notification-settings', clinic?.id],
+  const { data: agencySettings, isLoading: settingsLoading } = useQuery({
+    queryKey: ['agency-notification-settings', clinic?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('dentist_settings')
         .select('*')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .single();
 
       if (error && error.code !== 'PGRST116') throw error;
@@ -80,36 +80,36 @@ export default function NotificationPreferencesTab() {
   });
 
   useEffect(() => {
-    if (dentistSettings) {
+    if (agencySettings) {
       setSettings({
-        notification_new_appointment: dentistSettings.notification_new_appointment ?? true,
-        notification_form_submission: dentistSettings.notification_form_submission ?? true,
-        notification_cancellation: dentistSettings.notification_cancellation ?? true,
-        notification_message: dentistSettings.notification_message ?? true,
-        notification_channel_email: dentistSettings.notification_channel_email ?? true,
-        notification_channel_whatsapp: dentistSettings.notification_channel_whatsapp ?? false,
-        notification_channel_dashboard: dentistSettings.notification_channel_dashboard ?? true,
-        notification_email_secondary: dentistSettings.notification_email_secondary ?? null,
-        notification_whatsapp_number: dentistSettings.notification_whatsapp_number ?? null,
-        reminder_sms_enabled: dentistSettings.reminder_sms_enabled ?? true,
-        confirmation_email_enabled: dentistSettings.confirmation_email_enabled ?? true,
+        notification_new_appointment: agencySettings.notification_new_appointment ?? true,
+        notification_form_submission: agencySettings.notification_form_submission ?? true,
+        notification_cancellation: agencySettings.notification_cancellation ?? true,
+        notification_message: agencySettings.notification_message ?? true,
+        notification_channel_email: agencySettings.notification_channel_email ?? true,
+        notification_channel_whatsapp: agencySettings.notification_channel_whatsapp ?? false,
+        notification_channel_dashboard: agencySettings.notification_channel_dashboard ?? true,
+        notification_email_secondary: agencySettings.notification_email_secondary ?? null,
+        notification_whatsapp_number: agencySettings.notification_whatsapp_number ?? null,
+        reminder_sms_enabled: agencySettings.reminder_sms_enabled ?? true,
+        confirmation_email_enabled: agencySettings.confirmation_email_enabled ?? true,
       });
     }
-  }, [dentistSettings]);
+  }, [agencySettings]);
 
   const saveSettings = useMutation({
     mutationFn: async (newSettings: NotificationSettings) => {
       const { data: existing } = await supabase
         .from('dentist_settings')
         .select('id')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .single();
 
       if (existing) {
         const { error } = await supabase
           .from('dentist_settings')
           .update(newSettings)
-          .eq('clinic_id', clinic?.id);
+          .eq('agency_id', clinic?.id);
         if (error) throw error;
       } else {
         const { error } = await supabase
@@ -209,7 +209,7 @@ export default function NotificationPreferencesTab() {
               </div>
               <div>
                 <p className="font-medium">New Appointment Request</p>
-                <p className="text-sm text-muted-foreground">When a patient books or requests an appointment</p>
+                <p className="text-sm text-muted-foreground">When a applicant books or requests an appointment</p>
               </div>
             </div>
             <Switch
@@ -227,7 +227,7 @@ export default function NotificationPreferencesTab() {
               </div>
               <div>
                 <p className="font-medium">Form Submission Received</p>
-                <p className="text-sm text-muted-foreground">When a patient completes an intake form</p>
+                <p className="text-sm text-muted-foreground">When a applicant completes an intake form</p>
               </div>
             </div>
             <Switch
@@ -245,7 +245,7 @@ export default function NotificationPreferencesTab() {
               </div>
               <div>
                 <p className="font-medium">Appointment Cancellation</p>
-                <p className="text-sm text-muted-foreground">When a patient cancels their appointment</p>
+                <p className="text-sm text-muted-foreground">When a applicant cancels their appointment</p>
               </div>
             </div>
             <Switch
@@ -442,19 +442,19 @@ export default function NotificationPreferencesTab() {
         <Button
           variant="outline"
           onClick={() => {
-            if (dentistSettings) {
+            if (agencySettings) {
               setSettings({
-                notification_new_appointment: dentistSettings.notification_new_appointment ?? true,
-                notification_form_submission: dentistSettings.notification_form_submission ?? true,
-                notification_cancellation: dentistSettings.notification_cancellation ?? true,
-                notification_message: dentistSettings.notification_message ?? true,
-                notification_channel_email: dentistSettings.notification_channel_email ?? true,
-                notification_channel_whatsapp: dentistSettings.notification_channel_whatsapp ?? false,
-                notification_channel_dashboard: dentistSettings.notification_channel_dashboard ?? true,
-                notification_email_secondary: dentistSettings.notification_email_secondary ?? null,
-                notification_whatsapp_number: dentistSettings.notification_whatsapp_number ?? null,
-                reminder_sms_enabled: dentistSettings.reminder_sms_enabled ?? true,
-                confirmation_email_enabled: dentistSettings.confirmation_email_enabled ?? true,
+                notification_new_appointment: agencySettings.notification_new_appointment ?? true,
+                notification_form_submission: agencySettings.notification_form_submission ?? true,
+                notification_cancellation: agencySettings.notification_cancellation ?? true,
+                notification_message: agencySettings.notification_message ?? true,
+                notification_channel_email: agencySettings.notification_channel_email ?? true,
+                notification_channel_whatsapp: agencySettings.notification_channel_whatsapp ?? false,
+                notification_channel_dashboard: agencySettings.notification_channel_dashboard ?? true,
+                notification_email_secondary: agencySettings.notification_email_secondary ?? null,
+                notification_whatsapp_number: agencySettings.notification_whatsapp_number ?? null,
+                reminder_sms_enabled: agencySettings.reminder_sms_enabled ?? true,
+                confirmation_email_enabled: agencySettings.confirmation_email_enabled ?? true,
               });
             }
           }}

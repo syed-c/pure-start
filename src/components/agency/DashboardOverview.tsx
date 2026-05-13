@@ -41,12 +41,12 @@ interface DashboardOverviewProps {
 export default function DashboardOverview({ onNavigate }: DashboardOverviewProps) {
   const { user, isAdmin, isSuperAdmin } = useAuth();
 
-  // Fetch clinic - skip for admins who don't need a clinic
+  // Fetch agency - skip for admins who don't need a clinic
   const { data: clinic, isLoading: clinicLoading } = useQuery({
     queryKey: ['dashboard-clinic', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('*, clinic_hours(*), clinic_images(*)')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -65,7 +65,7 @@ export default function DashboardOverview({ onNavigate }: DashboardOverviewProps
       const { data } = await supabase
         .from('appointments')
         .select('*, treatment:treatments(name)')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .gte('preferred_date', today)
         .lte('preferred_date', today)
         .order('preferred_time');
@@ -81,7 +81,7 @@ export default function DashboardOverview({ onNavigate }: DashboardOverviewProps
       const { data } = await supabase
         .from('review_funnel_events')
         .select('*')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .order('created_at', { ascending: false })
         .limit(100);
       return data || [];
@@ -94,15 +94,15 @@ export default function DashboardOverview({ onNavigate }: DashboardOverviewProps
     queryKey: ['dashboard-patient-stats', clinic?.id],
     queryFn: async () => {
       const { count: total } = await supabase
-        .from('patients')
+        .from('foster_carers')
         .select('id', { count: 'exact', head: true })
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .or('is_deleted_by_dentist.is.null,is_deleted_by_dentist.eq.false');
       
       const { count: newThisMonth } = await supabase
-        .from('patients')
+        .from('foster_carers')
         .select('id', { count: 'exact', head: true })
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .gte('created_at', new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString());
       
       return { total: total || 0, newThisMonth: newThisMonth || 0 };

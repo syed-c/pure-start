@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { createAuditLog } from '@/lib/audit';
 
-interface DentistSettings {
+interface AgencySettings {
   id: string;
   clinic_id: string;
   booking_enabled: boolean;
@@ -29,31 +29,31 @@ export function useBookingSettings(agencyId: string | null) {
       const { data, error } = await supabase
         .from('dentist_settings')
         .select('*')
-        .eq('clinic_id', agencyId!)
+        .eq('agency_id', agencyId!)
         .single();
 
       if (error && error.code !== 'PGRST116') throw error;
-      return data as DentistSettings | null;
+      return data as AgencySettings | null;
     },
     enabled: !!agencyId,
   });
 
   const updateSettings = useMutation({
-    mutationFn: async (updates: Partial<DentistSettings>) => {
+    mutationFn: async (updates: Partial<AgencySettings>) => {
       if (!agencyId) throw new Error('No agency ID');
 
       // Check if settings exist
       const { data: existing } = await supabase
         .from('dentist_settings')
         .select('id')
-        .eq('clinic_id', agencyId)
+        .eq('agency_id', agencyId)
         .single();
 
       if (existing) {
         const { data, error } = await supabase
           .from('dentist_settings')
           .update(updates)
-          .eq('clinic_id', agencyId)
+          .eq('agency_id', agencyId)
           .select()
           .single();
 
@@ -107,7 +107,7 @@ export function useClinicBookingStatus(clinicId: string | null) {
       const { data, error } = await supabase
         .from('dentist_settings')
         .select('booking_enabled, allow_guest_booking, min_advance_booking_hours, max_advance_booking_days, booking_notes')
-        .eq('clinic_id', clinicId!)
+        .eq('agency_id', clinicId!)
         .single();
 
       if (error && error.code !== 'PGRST116') throw error;

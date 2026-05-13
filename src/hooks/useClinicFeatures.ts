@@ -46,7 +46,7 @@ export function useClinicSubscription(clinicId?: string) {
       if (!clinicId) return null;
       
       const { data, error } = await supabase
-        .from('clinic_subscriptions')
+        .from('agency_subscriptions')
         .select(`
           id,
           plan_id,
@@ -56,7 +56,7 @@ export function useClinicSubscription(clinicId?: string) {
           amount_paid,
           plan:subscription_plans(id, name, slug, description, price_monthly, price_yearly, billing_period)
         `)
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .eq('status', 'active')
         .maybeSingle();
       

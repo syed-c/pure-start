@@ -48,7 +48,7 @@ export default function ReviewRequestPage() {
         .from('review_requests')
         .select(`
           id, clinic_id, patient_id, patient_name, patient_email, recipient_name, short_code, status, expires_at,
-          clinic:clinics(id, name, slug, google_place_id, cover_image_url)
+          agency:agencies(id, name, slug, google_place_id, cover_image_url)
         `)
         .eq('short_code', requestCode)
         .single();
@@ -255,7 +255,7 @@ export default function ReviewRequestPage() {
               <AlertCircle className="h-8 w-8 text-amber-600" />
             </div>
             <h1 className="text-2xl font-bold mb-2">Link Expired</h1>
-            <p className="text-muted-foreground">This review request has expired. Please contact the clinic for a new link.</p>
+            <p className="text-muted-foreground">This review request has expired. Please contact the agency for a new link.</p>
           </CardContent>
         </Card>
       </div>

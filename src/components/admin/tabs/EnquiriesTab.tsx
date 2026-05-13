@@ -1,3 +1,4 @@
+// TODO: This tab currently shows agencies instead of leads/enquiries. It needs to be rebuilt to query from the enquiries/lead tables.
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabaseAdmin } from '@/integrations/supabase/client';
@@ -20,6 +21,7 @@ import {
   Filter
 } from 'lucide-react';
 import { format } from 'date-fns';
+import { toast } from 'sonner';
 
 interface AgencyEnquiry {
   id: string;
@@ -202,7 +204,7 @@ export default function EnquiriesTab() {
                     {agency.created_at ? format(new Date(agency.created_at), 'MMM d, yyyy') : '-'}
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" onClick={() => toast("Coming soon")}>
                       View
                     </Button>
                   </TableCell>

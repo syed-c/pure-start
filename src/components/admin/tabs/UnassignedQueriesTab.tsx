@@ -36,9 +36,9 @@ import {
 
 interface UnassignedAppointment {
   id: string;
-  patient_name: string;
-  patient_email: string | null;
-  patient_phone: string;
+  enquirer_name: string;
+  enquirer_email: string | null;
+  enquirer_phone: string;
   preferred_date: string | null;
   preferred_time: string | null;
   notes: string | null;
@@ -62,7 +62,7 @@ export default function UnassignedQueriesTab() {
   const [routingNotes, setRoutingNotes] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
 
-  // Fetch unassigned appointments (from unpaid clinics or marked as unassigned)
+  // Fetch unassigned enquiries (from unpaid agencies or marked as unassigned)
   const { data: appointments, isLoading, refetch } = useQuery({
     queryKey: ['unassigned-appointments', statusFilter],
     queryFn: async () => {
@@ -86,13 +86,13 @@ export default function UnassignedQueriesTab() {
     },
   });
 
-  // Fetch paid clinics for rerouting (same city)
+  // Fetch paid agencies for rerouting (same city)
   const { data: paidClinics } = useQuery({
     queryKey: ['paid-clinics-for-routing', selectedAppointment?.clinic?.city_id],
     queryFn: async () => {
       if (!selectedAppointment?.clinic?.city_id) return [];
 
-      // Get clinics with active subscriptions in the same city
+      // Get agencies with active subscriptions in the same city
       const { data, error } = await supabase
         .from('agencies')
         .select(`
@@ -106,7 +106,7 @@ export default function UnassignedQueriesTab() {
 
       if (error) throw error;
       
-      // Filter to only paid clinics (with active subscription)
+      // Filter to only paid agencies (with active subscription)
       return (data || []).filter((c: any) => 
         c.subscriptions?.some((s: any) => s.status === 'active')
       );
@@ -114,7 +114,7 @@ export default function UnassignedQueriesTab() {
     enabled: !!selectedAppointment?.clinic?.city_id && routeModalOpen,
   });
 
-  // Route appointment to another clinic
+  // Route enquiry to another clinic
   const routeAppointment = useMutation({
     mutationFn: async ({ appointmentId, newClinicId, notes }: { appointmentId: string; newClinicId: string; notes: string }) => {
       const { data: oldData } = await supabase
@@ -193,20 +193,20 @@ export default function UnassignedQueriesTab() {
     },
   });
 
-  // Respond to patient manually
+  // Respond to applicant manually
   const respondToPatient = useMutation({
     mutationFn: async ({ appointmentId, message, channel }: { appointmentId: string; message: string; channel: 'email' | 'sms' }) => {
-      const appointment = appointments?.find(a => a.id === appointmentId);
+      const enquiry = appointments?.find(a => a.id === appointmentId);
       if (!appointment) throw new Error('Appointment not found');
 
-      if (channel === 'email' && appointment.patient_email) {
+      if (channel === 'email' && appointment.enquirer_email) {
         // Send via edge function
         await supabase.functions.invoke('send-review-request', {
           body: {
-            to: appointment.patient_email,
+            to: appointment.enquirer_email,
             type: 'email',
             subject: 'Response to Your Appointment Inquiry',
-            html: `<p>Dear ${appointment.patient_name},</p><p>${message}</p><p>Best regards,<br>Foster Care Team</p>`,
+            html: `<p>Dear ${appointment.enquirer_name},</p><p>${message}</p><p>Best regards,<br>Foster Care Team</p>`,
           },
         });
       }
@@ -232,9 +232,9 @@ export default function UnassignedQueriesTab() {
     if (!searchTerm) return true;
     const term = searchTerm.toLowerCase();
     return (
-      apt.patient_name.toLowerCase().includes(term) ||
-      apt.patient_email?.toLowerCase().includes(term) ||
-      apt.patient_phone.includes(term) ||
+      apt.enquirer_name.toLowerCase().includes(term) ||
+      apt.enquirer_email?.toLowerCase().includes(term) ||
+      apt.enquirer_phone.includes(term) ||
       apt.clinic?.name.toLowerCase().includes(term)
     );
   });
@@ -346,7 +346,7 @@ export default function UnassignedQueriesTab() {
         <CardHeader>
           <CardTitle>Unassigned Queries ({filteredAppointments?.length || 0})</CardTitle>
           <CardDescription>
-            These appointments are from clinics without paid plans and need to be manually routed to paid agencies
+            These enquiries are from agencies without paid plans and need to be manually routed to paid agencies
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -368,7 +368,7 @@ export default function UnassignedQueriesTab() {
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
                           <User className="h-4 w-4 text-muted-foreground" />
-                          <span className="font-semibold">{apt.patient_name}</span>
+                          <span className="font-semibold">{apt.enquirer_name}</span>
                           <Badge variant="outline" className="text-xs">
                             {apt.status}
                           </Badge>
@@ -379,12 +379,12 @@ export default function UnassignedQueriesTab() {
                         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <Phone className="h-3 w-3" />
-                            {apt.patient_phone}
+                            {apt.enquirer_phone}
                           </span>
-                          {apt.patient_email && (
+                          {apt.enquirer_email && (
                             <span className="flex items-center gap-1">
                               <Mail className="h-3 w-3" />
-                              {apt.patient_email}
+                              {apt.enquirer_email}
                             </span>
                           )}
                           {apt.preferred_date && (
@@ -468,14 +468,14 @@ export default function UnassignedQueriesTab() {
           <DialogHeader>
             <DialogTitle>Route Appointment to Paid Dentist</DialogTitle>
             <DialogDescription>
-              Select a paid clinic in the same area to receive this booking
+              Select a paid agency in the same area to receive this booking
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
               <Label>Patient</Label>
-              <p className="text-sm font-medium">{selectedAppointment?.patient_name}</p>
-              <p className="text-xs text-muted-foreground">{selectedAppointment?.patient_phone}</p>
+              <p className="text-sm font-medium">{selectedAppointment?.enquirer_name}</p>
+              <p className="text-xs text-muted-foreground">{selectedAppointment?.enquirer_phone}</p>
             </div>
             <div>
               <Label>Select Paid Clinic</Label>
@@ -493,7 +493,7 @@ export default function UnassignedQueriesTab() {
               </Select>
               {paidClinics?.length === 0 && (
                 <p className="text-xs text-amber-600 mt-1">
-                  No paid clinics found in this area
+                  No paid agencies found in this area
                 </p>
               )}
             </div>
@@ -534,7 +534,7 @@ export default function UnassignedQueriesTab() {
           <DialogHeader>
             <DialogTitle>Respond to Patient</DialogTitle>
             <DialogDescription>
-              Send a direct response to {selectedAppointment?.patient_name}
+              Send a direct response to {selectedAppointment?.enquirer_name}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">

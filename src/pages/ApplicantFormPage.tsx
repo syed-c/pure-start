@@ -241,7 +241,7 @@ export default function ApplicantFormPage() {
   }
 
   const template = submission.template as any;
-  const clinic = submission.clinic as any;
+  const agency = submission.clinic as any;
   const FormIcon = FORM_TYPE_ICONS[template?.form_type] || FileText;
   const fields: FormField[] = template?.fields || [];
 
@@ -268,7 +268,7 @@ export default function ApplicantFormPage() {
               <CardContent className="p-6">
                 <h3 className="font-bold mb-2">What happens next?</h3>
                 <ul className="text-sm text-muted-foreground space-y-2 text-left">
-                  <li>• The clinic will review your information</li>
+                  <li>• The agency will review your information</li>
                   <li>• You may receive a confirmation email</li>
                   <li>• Arrive 10-15 minutes early for your appointment</li>
                 </ul>
@@ -284,7 +284,7 @@ export default function ApplicantFormPage() {
     <PageLayout>
       <SEOHead
         title={`${template?.name || "Patient Form"} - ${clinic?.name || "Fostering Agency"}`}
-        description={template?.description || "Complete your patient intake form"}
+        description={template?.description || "Complete your applicant intake form"}
         noindex
       />
       

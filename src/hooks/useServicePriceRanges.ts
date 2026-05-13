@@ -30,7 +30,7 @@ export function useServicePriceRanges(treatmentSlug?: string) {
 
       if (treatmentSlug) {
         const { data: treatment } = await supabase
-          .from('treatments')
+          .from('fostering_categories')
           .select('id')
           .eq('slug', treatmentSlug)
           .maybeSingle();

@@ -18,7 +18,7 @@ export interface ContentBlock {
   content?: string;
   imageUrl?: string;
   imageAlt?: string;
-  // For dentist-list blocks
+  // For agency-list blocks
   clinicIds?: string[];
   locationLabel?: string;
   // For faq-list blocks
@@ -205,7 +205,7 @@ export default function BlogContentBlockEditor({ blocks, onChange, blogTitle }: 
   };
 
   const handleGenerateImage = async (blockId: string, contextText?: string) => {
-    const prompt = contextText || blogTitle || 'dental healthcare';
+    const prompt = contextText || blogTitle || 'foster care';
     setGeneratingImageFor(blockId);
     try {
       const { data, error } = await supabase.functions.invoke('blog-ai-assistant', {
@@ -291,7 +291,7 @@ export default function BlogContentBlockEditor({ blocks, onChange, blogTitle }: 
               <GripVertical className="h-4 w-4 text-muted-foreground cursor-grab" />
               {block.type === 'heading' && `${block.headingLevel?.toUpperCase() || 'H2'} Block`}
               {block.type === 'image' && 'Image Block'}
-              {block.type === 'dentist-list' && `Dentist List (${block.clinicIds?.length || 0} clinics)`}
+              {block.type === 'dentist-list' && `Agency List (${block.clinicIds?.length || 0} agencies)`}
               {block.type === 'faq-list' && `FAQ Section (${block.faqs?.length || 0} items)`}
             </div>
             <div className="flex items-center gap-1">

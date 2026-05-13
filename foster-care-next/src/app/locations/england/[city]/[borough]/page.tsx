@@ -26,8 +26,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${boroughName.charAt(0).toUpperCase() + boroughName.slice(1)} Fostering Agencies | ${cityName} Foster Care`,
     description: `Find verified fostering agencies in ${boroughName}, ${cityName}. Connect with the best fostering agencies near you.`,
+    keywords: [`fostering agencies ${boroughName}`, 'foster care agency', 'foster agency ${cityName}', 'UK foster care'],
     alternates: {
       canonical: `https://www.foster-care.co.uk/locations/england/${city}/${borough}`,
+    },
+    openGraph: {
+      title: `${boroughName.charAt(0).toUpperCase() + boroughName.slice(1)} Fostering Agencies | ${cityName}`,
+      description: `Find verified fostering agencies in ${boroughName}, ${cityName}.`,
+      url: `https://www.foster-care.co.uk/locations/england/${city}/${borough}`,
+      siteName: 'Foster Care UK',
+      locale: 'en_GB',
+      type: 'website',
+      images: [
+        {
+          url: 'https://www.foster-care.co.uk/og-image.jpg',
+          width: 1200,
+          height: 630,
+          alt: `Fostering Agencies in ${boroughName}`,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${boroughName} Fostering Agencies`,
+      description: `Find verified fostering agencies in ${boroughName}.`,
+      images: ['https://www.foster-care.co.uk/og-image.jpg'],
     },
   };
 }
@@ -43,8 +66,38 @@ export default async function BoroughPage({ params }: Props) {
   const boroughName = borough.replace(/-/g, ' ');
   const boroughDisplay = boroughName.charAt(0).toUpperCase() + boroughName.slice(1);
 
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://www.foster-care.co.uk/',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: cityName,
+        item: `https://www.foster-care.co.uk/locations/england/${city}`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: boroughDisplay,
+        item: `https://www.foster-care.co.uk/locations/england/${city}/${borough}`,
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-[#0a0a0f]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <main>
       <section className="relative py-20 bg-gradient-to-b from-[#0a0a0f] to-[#0f0f14]">
         <div className="container px-4">
           <div className="max-w-4xl mx-auto text-center">
@@ -97,6 +150,7 @@ export default async function BoroughPage({ params }: Props) {
           )}
         </div>
       </section>
+      </main>
     </div>
   );
 }

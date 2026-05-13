@@ -61,7 +61,7 @@ interface CrmNumber {
 }
 
 const MESSAGE_TEMPLATES = [
-  { id: 'appointment_reminder', name: 'Appointment Reminder', text: 'Hi {name}, this is a reminder for your appointment at {clinic} on {date}. Reply YES to confirm or call us to reschedule.' },
+  { id: 'appointment_reminder', name: 'Appointment Reminder', text: 'Hi {name}, this is a reminder for your enquiry at {clinic} on {date}. Reply YES to confirm or call us to reschedule.' },
   { id: 'review_request', name: 'Review Request', text: 'Hi {name}, thank you for visiting {clinic}! We value your feedback. Please share your experience: {link}' },
   { id: 'followup', name: 'Follow-up', text: 'Hi {name}, thank you for your visit to {clinic}. How are you feeling? Let us know if you need anything!' },
   { id: 'promotion', name: 'Special Offer', text: 'Hi {name}! {clinic} has a special offer for you. Visit us this month and get 20% off your next treatment!' },
@@ -83,7 +83,7 @@ export default function MessagesTab() {
     queryKey: ['agency-profile-messages', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -102,7 +102,7 @@ export default function MessagesTab() {
       const { data, error } = await supabase
         .from('crm_numbers')
         .select('*')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .eq('is_active', true)
         .limit(1)
         .single();
@@ -118,9 +118,9 @@ export default function MessagesTab() {
     queryKey: ['clinic-messages', clinic?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinic_messages')
+        .from('messages')
         .select('*')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .order('created_at', { ascending: false })
         .limit(100);
 
@@ -135,9 +135,9 @@ export default function MessagesTab() {
     queryKey: ['clinic-patients-quick', clinic?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('patients')
+        .from('foster_carers')
         .select('id, name, phone, is_opted_in_sms')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .eq('is_opted_in_sms', true)
         .order('last_visit_at', { ascending: false })
         .limit(20);
@@ -176,11 +176,11 @@ export default function MessagesTab() {
   // Send message mutation
   const sendMessage = useMutation({
     mutationFn: async () => {
-      if (!clinic?.id) throw new Error('No clinic found');
+      if (!clinic?.id) throw new Error('No agency found');
       if (!recipientPhone.trim()) throw new Error('Phone number is required');
       if (!messageContent.trim()) throw new Error('Message is required');
 
-      const { error } = await supabase.from('clinic_messages').insert({
+      const { error } = await supabase.from('messages').insert({
         clinic_id: clinic.id,
         recipient_phone: recipientPhone.trim(),
         message_content: messageContent.trim(),
@@ -298,7 +298,7 @@ export default function MessagesTab() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">Send appointment reminders and follow-up messages via SMS</p>
+              <p className="text-sm text-muted-foreground">Send enquiry reminders and follow-up messages via SMS</p>
             </CardContent>
           </Card>
           

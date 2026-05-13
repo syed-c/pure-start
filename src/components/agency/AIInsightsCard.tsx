@@ -41,7 +41,7 @@ interface AIInsight {
 export default function AIInsightsCard({ clinicId, clinicName, onNavigate }: AIInsightsCardProps) {
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // Fetch clinic stats for AI analysis
+  // Fetch agency stats for AI analysis
   const { data: stats, isLoading } = useQuery({
     queryKey: ['ai-insights-stats', clinicId],
     queryFn: async () => {
@@ -52,17 +52,17 @@ export default function AIInsightsCard({ clinicId, clinicName, onNavigate }: AII
       const { data: appointments } = await supabase
         .from('appointments')
         .select('status, created_at')
-        .eq('clinic_id', clinicId);
+        .eq('agency_id', clinicId);
 
       // Get review funnel events
       const { data: funnelEvents } = await supabase
         .from('review_funnel_events')
         .select('event_type, created_at')
-        .eq('clinic_id', clinicId);
+        .eq('agency_id', clinicId);
 
-      // Get clinic info
-      const { data: clinic } = await supabase
-        .from('clinics')
+      // Get agency info
+      const { data: agency } = await supabase
+        .from('agencies')
         .select('rating, review_count, verification_status, google_place_id, description')
         .eq('id', clinicId)
         .single();
@@ -71,7 +71,7 @@ export default function AIInsightsCard({ clinicId, clinicName, onNavigate }: AII
       const { data: images } = await supabase
         .from('clinic_images')
         .select('id')
-        .eq('clinic_id', clinicId);
+        .eq('agency_id', clinicId);
 
       const appts = appointments || [];
       const events = funnelEvents || [];
@@ -122,7 +122,7 @@ export default function AIInsightsCard({ clinicId, clinicName, onNavigate }: AII
         type: 'warning',
         icon: TrendingDown,
         title: 'Rating Needs Attention',
-        description: 'Focus on patient experience to improve.',
+        description: 'Focus on applicant experience to improve.',
         action: { label: 'View Reviews', tab: 'my-reputation' },
       });
     }
@@ -133,7 +133,7 @@ export default function AIInsightsCard({ clinicId, clinicName, onNavigate }: AII
         type: 'warning',
         icon: AlertTriangle,
         title: 'High Negative Feedback',
-        description: 'Address patient concerns privately.',
+        description: 'Address applicant concerns privately.',
         action: { label: 'View Feedback', tab: 'my-reputation' },
       });
     } else if (stats.positiveRate >= 80 && stats.thumbsUp > 5) {

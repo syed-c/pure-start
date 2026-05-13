@@ -30,7 +30,7 @@ export function useProviderVerifications(agencyId?: string) {
       const { data, error } = await supabase
         .from('provider_verifications')
         .select('*')
-        .eq('clinic_id', agencyId)
+        .eq('agency_id', agencyId)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -48,7 +48,7 @@ export function useAllVerifications(status?: VerificationStatus) {
         .from('provider_verifications')
         .select(`
           *,
-          clinic:clinics(id, name),
+          agency:agencies(id, name),
           dentist:dentists(id, name)
         `)
         .order('submitted_at', { ascending: false });
@@ -148,7 +148,7 @@ export function useUpdateVerificationStatus() {
 
         if (verification?.clinic_id && verification.verification_type === 'identity') {
           await supabase
-            .from('clinics')
+            .from('agencies')
             .update({ verification_status: 'verified' })
             .eq('id', verification.clinic_id);
         }

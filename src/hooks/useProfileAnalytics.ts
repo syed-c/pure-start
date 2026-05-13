@@ -30,7 +30,7 @@ export function useProfileAnalytics(agencyId?: string, days: number = 30) {
       const { data: currentData, error } = await supabase
         .from('profile_analytics')
         .select('event_type, created_at')
-        .eq('clinic_id', agencyId)
+        .eq('agency_id', agencyId)
         .gte('created_at', startDate.toISOString())
         .order('created_at', { ascending: true });
 
@@ -40,7 +40,7 @@ export function useProfileAnalytics(agencyId?: string, days: number = 30) {
       const { data: previousData } = await supabase
         .from('profile_analytics')
         .select('event_type')
-        .eq('clinic_id', agencyId)
+        .eq('agency_id', agencyId)
         .gte('created_at', previousStartDate.toISOString())
         .lt('created_at', startDate.toISOString());
 

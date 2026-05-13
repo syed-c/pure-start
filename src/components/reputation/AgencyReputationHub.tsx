@@ -63,7 +63,7 @@ export default function AgencyReputationHub() {
           </div>
           <h3 className="text-2xl font-bold mb-3">No Practice Linked</h3>
           <p className="text-muted-foreground max-w-lg mx-auto mb-8">
-            Your account is not linked to a dental practice yet. Claim your practice profile
+            Your account is not linked to a fostering agency yet. Claim your agency profile
             or contact support if you believe this is an error.
           </p>
           <Button asChild className="gap-2">

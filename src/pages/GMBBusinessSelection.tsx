@@ -199,20 +199,20 @@ export default function GMBBusinessSelection() {
         throw new Error('No active session');
       }
 
-      // Check if this is a re-link flow (existing dentist linking GMB to their clinic)
+      // Check if this is a re-link flow (existing foster carer linking GMB to their clinic)
       const isRelinkFlow = localStorage.getItem('gmb_relink_flow') === 'true';
       
       if (isRelinkFlow) {
-        // For re-link, just update the existing clinic with the new google_place_id
+        // For re-link, just update the existing agency with the new google_place_id
         const { data: existingClinic } = await supabase
-          .from('clinics')
+          .from('agencies')
           .select('id')
           .eq('claimed_by', user?.id)
           .single();
         
         if (existingClinic) {
           const { error: updateError } = await supabase
-            .from('clinics')
+            .from('agencies')
             .update({
               google_place_id: selectedBusiness.placeId,
               gmb_data: {
@@ -241,7 +241,7 @@ export default function GMBBusinessSelection() {
         }
       }
 
-      // New listing flow - create clinic via edge function
+      // New listing flow - create agency via edge function
       const { data, error: createError } = await supabase.functions.invoke('gmb-create-listing', {
         headers: { Authorization: `Bearer ${session.access_token}` },
         body: { business: selectedBusiness },
@@ -255,11 +255,11 @@ export default function GMBBusinessSelection() {
 
       toast.success('Your practice has been successfully listed!');
 
-      // Tokens are only needed for the discovery step; clear them after the clinic is created.
+      // Tokens are only needed for the discovery step; clear them after the agency is created.
       clearGmbProviderToken();
       localStorage.removeItem('gmb_listing_flow');
 
-      // Refresh roles in case dentist role was just assigned
+      // Refresh roles in case foster carer role was just assigned
       await refreshRoles();
 
       // Check if location requires manual selection

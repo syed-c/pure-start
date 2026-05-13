@@ -63,34 +63,34 @@ interface AutomationSettings {
 // Message templates for preview
 const messageTemplates = [
   {
-    id: 'appointment_reminder',
-    name: 'Appointment Reminder',
+    id: 'enquiry_followup',
+    name: 'Enquiry Follow-up',
     channel: 'sms',
-    template: 'Hi {{patient_name}}, this is a reminder for your appointment at {{clinic_name}} on {{date}} at {{time}}. Reply CONFIRM to confirm or RESCHEDULE to change.\n\n– {{clinic_name}}',
+    template: 'Hi {{enquirer_name}}, thank you for your interest in fostering with {{agency_name}}. A member of our team will be in touch within 24 hours.\n\n– {{agency_name}}',
   },
   {
     id: 'review_request',
     name: 'Review Request',
     channel: 'sms',
-    template: 'Hi {{patient_name}}, thank you for visiting {{clinic_name}}. We\'d love your feedback! Please share your experience: {{review_link}}\n\n– {{clinic_name}}',
-  },
-  {
-    id: 'booking_confirmation',
-    name: 'Booking Confirmation',
-    channel: 'sms',
-    template: 'Your appointment is confirmed! ✓\n\n📍 {{clinic_name}}\n📅 {{date}} at {{time}}\n🦷 {{treatment}}\n\nTo reschedule: {{reschedule_link}}\nTo cancel: {{cancel_link}}',
+    template: 'Hi {{enquirer_name}}, thank you for choosing {{agency_name}}. We\'d love your feedback! Please share your experience: {{review_link}}\n\n– {{agency_name}}',
   },
   {
     id: 'welcome_message',
     name: 'Welcome Message',
     channel: 'whatsapp',
-    template: 'Welcome to {{clinic_name}}! 👋\n\nThank you for choosing us for your fostering care. We\'re here to help you maintain a healthy smile.\n\nBook your next appointment: {{booking_link}}\n\n– The {{clinic_name}} Team',
+    template: 'Welcome to {{agency_name}}! 👋\n\nThank you for your interest in fostering. We\'re here to support you every step of the way on your fostering journey.\n\nLearn more: {{booking_link}}\n\n– The {{agency_name}} Team',
   },
   {
-    id: 'followup',
-    name: 'Post-Treatment Follow-up',
+    id: 'placement_update',
+    name: 'Placement Update',
     channel: 'sms',
-    template: 'Hi {{patient_name}}, we hope you\'re feeling great after your visit to {{clinic_name}}! If you have any questions or concerns, please don\'t hesitate to contact us.\n\nReply HELP for assistance.',
+    template: 'Hi {{enquirer_name}}, we have an update regarding your fostering enquiry with {{agency_name}}. Please check your email or call us for details.\n\n– {{agency_name}}',
+  },
+  {
+    id: 'training_reminder',
+    name: 'Training Reminder',
+    channel: 'sms',
+    template: 'Hi {{enquirer_name}}, this is a reminder about your upcoming training session with {{agency_name}} on {{date}} at {{time}}. We look forward to seeing you.\n\n– {{agency_name}}',
   },
 ];
 
@@ -104,14 +104,14 @@ export default function MessagingControlTab() {
   
   // Sample data for preview
   const sampleData = {
-    patient_name: 'Sarah Johnson',
-    clinic_name: 'Bright Futures Fostering',
+    enquirer_name: 'Sarah Johnson',
+    agency_name: 'Bright Futures Fostering',
     date: 'January 15, 2026',
     time: '10:30 AM',
     treatment: 'Fostering Enquiry',
     review_link: 'https://www.foster-care.co.uk/review/abc123',
-    booking_link: 'https://www.foster-care.co.uk/book/abc123',
-    reschedule_link: 'https://www.foster-care.co.uk/reschedule/abc123',
+    booking_link: 'https://www.foster-care.co.uk/enquire/abc123',
+    reschedule_link: 'https://www.foster-care.co.uk/contact/abc123',
     cancel_link: 'https://www.foster-care.co.uk/cancel/abc123',
   };
   
@@ -133,8 +133,8 @@ export default function MessagingControlTab() {
     queryKey: ['admin-all-messages'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinic_messages')
-        .select('*, clinic:clinics(id, name)')
+        .from('messages')
+        .select('*, agency:agencies(id, name)')
         .order('created_at', { ascending: false })
         .limit(200);
 
@@ -143,14 +143,14 @@ export default function MessagingControlTab() {
     },
   });
 
-  // Fetch clinic automation settings
+  // Fetch agency automation settings
   const { data: automationSettings, isLoading: settingsLoading } = useQuery({
     queryKey: ['admin-automation-settings'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinic_automation_settings')
-        .select('*, clinic:clinics(id, name)')
-        .order('clinic_id');
+        .from('agency_automation_settings')
+        .select('*, agency:agencies(id, name)')
+        .order('agency_id');
 
       if (error) throw error;
       return data as AutomationSettings[];
@@ -161,7 +161,7 @@ export default function MessagingControlTab() {
   const toggleMessaging = useMutation({
     mutationFn: async ({ id, enabled }: { id: string; enabled: boolean }) => {
       const { error } = await supabase
-        .from('clinic_automation_settings')
+        .from('agency_automation_settings')
         .update({ is_messaging_enabled: enabled })
         .eq('id', id);
 
@@ -178,7 +178,7 @@ export default function MessagingControlTab() {
   const updateLimit = useMutation({
     mutationFn: async ({ id, limit }: { id: string; limit: number }) => {
       const { error } = await supabase
-        .from('clinic_automation_settings')
+        .from('agency_automation_settings')
         .update({ daily_message_limit: limit })
         .eq('id', id);
 
@@ -226,7 +226,7 @@ export default function MessagingControlTab() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-display font-bold text-foreground">Messaging Control</h1>
-          <p className="text-muted-foreground mt-1">Monitor and control all clinic messaging</p>
+          <p className="text-muted-foreground mt-1">Monitor and control all agency messaging</p>
         </div>
       </div>
 
@@ -437,7 +437,7 @@ export default function MessagingControlTab() {
             <CardHeader>
               <CardTitle>Clinic Messaging Controls</CardTitle>
               <CardDescription>
-                Enable/disable messaging and set limits per clinic
+                Enable/disable messaging and set limits per agency
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
@@ -518,7 +518,7 @@ export default function MessagingControlTab() {
                   ) : (
                     <TableRow>
                       <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
-                        No clinic settings configured
+                        No agency settings configured
                       </TableCell>
                     </TableRow>
                   )}

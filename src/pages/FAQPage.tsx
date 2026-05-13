@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Button } from "@/components/ui/button";
 import { SEOHead } from "@/components/seo/SEOHead";
+import { StructuredData } from "@/components/seo/StructuredData";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import { useRealCounts } from "@/hooks/useRealCounts";
@@ -94,10 +95,14 @@ const FAQPage = () => {
         canonical="/faq/"
         keywords={['fostering FAQ UK', 'become foster carer questions', 'Ofsted fostering agency', 'fostering allowance']}
       />
+      <StructuredData 
+        type="faq" 
+        questions={categories.flatMap(c => c.faqs.map(f => ({ question: f.q, answer: f.a })))} 
+      />
 
       {/* ───── Hero ───── */}
       <section className="relative py-20 md:py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-background to-muted/30" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-background to-muted/30 pointer-events-none" />
         <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-primary/[0.06] rounded-full blur-3xl" />
         <div className="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-accent/[0.08] rounded-full blur-3xl" />
 
@@ -229,7 +234,7 @@ const FAQPage = () => {
 
       {/* ───── CTA ───── */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary/80" />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary/80 pointer-events-none" />
         <div className="absolute -top-20 -right-20 w-60 h-60 bg-white/10 rounded-full blur-3xl" />
         <div className="container relative text-center">
           <motion.div {...fadeUp}>

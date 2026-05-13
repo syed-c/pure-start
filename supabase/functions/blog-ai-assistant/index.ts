@@ -78,7 +78,16 @@ serve(async (req) => {
   }
 
   try {
-    const AIMLAPI_KEY = Deno.env.get("AIMLAPI_KEY");
+    let AIMLAPI_KEY = Deno.env.get("AIMLAPI_KEY");
+    if (!AIMLAPI_KEY) {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL");
+      const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+      if (supabaseUrl && supabaseServiceKey) {
+        const sec = createClient(supabaseUrl, supabaseServiceKey);
+        const { data: secData } = await sec.from("app_secrets").select("value").eq("key", "AIMLAPI_KEY").single();
+        if (secData?.value) AIMLAPI_KEY = secData.value;
+      }
+    }
     if (!AIMLAPI_KEY) {
       throw new Error("AIMLAPI_KEY is not configured");
     }

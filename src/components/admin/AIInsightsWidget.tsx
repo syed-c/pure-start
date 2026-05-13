@@ -43,8 +43,8 @@ export default function AIInsightsWidget() {
         { count: appointmentsThisWeek },
         { count: appointmentsLastWeek },
       ] = await Promise.all([
-        supabase.from('clinics').select('*', { count: 'exact', head: true }),
-        supabase.from('clinics').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed'),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }),
+        supabase.from('agencies').select('*', { count: 'exact', head: true }).eq('claim_status', 'claimed'),
         supabase.from('claim_requests').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('review_funnel_events').select('*', { count: 'exact', head: true }).eq('event_type', 'thumbs_down').gte('created_at', weekAgo.toISOString()),
         supabase.from('appointments').select('*', { count: 'exact', head: true }).gte('created_at', weekAgo.toISOString()),

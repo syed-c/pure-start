@@ -157,7 +157,7 @@ export default function SiteConfigTab() {
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
   const [footerText, setFooterText] = useState({
     copyright: '© 2025 Foster Care. All rights reserved.',
-    legal: 'Licensed Dental Professionals Only.',
+    legal: 'Registered fostering information service. All agencies are independently verified.',
   });
 
   // Load config into state when fetched
@@ -187,19 +187,19 @@ export default function SiteConfigTab() {
         // Default footer sections (no /ae/ prefix)
         setFooterSections([
           { id: '1', title: 'Services', order: 1, links: [
-            { label: 'Teeth Whitening', path: '/services/teeth-whitening' },
-            { label: 'Dental Implants', path: '/services/fostering-placements' },
-            { label: 'Invisalign', path: '/services/invisalign' },
+            { label: 'Fostering Placements', path: '/fostering-types/placements' },
+            { label: 'Emergency Fostering', path: '/fostering-types/emergency' },
+            { label: 'Therapeutic Fostering', path: '/fostering-types/therapeutic' },
           ]},
           { id: '2', title: 'Locations', order: 2, links: [
-            { label: 'California', path: '/california' },
-            { label: 'Massachusetts', path: '/massachusetts' },
+            { label: 'England', path: '/locations/england' },
+            { label: 'Scotland', path: '/locations/scotland' },
           ]},
           { id: '3', title: 'Company', order: 3, links: [
             { label: 'About Us', path: '/about' },
             { label: 'Contact', path: '/contact' },
             { label: 'FAQs', path: '/faq' },
-            { label: 'Pricing', path: '/pricing' },
+            { label: 'How It Works', path: '/how-it-works' },
           ]},
         ]);
       }
@@ -234,7 +234,7 @@ export default function SiteConfigTab() {
       if (legal) {
         setFooterText({
           copyright: legal.copyright_text || '© 2025 Foster Care. All rights reserved.',
-          legal: legal.footer_text || 'Licensed Dental Professionals Only.',
+          legal: legal.footer_text || 'Registered fostering information service. All agencies are independently verified.',
         });
       }
     }
@@ -355,7 +355,7 @@ export default function SiteConfigTab() {
     });
     
     // Services
-    treatments.forEach((t: any) => {
+    categories.forEach((t: any) => {
       pages.push({ label: t.name, path: `/services/${t.slug}`, category: 'Services' });
     });
     

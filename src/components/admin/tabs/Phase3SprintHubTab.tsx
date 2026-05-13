@@ -45,10 +45,10 @@ const SPRINT_3_1_CATEGORIES = {
     targetCount: 12,
     targetWordCount: 1500,
     templates: [
-      'Toothache Relief', 'Crown Falls Off', 'Root Canal Signs',
-      'Bleeding After Extraction', 'Wisdom Tooth Pain', 'Dental Abscess',
-      'Broken Tooth Repair', 'Gum Disease Stages', 'Sensitive Teeth',
-      'Dental Numbness', 'Bridge Fell Out', 'Post-Root Canal Care',
+      'First Night Anxiety', 'Child Refuses School', 'Sibling Arguments',
+      'Contact Visits Stress', 'Birth Family Issues', 'Self-Harm Concerns',
+      'Placement Breakdown', 'School Exclusion', 'Therapy Access',
+      'Support Network Building', 'Respite Request', 'Moving to Adoption',
     ],
   },
   'insurance': {
@@ -57,20 +57,20 @@ const SPRINT_3_1_CATEGORIES = {
     targetCount: 20,
     targetWordCount: 1800,
     templates: [
-      'Cigna Coverage', 'Aetna Coverage', 'Delta Dental Coverage',
-      'MetLife Coverage', 'United Healthcare Coverage', 'Dental Financing',
-      'CareCredit Worth It', 'HSA FSA Guide',
+      'Fostering Allowance Guide', 'Tax Benefits for Carers', 'Respite Care Funding',
+      'Adoption Allowance', 'Disability Living Allowance', 'Education Funding',
+      'Therapy Cost Coverage', 'NHS Continuing Care',
     ],
   },
 };
 
-// Sprint 3.2: Neighborhood Pages (UAE Areas)
+// Sprint 3.2: Neighborhood Pages (UK Areas)
 const NEIGHBORHOOD_TARGETS = {
-  'dubai': ['jumeirah', 'al-barsha', 'deira', 'bur-dubai', 'downtown', 'marina', 'jbr', 'silicon-oasis', 'al-quoz', 'mirdif', 'al-nahda', 'karama', 'satwa', 'international-city', 'business-bay'],
-  'abu-dhabi': ['khalifa-city', 'al-reem-island', 'corniche', 'al-khalidiyah', 'mushrif', 'al-ain', 'yas-island', 'saadiyat-island', 'mussafah', 'al-wahda'],
-  'sharjah': ['al-nahda', 'al-majaz', 'al-khan', 'al-qasimia', 'muwaileh', 'university-city', 'al-taawun', 'al-mamzar'],
-  'ajman': ['al-nuaimia', 'al-rashidiya', 'al-jurf', 'al-rumaila', 'emirates-city'],
-  'ras-al-khaimah': ['al-nakheel', 'al-dhait', 'al-hamra', 'khuzam', 'julphar'],
+  'london': ['camden', 'hackney', 'islington', 'kensington', 'greenwich', 'croydon', 'bromley', 'lewisham', 'southwark', 'tower-hamlets', 'westminster', 'hammersmith', 'ealing', 'haringey', 'wandsworth'],
+  'manchester': ['didsbury', 'chorlton', 'salford', 'prestwich', 'withington', 'fallowfield', 'rusholme', 'sale', 'altrincham', 'stockport'],
+  'birmingham': ['edgbaston', 'moseley', 'solihull', 'sutton-coldfield', 'harborne', 'kings-heath', 'erdington', 'yardley', 'handsworth', 'northfield'],
+  'leeds': ['headingley', 'chapel-allerton', 'roundhay', 'horsforth', 'guiseley', 'morley', 'pudsey', 'otley', 'ilkley', 'bradford'],
+  'liverpool': ['wavertree', 'allerton', 'woolton', 'aintree', 'kirkby', 'bootle', 'birkenhead', 'wallasey', 'formby', 'crosby'],
 };
 
 // Sprint 3.3: Free Tools & Outreach
@@ -167,9 +167,9 @@ export default function Phase3SprintHubTab() {
     },
   });
 
-  // Fetch unclaimed clinics for outreach
-  const { data: unclaimedClinics } = useQuery({
-    queryKey: ['unclaimed-clinics-count'],
+  // Fetch unclaimed agencies for outreach
+  const { data: unclaimedCount } = useQuery({
+    queryKey: ['unclaimed-agencies-count'],
     queryFn: async () => {
       const { count, error } = await supabase
         .from('agencies')
@@ -705,8 +705,8 @@ export default function Phase3SprintHubTab() {
                       </TableCell>
                       <TableCell className="text-xs max-w-[200px] truncate">
                         {tool.id === 'cost-calculator' && 'Agency Cost Guide | Estimate Procedure Costs'}
-                        {tool.id === 'insurance-checker' && 'Insurance Coverage Checker | Verify Dental Coverage'}
-                        {tool.id === 'emergency-finder' && 'Emergency Foster Care Near Me | 24/7 Dental Care'}
+{tool.id === 'insurance-checker' && 'Insurance Coverage Checker | Verify Coverage'}
+                        {tool.id === 'emergency-finder' && 'Emergency Foster Care Near Me | 24/7 Care Nearby'}
                       </TableCell>
                       <TableCell>
                         <Badge variant="secondary" className="text-[10px]">WebApplication</Badge>
@@ -763,7 +763,7 @@ export default function Phase3SprintHubTab() {
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Users className="h-5 w-5" />
-                  Dentist Partnership
+                  Agency Partnership
                 </CardTitle>
                 <CardDescription>Automated email campaign</CardDescription>
               </CardHeader>
@@ -827,7 +827,7 @@ export default function Phase3SprintHubTab() {
                   <div className="text-center py-8 text-muted-foreground">
                     <Mail className="h-12 w-12 mx-auto mb-3 opacity-50" />
                     <p>No active campaigns</p>
-                    <p className="text-sm">Launch your first dentist partnership campaign</p>
+                    <p className="text-sm">Launch your first foster carer partnership campaign</p>
                   </div>
                 )}
               </CardContent>
@@ -842,7 +842,7 @@ export default function Phase3SprintHubTab() {
           <DialogHeader>
             <DialogTitle>Launch Outreach Campaign</DialogTitle>
             <DialogDescription>
-              Send automated emails to unclaimed clinics inviting them to claim their profiles.
+              Send automated emails to unclaimed agencies inviting them to claim their profiles.
             </DialogDescription>
           </DialogHeader>
           
@@ -864,7 +864,7 @@ export default function Phase3SprintHubTab() {
             <div className="p-4 bg-muted/50 rounded-lg">
               <p className="text-sm font-medium">Recipients</p>
               <p className="text-2xl font-bold">{unclaimedClinics?.toLocaleString() || 0}</p>
-              <p className="text-xs text-muted-foreground">Unclaimed clinics with valid email</p>
+              <p className="text-xs text-muted-foreground">Unclaimed agencies with valid email</p>
             </div>
 
             <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">

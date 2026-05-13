@@ -366,7 +366,7 @@ export default function FAQGenerationStudioTab() {
       }
       // Service filter (check slug pattern)
       if (serviceFilter !== '__all__') {
-        const treatment = treatments?.find(t => t.id === serviceFilter);
+        const treatment = categories?.find((t: any) => t.id === serviceFilter);
         if (treatment && !page.slug.toLowerCase().includes(treatment.slug.toLowerCase())) {
           return false;
         }

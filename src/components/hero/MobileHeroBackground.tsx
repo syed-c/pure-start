@@ -142,7 +142,7 @@ export const MobileHeroBackground = () => {
         />
       </svg>
       
-      {/* Tooth/dental icon floating */}
+      {/* Agency/icon floating */}
       <motion.div 
         className="absolute top-24 left-[18%] opacity-20"
         animate={{ y: [-5, 8, -5], rotate: [-5, 5, -5] }}

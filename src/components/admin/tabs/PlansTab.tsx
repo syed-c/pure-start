@@ -217,15 +217,15 @@ export default function PlansTab() {
     },
   });
 
-  // Fetch clinics with subscriptions
+  // Fetch agencies with subscriptions
   const { data: clinicSubscriptions = [] } = useQuery({
     queryKey: ['clinic-subscriptions-admin'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinic_subscriptions')
+        .from('agency_subscriptions')
         .select(`
           *,
-          clinic:clinics(id, name, slug, verification_status),
+          agency:agencies(id, name, slug, verification_status),
           plan:subscription_plans(id, name, slug)
         `)
         .order('created_at', { ascending: false });
@@ -234,9 +234,9 @@ export default function PlansTab() {
     },
   });
 
-  // Fetch all clinics for assignment - NO LIMIT
+  // Fetch all agencies for assignment - NO LIMIT
   const [clinicSearch, setClinicSearch] = useState('');
-  const { data: clinics = [], isLoading: clinicsLoading } = useQuery({
+  const { data: agencies = [], isLoading: clinicsLoading } = useQuery({
     queryKey: ['all-clinics-for-plans-unlimited'],
     queryFn: async () => {
       const allClinics: any[] = [];
@@ -266,7 +266,7 @@ export default function PlansTab() {
     },
   });
 
-  // Filter clinics based on search
+  // Filter agencies based on search
   const filteredClinicsForAssign = useMemo(() => {
     if (!clinicSearch.trim()) return clinics;
     const searchLower = clinicSearch.toLowerCase();
@@ -330,21 +330,21 @@ export default function PlansTab() {
   const assignPlan = useMutation({
     mutationFn: async ({ clinicId, planId }: { clinicId: string; planId: string }) => {
       const { data: existing } = await supabase
-        .from('clinic_subscriptions')
+        .from('agency_subscriptions')
         .select('id')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .maybeSingle();
 
       if (existing) {
         const { error } = await supabase
-          .from('clinic_subscriptions')
+          .from('agency_subscriptions')
           .update({ plan_id: planId, status: 'active', updated_at: new Date().toISOString() })
-          .eq('clinic_id', clinicId);
+          .eq('agency_id', clinicId);
         if (error) throw error;
       } else {
         const { error } = await supabase
-          .from('clinic_subscriptions')
-          .insert({ clinic_id: clinicId, plan_id: planId, status: 'active' });
+          .from('agency_subscriptions')
+          .insert({ agency_id: clinicId, plan_id: planId, status: 'active' });
         if (error) throw error;
       }
       
@@ -371,9 +371,9 @@ export default function PlansTab() {
       const { error } = await supabase
         .from('fostering_enquiries')
         .insert({
-          patient_name: customRequest.clinicName,
-          patient_email: customRequest.contactEmail,
-          patient_phone: customRequest.contactPhone,
+          enquirer_name: customRequest.clinicName,
+          enquirer_email: customRequest.contactEmail,
+          enquirer_phone: customRequest.contactPhone,
           message: `Custom Plan Request:
 - Expected Appointments/Year: ${customRequest.expectedAppointments}
 - Review Requests Needed: ${customRequest.reviewRequestsNeeded}
@@ -497,13 +497,13 @@ export default function PlansTab() {
                     Assign Plan to Clinic
                   </DialogTitle>
                   <DialogDescription className="text-muted-foreground">
-                    Search from {clinics.length.toLocaleString()} clinics and assign a subscription plan
+                    Search from {clinics.length.toLocaleString()} agencies and assign a subscription plan
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-5 py-4">
                   {/* Clinic Search & Selection */}
                   <div className="space-y-3">
-                    <Label className="text-sm font-bold text-foreground">Select Clinic</Label>
+                    <Label className="text-sm font-bold text-foreground">Select Agency</Label>
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
@@ -519,7 +519,7 @@ export default function PlansTab() {
                           <div className="text-center py-6 text-muted-foreground">Loading clinics...</div>
                         ) : filteredClinicsForAssign.length === 0 ? (
                           <div className="text-center py-6 text-muted-foreground">
-                            {clinicSearch ? 'No clinics found' : 'No clinics available'}
+                            {clinicSearch ? 'No agencies found' : 'No agencies available'}
                           </div>
                         ) : (
                           filteredClinicsForAssign.slice(0, 100).map((clinic: any) => (
@@ -560,7 +560,7 @@ export default function PlansTab() {
                       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-indigo-200 rounded-xl p-3 flex items-center gap-3">
                         <Building2 className="h-5 w-5 text-indigo-600" />
                         <div>
-                          <p className="text-xs text-indigo-600 font-medium">Selected Clinic</p>
+                          <p className="text-xs text-indigo-600 font-medium">Selected Agency</p>
                           <p className="font-bold text-indigo-800">{clinics.find((c: any) => c.id === selectedClinic)?.name}</p>
                         </div>
                       </div>
@@ -719,7 +719,7 @@ export default function PlansTab() {
                 <div className="mt-2 flex items-center justify-center gap-1 text-sm">
                   <TrendingUp className="h-4 w-4 text-teal" />
                   <span className="text-muted-foreground">Expected:</span>
-                  <span className="text-teal font-semibold">{plan.expected_patients} new patients/year</span>
+                  <span className="text-teal font-semibold">{plan.expected_patients} new carers/year</span>
                 </div>
               </div>
 
@@ -799,7 +799,7 @@ export default function PlansTab() {
                     <Input
                       value={customRequest.clinicName}
                       onChange={(e) => setCustomRequest(prev => ({ ...prev, clinicName: e.target.value }))}
-                      placeholder="e.g., Smile Dental Center"
+                      placeholder="e.g., Bright Foster Care Center"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -971,7 +971,7 @@ export default function PlansTab() {
           <Card className="overflow-hidden border shadow-sm">
             <CardHeader className="bg-muted/30 border-b">
               <CardTitle className="text-xl text-foreground">Clinic Plan Assignments</CardTitle>
-              <CardDescription className="text-muted-foreground">View and manage which clinics have which plans</CardDescription>
+              <CardDescription className="text-muted-foreground">View and manage which agencies have which plans</CardDescription>
             </CardHeader>
             <CardContent className="p-0">
               <Table>
@@ -1016,7 +1016,7 @@ export default function PlansTab() {
                         {sub.expires_at ? new Date(sub.expires_at).toLocaleDateString() : 'Never'}
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="sm" className="text-primary hover:text-primary hover:bg-primary/10">
+                        <Button variant="ghost" size="sm" className="text-primary hover:text-primary hover:bg-primary/10" onClick={() => toast("Edit assignment coming soon")}>
                           <Edit className="h-4 w-4" />
                         </Button>
                       </TableCell>
@@ -1027,7 +1027,7 @@ export default function PlansTab() {
                       <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
                         <Package className="h-12 w-12 mx-auto mb-3 text-muted-foreground/50" />
                         <p className="font-medium">No plan assignments yet</p>
-                        <p className="text-sm">Assign plans to clinics to get started</p>
+                        <p className="text-sm">Assign plans to agencies to get started</p>
                       </TableCell>
                     </TableRow>
                   )}

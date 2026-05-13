@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { SEOHead } from "@/components/seo/SEOHead";
+import { StructuredData } from "@/components/seo/StructuredData";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { z } from "zod";
@@ -102,9 +103,11 @@ const ContactPage = () => {
         canonical="/contact/"
         keywords={['contact foster connect', 'fostering help', 'fostering agency questions', 'foster care support']}
       />
+      <StructuredData type="organization" />
 
       {/* Hero */}
-      <section className="py-16 md:py-24 bg-muted/30">
+      <section className="py-16 md:py-24 bg-muted/30 relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-grid opacity-20 pointer-events-none" />
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
             <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">We're Here to Help</p>

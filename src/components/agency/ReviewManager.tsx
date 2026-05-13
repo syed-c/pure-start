@@ -53,12 +53,12 @@ export default function ReviewManager({ clinicId, clinicName, googlePlaceId }: R
   const { hasAccess: canAccessReviewManager, isLoading: featuresLoading } = useHasFeature(clinicId, 'review_manager');
   const { data: subscription } = useClinicSubscription(clinicId);
 
-  // Fetch clinic slug for review link
-  const { data: clinic } = useQuery({
+  // Fetch agency slug for review link
+  const { data: agency } = useQuery({
     queryKey: ['clinic-slug', clinicId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('slug')
         .eq('id', clinicId)
         .single();
@@ -82,7 +82,7 @@ export default function ReviewManager({ clinicId, clinicName, googlePlaceId }: R
       const { data, error } = await supabase
         .from('review_funnel_events')
         .select('*')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .order('created_at', { ascending: false })
         .limit(100);
       if (error) throw error;
@@ -119,7 +119,7 @@ export default function ReviewManager({ clinicId, clinicName, googlePlaceId }: R
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-display font-bold">Review Manager</h2>
-            <p className="text-muted-foreground">Collect and manage patient feedback</p>
+            <p className="text-muted-foreground">Collect and manage applicant feedback</p>
           </div>
         </div>
         
@@ -156,7 +156,7 @@ export default function ReviewManager({ clinicId, clinicName, googlePlaceId }: R
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-display font-bold">Review Manager</h2>
-          <p className="text-muted-foreground">Collect and manage patient feedback for {clinicName}</p>
+          <p className="text-muted-foreground">Collect and manage applicant feedback for {clinicName}</p>
         </div>
         <div className="flex gap-2">
           <Dialog open={qrDialogOpen} onOpenChange={setQrDialogOpen}>

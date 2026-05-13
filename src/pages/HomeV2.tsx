@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { SEOHead } from "@/components/seo/SEOHead";
+import { StructuredData } from "@/components/seo/StructuredData";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import { useRealCounts } from "@/hooks/useRealCounts";
 import { 
@@ -74,15 +75,22 @@ const HomeV2 = () => {
 
   return (
     <div className="min-h-screen bg-[#0a0a0f]">
-      <SEOHead title="Find Fostering Agencies in UK | Foster Care" description="Find verified fostering agencies across the UK" />
+      <SEOHead 
+        title="Find Fostering Agencies in UK | Foster Care" 
+        description="Find verified fostering agencies across the UK. Connect with Ofsted-registered foster care providers for emergency, short-term, long-term and specialist placements."
+        canonical="/"
+        keywords={['fostering agencies UK', 'foster care agency', 'become foster car', 'Ofsted registered foster agency', 'UK foster care']}
+      />
+      <StructuredData type="organization" />
+      <StructuredData type="website" />
       <Navbar />
 
       {/* HERO SECTION - New Clean Design */}
       <section className="relative min-h-[85vh] flex items-center overflow-hidden bg-[#0a0a0f]">
         {/* Background Pattern */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent" />
-          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0)', backgroundSize: '40px 40px' }} />
         </div>
 
         {/* Floating shapes */}
@@ -410,17 +418,17 @@ const HomeV2 = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to Start Your Journey?</h2>
           <p className="text-white/80 max-w-xl mx-auto mb-8">Find the perfect fostering agency for your family today.</p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link to="/search">
-              <Button size="lg" className="bg-white text-primary hover:bg-white/90 px-8">
+            <Button size="lg" className="bg-white text-primary hover:bg-white/90 px-8" asChild>
+              <Link to="/search">
                 <Search className="w-5 h-5 mr-2" />
                 Find Agencies
-              </Button>
-            </Link>
-            <Link to="/become-foster-carer">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 px-8">
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" className="border-white bg-transparent text-white hover:bg-white/10 px-8" asChild>
+              <Link to="/become-foster-carer">
                 Become a Foster Carer
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
       </section>

@@ -121,10 +121,10 @@ export default function AppointmentsTab() {
   };
 
   const getFilteredAppointments = () => {
-    let filtered = appointments || [];
+    let filtered = enquiries || [];
     filtered = filtered.filter(a =>
-      a.patient_name?.toLowerCase().includes(filters.search.toLowerCase()) ||
-      a.patient_phone?.includes(filters.search) ||
+      a.enquirer_name?.toLowerCase().includes(filters.search.toLowerCase()) ||
+      a.enquirer_phone?.includes(filters.search) ||
       a.clinic?.name?.toLowerCase().includes(filters.search.toLowerCase()) ||
       a.dentist?.name?.toLowerCase().includes(filters.search.toLowerCase())
     );
@@ -142,7 +142,7 @@ export default function AppointmentsTab() {
   const exportCSV = () => {
     const headers = ['Name', 'Phone', 'Email', 'Agency', 'Contact', 'Fostering Type', 'Date', 'Time', 'Status', 'Source', 'Created', 'Manage Link'];
     const rows = filteredAppointments.map(a => [
-      a.patient_name, a.patient_phone, a.patient_email || '', a.clinic?.name || '', a.dentist?.name || '',
+      a.enquirer_name, a.enquirer_phone, a.enquirer_email || '', a.clinic?.name || '', a.dentist?.name || '',
       a.treatment?.name || '', a.preferred_date || '', a.preferred_time || '', a.status, a.source, a.created_at,
       a.manage_token ? `${window.location.origin}/appointment/${a.manage_token}` : '',
     ]);
@@ -336,10 +336,10 @@ export default function AppointmentsTab() {
                         <User className="h-5 w-5 text-primary" />
                       </div>
                       <div>
-                        <p className="font-medium text-foreground">{apt.patient_name}</p>
+                        <p className="font-medium text-foreground">{apt.enquirer_name}</p>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <Phone className="h-3 w-3" />{apt.patient_phone}
-                          {apt.patient_email && (<><Mail className="h-3 w-3 ml-2" /><span className="truncate max-w-[120px]">{apt.patient_email}</span></>)}
+                          <Phone className="h-3 w-3" />{apt.enquirer_phone}
+                          {apt.enquirer_email && (<><Mail className="h-3 w-3 ml-2" /><span className="truncate max-w-[120px]">{apt.enquirer_email}</span></>)}
                         </div>
                       </div>
                     </div>
@@ -391,16 +391,16 @@ export default function AppointmentsTab() {
                       </Select>
                       {apt.manage_token && (<Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => copyManageLink(apt.manage_token!)} title="Copy manage link"><Copy className="h-4 w-4" /></Button>)}
                       {apt.manage_token && (<Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openManageLink(apt.manage_token!)} title="Open self-service page"><ExternalLink className="h-4 w-4" /></Button>)}
-                      {apt.patient_email && (<Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => sendNotification.mutate({ appointmentId: apt.id, type: apt.status || 'pending' })} title="Send email notification" disabled={sendNotification.isPending}><Send className="h-4 w-4" /></Button>)}
+                      {apt.enquirer_email && (<Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => sendNotification.mutate({ appointmentId: apt.id, type: apt.status || 'pending' })} title="Send email notification" disabled={sendNotification.isPending}><Send className="h-4 w-4" /></Button>)}
                       <Dialog>
                         <DialogTrigger asChild><Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSelectedAppointment(apt)}><Eye className="h-4 w-4" /></Button></DialogTrigger>
                         <DialogContent className="max-w-lg">
                           <DialogHeader><DialogTitle>Enquiry Details</DialogTitle></DialogHeader>
                           <div className="space-y-4">
                             <div className="grid grid-cols-2 gap-4">
-                              <div><p className="text-xs text-muted-foreground">Name</p><p className="font-medium">{apt.patient_name}</p></div>
-                              <div><p className="text-xs text-muted-foreground">Phone</p><p className="font-medium">{apt.patient_phone}</p></div>
-                              <div><p className="text-xs text-muted-foreground">Email</p><p className="font-medium">{apt.patient_email || '-'}</p></div>
+                              <div><p className="text-xs text-muted-foreground">Name</p><p className="font-medium">{apt.enquirer_name}</p></div>
+                              <div><p className="text-xs text-muted-foreground">Phone</p><p className="font-medium">{apt.enquirer_phone}</p></div>
+                              <div><p className="text-xs text-muted-foreground">Email</p><p className="font-medium">{apt.enquirer_email || '-'}</p></div>
                               <div><p className="text-xs text-muted-foreground">Status</p>{getStatusBadge(apt.status || 'pending')}</div>
                               <div><p className="text-xs text-muted-foreground">Date</p><p className="font-medium">{apt.preferred_date || '-'}</p></div>
                               <div><p className="text-xs text-muted-foreground">Time</p><p className="font-medium">{apt.preferred_time || '-'}</p></div>
@@ -419,7 +419,7 @@ export default function AppointmentsTab() {
                               </div>
                             )}
                             <div className="flex gap-2 pt-2 border-t">
-                              <Button variant="outline" size="sm" className="flex-1" onClick={() => sendNotification.mutate({ appointmentId: apt.id, type: apt.status || 'pending' })} disabled={!apt.patient_email || sendNotification.isPending}>
+                              <Button variant="outline" size="sm" className="flex-1" onClick={() => sendNotification.mutate({ appointmentId: apt.id, type: apt.status || 'pending' })} disabled={!apt.enquirer_email || sendNotification.isPending}>
                                 <Send className="h-4 w-4 mr-2" />Resend Email
                               </Button>
                               {apt.clinic?.slug && (

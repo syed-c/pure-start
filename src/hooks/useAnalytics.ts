@@ -28,7 +28,14 @@ export type GA4Event =
   | 'blog_read'
   | 'cta_click'
   | 'form_start'
-  | 'form_submit';
+  | 'form_submit'
+  // Fostering-specific events
+  | 'enquiry_submit'
+  | 'become_foster_carer'
+  | 'emergency_request'
+  | 'tool_usage'
+  | 'agency_contact'
+  | 'journey_start';
 
 export interface EventParams {
   // Common params
@@ -278,6 +285,77 @@ export function useAnalytics() {
     });
   }, [trackEvent]);
 
+  // Fostering-specific tracking functions
+  const trackEnquirySubmit = useCallback((params: {
+    agency_id?: string;
+    agency_name?: string;
+    enquiry_type: 'general' | 'contact' | 'emergency';
+    service_type?: string;
+    source?: string;
+  }) => {
+    trackEvent('enquiry_submit', {
+      content_category: 'fostering_enquiry',
+      ...params,
+    });
+  }, [trackEvent]);
+
+  const trackBecomeFosterCarer = useCallback((params: {
+    step: 'browse' | 'compare' | 'contact' | 'enquire' | 'apply';
+    agency_id?: string;
+    source?: string;
+  }) => {
+    trackEvent('become_foster_carer', {
+      journey_step: params.step,
+      ...params,
+    });
+  }, [trackEvent]);
+
+  const trackEmergencyRequest = useCallback((params: {
+    service_type?: string;
+    urgency_level?: 'immediate' | 'within_24h' | 'within_week';
+    location?: string;
+  }) => {
+    trackEvent('emergency_request', {
+      content_category: 'emergency_fostering',
+      ...params,
+    });
+  }, [trackEvent]);
+
+  const trackToolUsage = useCallback((params: {
+    tool: 'allowance_calculator' | 'eligibility_checker' | 'search';
+    action: 'start' | 'complete' | 'share';
+    result?: string;
+  }) => {
+    trackEvent('tool_usage', {
+      content_category: params.tool,
+      ...params,
+    });
+  }, [trackEvent]);
+
+  const trackAgencyContact = useCallback((params: {
+    agency_id: string;
+    agency_name: string;
+    contact_method: 'phone' | 'email' | 'form' | 'callback';
+    service_type?: string;
+  }) => {
+    trackEvent('agency_contact', {
+      content_category: 'agency_contact',
+      ...params,
+    });
+  }, [trackEvent]);
+
+  const trackJourneyStart = useCallback((params: {
+    step: 'browse' | 'compare' | 'contact' | 'enquire';
+    source: string;
+    agency_id?: string;
+    location?: string;
+  }) => {
+    trackEvent('journey_start', {
+      funnel_stage: params.step,
+      ...params,
+    });
+  }, [trackEvent]);
+
   return {
     trackEvent,
     trackAppointmentRequest,
@@ -291,6 +369,13 @@ export function useAnalytics() {
     trackPageView,
     trackCTAClick,
     trackBlogRead,
+    // Fostering-specific
+    trackEnquirySubmit,
+    trackBecomeFosterCarer,
+    trackEmergencyRequest,
+    trackToolUsage,
+    trackAgencyContact,
+    trackJourneyStart,
   };
 }
 

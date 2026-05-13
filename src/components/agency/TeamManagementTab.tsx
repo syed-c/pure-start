@@ -45,7 +45,7 @@ export default function TeamManagementTab() {
     queryKey: ['agency-profile-team', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -62,9 +62,9 @@ export default function TeamManagementTab() {
     queryKey: ['clinic-team', clinic?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('dentists')
+        .from('users')
         .select('*')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .order('is_primary', { ascending: false })
         .order('name');
 
@@ -77,12 +77,12 @@ export default function TeamManagementTab() {
   // Add team member mutation
   const addMember = useMutation({
     mutationFn: async (data: TeamMemberFormData) => {
-      if (!clinic?.id) throw new Error('No clinic found');
+      if (!clinic?.id) throw new Error('No agency found');
 
       const slug = data.name.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now().toString(36);
       
       const { error } = await supabase
-        .from('dentists')
+        .from('users')
         .insert({
           clinic_id: clinic.id,
           name: data.name,
@@ -122,7 +122,7 @@ export default function TeamManagementTab() {
   const updateMember = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: TeamMemberFormData }) => {
       const { error } = await supabase
-        .from('dentists')
+        .from('users')
         .update({
           name: data.name,
           title: data.title || null,
@@ -161,7 +161,7 @@ export default function TeamManagementTab() {
   const deleteMember = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
-        .from('dentists')
+        .from('users')
         .update({ is_active: false })
         .eq('id', id);
 
@@ -185,7 +185,7 @@ export default function TeamManagementTab() {
     setFormData({
       name: member.name,
       title: member.title || '',
-      professional_type: member.professional_type || 'dentist',
+      professional_type: member.professional_type || 'social_worker',
       is_primary: member.is_primary || false,
       license_number: member.license_number || '',
       department: member.department || '',

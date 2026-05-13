@@ -63,7 +63,7 @@ export default function AppointmentsTimeline({ clinicId, onViewAll }: Appointmen
       const { data } = await supabase
         .from('appointments')
         .select('*')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .order('created_at', { ascending: false })
         .limit(8);
       return data || [];
@@ -81,7 +81,7 @@ export default function AppointmentsTimeline({ clinicId, onViewAll }: Appointmen
       const { data } = await supabase
         .from('appointments')
         .select('status')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .gte('created_at', startOfDay)
         .lt('created_at', endOfDay);
 

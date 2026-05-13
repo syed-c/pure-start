@@ -22,7 +22,8 @@ export function useTabVisibility() {
           .eq('key', 'tab_visibility')
           .maybeSingle();
         if (error) return null;
-        return data?.value as unknown as TabVisibility | null;
+        if (!data) return null;
+        return data.value as unknown as TabVisibility;
       } catch {
         return null;
       }
@@ -35,6 +36,7 @@ export function useTabVisibility() {
   const isTabVisible = (tabId: string, dashboardType: 'admin' | 'agency'): boolean => {
     if (!data) return true;
     const visibilityMap = dashboardType === 'admin' ? data.adminTabs : data.agencyTabs;
+    if (!visibilityMap) return true;
     if (visibilityMap[tabId] === undefined) return true;
     return visibilityMap[tabId];
   };

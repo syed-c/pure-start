@@ -46,13 +46,13 @@ const WORD_COUNT_OPTIONS = [
 
 const DEFAULT_SEO_PROMPT = `You are a senior healthcare SEO content writer and local search strategist.
 
-You are writing a SERVICE-LOCATION PAGE for a dental directory platform (NOT a clinic website).
+You are writing a SERVICE-LOCATION PAGE for a fostering directory platform (NOT a agency website).
 This page helps users find agencys offering a specific treatment in a specific UAE location.
 
 IMPORTANT CONTEXT:
 - This website does NOT provide treatment.
-- It connects patients with licensed agencies and clinics.
-- Content must guide, educate, and help patients choose — not advertise one clinic.
+- It connects applicants with licensed agencies and clinics.
+- Content must guide, educate, and help applicants choose — not advertise one clinic.
 - The goal is to rank organically on Google using helpful content principles and E-E-A-T.
 
 GOOGLE & QUALITY REQUIREMENTS (MANDATORY):
@@ -65,7 +65,7 @@ GOOGLE & QUALITY REQUIREMENTS (MANDATORY):
 - No keyword stuffing, promotional claims, fake statistics, copied templates, or filler paragraphs
 
 WRITING STYLE:
-- Write like a knowledgeable healthcare guide helping a patient choose safely.
+- Write like a knowledgeable healthcare guide helping a applicant choose safely.
 - Tone: Clear, human, reassuring, informative. Not robotic, salesy, or repetitive.
 - Avoid: "best clinic", "top dentist", "leading clinic", exaggerated claims.
 - Use: Practical explanations, decision-making help, realistic expectations, safety guidance, UAE healthcare context.
@@ -88,7 +88,7 @@ STRUCTURE:
 - Closing — Encourage informed decision without pressure
 
 SEO RULES:
-- Natural variations: dentist in {AREA}, fostering agency in {AREA}, {SERVICE} in {EMIRATE}, treatment options near me
+- Natural variations: foster carer in {AREA}, fostering agency in {AREA}, {SERVICE} in {EMIRATE}, treatment options near me
 - Semantic entities: procedure steps, recovery, consultation, treatment planning, oral health goals
 - Do NOT repeat keywords unnaturally.
 

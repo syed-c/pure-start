@@ -94,10 +94,10 @@ export default function ClinicEnrichmentTab() {
   const [isBulkGenerating, setIsBulkGenerating] = useState(false);
   const [showBulkDialog, setShowBulkDialog] = useState(false);
   
-  // Filter: show all clinics or only those needing descriptions
+  // Filter: show all agencies or only those needing descriptions
   const [showAllClinics, setShowAllClinics] = useState(false);
 
-  // Fetch clinic stats
+  // Fetch agency stats
   const { data: clinicStats, refetch: refetchStats } = useQuery({
     queryKey: ['clinic-enrichment-stats'],
     queryFn: async () => {
@@ -128,7 +128,7 @@ export default function ClinicEnrichmentTab() {
     },
   });
 
-  // Fetch clinics without description with NO LIMIT
+  // Fetch agencies without description with NO LIMIT
   const { data: clinicsNeedingDescription = [], refetch: refetchClinics } = useQuery({
     queryKey: ['clinics-needing-description', searchTerm],
     queryFn: async () => {
@@ -153,7 +153,7 @@ export default function ClinicEnrichmentTab() {
     },
   });
 
-  // Fetch ALL clinics for management (paginated to get all)
+  // Fetch ALL agencies for management (paginated to get all)
   const { data: allClinics = [] } = useQuery({
     queryKey: ['all-clinics-enrichment', searchTerm],
     queryFn: async () => {
@@ -281,7 +281,7 @@ export default function ClinicEnrichmentTab() {
     }
   };
 
-  // Update clinic description mutation
+  // Update agency description mutation
   const updateDescriptionMutation = useMutation({
     mutationFn: async ({ clinicId, description }: { clinicId: string; description: string }) => {
       const { error } = await supabase
@@ -337,7 +337,7 @@ export default function ClinicEnrichmentTab() {
   // Add placeholder images
   const addPlaceholderImages = async () => {
     try {
-      // Update all clinics without cover images
+      // Update all agencies without cover images
       const { data: clinicsWithoutImages } = await supabase
         .from('agencies')
         .select('id')
@@ -345,7 +345,7 @@ export default function ClinicEnrichmentTab() {
         .eq('is_active', true);
       
       if (!clinicsWithoutImages || clinicsWithoutImages.length === 0) {
-        toast.info('All clinics already have images');
+        toast.info('All agencies already have images');
         return;
       }
 
@@ -356,7 +356,7 @@ export default function ClinicEnrichmentTab() {
       ];
 
       let updated = 0;
-      for (const clinic of clinicsWithoutImages) {
+      for (const agency of clinicsWithoutImages) {
         const randomImage = placeholderImages[Math.floor(Math.random() * placeholderImages.length)];
         const { error } = await supabase
           .from('agencies')
@@ -446,7 +446,7 @@ export default function ClinicEnrichmentTab() {
     addLog({
       clinic: '',
       action: 'started',
-      message: `Starting bulk generation for ${allIds.length} clinics with ${selectedWordCount} words...`,
+      message: `Starting bulk generation for ${allIds.length} agencies with ${selectedWordCount} words...`,
     });
 
     let processedTotal = 0;
@@ -1040,7 +1040,7 @@ export default function ClinicEnrichmentTab() {
                 <div className="relative w-64">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search clinics..."
+                    placeholder="Search agencies..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-10"
@@ -1124,7 +1124,7 @@ export default function ClinicEnrichmentTab() {
                 Image Management
               </CardTitle>
               <CardDescription>
-                {clinicStats?.noImage?.toLocaleString() || 0} clinics without images
+                {clinicStats?.noImage?.toLocaleString() || 0} agencies without images
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -1132,7 +1132,7 @@ export default function ClinicEnrichmentTab() {
                 <Image className="h-20 w-20 mx-auto text-muted-foreground/30 mb-6" />
                 <h3 className="text-xl font-bold mb-2">Add Placeholder Images</h3>
                 <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                  Click the button below to add professional fostering agency placeholder images to all clinics without cover photos. These are high-quality, royalty-free images.
+                  Click the button below to add professional fostering agency placeholder images to all agencies without cover photos. These are high-quality, royalty-free images.
                 </p>
                 <Button 
                   size="lg" 
@@ -1179,7 +1179,7 @@ export default function ClinicEnrichmentTab() {
               </Button>
             </div>
             <Textarea
-              placeholder="Enter clinic description..."
+              placeholder="Enter agency description..."
               value={editDescription}
               onChange={(e) => setEditDescription(e.target.value)}
               className="min-h-[200px]"

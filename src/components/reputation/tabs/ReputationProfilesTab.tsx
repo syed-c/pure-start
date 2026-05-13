@@ -24,7 +24,7 @@ export default function ReputationProfilesTab({ clinicId, isAdmin }: Props) {
     queryKey: ['rep-profiles', clinicId],
     queryFn: async () => {
       let query = supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name, slug, rating, review_count, is_active, claimed_by')
         .eq('is_active', true)
         .order('rating', { ascending: false });
@@ -44,15 +44,15 @@ export default function ReputationProfilesTab({ clinicId, isAdmin }: Props) {
         supabase
           .from('google_reviews')
           .select('rating, reply_status')
-          .eq('clinic_id', selectedClinic.id),
+          .eq('agency_id', selectedClinic.id),
         supabase
           .from('internal_reviews')
           .select('rating, status')
-          .eq('clinic_id', selectedClinic.id),
+          .eq('agency_id', selectedClinic.id),
         supabase
           .from('review_funnel_events')
           .select('event_type')
-          .eq('clinic_id', selectedClinic.id),
+          .eq('agency_id', selectedClinic.id),
       ]);
 
       const google = googleRes.data || [];

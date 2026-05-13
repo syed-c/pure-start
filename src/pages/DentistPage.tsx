@@ -53,7 +53,7 @@ const ContactPage = () => {
       if (!slug || slug.includes('/')) return null;
       const { data, error } = await supabase
         .from("dentists")
-        .select("*, clinic:clinics(id, name, slug, address, phone, latitude, longitude, city:cities(name, slug, state:states(name, abbreviation, slug)))")
+        .select("*, agency:agencies(id, name, slug, address, phone, latitude, longitude, city:cities(name, slug, state:states(name, abbreviation, slug)))")
         .eq("slug", slug)
         .maybeSingle();
       if (error) throw error;

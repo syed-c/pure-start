@@ -79,7 +79,7 @@ export default function GMBOnboarding() {
     queryFn: async () => {
       if (!user?.id) return null;
       const { data } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('*, city:cities(name), area:areas(name)')
         .eq('claimed_by', user.id)
         .maybeSingle();
@@ -239,7 +239,7 @@ export default function GMBOnboarding() {
   const handleGoToDashboard = async () => {
     setIsSkipping(true);
 
-    // Bootstrap dentist role if missing
+    // Bootstrap foster carer role if missing
     const { data: rolesData } = await supabase
       .from('user_roles')
       .select('role')
@@ -267,7 +267,7 @@ export default function GMBOnboarding() {
   };
 
   const handleCompleteProfile = async () => {
-    // Bootstrap dentist role if missing
+    // Bootstrap foster carer role if missing
     const { data: rolesData } = await supabase
       .from('user_roles')
       .select('role')
@@ -410,13 +410,13 @@ export default function GMBOnboarding() {
               )}
 
               {/* Location Selection Needed Warning */}
-              {needsLocationSelection && clinic && (
+              {needsLocationSelection && agency && (
                 <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl p-4">
                   <MapPin className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
                   <div className="flex-1">
                     <p className="font-medium text-amber-900">Location Confirmation Required</p>
                     <p className="text-sm text-amber-700 mb-3">
-                      We couldn't auto-detect your exact area. Please confirm your location so your clinic appears on the right directory pages.
+                      We couldn't auto-detect your exact area. Please confirm your location so your agency appears on the right directory pages.
                     </p>
                     <Button
                       onClick={() => setShowLocationModal(true)}
@@ -437,7 +437,7 @@ export default function GMBOnboarding() {
                   <div>
                     <p className="font-medium text-teal">Location Verified</p>
                     <p className="text-sm text-muted-foreground">
-                      Your clinic is now listed in {clinic?.area?.name || clinic?.city?.name || 'your area'}
+                      Your agency is now listed in {clinic?.area?.name || clinic?.city?.name || 'your area'}
                     </p>
                   </div>
                 </div>
@@ -493,7 +493,7 @@ export default function GMBOnboarding() {
                   <Shield className="h-4 w-4 text-primary mt-0.5" />
                   <div>
                     <p className="text-sm font-medium">Verified Badge</p>
-                    <p className="text-xs text-muted-foreground">Build patient trust</p>
+                    <p className="text-xs text-muted-foreground">Build applicant trust</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
@@ -597,7 +597,7 @@ export default function GMBOnboarding() {
           detectedCityId={detectedCityId || clinic?.city_id}
           onLocationSelected={() => {
             queryClient.invalidateQueries({ queryKey: ['user-clinic'] });
-            toast.success('Location confirmed! Your clinic is now live.');
+            toast.success('Location confirmed! Your agency is now live.');
             // Navigate without the location_pending flag
             navigate('/onboarding?gmb_connected=true&listing_created=true&location_verified=true', { replace: true });
           }}

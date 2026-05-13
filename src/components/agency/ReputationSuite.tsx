@@ -110,12 +110,12 @@ const MESSAGE_TEMPLATES = [
     id: 'appointment_reminder',
     name: 'Appointment Reminder',
     description: 'Remind about upcoming appointment',
-    message: 'Hi {name}! This is a reminder about your upcoming appointment at {clinic}. We look forward to seeing you!',
+    message: 'Hi {name}! This is a reminder about your upcoming enquiry at {clinic}. We look forward to seeing you!',
   },
   {
     id: 'thank_you',
     name: 'Thank You',
-    description: 'Thank patient for their visit',
+    description: 'Thank applicant for their visit',
     message: 'Hi {name}! Thank you for choosing {clinic} for your fostering care. We truly appreciate your trust in us!',
   },
 ];
@@ -156,7 +156,7 @@ export default function ReputationSuite() {
     queryKey: ['agency-profile-reputation', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name, slug, google_place_id, rating, review_count')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -178,7 +178,7 @@ export default function ReputationSuite() {
       const { data, error } = await supabase
         .from('review_funnel_events')
         .select('*')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .order('created_at', { ascending: false })
         .limit(500);
       if (error) throw error;
@@ -194,7 +194,7 @@ export default function ReputationSuite() {
       const { data, error } = await supabase
         .from('review_requests')
         .select('*')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .order('created_at', { ascending: false })
         .limit(100);
       if (error) throw error;
@@ -208,9 +208,9 @@ export default function ReputationSuite() {
     queryKey: ['clinic-patients-select', clinic?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('patients')
+        .from('foster_carers')
         .select('id, name, phone, email')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .order('name')
         .limit(200);
       if (error) throw error;
@@ -263,9 +263,9 @@ export default function ReputationSuite() {
     setInputMode('patient');
   };
 
-  // When patient is selected, populate fields
+  // When applicant is selected, populate fields
   const handlePatientSelect = (patientId: string) => {
-    const patient = patients.find(p => p.id === patientId);
+    const applicant = patients.find(p => p.id === patientId);
     if (patient) {
       setSelectedPatientId(patientId);
       setRecipientName(patient.name);
@@ -713,7 +713,7 @@ export default function ReputationSuite() {
                     <MessageSquare className="h-5 w-5 text-primary" />
                     Private Feedback Inbox
                   </CardTitle>
-                  <CardDescription className="text-white/60">Review and respond to patient feedback</CardDescription>
+                  <CardDescription className="text-white/60">Review and respond to applicant feedback</CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
                   <Button 
@@ -805,7 +805,7 @@ export default function ReputationSuite() {
                       <DialogContent className="bg-slate-900 border-slate-700/50 max-w-lg">
                         <DialogHeader>
                           <DialogTitle className="text-white">Send Review Request</DialogTitle>
-                          <DialogDescription className="text-white/60">Choose a patient or enter details manually</DialogDescription>
+                          <DialogDescription className="text-white/60">Choose a applicant or enter details manually</DialogDescription>
                         </DialogHeader>
                         <ScrollArea className="max-h-[70vh]">
                         <div className="space-y-5 py-4 pr-2">

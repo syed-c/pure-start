@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, createContext, useContext, ReactNode, useCallback } from 'react';
-import { User, Session, createClient } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
+import { User, Session } from '@supabase/supabase-js';
+import { supabase, supabaseAdmin } from '@/integrations/supabase/client';
 import { AppRole, UserStatus } from '@/types/database';
 
 interface UserProfile {
@@ -94,20 +94,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Profile doesn't exist, create one
         console.log('[useAuth] Profile not found, will create default');
       } else if (profileError) {
-        // Try with service role key - create a separate supabase client
+        // Try with service role key admin client
         console.log('[useAuth] RLS error, trying service role key');
-        const serviceRoleSupabase = createClient(
-          import.meta.env.VITE_SUPABASE_URL || 'https://vcvvtklbyvdbysfdbnfp.supabase.co',
-          import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY,
-          { auth: { persistSession: false } }
-        );
-        
-        const { data: serviceProfileData } = await serviceRoleSupabase
+
+        const { data: serviceProfileData } = await supabaseAdmin
           .from('user_profiles')
           .select('*')
           .eq('user_id', userId)
           .single();
-        
+
         if (serviceProfileData) {
           profileData = serviceProfileData;
           profileError = null;
@@ -405,7 +400,8 @@ export function usePermissions(requiredPermissions: string[]) {
     };
 
     checkPermissions();
-  }, [requiredPermissions.join(','), hasPermission]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requiredPermissions.join(',')]);
 
   return { isAllowed, isChecking };
 }

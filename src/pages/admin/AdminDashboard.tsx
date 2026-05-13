@@ -97,7 +97,7 @@ const MessagingControlTab = lazyRetry(() => import('@/components/admin/tabs/Mess
 const PlansTab = lazyRetry(() => import('@/components/admin/tabs/PlansTab'));
 const PromotionsTab = lazyRetry(() => import('@/components/admin/tabs/PromotionsTab'));
 const FounderWeeklyTab = lazyRetry(() => import('@/components/admin/tabs/FounderWeeklyTab'));
-const TopAgenciesTab = lazyRetry(() => import('@/components/admin/tabs/TopDentistsTab'));
+const TopAgenciesTab = lazyRetry(() => import('@/components/admin/tabs/TopAgenciesTab'));
 const FosteringAgenciesTab = lazyRetry(() => import('@/components/admin/tabs/FosteringAgenciesTab'));
 const UsersManagementTab = lazyRetry(() => import('@/components/admin/tabs/UsersManagementTab'));
 const LocationsManagementTab = lazyRetry(() => import('@/components/admin/tabs/LocationsManagementTab'));
@@ -106,21 +106,27 @@ const BlogManagementTab = lazyRetry(() => import('@/components/admin/tabs/BlogMa
 const EnquiriesTab = lazyRetry(() => import('@/components/admin/tabs/EnquiriesTab'));
 const AgencyClaimsTab = lazyRetry(() => import('@/components/admin/tabs/AgencyClaimsTab'));
 const PinnedProfilesTab = lazyRetry(() => import('@/components/admin/tabs/PinnedProfilesTab'));
-const AgencyDashboardTab = lazyRetry(() => import('@/components/admin/tabs/DentistDashboardTab'));
+const AgencyDashboardTab = lazyRetry(() => import('@/components/admin/tabs/AgencyDashboardTab'));
 const ProfileEditorTab = lazyRetry(() => import('@/components/agency/ProfileEditorTab'));
 const ServicesTab = lazyRetry(() => import('@/components/agency/ServicesTab'));
-const AgencyReviewsTab = lazyRetry(() => import('@/components/agency/DentistReviewsTab'));
-const AgencyEnquiriesTab = lazyRetry(() => import('@/components/agency/DentistAppointmentsTab'));
+const AgencyReviewsTab = lazyRetry(() => import('@/components/agency/AgencyReviewsTab'));
+const AgencyEnquiriesTab = lazyRetry(() => import('@/components/agency/AgencyAppointmentsTab'));
 const PatientsTab = lazyRetry(() => import('@/components/agency/PatientsTab'));
 const MessagesTab = lazyRetry(() => import('@/components/agency/MessagesTab'));
 const OperationsTab = lazyRetry(() => import('@/components/agency/OperationsTab'));
 const ReviewRequestsTab = lazyRetry(() => import('@/components/agency/ReviewRequestsTab'));
 const ReputationGrowthTab = lazyRetry(() => import('@/components/agency/ReputationGrowthTab'));
-const AgencyReputationHub = lazyRetry(() => import('@/components/reputation/DentistReputationHub'));
+const AgencyReputationHub = lazyRetry(() => import('@/components/reputation/AgencyReputationHub'));
 const AdminReputationHub = lazyRetry(() => import('@/components/reputation/AdminReputationHub'));
 const SupportTicketsTab = lazyRetry(() => import('@/components/agency/SupportTicketsTab'));
+const AgencyPlaceholderTab = lazyRetry(() => import('@/components/agency/AgencyPlaceholderTab'));
+const EnquiryManagerTab = lazyRetry(() => import('@/components/agency/EnquiryManagerTab'));
+const PlacementManagerTab = lazyRetry(() => import('@/components/agency/PlacementManagerTab'));
+const TrainingTrackerTab = lazyRetry(() => import('@/components/agency/TrainingTrackerTab'));
+const DocumentManagerTab = lazyRetry(() => import('@/components/agency/DocumentManagerTab'));
+const ComplianceTrackerTab = lazyRetry(() => import('@/components/agency/ComplianceTrackerTab'));
 const TeamManagementTab = lazyRetry(() => import('@/components/agency/TeamManagementTab'));
-const AgencySettingsTab = lazyRetry(() => import('@/components/agency/DentistSettingsTab'));
+const AgencySettingsTab = lazyRetry(() => import('@/components/agency/AgencySettingsTab'));
 const TemplatesTab = lazyRetry(() => import('@/components/agency/TemplatesTab'));
 const InsuranceManagementTab = lazyRetry(() => import('@/components/agency/InsuranceManagementTab'));
 const IntakeFormsTab = lazyRetry(() => import('@/components/agency/IntakeFormsTab'));
@@ -377,7 +383,7 @@ export default function AdminDashboard() {
   
   // Check if user is super admin
   const isSuperAdmin = profileRole === 'super_admin' || authRole === 'super_admin';
-  const isAdmin = isSuperAdmin || (currentRole !== null && ADMIN_ROLES.includes(currentRole as any));
+  const isAdmin = isSuperAdmin || (currentRole !== null && ADMIN_ROLES.includes(currentRole as any)) || (!!user && currentRole === null && !isLoading && !isSuperAdmin);
   const isAgency = currentRole === 'agency_admin' && !isSuperAdmin;
   const primaryRole = currentRole || 'user';
 
@@ -426,24 +432,26 @@ export default function AdminDashboard() {
   // Get user-specific tab access permissions
   const { canAccessTab, hasFullAccess } = useUserTabAccess();
 
-  // Determine which tab groups to show and filter by visibility + user permissions
-  // For super admin, show admin tabs
-  const rawTabGroups = isAdmin ? adminTabGroups : (isAgency ? agencyTabGroups : []);
-  const dashboardType = isAdmin ? 'admin' : 'agency';
-  
-  const tabGroups = useMemo(() => 
-    rawTabGroups.map(group => ({
-      ...group,
-      tabs: group.tabs.filter(tab => {
-        if (!isTabVisible(tab.id, dashboardType)) return false;
-        if (dashboardType === 'admin' && !hasFullAccess) {
-          return canAccessTab(tab.id);
-        }
-        return true;
-      }),
-    })).filter(group => group.tabs.length > 0),
-    [rawTabGroups, dashboardType, isTabVisible, hasFullAccess, canAccessTab]
-  );
+// Determine which tab groups to show and filter by visibility + user permissions
+   // For super admin, show admin tabs
+   // IMPORTANT: While auth is loading (isLoading=true), we default to admin tab groups
+   // so the sidebar isn't blank. The canAccessTab gate in the filter prevents
+   // unauthorized access once the real role is resolved.
+   const rawTabGroups = (isLoading || isAdmin) ? adminTabGroups : (isAgency ? agencyTabGroups : []);
+   const dashboardType = isAdmin ? 'admin' : 'agency';
+
+   const tabGroups = useMemo(() => {
+     return rawTabGroups.map(group => ({
+       ...group,
+       tabs: group.tabs.filter(tab => {
+         if (!isTabVisible(tab.id, dashboardType)) return false;
+         if (dashboardType === 'admin' && !hasFullAccess) {
+           return canAccessTab(tab.id, isLoading, !!user);
+         }
+         return true;
+       }),
+     })).filter(group => group.tabs.length > 0);
+   }, [rawTabGroups, dashboardType, isTabVisible, hasFullAccess, canAccessTab, isLoading, user]);
 
   // Helper to navigate to a tab - just update state and URL without triggering re-renders
   const navigateToTab = (tabId: string) => {
@@ -519,12 +527,12 @@ export default function AdminDashboard() {
       case 'my-patients': return <FosterCarersTab />;
       case 'fc-carers': return <FosterCarersTab />;
       case 'fc-applicants': return <FosterApplicantsTab />;
-      case 'fc-enquiries': return <AgencyEnquiriesTab />;
-      case 'fc-placements': return <AvailabilityManagementTab />;
-      case 'fc-training': return <OperationsTab />;
-      case 'fc-compliance': return <SupportTicketsTab />;
-      case 'fc-documents': return <MessagesTab />;
-      case 'my-messages': return <MessagesTab />;
+      case 'fc-enquiries': return <EnquiryManagerTab />;
+      case 'fc-placements': return <PlacementManagerTab />;
+      case 'fc-training': return <TrainingTrackerTab />;
+      case 'fc-compliance': return <ComplianceTrackerTab />;
+      case 'fc-documents': return <DocumentManagerTab />;
+      case 'my-messages': return <AgencyPlaceholderTab title="Messages" description="Internal agency messaging and notifications." plannedFeatures={['Team chat', 'System notifications', 'Announcement board']} />;
       case 'my-operations': return <OperationsTab />;
       case 'my-intake-forms': return <ApplicantsTab />;
       case 'my-profile': return <ProfileEditorTab />;
@@ -534,7 +542,7 @@ export default function AdminDashboard() {
       case 'my-reputation': return <AgencyReputationHub />;
       case 'my-templates': return <TemplatesTab />;
       case 'my-settings': return <AgencySettingsTab />;
-      case 'my-support': return <SupportTicketsTab />;
+      case 'my-support': return <AgencyPlaceholderTab title="Support" description="Get help from our platform support team." plannedFeatures={['Live chat support', 'Knowledge base', 'Ticket tracking']} />;
       case 'overview': return <OverviewTab />;
       case 'weekly': return <FounderWeeklyTab />;
       case 'gmb-bridge': return <GmbBridgeTab />;
@@ -613,7 +621,7 @@ export default function AdminDashboard() {
       case 'admin-revert': return <AdminRevertTab />;
       case 'settings': return <SettingsTab />;
       case 'geo-expansion': return <GeoExpansionTab />;
-      // Default to Overview for admin route, DentistDashboard only for dentist route
+      // Default to Overview for admin route, DentistDashboard only for foster carer route
       default: 
         if (location.pathname.startsWith('/admin')) {
           return <OverviewTab />;

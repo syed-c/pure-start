@@ -230,7 +230,7 @@ export default function SubscriptionsTab() {
     }
   };
 
-  const clinics = clinicsData || [];
+  const agencies = clinicsData || [];
 
   if (isLoading) {
     return (
@@ -249,7 +249,7 @@ export default function SubscriptionsTab() {
           <p className="text-muted-foreground mt-1">Track revenue, manage subscriptions, and monitor growth</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="gap-2">
+          <Button variant="outline" size="sm" className="gap-2" onClick={() => toast({ title: "Export coming soon" })}>
             <Download className="h-4 w-4" />
             Export
           </Button>

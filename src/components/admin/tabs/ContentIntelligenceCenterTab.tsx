@@ -999,7 +999,7 @@ export default function ContentIntelligenceCenterTab() {
                     ))}
                   </SelectContent>
                 </Select>
-                <Button 
+                  <Button 
                   variant="outline"
                   disabled={!optPageId || isOptimizing}
                   onClick={async () => {
@@ -1008,18 +1008,30 @@ export default function ContentIntelligenceCenterTab() {
                     setIsOptimizing(true);
                     setOptimizationResult(null);
                     try {
-                      const optimizer = useOptimizeContent();
-                      const result = await optimizer.mutateAsync({
-                        pageId: page.id,
-                        focus: optFocus,
-                        content: page.content || '',
-                        title: page.title || '',
-                        metaTitle: page.meta_title || undefined,
-                        metaDescription: page.meta_description || undefined
-                      });
+                      // Call edge function for content optimization
+                      const response = await fetch(
+                        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/content-optimizer`,
+                        {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`
+                          },
+                          body: JSON.stringify({
+                            pageId: page.id,
+                            focus: optFocus,
+                            content: page.content || '',
+                            title: page.title || '',
+                            metaTitle: page.meta_title || undefined,
+                            metaDescription: page.meta_description || undefined
+                          })
+                        }
+                      );
+                      if (!response.ok) throw new Error('Optimization failed');
+                      const result = await response.json();
                       setOptimizationResult(result);
                       toast.success('Content optimized');
-                    } catch (error: any) { toast.error(error.message); }
+                    } catch (error: any) { toast.error(error.message || 'Optimization failed'); }
                     finally { setIsOptimizing(false); }
                   }}
                 >

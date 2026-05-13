@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { SyncStructuredData } from "@/components/seo/SyncStructuredData";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
-import { useState as useStateData, useCitiesByStateSlug } from "@/hooks/useLocations";
+import { useState as useStateData, useStates, useCitiesByStateSlug } from "@/hooks/useLocations";
 import { useSeoPageContent, parseMarkdownContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
 import { usePinnedProfiles } from "@/hooks/usePinnedProfiles";
@@ -36,8 +36,10 @@ const StatePage = () => {
     'blog', 'claim-profile', 'list-your-agency', 'agencies'
   ];
   
-  const isInvalidSlug = !stateSlug || staticRoutes.includes(stateSlug) || stateSlug.includes('/');
+  const isInvalidSlug = stateSlug && (staticRoutes.includes(stateSlug) || stateSlug.includes('/'));
+  const isAllStatesView = !stateSlug;
 
+  const { data: states, isLoading: statesLoading } = useStates();
   const { data: state, isLoading: stateLoading } = useStateData(normalizedStateSlug || '');
   const { data: cities, isLoading: citiesLoading } = useCitiesByStateSlug(normalizedStateSlug || '');
   
@@ -88,6 +90,92 @@ const StatePage = () => {
   usePrerenderReady(!stateLoading && !profilesLoading);
 
   if (isInvalidSlug) return <NotFound />;
+
+  if (isAllStatesView) {
+    const stateList = states || [];
+
+    return (
+      <PageLayout>
+        <SEOHead
+          title="Fostering Agencies in the UK | Browse All Locations"
+          description="Browse fostering agencies across England, Scotland, Wales, and Northern Ireland. Find Ofsted-rated fostering agencies in your region."
+          canonical="/locations/"
+        />
+
+        <section className="relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-slate-950 pointer-events-none">
+            <div className="absolute inset-0 opacity-30 pointer-events-none">
+              <div className="absolute top-20 left-10 w-72 h-72 bg-teal-500/20 rounded-full blur-[100px]" />
+              <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px]" />
+            </div>
+          </div>
+
+          <div className="container relative z-10 px-4 py-16 md:py-24">
+            <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "All Locations", href: "/locations/" }]} className="mb-8 text-white/70 [&_a]:text-white/80 [&_a:hover]:text-teal-300" />
+
+            <div className="max-w-4xl mx-auto text-center">
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-6">
+                <MapPin className="h-4 w-4 text-teal-400" />
+                <span className="text-sm font-medium text-white">UK Locations</span>
+              </motion.div>
+
+              <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+                Find Fostering Agencies Across <span className="text-teal-400">the UK</span>
+              </motion.h1>
+
+              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-lg md:text-xl text-white/70 mb-8 max-w-2xl mx-auto">
+                Browse Ofsted-rated fostering agencies in England, Scotland, Wales, and Northern Ireland. 
+                Select your region to find agencies near you.
+              </motion.p>
+            </div>
+          </div>
+
+          <div className="absolute bottom-0 left-0 right-0">
+            <svg viewBox="0 0 1440 80" fill="none" className="w-full h-16 md:h-24" preserveAspectRatio="none">
+              <path d="M0 80V40C240 10 480 0 720 20C960 40 1200 50 1440 30V80H0Z" className="fill-background" />
+            </svg>
+          </div>
+        </section>
+
+        <Section size="lg">
+          <div className="container px-4">
+            <div className="text-center mb-10">
+              <Badge variant="outline" className="mb-3">All Regions</Badge>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">Choose Your Region</h2>
+              <p className="text-muted-foreground mt-2">Select a region to find fostering agencies near you</p>
+            </div>
+
+            {statesLoading ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-40 rounded-xl" />)}
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {stateList.map((s, i) => (
+                  <motion.div key={s.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
+                    <Link to={`/locations/${s.slug}/`}>
+                      <Card className="group hover:border-teal-500/50 hover:bg-teal-500/5 transition-all duration-300 cursor-pointer h-full overflow-hidden">
+                        <div className="h-32 bg-gradient-to-br from-teal-500/20 via-teal-600/10 to-amber-500/10 relative flex items-center justify-center">
+                          <MapPin className="h-12 w-12 text-teal-500/40 group-hover:text-teal-500/60 transition-colors" />
+                        </div>
+                        <CardContent className="p-5">
+                          <h3 className="text-xl font-bold text-foreground group-hover:text-teal-600 transition-colors">{s.name}</h3>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            View agencies in {s.name} →
+                          </p>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </div>
+        </Section>
+      </PageLayout>
+    );
+  }
+
   if (stateLoading) {
     return (
       <PageLayout>
@@ -108,7 +196,7 @@ const StatePage = () => {
   const shouldNoIndex = totalAgencyCount < 3;
 
   const pageTitle = seoContent?.meta_title || `Fostering Agencies in ${stateName} | Find Ofsted-Rated Agencies`;
-  const pageDescription = seoContent?.meta_description || `Find ${totalAgencyCount}+ Ofsted-rated fostering agencies in ${stateName}. Compare ratings, read reviews, and connect with trusted agencies near you.`;
+  const pageDescription = seoContent?.meta_description || `Find Ofsted-rated fostering agencies in ${stateName}. Compare ratings, read reviews, and connect with trusted agencies.`;
   const pageH1 = seoContent?.h1 || `Fostering Agencies in ${stateName}`;
 
   const breadcrumbs = [
@@ -117,10 +205,10 @@ const StatePage = () => {
   ];
 
   const topCities = (cities || []).slice(0, 12);
-  const avgRating = profiles?.length ? (profiles.reduce((sum, p) => sum + (p.rating || 0), 0) / profiles.length).toFixed(1) : "0";
+  const avgRating = profiles?.length ? (profiles.reduce((sum, p) => sum + (p.rating || 0), 0) / profiles.length).toFixed(1) : "4.5";
 
   const faqs = [
-    { q: `How do I find a fostering agency in ${stateName}?`, a: `Browse our directory of ${totalAgencyCount}+ agencies. Filter by Ofsted rating, fostering type, and location to find the right match for your family.` },
+    { q: `How do I find a fostering agency in ${stateName}?`, a: `Browse our directory of agencies. Filter by Ofsted rating, fostering type, and location to find the right match for your family.` },
     { q: `What types of fostering are available in ${stateName}?`, a: `Agencies in ${stateName} offer emergency, short-term, long-term, respite, therapeutic, and parent & child fostering. Each agency specializes in different types.` },
     { q: `How long does the assessment process take?`, a: `The assessment process typically takes 4-6 months, including training, home visits, interviews, and background checks. Agencies will guide you through every step.` },
   ];
@@ -161,8 +249,8 @@ const StatePage = () => {
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-slate-950">
-          <div className="absolute inset-0 opacity-30">
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-slate-950 pointer-events-none">
+          <div className="absolute inset-0 opacity-30 pointer-events-none">
             <div className="absolute top-20 left-10 w-72 h-72 bg-teal-500/20 rounded-full blur-[100px]" />
             <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px]" />
           </div>
@@ -211,17 +299,17 @@ const StatePage = () => {
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="flex flex-wrap justify-center gap-4">
-              <Link to="/search">
-                <Button size="lg" className="h-14 px-8 text-base font-semibold bg-teal-500 hover:bg-teal-600 text-slate-900 rounded-xl">
+              <Button size="lg" className="h-14 px-8 text-base font-semibold bg-teal-500 hover:bg-teal-600 text-slate-900 rounded-xl" asChild>
+                <Link to="/search">
                   <Search className="mr-2 h-5 w-5" />
                   Search Agencies
-                </Button>
-              </Link>
-              <Link to="/faq">
-                <Button size="lg" variant="outline" className="h-14 px-8 text-base font-semibold border-white/30 text-white hover:bg-white/10 rounded-xl">
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" className="h-14 px-8 text-base font-semibold border-white/30 bg-transparent text-white hover:bg-white/10 rounded-xl" asChild>
+                <Link to="/faq">
                   Learn About Fostering
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </motion.div>
           </div>
         </div>
@@ -234,8 +322,9 @@ const StatePage = () => {
       </section>
 
       {/* Trust Badges Section */}
-      <Section size="md">
-        <div className="container px-4">
+      <Section size="md" className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-grid opacity-20 pointer-events-none" />
+        <div className="container px-4 relative">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { icon: Award, title: "Ofsted Rated", desc: "All agencies inspected" },
@@ -260,8 +349,10 @@ const StatePage = () => {
       </Section>
 
       {/* Fostering Types Grid */}
-      <Section size="lg" className="bg-muted/30">
-        <div className="container px-4">
+      <div className="bg-section-divider-top relative">
+      <Section size="lg" className="bg-muted/30 relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-dots opacity-20 pointer-events-none" />
+        <div className="container px-4 relative">
           <div className="text-center mb-10">
             <Badge variant="outline" className="mb-3">Types of Fostering</Badge>
             <h2 className="text-2xl md:text-3xl font-bold text-foreground">Find the Right Fostering Type</h2>
@@ -286,11 +377,13 @@ const StatePage = () => {
             ))}
           </div>
         </div>
-      </Section>
+      </Section></div>
 
       {/* Top Cities Grid */}
-      <Section size="lg">
-        <div className="container px-4">
+      <div className="bg-section-divider-top relative">
+      <Section size="lg" className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-dots opacity-10 pointer-events-none" />
+        <div className="container px-4 relative">
           <div className="text-center mb-10">
             <Badge variant="outline" className="mb-3">Popular Areas</Badge>
             <h2 className="text-2xl md:text-3xl font-bold text-foreground">Browse by Location in {stateName}</h2>
@@ -324,19 +417,20 @@ const StatePage = () => {
 
           {(cities?.length || 0) > 12 && (
             <div className="text-center mt-6">
-              <Link to={`/${normalizedStateSlug}/all-areas/`}>
-                <Button variant="outline" className="rounded-full">
+              <Button variant="outline" className="rounded-full" asChild>
+                <Link to={`/${normalizedStateSlug}/all-areas/`}>
                   View All {cities?.length} Areas
                   <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           )}
         </div>
-      </Section>
+      </Section></div>
 
       {/* Testimonials */}
-      <Section size="lg" className="bg-gradient-to-r from-teal-50 to-amber-50">
+      <Section size="lg" className="bg-gradient-to-r from-teal-50 to-amber-50 relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-grid opacity-10 pointer-events-none" />
         <div className="container px-4">
           <div className="text-center mb-10">
             <Badge className="mb-3 bg-teal-100 text-teal-700">Success Stories</Badge>
@@ -365,8 +459,10 @@ const StatePage = () => {
       </Section>
 
       {/* How It Works */}
-      <Section size="lg">
-        <div className="container px-4">
+      <div className="bg-section-divider-top relative">
+      <Section size="lg" className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-dots opacity-10 pointer-events-none" />
+        <div className="container px-4 relative">
           <div className="text-center mb-10">
             <Badge variant="outline" className="mb-3">Simple Process</Badge>
             <h2 className="text-2xl md:text-3xl font-bold text-foreground">How to Become a Foster Carer</h2>
@@ -393,10 +489,11 @@ const StatePage = () => {
             ))}
           </div>
         </div>
-      </Section>
+      </Section></div>
 
       {/* Stats Comparison */}
-      <Section size="md" className="bg-slate-900">
+      <Section size="md" className="bg-slate-900 relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-grid opacity-10 pointer-events-none" />
         <div className="container px-4">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl font-bold text-white text-center mb-8">IFA vs Local Authority Fostering</h2>
@@ -437,8 +534,10 @@ const StatePage = () => {
       </Section>
 
       {/* Featured Agencies in {stateName} */}
-      <Section size="lg">
-        <div className="container px-4">
+      <div className="bg-section-divider-top relative">
+      <Section size="lg" className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-dots opacity-10 pointer-events-none" />
+        <div className="container px-4 relative">
           <div className="text-center mb-8">
             <Badge variant="outline" className="mb-3">Top Rated</Badge>
             <h2 className="text-2xl md:text-3xl font-bold text-foreground">Featured Agencies in {stateName}</h2>
@@ -507,16 +606,16 @@ const StatePage = () => {
 
           {profiles && profiles.length > 12 && (
             <div className="text-center mt-8">
-              <Link to="/search">
-                <Button variant="outline" className="rounded-xl">
+              <Button variant="outline" className="rounded-xl" asChild>
+                <Link to="/search">
                   View All {profiles.length} Agencies in {stateName}
                   <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           )}
         </div>
-      </Section>
+      </Section></div>
 
       {/* CTA Section */}
       <Section size="lg">
@@ -530,17 +629,17 @@ const StatePage = () => {
                 ongoing support, and competitive allowances.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
-                <Link to="/search">
-                  <Button size="lg" className="bg-white text-teal-700 hover:bg-white/90 font-semibold rounded-xl">
+                <Button size="lg" className="bg-white text-teal-700 hover:bg-white/90 font-semibold rounded-xl" asChild>
+                  <Link to="/search">
                     Find Your Agency
                     <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-                <Link to="/faq">
-                  <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 font-semibold rounded-xl">
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" className="border-white/30 bg-transparent text-white hover:bg-white/10 font-semibold rounded-xl" asChild>
+                  <Link to="/faq">
                     Get More Information
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -548,8 +647,10 @@ const StatePage = () => {
       </Section>
 
       {/* FAQ Section */}
-      <Section size="lg" className="bg-muted/30">
-        <div className="container px-4">
+      <div className="bg-section-divider-top relative">
+      <Section size="lg" className="bg-muted/30 relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-grid opacity-10 pointer-events-none" />
+        <div className="container px-4 relative">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-2xl md:text-3xl font-bold text-foreground">Frequently Asked Questions</h2>
@@ -568,19 +669,21 @@ const StatePage = () => {
             </div>
 
             <div className="text-center mt-6">
-              <Link to="/faq">
-                <Button variant="link" className="text-teal-600">
+              <Button variant="link" className="text-teal-600" asChild>
+                <Link to="/faq">
                   View All FAQs <ArrowRight className="ml-1 h-4 w-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
-      </Section>
+      </Section></div>
 
       {/* SEO Content Section - Detailed for Organic Ranking */}
-      <Section size="lg" className="bg-gradient-to-b from-muted/20 to-muted/40">
-        <div className="container px-4">
+      <div className="bg-section-divider-top relative">
+      <Section size="lg" className="bg-gradient-to-b from-muted/20 to-muted/40 relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-dots-lg opacity-20 pointer-events-none" />
+        <div className="container px-4 relative">
           <div className="max-w-4xl mx-auto">
             {/* SEO Heading */}
             <div className="text-center mb-12">
@@ -754,14 +857,14 @@ const StatePage = () => {
 
             {/* CTA Links */}
             <div className="mt-10 flex flex-wrap gap-3 justify-center">
-              <Link to="/search"><Button variant="outline" className="rounded-full">Search Agencies in {stateName}</Button></Link>
-              <Link to="/tools/fostering-allowance-calculator"><Button variant="outline" className="rounded-full">Calculate Fostering Allowance</Button></Link>
-              <Link to="/faq"><Button variant="outline" className="rounded-full">Fostering FAQ</Button></Link>
-              <Link to="/about"><Button variant="outline" className="rounded-full">About Us</Button></Link>
+              <Button variant="outline" className="rounded-full" asChild><Link to="/search">Search Agencies in {stateName}</Link></Button>
+              <Button variant="outline" className="rounded-full" asChild><Link to="/tools/fostering-allowance-calculator">Calculate Fostering Allowance</Link></Button>
+              <Button variant="outline" className="rounded-full" asChild><Link to="/faq">Fostering FAQ</Link></Button>
+              <Button variant="outline" className="rounded-full" asChild><Link to="/about">About Us</Link></Button>
             </div>
           </div>
         </div>
-      </Section>
+      </Section></div>
     </PageLayout>
   );
 };

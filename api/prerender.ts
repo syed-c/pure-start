@@ -44,7 +44,6 @@ export default async function handler(request: Request) {
     const prerenderUrl = `https://service.prerender.io/${targetUrl}`;
 
     console.log(`Prerendering for bot: ${targetUrl}`);
-    console.log(`Prerendering for bot: ${targetUrl}`);
 
     const response = await fetch(prerenderUrl, {
       headers: {

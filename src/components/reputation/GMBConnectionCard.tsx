@@ -117,7 +117,7 @@ export default function GMBConnectionCard({
     if (!manualPlaceId.trim()) return;
     try {
       const { error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .update({
           google_place_id: manualPlaceId.trim(),
           updated_at: new Date().toISOString(),

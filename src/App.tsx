@@ -68,9 +68,22 @@ const ApplicantFormPage = lazyRetry(() => import("./pages/ApplicantFormPage"));
 const BookDirectPage = lazyRetry(() => import("./pages/BookDirectPage"));
 const Index = lazyRetry(() => import("./pages/Index"));
 
+const LondonPage = lazyRetry(() => import("./pages/templates/cities/London"));
+const ManchesterPage = lazyRetry(() => import("./pages/templates/cities/Manchester"));
+const BirminghamPage = lazyRetry(() => import("./pages/templates/cities/Birmingham"));
+const LeedsPage = lazyRetry(() => import("./pages/templates/cities/Leeds"));
+const LiverpoolPage = lazyRetry(() => import("./pages/templates/cities/Liverpool"));
+const BristolPage = lazyRetry(() => import("./pages/templates/cities/Bristol"));
+const SheffieldPage = lazyRetry(() => import("./pages/templates/cities/Sheffield"));
+const GlasgowPage = lazyRetry(() => import("./pages/templates/cities/Glasgow"));
+const CardiffPage = lazyRetry(() => import("./pages/templates/cities/Cardiff"));
+const NewcastlePage = lazyRetry(() => import("./pages/templates/cities/Newcastle"));
+const EdinburghPage = lazyRetry(() => import("./pages/templates/cities/Edinburgh"));
+
 const FosteringAllowanceCalculator = lazyRetry(() => import("./pages/tools/FosteringAllowanceCalculator"));
 const InsuranceChecker = lazyRetry(() => import("./pages/tools/InsuranceChecker"));
 const EmergencyFostering = lazyRetry(() => import("./pages/EmergencyFostering"));
+const IFAvsLocalAuthorityPage = lazyRetry(() => import("./pages/compare/IFAvsLocalAuthority"));
 
 const ServicePricePage = lazyRetry(() => import("./pages/ServicePricePage"));
 const AgenciesDirectoryPage = lazyRetry(() => import("./pages/AgenciesDirectoryPage"));
@@ -121,20 +134,33 @@ const App = () => (
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/search" element={<SearchPage />} />
+                <Route path="/search/" element={<SearchPage />} />
                 <Route path="/find-agency" element={<SearchPage />} />
+                <Route path="/find-agency/" element={<SearchPage />} />
                 <Route path="/agencies" element={<AgenciesDirectoryPage />} />
+                <Route path="/agencies/" element={<AgenciesDirectoryPage />} />
                 <Route path="/agencies/:citySlug" element={<AgenciesDirectoryPage />} />
+                <Route path="/agencies/:citySlug/" element={<AgenciesDirectoryPage />} />
                 <Route path="/become-foster-carer" element={<BecomeFosterCarerPage />} />
+                <Route path="/become-foster-carer/" element={<BecomeFosterCarerPage />} />
                 
                 <Route path="/locations" element={<StatePage />} />
+                <Route path="/locations/" element={<StatePage />} />
                 <Route path="/locations/:stateSlug" element={<StatePage />} />
+                <Route path="/locations/:stateSlug/" element={<StatePage />} />
                 <Route path="/locations/:stateSlug/:citySlug" element={<CityPage />} />
+                <Route path="/locations/:stateSlug/:citySlug/" element={<CityPage />} />
                 <Route path="/locations/:stateSlug/:citySlug/:serviceSlug" element={<ServiceLocationPage />} />
+                <Route path="/locations/:stateSlug/:citySlug/:serviceSlug/" element={<ServiceLocationPage />} />
                 
                 <Route path="/categories" element={<ServicesPage />} />
+                <Route path="/categories/" element={<ServicesPage />} />
                 <Route path="/categories/:serviceSlug" element={<ServicePage />} />
+                <Route path="/categories/:serviceSlug/" element={<ServicePage />} />
                 <Route path="/services" element={<Navigate to="/categories" replace />} />
+                <Route path="/services/" element={<Navigate to="/categories" replace />} />
                 <Route path="/services/:serviceSlug" element={<ServicePage />} />
+                <Route path="/services/:serviceSlug/" element={<ServicePage />} />
                 
                 <Route path="/agency/:agencySlug" element={<AgencyPage />} />
                 <Route path="/agency/:agencySlug/" element={<AgencyPage />} />
@@ -147,68 +173,140 @@ const App = () => (
                 <Route path="/fostering-agencies/:locationSlug/:categorySlug" element={<FosteringCategoryLocationPage />} />
                 <Route path="/fostering-agencies/:locationSlug/:categorySlug/" element={<FosteringCategoryLocationPage />} />
                 
-                <Route path="/fostering/:typeSlug" element={<AgencyPage />} />
-                <Route path="/compare" element={<AgencyPage />} />
+                <Route path="/fostering/:typeSlug" element={<FosteringLocationPage />} />
+                <Route path="/fostering/:typeSlug/" element={<FosteringLocationPage />} />
+                <Route path="/compare/ifa-vs-local-authority" element={<IFAvsLocalAuthorityPage />} />
+                <Route path="/compare/ifa-vs-local-authority/" element={<IFAvsLocalAuthorityPage />} />
+                <Route path="/compare" element={<IFAvsLocalAuthorityPage />} />
+                <Route path="/compare/" element={<IFAvsLocalAuthorityPage />} />
                 
                 <Route path="/:stateSlug" element={<StatePage />} />
+                <Route path="/:stateSlug/" element={<StatePage />} />
+                <Route path="/london" element={<LondonPage />} />
+                <Route path="/london/" element={<LondonPage />} />
+                <Route path="/manchester" element={<ManchesterPage />} />
+                <Route path="/manchester/" element={<ManchesterPage />} />
+                <Route path="/birmingham" element={<BirminghamPage />} />
+                <Route path="/birmingham/" element={<BirminghamPage />} />
+                <Route path="/leeds" element={<LeedsPage />} />
+                <Route path="/leeds/" element={<LeedsPage />} />
+                <Route path="/liverpool" element={<LiverpoolPage />} />
+                <Route path="/liverpool/" element={<LiverpoolPage />} />
+                <Route path="/bristol" element={<BristolPage />} />
+                <Route path="/bristol/" element={<BristolPage />} />
+                <Route path="/sheffield" element={<SheffieldPage />} />
+                <Route path="/sheffield/" element={<SheffieldPage />} />
+                <Route path="/glasgow" element={<GlasgowPage />} />
+                <Route path="/glasgow/" element={<GlasgowPage />} />
+                <Route path="/cardiff" element={<CardiffPage />} />
+                <Route path="/cardiff/" element={<CardiffPage />} />
+                <Route path="/newcastle" element={<NewcastlePage />} />
+                <Route path="/newcastle/" element={<NewcastlePage />} />
+                <Route path="/edinburgh" element={<EdinburghPage />} />
+                <Route path="/edinburgh/" element={<EdinburghPage />} />
                 <Route path="/:stateSlug/:citySlug" element={<CityPage />} />
+                <Route path="/:stateSlug/:citySlug/" element={<CityPage />} />
                 <Route path="/:stateSlug/:citySlug/:serviceSlug" element={<ServiceLocationPage />} />
+                <Route path="/:stateSlug/:citySlug/:serviceSlug/" element={<ServiceLocationPage />} />
                 
                 <Route path="/blog" element={<BlogPage />} />
+                <Route path="/blog/" element={<BlogPage />} />
                 <Route path="/blog/:postSlug" element={<BlogPostPage />} />
+                <Route path="/blog/:postSlug/" element={<BlogPostPage />} />
                 
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/auth/" element={<Auth />} />
                 <Route path="/login" element={<Navigate to="/auth" replace />} />
                 <Route path="/login/" element={<Navigate to="/auth" replace />} />
                 <Route path="/auth/callback" element={<AuthCallback />} />
+                <Route path="/auth/callback/" element={<AuthCallback />} />
                 <Route path="/onboarding" element={<GMBOnboarding />} />
+                <Route path="/onboarding/" element={<GMBOnboarding />} />
                 <Route path="/gmb-select" element={<GMBBusinessSelection />} />
+                <Route path="/gmb-select/" element={<GMBBusinessSelection />} />
                 
                 <Route path="/admin" element={<ProtectedRoute allowedRoles={['super_admin', 'agency_admin', 'agency_staff', 'trainer', 'auditor']}><AdminDashboard /></ProtectedRoute>} />
+                <Route path="/admin/" element={<ProtectedRoute allowedRoles={['super_admin', 'agency_admin', 'agency_staff', 'trainer', 'auditor']}><AdminDashboard /></ProtectedRoute>} />
                 <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['super_admin', 'agency_admin', 'agency_staff', 'trainer', 'auditor']}><AdminDashboard /></ProtectedRoute>} />
+                <Route path="/dashboard/" element={<ProtectedRoute allowedRoles={['super_admin', 'agency_admin', 'agency_staff', 'trainer', 'auditor']}><AdminDashboard /></ProtectedRoute>} />
                 <Route path="/dashboard/:section" element={<ProtectedRoute allowedRoles={['super_admin', 'agency_admin', 'agency_staff', 'trainer', 'auditor']}><AdminDashboard /></ProtectedRoute>} />
+                <Route path="/dashboard/:section/" element={<ProtectedRoute allowedRoles={['super_admin', 'agency_admin', 'agency_staff', 'trainer', 'auditor']}><AdminDashboard /></ProtectedRoute>} />
                 <Route path="/dashboard-v2" element={<ProtectedRoute allowedRoles={['super_admin', 'agency_admin', 'agency_staff']}><AgencyDashboardV2 /></ProtectedRoute>} />
+                <Route path="/dashboard-v2/" element={<ProtectedRoute allowedRoles={['super_admin', 'agency_admin', 'agency_staff']}><AgencyDashboardV2 /></ProtectedRoute>} />
                 
                 <Route path="/carer" element={<ProtectedRoute allowedRoles={['foster_carer']}><FosterCarerDashboard /></ProtectedRoute>} />
+                <Route path="/carer/" element={<ProtectedRoute allowedRoles={['foster_carer']}><FosterCarerDashboard /></ProtectedRoute>} />
                 <Route path="/applicant" element={<ProtectedRoute allowedRoles={['applicant']}><ApplicantDashboard /></ProtectedRoute>} />
+                <Route path="/applicant/" element={<ProtectedRoute allowedRoles={['applicant']}><ApplicantDashboard /></ProtectedRoute>} />
                 <Route path="/trainer" element={<ProtectedRoute allowedRoles={['trainer']}><TrainerDashboard /></ProtectedRoute>} />
+                <Route path="/trainer/" element={<ProtectedRoute allowedRoles={['trainer']}><TrainerDashboard /></ProtectedRoute>} />
                 <Route path="/la" element={<ProtectedRoute allowedRoles={['local_authority']}><LocalAuthorityDashboard /></ProtectedRoute>} />
+                <Route path="/la/" element={<ProtectedRoute allowedRoles={['local_authority']}><LocalAuthorityDashboard /></ProtectedRoute>} />
                 
                 <Route path="/about" element={<AboutPage />} />
+                <Route path="/about/" element={<AboutPage />} />
                 <Route path="/contact" element={<ContactPage />} />
+                <Route path="/contact/" element={<ContactPage />} />
                 <Route path="/faq" element={<FAQPage />} />
+                <Route path="/faq/" element={<FAQPage />} />
                 <Route path="/how-it-works" element={<HowItWorksPage />} />
+                <Route path="/how-it-works/" element={<HowItWorksPage />} />
                 <Route path="/privacy" element={<PrivacyPage />} />
+                <Route path="/privacy/" element={<PrivacyPage />} />
                 <Route path="/terms" element={<TermsPage />} />
+                <Route path="/terms/" element={<TermsPage />} />
                 <Route path="/sitemap" element={<SitemapPage />} />
+                <Route path="/sitemap/" element={<SitemapPage />} />
                 <Route path="/editorial-policy" element={<EditorialPolicyPage />} />
+                <Route path="/editorial-policy/" element={<EditorialPolicyPage />} />
                 <Route path="/medical-review-policy" element={<MedicalReviewPolicyPage />} />
+                <Route path="/medical-review-policy/" element={<MedicalReviewPolicyPage />} />
                 <Route path="/verification-policy" element={<VerificationPolicyPage />} />
-                
+                <Route path="/verification-policy/" element={<VerificationPolicyPage />} />
                 <Route path="/pricing" element={<PricingPage />} />
+                <Route path="/pricing/" element={<PricingPage />} />
                 
                 <Route path="/insurance" element={<InsurancePage />} />
+                <Route path="/insurance/" element={<InsurancePage />} />
                 <Route path="/insurance/:insuranceSlug" element={<InsuranceDetailPage />} />
+                <Route path="/insurance/:insuranceSlug/" element={<InsuranceDetailPage />} />
                 <Route path="/insurance/:insuranceSlug/:regionSlug" element={<InsuranceDetailPage />} />
+                <Route path="/insurance/:insuranceSlug/:regionSlug/" element={<InsuranceDetailPage />} />
                 <Route path="/insurance/:insuranceSlug/:regionSlug/:citySlug" element={<InsuranceDetailPage />} />
+                <Route path="/insurance/:insuranceSlug/:regionSlug/:citySlug/" element={<InsuranceDetailPage />} />
                 
                 <Route path="/claim-profile" element={<ClaimProfilePage />} />
+                <Route path="/claim-profile/" element={<ClaimProfilePage />} />
                 <Route path="/list-your-agency" element={<ListYourPracticePage />} />
+                <Route path="/list-your-agency/" element={<ListYourPracticePage />} />
                 <Route path="/list-your-practice" element={<Navigate to="/list-your-agency" replace />} />
+                <Route path="/list-your-practice/" element={<Navigate to="/list-your-agency" replace />} />
                 <Route path="/list-your-practice/success" element={<ListYourPracticeSuccessPage />} />
+                <Route path="/list-your-practice/success/" element={<ListYourPracticeSuccessPage />} />
                 <Route path="/review/:clinicId" element={<ReviewFunnelPage />} />
+                <Route path="/review/:clinicId/" element={<ReviewFunnelPage />} />
                 <Route path="/rq/:requestCode" element={<ReviewRequestPage />} />
+                <Route path="/rq/:requestCode/" element={<ReviewRequestPage />} />
                 <Route path="/appointment/:token" element={<AppointmentManagePage />} />
+                <Route path="/appointment/:token/" element={<AppointmentManagePage />} />
                 <Route path="/form/:submissionId" element={<ApplicantFormPage />} />
+                <Route path="/form/:submissionId/" element={<ApplicantFormPage />} />
                 <Route path="/book/:clinicId" element={<BookDirectPage />} />
+                <Route path="/book/:clinicId/" element={<BookDirectPage />} />
                 
                 <Route path="/tools/fostering-allowance-calculator" element={<FosteringAllowanceCalculator />} />
+                <Route path="/tools/fostering-allowance-calculator/" element={<FosteringAllowanceCalculator />} />
                 <Route path="/tools/agency-cost-guide" element={<Navigate to="/tools/fostering-allowance-calculator" replace />} />
+                <Route path="/tools/agency-cost-guide/" element={<Navigate to="/tools/fostering-allowance-calculator" replace />} />
                 <Route path="/tools/insurance-checker" element={<InsuranceChecker />} />
+                <Route path="/tools/insurance-checker/" element={<InsuranceChecker />} />
                 <Route path="/emergency-fostering" element={<EmergencyFostering />} />
+                <Route path="/emergency-fostering/" element={<EmergencyFostering />} />
                 <Route path="/emergency-foster-care" element={<Navigate to="/emergency-fostering" replace />} />
+                <Route path="/emergency-foster-care/" element={<Navigate to="/emergency-fostering" replace />} />
                 
                 <Route path="/cost/:serviceSlug" element={<ServicePricePage />} />
+                <Route path="/cost/:serviceSlug/" element={<ServicePricePage />} />
                 
                 <Route path="/ae/clinic/:clinicSlug" element={<Navigate to="/find-agency" replace />} />
                 <Route path="/ae/dentist/:contactSlug" element={<Navigate to="/find-agency" replace />} />

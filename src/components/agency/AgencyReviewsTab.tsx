@@ -15,7 +15,7 @@ export default function AgencyReviewsTab() {
     queryKey: ['agency-profile-reviews', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name, google_place_id')
         .eq('claimed_by', user?.id)
         .limit(1)

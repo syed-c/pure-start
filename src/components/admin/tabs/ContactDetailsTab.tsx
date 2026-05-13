@@ -327,7 +327,7 @@ export default function ContactDetailsTab() {
                     type="tel"
                     value={contactDetails.support_phone}
                     onChange={(e) => updateContact('support_phone', e.target.value)}
-                    placeholder="+971 4 123 4567"
+                    placeholder="+44 20 7946 0958"
                   />
                   <p className="text-xs text-muted-foreground">Main customer support line</p>
                 </div>
@@ -341,9 +341,9 @@ export default function ContactDetailsTab() {
                     type="tel"
                     value={contactDetails.booking_phone}
                     onChange={(e) => updateContact('booking_phone', e.target.value)}
-                    placeholder="+971 4 123 4567"
+                    placeholder="+44 20 7946 0958"
                   />
-                  <p className="text-xs text-muted-foreground">For appointment scheduling</p>
+                  <p className="text-xs text-muted-foreground">For enquiry scheduling</p>
                 </div>
 
                 <div className="space-y-2">
@@ -355,7 +355,7 @@ export default function ContactDetailsTab() {
                     type="tel"
                     value={contactDetails.sales_phone}
                     onChange={(e) => updateContact('sales_phone', e.target.value)}
-                    placeholder="+971 4 123 4567"
+                    placeholder="+44 20 7946 0958"
                   />
                   <p className="text-xs text-muted-foreground">For sales inquiries</p>
                 </div>
@@ -369,7 +369,7 @@ export default function ContactDetailsTab() {
                     type="tel"
                     value={contactDetails.whatsapp}
                     onChange={(e) => updateContact('whatsapp', e.target.value)}
-                    placeholder="+971 50 123 4567"
+                    placeholder="+44 7700 900077"
                   />
                   <p className="text-xs text-muted-foreground">WhatsApp contact for quick messaging</p>
                 </div>
@@ -416,7 +416,7 @@ export default function ContactDetailsTab() {
                     <Input
                       value={contactDetails.city}
                       onChange={(e) => updateContact('city', e.target.value)}
-                      placeholder="Los Angeles"
+                      placeholder="London"
                     />
                   </div>
 
@@ -434,7 +434,7 @@ export default function ContactDetailsTab() {
                     <Input
                       value={contactDetails.zip_code}
                       onChange={(e) => updateContact('zip_code', e.target.value)}
-                      placeholder="90001"
+                      placeholder="SW1A 1AA"
                     />
                   </div>
 

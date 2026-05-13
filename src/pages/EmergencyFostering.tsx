@@ -17,6 +17,7 @@ import { motion } from 'framer-motion';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Section } from '@/components/layout/Section';
 import { SEOHead } from '@/components/seo/SEOHead';
+import { StructuredData } from '@/components/seo/StructuredData';
 import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
 import { useSeoPageContent } from '@/hooks/useSeoPageContent';
 import { format } from 'date-fns';
@@ -103,7 +104,13 @@ export default function EmergencyFosteringFinder() {
         title={seoContent?.meta_title || "Emergency Fostering | Find Agencies With Immediate Placements | Foster Care"}
         description={seoContent?.meta_description || "Find fostering agencies offering emergency placements. Get immediate support for children who need urgent care."}
         canonical="/emergency-fostering/"
+        keywords={['emergency fostering', 'urgent foster care', 'emergency placement UK', 'same day foster care']}
       />
+      <StructuredData type="organization" />
+      <StructuredData type="breadcrumb" items={[
+        { name: "Home", url: "/" },
+        { name: "Emergency Fostering", url: "/emergency-fostering/" }
+      ]} />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-b from-destructive/5 via-background to-background pt-6 pb-12">

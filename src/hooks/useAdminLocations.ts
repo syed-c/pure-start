@@ -162,7 +162,7 @@ export function useCitiesWithClinics() {
     queryFn: async (): Promise<Array<{ id: string; name: string }>> => {
       // Get approved clinics - cast to any to avoid TS deep instantiation issue with Supabase types
       const { data: clinicsRaw, error: clinicError } = await (supabase
-        .from('clinics')
+        .from('agencies')
         .select('city_id') as any)
         .eq('claim_status', 'approved');
       

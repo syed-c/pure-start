@@ -58,7 +58,7 @@ export function useAdminUsers() {
 
       // Fetch all clinics to check GMB connection and get slugs
       const { data: clinics } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('claimed_by, google_place_id, verification_status, slug');
 
       // Build role map

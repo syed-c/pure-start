@@ -74,7 +74,7 @@ export default function ClinicRedistributionPanel() {
       
       if (error) throw error;
       
-      // Also fetch the list of cities missing coordinates with clinic counts
+      // Also fetch the list of cities missing coordinates with agency counts
       const { data: missingCities } = await supabase
         .from('cities')
         .select(`
@@ -86,7 +86,7 @@ export default function ClinicRedistributionPanel() {
         .or('latitude.is.null,longitude.is.null')
         .order('name');
 
-      // Build list with clinic counts
+      // Build list with agency counts
       const missingCitiesWithCounts: Array<{ name: string; state: string; clinicCount: number }> = [];
       
       for (const city of missingCities || []) {
@@ -152,9 +152,9 @@ export default function ClinicRedistributionPanel() {
       setRedistributeResult(data);
       
       if (data.reassigned > 0) {
-        toast.success(`Reassigned ${data.reassigned} clinics to correct cities!`);
+        toast.success(`Reassigned ${data.reassigned} agencies to correct cities!`);
       } else {
-        toast.info('All clinics are already in their nearest city.');
+        toast.info('All agencies are already in their nearest city.');
       }
       
       fetchStats(); // Refresh stats
@@ -191,7 +191,7 @@ export default function ClinicRedistributionPanel() {
         <div>
           <h2 className="text-2xl font-bold">Clinic Redistribution (UAE)</h2>
           <p className="text-muted-foreground">
-            Ensure clinics are assigned to their correct nearest area based on UAE GPS coordinates
+            Ensure agencies are assigned to their correct nearest area based on UAE GPS coordinates
           </p>
         </div>
         <Button variant="outline" onClick={fetchStats} disabled={isLoadingStats}>
@@ -252,7 +252,7 @@ export default function ClinicRedistributionPanel() {
             <div className="grid grid-cols-3 gap-2 text-sm">
               <div className="text-center p-2 bg-muted rounded-lg">
                 <p className="text-xl font-bold">{stats?.clinics.total || 0}</p>
-                <p className="text-xs text-muted-foreground">Total Clinics</p>
+                <p className="text-xs text-muted-foreground">Total Agencies</p>
               </div>
               <div className="text-center p-2 bg-primary/10 rounded-lg">
                 <p className="text-xl font-bold text-primary">{stats?.clinics.withCoordinates || 0}</p>
@@ -322,7 +322,7 @@ export default function ClinicRedistributionPanel() {
         <CardHeader>
           <CardTitle>Redistribution Actions</CardTitle>
           <CardDescription>
-            Follow these steps to ensure all clinics are in the correct city
+            Follow these steps to ensure all agencies are in the correct city
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -408,8 +408,8 @@ export default function ClinicRedistributionPanel() {
                 )}
               </div>
               <p className="text-sm text-muted-foreground">
-                Reassign clinics to their nearest area based on UAE GPS coordinates. 
-                Only clinics with coordinates will be processed.
+                Reassign agencies to their nearest area based on UAE GPS coordinates. 
+                Only agencies with coordinates will be processed.
               </p>
               <Button 
                 onClick={runRedistribution} 
@@ -494,11 +494,11 @@ export default function ClinicRedistributionPanel() {
             <div className="text-sm text-muted-foreground space-y-1">
               <p>
                 <strong>How it works:</strong> The system uses GPS coordinates to calculate the 
-                distance between each clinic and all cities in the same state. Each clinic is 
+                distance between each agency and all cities in the same state. Each agency is 
                 assigned to the nearest city.
               </p>
               <p>
-                <strong>Requirements:</strong> Both cities and clinics need latitude/longitude 
+                <strong>Requirements:</strong> Both cities and agencies need latitude/longitude 
                 coordinates. Clinics without coordinates will be skipped. Cities without coordinates 
                 won't be considered as destinations.
               </p>

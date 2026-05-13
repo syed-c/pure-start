@@ -70,7 +70,7 @@ const COLORS = [
 
 const DEFAULT_TYPES = [
   { name: 'New Patient Exam', duration: 60, color: 'blue', description: 'Comprehensive first-visit examination' },
-  { name: 'Routine Cleaning', duration: 45, color: 'green', description: 'Professional dental cleaning' },
+  { name: 'Routine Cleaning', duration: 45, color: 'green', description: 'Professional fostering cleaning' },
   { name: 'Emergency Visit', duration: 30, color: 'orange', description: 'Urgent fostering care' },
   { name: 'Consultation', duration: 30, color: 'purple', description: 'Treatment planning discussion' },
   { name: 'Follow-up', duration: 15, color: 'teal', description: 'Post-treatment check' },
@@ -99,14 +99,14 @@ export default function AppointmentTypesTab() {
     color: 'blue',
   });
 
-  // Fetch appointment types
+  // Fetch enquiry types
   const { data: appointmentTypes, isLoading: typesLoading } = useQuery({
     queryKey: ['appointment-types', clinic?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('appointment_types')
         .select('*')
-        .eq('clinic_id', clinic!.id)
+        .eq('agency_id', clinic!.id)
         .order('display_order');
 
       if (error) throw error;
@@ -115,7 +115,7 @@ export default function AppointmentTypesTab() {
     enabled: !!clinic?.id,
   });
 
-  // Create/Update appointment type
+  // Create/Update enquiry type
   const saveMutation = useMutation({
     mutationFn: async () => {
       const typeData = {
@@ -171,7 +171,7 @@ export default function AppointmentTypesTab() {
     },
   });
 
-  // Delete appointment type
+  // Delete enquiry type
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
@@ -261,7 +261,7 @@ export default function AppointmentTypesTab() {
       <Card className="bg-slate-800/90 border border-slate-700/50">
         <CardContent className="py-12 text-center">
           <Stethoscope className="h-12 w-12 mx-auto text-white/30 mb-4" />
-          <p className="text-white/60">No clinic linked to your account</p>
+          <p className="text-white/60">No agency linked to your account</p>
         </CardContent>
       </Card>
     );
@@ -452,7 +452,7 @@ export default function AppointmentTypesTab() {
             </div>
             <h3 className="text-xl font-bold text-white mb-2">No services configured yet</h3>
             <p className="text-white/60 mb-6 max-w-md mx-auto">
-              Create appointment types so patients can book specific services online
+              Create enquiry types so patients can book specific services online
             </p>
             <div className="flex gap-3 justify-center">
               <Button onClick={initializeDefaults} variant="outline" className="border-slate-600/50 text-white hover:bg-slate-700/50">

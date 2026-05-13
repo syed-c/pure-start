@@ -16,7 +16,7 @@ export function useAgencyProfile() {
 
       // Get clinic where this user is the owner (claimed_by)
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select(`
           *,
           city:cities(id, name, slug, state:states(id, name, slug))
@@ -56,7 +56,7 @@ export function useFostererAppointments() {
           treatment:treatments(id, name),
           fosterer:dentists(id, name)
         `)
-        .eq('clinic_id', agency.id)
+        .eq('agency_id', agency.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -81,12 +81,12 @@ export function useFostererReviews() {
         supabase
           .from('internal_reviews')
           .select('*')
-          .eq('clinic_id', agency.id)
+          .eq('agency_id', agency.id)
           .order('created_at', { ascending: false }),
         supabase
           .from('google_reviews')
           .select('*')
-          .eq('clinic_id', agency.id)
+          .eq('agency_id', agency.id)
           .order('review_time', { ascending: false }),
       ]);
 
@@ -111,9 +111,9 @@ export function useFostererTeam() {
       if (!agency?.id) return [];
 
       const { data, error } = await supabase
-        .from('dentists')
+        .from('users')
         .select('*')
-        .eq('clinic_id', agency.id)
+        .eq('agency_id', agency.id)
         .order('is_primary', { ascending: false });
 
       if (error) throw error;
@@ -135,9 +135,9 @@ export function useFostererChildren() {
       if (!agency?.id) return [];
 
       const { data, error } = await supabase
-        .from('patients')
+        .from('foster_carers')
         .select('*')
-        .eq('clinic_id', agency.id)
+        .eq('agency_id', agency.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -159,12 +159,12 @@ export function useFostererMessages() {
       if (!agency?.id) return [];
 
       const { data, error } = await supabase
-        .from('clinic_messages')
+        .from('messages')
         .select(`
           *,
           patient:patients(id, name, phone)
         `)
-        .eq('clinic_id', agency.id)
+        .eq('agency_id', agency.id)
         .order('created_at', { ascending: false })
         .limit(100);
 
@@ -192,7 +192,7 @@ export function useFostererLeads() {
           *,
           treatment:treatments(id, name)
         `)
-        .eq('clinic_id', agency.id)
+        .eq('agency_id', agency.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -226,12 +226,12 @@ export function useFostererStats() {
         { count: reviewsTotal },
         { count: childrenTotal },
       ] = await Promise.all([
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('clinic_id', agency.id),
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('clinic_id', agency.id).eq('status', 'pending'),
-        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('clinic_id', agency.id).eq('status', 'confirmed'),
-        supabase.from('leads').select('*', { count: 'exact', head: true }).eq('clinic_id', agency.id).gte('created_at', monthAgo.toISOString()),
-        supabase.from('internal_reviews').select('*', { count: 'exact', head: true }).eq('clinic_id', agency.id),
-        supabase.from('patients').select('*', { count: 'exact', head: true }).eq('clinic_id', agency.id),
+        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('agency_id', agency.id),
+        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('agency_id', agency.id).eq('status', 'pending'),
+        supabase.from('appointments').select('*', { count: 'exact', head: true }).eq('agency_id', agency.id).eq('status', 'confirmed'),
+        supabase.from('leads').select('*', { count: 'exact', head: true }).eq('agency_id', agency.id).gte('created_at', monthAgo.toISOString()),
+        supabase.from('internal_reviews').select('*', { count: 'exact', head: true }).eq('agency_id', agency.id),
+        supabase.from('foster_carers').select('*', { count: 'exact', head: true }).eq('agency_id', agency.id),
       ]);
 
       return {

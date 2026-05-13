@@ -126,9 +126,9 @@ export default function LeadsTab() {
   };
 
   const filteredLeads = leads?.filter(l =>
-    l.patient_name?.toLowerCase().includes(filters.search.toLowerCase()) ||
-    l.patient_phone?.includes(filters.search) ||
-    l.patient_email?.toLowerCase().includes(filters.search.toLowerCase())
+    l.enquirer_name?.toLowerCase().includes(filters.search.toLowerCase()) ||
+    l.enquirer_phone?.includes(filters.search) ||
+    l.enquirer_email?.toLowerCase().includes(filters.search.toLowerCase())
   ) || [];
 
   // Separate listing requests from regular leads
@@ -270,7 +270,7 @@ export default function LeadsTab() {
                     <TableRow key={lead.id}>
                       <TableCell>
                         <div>
-                          <div className="font-bold">{listingData?.clinicName || lead.patient_name}</div>
+                          <div className="font-bold">{listingData?.clinicName || lead.enquirer_name}</div>
                           <div className="text-sm text-muted-foreground">{listingData?.dentistName || 'Unknown'}</div>
                         </div>
                       </TableCell>
@@ -278,12 +278,12 @@ export default function LeadsTab() {
                         <div className="space-y-1 text-sm">
                           <div className="flex items-center gap-1 text-muted-foreground">
                             <Phone className="h-3 w-3" />
-                            {lead.patient_phone}
+                            {lead.enquirer_phone}
                           </div>
-                          {lead.patient_email && (
+                          {lead.enquirer_email && (
                             <div className="flex items-center gap-1 text-muted-foreground">
                               <Mail className="h-3 w-3" />
-                              {lead.patient_email}
+                              {lead.enquirer_email}
                             </div>
                           )}
                         </div>
@@ -368,7 +368,7 @@ export default function LeadsTab() {
               {regularLeads.map((lead) => (
                 <TableRow key={lead.id}>
                   <TableCell>
-                    <div className="font-medium">{lead.patient_name}</div>
+                    <div className="font-medium">{lead.enquirer_name}</div>
                     {lead.message && (
                       <p className="text-xs text-muted-foreground truncate max-w-48">{lead.message}</p>
                     )}
@@ -377,12 +377,12 @@ export default function LeadsTab() {
                     <div className="space-y-1 text-sm">
                       <div className="flex items-center gap-1 text-muted-foreground">
                         <Phone className="h-3 w-3" />
-                        {lead.patient_phone}
+                        {lead.enquirer_phone}
                       </div>
-                      {lead.patient_email && (
+                      {lead.enquirer_email && (
                         <div className="flex items-center gap-1 text-muted-foreground">
                           <Mail className="h-3 w-3" />
-                          {lead.patient_email}
+                          {lead.enquirer_email}
                         </div>
                       )}
                     </div>
@@ -439,7 +439,7 @@ export default function LeadsTab() {
       <Dialog open={noteDialog} onOpenChange={setNoteDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Lead Notes - {selectedLead?.patient_name}</DialogTitle>
+            <DialogTitle>Lead Notes - {selectedLead?.enquirer_name}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
@@ -467,7 +467,7 @@ export default function LeadsTab() {
               Approve Practice Listing
             </DialogTitle>
             <DialogDescription>
-              This will create a user account for the dentist and activate their listing.
+              This will create a user account for the foster carer and activate their listing.
             </DialogDescription>
           </DialogHeader>
           
@@ -481,7 +481,7 @@ export default function LeadsTab() {
                       <div className="flex items-center gap-3">
                         <Building2 className="h-5 w-5 text-primary" />
                         <div>
-                          <p className="font-bold">{listingData?.clinicName || selectedLead.patient_name}</p>
+                          <p className="font-bold">{listingData?.clinicName || selectedLead.enquirer_name}</p>
                           <p className="text-sm text-muted-foreground">{listingData?.dentistName}</p>
                         </div>
                       </div>
@@ -495,12 +495,12 @@ export default function LeadsTab() {
                       
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Mail className="h-4 w-4" />
-                        {selectedLead.patient_email}
+                        {selectedLead.enquirer_email}
                       </div>
                       
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Phone className="h-4 w-4" />
-                        {selectedLead.patient_phone}
+                        {selectedLead.enquirer_phone}
                       </div>
 
                       {listingData?.website && (

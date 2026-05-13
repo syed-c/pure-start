@@ -386,7 +386,7 @@ export default function OverviewTab() {
             <p className="text-white/60 mt-1">Foster Care — UK Fostering Agency Directory</p>
           </div>
           <div className="flex items-center gap-3">
-            <Button className="bg-primary hover:bg-primary/90 text-white rounded-xl shadow-lg shadow-primary/30">
+            <Button className="bg-primary hover:bg-primary/90 text-white rounded-xl shadow-lg shadow-primary/30" onClick={() => navigateTo('agencies')}>
               <UserPlus className="h-4 w-4 mr-2" />
               Add Agency
             </Button>
@@ -429,7 +429,7 @@ export default function OverviewTab() {
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
         <ModernStatCard
           title="Fostering Agencies"
-          value={stats?.clinics?.total || 0}
+          value={stats?.agencies?.total || 0}
           icon={Building2}
           variant="filled"
           color="primary"
@@ -668,7 +668,7 @@ export default function OverviewTab() {
           }))}
           action={{
             label: '+ New',
-            onClick: () => {},
+            onClick: () => toast('Create task coming soon'),
           }}
         />
       </div>
@@ -690,7 +690,7 @@ export default function OverviewTab() {
             <h3 className="text-sm font-bold text-white/60 uppercase tracking-wider mb-3">System Metrics</h3>
             <div className="grid grid-cols-3 gap-4 mb-4">
               <div className="text-center">
-                <p className="text-3xl font-extrabold text-white font-mono">{stats?.clinics?.verified || 0}</p>
+                <p className="text-3xl font-extrabold text-white font-mono">{stats?.agencies?.verified || 0}</p>
                 <p className="text-xs text-white/50">Verified</p>
               </div>
               <div className="text-center">
@@ -722,7 +722,7 @@ export default function OverviewTab() {
                 size="sm" 
                 variant="ghost" 
                 className="text-white/60 hover:text-white hover:bg-white/10"
-                onClick={() => navigateTo('audit-logs')}
+                onClick={() => navigateTo('audit')}
               >
                 View Logs
               </Button>
@@ -795,7 +795,7 @@ export default function OverviewTab() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-foreground">Ofsted Verified</span>
-                <span className="text-sm font-bold text-gold">{Math.round((verifiedAgencyCount / (stats?.clinics?.total || 1)) * 100)}%</span>
+                <span className="text-sm font-bold text-gold">{Math.round((verifiedAgencyCount / (stats?.agencies?.total || 1)) * 100)}%</span>
               </div>
               <Progress value={Math.round((verifiedAgencyCount / (stats?.clinics?.total || 1)) * 100)} className="h-2 [&>div]:bg-gold" />
             </div>

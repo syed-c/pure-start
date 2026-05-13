@@ -33,7 +33,7 @@ export default function InsuranceChecker() {
   const { data: treatments } = useQuery({
     queryKey: ['tool-treatments'],
     queryFn: async () => {
-      const { data } = await supabase.from('treatments').select('id, name, slug').eq('is_active', true).order('name');
+      const { data } = await supabase.from('fostering_categories').select('id, name, slug').eq('is_active', true).order('name');
       return data || [];
     },
   });
@@ -71,7 +71,7 @@ export default function InsuranceChecker() {
       const clinicIds = ciData.map((ci: any) => ci.clinic_id);
 
       let query = supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name, slug, rating, review_count, address, city_id, cities(name, states(abbreviation))')
         .eq('is_active', true)
         .in('id', clinicIds.slice(0, 100));
@@ -90,7 +90,7 @@ export default function InsuranceChecker() {
           .from('clinic_treatments')
           .select('clinic_id, price_from, price_to')
           .eq('treatment_id', treatmentId)
-          .in('clinic_id', filtered.map((c: any) => c.id));
+          .in('agency_id', filtered.map((c: any) => c.id));
 
         const ctMap = new Map((ctData || []).map((ct: any) => [ct.clinic_id, ct]));
         filtered = filtered.filter((c: any) => ctMap.has(c.id)).map((c: any) => ({

@@ -6,14 +6,15 @@ import { useAuth } from '@/hooks/useAuth';
  * Hook to determine which admin tabs a user can access based on their role
  * and explicitly assigned tab permissions in user_tab_permissions table.
  * 
- * - super_admin and district_manager: Access ALL tabs (no restrictions)
+ * - Admin dashboard roles (super_admin, agency_admin, agency_staff, trainer, auditor, district_manager): Access ALL tabs
  * - Other roles (content_team, seo_team, etc.): Only access tabs explicitly granted
  */
 export function useUserTabAccess() {
   const { user, roles } = useAuth();
   
-  // Super admins and district managers have full access
-  const hasFullAccess = roles.includes('super_admin') || roles.includes('district_manager');
+  // Admin dashboard roles have full access by default
+  const ADMIN_DASHBOARD_ROLES = ['super_admin', 'agency_admin', 'agency_staff', 'trainer', 'auditor', 'district_manager'];
+  const hasFullAccess = roles.some(r => ADMIN_DASHBOARD_ROLES.includes(r));
   
   // Fetch user-specific tab permissions for non-super-admin users
   const { data: userTabPermissions, isLoading } = useQuery({
@@ -39,16 +40,20 @@ export function useUserTabAccess() {
    * @param tabId - The tab identifier (e.g., 'blog', 'seo', 'clinics')
    * @returns boolean - Whether user can access the tab
    */
-  const canAccessTab = (tabId: string): boolean => {
+const canAccessTab = (tabId: string, isLoading?: boolean, userExists?: boolean): boolean => {
     // Super admins can access everything
     if (hasFullAccess) return true;
-    
-    // For other users, check if they have explicit permission
-    if (!userTabPermissions || userTabPermissions.length === 0) {
-      // No permissions assigned = no access to admin tabs
-      return false;
-    }
-    
+
+    // Allow all tabs while profile is still loading or user not yet resolved
+    // This prevents the admin sidebar from going blank during auth initialization
+    if (isLoading || !userExists) return true;
+
+    // If permissions haven't been fetched yet (query disabled, loading, or table missing), allow
+    if (userTabPermissions === undefined) return true;
+
+    // If permissions were fetched and array is empty, no access granted
+    if (userTabPermissions.length === 0) return false;
+
     return userTabPermissions.includes(tabId);
   };
   

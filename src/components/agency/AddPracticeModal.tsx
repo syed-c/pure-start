@@ -245,9 +245,9 @@ export function AddPracticeModal({ open, onOpenChange }: AddPracticeModalProps) 
       // Generate unique slug without random codes
       const slug = await generateUniqueSlug('clinics', formData.clinicName);
 
-      // Create the clinic directly
+      // Create the agency directly
       const { data: newClinic, error: clinicError } = await supabase
-        .from('clinics')
+        .from('agencies')
         .insert([{
           name: formData.clinicName,
           slug,
@@ -269,7 +269,7 @@ export function AddPracticeModal({ open, onOpenChange }: AddPracticeModalProps) 
 
       if (clinicError) throw clinicError;
 
-      // Add clinic treatments
+      // Add agency treatments
       if (selectedServices.length > 0 && newClinic) {
         const treatmentInserts = selectedServices.map(treatmentId => ({
           clinic_id: newClinic.id,
@@ -279,9 +279,9 @@ export function AddPracticeModal({ open, onOpenChange }: AddPracticeModalProps) 
         await supabase.from('clinic_treatments').insert(treatmentInserts);
       }
 
-      // Create dentist profile linked to clinic with unique slug
+      // Create foster carer profile linked to agency with unique slug
       const contactSlug = await generateUniqueSlug('dentists', formData.dentistName);
-      await supabase.from('dentists').insert({
+      await supabase.from('users').insert({
         name: formData.dentistName,
         slug: contactSlug,
         email: formData.email,
@@ -291,7 +291,7 @@ export function AddPracticeModal({ open, onOpenChange }: AddPracticeModalProps) 
         is_active: true,
       });
 
-      // Ensure user has dentist role
+      // Ensure user has foster carer role
       const { data: existingRole } = await supabase
         .from('user_roles')
         .select('id')
@@ -365,7 +365,7 @@ export function AddPracticeModal({ open, onOpenChange }: AddPracticeModalProps) 
             <div>
               <span className="text-xl">Add Your Practice</span>
               <p className="text-sm font-normal text-muted-foreground mt-0.5">
-                Create your clinic profile in a few steps
+                Create your agency profile in a few steps
               </p>
             </div>
           </DialogTitle>
@@ -421,7 +421,7 @@ export function AddPracticeModal({ open, onOpenChange }: AddPracticeModalProps) 
                     name="clinicName"
                     value={formData.clinicName}
                     onChange={handleChange}
-                    placeholder="e.g., Sunshine Dental Care"
+                    placeholder="e.g., Sunshine Foster Care"
                     className={errors.clinicName ? 'border-destructive' : ''}
                   />
                   {errors.clinicName && (

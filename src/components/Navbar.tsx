@@ -97,7 +97,7 @@ export function Navbar() {
                     <DropdownMenuSeparator className="bg-slate-700 mb-2" />
                     {regions.map((region) => (
                       <DropdownMenuItem key={region.slug} asChild className="rounded-lg cursor-pointer py-2 px-3 hover:bg-slate-700 hover:text-teal-400">
-                        <Link to={`/fostering-agencies`} className="flex items-center gap-2">
+                        <Link to={`/fostering-agencies/${region.slug}`} className="flex items-center gap-2">
                           <MapPin className="h-4 w-4 text-teal-500" />
                           <span className="font-semibold">{region.name}</span>
                         </Link>
@@ -149,6 +149,10 @@ export function Navbar() {
 
             <Link to="/become-foster-carer" className="px-4 py-2.5 text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all rounded-lg">
               Become Carer
+            </Link>
+
+            <Link to="/tools/fostering-allowance-calculator" className="px-4 py-2.5 text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all rounded-lg">
+              Calculator
             </Link>
 
             <Link to="/about" className="px-4 py-2.5 text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all rounded-lg">
@@ -214,7 +218,7 @@ export function Navbar() {
                 {regions.map((region) => (
                   <Link
                     key={region.slug}
-                    to={`/fostering-agencies`}
+                    to={`/fostering-agencies/${region.slug}`}
                     className="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-200 hover:bg-slate-800 rounded-lg"
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -242,6 +246,9 @@ export function Navbar() {
                 
                 <Link to="/become-foster-carer" className="flex px-3 py-3 text-sm font-semibold text-slate-200 hover:bg-slate-800 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
                   Become a Foster Carer
+                </Link>
+                <Link to="/tools/fostering-allowance-calculator" className="flex px-3 py-3 text-sm font-semibold text-slate-200 hover:bg-slate-800 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
+                  Allowance Calculator
                 </Link>
                 <Link to="/about" className="flex px-3 py-3 text-sm font-semibold text-slate-200 hover:bg-slate-800 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
                   About Us

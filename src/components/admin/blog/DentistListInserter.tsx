@@ -67,7 +67,7 @@ export default function AgencyListInserter({ blocks, onInsert }: AgencyListInser
     enabled: !!selectedCity,
     queryFn: async () => {
       const { data } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name, slug, address, phone, rating, review_count, cover_image_url')
         .eq('city_id', selectedCity)
         .eq('is_active', true)

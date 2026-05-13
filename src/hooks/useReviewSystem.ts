@@ -109,12 +109,12 @@ export function useReviewRequests(agencyId?: string) {
         .from('review_requests')
         .select(`
           *,
-          clinic:clinics(id, name, slug)
+          agency:agencies(id, name, slug)
         `)
         .order('created_at', { ascending: false });
       
       if (agencyId) {
-        query = query.eq('clinic_id', agencyId);
+        query = query.eq('agency_id', agencyId);
       }
       
       const { data, error } = await query.limit(200);
@@ -132,7 +132,7 @@ export function useReviewRequestByCode(shortCode: string) {
         .from('review_requests')
         .select(`
           *,
-          clinic:clinics(id, name, slug, google_place_id, cover_image_url)
+          agency:agencies(id, name, slug, google_place_id, cover_image_url)
         `)
         .eq('short_code', shortCode)
         .single();
@@ -212,7 +212,7 @@ export function useReviewClicks(agencyId?: string) {
         .order('created_at', { ascending: false });
       
       if (agencyId) {
-        query = query.eq('clinic_id', agencyId);
+        query = query.eq('agency_id', agencyId);
       }
       
       const { data, error } = await query.limit(500);
@@ -256,7 +256,7 @@ export function useInternalReviews(agencyId?: string, status?: string) {
         .order('created_at', { ascending: false });
       
       if (agencyId) {
-        query = query.eq('clinic_id', agencyId);
+        query = query.eq('agency_id', agencyId);
       }
       if (status) {
         query = query.eq('status', status as any);
@@ -335,7 +335,7 @@ export function useGoogleReviews(agencyId?: string) {
         .order('review_time', { ascending: false });
       
       if (agencyId) {
-        query = query.eq('clinic_id', agencyId);
+        query = query.eq('agency_id', agencyId);
       }
       
       const { data, error } = await query.limit(200);
@@ -355,7 +355,7 @@ export function useReputationKPIs(agencyId: string, days: number = 30) {
       const { data, error } = await supabase
         .from('profile_analytics')
         .select('event_type, created_at')
-        .eq('clinic_id', agencyId)
+        .eq('agency_id', agencyId)
         .gte('created_at', startDate)
         .order('created_at', { ascending: true });
       
@@ -426,7 +426,7 @@ export function useAllReviewRequests() {
         .from('review_requests')
         .select(`
           *,
-          clinic:clinics(id, name, slug)
+          agency:agencies(id, name, slug)
         `)
         .order('created_at', { ascending: false })
         .limit(500);
@@ -445,7 +445,7 @@ export function useAllInternalReviews() {
         .from('internal_reviews')
         .select(`
           *,
-          clinic:clinics(id, name, slug)
+          agency:agencies(id, name, slug)
         `)
         .order('created_at', { ascending: false })
         .limit(500);
@@ -464,7 +464,7 @@ export function useAllReviewClicks() {
         .from('review_clicks')
         .select(`
           *,
-          clinic:clinics(id, name)
+          agency:agencies(id, name)
         `)
         .order('created_at', { ascending: false })
         .limit(50000);

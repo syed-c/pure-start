@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Button } from "@/components/ui/button";
 import { SEOHead } from "@/components/seo/SEOHead";
+import { StructuredData } from "@/components/seo/StructuredData";
 import { useRealCounts } from "@/hooks/useRealCounts";
 import {
   Search, UserCheck, Calendar, Star, ArrowRight, CheckCircle,
@@ -48,16 +49,17 @@ const HowItWorksPage = () => {
 
   return (
     <PageLayout>
-      <SEOHead
+<SEOHead
         title="How It Works | Find Fostering Agencies or List Your Agency"
         description="Learn how Foster Care works. Search, compare, and enquire with fostering agencies. Agencies can list their services and reach more carers."
         canonical="/how-it-works/"
-        keywords={['how to find fostering agency', 'become foster carer', 'list fostering agency']}
+        keywords={['how to find fostering agency', 'become foster carers', 'list fostering agency']}
       />
+      <StructuredData type="organization" />
 
       {/* ───── Hero ───── */}
       <section className="relative py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-background to-muted/30" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-background to-muted/30 pointer-events-none" />
         <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-primary/[0.06] rounded-full blur-3xl" />
         <div className="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-accent/[0.08] rounded-full blur-3xl" />
 
@@ -257,7 +259,7 @@ const HowItWorksPage = () => {
 
       {/* ───── CTA ───── */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary/80" />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary/80 pointer-events-none" />
         <div className="absolute -top-20 -right-20 w-60 h-60 bg-white/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-white/5 rounded-full blur-3xl" />
         <div className="container relative text-center">

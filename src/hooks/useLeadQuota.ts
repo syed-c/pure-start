@@ -23,7 +23,7 @@ export function useLeadQuota(clinicId?: string) {
       const { data, error } = await supabase
         .from('lead_quotas')
         .select('*')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .single();
 
       if (error && error.code !== 'PGRST116') throw error;
@@ -41,7 +41,7 @@ export function useAllLeadQuotas() {
         .from('lead_quotas')
         .select(`
           *,
-          clinic:clinics(id, name),
+          agency:agencies(id, name),
           plan:subscription_plans(id, name, slug)
         `)
         .order('leads_used', { ascending: false });
@@ -121,7 +121,7 @@ export function useResetLeadQuota() {
           period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
           updated_at: new Date().toISOString()
         })
-        .eq('clinic_id', clinicId);
+        .eq('agency_id', clinicId);
 
       if (error) throw error;
     },

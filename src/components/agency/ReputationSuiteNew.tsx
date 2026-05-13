@@ -54,12 +54,12 @@ export default function ReputationSuiteNew() {
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
   const [sendDialogOpen, setSendDialogOpen] = useState(false);
 
-  // Fetch clinic - skip for admins
+  // Fetch agency - skip for admins
   const { data: clinic, isLoading: clinicLoading } = useQuery({
     queryKey: ['reputation-suite-clinic', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name, slug, google_place_id, rating, review_count')
         .eq('claimed_by', user?.id)
         .limit(1)

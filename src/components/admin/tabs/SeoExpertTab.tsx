@@ -58,10 +58,10 @@ const PAGE_TYPE_LABELS: Record<string, string> = {
   city: 'Location Pages (Cities)',
   city_treatment: 'Service-Location Pages',
   treatment: 'Service Pages',
-  clinic: 'Clinic Profiles',
+  clinic: 'Agency Profiles',
   blog: 'Blog Posts',
   static: 'Static Pages',
-  dentist: 'Dentist Profiles'
+  dentist: 'Agency Staff Profiles'
 };
 
 const ISSUE_CATEGORIES = [
@@ -791,7 +791,7 @@ export default function SeoExpertTab() {
                 <div className="space-y-2">
                   <Label>Custom AI Instructions (Optional)</Label>
                   <Textarea
-                    placeholder="Add specific instructions for the AI... e.g., 'Focus on local keywords for this city' or 'Include specific dental services mentioned'"
+                    placeholder="Add specific instructions for the AI... e.g., 'Focus on local keywords for this city' or 'Include specific fostering services mentioned'"
                     value={customPrompt}
                     onChange={(e) => setCustomPrompt(e.target.value)}
                     rows={4}

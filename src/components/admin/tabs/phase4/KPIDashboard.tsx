@@ -134,7 +134,7 @@ export default function KPIDashboard({ kpiData }: KPIDashboardProps) {
     totalPosts: 68,
     topPerforming: [
       { title: 'Best Specialist Fosterings in Los Angeles', views: 4520 },
-      { title: 'Dental Implant Cost Guide 2026', views: 3890 },
+      { title: 'Fostering Implant Cost Guide 2026', views: 3890 },
       { title: 'Root Canal vs Extraction: Complete Comparison', views: 2340 }
     ],
     topCities: [
@@ -143,7 +143,7 @@ export default function KPIDashboard({ kpiData }: KPIDashboardProps) {
       { city: 'Boston', views: 6780 }
     ],
     topServices: [
-      { service: 'Dental Implants', views: 9870 },
+      { service: 'Fostering Implants', views: 9870 },
       { service: 'Invisalign', views: 7650 },
       { service: 'Teeth Whitening', views: 5430 }
     ]

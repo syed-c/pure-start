@@ -86,7 +86,7 @@ export default function FormWorkflowTab() {
       const { data, error } = await supabase
         .from('form_workflow_settings')
         .select('*')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .order('created_at');
       
       if (error) throw error;

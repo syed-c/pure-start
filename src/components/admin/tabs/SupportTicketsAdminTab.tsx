@@ -103,7 +103,7 @@ export default function SupportTicketsAdminTab() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('support_tickets')
-        .select('*, clinic:clinics(id, name)')
+        .select('*, agency:agencies(id, name)')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -204,7 +204,7 @@ export default function SupportTicketsAdminTab() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-display font-bold text-foreground">Support Tickets</h1>
-          <p className="text-muted-foreground mt-1">Manage dentist support requests</p>
+          <p className="text-muted-foreground mt-1">Manage foster carer support requests</p>
         </div>
       </div>
 

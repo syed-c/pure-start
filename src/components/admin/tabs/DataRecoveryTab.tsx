@@ -196,7 +196,7 @@ export default function DataRecoveryTab() {
       {/* DB Status Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: 'Clinics', value: counts?.clinics ?? '—', icon: '🏥' },
+          { label: 'Agencies', value: counts?.clinics ?? '—', icon: '🏥' },
           { label: 'Hours', value: counts?.clinic_hours ?? '—', icon: '🕐' },
           { label: 'Reviews', value: counts?.google_reviews ?? '—', icon: '⭐' },
           { label: 'Agencies', value: counts?.agencies ?? '—', icon: '🦷' },
@@ -302,7 +302,7 @@ export default function DataRecoveryTab() {
             {state.phase === 'done' && (
               <Badge variant="default" className="bg-green-600 text-white text-sm px-4 py-2">
                 <CheckCircle2 className="h-4 w-4 mr-2" />
-                Recovery Complete — {state.imported} clinics restored
+                Recovery Complete — {state.imported} agencies restored
               </Badge>
             )}
 

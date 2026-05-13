@@ -326,7 +326,7 @@ export function BulkActionsPanel({ selectedPageIds, onJobStarted }: BulkActionsP
           <Textarea
             value={customPrompt}
             onChange={(e) => setCustomPrompt(e.target.value)}
-            placeholder="Add specific instructions for the AI, e.g., 'Focus on emergency dental services' or 'Mention insurance options'"
+            placeholder="Add specific instructions for the AI, e.g., 'Focus on emergency fostering services' or 'Mention insurance options'"
             className="min-h-[80px]"
           />
         </div>

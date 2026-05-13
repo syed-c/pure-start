@@ -162,7 +162,7 @@ export default function InternalReviewsManager({ clinicId }: InternalReviewsMana
             <div className="text-center py-12 text-muted-foreground">
               <CheckCircle className="h-12 w-12 mx-auto mb-3 text-teal/50" />
               <p className="text-lg font-medium">No negative feedback yet</p>
-              <p className="text-sm">Great job maintaining patient satisfaction!</p>
+              <p className="text-sm">Great job maintaining applicant satisfaction!</p>
             </div>
           ) : (
             <Table>

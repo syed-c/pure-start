@@ -73,11 +73,11 @@ export default function SupportTicketsTab() {
   });
 
   // Fetch clinic
-  const { data: clinic } = useQuery({
+  const { data: agency } = useQuery({
     queryKey: ['support-clinic', user?.id],
     queryFn: async () => {
       const { data } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -94,7 +94,7 @@ export default function SupportTicketsTab() {
       const { data, error } = await supabase
         .from('support_tickets')
         .select('*')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .order('created_at', { ascending: false });
       if (error) throw error;
       return (data || []) as SupportTicket[];

@@ -52,7 +52,7 @@ export default function ReputationSurveysTab({ clinicId, isAdmin }: Props) {
         .eq('event_type', 'thumbs_down')
         .not('comment', 'is', null)
         .order('created_at', { ascending: false });
-      if (clinicId) query = query.eq('clinic_id', clinicId);
+      if (clinicId) query = query.eq('agency_id', clinicId);
       const { data, error } = await query.limit(50);
       if (error) return [];
       return data || [];

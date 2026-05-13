@@ -89,7 +89,8 @@ const BlogPage = () => {
       />
 
       {/* Hero */}
-      <section className="py-16 md:py-24 bg-muted/30">
+      <section className="py-16 md:py-24 bg-muted/30 relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-grid opacity-20 pointer-events-none" />
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
             <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">Fostering Insights</p>

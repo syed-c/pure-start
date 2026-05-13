@@ -9,6 +9,11 @@ export interface OrganizationSchemaProps {
   type: 'organization';
 }
 
+// WebSite Schema for search box
+export interface WebSiteSchemaProps {
+  type: 'website';
+}
+
 // LocalBusiness/Dentist Schema
 export interface LocalBusinessSchemaProps {
   type: 'localBusiness';
@@ -64,149 +69,60 @@ export interface BreadcrumbSchemaProps {
   items: { name: string; url?: string }[];
 }
 
-// Service Schema
-export interface ServiceSchemaProps {
-  type: 'service';
-  name: string;
-  description?: string;
-  url: string;
-  provider?: string;
-  areaServed?: string;
-}
-
-export type StructuredDataProps =
-  | OrganizationSchemaProps
-  | LocalBusinessSchemaProps
-  | PersonSchemaProps
-  | ArticleSchemaProps
-  | FAQSchemaProps
-  | BreadcrumbSchemaProps
-  | ServiceSchemaProps;
-
-// Organization schema generator that uses settings
-const generateOrganizationSchema = (settings?: {
-  name: string;
-  url: string;
-  logo: string;
-  description: string;
-  email?: string;
-  phone?: string;
-  foundingDate?: string;
-  founders?: string[];
-  address?: {
-    streetAddress?: string;
-    addressLocality?: string;
-    addressRegion?: string;
-    postalCode?: string;
-    addressCountry?: string;
-  };
-  socialProfiles?: string[];
-}) => {
-  const org = settings || {
-    name: 'Foster Care',
-    url: BASE_URL,
-    logo: `${BASE_URL}/logo.png`,
-    description: 'Find and book appointments with top-rated dental professionals across the UAE.',
-  };
-
-  const schema: Record<string, any> = {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: org.name,
-    url: org.url,
-    logo: org.logo,
-    description: org.description,
-  };
-
-  if (org.email) schema.email = org.email;
-  if (org.phone) schema.telephone = org.phone;
-  if (org.foundingDate) schema.foundingDate = org.foundingDate;
-  
-  if (org.founders && org.founders.length > 0) {
-    schema.founder = org.founders.map(name => ({
-      '@type': 'Person',
-      name,
-    }));
-  }
-
-  if (org.address && org.address.streetAddress) {
-    schema.address = {
-      '@type': 'PostalAddress',
-      streetAddress: org.address.streetAddress,
-      addressLocality: org.address.addressLocality,
-      addressRegion: org.address.addressRegion,
-      postalCode: org.address.postalCode,
-      addressCountry: org.address.addressCountry || 'AE',
-    };
-  } else {
-    schema.address = {
-      '@type': 'PostalAddress',
-      addressCountry: 'AE',
-    };
-  }
-
-  if (org.socialProfiles && org.socialProfiles.length > 0) {
-    schema.sameAs = org.socialProfiles;
-  }
-
-  return schema;
-};
-
-const generateLocalBusinessSchema = (props: LocalBusinessSchemaProps) => ({
+// Organization Schema
+const generateOrganizationSchema = (props?: { name?: string; url?: string; logo?: string }) => ({
   '@context': 'https://schema.org',
-  '@type': ['Dentist', 'LocalBusiness'],
+  '@type': 'Organization',
+  name: props?.name || 'Foster Care UK',
+  url: props?.url || BASE_URL,
+  logo: props?.logo || `${BASE_URL}/logo.png`,
+  sameAs: [
+    'https://www.facebook.com/fostercareuk',
+    'https://www.twitter.com/fostercareuk',
+    'https://www.instagram.com/fostercareuk',
+  ],
+});
+
+// Service Schema
+const generateServiceSchema = (props: ServiceSchemaProps) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Service',
   name: props.name,
   description: props.description,
-  url: `${BASE_URL}${withTrailingSlash(props.url)}`,
-  image: props.image,
-  telephone: props.phone,
-  email: props.email,
-  priceRange: props.priceRange || '$$',
-  address: props.address
-    ? {
-        '@type': 'PostalAddress',
-        streetAddress: props.address,
-        addressLocality: props.city,
-        addressCountry: props.country || 'AE',
-      }
-    : undefined,
-  geo: props.geo
-    ? {
-        '@type': 'GeoCoordinates',
-        latitude: props.geo.lat,
-        longitude: props.geo.lng,
-      }
-    : undefined,
-  aggregateRating:
-    props.rating && props.reviewCount && props.reviewCount > 0
-      ? {
-          '@type': 'AggregateRating',
-          ratingValue: props.rating,
-          reviewCount: props.reviewCount,
-          ratingCount: props.reviewCount,
-          bestRating: 5,
-          worstRating: 1,
-        }
-      : undefined,
-  openingHoursSpecification: props.openingHours?.map((h) => ({
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek: h.day,
-    opens: h.open,
-    closes: h.close,
-  })),
+  provider: {
+    '@type': 'Organization',
+    name: props.provider?.name || 'Foster Care UK',
+    url: props.provider?.url || BASE_URL,
+  },
+});
+
+// WebSite Schema with SearchAction
+const generateWebSiteSchema = () => ({
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Foster Care UK',
+  url: BASE_URL,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${BASE_URL}/search?q={search_term_string}`,
+    },
+    'query-input': 'required name=search_term_string',
+  },
 });
 
 const generatePersonSchema = (props: PersonSchemaProps) => ({
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: props.name,
-  jobTitle: props.jobTitle || 'Dentist',
+  jobTitle: props.jobTitle || 'Foster Care Agency',
   description: props.description,
   image: props.image,
   url: `${BASE_URL}${withTrailingSlash(props.url)}`,
   worksFor: props.worksFor
     ? {
-        '@type': 'Dentist',
+        '@type': 'FosterCareAgency',
         name: props.worksFor.name,
         url: `${BASE_URL}${withTrailingSlash(props.worksFor.url)}`,
       }
@@ -280,33 +196,6 @@ const generateBreadcrumbSchema = (props: BreadcrumbSchemaProps) => ({
   }),
 });
 
-const generateServiceSchema = (props: ServiceSchemaProps) => ({
-  '@context': 'https://schema.org',
-  '@type': 'Service',
-  name: props.name,
-  description: props.description,
-  url: `${BASE_URL}${withTrailingSlash(props.url)}`,
-  provider: props.provider
-    ? {
-        '@type': 'Organization',
-        name: props.provider,
-      }
-    : {
-        '@type': 'Organization',
-        name: 'Foster Care',
-      },
-  areaServed: props.areaServed
-    ? {
-        '@type': 'City',
-        name: props.areaServed,
-      }
-    : {
-        '@type': 'Country',
-        name: 'United Arab Emirates',
-      },
-  serviceType: 'Dental Service',
-});
-
 export const StructuredData = (props: StructuredDataProps) => {
   const { data: schemaSettings } = useSchemaSettings();
 
@@ -333,6 +222,9 @@ export const StructuredData = (props: StructuredDataProps) => {
       break;
     case 'service':
       schema = generateServiceSchema(props);
+      break;
+    case 'website':
+      schema = generateWebSiteSchema();
       break;
   }
 

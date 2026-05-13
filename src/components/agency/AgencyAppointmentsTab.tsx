@@ -69,7 +69,7 @@ export default function AgencyEnquiriesTab() {
     queryKey: ['agency-profile-appointments', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -87,7 +87,7 @@ export default function AgencyEnquiriesTab() {
       const { data, error } = await supabase
         .from('appointments')
         .select('*, treatment:treatments(id, name)')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .order('created_at', { ascending: false });
       if (error) throw error;
       return data as Appointment[];
@@ -205,7 +205,7 @@ export default function AgencyEnquiriesTab() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Appointments</h1>
-          <p className="text-muted-foreground">Manage your patient bookings</p>
+          <p className="text-muted-foreground">Manage your enquiries</p>
         </div>
         <Button variant="outline" className="gap-2">
           <CalendarDays className="h-4 w-4" />

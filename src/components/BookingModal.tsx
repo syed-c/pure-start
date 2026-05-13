@@ -104,7 +104,7 @@ export function BookingModal({
     queryKey: ['booking-treatments'],
     queryFn: async () => {
       const { data } = await supabase
-        .from('treatments')
+        .from('fostering_categories')
         .select('id, name')
         .eq('is_active', true)
         .order('display_order');

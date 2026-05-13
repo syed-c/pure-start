@@ -67,8 +67,8 @@ const PAGE_TYPE_OPTIONS = [
   { value: 'state', label: 'State Pages', icon: MapPin },
   { value: 'service', label: 'Service Pages', icon: Stethoscope },
   { value: 'service-location', label: 'Service + Location', icon: MapPin },
-  { value: 'clinic', label: 'Clinic Profiles', icon: Building2 },
-  { value: 'dentist', label: 'Dentist Profiles', icon: Building2 },
+  { value: 'clinic', label: 'Agency Profiles', icon: Building2 },
+  { value: 'dentist', label: 'Agency Staff Profiles', icon: Building2 },
   { value: 'blog', label: 'Blog Posts', icon: BookOpen },
   { value: 'static', label: 'Static Pages', icon: FileText },
 ];

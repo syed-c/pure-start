@@ -43,7 +43,7 @@ export default function ProfileHealthCard({
     queryKey: ['profile-health', clinicId],
     queryFn: async () => {
       const { data } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('*, clinic_hours(*), clinic_images(*)')
         .eq('id', clinicId)
         .single();

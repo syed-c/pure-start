@@ -66,7 +66,7 @@ const NEIGHBORING_STATES: Record<string, { name: string; slug: string }[]> = {
   ],
 };
 
-// Related services mapping for cross-linking (expanded for UAE dental market)
+// Related services mapping for cross-linking
 const RELATED_SERVICES: Record<string, string[]> = {
   "fostering-placements": ["dental-crowns", "dental-veneers", "teeth-whitening", "bone-grafting"],
   "teeth-whitening": ["dental-veneers", "teeth-cleaning", "invisalign", "smile-makeover"],
@@ -125,7 +125,7 @@ export const GeographicLinkBlock = ({
       >
         <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
           <Navigation className="h-5 w-5 text-primary" />
-          Explore Dental Care in {stateName}
+          Explore Fostering in {stateName}
         </h3>
 
         <div className="grid md:grid-cols-3 gap-6">
@@ -196,11 +196,11 @@ export const GeographicLinkBlock = ({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className="bg-card border border-border rounded-2xl p-6"
-        aria-label="Explore dental services"
+        aria-label="Explore agency services"
       >
         <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
           <Navigation className="h-5 w-5 text-primary" />
-          Dental Services in {cityName}
+          Fostering Services in {cityName}
         </h3>
 
         <div className="grid md:grid-cols-3 gap-6">

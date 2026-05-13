@@ -32,9 +32,9 @@ export default function ReputationRepliesTab({ clinicId, isAdmin }: Props) {
     queryFn: async () => {
       let query = supabase
         .from('google_reviews')
-        .select('*, clinic:clinics(id, name, slug, google_place_id)')
+        .select('*, agency:agencies(id, name, slug, google_place_id)')
         .order('review_time', { ascending: false });
-      if (clinicId) query = query.eq('clinic_id', clinicId);
+      if (clinicId) query = query.eq('agency_id', clinicId);
       if (statusFilter !== 'all') query = query.eq('reply_status', statusFilter);
       const { data, error } = await query.limit(200);
       if (error) throw error;

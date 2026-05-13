@@ -14,7 +14,7 @@ const faqs = [
     a: "Direct billing means the clinic bills your insurance company directly, so you don't have to pay upfront for covered services. You only pay your copay or deductible at the time of service.",
   },
   {
-    q: "Do I need pre-approval for dental procedures?",
+    q: "Do I need pre-approval for specialized procedures?",
     a: "Some procedures like crowns, bridges, or orthodontics may require pre-approval. Ask your dentist to submit a pre-authorization request before scheduling major work.",
   },
   {

@@ -95,8 +95,9 @@ function cleanAIContent(raw: string): string {
     return `[${label}](${cleanPath})`;
   });
 
-  // Keep blog interlinking internal-only by removing external markdown links
-  cleaned = cleaned.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/gi, '$1');
+  // Remove external links only, keep internal markdown links
+  // External links with non-internal domains are stripped for security
+  cleaned = cleaned.replace(/\[([^\]]+)\]\((https?:\/\/(?!www\.foster-care\.co\.uk)[^)]+)\)/gi, '$1');
 
   return cleaned;
 }

@@ -197,7 +197,7 @@ export function AISearchControlTab() {
 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>Paid Dentist Priority</Label>
+                    <Label>Paid Agency Priority</Label>
                     <p className="text-sm text-muted-foreground">
                       Boost paid agencies in search rankings
                     </p>

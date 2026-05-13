@@ -84,7 +84,7 @@ interface ClinicWithSettings {
 
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--teal))', 'hsl(var(--gold))', 'hsl(var(--coral))'];
 
-// Helper function to fetch ALL clinics with batch fetching
+// Helper function to fetch ALL agencies with batch fetching
 async function fetchAllClinics(): Promise<ClinicWithSettings[]> {
   const allClinics: ClinicWithSettings[] = [];
   const batchSize = 1000;
@@ -231,7 +231,7 @@ export default function BookingSystemTab() {
     },
   });
 
-  // Fetch ALL clinics with their booking settings (no limit)
+  // Fetch ALL agencies with their booking settings (no limit)
   const { data: clinicsData, isLoading: clinicsLoading, refetch: refetchClinics } = useQuery({
     queryKey: ['booking-clinics-with-settings-all'],
     queryFn: fetchAllClinics,
@@ -244,14 +244,14 @@ export default function BookingSystemTab() {
     queryFn: async () => {
       const { data } = await supabase
         .from('fostering_enquiries')
-        .select('id, patient_name, status, preferred_date, preferred_time, created_at, source, clinic:clinics(name)')
+        .select('id, enquirer_name, status, preferred_date, preferred_time, created_at, source, agency:agencies(name)')
         .order('created_at', { ascending: false })
         .limit(25);
       return data || [];
     },
   });
 
-  // Filter clinics based on search and status
+  // Filter agencies based on search and status
   const filteredClinics = useMemo(() => {
     if (!clinicsData) return [];
     
@@ -273,7 +273,7 @@ export default function BookingSystemTab() {
     });
   }, [clinicsData, searchTerm, statusFilter]);
 
-  // Update clinic booking settings mutation
+  // Update agency booking settings mutation
   const updateSettingsMutation = useMutation({
     mutationFn: async (params: { clinicId: string; settings: Record<string, any> }) => {
       const { error } = await supabase
@@ -282,7 +282,7 @@ export default function BookingSystemTab() {
           clinic_id: params.clinicId,
           ...params.settings,
           updated_at: new Date().toISOString(),
-        }, { onConflict: 'clinic_id' });
+        }, { onConflict: 'agency_id' });
       
       if (error) throw error;
     },
@@ -301,10 +301,10 @@ export default function BookingSystemTab() {
     mutationFn: async () => {
       if (!clinicsData) return;
       
-      // Get clinics without settings
+      // Get agencies without settings
       const clinicsWithoutSettings = clinicsData.filter(c => !c.dentist_settings);
       
-      for (const clinic of clinicsWithoutSettings) {
+      for (const agency of clinicsWithoutSettings) {
         await supabase
           .from('dentist_settings')
           .upsert({
@@ -315,7 +315,7 @@ export default function BookingSystemTab() {
             max_advance_booking_days: 60,
             confirmation_email_enabled: true,
             reminder_sms_enabled: false,
-          }, { onConflict: 'clinic_id' });
+          }, { onConflict: 'agency_id' });
       }
       
       // Also update existing settings to enable booking
@@ -694,11 +694,11 @@ export default function BookingSystemTab() {
               <div className="space-y-3 text-sm">
                 <div className="flex items-start gap-2">
                   <CheckCircle className="h-4 w-4 text-teal mt-0.5" />
-                  <span>Inline calendar booking on clinic & dentist profiles</span>
+                  <span>Inline calendar booking on agency & foster carer profiles</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <CheckCircle className="h-4 w-4 text-teal mt-0.5" />
-                  <span>GMB-synced clinic hours for accurate time slots</span>
+                  <span>GMB-synced agency hours for accurate time slots</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <CheckCircle className="h-4 w-4 text-teal mt-0.5" />
@@ -708,7 +708,7 @@ export default function BookingSystemTab() {
               <div className="space-y-3 text-sm">
                 <div className="flex items-start gap-2">
                   <CheckCircle className="h-4 w-4 text-teal mt-0.5" />
-                  <span>Returning patient detection</span>
+                  <span>Returning applicant detection</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <CheckCircle className="h-4 w-4 text-teal mt-0.5" />
@@ -952,7 +952,7 @@ export default function BookingSystemTab() {
                   <TableBody>
                     {recentAppointments?.map((apt) => (
                       <TableRow key={apt.id}>
-                        <TableCell className="font-medium">{apt.patient_name}</TableCell>
+                        <TableCell className="font-medium">{apt.enquirer_name}</TableCell>
                         <TableCell className="text-muted-foreground">
                           {(apt.clinic as any)?.name || '-'}
                         </TableCell>

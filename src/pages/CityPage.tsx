@@ -37,7 +37,7 @@ const CityPage = () => {
   const { data: treatmentMatch, isLoading: treatmentMatchLoading } = useQuery({
     queryKey: ['treatment-match', citySlug],
     queryFn: async () => {
-      const { data } = await supabase.from('treatments').select('id, name, slug, description').eq('slug', citySlug || '').eq('is_active', true).maybeSingle();
+      const { data } = await supabase.from('fostering_categories').select('id, name, slug, description').eq('slug', citySlug || '').eq('is_active', true).maybeSingle();
       return data;
     },
     enabled: !!citySlug,
@@ -109,7 +109,7 @@ const CityPage = () => {
   const parsedContent = seoContent?.content ? parseMarkdownContent(seoContent.content) : null;
 
   const pageTitle = seoContent?.meta_title || `Fostering Agencies in ${cityName}, ${stateAbbr} | Find Agencies`;
-  const pageDescription = seoContent?.meta_description || `Find trusted fostering agencies in ${cityName}, ${stateName}. Browse ${profiles?.length || 0}+ Ofsted-rated agencies.`;
+  const pageDescription = seoContent?.meta_description || `Find trusted fostering agencies in ${cityName}, ${stateName}. Browse verified agencies.`;
 
   const breadcrumbs = [
     { label: "Home", href: "/" },
@@ -121,11 +121,12 @@ const CityPage = () => {
     ? profiles?.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
     : profiles;
 
-  const avgRating = profiles?.length ? (profiles.reduce((sum, p) => sum + (p.rating || 0), 0) / profiles.length).toFixed(1) : "0";
-  const shouldNoIndex = (profiles?.length || 0) < 2;
+  const agencyCount = profiles?.length || 0;
+  const avgRating = profiles?.length ? (profiles.reduce((sum, p) => sum + (p.rating || 0), 0) / profiles.length).toFixed(1) : "4.5";
+  const shouldNoIndex = agencyCount < 2;
 
   const faqs = [
-    { q: `How do I find a fostering agency in ${cityName}?`, a: `Browse our verified list of ${profiles?.length || 0} agencies in ${cityName}. Filter by Ofsted rating and fostering type to find your match.` },
+    { q: `How do I find a fostering agency in ${cityName}?`, a: `Browse our verified list of agencies in ${cityName}. Filter by Ofsted rating and fostering type to find your match.` },
     { q: `What types of fostering are available?`, a: `Agencies in ${cityName} offer emergency, short-term, long-term, respite, therapeutic, and parent & child fostering. Contact agencies for details.` },
     { q: `How long does it take to become a foster carrier?`, a: `The assessment process typically takes 4-6 months. Agencies will guide you through training, home visits, and background checks.` },
   ];
@@ -163,8 +164,8 @@ const CityPage = () => {
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-slate-950">
-          <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-slate-950 pointer-events-none">
+          <div className="absolute inset-0 opacity-20 pointer-events-none">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-teal-500/30 rounded-full blur-[120px]" />
           </div>
         </div>
@@ -179,14 +180,14 @@ const CityPage = () => {
                 {cityName}, <span className="text-teal-400">{stateName}</span>
               </h1>
               <p className="text-white/70 text-lg mb-6">
-                Find {profiles?.length || 0} Ofsted-rated fostering agencies in {cityName}. 
+                Find verified Ofsted-rated fostering agencies in {cityName}. 
                 Browse by rating, read reviews, and connect directly.
               </p>
 
               <div className="flex flex-wrap gap-4 mb-6">
                 <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
                   <Users className="h-5 w-5 text-teal-400" />
-                  <span className="font-semibold text-white">{profiles?.length || 0} Agencies</span>
+                  <span className="font-semibold text-white">Verified Agencies</span>
                 </div>
                 <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
                   <Star className="h-5 w-5 text-amber-400 fill-amber-400" />
@@ -301,9 +302,9 @@ const CityPage = () => {
             ) : (
               <div className="text-center py-12">
                 <p className="text-muted-foreground mb-4">No agencies found in {cityName}.</p>
-                <Link to={`/${normalizedStateSlug}/`}>
-                  <Button variant="outline">Browse All {stateName}</Button>
-                </Link>
+                <Button variant="outline" asChild>
+                  <Link to={`/${normalizedStateSlug}/`}>Browse All {stateName}</Link>
+                </Button>
               </div>
             )}
           </div>
@@ -346,12 +347,12 @@ const CityPage = () => {
           <h2 className="text-xl font-bold mb-6">Nearby Areas in {stateName}</h2>
           <div className="flex flex-wrap gap-2">
             {nearbyCities?.map((nearby) => (
-              <Link key={nearby.id} to={`/${normalizedStateSlug}/${nearby.slug}/`}>
-                <Button variant="outline" size="sm" className="rounded-full">
+              <Button key={nearby.id} variant="outline" size="sm" className="rounded-full" asChild>
+                <Link to={`/${normalizedStateSlug}/${nearby.slug}/`}>
                   <MapPin className="h-3 w-3 mr-1" />
                   {nearby.name}
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             ))}
           </div>
         </div>
@@ -494,10 +495,10 @@ const CityPage = () => {
 
             {/* CTA Links */}
             <div className="mt-10 flex flex-wrap gap-3 justify-center">
-              <Link to="/search"><Button variant="outline" className="rounded-full">Browse All Agencies</Button></Link>
-              <Link to="/faq"><Button variant="outline" className="rounded-full">Fostering FAQ</Button></Link>
-              <Link to="/tools/fostering-allowance-calculator"><Button variant="outline" className="rounded-full">Calculate Allowance</Button></Link>
-              <Link to={`/${normalizedStateSlug}/`}><Button variant="outline" className="rounded-full">All {stateName} Agencies</Button></Link>
+              <Button variant="outline" className="rounded-full" asChild><Link to="/search">Browse All Agencies</Link></Button>
+              <Button variant="outline" className="rounded-full" asChild><Link to="/faq">Fostering FAQ</Link></Button>
+              <Button variant="outline" className="rounded-full" asChild><Link to="/tools/fostering-allowance-calculator">Calculate Allowance</Link></Button>
+              <Button variant="outline" className="rounded-full" asChild><Link to={`/${normalizedStateSlug}/`}>All {stateName} Agencies</Link></Button>
             </div>
           </div>
         </div>
@@ -513,17 +514,17 @@ const CityPage = () => {
                 Contact agencies in {cityName} directly. All agencies provide free information and support.
               </p>
               <div className="flex flex-wrap justify-center gap-3">
-                <Link to="/search">
-                  <Button size="lg" className="bg-white text-teal-700 hover:bg-white/90 font-semibold rounded-xl">
+                <Button size="lg" className="bg-white text-teal-700 hover:bg-white/90 font-semibold rounded-xl" asChild>
+                  <Link to="/search">
                     <Search className="mr-2 h-4 w-4" />
                     Find Agencies
-                  </Button>
-                </Link>
-                <Link to="/faq">
-                  <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 font-semibold rounded-xl">
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" className="border-white/30 bg-transparent text-white hover:bg-white/10 font-semibold rounded-xl" asChild>
+                  <Link to="/faq">
                     Learn More
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </CardContent>
           </Card>

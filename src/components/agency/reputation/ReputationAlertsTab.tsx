@@ -44,7 +44,7 @@ export default function ReputationAlertsTab({ clinicId, rating }: ReputationAler
       const { data } = await supabase
         .from('review_funnel_events')
         .select('*')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .order('created_at', { ascending: false })
         .limit(500);
       return data || [];
@@ -57,7 +57,7 @@ export default function ReputationAlertsTab({ clinicId, rating }: ReputationAler
       const { data } = await supabase
         .from('google_reviews')
         .select('*')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .order('review_time', { ascending: false })
         .limit(100);
       return data || [];
@@ -92,7 +92,7 @@ export default function ReputationAlertsTab({ clinicId, rating }: ReputationAler
         type: 'rating_drop',
         severity: rating < 3.5 ? 'high' : 'medium',
         title: 'Rating Below 4.0',
-        description: `Your current rating is ${rating.toFixed(1)}. Focus on improving patient experience and collecting positive reviews.`,
+        description: `Your current rating is ${rating.toFixed(1)}. Focus on improving applicant experience and collecting positive reviews.`,
         timestamp: now,
         actionable: true,
       });

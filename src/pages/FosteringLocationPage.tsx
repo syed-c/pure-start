@@ -12,7 +12,7 @@ import { SEOHead } from "@/components/seo/SEOHead";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
-import { POPULAR_CITIES, FOSTERING_CATEGORIES } from "@/lib/constants/activeRegions";
+import { POPULAR_CITIES, FOSTERING_CATEGORIES, ACTIVE_REGIONS } from "@/lib/constants/activeRegions";
 import { Heart, Shield, Users, MapPin, Star, ArrowRight, Search, UserPlus } from "lucide-react";
 
 const FosteringLocationPage = () => {
@@ -60,7 +60,7 @@ const FosteringLocationPage = () => {
     'canterbury': 'Canterbury',
     'ashford': 'Ashford',
     'dover': 'Dover',
-    ' Rochester': 'Rochester',
+    'rochester': 'Rochester',
     'tonbridge': 'Tonbridge',
     'folkestone': 'Folkestone',
     'margate': 'Margate',
@@ -140,6 +140,24 @@ const FosteringLocationPage = () => {
     'newport': 'Newport',
     'wrexham': 'Wrexham',
     'derry': 'Derry',
+    // Additional Cities from POPULAR_CITIES
+    'leicester': 'Leicester',
+    'coventry': 'Coventry',
+    'plymouth': 'Plymouth',
+    'norwich': 'Norwich',
+    'portsmouth': 'Portsmouth',
+    'milton-keynes': 'Milton Keynes',
+    'walsall': 'Walsall',
+    'oldham': 'Oldham',
+    'wigan': 'Wigan',
+    'salford': 'Salford',
+    'blackpool': 'Blackpool',
+    'exeter': 'Exeter',
+    'stirling': 'Stirling',
+    'paisley': 'Paisley',
+    'barry': 'Barry',
+    'lisburn': 'Lisburn',
+    'newry': 'Newry',
   };
 
   const fallbackLocation = locationNameMap[locationSlugLower]
@@ -196,14 +214,43 @@ const FosteringLocationPage = () => {
   });
 
   const { data: agencies, isLoading: agenciesLoading } = useQuery({
-    queryKey: ["location-agencies", location?.name],
+    queryKey: ["location-agencies", location?.slug],
     queryFn: async () => {
       if (!location) return [];
-      // Use proper filtering - exclude duplicates and filter by city
+
+      // Strategy 1: Try relational query via agency_locations junction table + city_id
+      try {
+        const { data: cityData } = await supabaseAdmin
+          .from("cities")
+          .select("id")
+          .eq("slug", location.slug)
+          .eq("is_active", true)
+          .maybeSingle();
+
+        if (cityData?.id) {
+          const { data: relationalAgencies } = await supabaseAdmin
+            .from("agency_locations")
+            .select("agency:agencies(id, name, slug, rating, review_count, is_verified, city, state, main_image_url, cover_image_url, description)")
+            .eq("location_id", cityData.id)
+            .limit(30);
+
+          if (relationalAgencies && relationalAgencies.length > 0) {
+            const mapped = relationalAgencies
+              .map((row: any) => row.agency)
+              .filter(Boolean)
+              .filter((a: any) => !a.is_duplicate);
+            if (mapped.length > 0) return mapped;
+          }
+        }
+      } catch (_e) {
+        // Fallback to text search if relational query fails
+      }
+
+      // Strategy 2: Fallback to text-based city/state matching
       const { data } = await supabaseAdmin
         .from("agencies")
         .select("id, name, slug, rating, review_count, is_verified, city, state, main_image_url, cover_image_url, description")
-        .ilike("city", `%${location.name}%`)
+        .or(`city.ilike.%${location.name}%,state.ilike.%${location.name}%`)
         .eq("is_duplicate", false)
         .order("rating", { ascending: false })
         .limit(30);
@@ -213,18 +260,42 @@ const FosteringLocationPage = () => {
   });
 
   const { data: nearbyLocations } = useQuery({
-    queryKey: ["nearby-locations", locationSlug],
+    queryKey: ["nearby-locations", locationSlug, location?.type],
     queryFn: async () => {
+      if (!location) return [];
+
+      // Get current city's state_id for sibling cities
+      const { data: currentCity } = await supabase
+        .from("cities")
+        .select("state_id")
+        .eq("slug", locationSlug)
+        .eq("is_active", true)
+        .maybeSingle();
+
+      // If we have a state_id, show sibling cities in same nation
+      if (currentCity?.state_id) {
+        const { data: siblings } = await supabase
+          .from("cities")
+          .select("id, name, slug")
+          .eq("state_id", currentCity.state_id)
+          .eq("is_active", true)
+          .neq("slug", locationSlug)
+          .order("name")
+          .limit(8);
+        return siblings || [];
+      }
+
+      // Fallback: show other active cities
       const { data } = await supabase
         .from("cities")
         .select("id, name, slug")
         .eq("is_active", true)
         .neq("slug", locationSlug)
         .order("name")
-        .limit(10);
-      return (data || []).slice(0, 8);
+        .limit(8);
+      return data || [];
     },
-    enabled: !!locationSlug,
+    enabled: !!locationSlug && !!location,
   });
 
   const isLoading = locationLoading || agenciesLoading;
@@ -242,8 +313,8 @@ const FosteringLocationPage = () => {
 
         {/* Hero Section - Homepage Style */}
         <section className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-teal-950">
-            <div className="absolute inset-0 opacity-30">
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-teal-950 pointer-events-none">
+            <div className="absolute inset-0 opacity-30 pointer-events-none">
               <div className="absolute top-20 left-10 w-72 h-72 bg-teal-500/20 rounded-full blur-[100px]" />
               <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px]" />
             </div>
@@ -318,9 +389,9 @@ const FosteringLocationPage = () => {
               ))}
             </div>
             <div className="mt-6 text-center">
-              <Link to="/locations">
-                <Button variant="outline">View All Locations</Button>
-              </Link>
+              <Button variant="outline" asChild>
+                <Link to="/locations">View All Locations</Link>
+              </Button>
             </div>
           </Section>
 
@@ -338,9 +409,32 @@ const FosteringLocationPage = () => {
               ))}
             </div>
             <div className="mt-6 text-center">
-              <Link to="/categories">
-                <Button variant="outline">View All Services</Button>
-              </Link>
+              <Button variant="outline" asChild>
+                <Link to="/categories">View All Services</Link>
+              </Button>
+            </div>
+          </Section>
+
+          <Section className="relative overflow-hidden mt-12">
+            <div className="absolute inset-0 bg-subtle-grid opacity-20 pointer-events-none" />
+            <div className="relative z-10">
+              <h2 className="text-2xl font-bold mb-4">Find Fostering Agencies Across the UK</h2>
+              <p className="text-muted-foreground mb-6 max-w-2xl">
+                Browse our comprehensive directory of fostering agencies organised by UK nation and region. 
+                Select your area below to find Ofsted-rated agencies near you.
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {ACTIVE_REGIONS.map((region) => (
+                  <Link key={region.slug} to={`/fostering-agencies/${region.slug}`}>
+                    <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                      <CardContent className="p-4 text-center">
+                        <h3 className="font-semibold">{region.name}</h3>
+                        <p className="text-sm text-gray-500">View agencies →</p>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
             </div>
           </Section>
 
@@ -352,17 +446,17 @@ const FosteringLocationPage = () => {
                   Search and compare fostering agencies across the UK.
                 </p>
                 <div className="mt-6 flex gap-4 justify-center">
-                  <Link to="/search">
-                    <Button size="lg">
+                  <Button size="lg" asChild>
+                    <Link to="/search">
                       <Search className="w-4 h-4 mr-2" />
                       Search Agencies
-                    </Button>
-                  </Link>
-                  <Link to="/become-foster-carer">
-                    <Button size="lg" variant="outline">
+                    </Link>
+                  </Button>
+                  <Button size="lg" variant="outline" asChild>
+                    <Link to="/become-foster-carer">
                       Become a Foster Carer
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -392,9 +486,9 @@ const FosteringLocationPage = () => {
           <p className="mt-2 text-gray-600">
             The location you're looking for doesn't exist.
           </p>
-          <Link to="/">
-            <Button className="mt-4">Go Home</Button>
-          </Link>
+          <Button className="mt-4" asChild>
+            <Link to="/">Go Home</Link>
+          </Button>
         </div>
       </PageLayout>
     );
@@ -411,13 +505,20 @@ const FosteringLocationPage = () => {
     { label: locationName, href: canonicalUrl },
   ];
 
+const shouldNoIndex = !isIndexPage && (!agencies || agencies.length === 0);
+
+  // Get agencies length for noIndex calculation
+  const agencyCount = agencies?.length || 0;
+  const needsNoIndex = !isIndexPage && agencyCount === 0;
+
   return (
     <PageLayout>
       <SEOHead
         title={seoContent?.meta_title || pageTitle}
         description={seoContent?.meta_description || pageDescription}
         canonical={canonicalUrl}
-        keywords={[`fostering agencies ${locationName}`, `foster care ${locationName}`, `Ofsted registered fostering ${locationName}`, `foster carer ${locationName}`]}
+        keywords={[`fostering agencies ${locationName}`, `foster care ${locationName}`, `Ofsted registered fostering ${locationName}`, `foster care ${locationName}`]}
+        noIndex={shouldNoIndex}
         openGraph={{
           title: seoContent?.meta_title || pageTitle,
           description: seoContent?.meta_description || pageDescription,
@@ -443,11 +544,60 @@ const FosteringLocationPage = () => {
           }),
         }}
       />
+      {/* BreadcrumbList Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://fostercareuk.com/" },
+              { "@type": "ListItem", "position": 2, "name": "Fostering Agencies", "item": "https://fostercareuk.com/fostering-agencies" },
+              { "@type": "ListItem", "position": 3, "name": locationName, "item": canonicalUrl },
+            ],
+          }),
+        }}
+      />
+      {/* Organization Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Foster Care UK",
+            "url": "https://fostercareuk.com",
+            "logo": "https://fostercareuk.com/logo.png",
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "telephone": "+44-800-123-4567",
+              "contactType": "customer service",
+              "areaServed": "GB",
+            },
+          }),
+        }}
+      />
+{/* FAQ Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              { "@type": "Question", "name": `How do I find fostering agencies in ${locationName}?`, "acceptedAnswer": { "@type": "Answer", "text": `Browse our directory of verified fostering agencies in ${locationName}.` } },
+              { "@type": "Question", "name": `What types of fostering are available?`, "acceptedAnswer": { "@type": "Answer", "text": "Various types including short-term, long-term, emergency, and specialist fostering." } },
+              { "@type": "Question", "name": "How do I become a foster carrier?", "acceptedAnswer": { "@type": "Answer", "text": "Contact any agency directly to begin your journey as a foster carrier." } },
+            ],
+          }),
+        }}
+      />
 
       {/* Hero Section - Homepage Style */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-teal-950">
-          <div className="absolute inset-0 opacity-40">
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-teal-950 pointer-events-none">
+          <div className="absolute inset-0 opacity-40 pointer-events-none">
             <div className="absolute top-0 left-1/4 w-96 h-96 bg-teal-500/30 rounded-full blur-[120px]" />
             <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-amber-500/20 rounded-full blur-[100px]" />
           </div>
@@ -481,7 +631,7 @@ const FosteringLocationPage = () => {
               transition={{ delay: 0.2 }}
               className="text-base md:text-lg text-white/80 mb-8 max-w-xl mx-auto"
             >
-              {seoContent?.meta_description || `${agencies?.length || 0} verified fostering agencies in ${locationName}. Find your perfect match today.`}
+              {seoContent?.meta_description || `Find verified fostering agencies in ${locationName}.`}
             </motion.p>
 
             {/* Modern Stats */}
@@ -493,7 +643,7 @@ const FosteringLocationPage = () => {
             >
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl px-5 py-2.5">
                 <Users className="h-5 w-5 text-teal-400" />
-                <span className="text-base font-bold text-white">{agencies?.length || 0}</span>
+                <span className="text-base font-bold text-white">Verified Agencies</span>
                 <span className="text-xs text-white/60">Agencies</span>
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl px-5 py-2.5">
@@ -592,12 +742,12 @@ const FosteringLocationPage = () => {
         {/* View More */}
         {agencies && agencies.length > 12 && (
           <div className="py-6 text-center">
-            <Link to={`/search?location=${locationSlug}`}>
-              <Button size="lg" variant="outline" className="border-teal-500 text-teal-600 hover:bg-teal-500/10">
+            <Button size="lg" variant="outline" className="border-teal-500 text-teal-600 hover:bg-teal-500/10" asChild>
+              <Link to={`/search?location=${locationSlug}`}>
                 View All {agencies.length} Agencies in {locationName}
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         )}
 
@@ -670,18 +820,18 @@ const FosteringLocationPage = () => {
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Ready to Find Your Perfect Agency?</h2>
               <p className="text-base text-white/70 mb-6 max-w-xl mx-auto">Connect with verified fostering agencies in {locationName} today. Start your journey to becoming a foster carer.</p>
               <div className="flex flex-wrap gap-4 justify-center">
-                <Link to="/search">
-                  <Button size="xl" className="bg-teal-500 hover:bg-teal-600 text-white font-bold px-8 h-14 text-base rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">
+                <Button size="xl" className="bg-teal-500 hover:bg-teal-600 text-white font-bold px-8 h-14 text-base rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all" asChild>
+                  <Link to="/search">
                     <Search className="mr-2 h-5 w-5" />
                     Find Agencies
-                  </Button>
-                </Link>
-                <Link to="/become-foster-carer">
-                  <Button size="xl" variant="outline" className="border-2 border-white/40 bg-white/10 hover:bg-white/20 text-white font-bold px-8 h-14 text-base rounded-xl backdrop-blur-sm transition-all">
+                  </Link>
+                </Button>
+                <Button size="xl" variant="outline" className="border-2 border-white/40 bg-white/10 hover:bg-white/20 text-white font-bold px-8 h-14 text-base rounded-xl backdrop-blur-sm transition-all" asChild>
+                  <Link to="/become-foster-carer">
                     <UserPlus className="mr-2 h-5 w-5" />
                     Become a Carer
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </CardContent>
           </Card>

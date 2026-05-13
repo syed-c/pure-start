@@ -24,10 +24,10 @@ export function useAdminSubscriptions(status?: string) {
     queryKey: ['admin-subscriptions', status],
     queryFn: async () => {
       let query = supabase
-        .from('clinic_subscriptions')
+        .from('agency_subscriptions')
         .select(`
           *,
-          clinic:clinics(id, name),
+          agency:agencies(id, name),
           plan:subscription_plans(id, name, slug, price_monthly)
         `)
         .order('created_at', { ascending: false });
@@ -48,7 +48,7 @@ export function useCreateSubscription() {
   return useMutation({
     mutationFn: async (sub: { clinic_id: string; plan_id: string; billing_cycle?: string }) => {
       const { data, error } = await supabase
-        .from('clinic_subscriptions')
+        .from('agency_subscriptions')
         .insert({
           clinic_id: sub.clinic_id,
           plan_id: sub.plan_id,
@@ -75,7 +75,7 @@ export function useUpdateSubscription() {
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: Partial<Subscription> }) => {
       const { error } = await supabase
-        .from('clinic_subscriptions')
+        .from('agency_subscriptions')
         .update({ ...updates, updated_at: new Date().toISOString() })
         .eq('id', id);
       
@@ -94,7 +94,7 @@ export function useCancelSubscription() {
   return useMutation({
     mutationFn: async (subscriptionId: string) => {
       const { error } = await supabase
-        .from('clinic_subscriptions')
+        .from('agency_subscriptions')
         .update({ 
           status: 'cancelled',
           updated_at: new Date().toISOString(),

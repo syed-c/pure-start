@@ -65,7 +65,7 @@ export default function AdvancedFeaturesPanel() {
     {
       id: 'search-filters',
       name: 'Advanced Search Filters',
-      description: 'Enhanced filtering options for better dentist discovery',
+      description: 'Enhanced filtering options for better foster carer discovery',
       status: 'completed',
       progress: 100,
       subFeatures: [
@@ -78,17 +78,17 @@ export default function AdvancedFeaturesPanel() {
         { name: 'Sedation options filter', completed: true },
         { name: 'Patient ratings (4+ stars)', completed: true },
         { name: 'Years in practice filter', completed: true },
-        { name: 'Accepts new patients toggle', completed: true }
+        { name: 'Accepts new carers toggle', completed: true }
       ]
     },
     {
       id: 'review-system',
       name: 'Enhanced Review System',
-      description: 'Verified reviews with detailed categories and dentist responses',
+      description: 'Verified reviews with detailed categories and foster carer responses',
       status: 'in-progress',
       progress: 65,
       subFeatures: [
-        { name: 'Verified patient reviews', completed: true },
+        { name: 'Verified applicant reviews', completed: true },
         { name: 'Photo uploads (office, waiting room)', completed: false },
         { name: 'Dentist response capability', completed: true },
         { name: 'Helpful/not helpful voting', completed: true },
@@ -101,7 +101,7 @@ export default function AdvancedFeaturesPanel() {
     {
       id: 'cost-estimator',
       name: 'Enhanced Cost Estimator',
-      description: 'Insurance-aware cost estimation with dentist comparison',
+      description: 'Insurance-aware cost estimation with foster carer comparison',
       status: 'completed',
       progress: 100,
       subFeatures: [

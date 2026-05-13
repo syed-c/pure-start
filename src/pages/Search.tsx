@@ -11,6 +11,7 @@ import { useRealCounts } from "@/hooks/useRealCounts";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { SEOHead } from "@/components/seo/SEOHead";
+import { StructuredData } from "@/components/seo/StructuredData";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 
@@ -56,9 +57,9 @@ const Search = () => {
     queryFn: async () => {
       let query = supabase
         .from("cities")
-        .select(`id, name, slug, dentist_count, state:states(id, name, slug, abbreviation)`)
+        .select(`id, name, slug, agency_count, state:states(id, name, slug, abbreviation)`)
         .eq("is_active", true)
-        .order("dentist_count", { ascending: false });
+        .order("agency_count", { ascending: false });
 
       if (selectedState) {
         query = query.eq("state_id", selectedState);
@@ -97,6 +98,7 @@ const Search = () => {
         canonical="/search/"
         keywords={["fostering agency directory", "find fostering agency UK", "fostering agencies near me", "foster care agencies"]}
       />
+      <StructuredData type="organization" />
       <Navbar />
 
       {/* Hero */}
@@ -251,11 +253,11 @@ const Search = () => {
               </p>
             </div>
             {selectedState && (
-              <Link to={`/${states?.find(s => s.id === selectedState)?.slug || ''}/`}>
-                <Button variant="outline" size="sm" className="rounded-xl font-bold gap-1">
+              <Button variant="outline" size="sm" className="rounded-xl font-bold gap-1" asChild>
+                <Link to={`/${states?.find(s => s.id === selectedState)?.slug || ''}/`}>
                   View Region Page <ArrowRight className="h-3.5 w-3.5" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             )}
           </div>
 
@@ -278,11 +280,11 @@ const Search = () => {
                           {city.name}
                         </h3>
                         <p className="text-xs text-muted-foreground mt-0.5">
-                          {(city.state as any)?.name} • {(city as any).dentist_count || 0} Agencies
+                          {(city.state as any)?.name} • {(city as any).agency_count || 0} Agencies
                         </p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0 ml-2">
-                        {((city as any).dentist_count || 0) > 20 && (
+                        {((city as any).agency_count || 0) > 20 && (
                           <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-5 rounded-lg font-bold">
                             Popular
                           </Badge>

@@ -63,7 +63,7 @@ export default function OperationsTab() {
     queryKey: ['agency-profile-operations', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name, google_place_id')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -81,15 +81,15 @@ export default function OperationsTab() {
     queryFn: async () => {
       // Try to fetch existing
       const { data, error } = await supabase
-        .from('clinic_automation_settings')
+        .from('agency_automation_settings')
         .select('*')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .single();
 
       if (error && error.code === 'PGRST116') {
         // Create default settings
         const { data: newData, error: createError } = await supabase
-          .from('clinic_automation_settings')
+          .from('agency_automation_settings')
           .insert({ clinic_id: clinic?.id })
           .select()
           .single();
@@ -113,7 +113,7 @@ export default function OperationsTab() {
       const { data, error } = await supabase
         .from('crm_numbers')
         .select('*')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .eq('is_active', true)
         .limit(1)
         .single();
@@ -130,7 +130,7 @@ export default function OperationsTab() {
       if (!settings || !clinic?.id) throw new Error('No settings');
 
       const { error } = await supabase
-        .from('clinic_automation_settings')
+        .from('agency_automation_settings')
         .update({
           reminder_2_days: settings.reminder_2_days,
           reminder_1_day: settings.reminder_1_day,
@@ -140,7 +140,7 @@ export default function OperationsTab() {
           review_request_enabled: settings.review_request_enabled,
           updated_at: new Date().toISOString(),
         })
-        .eq('clinic_id', clinic.id);
+        .eq('agency_id', clinic.id);
 
       if (error) throw error;
     },
@@ -464,7 +464,7 @@ export default function OperationsTab() {
                   <div>
                     <p className="font-medium">Review Request</p>
                     <p className="text-sm text-muted-foreground">
-                      Send review link after positive appointment feedback
+                      Send review link after positive enquiry feedback
                     </p>
                   </div>
                 </div>

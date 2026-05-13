@@ -103,6 +103,7 @@ const AgenciesDirectoryPage = () => {
   const popularCities = POPULAR_CITIES.slice(0, 8);
   const cityName = citySlug ? citySlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : null;
   const isCityPage = !!citySlug;
+  const shouldNoIndex = !isLoading && (!agencies || agencies.length === 0);
 
   const faqs = [
     { q: "How do I choose a fostering agency?", a: "Look for Ofsted ratings, read reviews from current foster carers, consider the fostering types they offer, and check their training and support packages." },
@@ -124,7 +125,15 @@ const AgenciesDirectoryPage = () => {
         keywords={isCityPage 
           ? [`fostering agencies ${cityName}`, "UK foster care agencies", "find foster agency"]
           : ["fostering agencies England", "UK foster care agencies", "find foster agency", "Ofsted rated fostering"]}
+        noIndex={shouldNoIndex}
       />
+      <StructuredData type="breadcrumb" items={[
+        { name: "Home", url: "https://fostercareuk.com/" },
+        { name: "Agencies", url: "https://fostercareuk.com/agencies" },
+        ...(isCityPage ? [{ name: cityName!, url: `https://fostercareuk.com/agencies/${citySlug}` }] : []),
+      ]} />
+      <StructuredData type="organization" />
+      <StructuredData type="localBusiness" name="Foster Care UK" url="https://fostercareuk.com" areaServed="England" />
       <StructuredData type="faq" questions={faqs.map(f => ({ question: f.q, answer: f.a }))} />
 
       {/* Hero */}
@@ -151,7 +160,7 @@ const AgenciesDirectoryPage = () => {
             <p className="text-white/70 text-lg mb-8 max-w-2xl mx-auto">
               {isCityPage 
                 ? `Browse Ofsted-rated fostering agencies in ${cityName}. Compare ratings, read reviews, and find the right match for your family.`
-                : `Browse ${agencies?.length || 0}+ Ofsted-rated fostering agencies across England. Compare ratings, read reviews, and find the right match for your family.`
+                : `Browse Ofsted-rated fostering agencies across England. Compare ratings, read reviews, and find the right match for your family.`
               }
             </p>
 
@@ -189,8 +198,8 @@ const AgenciesDirectoryPage = () => {
               <div className="flex items-center justify-between mb-4">
                 <p className="text-muted-foreground">
                   {isLoading ? "Loading..." : isCityPage 
-                    ? `${agencies?.length || 0} agencies in ${cityName}`
-                    : `${agencies?.length || 0} agencies found`}
+                    ? `Agencies in ${cityName}`
+                    : `Agencies found`}
                 </p>
                 {compareList.length > 0 && (
                   <Button asChild variant="outline" size="sm">
@@ -234,20 +243,20 @@ const AgenciesDirectoryPage = () => {
           </h2>
           <div className="flex flex-wrap gap-2 justify-center">
             {isCityPage && (
-              <Link to="/agencies">
-                <Button variant="outline" className="rounded-full">
+              <Button variant="outline" className="rounded-full" asChild>
+                <Link to="/agencies">
                   View All
                   <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             )}
             {popularCities.filter(c => c.slug !== citySlug).slice(0, 8).map((city) => (
-              <Link key={city.slug} to={`/agencies/${city.slug}`}>
-                <Button variant="outline" className="rounded-full">
+              <Button key={city.slug} variant="outline" className="rounded-full" asChild>
+                <Link to={`/agencies/${city.slug}`}>
                   <MapPin className="h-4 w-4 mr-2" />
                   {city.name}
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             ))}
           </div>
         </div>
@@ -264,17 +273,17 @@ const AgenciesDirectoryPage = () => {
                 ongoing support, and competitive allowances.
               </p>
               <div className="flex flex-wrap gap-4 justify-center">
-                <Link to="/search">
-                  <Button size="lg" className="rounded-full">
+                <Button size="lg" className="rounded-full" asChild>
+                  <Link to="/search">
                     Search Agencies
                     <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-                <Link to="/faq">
-                  <Button size="lg" variant="outline" className="rounded-full">
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" className="rounded-full" asChild>
+                  <Link to="/faq">
                     Learn More
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </CardContent>
           </Card>

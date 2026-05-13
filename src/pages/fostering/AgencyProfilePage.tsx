@@ -125,7 +125,7 @@ export default function AgencyProfilePage() {
         {agency.cover_image_url ? (
           <img 
             src={agency.cover_image_url} 
-            alt="" 
+            alt={`${agency.name} agency cover image`}
             className="w-full h-full object-cover"
           />
         ) : (

@@ -155,7 +155,7 @@ export function useSuggestInternalLinks() {
     mutationFn: async ({ content, category }: { content: string; category?: string }) => {
       // Fetch treatments and cities for internal linking opportunities
       const [treatmentsRes, citiesRes] = await Promise.all([
-        supabase.from('treatments').select('slug, name').eq('is_active', true),
+        supabase.from('fostering_categories').select('slug, name').eq('is_active', true),
         supabase.from('cities').select('slug, name, states(slug)').eq('is_active', true).limit(50),
       ]);
       

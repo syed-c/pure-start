@@ -91,7 +91,7 @@ export default function ReputationReviewRequestsTab({
       const { data, error } = await supabase
         .from('review_requests')
         .select('*')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .order('created_at', { ascending: false })
         .limit(200);
       if (error) throw error;
@@ -104,9 +104,9 @@ export default function ReputationReviewRequestsTab({
     queryKey: ['patients-for-requests', clinicId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('patients')
+        .from('foster_carers')
         .select('id, name, phone, email')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .order('name')
         .limit(200);
       if (error) throw error;
@@ -149,7 +149,7 @@ export default function ReputationReviewRequestsTab({
   };
 
   const handlePatientSelect = (patientId: string) => {
-    const patient = patients.find((p) => p.id === patientId);
+    const applicant = patients.find((p) => p.id === patientId);
     if (patient) {
       setSelectedPatientId(patientId);
       setRecipientName(patient.name);
@@ -417,7 +417,7 @@ export default function ReputationReviewRequestsTab({
               Send Review Request
             </DialogTitle>
             <DialogDescription>
-              Request a review from your patient via their preferred channel
+              Request a review from your applicant via their preferred channel
             </DialogDescription>
           </DialogHeader>
 
@@ -450,7 +450,7 @@ export default function ReputationReviewRequestsTab({
               <Label>Select Patient</Label>
               <Select value={selectedPatientId || ''} onValueChange={handlePatientSelect}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Choose a patient or enter manually" />
+                  <SelectValue placeholder="Choose a applicant or enter manually" />
                 </SelectTrigger>
                 <SelectContent className="bg-background border shadow-lg z-50 max-h-60">
                   {patients.map((p) => (

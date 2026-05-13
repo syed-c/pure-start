@@ -96,9 +96,9 @@ export default function ReputationQRCodesTab({
     queryKey: ['qr-settings', clinicId],
     queryFn: async () => {
       const { data } = await supabase
-        .from('clinic_oauth_tokens')
+        .from('agency_oauth_tokens')
         .select('gmb_data')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .maybeSingle();
 
       if (data?.gmb_data && typeof data.gmb_data === 'object') {
@@ -117,7 +117,7 @@ export default function ReputationQRCodesTab({
       const { data, error } = await supabase
         .from('review_funnel_events')
         .select('created_at, event_type, source')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .eq('source', 'qr_code')
         .gte('created_at', thirtyDaysAgo);
 
@@ -148,18 +148,18 @@ export default function ReputationQRCodesTab({
   const saveSettingsMutation = useMutation({
     mutationFn: async (newSettings: QRSettings) => {
       const { data: existing } = await supabase
-        .from('clinic_oauth_tokens')
+        .from('agency_oauth_tokens')
         .select('gmb_data')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .maybeSingle();
 
       const existingData = (existing?.gmb_data as Record<string, unknown>) || {};
       const updatedGmbData = { ...existingData, qr_settings: newSettings };
 
       if (existing) {
-        await supabase.from('clinic_oauth_tokens').update({ gmb_data: updatedGmbData } as any).eq('clinic_id', clinicId);
+        await supabase.from('agency_oauth_tokens').update({ gmb_data: updatedGmbData } as any).eq('agency_id', clinicId);
       } else {
-        await supabase.from('clinic_oauth_tokens').insert({ clinic_id: clinicId, gmb_data: updatedGmbData } as any);
+        await supabase.from('agency_oauth_tokens').insert({ clinic_id: clinicId, gmb_data: updatedGmbData } as any);
       }
     },
     onSuccess: () => {

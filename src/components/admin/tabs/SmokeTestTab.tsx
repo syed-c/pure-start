@@ -20,7 +20,7 @@ import { toast } from 'sonner';
 
 interface RouteTest {
   path: string;
-  type: 'city' | 'area' | 'service' | 'clinic' | 'dentist' | 'blog' | 'static';
+  type: 'city' | 'area' | 'service' | 'agency' | 'fosterer' | 'blog' | 'static';
   name: string;
   status: 'pending' | 'success' | 'error' | 'not-found';
   responseTime?: number;
@@ -55,7 +55,7 @@ export default function SmokeTestTab() {
     },
   });
 
-  const { data: clinics } = useQuery({
+  const { data: agencies } = useQuery({
     queryKey: ['smoke-test-clinics'],
     queryFn: async () => {
       const { data } = await supabase
@@ -67,8 +67,8 @@ export default function SmokeTestTab() {
     },
   });
 
-  const { data: agencies } = useQuery({
-    queryKey: ['smoke-test-agencies'],
+  const { data: fosterCarers } = useQuery({
+    queryKey: ['smoke-test-foster-carers'],
     queryFn: async () => {
       const { data } = await supabase.from('foster_carers').select('slug, name').eq('is_active', true).limit(5);
       return data || [];
@@ -121,8 +121,8 @@ export default function SmokeTestTab() {
     });
 
     // Fosterer pages
-    agencies?.forEach(dentist => {
-      routes.push({ path: `/fosterer/${dentist.slug}`, type: 'fosterer', name: dentist.name, status: 'pending' });
+    fosterCarers?.forEach(carer => {
+      routes.push({ path: `/fosterer/${carer.slug}`, type: 'fosterer', name: carer.name, status: 'pending' });
     });
 
     // Blog pages
@@ -198,8 +198,8 @@ export default function SmokeTestTab() {
       case 'city': return <MapPin className="h-4 w-4" />;
       case 'area': return <MapPin className="h-4 w-4" />;
       case 'service': return <Stethoscope className="h-4 w-4" />;
-      case 'clinic': return <Building2 className="h-4 w-4" />;
-      case 'dentist': return <Building2 className="h-4 w-4" />;
+      case 'agency': return <Building2 className="h-4 w-4" />;
+      case 'fosterer': return <Users className="h-4 w-4" />;
       case 'blog': return <FileText className="h-4 w-4" />;
       default: return <Globe className="h-4 w-4" />;
     }

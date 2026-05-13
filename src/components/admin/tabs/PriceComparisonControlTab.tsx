@@ -249,7 +249,7 @@ export default function PriceComparisonControlTab() {
                 <div className="text-center py-10 text-muted-foreground">
                   <Shield className="h-8 w-8 mx-auto mb-3 text-muted-foreground/50" />
                   <p className="font-bold mb-1">No coverage data yet</p>
-                  <p className="text-sm">Add insurance coverage percentages per service to enable the coverage filter for patients</p>
+                  <p className="text-sm">Add insurance coverage percentages per service to enable the coverage filter for carers</p>
                 </div>
               )}
             </CardContent>

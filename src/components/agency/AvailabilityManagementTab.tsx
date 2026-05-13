@@ -90,7 +90,7 @@ export default function AvailabilityManagementTab() {
       const { data, error } = await supabase
         .from('dentist_availability_rules')
         .select('*')
-        .eq('clinic_id', clinic!.id)
+        .eq('agency_id', clinic!.id)
         .order('day_of_week');
       if (error) throw error;
       return data as AvailabilityRule[];
@@ -105,7 +105,7 @@ export default function AvailabilityManagementTab() {
       const { data, error } = await supabase
         .from('availability_blocks')
         .select('*')
-        .eq('clinic_id', clinic!.id)
+        .eq('agency_id', clinic!.id)
         .gte('end_datetime', new Date().toISOString())
         .order('start_datetime');
       if (error) throw error;
@@ -232,7 +232,7 @@ export default function AvailabilityManagementTab() {
     return (
       <Card className="bg-slate-800/90 border-slate-700/50">
         <CardContent className="py-12 text-center">
-          <p className="text-white/60">No clinic linked to your account</p>
+          <p className="text-white/60">No agency linked to your account</p>
         </CardContent>
       </Card>
     );
@@ -306,7 +306,7 @@ export default function AvailabilityManagementTab() {
               </div>
               <div>
                 <h3 className="font-bold text-white">Appointment Slot Duration</h3>
-                <p className="text-sm text-white/60">Choose how long each appointment slot should be</p>
+                <p className="text-sm text-white/60">Choose how long each enquiry slot should be</p>
               </div>
             </div>
             <div className="flex gap-2">

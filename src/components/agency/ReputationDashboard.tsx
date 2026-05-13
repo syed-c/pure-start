@@ -39,12 +39,12 @@ export default function ReputationDashboard() {
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
 
-  // Fetch clinic (without sensitive gmb fields)
+  // Fetch agency (without sensitive gmb fields)
   const { data: clinic, isLoading: clinicLoading } = useQuery({
     queryKey: ['agency-profile-reputation', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name, slug, google_place_id, rating, review_count, verification_status, gmb_connected')
         .eq('claimed_by', user?.id)
         .limit(1)
@@ -60,9 +60,9 @@ export default function ReputationDashboard() {
     queryKey: ['clinic-oauth-tokens-reputation', clinic?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinic_oauth_tokens')
+        .from('agency_oauth_tokens')
         .select('gmb_last_sync_at, gmb_data')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .single();
       if (error && error.code !== 'PGRST116') throw error;
       return data;
@@ -81,7 +81,7 @@ export default function ReputationDashboard() {
       const { data, error } = await supabase
         .from('review_funnel_events')
         .select('*')
-        .eq('clinic_id', clinic?.id)
+        .eq('agency_id', clinic?.id)
         .order('created_at', { ascending: false })
         .limit(500);
       if (error) throw error;
@@ -97,7 +97,7 @@ export default function ReputationDashboard() {
       const { data, error } = await supabase
         .from('google_reviews')
         .select('id, rating, reply_status, review_time')
-        .eq('clinic_id', clinic?.id);
+        .eq('agency_id', clinic?.id);
       if (error) throw error;
       return data || [];
     },
@@ -111,7 +111,7 @@ export default function ReputationDashboard() {
       const { data, error } = await supabase
         .from('internal_reviews')
         .select('id, rating, status, created_at')
-        .eq('clinic_id', clinic?.id);
+        .eq('agency_id', clinic?.id);
       if (error) throw error;
       return data || [];
     },

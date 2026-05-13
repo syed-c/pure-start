@@ -168,7 +168,7 @@ export default function EmailEnrichmentBotTab() {
     enabled: selectedStateId !== 'all',
   });
 
-  // Fetch clinic stats using count queries to avoid 1000 row limit
+  // Fetch agency stats using count queries to avoid 1000 row limit
   const { data: clinicStats, refetch: refetchStats } = useQuery({
     queryKey: ['clinic-email-stats', selectedStateId, selectedCityId],
     queryFn: async (): Promise<ClinicStats> => {
@@ -233,7 +233,7 @@ export default function EmailEnrichmentBotTab() {
         .from('email_enrichment_results')
         .select(`
           *,
-          clinic:clinics(id, name, website, email, phone, address, city:cities(name))
+          agency:agencies(id, name, website, email, phone, address, city:cities(name))
         `)
         .eq('session_id', activeSessionId)
         .order('match_confidence', { ascending: false });
@@ -251,7 +251,7 @@ export default function EmailEnrichmentBotTab() {
         .from('email_enrichment_results')
         .select(`
           *,
-          clinic:clinics(id, name, website, email, phone, address, city:cities(name))
+          agency:agencies(id, name, website, email, phone, address, city:cities(name))
         `)
         .eq('needs_review', true)
         .is('applied_at', null)
@@ -641,7 +641,7 @@ export default function EmailEnrichmentBotTab() {
               <Building2 className="h-5 w-5 text-muted-foreground" />
               <div>
                 <p className="text-2xl font-bold">{clinicStats?.total || 0}</p>
-                <p className="text-xs text-muted-foreground">Total Clinics</p>
+                <p className="text-xs text-muted-foreground">Total Agencies</p>
               </div>
             </div>
           </CardContent>
@@ -700,7 +700,7 @@ export default function EmailEnrichmentBotTab() {
             Email Enrichment Bot
           </CardTitle>
           <CardDescription>
-            Scrape clinic websites to discover email addresses and enrich profiles
+            Scrape agency websites to discover email addresses and enrich profiles
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -1188,7 +1188,7 @@ export default function EmailEnrichmentBotTab() {
           <DialogHeader>
             <DialogTitle>Review Email Match</DialogTitle>
             <DialogDescription>
-              Verify the email before applying to the clinic profile
+              Verify the email before applying to the agency profile
             </DialogDescription>
           </DialogHeader>
           

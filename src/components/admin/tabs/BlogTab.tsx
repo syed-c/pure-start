@@ -1407,7 +1407,7 @@ export default function BlogTab() {
                         <SelectItem value="Editor">Editor</SelectItem>
                         <SelectItem value="Admin">Admin</SelectItem>
                         <SelectItem value="Guest">Guest Writer</SelectItem>
-                        <SelectItem value="Expert">Dental Expert</SelectItem>
+                        <SelectItem value="Expert">Foster Care Expert</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -1527,7 +1527,7 @@ export default function BlogTab() {
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
                     <Label>Cluster Name</Label>
-                    <Input value={clusterForm.cluster_name} onChange={(e) => setClusterForm({ ...clusterForm, cluster_name: e.target.value })} placeholder="e.g., Dental Implants" />
+                    <Input value={clusterForm.cluster_name} onChange={(e) => setClusterForm({ ...clusterForm, cluster_name: e.target.value })} placeholder="e.g., Foster Care Types Guide" />
                   </div>
                   <div className="space-y-2">
                     <Label>Primary Keyword</Label>

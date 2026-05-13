@@ -61,7 +61,7 @@ export default function ClaimsTab() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-display font-bold text-foreground">Claims & Verification</h1>
-        <p className="text-muted-foreground mt-1">Review and manage clinic ownership claims</p>
+        <p className="text-muted-foreground mt-1">Review and manage agency ownership claims</p>
       </div>
 
       {/* Stats */}

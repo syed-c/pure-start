@@ -13,7 +13,7 @@ import { getContentBody, calculateReadingTime } from "@/lib/blogContent";
 import { useRealCounts } from "@/hooks/useRealCounts";
 import { parseMarkdownToHtml } from "@/lib/utils/parseMarkdown";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
-import { BlogDentistList } from "@/components/blog/BlogDentistList";
+import { BlogAgencyList } from "@/components/blog/BlogDentistList";
 import { BlogFAQList } from "@/components/blog/BlogFAQList";
 import { 
   Calendar, User, Clock, ArrowLeft, Share2, Facebook, Twitter, Linkedin,
@@ -23,7 +23,7 @@ import { format } from "date-fns";
 
 type BlogContentBlock = {
   id: string;
-  type: "heading" | "image" | "dentist-list" | "faq-list";
+  type: "heading" | "image" | "agency-list" | "faq-list";
   headingLevel?: "h1" | "h2" | "h3";
   headingText?: string;
   content?: string;
@@ -257,21 +257,21 @@ const BlogPostPage = () => {
     };
 
     for (const line of lines) {
-      // Check for dentist list marker
-      const dentistMatch = line.match(/<!-- DENTIST_LIST:(.+?) -->/);
-      if (dentistMatch) {
+      // Check for agency list marker
+      const agencyMatch = line.match(/<!-- AGENCY_LIST:(.+?) -->/);
+      if (agencyMatch) {
         flushTextBlock();
         try {
-          const data = JSON.parse(dentistMatch[1]);
+          const data = JSON.parse(agencyMatch[1]);
           elements.push(
-            <BlogDentistList 
-              key={`dentist-${elementKey++}`}
-              clinicIds={data.clinicIds || []}
+            <BlogAgencyList 
+              key={`agency-${elementKey++}`}
+              agencyIds={data.agencyIds || []}
               locationLabel={data.locationLabel}
             />
           );
         } catch (e) {
-          console.error('Failed to parse dentist list data:', e);
+          console.error('Failed to parse agency list data:', e);
         }
         continue;
       }
@@ -516,12 +516,24 @@ const BlogPostPage = () => {
   // Main render content function
   const renderBlocks = (blocks: BlogContentBlock[]) => {
     return blocks.map((b, i) => {
+      if (b.type === "agency-list") {
+        return (
+          <BlogAgencyList
+            key={b.id || `agency-${i}`}
+            agencyIds={b.agencyIds || []}
+            agencySlugs={b.agencySlugs || []}
+            locationLabel={b.locationLabel}
+            headingText={b.headingText}
+          />
+        );
+      }
+
       if (b.type === "dentist-list") {
         return (
-          <BlogDentistList
-            key={b.id || `dentist-${i}`}
-            clinicIds={b.clinicIds || []}
-            clinicSlugs={b.clinicSlugs || []}
+          <BlogAgencyList
+            key={b.id || `agency-${i}`}
+            agencyIds={b.agencyIds || []}
+            agencySlugs={b.agencySlugs || []}
             locationLabel={b.locationLabel}
             headingText={b.headingText}
           />
@@ -611,8 +623,11 @@ const BlogPostPage = () => {
       />
 
       {/* Breadcrumb Section - Clean Header */}
-      <Section size="sm" className="border-b border-border bg-muted/30">
-        <Breadcrumbs items={breadcrumbs} />
+      <Section size="sm" className="border-b border-border bg-muted/30 relative">
+        <div className="absolute inset-0 bg-subtle-grid opacity-20 pointer-events-none" />
+        <div className="relative z-10">
+          <Breadcrumbs items={breadcrumbs} />
+        </div>
       </Section>
 
       <Section size="lg">
@@ -750,7 +765,7 @@ const BlogPostPage = () => {
           {/* Sidebar */}
           <aside className="space-y-6">
             {/* CTA Card */}
-            <div className="card-modern p-6 bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+            <div className="card-depth p-6 bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-12 w-12 rounded-2xl bg-primary/20 flex items-center justify-center">
                   <Search className="h-6 w-6 text-primary" />
@@ -772,7 +787,7 @@ const BlogPostPage = () => {
             </div>
 
             {/* Browse by Location */}
-            <div className="card-modern p-6">
+            <div className="card-depth p-6">
               <div className="flex items-center gap-2 mb-4">
                 <MapPin className="h-5 w-5 text-primary" />
                 <h3 className="font-bold">Browse by Location</h3>
@@ -792,7 +807,7 @@ const BlogPostPage = () => {
             </div>
 
             {/* Popular Treatments */}
-            <div className="card-modern p-6">
+            <div className="card-depth p-6">
               <div className="flex items-center gap-2 mb-4">
                 <Star className="h-5 w-5 text-gold" />
                 <h3 className="font-bold">Popular Services</h3>
@@ -811,7 +826,8 @@ const BlogPostPage = () => {
             </div>
 
             {/* Trust Signals */}
-            <div className="card-modern p-6 bg-muted/30">
+            <div className="card-depth p-6 bg-muted/30 relative overflow-hidden">
+              <div className="absolute inset-0 bg-subtle-dots opacity-20" />
               <div className="flex items-center gap-2 mb-4">
                 <Shield className="h-5 w-5 text-emerald-500" />
                 <h3 className="font-bold">Why Foster Care?</h3>
@@ -833,7 +849,7 @@ const BlogPostPage = () => {
                   <div className="h-5 w-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                     <span className="text-emerald-500 text-xs">✓</span>
                   </div>
-                  <span>Read real patient reviews</span>
+                  <span>Read real applicant reviews</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <div className="h-5 w-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -845,13 +861,13 @@ const BlogPostPage = () => {
             </div>
 
             {/* Contact CTA */}
-            <div className="card-modern p-6 border-coral/20 bg-coral/5">
+            <div className="card-depth p-6 border-coral/20 bg-coral/5">
               <div className="flex items-center gap-2 mb-3">
                 <Phone className="h-5 w-5 text-coral" />
                 <h3 className="font-bold">Need Help?</h3>
               </div>
               <p className="text-sm text-muted-foreground mb-4">
-                Our team can help you find the right dentist for your needs.
+                Our team can help you find the right agency for your needs.
               </p>
               <Button asChild variant="outline" className="w-full rounded-xl font-bold border-coral/30 hover:bg-coral/10">
                 <Link to="/contact">Contact Us</Link>
@@ -881,7 +897,7 @@ const BlogPostPage = () => {
                 <Link
                   key={relatedPost.id}
                   to={`/blog/${relatedPost.slug}`}
-                  className="card-modern overflow-hidden group card-hover"
+                  className="card-depth overflow-hidden group card-hover"
                 >
                   <div className="h-40 relative overflow-hidden">
                     {relatedPost.featured_image_url ? (
@@ -910,8 +926,9 @@ const BlogPostPage = () => {
       )}
 
       {/* CTA Section */}
-      <Section variant="primary" size="md">
-        <div className="text-center">
+      <Section variant="primary" size="md" className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-subtle-grid opacity-10 pointer-events-none" />
+        <div className="relative z-10 text-center">
           <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
             Ready to Find Your Perfect Fostering Agency?
           </h2>

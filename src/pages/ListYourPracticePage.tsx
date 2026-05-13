@@ -298,8 +298,9 @@ const ListYourPracticePage = () => {
         keywords={['list fostering agency', 'fostering directory listing', 'agency marketing', 'fostering agency growth']}
       />
       {/* Hero */}
-      <div className="bg-gradient-to-br from-primary/10 via-background to-teal/5 border-b">
-        <div className="container py-12 md:py-16">
+      <div className="bg-gradient-to-br from-primary/10 via-background to-teal/5 border-b relative">
+        <div className="absolute inset-0 bg-subtle-grid opacity-20 pointer-events-none" />
+        <div className="container py-12 md:py-16 relative z-10">
           <div className="max-w-2xl mx-auto text-center">
             <div className="mb-6">
               <PromotionBanner variant="inline" />
@@ -548,7 +549,7 @@ const ListYourPracticePage = () => {
 
             {/* Benefits Sidebar */}
             <div className="lg:col-span-2">
-              <div className="card-modern p-6 sticky top-24">
+              <div className="card-depth p-6 sticky top-24">
                 <h3 className="font-display text-lg font-bold mb-6">Why List on Foster Care?</h3>
                 <div className="space-y-5">
                   {benefits.map((benefit, i) => (

@@ -78,19 +78,51 @@ export default function UsersTab() {
     email: '',
     password: '',
     fullName: '',
-role: 'fosterer' as string,
+    role: 'fosterer' as string,
     agencyId: '',
-        setNewUser({ email: '', password: '', fullName: '', role: 'fosterer', agencyId: '' });
+  });
+
+  const roleBreakdown = {
+    admin: users?.filter(u => u.roles?.includes('super_admin')).length || 0,
+    agency: users?.filter(u => u.roles?.includes('agency_admin') || u.roles?.includes('agency_staff')).length || 0,
     fosterer: users?.filter(u => u.roles?.includes('fosterer')).length || 0,
-                {newUser.role === 'fosterer' && (
-                <Card className={`card-modern cursor-pointer transition-colors ${roleFilter === 'fosterer' ? 'border-teal' : 'hover:border-teal/50'}`} onClick={() => setRoleFilter('fosterer')}>
+    team: users?.filter(u => ['seo_team', 'content_team', 'marketing_team', 'support_team'].some(r => u.roles?.includes(r))).length || 0,
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className={`card-modern cursor-pointer transition-colors ${roleFilter === 'all' ? 'border-primary' : 'hover:border-primary/50'}`} onClick={() => setRoleFilter('all')}>
+          <CardContent className="p-4 flex items-center gap-4">
+            <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+              <Users className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold">{users?.length || 0}</p>
+              <p className="text-sm text-muted-foreground">Total Users</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className={`card-modern cursor-pointer transition-colors ${roleFilter === 'agency_admin' ? 'border-primary' : 'hover:border-primary/50'}`} onClick={() => setRoleFilter('agency_admin')}>
+          <CardContent className="p-4 flex items-center gap-4">
+            <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+              <Building2 className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold">{roleBreakdown.agency}</p>
+              <p className="text-sm text-muted-foreground">Agencies</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className={`card-modern cursor-pointer transition-colors ${roleFilter === 'fosterer' ? 'border-teal' : 'hover:border-teal/50'}`} onClick={() => setRoleFilter('fosterer')}>
           <CardContent className="p-4 flex items-center gap-4">
             <div className="h-12 w-12 rounded-xl bg-teal-light flex items-center justify-center">
               <Users className="h-6 w-6 text-teal" />
             </div>
             <div>
-              <p className="text-2xl font-bold">{roleBreakdown.dentist}</p>
-              <p className="text-sm text-muted-foreground">Agencies</p>
+              <p className="text-2xl font-bold">{roleBreakdown.fosterer}</p>
+              <p className="text-sm text-muted-foreground">Fosterers</p>
             </div>
           </CardContent>
         </Card>

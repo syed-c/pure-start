@@ -1,10 +1,55 @@
+# Foster Care UK Robots.txt
+
 User-agent: *
 Allow: /
+
+# Crawl-delay for rate limiting
+Crawl-delay: 1
 
 # Sitemap
 Sitemap: https://www.foster-care.co.uk/sitemap.xml
 
-# Disallow admin pages
+# Disallow admin and private pages
 Disallow: /admin/
 Disallow: /dashboard/
+Disallow: /api/
+Disallow: /auth/
+Disallow: /login/
+Disallow: /signup/
+Disallow: /account/
+Disallow: /settings/
+Disallow: /private/
+
+# Disallow dynamic search param pages
+Disallow: /search?
+Disallow: /?
+
+# User-agent specific rules
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /auth/
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: GPTBot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin/
 Disallow: /api/

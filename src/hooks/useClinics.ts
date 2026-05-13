@@ -50,7 +50,7 @@ export function useClinics(filters: ClinicsFilters = {}) {
     queryKey: ['clinics', filters],
     queryFn: async () => {
       let query = supabase
-        .from('clinics')
+        .from('agencies')
         .select(`
           *,
           city:cities(*),
@@ -97,7 +97,7 @@ export function useClinic(id: string) {
     queryKey: ['clinic', id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select(`
           *,
           city:cities(*),
@@ -119,13 +119,13 @@ export function useUpdateClinic() {
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: Record<string, unknown> }) => {
       const { data: oldData } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('*')
         .eq('id', id)
         .single();
 
       const { data, error } = await supabase
-        .from('clinics')
+        .from('agencies')
         .update(updates as never)
         .eq('id', id)
         .select()

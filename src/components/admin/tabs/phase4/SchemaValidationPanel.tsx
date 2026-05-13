@@ -82,11 +82,11 @@ export function SchemaValidationPanel() {
       sampleUrl: '/contact/sample-clinic/',
       isValid: true,
       issues: [
-        { type: 'warning', field: 'openingHoursSpecification', message: 'Opening hours not always present', recommendation: 'Ensure all clinic profiles have hours configured' }
+        { type: 'warning', field: 'openingHoursSpecification', message: 'Opening hours not always present', recommendation: 'Ensure all agency profiles have hours configured' }
       ],
       requiredFields: [
         { field: '@context', present: true, value: 'https://schema.org' },
-        { field: '@type', present: true, value: '["Dentist", "LocalBusiness"]' },
+        { field: '@type', present: true, value: '["Foster Carer", "LocalBusiness"]' },
         { field: 'name', present: true },
         { field: 'url', present: true },
         { field: 'address', present: true }

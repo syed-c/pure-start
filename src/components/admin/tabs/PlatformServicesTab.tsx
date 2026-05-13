@@ -44,14 +44,14 @@ interface PlatformService {
 
 const PLATFORM_SERVICES: PlatformService[] = [
   // Core Features
-  { id: 'clinic_profiles', key: 'clinic_profiles', name: 'Clinic Profiles', description: 'Public clinic listings and profiles', icon: Building2, category: 'core' },
-  { id: 'dentist_profiles', key: 'dentist_profiles', name: 'Dentist Profiles', description: 'Individual dentist pages', icon: Users, category: 'core' },
-  { id: 'search_directory', key: 'search_directory', name: 'Search & Directory', description: 'Location-based clinic search', icon: Search, category: 'core' },
+  { id: 'clinic_profiles', key: 'clinic_profiles', name: 'Agency Profiles', description: 'Public agency listings and profiles', icon: Building2, category: 'core' },
+  { id: 'dentist_profiles', key: 'dentist_profiles', name: 'Agency Staff Profiles', description: 'Individual foster carer pages', icon: Users, category: 'core' },
+  { id: 'search_directory', key: 'search_directory', name: 'Search & Directory', description: 'Location-based agency search', icon: Search, category: 'core' },
   { id: 'appointment_booking', key: 'appointment_booking', name: 'Appointment Booking', description: 'Online booking functionality', icon: Calendar, category: 'core' },
   { id: 'clinic_claiming', key: 'clinic_claiming', name: 'Clinic Claiming', description: 'Allow agencies to claim profiles', icon: Shield, category: 'core' },
   
   // Messaging Features
-  { id: 'sms_notifications', key: 'sms_notifications', name: 'SMS Notifications', description: 'Send SMS to patients', icon: MessageSquare, category: 'messaging' },
+  { id: 'sms_notifications', key: 'sms_notifications', name: 'SMS Notifications', description: 'Send SMS to carers', icon: MessageSquare, category: 'messaging' },
   { id: 'whatsapp_notifications', key: 'whatsapp_notifications', name: 'WhatsApp Notifications', description: 'Send WhatsApp messages', icon: MessageSquare, category: 'messaging', isPremium: true },
   { id: 'email_notifications', key: 'email_notifications', name: 'Email Notifications', description: 'Email communication system', icon: Mail, category: 'messaging' },
   { id: 'appointment_reminders', key: 'appointment_reminders', name: 'Appointment Reminders', description: 'Automated reminders before appointments', icon: Bell, category: 'messaging' },

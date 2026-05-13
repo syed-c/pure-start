@@ -96,7 +96,7 @@ export function PerformanceAuditPanel() {
       },
       score: 82,
       issues: ['LCP slightly above threshold on mobile', 'Minor CLS issues from dynamic content'],
-      recommendations: ['Optimize hero image loading', 'Add explicit dimensions to dentist cards', 'Lazy load below-fold images']
+      recommendations: ['Optimize hero image loading', 'Add explicit dimensions to foster carer cards', 'Lazy load below-fold images']
     },
     {
       url: '/services/fostering-placements/',

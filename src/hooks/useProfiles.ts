@@ -45,7 +45,7 @@ export function useProfiles(filters: ProfileFilters = {}) {
       let profilesData = data;
       if (!profilesData || profilesData.length === 0) {
         const { data: clinicData } = await supabase
-          .from('clinics')
+          .from('agencies')
           .select('id, name, slug, rating, review_count, is_verified, city, state, main_image_url, cover_image_url')
           .order('rating', { ascending: false })
           .limit(filters.limit || 50);

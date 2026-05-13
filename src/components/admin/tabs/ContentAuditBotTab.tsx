@@ -67,7 +67,7 @@ const PAGE_TYPES = [
   { value: 'service', label: 'Service Pages' },
   { value: 'service_location', label: 'Service Location Pages' },
   { value: 'clinic', label: 'Clinic Pages' },
-  { value: 'dentist', label: 'Dentist Pages' },
+  { value: 'dentist', label: 'Agency Pages' },
 ];
 
 const statusColors = {

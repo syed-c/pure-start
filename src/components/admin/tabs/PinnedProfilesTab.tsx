@@ -108,7 +108,7 @@ export default function PinnedProfilesTab() {
 
   const settingKey = getSettingKey();
 
-  // Fetch current pinned clinics for the selected page
+  // Fetch current pinned agencies for the selected page
   const { data: currentPins, isLoading: pinsLoading } = useQuery({
     queryKey: ['pinned-clinics', settingKey],
     queryFn: async () => {
@@ -140,7 +140,7 @@ export default function PinnedProfilesTab() {
     setHasChanges(false);
   };
 
-  // Helper to fetch all clinics without limit
+  // Helper to fetch all agencies without limit
   const fetchAllPinnableClinics = async () => {
     const allClinics: any[] = [];
     let from = 0;
@@ -189,7 +189,7 @@ export default function PinnedProfilesTab() {
     return allClinics;
   };
 
-  // Fetch ALL clinics for selection - NO LIMIT
+  // Fetch ALL agencies for selection - NO LIMIT
   const { data: availableClinics } = useQuery({
     queryKey: ['available-clinics-unlimited', pageType, selectedState, selectedCity],
     queryFn: fetchAllPinnableClinics,
@@ -288,7 +288,7 @@ export default function PinnedProfilesTab() {
     c => !pinnedClinics.some(p => p.id === c.id)
   ) || [];
 
-  // Filter unpinned clinics by search query
+  // Filter unpinned agencies by search query
   const filteredUnpinnedClinics = useMemo(() => {
     if (!clinicSearchQuery.trim()) return unpinnedClinics;
     const query = clinicSearchQuery.toLowerCase();
@@ -306,7 +306,7 @@ export default function PinnedProfilesTab() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-display font-bold text-foreground">Pinned Profiles</h1>
-          <p className="text-muted-foreground mt-1">Select which clinics appear at the top of each page</p>
+          <p className="text-muted-foreground mt-1">Select which agencies appear at the top of each page</p>
         </div>
         {hasChanges && (
           <Button onClick={() => savePins.mutate()} disabled={savePins.isPending}>
@@ -433,7 +433,7 @@ export default function PinnedProfilesTab() {
                   <Pin className="h-5 w-5 text-primary" />
                   Pinned Clinics ({pinnedClinics.length}/10)
                 </CardTitle>
-                <CardDescription>These clinics will appear at the top of the page in order</CardDescription>
+                <CardDescription>These agencies will appear at the top of the page in order</CardDescription>
               </div>
               {pinnedClinics.length > 0 && (
                 <Button variant="outline" size="sm" onClick={clearPins}>
@@ -483,7 +483,7 @@ export default function PinnedProfilesTab() {
             ) : (
               <div className="text-center py-8 text-muted-foreground">
                 <Pin className="h-12 w-12 mx-auto mb-4 opacity-20" />
-                <p>No pinned clinics yet. Select clinics from the list below.</p>
+                <p>No pinned agencies yet. Select agencies from the list below.</p>
               </div>
             )}
           </CardContent>
@@ -497,12 +497,12 @@ export default function PinnedProfilesTab() {
             <div className="flex items-center justify-between gap-4">
               <div>
                 <CardTitle className="text-lg">Available Clinics ({filteredUnpinnedClinics.length.toLocaleString()})</CardTitle>
-                <CardDescription>Click to pin clinics to the top of the page</CardDescription>
+                <CardDescription>Click to pin agencies to the top of the page</CardDescription>
               </div>
               <div className="relative w-64">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search clinics..."
+                  placeholder="Search agencies..."
                   value={clinicSearchQuery}
                   onChange={(e) => setClinicSearchQuery(e.target.value)}
                   className="pl-9"
@@ -558,7 +558,7 @@ export default function PinnedProfilesTab() {
                   {filteredUnpinnedClinics.length === 0 && (
                     <TableRow>
                       <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                        {pinsLoading ? 'Loading...' : clinicSearchQuery ? 'No clinics match your search' : 'No clinics available for this page'}
+                        {pinsLoading ? 'Loading...' : clinicSearchQuery ? 'No agencies match your search' : 'No agencies available for this page'}
                       </TableCell>
                     </TableRow>
                   )}

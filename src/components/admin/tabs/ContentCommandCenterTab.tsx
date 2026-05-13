@@ -261,7 +261,7 @@ export default function ContentCommandCenterTab() {
                   </CardTitle>
                   <CardDescription>
                     AI-powered audit of all content across the platform. Analyzes locations, services, 
-                    blog coverage, clinic descriptions, and SEO pages to identify gaps and opportunities.
+                    blog coverage, agency descriptions, and SEO pages to identify gaps and opportunities.
                   </CardDescription>
                 </div>
                 <div className="flex flex-col gap-2 items-end">
@@ -319,7 +319,7 @@ export default function ContentCommandCenterTab() {
                     <li>• Missing service-location pages</li>
                     <li>• Thin content needing expansion</li>
                     <li>• Blog topics to cover</li>
-                    <li>• Areas without clinic coverage</li>
+                    <li>• Areas without agency coverage</li>
                     <li>• SEO optimization priorities</li>
                     <li>• Internal linking opportunities</li>
                   </ul>

@@ -64,7 +64,7 @@ ALTER TABLE public.cities ADD COLUMN IF NOT EXISTS updated_at timestamptz NOT NU
 
 -- areas
 CREATE TABLE IF NOT EXISTS public.areas (id uuid NOT NULL DEFAULT gen_random_uuid());
-ALTER TABLE public.areas ADD COLUMN IF NOT EXISTS city_id uuid NOT NULL DEFAULT gen_random_uuid();
+ALTER TABLE public.areas ADD COLUMN IF NOT EXISTS city_id uuid;
 ALTER TABLE public.areas ADD COLUMN IF NOT EXISTS name text NOT NULL DEFAULT '';
 ALTER TABLE public.areas ADD COLUMN IF NOT EXISTS slug text NOT NULL DEFAULT '';
 ALTER TABLE public.areas ADD COLUMN IF NOT EXISTS image_url text;
@@ -104,7 +104,8 @@ CREATE TABLE IF NOT EXISTS public.subscription_plans (id uuid NOT NULL DEFAULT g
 ALTER TABLE public.subscription_plans ADD COLUMN IF NOT EXISTS name text NOT NULL DEFAULT '';
 ALTER TABLE public.subscription_plans ADD COLUMN IF NOT EXISTS slug text NOT NULL DEFAULT '';
 ALTER TABLE public.subscription_plans ADD COLUMN IF NOT EXISTS description text;
-ALTER TABLE public.subscription_plans ADD COLUMN IF NOT EXISTS price_aed numeric NOT NULL DEFAULT 0;
+ALTER TABLE public.subscription_plans ADD COLUMN IF NOT EXISTS price_gbp numeric DEFAULT 0;
+ALTER TABLE public.subscription_plans ADD COLUMN IF NOT EXISTS price_aed numeric DEFAULT 0;
 ALTER TABLE public.subscription_plans ADD COLUMN IF NOT EXISTS billing_period text DEFAULT 'monthly';
 ALTER TABLE public.subscription_plans ADD COLUMN IF NOT EXISTS is_active boolean NOT NULL DEFAULT true;
 ALTER TABLE public.subscription_plans ADD COLUMN IF NOT EXISTS display_order integer NOT NULL DEFAULT 0;
@@ -268,7 +269,7 @@ ALTER TABLE public.appointments ADD COLUMN IF NOT EXISTS updated_at timestamptz 
 -- user_roles
 CREATE TABLE IF NOT EXISTS public.user_roles (id uuid NOT NULL DEFAULT gen_random_uuid());
 ALTER TABLE public.user_roles ADD COLUMN IF NOT EXISTS user_id uuid NOT NULL DEFAULT gen_random_uuid();
-ALTER TABLE public.user_roles ADD COLUMN IF NOT EXISTS role app_role NOT NULL DEFAULT 'patient';
+ALTER TABLE public.user_roles ADD COLUMN IF NOT EXISTS role app_role NOT NULL DEFAULT 'applicant';
 ALTER TABLE public.user_roles ADD COLUMN IF NOT EXISTS created_at timestamptz NOT NULL DEFAULT now();
 
 -- user_onboarding
@@ -2551,6 +2552,38 @@ DROP POLICY IF EXISTS "Admins view sessions" ON public.visitor_sessions;
 CREATE POLICY "Admins view sessions" ON public.visitor_sessions FOR SELECT USING (has_role(auth.uid(), 'super_admin'));
 DROP POLICY IF EXISTS "Anyone insert sessions" ON public.visitor_sessions;
 CREATE POLICY "Anyone insert sessions" ON public.visitor_sessions FOR INSERT WITH CHECK (true);
+
+-- =====================
+-- 9. INDEXES (performance)
+-- =====================
+-- FK indexes for joins and lookups
+CREATE INDEX IF NOT EXISTS idx_cities_state_id ON public.cities (state_id);
+CREATE INDEX IF NOT EXISTS idx_areas_city_id ON public.areas (city_id);
+CREATE INDEX IF NOT EXISTS idx_clinics_city_id ON public.clinics (city_id);
+CREATE INDEX IF NOT EXISTS idx_clinics_area_id ON public.clinics (area_id);
+CREATE INDEX IF NOT EXISTS idx_leads_clinic_id ON public.leads (clinic_id);
+CREATE INDEX IF NOT EXISTS idx_leads_category_id ON public.leads (category_id);
+CREATE INDEX IF NOT EXISTS idx_appointments_clinic_id ON public.appointments (clinic_id);
+CREATE INDEX IF NOT EXISTS idx_appointments_lead_id ON public.appointments (lead_id);
+CREATE INDEX IF NOT EXISTS idx_appointments_dentist_id ON public.appointments (dentist_id);
+CREATE INDEX IF NOT EXISTS idx_dentists_clinic_id ON public.dentists (clinic_id);
+CREATE INDEX IF NOT EXISTS idx_dentists_user_id ON public.dentists (user_id);
+CREATE INDEX IF NOT EXISTS idx_patients_clinic_id ON public.patients (clinic_id);
+CREATE INDEX IF NOT EXISTS idx_reviews_clinic_id ON public.reviews (clinic_id);
+CREATE INDEX IF NOT EXISTS idx_clinic_treatments_clinic_id ON public.clinic_treatments (clinic_id);
+CREATE INDEX IF NOT EXISTS idx_support_tickets_clinic_id ON public.support_tickets (clinic_id);
+CREATE INDEX IF NOT EXISTS idx_foster_carers_organisation_id ON public.foster_carers (organisation_id);
+CREATE INDEX IF NOT EXISTS idx_user_profiles_user_id ON public.user_profiles (user_id);
+CREATE INDEX IF NOT EXISTS idx_user_profiles_organisation_id ON public.user_profiles (organisation_id);
+CREATE INDEX IF NOT EXISTS idx_user_roles_user_id ON public.user_roles (user_id);
+CREATE INDEX IF NOT EXISTS idx_user_roles_role ON public.user_roles (role);
+CREATE INDEX IF NOT EXISTS idx_permissions_role ON public.role_permissions (role);
+CREATE INDEX IF NOT EXISTS idx_audit_logs_user_id ON public.audit_logs (user_id);
+CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at ON public.audit_logs (created_at);
+CREATE INDEX IF NOT EXISTS idx_seo_pages_slug ON public.seo_pages (slug);
+CREATE INDEX IF NOT EXISTS idx_seo_pages_page_type ON public.seo_pages (page_type);
+CREATE INDEX IF NOT EXISTS idx_visitor_events_session_id ON public.visitor_events (session_id);
+CREATE INDEX IF NOT EXISTS idx_visitor_sessions_visitor_id ON public.visitor_sessions (visitor_id);
 
 -- =====================
 -- 10. TRIGGERS

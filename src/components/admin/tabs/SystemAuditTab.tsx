@@ -52,25 +52,25 @@ export default function SystemAuditTab() {
     queryKey: ['system-audit-stats'],
     queryFn: async () => {
       const [
-        { count: clinicsCount },
         { count: agenciesCount },
-        { count: appointmentsCount },
+        { count: fosterCarersCount },
+        { count: enquiriesCount },
         { count: leadsCount },
         { count: reviewsCount },
         { count: usersCount },
         { count: citiesCount },
         { count: statesCount },
-        { count: treatmentsCount },
+        { count: categoriesCount },
         { count: insurancesCount },
       ] = await Promise.all([
         supabase.from('agencies').select('*', { count: 'exact', head: true }),
         supabase.from('foster_carers').select('*', { count: 'exact', head: true }),
         supabase.from('fostering_enquiries').select('*', { count: 'exact', head: true }),
-        supabase.from('fostering_enquiries').select('*', { count: 'exact', head: true }),
+        supabase.from('leads').select('*', { count: 'exact', head: true }),
         supabase.from('internal_reviews').select('*', { count: 'exact', head: true }),
         supabase.from('user_roles').select('*', { count: 'exact', head: true }),
         supabase.from('cities').select('*', { count: 'exact', head: true }),
-        supabase.from('cities').select('*', { count: 'exact', head: true }),
+        supabase.from('states').select('*', { count: 'exact', head: true }),
         supabase.from('fostering_categories').select('*', { count: 'exact', head: true }),
         supabase.from('insurances').select('*', { count: 'exact', head: true }),
       ]);
@@ -83,14 +83,14 @@ export default function SystemAuditTab() {
         reviews: reviewsCount || 0,
         users: usersCount || 0,
         cities: citiesCount || 0,
-        regions: regionsCount || 0,
+        regions: statesCount || 0,
         categories: categoriesCount || 0,
         insurances: insurancesCount || 0,
       };
     },
   });
 
-  // Define existing modules based on audit
+  // Existing modules based on audit
   const existingModules: SystemModule[] = [
     {
       id: 'auth',
@@ -111,12 +111,12 @@ export default function SystemAuditTab() {
       riskLevel: 'low',
     },
     {
-      id: 'agencies',
-      name: 'Dentist Profiles',
+      id: 'foster_carers',
+      name: 'Foster Carer Profiles',
       status: 'active',
-      description: 'Individual dentist profiles linked to clinics',
-      tables: ['dentists'],
-      integrationPoints: ['Clinic Team Management'],
+      description: 'Individual foster carer profiles linked to agencies',
+      tables: ['foster_carers'],
+      integrationPoints: ['Agency Staff Management'],
       riskLevel: 'low',
     },
     {
@@ -161,7 +161,7 @@ export default function SystemAuditTab() {
       status: 'partial',
       description: 'Insurance list exists but filtering/matching is basic',
       tables: ['insurances', 'clinic_insurances'],
-      integrationPoints: ['Clinic Profile', 'Booking Form'],
+      integrationPoints: ['Agency Profile', 'Booking Form'],
       riskLevel: 'low',
     },
     {
@@ -233,8 +233,9 @@ export default function SystemAuditTab() {
   const userRoles = [
     { role: 'super_admin', description: 'Full platform access, all admin controls', count: '~2' },
     { role: 'district_manager', description: 'Regional management (limited use)', count: '~1' },
-    { role: 'dentist', description: 'Claimed clinic owners, dashboard access', count: '~10' },
-    { role: 'patient', description: 'Implicit role (no user_roles entry needed)', count: 'N/A' },
+    { role: 'agency_admin', description: 'Agency admins, managing directors', count: '~10' },
+    { role: 'foster_carer', description: 'Registered foster carers', count: 'N/A' },
+    { role: 'applicant', description: 'Prospective foster carers', count: 'N/A' },
   ];
 
   // Integration status
@@ -252,7 +253,7 @@ export default function SystemAuditTab() {
   // Risk assessment for new features
   const riskChecklist = [
     { item: 'Adding slot-based booking', risk: 'medium', mitigation: 'Add new tables, use feature flags' },
-    { item: 'Booking default ON enforcement', risk: 'low', mitigation: 'Add dentist_settings table, default TRUE' },
+    { item: 'Booking default ON enforcement', risk: 'low', mitigation: 'Add agency_settings table, default TRUE' },
     { item: 'Insurance-first search', risk: 'low', mitigation: 'Extend existing filters, no schema change' },
     { item: 'AI matching engine', risk: 'low', mitigation: 'Scoring logic in edge function, configurable weights' },
     { item: 'Availability rules', risk: 'low', mitigation: 'New tables, does not touch existing' },
@@ -435,7 +436,7 @@ export default function SystemAuditTab() {
               Current Booking Behavior
             </CardTitle>
             <CardDescription>
-              How appointments work TODAY (before booking engine features)
+              How enquiries work TODAY (before booking engine features)
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -443,7 +444,7 @@ export default function SystemAuditTab() {
               <div className="p-3 rounded-lg bg-amber/10 border border-amber/20">
                 <p className="font-medium text-sm">Type: Lead Form + Calendar Preference</p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Users submit preferred date/time, clinic confirms manually. NOT real-time slots.
+                  Users submit preferred date/time, agency confirms manually. NOT real-time slots.
                 </p>
               </div>
               
@@ -611,7 +612,7 @@ export default function SystemAuditTab() {
                 <p>• appointment_types ✨</p>
                 <p>• availability_rules ✨</p>
                 <p>• slot_locks ✨</p>
-                <p>• dentist_settings ✨</p>
+                <p>• agency_settings ✨</p>
               </div>
             </div>
           </div>

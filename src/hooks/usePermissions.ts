@@ -6,8 +6,9 @@ import { createAuditLog } from '@/lib/audit';
 import { AppRole } from '@/types/database';
 
 // ============================================
-// NEW RBAC SYSTEM FOR UK FOSTERING PLATFORM
+// PRIMARY RBAC SYSTEM FOR UK FOSTERING PLATFORM
 // ============================================
+// This is the canonical permission system. useAuth().hasPermission() delegates here.
 
 // Permission keys for the fostering platform
 export const PERMISSIONS = {
@@ -16,14 +17,14 @@ export const PERMISSIONS = {
   EDIT_AGENCY: 'edit_agency',
   MANAGE_AGENCY_STAFF: 'manage_agency_staff',
   VIEW_AGENCY_REPORTS: 'view_agency_reports',
-  
+
   // Users
   VIEW_USERS: 'view_users',
   INVITE_USERS: 'invite_users',
   EDIT_USERS: 'edit_users',
   SUSPEND_USERS: 'suspend_users',
   DELETE_USERS: 'delete_users',
-  
+
   // Foster Carers
   VIEW_FOSTER_CARERS: 'view_foster_carers',
   CREATE_FOSTER_CARER: 'create_foster_carer',
@@ -31,14 +32,14 @@ export const PERMISSIONS = {
   DELETE_FOSTER_CARER: 'delete_foster_carer',
   VIEW_OWN_CARER: 'view_own_carer',
   EDIT_OWN_CARER: 'edit_own_carer',
-  
+
   // Applicants
   VIEW_APPLICANTS: 'view_applicants',
   CREATE_APPLICANT: 'create_applicant',
   EDIT_APPLICANT: 'edit_applicant',
   APPROVE_APPLICANT: 'approve_applicant',
   VIEW_OWN_APPLICATION: 'view_own_application',
-  
+
   // Training
   VIEW_TRAINING: 'view_training',
   CREATE_TRAINING: 'create_training',
@@ -46,29 +47,29 @@ export const PERMISSIONS = {
   DELETE_TRAINING: 'delete_training',
   MANAGE_ATTENDANCE: 'manage_attendance',
   ISSUE_CERTIFICATES: 'issue_certificates',
-  
+
   // Placements
   VIEW_PLACEMENTS: 'view_placements',
   CREATE_PLACEMENT: 'create_placement',
   EDIT_PLACEMENT: 'edit_placement',
   REQUEST_PLACEMENT: 'request_placement',
   VIEW_OWN_PLACEMENTS: 'view_own_placements',
-  
+
   // Documents
   VIEW_DOCUMENTS: 'view_documents',
   UPLOAD_DOCUMENTS: 'upload_documents',
   DELETE_DOCUMENTS: 'delete_documents',
   VIEW_OWN_DOCUMENTS: 'view_own_documents',
-  
+
   // Messages
   VIEW_MESSAGES: 'view_messages',
   SEND_MESSAGES: 'send_messages',
   VIEW_OWN_MESSAGES: 'view_own_messages',
-  
+
   // Reports
   VIEW_REPORTS: 'view_reports',
   VIEW_AUDIT_LOGS: 'view_audit_logs',
-  
+
   // Platform (Super Admin only)
   MANAGE_PLATFORM_SETTINGS: 'manage_platform_settings',
   MANAGE_ROLES: 'manage_roles',
@@ -76,10 +77,14 @@ export const PERMISSIONS = {
   MANAGE_ORGANISATIONS: 'manage_organisations',
 } as const;
 
-// Role-based permission map (fallback for when DB doesn't respond)
-export const ROLE_DEFAULT_PERMISSIONS: Record<AppRole, string[]> = {
+// Flat array of all permission keys — used for role definition screens and audit log filters
+export const ALL_PERMISSIONS: string[] = Object.values(PERMISSIONS);
+
+// Single source of truth: role → permissions mapping
+// Used by both usePermissions hook and useAuth().hasPermission()
+export const ROLE_PERMISSIONS: Record<string, string[]> = {
   super_admin: Object.values(PERMISSIONS),
-  
+
   agency_admin: [
     PERMISSIONS.VIEW_AGENCY,
     PERMISSIONS.EDIT_AGENCY,
@@ -108,7 +113,7 @@ export const ROLE_DEFAULT_PERMISSIONS: Record<AppRole, string[]> = {
     PERMISSIONS.VIEW_MESSAGES,
     PERMISSIONS.SEND_MESSAGES,
   ],
-  
+
   agency_staff: [
     PERMISSIONS.VIEW_FOSTER_CARERS,
     PERMISSIONS.EDIT_FOSTER_CARER,
@@ -123,7 +128,7 @@ export const ROLE_DEFAULT_PERMISSIONS: Record<AppRole, string[]> = {
     PERMISSIONS.SEND_MESSAGES,
     PERMISSIONS.VIEW_AGENCY_REPORTS,
   ],
-  
+
   foster_carer: [
     PERMISSIONS.VIEW_OWN_CARER,
     PERMISSIONS.EDIT_OWN_CARER,
@@ -134,7 +139,7 @@ export const ROLE_DEFAULT_PERMISSIONS: Record<AppRole, string[]> = {
     PERMISSIONS.SEND_MESSAGES,
     PERMISSIONS.VIEW_TRAINING,
   ],
-  
+
   applicant: [
     PERMISSIONS.VIEW_OWN_APPLICATION,
     PERMISSIONS.VIEW_OWN_DOCUMENTS,
@@ -143,7 +148,7 @@ export const ROLE_DEFAULT_PERMISSIONS: Record<AppRole, string[]> = {
     PERMISSIONS.SEND_MESSAGES,
     PERMISSIONS.VIEW_TRAINING,
   ],
-  
+
   trainer: [
     PERMISSIONS.VIEW_TRAINING,
     PERMISSIONS.CREATE_TRAINING,
@@ -154,14 +159,14 @@ export const ROLE_DEFAULT_PERMISSIONS: Record<AppRole, string[]> = {
     PERMISSIONS.VIEW_MESSAGES,
     PERMISSIONS.SEND_MESSAGES,
   ],
-  
+
   local_authority: [
     PERMISSIONS.REQUEST_PLACEMENT,
     PERMISSIONS.VIEW_PLACEMENTS,
     PERMISSIONS.VIEW_MESSAGES,
     PERMISSIONS.SEND_MESSAGES,
   ],
-  
+
   auditor: [
     PERMISSIONS.VIEW_AGENCY,
     PERMISSIONS.VIEW_USERS,
@@ -174,109 +179,6 @@ export const ROLE_DEFAULT_PERMISSIONS: Record<AppRole, string[]> = {
     PERMISSIONS.VIEW_REPORTS,
   ],
 };
-
-// Role display names
-export const ROLE_DISPLAY_NAMES: Record<AppRole, string> = {
-  super_admin: 'Super Admin',
-  agency_admin: 'Agency Admin',
-  agency_staff: 'Agency Staff',
-  foster_carer: 'Foster Carer',
-  applicant: 'Applicant',
-  trainer: 'Trainer',
-  local_authority: 'Local Authority',
-  auditor: 'Auditor',
-};
-
-// Role descriptions
-export const ROLE_DESCRIPTIONS: Record<AppRole, string> = {
-  super_admin: 'Full platform access and control',
-  agency_admin: 'Manage your fostering agency',
-  agency_staff: 'Support foster carers and applicants',
-  foster_carer: 'Manage your fostering responsibilities',
-  applicant: 'Track your application progress',
-  trainer: 'Create and manage training sessions',
-  local_authority: 'Submit placement requests',
-  auditor: 'Read-only access for audits',
-};
-
-// Role colors for UI
-export const ROLE_COLORS: Record<AppRole, string> = {
-  super_admin: 'bg-purple-500',
-  agency_admin: 'bg-blue-500',
-  agency_staff: 'bg-teal-500',
-  foster_carer: 'bg-green-500',
-  applicant: 'bg-amber-500',
-  trainer: 'bg-orange-500',
-  local_authority: 'bg-indigo-500',
-  auditor: 'bg-gray-500',
-};
-
-// All available permissions organized by category
-export const ALL_PERMISSIONS = [
-  // Clinics & Agencies
-  { id: 'clinics.view', label: 'View Clinics', category: 'Clinics & Agencies' },
-  { id: 'clinics.create', label: 'Create Clinics', category: 'Clinics & Agencies' },
-  { id: 'clinics.edit', label: 'Edit Clinics', category: 'Clinics & Agencies' },
-  { id: 'clinics.delete', label: 'Delete Clinics', category: 'Clinics & Agencies' },
-  { id: 'clinics.verify', label: 'Verify Clinics', category: 'Clinics & Agencies' },
-  { id: 'clinics.pause', label: 'Pause Clinics', category: 'Clinics & Agencies' },
-  { id: 'clinics.claim', label: 'Force Claim/Unclaim', category: 'Clinics & Agencies' },
-  
-  // Locations
-  { id: 'locations.view', label: 'View Locations', category: 'Locations' },
-  { id: 'locations.create', label: 'Create Locations', category: 'Locations' },
-  { id: 'locations.edit', label: 'Edit Locations', category: 'Locations' },
-  { id: 'locations.delete', label: 'Delete Locations', category: 'Locations' },
-  
-  // Users
-  { id: 'users.view', label: 'View Users', category: 'Users' },
-  { id: 'users.create', label: 'Create Users', category: 'Users' },
-  { id: 'users.edit', label: 'Edit Users', category: 'Users' },
-  { id: 'users.roles', label: 'Manage Roles', category: 'Users' },
-  { id: 'users.delete', label: 'Delete Users', category: 'Users' },
-  
-  // Appointments & Leads
-  { id: 'appointments.view', label: 'View Appointments', category: 'Operations' },
-  { id: 'appointments.manage', label: 'Manage Appointments', category: 'Operations' },
-  { id: 'leads.view', label: 'View Leads', category: 'Operations' },
-  { id: 'leads.manage', label: 'Manage Leads', category: 'Operations' },
-  
-  // Content
-  { id: 'pages.view', label: 'View Pages', category: 'Content' },
-  { id: 'pages.edit', label: 'Edit Pages', category: 'Content' },
-  { id: 'blog.manage', label: 'Manage Blog', category: 'Content' },
-  { id: 'seo.manage', label: 'Manage SEO', category: 'Content' },
-  
-  // Revenue
-  { id: 'subscriptions.view', label: 'View Subscriptions', category: 'Revenue' },
-  { id: 'subscriptions.manage', label: 'Manage Subscriptions', category: 'Revenue' },
-  { id: 'plans.manage', label: 'Manage Plans', category: 'Revenue' },
-  { id: 'promotions.manage', label: 'Manage Promotions', category: 'Revenue' },
-  
-  // Messaging
-  { id: 'messaging.sms', label: 'Send SMS', category: 'Messaging' },
-  { id: 'messaging.whatsapp', label: 'Send WhatsApp', category: 'Messaging' },
-  { id: 'messaging.email', label: 'Send Emails', category: 'Messaging' },
-  { id: 'messaging.view_logs', label: 'View Message Logs', category: 'Messaging' },
-  
-  // Reputation
-  { id: 'reviews.view', label: 'View Reviews', category: 'Reputation' },
-  { id: 'reviews.manage', label: 'Manage Reviews', category: 'Reputation' },
-  { id: 'reviews.ai_reply', label: 'AI Reply to Reviews', category: 'Reputation' },
-  
-  // AI & Automation
-  { id: 'ai.view_insights', label: 'View AI Insights', category: 'AI & Automation' },
-  { id: 'ai.manage', label: 'Manage AI Settings', category: 'AI & Automation' },
-  { id: 'automation.view', label: 'View Automation', category: 'AI & Automation' },
-  { id: 'automation.manage', label: 'Manage Automation', category: 'AI & Automation' },
-  
-  // System
-  { id: 'api.manage', label: 'Manage APIs', category: 'System' },
-  { id: 'audit.view', label: 'View Audit Logs', category: 'System' },
-  { id: 'settings.manage', label: 'Manage Settings', category: 'System' },
-  { id: 'support.view', label: 'View Support Tickets', category: 'System' },
-  { id: 'support.manage', label: 'Manage Support Tickets', category: 'System' },
-];
 
 export interface RolePreset {
   id: string;

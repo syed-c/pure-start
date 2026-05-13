@@ -38,7 +38,7 @@ interface GMBClinic {
   verification_status: string | null;
   is_active: boolean | null;
   source: string | null;
-  // From joined clinic_oauth_tokens table
+  // From joined agency_oauth_tokens table
   oauth_tokens?: {
     gmb_connected: boolean;
     gmb_location_id: string | null;
@@ -52,15 +52,15 @@ export default function GMBConnectionsTab() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'connected' | 'disconnected'>('all');
 
-  // Fetch all clinics with GMB data from secure oauth tokens table
-  const { data: clinics = [], isLoading, refetch } = useQuery({
+  // Fetch all agencies with GMB data from secure oauth tokens table
+  const { data: agencies = [], isLoading, refetch } = useQuery({
     queryKey: ['gmb-connections'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('agencies')
         .select(`
           id, name, slug, google_place_id, gmb_connected, rating, review_count, claim_status, verification_status, is_active, source,
-          oauth_tokens:clinic_oauth_tokens(gmb_connected, gmb_location_id, gmb_last_sync_at, gmb_account_email, gmb_data)
+          oauth_tokens:agency_oauth_tokens(gmb_connected, gmb_location_id, gmb_last_sync_at, gmb_account_email, gmb_data)
         `)
         .order('name')
         .limit(50000);
@@ -73,7 +73,7 @@ export default function GMBConnectionsTab() {
   });
 
   // Calculate stats - CRITICAL: gmb_connected flag indicates real OAuth connection
-  // google_place_id only means the clinic was imported from GMB, NOT that it's connected
+  // google_place_id only means the agency was imported from GMB, NOT that it's connected
   const totalClinics = clinics.length;
   
   // Truly connected = has oauth_tokens with gmb_connected=true
@@ -168,7 +168,7 @@ export default function GMBConnectionsTab() {
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
           </Button>
-          <Button>
+          <Button onClick={() => toast("Sync settings coming soon")}>
             <Settings className="h-4 w-4 mr-2" />
             Sync Settings
           </Button>
@@ -183,7 +183,7 @@ export default function GMBConnectionsTab() {
               <Building2 className="h-5 w-5 text-primary" />
             </div>
             <p className="text-3xl font-bold">{totalClinics}</p>
-            <p className="text-sm text-muted-foreground">Total Clinics</p>
+            <p className="text-sm text-muted-foreground">Total Agencies</p>
           </CardContent>
         </Card>
 
@@ -275,7 +275,7 @@ export default function GMBConnectionsTab() {
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search clinics..."
+            placeholder="Search agencies..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
@@ -396,7 +396,7 @@ export default function GMBConnectionsTab() {
                     </TableCell>
                     <TableCell className="text-right">
                       {clinic.google_place_id && (
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" variant="outline" onClick={() => toast("Sync triggered")}>
                           <RefreshCw className="h-4 w-4 mr-1" />
                           Sync
                         </Button>
@@ -409,7 +409,7 @@ export default function GMBConnectionsTab() {
                 <TableRow>
                   <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                     <Globe className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                    <p>No clinics found matching your criteria</p>
+                    <p>No agencies found matching your criteria</p>
                   </TableCell>
                 </TableRow>
               )}

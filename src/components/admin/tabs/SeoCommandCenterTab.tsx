@@ -317,7 +317,7 @@ export default function SeoCommandCenterTab() {
                         <Badge variant={count > 0 ? 'destructive' : 'secondary'}>
                           {count} issues
                         </Badge>
-                        <Button variant="ghost" size="sm" disabled={count === 0}>
+                        <Button variant="ghost" size="sm" disabled={count === 0} onClick={() => toast("Fix feature coming soon")}>
                           Fix
                         </Button>
                       </div>
@@ -399,10 +399,10 @@ export default function SeoCommandCenterTab() {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="sm" onClick={() => toast("Edit coming soon")}>
                           <Edit className="h-3 w-3" />
                         </Button>
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="sm" onClick={() => toast("AI optimization coming soon")}>
                           <Sparkles className="h-3 w-3" />
                         </Button>
                       </div>
@@ -551,7 +551,7 @@ export default function SeoCommandCenterTab() {
                   placeholder="Ask about your SEO... (e.g., Which pages need urgent fixes?)"
                   rows={4}
                 />
-                <Button>
+                <Button onClick={() => toast("AI assistant coming soon")}>
                   <Sparkles className="h-4 w-4 mr-2" />
                   Ask AI
                 </Button>

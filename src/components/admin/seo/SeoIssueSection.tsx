@@ -300,7 +300,7 @@ export const SEO_ISSUE_CONFIG = {
     ],
     bestPractices: [
       'Include a compelling introduction (150+ words)',
-      'Add service/treatment descriptions for dental pages',
+      'Add service/treatment descriptions for fostering pages',
       'Include location-specific information for local pages',
       'Add 3-5 frequently asked questions with detailed answers',
       'Use bullet points and lists for scannable content',

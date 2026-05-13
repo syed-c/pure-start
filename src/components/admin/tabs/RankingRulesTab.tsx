@@ -57,12 +57,12 @@ const defaultFactors: RankingFactor[] = [
   { key: 'claim_status', label: 'Claim Status', description: 'Claimed profiles rank above unclaimed', weight: 25, maxWeight: 30, icon: CheckCircle },
   { key: 'profile_completeness', label: 'Profile Completeness', description: 'Complete profiles with photos, services, etc.', weight: 15, maxWeight: 20, icon: BarChart3 },
   { key: 'review_score', label: 'Review Score', description: 'Google rating and review count', weight: 10, maxWeight: 15, icon: Star },
-  { key: 'responsiveness', label: 'Lead Responsiveness', description: 'How quickly clinic responds to leads', weight: 5, maxWeight: 10, icon: Clock },
+  { key: 'responsiveness', label: 'Lead Responsiveness', description: 'How quickly agency responds to enquiries', weight: 5, maxWeight: 10, icon: Clock },
   { key: 'freshness', label: 'Profile Freshness', description: 'Recently updated profiles get boost', weight: 5, maxWeight: 10, icon: RefreshCw },
 ];
 
 const defaultBoosts: RankingBoost[] = [
-  { key: 'verified_badge', label: 'Verified Badge', description: '+50% score for verified clinics', multiplier: 1.5, enabled: true },
+  { key: 'verified_badge', label: 'Verified Badge', description: '+50% score for verified agencies', multiplier: 1.5, enabled: true },
   { key: 'featured_placement', label: 'Featured Placement', description: '+100% score for featured/sponsored', multiplier: 2.0, enabled: true },
   { key: 'area_sponsor', label: 'Area Sponsor', description: '+75% score when sponsoring an area', multiplier: 1.75, enabled: true },
   { key: 'high_response_rate', label: 'High Response Rate', description: '+20% for >90% lead response', multiplier: 1.2, enabled: true },
@@ -113,7 +113,7 @@ export default function RankingRulesTab() {
     },
   });
 
-  // Preview clinics with ranking
+  // Preview agencies with ranking
   const { data: previewClinics, refetch: refetchPreview } = useQuery({
     queryKey: ['ranking-preview', previewCity],
     queryFn: async () => {
@@ -175,6 +175,7 @@ export default function RankingRulesTab() {
   });
 
   // Recalculate all ranks
+  // TODO: Implement actual rank recalculation logic (e.g., call edge function or batch update agencies table)
   const recalculateRanks = useMutation({
     mutationFn: async () => {
       // Just simulate for now
@@ -226,7 +227,7 @@ export default function RankingRulesTab() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-display font-bold text-foreground">Ranking Rules</h1>
-          <p className="text-muted-foreground mt-1">Control how clinics are ranked in search and listings</p>
+          <p className="text-muted-foreground mt-1">Control how agencies are ranked in search and listings</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => recalculateRanks.mutate()} disabled={recalculateRanks.isPending}>
@@ -336,7 +337,7 @@ export default function RankingRulesTab() {
           <Card className="card-modern">
             <CardHeader>
               <CardTitle className="text-lg">Ranking Boosts</CardTitle>
-              <CardDescription>Score multipliers for premium or high-performing clinics</CardDescription>
+              <CardDescription>Score multipliers for premium or high-performing agencies</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {boosts.map((boost) => (
@@ -405,7 +406,7 @@ export default function RankingRulesTab() {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-lg">Ranking Preview</CardTitle>
-                  <CardDescription>See how clinics rank with current rules</CardDescription>
+                  <CardDescription>See how agencies rank with current rules</CardDescription>
                 </div>
                 <div className="flex gap-4">
                   <Select value={previewCity} onValueChange={setPreviewCity}>
@@ -456,7 +457,7 @@ export default function RankingRulesTab() {
                   {(!previewClinics || previewClinics.length === 0) && (
                     <TableRow>
                       <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                        {previewCity ? 'No clinics found in this city' : 'Select a city to preview rankings'}
+                        {previewCity ? 'No agencies found in this city' : 'Select a city to preview rankings'}
                       </TableCell>
                     </TableRow>
                   )}

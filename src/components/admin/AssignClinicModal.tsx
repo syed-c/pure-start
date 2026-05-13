@@ -45,7 +45,7 @@ export function AssignClinicModal({
     queryKey: ['clinics-for-assignment', search],
     queryFn: async () => {
       let query = supabase
-        .from('clinics')
+        .from('agencies')
         .select('id, name, slug, address, claim_status, claimed_by, city:cities(name)')
         .order('name', { ascending: true })
         .limit(50);
@@ -66,7 +66,7 @@ export function AssignClinicModal({
     mutationFn: async (clinicId: string) => {
       // 1. Update clinic claimed_by
       const { error: clinicError } = await supabase
-        .from('clinics')
+        .from('agencies')
         .update({
           claimed_by: userId,
           claim_status: 'claimed',

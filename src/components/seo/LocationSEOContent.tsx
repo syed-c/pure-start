@@ -144,15 +144,15 @@ const StateSEOContent = ({
       </div>
     </div>
 
-    {/* Dental Services Section */}
+    {/* Fostering Services Section */}
     <div className="bg-card border border-border rounded-3xl p-8 md:p-10">
       <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
-        Dental Services Available in {stateName}
+        Fostering Services Available in {stateName}
       </h2>
       <p className="text-muted-foreground mb-6">
-        {stateName} fostering agencys offer comprehensive oral healthcare services for patients of all ages. 
-        Whether you need preventive care, restorative treatments, or cosmetic enhancements, you'll find 
-        experienced specialists throughout the state.
+        {stateName} fostering agencies offer comprehensive support for children and families. 
+        Whether you need short-term care, long-term placements, or specialist support, you'll find 
+        experienced agencies throughout the state.
       </p>
       
       <div className="grid md:grid-cols-3 gap-4 mt-6">
@@ -161,24 +161,24 @@ const StateSEOContent = ({
           <h3 className="font-bold text-foreground mb-2">Preventive Care</h3>
           <ul className="text-sm text-muted-foreground space-y-1">
             <li>• Regular checkups & cleanings</li>
-            <li>• Dental X-rays & exams</li>
+            <li>• X-rays & assessments</li>
             <li>• Fluoride treatments</li>
             <li>• Sealants for children</li>
           </ul>
         </div>
         <div className="bg-muted/50 rounded-2xl p-5">
           <Stethoscope className="h-8 w-8 text-primary mb-3" />
-          <h3 className="font-bold text-foreground mb-2">Restorative Dentistry</h3>
+          <h3 className="font-bold text-foreground mb-2">Specialist Support</h3>
           <ul className="text-sm text-muted-foreground space-y-1">
-            <li>• Dental fillings & crowns</li>
+            <li>• Fillings & restorations</li>
             <li>• Root canal treatment</li>
-            <li>• Dental bridges & implants</li>
+            <li>• Bridges & implants</li>
             <li>• Dentures & partials</li>
           </ul>
         </div>
         <div className="bg-muted/50 rounded-2xl p-5">
           <Star className="h-8 w-8 text-primary mb-3" />
-          <h3 className="font-bold text-foreground mb-2">Specialist Fosteringry</h3>
+          <h3 className="font-bold text-foreground mb-2">Specialist Care</h3>
           <ul className="text-sm text-muted-foreground space-y-1">
             <li>• Teeth whitening</li>
             <li>• Porcelain veneers</li>
@@ -273,12 +273,12 @@ const CitySEOContent = ({
     {/* Main Content */}
     <div className="bg-card border border-border rounded-3xl p-8 md:p-10">
       <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
-        About Dental Care in {cityName}, {stateAbbr}
+        About Fostering in {cityName}, {stateAbbr}
       </h2>
       <p className="text-lg text-muted-foreground leading-relaxed mb-6">
         {cityName} residents have access to {clinicCount}+ fostering agencies offering comprehensive 
         services. From short-term to long-term care, {cityName}'s foster care providers are 
-        committed to helping you achieve and maintain a healthy smile.
+        committed to helping children and families find the right support.
       </p>
       <p className="text-muted-foreground leading-relaxed mb-6">
         Whether you're looking for short-term care, emergency placements, or long-term 
@@ -306,7 +306,7 @@ const CitySEOContent = ({
         <div className="bg-muted/50 rounded-2xl p-4 text-center">
           <Clock className="h-8 w-8 text-primary mx-auto mb-2" />
           <div className="text-2xl font-bold text-foreground">60s</div>
-          <div className="text-sm text-muted-foreground">Book Online</div>
+          <div className="text-sm text-muted-foreground">Book Enquiry</div>
         </div>
       </div>
     </div>
@@ -314,7 +314,7 @@ const CitySEOContent = ({
     {/* Services Section */}
     <div className="bg-card border border-border rounded-3xl p-8 md:p-10">
       <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
-        Dental Services in {cityName}
+        Fostering Services in {cityName}
       </h2>
       <div className="grid md:grid-cols-2 gap-6">
         <div>
@@ -324,8 +324,8 @@ const CitySEOContent = ({
           </h3>
           <ul className="text-muted-foreground space-y-2 ml-7">
             <li>• Comprehensive care assessments</li>
-            <li>• Professional teeth cleaning</li>
-            <li>• Dental fillings & sealants</li>
+            <li>• Professional assessments & checkups</li>
+            <li>• Fillings & sealants</li>
             <li>• Gum disease treatment</li>
             <li>• Oral cancer screenings</li>
           </ul>
@@ -339,7 +339,7 @@ const CitySEOContent = ({
             <li>• Teeth whitening treatments</li>
             <li>• Porcelain veneers & bonding</li>
             <li>• Invisalign & orthodontics</li>
-            <li>• Dental implants & crowns</li>
+            <li>• Implants & crowns</li>
             <li>• Full smile makeovers</li>
           </ul>
         </div>
@@ -366,11 +366,11 @@ const CitySEOContent = ({
     {/* What to Expect Section */}
     <div className="bg-card border border-border rounded-3xl p-8 md:p-10">
       <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
-        What to Expect at a {cityName} Dental Visit
+        What to Expect at a {cityName} Agency
       </h2>
       <p className="text-muted-foreground mb-6">
-        First-time patients can expect a welcoming experience at {cityName} agency offices. Here's what 
-        typically happens during your visit:
+        First-time enquirers can expect a welcoming experience at {cityName} agency offices. Here's what 
+        typically happens when you make an enquiry:
       </p>
       
       <div className="space-y-4">
@@ -461,7 +461,7 @@ const ServiceLocationSEOContent = ({
           Looking for {treatmentLower} care in {locationName}? Our network of {clinicCount}+ 
           verified fostering agencys includes specialists who excel in providing top-quality {treatmentLower} 
           treatments. Whether you're a new patient or seeking a second opinion, you'll find experienced 
-          professionals dedicated to your oral health.
+          professionals dedicated to supporting your family's needs.
         </p>
         
         <div className="grid sm:grid-cols-2 gap-4 mt-6">

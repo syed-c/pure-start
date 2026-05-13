@@ -36,7 +36,7 @@ export function useRealCounts() {
 
       // Try clinics as fallback
       const { count: clinics, error: clinicsError } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('*', { count: 'exact', head: true });
 
       // Try foster_carers table

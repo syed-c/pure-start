@@ -137,7 +137,7 @@ export default function AdminRevertTab() {
             // Check for cancellation
             if (cancelRef.current.has(log.id)) {
               setRevertProgress(prev => ({ ...prev, [log.id]: { ...prev[log.id], running: false } }));
-              return { success: true, message: `Cancelled after recovering ${imported} clinics (${skipped} skipped, ${errors} errors). ${placeIds.length - i} remaining.` };
+              return { success: true, message: `Cancelled after recovering ${imported} agencies (${skipped} skipped, ${errors} errors). ${placeIds.length - i} remaining.` };
             }
 
             const batch = placeIds.slice(i, i + BATCH);
@@ -166,12 +166,12 @@ export default function AdminRevertTab() {
           }
           
           setRevertProgress(prev => ({ ...prev, [log.id]: { total, processed: total, imported, skipped, errors, running: false } }));
-          return { success: true, message: `Recovered ${imported} clinics (${skipped} skipped, ${errors} errors) out of ${total} total` };
+          return { success: true, message: `Recovered ${imported} agencies (${skipped} skipped, ${errors} errors) out of ${total} total` };
         }
       }
       
       if (log.entity_type === 'dentist') {
-        return { success: false, message: 'Dentist recovery requires manual re-creation. Use the Data Recovery tab for bulk clinic restoration which will also restore associated data.' };
+        return { success: false, message: 'Dentist recovery requires manual re-creation. Use the Data Recovery tab for bulk agency restoration which will also restore associated data.' };
       }
       
       return { success: false, message: 'This action type cannot be automatically reverted. Please use the Data Recovery tab.' };

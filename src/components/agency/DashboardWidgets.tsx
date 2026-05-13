@@ -53,7 +53,7 @@ export default function DashboardWidgets({
       const { data } = await supabase
         .from('review_funnel_events')
         .select('*')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .order('created_at', { ascending: false })
         .limit(100);
       return data || [];
@@ -68,18 +68,18 @@ export default function DashboardWidgets({
       const { data } = await supabase
         .from('appointments')
         .select('*')
-        .eq('clinic_id', clinicId)
+        .eq('agency_id', clinicId)
         .gte('created_at', today);
       return data || [];
     },
   });
 
   // Fetch profile completeness
-  const { data: clinic } = useQuery({
+  const { data: agency } = useQuery({
     queryKey: ['dashboard-clinic-profile', clinicId],
     queryFn: async () => {
       const { data } = await supabase
-        .from('clinics')
+        .from('agencies')
         .select('*, clinic_hours(*), clinic_images(*)')
         .eq('id', clinicId)
         .single();
@@ -98,7 +98,7 @@ export default function DashboardWidgets({
   const completedAppts = todayAppointments.filter(a => a.status === 'completed').length;
 
   // Calculate profile completeness
-  const profileFields = clinic ? [
+  const profileFields = agency ? [
     clinic.name,
     clinic.description,
     clinic.address,
@@ -147,7 +147,7 @@ export default function DashboardWidgets({
       icon: CheckCircle,
       type: 'action' as const,
       title: 'Get verified',
-      description: 'Verified clinics receive 3x more patient bookings.',
+      description: 'Verified clinics receive 3x more applicant bookings.',
     } : null,
     {
       icon: Lightbulb,
@@ -284,7 +284,7 @@ export default function DashboardWidgets({
               variant="outline" 
               size="sm" 
               className="w-full mt-3 text-xs bg-transparent border-primary/30 text-primary hover:bg-primary/10 hover:border-primary/50"
-              onClick={() => onNavigate('my-appointments')}
+              onClick={() => onNavigate('fc-enquiries')}
             >
               View All
               <ArrowRight className="h-3 w-3 ml-1" />
@@ -433,7 +433,7 @@ export default function DashboardWidgets({
               variant="outline" 
               size="sm" 
               className="w-full justify-start gap-2 text-xs bg-transparent border-gold/30 text-gold hover:bg-gold/10 hover:border-gold/50"
-              onClick={() => onNavigate('my-appointments')}
+              onClick={() => onNavigate('fc-enquiries')}
             >
               <Eye className="h-3.5 w-3.5" />
               View All Bookings

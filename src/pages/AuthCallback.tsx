@@ -18,8 +18,8 @@ import { useAuth } from '@/hooks/useAuth';
  * 
  * Handles post-OAuth redirects for:
  * 1) Normal Google login (redirect to dashboard based on role)
- * 2) "List Your Practice" flow (bootstrap dentist role + clinic, then onboarding)
- * 3) GMB sync flow (existing dentist linking GMB to their clinic)
+ * 2) "List Your Practice" flow (bootstrap foster carer role + clinic, then onboarding)
+ * 3) GMB sync flow (existing foster carer linking GMB to their clinic)
  * 
  * CRITICAL: When a logged-in user uses a DIFFERENT Google account to sync GMB,
  * we capture the GMB token from that account, then RESTORE the original user's session.
@@ -81,7 +81,7 @@ export default function AuthCallback() {
       }
     };
 
-    // GMB Sync: complete linking existing clinic to Google
+    // GMB Sync: complete linking existing agency to Google
     const handleGmbTransfer = async (accessToken: string) => {
       const linkToken = localStorage.getItem('gmb_link_token');
 
@@ -322,7 +322,7 @@ export default function AuthCallback() {
         const provider = session.user.app_metadata?.provider || 'unknown';
         const isGoogleProvider = provider === 'google';
 
-        // GMB sync flow (existing dentist linking GMB to their clinic)
+        // GMB sync flow (existing foster carer linking GMB to their clinic)
         let gmbSuccess = false;
         let shouldSelectGmbBusiness = false;
         
@@ -383,7 +383,7 @@ export default function AuthCallback() {
         }
 
         if (isGmbCallback && gmbSuccess) {
-          // Existing dentist successfully completed GMB link → go to dashboard
+          // Existing foster carer successfully completed GMB link → go to dashboard
           navigate('/dashboard?tab=settings&gmb_connected=true', { replace: true });
           return;
         }
@@ -395,7 +395,7 @@ export default function AuthCallback() {
           // Agencies go directly to dashboard (no onboarding redirect)
           navigate('/dashboard?tab=my-dashboard', { replace: true });
         } else {
-          // No role yet - bootstrap dentist role if Google provider login
+          // No role yet - bootstrap foster carer role if Google provider login
           if (isGoogleProvider) {
             setMessage('Setting up your account...');
             try {
@@ -421,12 +421,12 @@ export default function AuthCallback() {
               
               // Check if user needs to add a clinic
               if (bootstrapData?.needsClinic) {
-                // New user without clinic - redirect to GMB business selection
+                // New user without agency - redirect to GMB business selection
                 // so they can add their practice via GMB or manually
                 localStorage.setItem('gmb_listing_flow', 'true');
                 navigate('/gmb-select', { replace: true, state: { providerToken, isNewUser: true } });
               } else {
-                // User already has a clinic - go to dashboard
+                // User already has a agency - go to dashboard
                 navigate('/dashboard?tab=my-dashboard', { replace: true });
               }
             } catch (err) {
