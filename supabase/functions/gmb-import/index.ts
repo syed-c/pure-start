@@ -43,16 +43,51 @@ function parseAddress(formattedAddress: string): {
 
   if (!formattedAddress) return result;
 
+  // Try structured address parsing first - Google Places often has format:
+  // "123 Street, City, Postcode, UK" or "Building, Street, City, Postcode, UK"
   const parts = formattedAddress.split(',').map(p => p.trim());
 
   if (parts.length >= 1) result.address = parts[0];
-  if (parts.length >= 2) result.city = parts[parts.length - 2];
-  if (parts.length >= 3) result.county = parts[parts.length - 1];
 
-  // Try to extract postcode (usually last part if it looks like UK postcode)
-  const postcodeMatch = formattedAddress.match(/[A-Z]{1,2}[0-9][A-Z0-9]?\s?[0-9][A-Z]{2}/i);
-  if (postcodeMatch) {
-    result.postcode = postcodeMatch[0];
+  // Find the city by looking for the part that CONTAINS the UK postcode
+  // UK postcodes look like: "CB4 2HY" or "CB23 8DS" — the city name is in the same
+  // comma-separated part, before the postcode: "Cambridge CB4 2HY"
+  const ukPostcodeRegex = /[A-Z]{1,2}[0-9][A-Z0-9]?\s?[0-9][A-Z]{2}/i;
+  let postcodeFound = false;
+
+  for (let i = parts.length - 1; i >= 0; i--) {
+    const part = parts[i].trim();
+    const postcodeMatch = part.match(ukPostcodeRegex);
+    if (postcodeMatch) {
+      result.postcode = postcodeMatch[0];
+      // City is the same part with the postcode stripped
+      // e.g. "Cambridge CB4 2HY" → postcode="CB4 2HY", city="Cambridge"
+      result.city = part.replace(ukPostcodeRegex, '').trim();
+      postcodeFound = true;
+      break;
+    }
+    if (i === parts.length - 1) {
+      result.county = part;
+    }
+  }
+
+  // Fallback: if no postcode found, use second-to-last part as city
+  if (!postcodeFound && parts.length >= 2) {
+    result.city = parts[parts.length - 2];
+  }
+
+  // Country from last part
+  const lastPart = parts[parts.length - 1]?.toLowerCase() || '';
+  if (lastPart === 'uk' || lastPart === 'united kingdom' || lastPart === 'gb' || lastPart === 'great britain') {
+    result.country = 'United Kingdom';
+  }
+
+  // Clean up city - remove any remaining postcode remnants and normalize whitespace
+  if (result.city) {
+    result.city = result.city
+      .replace(ukPostcodeRegex, '')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
 
   return result;
@@ -87,7 +122,7 @@ async function lookupCityId(supabase: any, cityName: string): Promise<string | n
 
   if (nameMatch?.id) return nameMatch.id;
 
-  // 3. Partial name match
+  // 3. Partial name match (city name contains the search term)
   const { data: partialMatch } = await supabase
     .from('cities')
     .select('id')
@@ -96,6 +131,16 @@ async function lookupCityId(supabase: any, cityName: string): Promise<string | n
     .limit(1);
 
   if (partialMatch && partialMatch.length > 0) return partialMatch[0].id;
+
+  // 4. Prefix match (search term starts with city name - handles postcode remnants)
+  const { data: prefixMatch } = await supabase
+    .from('cities')
+    .select('id')
+    .ilike('name', `${cityName.trim()}%`)
+    .eq('is_active', true)
+    .limit(1);
+
+  if (prefixMatch && prefixMatch.length > 0) return prefixMatch[0].id;
 
   return null;
 }

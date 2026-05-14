@@ -553,10 +553,10 @@ export default function GmbScraperBotTab() {
       addLog('info', `\n📍 [${cityIndex + 1}/${citiesToScan.length}] ${city.name}`);
       addLog('info', `  🔍 Searching...`);
       
-      // PHASE 1: Search this city - use state abbreviation from the city's linked state
+      // PHASE 1: Search this city - use state name (not abbreviation) for Google Places
       const cityState = (city as any).state as { abbreviation?: string; name?: string } | undefined;
-      const stateAbbrev = cityState?.abbreviation || cityState?.name || '';
-      const cityResults = await searchCity(city.name, city.id, stateAbbrev, selectedCategories, runKey);
+      const stateName = cityState?.name || cityState?.abbreviation || '';
+      const cityResults = await searchCity(city.name, city.id, stateName, selectedCategories, runKey);
       
       // Deduplicate
       const uniqueResults = cityResults.reduce((acc, r) => {
