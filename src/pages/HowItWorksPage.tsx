@@ -94,7 +94,13 @@ const HowItWorksPage = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="flex justify-center"
             >
-              <img src={howItWorksImg} alt="How Foster Care works" className="w-full max-w-md drop-shadow-xl" />
+              <img
+                src="https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=600&q=80"
+                alt="How Foster Care works"
+                className="w-full max-w-md rounded-2xl drop-shadow-xl"
+                loading="lazy"
+                onError={(e) => { (e.target as HTMLImageElement).src = howItWorksImg; }}
+              />
             </motion.div>
           </div>
         </div>

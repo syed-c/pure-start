@@ -107,7 +107,13 @@ const AboutPage = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="relative flex justify-center"
             >
-              <img src={aboutHeroImg} alt="Welcoming foster home" className="w-full max-w-md drop-shadow-2xl" />
+              <img
+                src="https://images.unsplash.com/photo-1593113630400-ea4288922497?w=600&q=80"
+                alt="Welcoming foster home"
+                className="w-full max-w-md rounded-2xl drop-shadow-2xl"
+                loading="lazy"
+                onError={(e) => { (e.target as HTMLImageElement).src = aboutHeroImg; }}
+              />
               {/* Floating stat card */}
               <div className="absolute -bottom-4 -left-4 bg-card border border-border rounded-2xl p-4 shadow-xl">
                 <div className="flex items-center gap-3">
@@ -181,7 +187,13 @@ const AboutPage = () => {
             >
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 rounded-3xl blur-2xl scale-110" />
-                <img src={missionImg} alt="Foster care mission" className="relative w-full max-w-sm drop-shadow-xl" />
+                <img
+                  src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&q=80"
+                  alt="Foster care mission"
+                  className="relative w-full max-w-sm rounded-2xl drop-shadow-xl"
+                  loading="lazy"
+                  onError={(e) => { (e.target as HTMLImageElement).src = missionImg; }}
+                />
               </div>
             </motion.div>
           </div>

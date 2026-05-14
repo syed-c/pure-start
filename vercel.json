@@ -34,16 +34,7 @@
     { "source": "/sitemap.xsl", "destination": "/sitemap.xsl" },
     { "source": "/api/stripe-webhook", "destination": "https://vcvvtklbyvdbysfdbnfp.supabase.co/functions/v1/stripe-webhook" },
     { "source": "/api/whatsapp-webhook", "destination": "https://vcvvtklbyvdbysfdbnfp.supabase.co/functions/v1/whatsapp-webhook" },
-    {
-      "source": "/:path*",
-      "has": [
-        { "type": "header", "key": "user-agent", "value": "(?i).*(googlebot|google-inspectiontool|google-extended|google-safety|storebot-google|googleother|bingbot|bingpreview|msnbot|yandex|baiduspider|facebookexternalhit|facebookbot|twitterbot|linkedinbot|discordbot|whatsapp|telegrambot|applebot|ahrefs|semrush|screaming+frog|dotbot|petalbot|bytespider|rogerbot|embedly|quora|pinterest|slackbot|redditbot|flipboard|flipboard|twitterbot|ia_archiver|archive.org_bot|duckduckbot|ecosia|qwant|gigabot|sogou|exabot|swiftbot|yacybot|seznambot|ccbot|gptbot|chatgpt-user|oai-searchbot|openai|claude-web|claudebot|anthropic-ai|perplexitybot|perplexity-user|cohere-ai|youbot|you.com|meta-externalagent|meta-externalfetcher|amazonbot|adsbot-google).*" }
-      ],
-      "missing": [
-        { "type": "header", "key": "x-prerender-bypass", "value": "true" }
-      ],
-      "destination": "https://vcvvtklbyvdbysfdbnfp.supabase.co/functions/v1/serve-static?path=/:path*"
-    },
+
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

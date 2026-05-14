@@ -131,7 +131,7 @@ function HomePage() {
       <section className="relative overflow-hidden min-h-[600px] flex items-center">
         <div className="absolute inset-0 pointer-events-none">
           <img
-            src="https://images.unsplash.com/photo-1581579186916-5ac1fad4c010?w=1600&q=80"
+            src="https://images.unsplash.com/photo-1511895426328-dc8714191300?w=1600&q=80"
             alt="Family spending time together"
             className="w-full h-full object-cover"
             loading="eager"

@@ -21,7 +21,7 @@ declare global {
  * @param options - Optional configuration
  */
 interface PrerenderOptions {
-  /** Delay in ms before signaling ready (default: 500) */
+  /** Delay in ms before signaling ready (default: 800) */
   delay?: number;
   /** Minimum content length to validate (optional) */
   minContentLength?: number;
@@ -29,39 +29,33 @@ interface PrerenderOptions {
 
 export function usePrerenderReady(isReady: boolean, options?: PrerenderOptions) {
   const hasSignaled = useRef(false);
-  const delay = options?.delay ?? 500;
+  const delay = options?.delay ?? 800;
 
   useEffect(() => {
-    // Only signal once per page load
     if (isReady && !hasSignaled.current) {
       hasSignaled.current = true;
-      
-      // Delay to ensure React has committed ALL DOM updates
-      // including react-helmet-async meta tags and all component content
+
       const timer = setTimeout(() => {
         if (typeof window !== 'undefined') {
-          // Validate that content is actually in the DOM
-          const hasContent = document.querySelector('h1') && 
-                            (document.querySelector('article') || document.querySelector('main'));
-          
-          if (hasContent) {
+          const hasH1 = !!document.querySelector('h1');
+          const hasMain = !!document.querySelector('main, article, [role="main"]');
+          const contentLength = document.body?.innerText?.length || 0;
+          const minLength = options?.minContentLength ?? 200;
+
+          if (hasH1 && hasMain && contentLength > minLength) {
             window.prerenderReady = true;
-            console.log('[Prerender] Page ready for capture - all data loaded');
           } else {
-            // Wait a bit more if content not found
             setTimeout(() => {
               window.prerenderReady = true;
-              console.log('[Prerender] Page ready for capture - delayed signal');
-            }, 500);
+            }, 1000);
           }
         }
       }, delay);
 
       return () => clearTimeout(timer);
     }
-  }, [isReady, delay]);
+  }, [isReady, delay, options?.minContentLength]);
 
-  // Reset on unmount so new pages can signal again
   useEffect(() => {
     return () => {
       hasSignaled.current = false;

@@ -313,7 +313,15 @@ const FosteringLocationPage = () => {
 
         {/* Hero Section - Homepage Style */}
         <section className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-teal-950 pointer-events-none">
+          <div className="absolute inset-0 pointer-events-none">
+            <img
+              src="https://images.unsplash.com/photo-1593113630400-ea4288922497?w=1600&q=80"
+              alt=""
+              className="w-full h-full object-cover"
+              loading="lazy"
+              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-teal-950/95 via-slate-900/95 to-teal-950/95 pointer-events-none" />
             <div className="absolute inset-0 opacity-30 pointer-events-none">
               <div className="absolute top-20 left-10 w-72 h-72 bg-teal-500/20 rounded-full blur-[100px]" />
               <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px]" />
@@ -596,7 +604,15 @@ const shouldNoIndex = !isIndexPage && (!agencies || agencies.length === 0);
 
       {/* Hero Section - Homepage Style */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-teal-950 pointer-events-none">
+        <div className="absolute inset-0 pointer-events-none">
+          <img
+            src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1600&q=80"
+            alt=""
+            className="w-full h-full object-cover"
+            loading="lazy"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-950/95 via-slate-900/95 to-teal-950/95 pointer-events-none" />
           <div className="absolute inset-0 opacity-40 pointer-events-none">
             <div className="absolute top-0 left-1/4 w-96 h-96 bg-teal-500/30 rounded-full blur-[120px]" />
             <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-amber-500/20 rounded-full blur-[100px]" />

@@ -126,8 +126,18 @@ const ServicesPage = () => {
       <StructuredData type="organization" />
       
       {/* Hero */}
-      <section className="py-16 md:py-24 bg-muted/30 relative overflow-hidden">
-        <div className="absolute inset-0 bg-subtle-grid opacity-20 pointer-events-none" />
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <img
+            src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1600&q=80"
+            alt=""
+            className="w-full h-full object-cover"
+            loading="lazy"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-950/95 via-slate-950/95 to-slate-900/95 pointer-events-none" />
+          <div className="absolute inset-0 bg-subtle-grid opacity-20 pointer-events-none" />
+        </div>
         <div className="container">
           <Breadcrumbs items={breadcrumbs} className="mb-6" />
           <div className="max-w-3xl mx-auto text-center">

@@ -51,11 +51,19 @@ const StatePage = () => {
     queryFn: async () => {
       const cityIds = (cities || []).map((c) => c.id);
       if (!cityIds.length) return {};
-      const { data } = await supabase.from("clinics").select("city_id").in("city_id", cityIds).eq("is_active", true);
+
+      // Query agencies by city names that belong to this state
+      const cityNames = (cities || []).map(c => c.name).filter(Boolean);
       const counts: Record<string, number> = {};
-      for (const row of data || []) {
-        const id = row.city_id as string | null;
-        if (id) counts[id] = (counts[id] || 0) + 1;
+
+      if (cityNames.length > 0) {
+        for (const city of (cities || [])) {
+          const { count } = await supabaseAdmin
+            .from('agencies')
+            .select('id', { count: 'exact', head: true })
+            .ilike('city', `%${city.name}%`);
+          if (count) counts[city.id] = count;
+        }
       }
       return counts;
     },
@@ -63,17 +71,40 @@ const StatePage = () => {
   });
 
   const { data: profiles, isLoading: profilesLoading } = useQuery({
-    queryKey: ['region-profiles', stateSlug],
+    queryKey: ['region-profiles', stateSlug, state?.id],
     queryFn: async () => {
       if (!state) return [];
       console.log('StatePage - state:', state.name);
+
+      // Get city names belonging to this state
+      const { data: stateCities } = await supabase
+        .from('cities')
+        .select('name')
+        .eq('state_id', state.id)
+        .eq('is_active', true);
+
+      const cityNames = (stateCities || []).map(c => c.name).filter(Boolean);
+
+      if (cityNames.length > 0) {
+        // Build OR filter: city ILIKE any of the state's city names
+        const cityFilters = cityNames.map(name => `city.ilike.%${name}%`);
+        const { data, error } = await supabaseAdmin
+          .from('agencies')
+          .select(`id, name, slug, city, state, phone, email, website, rating, review_count, is_verified, is_featured`)
+          .or(cityFilters.join(','))
+          .order('rating', { ascending: false })
+          .limit(50);
+        console.log('StatePage - agencies found:', data?.length, 'error:', error);
+        return data || [];
+      }
+
+      // Fallback: show all agencies (state column is "UK" for all)
       const { data, error } = await supabaseAdmin
         .from('agencies')
         .select(`id, name, slug, city, state, phone, email, website, rating, review_count, is_verified, is_featured`)
-        .ilike('state', `%${state.name}%`)
         .order('rating', { ascending: false })
         .limit(50);
-      console.log('StatePage - agencies found:', data?.length, 'error:', error);
+      console.log('StatePage - fallback agencies found:', data?.length, 'error:', error);
       return data || [];
     },
     enabled: !!state,
@@ -103,7 +134,15 @@ const StatePage = () => {
         />
 
         <section className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-slate-950 pointer-events-none">
+          <div className="absolute inset-0 pointer-events-none">
+            <img
+              src="https://images.unsplash.com/photo-1593113630400-ea4288922497?w=1600&q=80"
+              alt=""
+              className="w-full h-full object-cover"
+              loading="lazy"
+              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-teal-950/95 via-slate-900/95 to-slate-950/95 pointer-events-none" />
             <div className="absolute inset-0 opacity-30 pointer-events-none">
               <div className="absolute top-20 left-10 w-72 h-72 bg-teal-500/20 rounded-full blur-[100px]" />
               <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px]" />
@@ -249,7 +288,15 @@ const StatePage = () => {
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-slate-950 pointer-events-none">
+        <div className="absolute inset-0 pointer-events-none">
+          <img
+            src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1600&q=80"
+            alt=""
+            className="w-full h-full object-cover"
+            loading="lazy"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-950/95 via-slate-900/95 to-slate-950/95 pointer-events-none" />
           <div className="absolute inset-0 opacity-30 pointer-events-none">
             <div className="absolute top-20 left-10 w-72 h-72 bg-teal-500/20 rounded-full blur-[100px]" />
             <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px]" />

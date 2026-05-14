@@ -164,7 +164,15 @@ const CityPage = () => {
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-teal-950 via-slate-900 to-slate-950 pointer-events-none">
+        <div className="absolute inset-0 pointer-events-none">
+          <img
+            src="https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=1600&q=80"
+            alt=""
+            className="w-full h-full object-cover"
+            loading="lazy"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-950/95 via-slate-900/95 to-slate-950/95 pointer-events-none" />
           <div className="absolute inset-0 opacity-20 pointer-events-none">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-teal-500/30 rounded-full blur-[120px]" />
           </div>
