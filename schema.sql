@@ -7,7 +7,11 @@
 -- =====================
 -- 1. ENUM TYPES
 -- =====================
-DO $$ BEGIN CREATE TYPE public.app_role AS ENUM ('super_admin','district_manager','dentist','patient'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE public.app_role AS ENUM ('super_admin','district_manager','dentist','patient','agency_admin','foster_carer'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE public.agency_type AS ENUM ('independent','local_authority','combined'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE public.fostering_type AS ENUM ('emergency','respite','parent_child','therapeutic','long_term','short_term','disability_complex','sibling','teenage'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE public.agency_source AS ENUM ('manual','gmb','import','ofsted'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE public.listing_status AS ENUM ('listed','unlisted','draft','archived'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 DO $$ BEGIN CREATE TYPE public.appointment_status AS ENUM ('pending','confirmed','completed','cancelled','no_show'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 DO $$ BEGIN CREATE TYPE public.claim_status AS ENUM ('unclaimed','pending','claimed'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 DO $$ BEGIN CREATE TYPE public.clinic_source AS ENUM ('manual','gmb','import'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
@@ -37,8 +41,7 @@ ALTER TABLE public.states ADD COLUMN IF NOT EXISTS slug text NOT NULL DEFAULT ''
 ALTER TABLE public.states ADD COLUMN IF NOT EXISTS abbreviation text NOT NULL DEFAULT '';
 ALTER TABLE public.states ADD COLUMN IF NOT EXISTS country_code text NOT NULL DEFAULT 'US';
 ALTER TABLE public.states ADD COLUMN IF NOT EXISTS image_url text;
-ALTER TABLE public.states ADD COLUMN IF NOT EXISTS dentist_count integer NOT NULL DEFAULT 0;
-ALTER TABLE public.states ADD COLUMN IF NOT EXISTS clinic_count integer NOT NULL DEFAULT 0;
+ALTER TABLE public.states ADD COLUMN IF NOT EXISTS agency_count integer NOT NULL DEFAULT 0;
 ALTER TABLE public.states ADD COLUMN IF NOT EXISTS is_active boolean NOT NULL DEFAULT true;
 ALTER TABLE public.states ADD COLUMN IF NOT EXISTS display_order integer NOT NULL DEFAULT 0;
 ALTER TABLE public.states ADD COLUMN IF NOT EXISTS seo_status text;
@@ -115,53 +118,115 @@ ALTER TABLE public.subscription_plans ADD COLUMN IF NOT EXISTS price_yearly nume
 ALTER TABLE public.subscription_plans ADD COLUMN IF NOT EXISTS created_at timestamptz NOT NULL DEFAULT now();
 ALTER TABLE public.subscription_plans ADD COLUMN IF NOT EXISTS updated_at timestamptz NOT NULL DEFAULT now();
 
--- clinics
-CREATE TABLE IF NOT EXISTS public.clinics (id uuid NOT NULL DEFAULT gen_random_uuid());
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS name text NOT NULL DEFAULT '';
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS slug text NOT NULL DEFAULT '';
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS description text;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS logo_url text;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS cover_image_url text;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS email text;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS phone text;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS website text;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS whatsapp text;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS city_id uuid;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS area_id uuid;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS address text;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS latitude double precision;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS longitude double precision;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS google_place_id text;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS google_maps_url text;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS claim_status claim_status NOT NULL DEFAULT 'unclaimed';
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS claimed_by uuid;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS claimed_at timestamptz;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS verification_status verification_status NOT NULL DEFAULT 'unverified';
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS source clinic_source NOT NULL DEFAULT 'manual';
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS owner_id uuid;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS seo_visible boolean NOT NULL DEFAULT true;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS rank_score integer NOT NULL DEFAULT 0;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS duplicate_group_id text;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS is_duplicate boolean NOT NULL DEFAULT false;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS is_suspended boolean NOT NULL DEFAULT false;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS is_featured boolean NOT NULL DEFAULT false;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS is_active boolean NOT NULL DEFAULT true;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS gmb_data jsonb;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS total_reviews integer NOT NULL DEFAULT 0;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS average_rating numeric NOT NULL DEFAULT 0;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS rating numeric NOT NULL DEFAULT 0;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS review_count integer NOT NULL DEFAULT 0;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS total_leads integer NOT NULL DEFAULT 0;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS opening_hours jsonb;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS photos jsonb;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS location_verified boolean NOT NULL DEFAULT false;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS location_pending_approval boolean NOT NULL DEFAULT false;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS verified_at timestamptz;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS verification_expires_at timestamptz;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS gmb_connected boolean DEFAULT false;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS is_active_listing boolean DEFAULT true;
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS created_at timestamptz NOT NULL DEFAULT now();
-ALTER TABLE public.clinics ADD COLUMN IF NOT EXISTS updated_at timestamptz NOT NULL DEFAULT now();
+-- agencies (primary table - consolidated from legacy clinics + fostering migrations)
+CREATE TABLE IF NOT EXISTS public.agencies (id uuid NOT NULL DEFAULT gen_random_uuid());
+-- Identity
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS name text NOT NULL DEFAULT '';
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS slug text NOT NULL DEFAULT '';
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS description text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS short_description text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS full_description text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS editorial_summary text;
+-- Contact
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS email text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS phone text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS website text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS whatsapp text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS international_phone text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS contact_form_url text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS booking_url text;
+-- Location
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS city text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS state text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS postcode text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS address text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS latitude double precision;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS longitude double precision;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS city_id uuid;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS area_id uuid;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS regions_served text[];
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS counties_served text[];
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS areas_served text[];
+-- Media
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS logo_url text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS cover_image_url text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS image_url text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS main_image_url text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS photos jsonb;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS opening_hours jsonb;
+-- Google / GMB
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS google_place_id text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS google_maps_url text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS google_resource_name text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS google_website_url text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS google_primary_type text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS google_types text[];
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS business_status text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS price_level text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS utc_offset_minutes integer;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS gmb_data jsonb;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS gmb_connected boolean DEFAULT false;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS imported_at timestamptz;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS last_synced_at timestamptz;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS import_source text DEFAULT 'gmb';
+-- Status & verification
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS claim_status text NOT NULL DEFAULT 'unclaimed';
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS claim_emails text[];
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS claimed_by uuid;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS claimed_at timestamptz;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS verification_status text NOT NULL DEFAULT 'unverified';
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS verification_sent_at timestamptz;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS source text NOT NULL DEFAULT 'manual';
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS owner_id uuid;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS status text DEFAULT 'published';
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS listing_status text DEFAULT 'listed';
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS is_active boolean NOT NULL DEFAULT true;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS is_active_listing boolean DEFAULT true;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS is_duplicate boolean NOT NULL DEFAULT false;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS duplicate_of_id uuid;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS duplicate_group_id text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS is_suspended boolean NOT NULL DEFAULT false;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS is_featured boolean NOT NULL DEFAULT false;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS seo_visible boolean NOT NULL DEFAULT true;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS noindex boolean DEFAULT false;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS location_verified boolean NOT NULL DEFAULT false;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS location_pending_approval boolean NOT NULL DEFAULT false;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS verified_at timestamptz;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS verification_expires_at timestamptz;
+-- Ratings & reviews
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS rating numeric NOT NULL DEFAULT 0;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS review_count integer NOT NULL DEFAULT 0;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS average_rating numeric NOT NULL DEFAULT 0;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS total_reviews integer NOT NULL DEFAULT 0;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS total_leads integer NOT NULL DEFAULT 0;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS rank_score integer NOT NULL DEFAULT 0;
+-- Fostering-specific
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS agency_type text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS fostering_types text[] DEFAULT '{}';
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS fostering_types_supported text[] DEFAULT '{}';
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS age_groups_supported text[] DEFAULT '{}';
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS has_24_7_support boolean DEFAULT false;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS training_provided boolean DEFAULT false;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS accepting_new_carers boolean DEFAULT true;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS accepting_referrals boolean DEFAULT true;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS online_enquiry boolean DEFAULT true;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS allowance_info text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS ofsted_rating text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS ofsted_urn text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS established_year integer;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS staff_count integer;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS foster_carer_count integer;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS child_placements_count integer;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS approved_trainer boolean DEFAULT false;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS has_therapeutic_team boolean DEFAULT false;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS faqs jsonb;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS meta_title text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS meta_description text;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS canonical_url text;
+-- Timestamps
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS user_id uuid;
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS created_at timestamptz NOT NULL DEFAULT now();
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS updated_at timestamptz NOT NULL DEFAULT now();
 
 -- dentists
 CREATE TABLE IF NOT EXISTS public.dentists (id uuid NOT NULL DEFAULT gen_random_uuid());
@@ -580,6 +645,12 @@ ALTER TABLE public.claim_requests ADD COLUMN IF NOT EXISTS business_phone text;
 ALTER TABLE public.claim_requests ADD COLUMN IF NOT EXISTS documents jsonb;
 ALTER TABLE public.claim_requests ADD COLUMN IF NOT EXISTS created_at timestamptz NOT NULL DEFAULT now();
 ALTER TABLE public.claim_requests ADD COLUMN IF NOT EXISTS updated_at timestamptz NOT NULL DEFAULT now();
+ALTER TABLE public.claim_requests ADD COLUMN IF NOT EXISTS agency_id uuid;
+ALTER TABLE public.claim_requests ADD COLUMN IF NOT EXISTS requester_name text;
+ALTER TABLE public.claim_requests ADD COLUMN IF NOT EXISTS requester_phone text;
+ALTER TABLE public.claim_requests ADD COLUMN IF NOT EXISTS requester_address text;
+ALTER TABLE public.claim_requests ADD COLUMN IF NOT EXISTS claim_type text;
+ALTER TABLE public.claim_requests ADD COLUMN IF NOT EXISTS verification_attempts integer DEFAULT 0;
 
 -- clinic_automation_settings
 CREATE TABLE IF NOT EXISTS public.clinic_automation_settings (id uuid NOT NULL DEFAULT gen_random_uuid());
@@ -739,37 +810,37 @@ ALTER TABLE public.dentist_availability_rules ADD COLUMN IF NOT EXISTS is_active
 ALTER TABLE public.dentist_availability_rules ADD COLUMN IF NOT EXISTS created_at timestamptz NOT NULL DEFAULT now();
 ALTER TABLE public.dentist_availability_rules ADD COLUMN IF NOT EXISTS updated_at timestamptz NOT NULL DEFAULT now();
 
--- dentist_settings
-CREATE TABLE IF NOT EXISTS public.dentist_settings (id uuid NOT NULL DEFAULT gen_random_uuid());
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS clinic_id uuid NOT NULL DEFAULT gen_random_uuid();
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS user_id uuid;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS booking_enabled boolean DEFAULT false;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS auto_confirm boolean DEFAULT false;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS notification_email text;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS notification_phone text;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS working_hours jsonb;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS settings jsonb;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS allow_same_day_booking boolean DEFAULT false;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS min_advance_booking_hours integer DEFAULT 24;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS max_advance_booking_days integer DEFAULT 30;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS confirmation_email_enabled boolean DEFAULT true;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS reminder_sms_enabled boolean DEFAULT false;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS notification_new_appointment boolean DEFAULT true;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS notification_form_submission boolean DEFAULT true;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS notification_cancellation boolean DEFAULT true;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS notification_message boolean DEFAULT true;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS notification_channel_email boolean DEFAULT true;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS notification_channel_whatsapp boolean DEFAULT false;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS notification_channel_dashboard boolean DEFAULT true;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS notification_email_secondary text;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS notification_whatsapp_number text;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS booking_require_approval boolean;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS allow_guest_booking boolean;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS reminder_hours_before integer;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS cancellation_policy text;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS booking_notes text;
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS created_at timestamptz NOT NULL DEFAULT now();
-ALTER TABLE public.dentist_settings ADD COLUMN IF NOT EXISTS updated_at timestamptz NOT NULL DEFAULT now();
+-- agency_settings
+CREATE TABLE IF NOT EXISTS public.agency_settings (id uuid NOT NULL DEFAULT gen_random_uuid());
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS clinic_id uuid NOT NULL DEFAULT gen_random_uuid();
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS user_id uuid;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS booking_enabled boolean DEFAULT false;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS auto_confirm boolean DEFAULT false;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS notification_email text;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS notification_phone text;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS working_hours jsonb;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS settings jsonb;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS allow_same_day_booking boolean DEFAULT false;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS min_advance_booking_hours integer DEFAULT 24;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS max_advance_booking_days integer DEFAULT 30;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS confirmation_email_enabled boolean DEFAULT true;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS reminder_sms_enabled boolean DEFAULT false;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS notification_new_appointment boolean DEFAULT true;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS notification_form_submission boolean DEFAULT true;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS notification_cancellation boolean DEFAULT true;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS notification_message boolean DEFAULT true;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS notification_channel_email boolean DEFAULT true;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS notification_channel_whatsapp boolean DEFAULT false;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS notification_channel_dashboard boolean DEFAULT true;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS notification_email_secondary text;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS notification_whatsapp_number text;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS booking_require_approval boolean;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS allow_guest_booking boolean;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS reminder_hours_before integer;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS cancellation_policy text;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS booking_notes text;
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS created_at timestamptz NOT NULL DEFAULT now();
+ALTER TABLE public.agency_settings ADD COLUMN IF NOT EXISTS updated_at timestamptz NOT NULL DEFAULT now();
 
 -- editorial_calendar
 CREATE TABLE IF NOT EXISTS public.editorial_calendar (id uuid NOT NULL DEFAULT gen_random_uuid());
@@ -1147,14 +1218,14 @@ ALTER TABLE public.pending_areas ADD COLUMN IF NOT EXISTS submitted_by uuid;
 ALTER TABLE public.pending_areas ADD COLUMN IF NOT EXISTS clinic_id_ref uuid;
 ALTER TABLE public.pending_areas ADD COLUMN IF NOT EXISTS created_at timestamptz NOT NULL DEFAULT now();
 
--- pinned_clinics
-CREATE TABLE IF NOT EXISTS public.pinned_clinics (id uuid NOT NULL DEFAULT gen_random_uuid());
-ALTER TABLE public.pinned_clinics ADD COLUMN IF NOT EXISTS clinic_id uuid NOT NULL DEFAULT gen_random_uuid();
-ALTER TABLE public.pinned_clinics ADD COLUMN IF NOT EXISTS city_id uuid;
-ALTER TABLE public.pinned_clinics ADD COLUMN IF NOT EXISTS area_id uuid;
-ALTER TABLE public.pinned_clinics ADD COLUMN IF NOT EXISTS display_order integer DEFAULT 0;
-ALTER TABLE public.pinned_clinics ADD COLUMN IF NOT EXISTS is_active boolean DEFAULT true;
-ALTER TABLE public.pinned_clinics ADD COLUMN IF NOT EXISTS created_at timestamptz NOT NULL DEFAULT now();
+-- pinned_agencies
+CREATE TABLE IF NOT EXISTS public.pinned_agencies (id uuid NOT NULL DEFAULT gen_random_uuid());
+ALTER TABLE public.pinned_agencies ADD COLUMN IF NOT EXISTS agency_id uuid NOT NULL DEFAULT gen_random_uuid();
+ALTER TABLE public.pinned_agencies ADD COLUMN IF NOT EXISTS city_id uuid;
+ALTER TABLE public.pinned_agencies ADD COLUMN IF NOT EXISTS area_id uuid;
+ALTER TABLE public.pinned_agencies ADD COLUMN IF NOT EXISTS display_order integer DEFAULT 0;
+ALTER TABLE public.pinned_agencies ADD COLUMN IF NOT EXISTS is_active boolean DEFAULT true;
+ALTER TABLE public.pinned_agencies ADD COLUMN IF NOT EXISTS created_at timestamptz NOT NULL DEFAULT now();
 
 -- plan_features
 CREATE TABLE IF NOT EXISTS public.plan_features (id uuid NOT NULL DEFAULT gen_random_uuid());
@@ -1598,9 +1669,9 @@ RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path TO 'public'
   SELECT EXISTS (SELECT 1 FROM public.user_roles WHERE user_id = _user_id AND role IN ('super_admin','district_manager'))
 $$;
 
-CREATE OR REPLACE FUNCTION public.owns_clinic(_user_id uuid, _clinic_id uuid)
+CREATE OR REPLACE FUNCTION public.owns_agency(_user_id uuid, _agency_id uuid)
 RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path TO 'public' AS $$
-  SELECT EXISTS (SELECT 1 FROM public.clinics WHERE id = _clinic_id AND claimed_by = _user_id)
+  SELECT EXISTS (SELECT 1 FROM public.agencies WHERE id = _agency_id AND claimed_by = _user_id)
 $$;
 
 CREATE OR REPLACE FUNCTION public.has_permission(_user_id uuid, _permission text)
@@ -1622,7 +1693,7 @@ CREATE OR REPLACE FUNCTION public.notify_new_booking()
 RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path TO 'public' AS $$
 BEGIN
   INSERT INTO public.booking_notifications (appointment_id, title, message, notification_type, user_id)
-  VALUES (NEW.id, 'New Booking Request', 'New appointment request from ' || NEW.patient_name, 'new_booking', COALESCE((SELECT claimed_by FROM clinics WHERE id = NEW.clinic_id), gen_random_uuid()));
+  VALUES (NEW.id, 'New Booking Request', 'New appointment request from ' || NEW.patient_name, 'new_booking', COALESCE((SELECT claimed_by FROM agencies WHERE id = NEW.clinic_id), gen_random_uuid()));
   RETURN NEW;
 END; $$;
 
@@ -1645,7 +1716,7 @@ DO $$ BEGIN ALTER TABLE ONLY public.areas ADD CONSTRAINT areas_pkey PRIMARY KEY 
 DO $$ BEGIN ALTER TABLE ONLY public.treatments ADD CONSTRAINT treatments_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.insurances ADD CONSTRAINT insurances_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.subscription_plans ADD CONSTRAINT subscription_plans_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.clinics ADD CONSTRAINT clinics_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.agencies ADD CONSTRAINT agencies_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.dentists ADD CONSTRAINT dentists_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.patients ADD CONSTRAINT patients_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.leads ADD CONSTRAINT leads_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
@@ -1690,7 +1761,7 @@ DO $$ BEGIN ALTER TABLE ONLY public.comparison_pages ADD CONSTRAINT comparison_p
 DO $$ BEGIN ALTER TABLE ONLY public.contact_submissions ADD CONSTRAINT contact_submissions_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.crm_numbers ADD CONSTRAINT crm_numbers_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.dentist_availability_rules ADD CONSTRAINT dentist_availability_rules_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.dentist_settings ADD CONSTRAINT dentist_settings_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.agency_settings ADD CONSTRAINT agency_settings_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.editorial_calendar ADD CONSTRAINT editorial_calendar_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.email_enrichment_sessions ADD CONSTRAINT email_enrichment_sessions_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.email_enrichment_results ADD CONSTRAINT email_enrichment_results_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
@@ -1714,7 +1785,7 @@ DO $$ BEGIN ALTER TABLE ONLY public.page_translations ADD CONSTRAINT page_transl
 DO $$ BEGIN ALTER TABLE ONLY public.page_views ADD CONSTRAINT page_views_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.patient_form_submissions ADD CONSTRAINT patient_form_submissions_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.pending_areas ADD CONSTRAINT pending_areas_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.pinned_clinics ADD CONSTRAINT pinned_clinics_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.pinned_agencies ADD CONSTRAINT pinned_agencies_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.plan_features ADD CONSTRAINT plan_features_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.platform_alerts ADD CONSTRAINT platform_alerts_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.platform_notifications ADD CONSTRAINT platform_notifications_pkey PRIMARY KEY (id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
@@ -1768,68 +1839,69 @@ DO $$ BEGIN ALTER TABLE ONLY public.static_page_cache ADD CONSTRAINT static_page
 -- =====================
 DO $$ BEGIN ALTER TABLE ONLY public.cities ADD CONSTRAINT cities_state_id_fkey FOREIGN KEY (state_id) REFERENCES states(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.areas ADD CONSTRAINT areas_city_id_fkey FOREIGN KEY (city_id) REFERENCES cities(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.clinics ADD CONSTRAINT clinics_city_id_fkey FOREIGN KEY (city_id) REFERENCES cities(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.clinics ADD CONSTRAINT clinics_area_id_fkey FOREIGN KEY (area_id) REFERENCES areas(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.dentists ADD CONSTRAINT dentists_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.leads ADD CONSTRAINT leads_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.agencies ADD CONSTRAINT agencies_city_id_fkey FOREIGN KEY (city_id) REFERENCES cities(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.agencies ADD CONSTRAINT agencies_area_id_fkey FOREIGN KEY (area_id) REFERENCES areas(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.dentists ADD CONSTRAINT dentists_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.leads ADD CONSTRAINT leads_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.leads ADD CONSTRAINT leads_treatment_id_fkey FOREIGN KEY (treatment_id) REFERENCES treatments(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.appointments ADD CONSTRAINT appointments_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.appointments ADD CONSTRAINT appointments_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.appointments ADD CONSTRAINT appointments_dentist_id_fkey FOREIGN KEY (dentist_id) REFERENCES dentists(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.appointments ADD CONSTRAINT appointments_lead_id_fkey FOREIGN KEY (lead_id) REFERENCES leads(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.appointments ADD CONSTRAINT appointments_patient_id_fkey FOREIGN KEY (patient_id) REFERENCES patients(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.appointments ADD CONSTRAINT appointments_treatment_id_fkey FOREIGN KEY (treatment_id) REFERENCES treatments(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.ai_errors ADD CONSTRAINT ai_errors_event_id_fkey FOREIGN KEY (event_id) REFERENCES ai_events(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.ai_events ADD CONSTRAINT ai_events_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.ai_events ADD CONSTRAINT ai_events_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.ai_feedback ADD CONSTRAINT ai_feedback_event_id_fkey FOREIGN KEY (event_id) REFERENCES ai_events(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.ai_inputs ADD CONSTRAINT ai_inputs_event_id_fkey FOREIGN KEY (event_id) REFERENCES ai_events(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.ai_outputs ADD CONSTRAINT ai_outputs_event_id_fkey FOREIGN KEY (event_id) REFERENCES ai_events(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.appointment_types ADD CONSTRAINT appointment_types_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.appointment_types ADD CONSTRAINT appointment_types_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.automation_logs ADD CONSTRAINT automation_logs_rule_id_fkey FOREIGN KEY (rule_id) REFERENCES automation_rules(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.availability_blocks ADD CONSTRAINT availability_blocks_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.availability_blocks ADD CONSTRAINT availability_blocks_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.booking_notifications ADD CONSTRAINT booking_notifications_appointment_id_fkey FOREIGN KEY (appointment_id) REFERENCES appointments(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.booking_notifications ADD CONSTRAINT booking_notifications_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.claim_requests ADD CONSTRAINT claim_requests_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.clinic_automation_settings ADD CONSTRAINT clinic_automation_settings_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.clinic_hours ADD CONSTRAINT clinic_hours_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.clinic_images ADD CONSTRAINT clinic_images_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.clinic_insurances ADD CONSTRAINT clinic_insurances_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.booking_notifications ADD CONSTRAINT booking_notifications_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.claim_requests ADD CONSTRAINT claim_requests_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.claim_requests ADD CONSTRAINT claim_requests_agency_id_fkey FOREIGN KEY (agency_id) REFERENCES agencies(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.clinic_automation_settings ADD CONSTRAINT clinic_automation_settings_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.clinic_hours ADD CONSTRAINT clinic_hours_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.clinic_images ADD CONSTRAINT clinic_images_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.clinic_insurances ADD CONSTRAINT clinic_insurances_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.clinic_insurances ADD CONSTRAINT clinic_insurances_insurance_id_fkey FOREIGN KEY (insurance_id) REFERENCES insurances(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.clinic_messages ADD CONSTRAINT clinic_messages_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.clinic_messages ADD CONSTRAINT clinic_messages_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.clinic_messages ADD CONSTRAINT clinic_messages_patient_id_fkey FOREIGN KEY (patient_id) REFERENCES patients(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.clinic_oauth_tokens ADD CONSTRAINT clinic_oauth_tokens_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.clinic_subscriptions ADD CONSTRAINT clinic_subscriptions_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.clinic_oauth_tokens ADD CONSTRAINT clinic_oauth_tokens_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.clinic_subscriptions ADD CONSTRAINT clinic_subscriptions_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.clinic_subscriptions ADD CONSTRAINT clinic_subscriptions_plan_id_fkey FOREIGN KEY (plan_id) REFERENCES subscription_plans(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.clinic_treatments ADD CONSTRAINT clinic_treatments_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.clinic_treatments ADD CONSTRAINT clinic_treatments_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.clinic_treatments ADD CONSTRAINT clinic_treatments_treatment_id_fkey FOREIGN KEY (treatment_id) REFERENCES treatments(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.comparison_pages ADD CONSTRAINT comparison_pages_treatment_id_fkey FOREIGN KEY (treatment_id) REFERENCES treatments(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.comparison_pages ADD CONSTRAINT comparison_pages_state_id_1_fkey FOREIGN KEY (state_id_1) REFERENCES states(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.comparison_pages ADD CONSTRAINT comparison_pages_state_id_2_fkey FOREIGN KEY (state_id_2) REFERENCES states(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.comparison_pages ADD CONSTRAINT comparison_pages_city_id_1_fkey FOREIGN KEY (city_id_1) REFERENCES cities(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.comparison_pages ADD CONSTRAINT comparison_pages_city_id_2_fkey FOREIGN KEY (city_id_2) REFERENCES cities(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.contact_submissions ADD CONSTRAINT contact_submissions_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.crm_numbers ADD CONSTRAINT crm_numbers_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.dentist_availability_rules ADD CONSTRAINT dentist_availability_rules_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.dentist_settings ADD CONSTRAINT dentist_settings_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.contact_submissions ADD CONSTRAINT contact_submissions_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.crm_numbers ADD CONSTRAINT crm_numbers_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.dentist_availability_rules ADD CONSTRAINT dentist_availability_rules_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.agency_settings ADD CONSTRAINT agency_settings_agency_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.editorial_calendar ADD CONSTRAINT editorial_calendar_template_id_fkey FOREIGN KEY (template_id) REFERENCES blog_content_templates(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.editorial_calendar ADD CONSTRAINT editorial_calendar_topic_cluster_id_fkey FOREIGN KEY (topic_cluster_id) REFERENCES blog_topic_clusters(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.email_enrichment_results ADD CONSTRAINT email_enrichment_results_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.email_enrichment_results ADD CONSTRAINT email_enrichment_results_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.email_enrichment_results ADD CONSTRAINT email_enrichment_results_session_id_fkey FOREIGN KEY (session_id) REFERENCES email_enrichment_sessions(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.gmb_link_requests ADD CONSTRAINT gmb_link_requests_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.gmb_link_requests ADD CONSTRAINT gmb_link_requests_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.gmb_scraper_results ADD CONSTRAINT gmb_scraper_results_session_id_fkey FOREIGN KEY (session_id) REFERENCES gmb_scraper_sessions(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.gmb_scraper_sessions ADD CONSTRAINT gmb_scraper_sessions_state_id_fkey FOREIGN KEY (state_id) REFERENCES states(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.google_reviews ADD CONSTRAINT google_reviews_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.google_reviews ADD CONSTRAINT google_reviews_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.insurance_service_coverage ADD CONSTRAINT insurance_service_coverage_insurance_id_fkey FOREIGN KEY (insurance_id) REFERENCES insurances(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.insurance_service_coverage ADD CONSTRAINT insurance_service_coverage_treatment_id_fkey FOREIGN KEY (treatment_id) REFERENCES treatments(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.lead_quotas ADD CONSTRAINT lead_quotas_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.lead_quotas ADD CONSTRAINT lead_quotas_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.lead_quotas ADD CONSTRAINT lead_quotas_plan_id_fkey FOREIGN KEY (plan_id) REFERENCES subscription_plans(id); EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.pinned_clinics ADD CONSTRAINT pinned_clinics_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.pinned_agencies ADD CONSTRAINT pinned_agencies_agency_id_fkey FOREIGN KEY (agency_id) REFERENCES agencies(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.plan_features ADD CONSTRAINT plan_features_plan_id_fkey FOREIGN KEY (plan_id) REFERENCES subscription_plans(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.review_requests ADD CONSTRAINT review_requests_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.review_requests ADD CONSTRAINT review_requests_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.seo_fix_job_items ADD CONSTRAINT seo_fix_job_items_job_id_fkey FOREIGN KEY (job_id) REFERENCES seo_fix_jobs(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.service_price_ranges ADD CONSTRAINT service_price_ranges_treatment_id_fkey FOREIGN KEY (treatment_id) REFERENCES treatments(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.service_price_ranges ADD CONSTRAINT service_price_ranges_state_id_fkey FOREIGN KEY (state_id) REFERENCES states(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.support_ticket_replies ADD CONSTRAINT support_ticket_replies_ticket_id_fkey FOREIGN KEY (ticket_id) REFERENCES support_tickets(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
-DO $$ BEGIN ALTER TABLE ONLY public.support_tickets ADD CONSTRAINT support_tickets_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES clinics(id) ON DELETE SET NULL; EXCEPTION WHEN OTHERS THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE ONLY public.support_tickets ADD CONSTRAINT support_tickets_clinic_id_fkey FOREIGN KEY (clinic_id) REFERENCES agencies(id) ON DELETE SET NULL; EXCEPTION WHEN OTHERS THEN NULL; END $$;
 DO $$ BEGIN ALTER TABLE ONLY public.translation_queue ADD CONSTRAINT translation_queue_seo_page_id_fkey FOREIGN KEY (seo_page_id) REFERENCES seo_pages(id) ON DELETE CASCADE; EXCEPTION WHEN OTHERS THEN NULL; END $$;
 
 -- =====================
@@ -1885,13 +1957,13 @@ ALTER TABLE public.clinic_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.clinic_oauth_tokens ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.clinic_subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.clinic_treatments ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.clinics ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.agencies ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.comparison_pages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.contact_submissions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.countries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.crm_numbers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.dentist_availability_rules ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.dentist_settings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.agency_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.dentists ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.district_assignments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.editorial_calendar ENABLE ROW LEVEL SECURITY;
@@ -1921,7 +1993,7 @@ ALTER TABLE public.page_views ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.patient_form_submissions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.patients ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.pending_areas ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.pinned_clinics ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.pinned_agencies ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.plan_features ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.platform_alerts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.platform_notifications ENABLE ROW LEVEL SECURITY;
@@ -2017,7 +2089,7 @@ CREATE POLICY "Admins manage ai search settings" ON public.ai_search_settings FO
 DROP POLICY IF EXISTS "Public read appointment_types" ON public.appointment_types;
 CREATE POLICY "Public read appointment_types" ON public.appointment_types FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Clinic owners manage appointment_types" ON public.appointment_types;
-CREATE POLICY "Clinic owners manage appointment_types" ON public.appointment_types FOR ALL USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = appointment_types.clinic_id AND clinics.claimed_by = auth.uid())) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Clinic owners manage appointment_types" ON public.appointment_types FOR ALL USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = appointment_types.clinic_id AND agencies.claimed_by = auth.uid())) OR has_role(auth.uid(), 'super_admin'));
 
 -- appointments
 DROP POLICY IF EXISTS "Anyone can create appointments" ON public.appointments;
@@ -2025,7 +2097,7 @@ CREATE POLICY "Anyone can create appointments" ON public.appointments FOR INSERT
 DROP POLICY IF EXISTS "Admins manage appointments" ON public.appointments;
 CREATE POLICY "Admins manage appointments" ON public.appointments FOR ALL USING (has_role(auth.uid(), 'super_admin'));
 DROP POLICY IF EXISTS "Appointments readable by clinic owners/admins" ON public.appointments;
-CREATE POLICY "Appointments readable by clinic owners/admins" ON public.appointments FOR SELECT USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = appointments.clinic_id AND (clinics.claimed_by = auth.uid() OR clinics.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Appointments readable by clinic owners/admins" ON public.appointments FOR SELECT USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = appointments.clinic_id AND (agencies.claimed_by = auth.uid() OR agencies.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
 
 -- areas
 DROP POLICY IF EXISTS "Admins manage areas" ON public.areas;
@@ -2051,7 +2123,7 @@ CREATE POLICY "Admins manage automation rules" ON public.automation_rules FOR AL
 DROP POLICY IF EXISTS "Public read availability blocks" ON public.availability_blocks;
 CREATE POLICY "Public read availability blocks" ON public.availability_blocks FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Clinic owners manage availability blocks" ON public.availability_blocks;
-CREATE POLICY "Clinic owners manage availability blocks" ON public.availability_blocks FOR ALL USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = availability_blocks.clinic_id AND clinics.claimed_by = auth.uid())) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Clinic owners manage availability blocks" ON public.availability_blocks FOR ALL USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = availability_blocks.clinic_id AND agencies.claimed_by = auth.uid())) OR has_role(auth.uid(), 'super_admin'));
 
 -- blog_authors
 DROP POLICY IF EXISTS "blog_authors_admin" ON public.blog_authors;
@@ -2113,21 +2185,21 @@ CREATE POLICY "Users can view own claims" ON public.claim_requests FOR SELECT US
 
 -- clinic_automation_settings
 DROP POLICY IF EXISTS "Clinic owners can manage automation" ON public.clinic_automation_settings;
-CREATE POLICY "Clinic owners can manage automation" ON public.clinic_automation_settings FOR ALL USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = clinic_automation_settings.clinic_id AND (clinics.claimed_by = auth.uid() OR clinics.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Clinic owners can manage automation" ON public.clinic_automation_settings FOR ALL USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = clinic_automation_settings.clinic_id AND (agencies.claimed_by = auth.uid() OR agencies.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
 DROP POLICY IF EXISTS "Clinic owners can view automation" ON public.clinic_automation_settings;
-CREATE POLICY "Clinic owners can view automation" ON public.clinic_automation_settings FOR SELECT USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = clinic_automation_settings.clinic_id AND (clinics.claimed_by = auth.uid() OR clinics.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Clinic owners can view automation" ON public.clinic_automation_settings FOR SELECT USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = clinic_automation_settings.clinic_id AND (agencies.claimed_by = auth.uid() OR agencies.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
 
 -- clinic_hours
 DROP POLICY IF EXISTS "Clinic hours readable by all" ON public.clinic_hours;
 CREATE POLICY "Clinic hours readable by all" ON public.clinic_hours FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Clinic owners manage hours" ON public.clinic_hours;
-CREATE POLICY "Clinic owners manage hours" ON public.clinic_hours FOR ALL USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = clinic_hours.clinic_id AND (clinics.claimed_by = auth.uid() OR clinics.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Clinic owners manage hours" ON public.clinic_hours FOR ALL USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = clinic_hours.clinic_id AND (agencies.claimed_by = auth.uid() OR agencies.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
 
 -- clinic_images
 DROP POLICY IF EXISTS "Clinic images readable by all" ON public.clinic_images;
 CREATE POLICY "Clinic images readable by all" ON public.clinic_images FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Clinic owners manage images" ON public.clinic_images;
-CREATE POLICY "Clinic owners manage images" ON public.clinic_images FOR ALL USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = clinic_images.clinic_id AND (clinics.claimed_by = auth.uid() OR clinics.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Clinic owners manage images" ON public.clinic_images FOR ALL USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = clinic_images.clinic_id AND (agencies.claimed_by = auth.uid() OR agencies.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
 
 -- clinic_insurances
 DROP POLICY IF EXISTS "Admins manage" ON public.clinic_insurances;
@@ -2137,21 +2209,21 @@ CREATE POLICY "Readable by all" ON public.clinic_insurances FOR SELECT USING (tr
 
 -- clinic_messages
 DROP POLICY IF EXISTS "Clinic owners can manage messages" ON public.clinic_messages;
-CREATE POLICY "Clinic owners can manage messages" ON public.clinic_messages FOR ALL USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = clinic_messages.clinic_id AND (clinics.claimed_by = auth.uid() OR clinics.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Clinic owners can manage messages" ON public.clinic_messages FOR ALL USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = clinic_messages.clinic_id AND (agencies.claimed_by = auth.uid() OR agencies.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
 DROP POLICY IF EXISTS "Clinic owners can view messages" ON public.clinic_messages;
-CREATE POLICY "Clinic owners can view messages" ON public.clinic_messages FOR SELECT USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = clinic_messages.clinic_id AND (clinics.claimed_by = auth.uid() OR clinics.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Clinic owners can view messages" ON public.clinic_messages FOR SELECT USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = clinic_messages.clinic_id AND (agencies.claimed_by = auth.uid() OR agencies.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
 
 -- clinic_oauth_tokens
 DROP POLICY IF EXISTS "Admins manage oauth tokens" ON public.clinic_oauth_tokens;
 CREATE POLICY "Admins manage oauth tokens" ON public.clinic_oauth_tokens FOR ALL USING (has_role(auth.uid(), 'super_admin'));
 DROP POLICY IF EXISTS "Clinic owners can view oauth tokens" ON public.clinic_oauth_tokens;
-CREATE POLICY "Clinic owners can view oauth tokens" ON public.clinic_oauth_tokens FOR SELECT USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = clinic_oauth_tokens.clinic_id AND (clinics.claimed_by = auth.uid() OR clinics.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Clinic owners can view oauth tokens" ON public.clinic_oauth_tokens FOR SELECT USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = clinic_oauth_tokens.clinic_id AND (agencies.claimed_by = auth.uid() OR agencies.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
 
 -- clinic_subscriptions
 DROP POLICY IF EXISTS "Admins manage subscriptions" ON public.clinic_subscriptions;
 CREATE POLICY "Admins manage subscriptions" ON public.clinic_subscriptions FOR ALL USING (has_role(auth.uid(), 'super_admin'));
 DROP POLICY IF EXISTS "Clinic owners can view own subs" ON public.clinic_subscriptions;
-CREATE POLICY "Clinic owners can view own subs" ON public.clinic_subscriptions FOR SELECT USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = clinic_subscriptions.clinic_id AND (clinics.claimed_by = auth.uid() OR clinics.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Clinic owners can view own subs" ON public.clinic_subscriptions FOR SELECT USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = clinic_subscriptions.clinic_id AND (agencies.claimed_by = auth.uid() OR agencies.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
 
 -- clinic_treatments
 DROP POLICY IF EXISTS "Admins manage" ON public.clinic_treatments;
@@ -2159,15 +2231,15 @@ CREATE POLICY "Admins manage" ON public.clinic_treatments FOR ALL USING (has_rol
 DROP POLICY IF EXISTS "Readable by all" ON public.clinic_treatments;
 CREATE POLICY "Readable by all" ON public.clinic_treatments FOR SELECT USING (true);
 
--- clinics
-DROP POLICY IF EXISTS "Clinics readable by all" ON public.clinics;
-CREATE POLICY "Clinics readable by all" ON public.clinics FOR SELECT USING (true);
-DROP POLICY IF EXISTS "Admins can insert clinics" ON public.clinics;
-CREATE POLICY "Admins can insert clinics" ON public.clinics FOR INSERT WITH CHECK (has_role(auth.uid(), 'super_admin') OR has_role(auth.uid(), 'district_manager'));
-DROP POLICY IF EXISTS "Clinic owners can update" ON public.clinics;
-CREATE POLICY "Clinic owners can update" ON public.clinics FOR UPDATE USING (auth.uid() = claimed_by OR auth.uid() = owner_id OR has_role(auth.uid(), 'super_admin'));
-DROP POLICY IF EXISTS "Admins can delete clinics" ON public.clinics;
-CREATE POLICY "Admins can delete clinics" ON public.clinics FOR DELETE USING (has_role(auth.uid(), 'super_admin'));
+-- agencies
+DROP POLICY IF EXISTS "Agencies readable by all" ON public.agencies;
+CREATE POLICY "Agencies readable by all" ON public.agencies FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Admins can insert agencies" ON public.agencies;
+CREATE POLICY "Admins can insert agencies" ON public.agencies FOR INSERT WITH CHECK (has_role(auth.uid(), 'super_admin') OR has_role(auth.uid(), 'district_manager'));
+DROP POLICY IF EXISTS "Agency owners can update" ON public.agencies;
+CREATE POLICY "Agency owners can update" ON public.agencies FOR UPDATE USING (auth.uid() = claimed_by OR auth.uid() = owner_id OR has_role(auth.uid(), 'super_admin'));
+DROP POLICY IF EXISTS "Admins can delete agencies" ON public.agencies;
+CREATE POLICY "Admins can delete agencies" ON public.agencies FOR DELETE USING (has_role(auth.uid(), 'super_admin'));
 
 -- comparison_pages
 DROP POLICY IF EXISTS "Anyone can view comparison pages" ON public.comparison_pages;
@@ -2195,13 +2267,13 @@ CREATE POLICY "Admins manage crm numbers" ON public.crm_numbers FOR ALL USING (h
 DROP POLICY IF EXISTS "Public read availability rules" ON public.dentist_availability_rules;
 CREATE POLICY "Public read availability rules" ON public.dentist_availability_rules FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Clinic owners manage availability rules" ON public.dentist_availability_rules;
-CREATE POLICY "Clinic owners manage availability rules" ON public.dentist_availability_rules FOR ALL USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = dentist_availability_rules.clinic_id AND clinics.claimed_by = auth.uid())) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Clinic owners manage availability rules" ON public.dentist_availability_rules FOR ALL USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = dentist_availability_rules.clinic_id AND agencies.claimed_by = auth.uid())) OR has_role(auth.uid(), 'super_admin'));
 
--- dentist_settings
-DROP POLICY IF EXISTS "Dentist settings manageable by owners/admins" ON public.dentist_settings;
-CREATE POLICY "Dentist settings manageable by owners/admins" ON public.dentist_settings FOR ALL USING (auth.uid() = user_id OR has_role(auth.uid(), 'super_admin'));
-DROP POLICY IF EXISTS "Dentist settings readable by owners/admins" ON public.dentist_settings;
-CREATE POLICY "Dentist settings readable by owners/admins" ON public.dentist_settings FOR SELECT USING (auth.uid() = user_id OR has_role(auth.uid(), 'super_admin'));
+-- agency_settings
+DROP POLICY IF EXISTS "Agency settings manageable by owners/admins" ON public.agency_settings;
+CREATE POLICY "Agency settings manageable by owners/admins" ON public.agency_settings FOR ALL USING (auth.uid() = user_id OR has_role(auth.uid(), 'super_admin'));
+DROP POLICY IF EXISTS "Agency settings readable by owners/admins" ON public.agency_settings;
+CREATE POLICY "Agency settings readable by owners/admins" ON public.agency_settings FOR SELECT USING (auth.uid() = user_id OR has_role(auth.uid(), 'super_admin'));
 
 -- dentists
 DROP POLICY IF EXISTS "Dentists readable by all" ON public.dentists;
@@ -2239,7 +2311,7 @@ CREATE POLICY "Feature registry readable by all" ON public.feature_registry FOR 
 
 -- form_workflow_settings
 DROP POLICY IF EXISTS "Clinic owners manage form_workflow_settings" ON public.form_workflow_settings;
-CREATE POLICY "Clinic owners manage form_workflow_settings" ON public.form_workflow_settings FOR ALL USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = form_workflow_settings.clinic_id AND clinics.claimed_by = auth.uid())) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Clinic owners manage form_workflow_settings" ON public.form_workflow_settings FOR ALL USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = form_workflow_settings.clinic_id AND agencies.claimed_by = auth.uid())) OR has_role(auth.uid(), 'super_admin'));
 
 -- global_settings
 DROP POLICY IF EXISTS "Admins manage settings" ON public.global_settings;
@@ -2283,7 +2355,7 @@ CREATE POLICY "Insurances readable by all" ON public.insurances FOR SELECT USING
 
 -- intake_form_templates
 DROP POLICY IF EXISTS "Clinic owners manage intake_form_templates" ON public.intake_form_templates;
-CREATE POLICY "Clinic owners manage intake_form_templates" ON public.intake_form_templates FOR ALL USING (clinic_id IS NULL OR (EXISTS (SELECT 1 FROM clinics WHERE clinics.id = intake_form_templates.clinic_id AND clinics.claimed_by = auth.uid())) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Clinic owners manage intake_form_templates" ON public.intake_form_templates FOR ALL USING (clinic_id IS NULL OR (EXISTS (SELECT 1 FROM agencies WHERE agencies.id = intake_form_templates.clinic_id AND agencies.claimed_by = auth.uid())) OR has_role(auth.uid(), 'super_admin'));
 DROP POLICY IF EXISTS "Public read intake_form_templates" ON public.intake_form_templates;
 CREATE POLICY "Public read intake_form_templates" ON public.intake_form_templates FOR SELECT USING (true);
 
@@ -2307,7 +2379,7 @@ CREATE POLICY "Admins manage leads" ON public.leads FOR ALL USING (has_role(auth
 DROP POLICY IF EXISTS "Anyone can create leads" ON public.leads;
 CREATE POLICY "Anyone can create leads" ON public.leads FOR INSERT WITH CHECK (true);
 DROP POLICY IF EXISTS "Leads readable by clinic owners/admins" ON public.leads;
-CREATE POLICY "Leads readable by clinic owners/admins" ON public.leads FOR SELECT USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = leads.clinic_id AND (clinics.claimed_by = auth.uid() OR clinics.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Leads readable by clinic owners/admins" ON public.leads FOR SELECT USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = leads.clinic_id AND (agencies.claimed_by = auth.uid() OR agencies.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
 
 -- messaging_templates
 DROP POLICY IF EXISTS "Admins manage templates" ON public.messaging_templates;
@@ -2343,13 +2415,13 @@ CREATE POLICY "Admins view page_views" ON public.page_views FOR SELECT USING (ha
 DROP POLICY IF EXISTS "Public insert submissions" ON public.patient_form_submissions;
 CREATE POLICY "Public insert submissions" ON public.patient_form_submissions FOR INSERT WITH CHECK (true);
 DROP POLICY IF EXISTS "Clinic owners read submissions" ON public.patient_form_submissions;
-CREATE POLICY "Clinic owners read submissions" ON public.patient_form_submissions FOR SELECT USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = patient_form_submissions.clinic_id AND clinics.claimed_by = auth.uid())) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Clinic owners read submissions" ON public.patient_form_submissions FOR SELECT USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = patient_form_submissions.clinic_id AND agencies.claimed_by = auth.uid())) OR has_role(auth.uid(), 'super_admin'));
 
 -- patients
 DROP POLICY IF EXISTS "Clinic owners can manage patients" ON public.patients;
-CREATE POLICY "Clinic owners can manage patients" ON public.patients FOR ALL USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = patients.clinic_id AND (clinics.claimed_by = auth.uid() OR clinics.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Clinic owners can manage patients" ON public.patients FOR ALL USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = patients.clinic_id AND (agencies.claimed_by = auth.uid() OR agencies.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
 DROP POLICY IF EXISTS "Clinic owners can view patients" ON public.patients;
-CREATE POLICY "Clinic owners can view patients" ON public.patients FOR SELECT USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = patients.clinic_id AND (clinics.claimed_by = auth.uid() OR clinics.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Clinic owners can view patients" ON public.patients FOR SELECT USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = patients.clinic_id AND (agencies.claimed_by = auth.uid() OR agencies.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
 
 -- pending_areas
 DROP POLICY IF EXISTS "Admins manage pending areas" ON public.pending_areas;
@@ -2357,13 +2429,13 @@ CREATE POLICY "Admins manage pending areas" ON public.pending_areas FOR ALL USIN
 DROP POLICY IF EXISTS "Auth users can create pending areas" ON public.pending_areas;
 CREATE POLICY "Auth users can create pending areas" ON public.pending_areas FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
 DROP POLICY IF EXISTS "Pending areas readable by owners/admins" ON public.pending_areas;
-CREATE POLICY "Pending areas readable by owners/admins" ON public.pending_areas FOR SELECT USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = pending_areas.clinic_id AND (clinics.claimed_by = auth.uid() OR clinics.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Pending areas readable by owners/admins" ON public.pending_areas FOR SELECT USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = pending_areas.clinic_id AND (agencies.claimed_by = auth.uid() OR agencies.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
 
--- pinned_clinics
-DROP POLICY IF EXISTS "Admins manage pinned clinics" ON public.pinned_clinics;
-CREATE POLICY "Admins manage pinned clinics" ON public.pinned_clinics FOR ALL USING (has_role(auth.uid(), 'super_admin'));
-DROP POLICY IF EXISTS "Pinned clinics readable by all" ON public.pinned_clinics;
-CREATE POLICY "Pinned clinics readable by all" ON public.pinned_clinics FOR SELECT USING (true);
+-- pinned_agencies
+DROP POLICY IF EXISTS "Admins manage pinned agencies" ON public.pinned_agencies;
+CREATE POLICY "Admins manage pinned agencies" ON public.pinned_agencies FOR ALL USING (has_role(auth.uid(), 'super_admin'));
+DROP POLICY IF EXISTS "Pinned agencies readable by all" ON public.pinned_agencies;
+CREATE POLICY "Pinned agencies readable by all" ON public.pinned_agencies FOR SELECT USING (true);
 
 -- plan_features
 DROP POLICY IF EXISTS "Admins manage plan features" ON public.plan_features;
@@ -2387,7 +2459,7 @@ CREATE POLICY "platform_notifications_write" ON public.platform_notifications FO
 DROP POLICY IF EXISTS "Admins manage profile analytics" ON public.profile_analytics;
 CREATE POLICY "Admins manage profile analytics" ON public.profile_analytics FOR ALL USING (has_role(auth.uid(), 'super_admin'));
 DROP POLICY IF EXISTS "Profile analytics readable by clinic owners/admins" ON public.profile_analytics;
-CREATE POLICY "Profile analytics readable by clinic owners/admins" ON public.profile_analytics FOR SELECT USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = profile_analytics.clinic_id AND (clinics.claimed_by = auth.uid() OR clinics.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Profile analytics readable by clinic owners/admins" ON public.profile_analytics FOR SELECT USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = profile_analytics.clinic_id AND (agencies.claimed_by = auth.uid() OR agencies.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
 
 -- provider_verifications
 DROP POLICY IF EXISTS "provider_verifications_read" ON public.provider_verifications;
@@ -2405,19 +2477,19 @@ CREATE POLICY "reputation_kpis_write" ON public.reputation_kpis FOR INSERT WITH 
 DROP POLICY IF EXISTS "Anyone can insert review clicks" ON public.review_clicks;
 CREATE POLICY "Anyone can insert review clicks" ON public.review_clicks FOR INSERT WITH CHECK (true);
 DROP POLICY IF EXISTS "Review clicks readable by clinic owners" ON public.review_clicks;
-CREATE POLICY "Review clicks readable by clinic owners" ON public.review_clicks FOR SELECT USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = review_clicks.clinic_id AND (clinics.claimed_by = auth.uid() OR clinics.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Review clicks readable by clinic owners" ON public.review_clicks FOR SELECT USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = review_clicks.clinic_id AND (agencies.claimed_by = auth.uid() OR agencies.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
 
 -- review_funnel_events
 DROP POLICY IF EXISTS "Anyone can insert funnel events" ON public.review_funnel_events;
 CREATE POLICY "Anyone can insert funnel events" ON public.review_funnel_events FOR INSERT WITH CHECK (true);
 DROP POLICY IF EXISTS "Clinic owners can view funnel events" ON public.review_funnel_events;
-CREATE POLICY "Clinic owners can view funnel events" ON public.review_funnel_events FOR SELECT USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = review_funnel_events.clinic_id AND (clinics.claimed_by = auth.uid() OR clinics.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Clinic owners can view funnel events" ON public.review_funnel_events FOR SELECT USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = review_funnel_events.clinic_id AND (agencies.claimed_by = auth.uid() OR agencies.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
 
 -- review_requests
 DROP POLICY IF EXISTS "Clinic owners can manage review requests" ON public.review_requests;
-CREATE POLICY "Clinic owners can manage review requests" ON public.review_requests FOR ALL USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = review_requests.clinic_id AND (clinics.claimed_by = auth.uid() OR clinics.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Clinic owners can manage review requests" ON public.review_requests FOR ALL USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = review_requests.clinic_id AND (agencies.claimed_by = auth.uid() OR agencies.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
 DROP POLICY IF EXISTS "Clinic owners can view review requests" ON public.review_requests;
-CREATE POLICY "Clinic owners can view review requests" ON public.review_requests FOR SELECT USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = review_requests.clinic_id AND (clinics.claimed_by = auth.uid() OR clinics.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Clinic owners can view review requests" ON public.review_requests FOR SELECT USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = review_requests.clinic_id AND (agencies.claimed_by = auth.uid() OR agencies.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
 
 -- role_presets
 DROP POLICY IF EXISTS "role_presets_admin" ON public.role_presets;
@@ -2541,7 +2613,7 @@ CREATE POLICY "user_tab_permissions_read" ON public.user_tab_permissions FOR SEL
 DROP POLICY IF EXISTS "Anyone can insert visitor events" ON public.visitor_events;
 CREATE POLICY "Anyone can insert visitor events" ON public.visitor_events FOR INSERT WITH CHECK (true);
 DROP POLICY IF EXISTS "Visitor events readable by clinic owners/admins" ON public.visitor_events;
-CREATE POLICY "Visitor events readable by clinic owners/admins" ON public.visitor_events FOR SELECT USING ((EXISTS (SELECT 1 FROM clinics WHERE clinics.id = visitor_events.clinic_id AND (clinics.claimed_by = auth.uid() OR clinics.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
+CREATE POLICY "Visitor events readable by clinic owners/admins" ON public.visitor_events FOR SELECT USING ((EXISTS (SELECT 1 FROM agencies WHERE agencies.id = visitor_events.clinic_id AND (agencies.claimed_by = auth.uid() OR agencies.owner_id = auth.uid()))) OR has_role(auth.uid(), 'super_admin'));
 
 -- visitor_journeys
 DROP POLICY IF EXISTS "Allow service role full access on visitor_journeys" ON public.visitor_journeys;
@@ -2559,8 +2631,8 @@ CREATE POLICY "Anyone insert sessions" ON public.visitor_sessions FOR INSERT WIT
 -- FK indexes for joins and lookups
 CREATE INDEX IF NOT EXISTS idx_cities_state_id ON public.cities (state_id);
 CREATE INDEX IF NOT EXISTS idx_areas_city_id ON public.areas (city_id);
-CREATE INDEX IF NOT EXISTS idx_clinics_city_id ON public.clinics (city_id);
-CREATE INDEX IF NOT EXISTS idx_clinics_area_id ON public.clinics (area_id);
+CREATE INDEX IF NOT EXISTS idx_agencies_city_id ON public.agencies (city_id);
+CREATE INDEX IF NOT EXISTS idx_agencies_area_id ON public.agencies (area_id);
 CREATE INDEX IF NOT EXISTS idx_leads_clinic_id ON public.leads (clinic_id);
 CREATE INDEX IF NOT EXISTS idx_leads_category_id ON public.leads (category_id);
 CREATE INDEX IF NOT EXISTS idx_appointments_clinic_id ON public.appointments (clinic_id);

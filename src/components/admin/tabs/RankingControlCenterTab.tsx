@@ -163,13 +163,10 @@ function computeScores(data: ReturnType<typeof useRankingData>) {
     return ((nonDuplicate + nonThin) / (s.pages.length * 2)) * 100;
   })() : 0;
 
-  // 4. Local Relevance (Dubai focus)
-  const dubaiCities = l ? l.cities.filter(city => 
-    city.name.toLowerCase().includes('dubai') || 
-    l.states.find(st => st.id === city.state_id)?.name?.toLowerCase().includes('dubai')
-  ) : [];
-  const dubaiActive = dubaiCities.filter(c => c.is_active).length;
-  const localScore = l ? Math.min(100, (dubaiActive / Math.max(1, 15)) * 100) : 0; // target: 15 Dubai areas
+  // 4. Local Relevance (UK cities coverage)
+  const ukCities = l ? l.cities.filter(city => city.is_active) : [];
+  const ukActiveCities = ukCities.length;
+  const localScore = l ? Math.min(100, (ukActiveCities / Math.max(1, 50)) * 100) : 0; // target: 50 active UK cities
 
   // 5. Trust Signal Score
   const trustFactors = c ? [

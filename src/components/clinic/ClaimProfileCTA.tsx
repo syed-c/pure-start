@@ -53,8 +53,18 @@ export function ClaimProfileCTA({
           className="w-full rounded-xl font-bold animate-pulse-soft"
           asChild
         >
-          <Link to={`/claim-profile?clinic=${encodeURIComponent(clinicName)}`}>
+          <Link to={`/claim-profile?agency=${encodeURIComponent(clinicName)}`}>
             Claim This Profile
+            <ArrowRight className="h-4 w-4 ml-2" />
+          </Link>
+
+          <Link to={`/claim-profile?agency=${encodeURIComponent(clinicName)}`}>
+            Claim This Profile
+            <ArrowRight className="h-4 w-4 ml-2" />
+          </Link>
+
+          <Link to={`/claim-profile?agency=${encodeURIComponent(clinicName)}`}>
+            Claim Your Agency Profile
             <ArrowRight className="h-4 w-4 ml-2" />
           </Link>
         </Button>

@@ -176,34 +176,61 @@ export function useGenerateContent() {
       const locationInfo = params.location ? `Location: ${params.location}, UK. ` : '';
       const serviceInfo = params.service ? `Service: ${params.service}. ` : '';
       
-      const prompt = `Generate high-quality, unique content for a UK fostering platform page.
+      const wordTarget = params.wordCount >= 1200 ? 'long-form' : params.wordCount >= 700 ? 'standard' : 'concise';
+      
+      const prompt = `Generate high-quality, unique, comprehensive content for a UK fostering directory platform page.
+
+PLATFORM CONTEXT:
+- This is "Pure Start", a UK fostering directory that connects prospective foster carers with fostering agencies
+- The platform helps people find Independent Fostering Agencies (IFAs) and Local Authority fostering services
+- Audience: UK residents interested in becoming foster carers, looking for agencies in their local area
+- The platform covers all UK nations: England, Scotland, Wales, Northern Ireland
 
 Page Type: ${params.pageType}
 Target Keyword: ${params.targetKeyword}
 ${locationInfo}${serviceInfo}Tone: ${params.tone}
-Word Count: ${params.wordCount} words
+Target Length: ${params.wordCount} words (${wordTarget} format)
 
-${params.existingContent ? `Existing content to improve:\n${params.existingContent.substring(0, 2000)}\n\n` : ''}
+THE CONTENT MUST BE EXACTLY ${params.wordCount} WORDS. Count your words carefully. If under word count, add more substance.
+
+${params.existingContent ? `Existing content to improve/expand (may be too thin):\n${params.existingContent.substring(0, 2000)}\n\n` : ''}
 ${params.competitors?.length ? `Competitor analysis - do NOT copy, but note what topics they cover:\n${params.competitors.join('\n')}\n\n` : ''}
+
+CONTENT STRUCTURE REQUIREMENTS:
+- H1 tag that includes the target keyword and location
+- 4-6 H2 sections with substantive paragraphs under each
+- Introduction paragraph (100-150 words) that hooks the reader
+- Local/regional context about fostering in the specific area
+- Information about types of fostering available in that area
+- How to choose a fostering agency in that location
+- The fostering process and what to expect
+- Financial support and allowance information (UK-specific)
+- Trust signals: Ofsted ratings, regulatory info, support provided
+- FAQ section with 4-6 common questions specific to the location/topic
+- Strong CTA encouraging readers to browse agencies or get in touch
 
 RULES:
 - Write unique, helpful content for UK fostering applicants and foster carers
-- Include local context for UK locations
-- Follow Google E-E-A-T guidelines
+- Include specific local context for UK locations (mention city/region landmarks, regional fostering statistics where applicable)
+- Follow Google E-E-A-T guidelines (experience, expertise, authoritativeness, trustworthiness)
 - People-first content, not search-first
-- No template or duplicate content
-- No exaggerated claims about safeguarding
-- Include factual UK fostering information
-- Add helpful FAQs at the end
-- Include trust signals
+- No template or duplicate content - each page must feel unique to its location
+- No exaggerated claims about safeguarding or fostering outcomes
+- Include factual UK fostering information (fostering allowance rates, assessment process, etc.)
+- Use HTML tags properly: <h2> for sections, <p> for paragraphs, <ul>/<li> for lists
+- Make every page feel like it was hand-written for that specific location
+- Include trust building elements: mention Ofsted, fostering panels, support systems
 
-Return ONLY valid JSON:
+Return ONLY valid JSON with NO text before or after:
 {
-  "content": "full HTML content with h2 sections",
-  "metaTitle": "string (max 60 chars)",
-  "metaDescription": "string (max 160 chars)",
+  "content": "full HTML content with h2 sections, minimum ${params.wordCount} words",
+  "metaTitle": "string (max 60 chars, include location and keyword)",
+  "metaDescription": "string (max 160 chars, compelling with location context)",
   "faqs": [{"question": "string", "answer": "string"}]
-}`;
+}
+
+IMPORTANT: The content field must contain AT LEAST ${params.wordCount} words. Count words before returning. If short, add more detailed paragraphs.
+`;
 
       const response = await fetch(
         `https://api.aimlapi.com/v1/chat/completions`,
@@ -219,7 +246,7 @@ Return ONLY valid JSON:
               { role: 'system', content: `You are an expert UK fostering content writer. Your response must be ONLY valid JSON - no explanations, no markdown, no text before or after. Start with { and end with }.` },
               { role: 'user', content: prompt }
             ],
-            max_tokens: 8192,
+            max_tokens: 16384,
             temperature: 0.7,
           })
         }
@@ -328,7 +355,9 @@ messages: [
       }
 
       const data = await response.json();
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      let text = data.choices?.[0]?.message?.content || data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      
+      if (!text) throw new Error('Empty AI response');
       
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       if (!jsonMatch) throw new Error('Could not parse AI response');
@@ -363,6 +392,8 @@ export function useAnalyzeCompetitors() {
 
       const prompt = `Analyze competitor content for gaps and opportunities. Do NOT copy content.
 
+Platform Context: Pure Start is a UK fostering directory connecting prospective foster carers with fostering agencies.
+
 My Content: ${params.myContent.substring(0, 2000)}
 Target Keyword: ${params.keyword}
 
@@ -371,9 +402,9 @@ ${params.competitorUrls.join('\n')}
 
 Return ONLY valid JSON:
 {
-  "gaps": ["topicscompetitors cover that I'm missing"],
+  "gaps": ["topics competitors cover that I'm missing"],
   "opportunities": ["content angles I can use"],
-  "recommendations": ["specific actions to improve"]
+  "recommendations": ["specific actionable steps to improve my content"]
 }`;
 
       const response = await fetch(
@@ -387,7 +418,7 @@ Return ONLY valid JSON:
           body: JSON.stringify({
             model: model,
             messages: [
-              { role: 'system', content: `You are an expert SEO competitor analyst. Return ONLY valid JSON.` },
+              { role: 'system', content: `You are an expert SEO competitor analyst for UK fostering platforms. Return ONLY valid JSON.` },
               { role: 'user', content: prompt }
             ],
             max_tokens: 2048,
@@ -402,7 +433,9 @@ Return ONLY valid JSON:
       }
 
       const data = await response.json();
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      let text = data.choices?.[0]?.message?.content || data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      
+      if (!text) throw new Error('Empty AI response');
       
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       if (!jsonMatch) throw new Error('Could not parse AI response');

@@ -13,6 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useGenerateContentBrief, useGenerateContent, useOptimizeContent, useAnalyzeCompetitors } from '@/hooks/useContentGeneration';
+import { ACTIVE_REGIONS, POPULAR_CITIES, FOSTERING_CATEGORIES } from '@/lib/constants/activeRegions';
 import { 
   Brain, MapPin, Users, BookOpen, Target, 
   Sparkles, RefreshCw, Loader2, 
@@ -87,7 +88,7 @@ export default function ContentIntelligenceCenterTab() {
 
   const [genPageId, setGenPageId] = useState('');
   const [genTone, setGenTone] = useState('professional');
-  const [genWordCount, setGenWordCount] = useState('900');
+  const [genWordCount, setGenWordCount] = useState('1200');
   const [genMode, setGenMode] = useState('create');
   const [isGeneratingContent, setIsGeneratingContent] = useState(false);
   const [generatedContent, setGeneratedContent] = useState<any>(null);
@@ -118,6 +119,7 @@ export default function ContentIntelligenceCenterTab() {
 
   const generateBrief = useGenerateContentBrief();
   const generateContent = useGenerateContent();
+  const optimizeContent = useOptimizeContent();
   const analyzeCompetitors = useAnalyzeCompetitors();
 
   const { data: contentStats, refetch } = useQuery({
@@ -263,6 +265,27 @@ export default function ContentIntelligenceCenterTab() {
     }
   };
 
+  const getPageContext = async (page: SeoPage) => {
+    let location = '';
+    let service = '';
+    const slug = page.slug || '';
+    if (page.page_type === 'city' || slug.includes('/')) {
+      const parts = slug.split('/').filter(Boolean);
+      const lastPart = parts[parts.length - 1] || slug;
+      const city = POPULAR_CITIES.find(c => c.slug === lastPart || slug.includes(c.slug));
+      if (city) {
+        location = city.name;
+        const region = ACTIVE_REGIONS.find(r => r.slug === city.region);
+        if (region) location += `, ${region.name}`;
+      }
+    }
+    if (page.page_type === 'service' || page.page_type === 'service_location' || page.page_type === 'category') {
+      const cat = FOSTERING_CATEGORIES.find(c => slug.includes(c.slug));
+      if (cat) service = cat.name;
+    }
+    return { location, service };
+  };
+
   const handleGenerateContent = async () => {
     if (!genPageId) {
       toast.error('Please select a page');
@@ -274,16 +297,19 @@ export default function ContentIntelligenceCenterTab() {
     setIsGeneratingContent(true);
     setGeneratedContent(null);
     try {
+      const context = await getPageContext(page);
       const content = await generateContent.mutateAsync({
         pageId: page.id,
         pageType: page.page_type,
         targetKeyword: page.title || page.slug,
         tone: genTone,
         wordCount: parseInt(genWordCount),
-        existingContent: page.content || undefined
+        existingContent: page.content || undefined,
+        location: context.location || undefined,
+        service: context.service || undefined
       });
       setGeneratedContent(content);
-      toast.success('Content generated');
+      toast.success(`Content generated (${genWordCount} words, ${genTone} tone)`);
     } catch (error: any) {
       toast.error(error.message || 'Failed to generate content');
     } finally {
@@ -367,12 +393,15 @@ export default function ContentIntelligenceCenterTab() {
     if (!page) return;
     setIsGeneratingContent(true);
     try {
+      const context = await getPageContext(page);
       const content = await generateContent.mutateAsync({
         pageId,
         pageType: page.page_type,
         targetKeyword: page.title || page.slug,
         tone: 'professional',
-        wordCount: 500
+        wordCount: 500,
+        location: context.location || undefined,
+        service: context.service || undefined
       });
       await supabase.from('seo_pages').update({
         faqs: content.faqs,
@@ -391,18 +420,21 @@ export default function ContentIntelligenceCenterTab() {
     setIsAnalyzingGaps(true);
     setGapResults([]);
     try {
-      const { data: pageData } = await supabase.from('seo_pages').select('slug, page_type');
+      const { data: pageData } = await supabase.from('seo_pages').select('slug, page_type, title, word_count, seo_score, meta_title, meta_description, faqs, is_indexed');
       const existingSlugs = new Set(pageData?.map(p => p.slug) || []);
       const gaps: any[] = [];
       
+      // 1. Missing city pages
       if (cities) {
-        for (const city of cities.slice(0, 15)) {
-          if (!existingSlugs.has(`foster-care-${city.slug}`)) {
+        for (const city of cities) {
+          const patterns = [`foster-care-${city.slug}`, `fostering-agencies-${city.slug}`, `fostering-${city.slug}`];
+          const exists = patterns.some(p => existingSlugs.has(p));
+          if (!exists) {
             gaps.push({
               title: city.name,
               type: 'location',
               priority: 'high',
-              reason: 'Missing city page',
+              reason: 'Missing city fostering page',
               suggestedTitle: `Foster Care in ${city.name}`,
               slug: `foster-care-${city.slug}`,
               action: 'create'
@@ -411,12 +443,75 @@ export default function ContentIntelligenceCenterTab() {
         }
       }
       
-      if (gapResults.length > 0) {
-        setGapResults(gapResults);
-      } else {
-        setGapResults(gaps.slice(0, 20));
+      // 2. Missing service pages
+      if (services) {
+        for (const service of services) {
+          if (!existingSlugs.has(service.slug)) {
+            gaps.push({
+              title: service.name,
+              type: 'service',
+              priority: 'high',
+              reason: 'Missing fostering type page',
+              suggestedTitle: `${service.name} - A Complete Guide`,
+              slug: service.slug,
+              action: 'create'
+            });
+          }
+        }
       }
-      toast.success(`Found ${gaps.length} gaps`);
+      
+      // 3. Thin content pages
+      pageData?.forEach(p => {
+        if (p.word_count && p.word_count < 300) {
+          gaps.push({
+            title: p.title || p.slug,
+            type: 'thin_content',
+            priority: 'high',
+            reason: `Thin content (${p.word_count} words) - needs expansion`,
+            suggestedTitle: p.title || p.slug,
+            slug: p.slug,
+            action: 'expand'
+          });
+        }
+      });
+      
+      // 4. Missing meta descriptions on indexed pages
+      pageData?.forEach(p => {
+        if (p.is_indexed && !p.meta_description) {
+          gaps.push({
+            title: p.title || p.slug,
+            type: 'missing_meta',
+            priority: 'medium',
+            reason: 'Indexed page missing meta description',
+            suggestedTitle: p.title || p.slug,
+            slug: p.slug,
+            action: 'fix_meta'
+          });
+        }
+      });
+      
+      // 5. Missing FAQs
+      pageData?.forEach(p => {
+        if (!p.faqs && p.word_count && p.word_count > 0) {
+          gaps.push({
+            title: p.title || p.slug,
+            type: 'missing_faqs',
+            priority: 'medium',
+            reason: 'Content exists but no FAQ section',
+            suggestedTitle: p.title || p.slug,
+            slug: p.slug,
+            action: 'generate_faqs'
+          });
+        }
+      });
+      
+      gaps.sort((a, b) => {
+        const priority = { high: 0, medium: 1, low: 2 };
+        return (priority[a.priority as keyof typeof priority] || 0) - (priority[b.priority as keyof typeof priority] || 0);
+      });
+      
+      setGapResults(gaps.slice(0, 50));
+      toast.success(`Found ${gaps.length} content gaps (${gaps.filter(g => g.priority === 'high').length} high priority)`);
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -440,19 +535,27 @@ export default function ContentIntelligenceCenterTab() {
         const { data } = await supabase.from('seo_pages').select('id, slug, title, page_type, word_count').lt('word_count', 500).limit(50);
         pages = data || [];
       } else if (bulkTarget === 'missing-meta') {
-        const { data } = await supabase.from('seo_pages').select('id, slug, title, page_type').is('meta_title', null).limit(50);
+        const { data } = await supabase.from('seo_pages').select('id, slug, title, page_type, content, meta_title, meta_description').is('meta_title', null).limit(50);
         pages = data || [];
       } else if (bulkTarget === 'missing-faq') {
         const { data } = await supabase.from('seo_pages').select('id, slug, title, page_type').is('faqs', null).limit(50);
         pages = data || [];
+      } else if (bulkTarget === 'all-issues') {
+        const { data } = await supabase.from('seo_pages').select('id, slug, title, page_type, seo_score, word_count')
+          .or(`word_count.lt.500,seo_score.lt.60,meta_title.is.null,faqs.is.null`)
+          .limit(50);
+        pages = data || [];
       }
       
-      setBulkResults(pages.map(p => ({
-        ...p,
-        type: p.page_type,
-        issues: [bulkTarget === 'low-score' ? 'Low Score' : bulkTarget === 'thin' ? 'Thin' : 'Missing'],
-        status: 'ready'
-      })));
+      setBulkResults(pages.map(p => {
+        const issues: string[] = [];
+        if ((p as any).word_count !== undefined && (p as any).word_count < 500) issues.push('Thin Content');
+        if ((p as any).seo_score !== undefined && (p as any).seo_score < 60) issues.push('Low Score');
+        if (!(p as any).meta_title) issues.push('Missing Meta');
+        if (bulkTarget === 'missing-faq') issues.push('Missing FAQs');
+        if (issues.length === 0) issues.push(bulkTarget === 'low-score' ? 'Low Score' : bulkTarget === 'thin' ? 'Thin Content' : 'Needs Attention');
+        return { ...p, type: p.page_type, issues, status: 'ready' as const };
+      }));
       toast.success(`Found ${pages.length} pages`);
     } catch (error: any) {
       toast.error(error.message);
@@ -461,19 +564,76 @@ export default function ContentIntelligenceCenterTab() {
     }
   };
 
-  const runBulkGenerateFAQs = async () => {
-    if (bulkResults.length === 0) return;
-    setIsRunningBulk(true);
-    try {
-      for (const page of bulkResults.slice(0, 10)) {
-        await handleGenerateFAQs(page.id);
-      }
-      toast.success('FAQs generated for selected pages');
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setIsRunningBulk(false);
+  const runBulkFix = async () => {
+    if (bulkResults.length === 0 || !bulkAction) {
+      toast.error('Select pages and an action');
+      return;
     }
+    setIsRunningBulk(true);
+    setBulkResults(prev => prev.map(p => ({ ...p, status: 'processing' as const })));
+    let processed = 0;
+    for (const page of bulkResults.slice(0, 20)) {
+      try {
+        if (bulkAction === 'generate-faq') {
+          await handleGenerateFAQs(page.id);
+        } else if (bulkAction === 'regenerate') {
+          const fullPage = seoPages?.find((p: SeoPage) => p.id === page.id);
+          if (fullPage) {
+            const context = await getPageContext(fullPage);
+            await generateContent.mutateAsync({
+              pageId: fullPage.id,
+              pageType: fullPage.page_type,
+              targetKeyword: fullPage.title || fullPage.slug,
+              tone: genTone,
+              wordCount: parseInt(genWordCount),
+              existingContent: fullPage.content || undefined,
+              location: context.location || undefined,
+              service: context.service || undefined
+            });
+          }
+        } else if (bulkAction === 'fix-meta') {
+          const fullPage = seoPages?.find((p: SeoPage) => p.id === page.id);
+          if (fullPage) {
+            const { location, service } = await getPageContext(fullPage);
+            const content = await generateContent.mutateAsync({
+              pageId: fullPage.id,
+              pageType: fullPage.page_type,
+              targetKeyword: fullPage.title || fullPage.slug,
+              tone: 'professional',
+              wordCount: 300,
+              existingContent: fullPage.content || undefined,
+              location: location || undefined,
+              service: service || undefined
+            });
+            await supabase.from('seo_pages').update({
+              meta_title: content.metaTitle,
+              meta_description: content.metaDescription,
+              updated_at: new Date().toISOString()
+            }).eq('id', fullPage.id);
+          }
+        } else if (bulkAction === 'optimize') {
+          const fullPage = seoPages?.find((p: SeoPage) => p.id === page.id);
+          if (fullPage && fullPage.content) {
+            await optimizeContent.mutateAsync({
+              pageId: fullPage.id,
+              focus: ['seo', 'readability', 'faqs'],
+              content: fullPage.content,
+              title: fullPage.title || '',
+              metaTitle: fullPage.meta_title || undefined,
+              metaDescription: fullPage.meta_description || undefined
+            });
+          }
+        }
+        setBulkResults(prev => prev.map(p => p.id === page.id ? { ...p, status: 'completed' as const } : p));
+        processed++;
+      } catch (e) {
+        setBulkResults(prev => prev.map(p => p.id === page.id ? { ...p, status: 'error' as const } : p));
+      }
+      await new Promise(r => setTimeout(r, 1500));
+    }
+    setIsRunningBulk(false);
+    toast.success(`Fixed ${processed} of ${bulkResults.slice(0, 20).length} pages`);
+    refetch();
   };
 
   return (
@@ -846,19 +1006,24 @@ export default function ContentIntelligenceCenterTab() {
                 </div>
                 <div className="flex gap-2 flex-wrap mb-3">
                   <Select value={genTone} onValueChange={setGenTone}>
-                    <SelectTrigger className="w-[140px]"><SelectValue placeholder="Tone" /></SelectTrigger>
+                    <SelectTrigger className="w-[150px]"><SelectValue placeholder="Tone" /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="professional">Professional</SelectItem>
-                      <SelectItem value="warm">Warm</SelectItem>
+                      <SelectItem value="warm">Warm & Friendly</SelectItem>
                       <SelectItem value="trust-focused">Trust-focused</SelectItem>
+                      <SelectItem value="compassionate">Compassionate</SelectItem>
+                      <SelectItem value="informative">Informative</SelectItem>
+                      <SelectItem value="authoritative">Authoritative</SelectItem>
                     </SelectContent>
                   </Select>
                   <Select value={genWordCount} onValueChange={setGenWordCount}>
-                    <SelectTrigger className="w-[140px]"><SelectValue placeholder="Words" /></SelectTrigger>
+                    <SelectTrigger className="w-[150px]"><SelectValue placeholder="Words" /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="500">500 words</SelectItem>
-                      <SelectItem value="900">900 words</SelectItem>
-                      <SelectItem value="1400">1400 words</SelectItem>
+                      <SelectItem value="500">500 words (Concise)</SelectItem>
+                      <SelectItem value="800">800 words (Standard)</SelectItem>
+                      <SelectItem value="1200">1200 words (Detailed)</SelectItem>
+                      <SelectItem value="1500">1500 words (In-depth)</SelectItem>
+                      <SelectItem value="2000">2000 words (Comprehensive)</SelectItem>
                     </SelectContent>
                   </Select>
                   <Button 
@@ -917,19 +1082,24 @@ export default function ContentIntelligenceCenterTab() {
                     </SelectContent>
                   </Select>
                   <Select value={genTone} onValueChange={setGenTone}>
-                    <SelectTrigger className="w-[140px]"><SelectValue placeholder="Tone" /></SelectTrigger>
+                    <SelectTrigger className="w-[150px]"><SelectValue placeholder="Tone" /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="professional">Professional</SelectItem>
-                      <SelectItem value="warm">Warm</SelectItem>
+                      <SelectItem value="warm">Warm & Friendly</SelectItem>
                       <SelectItem value="trust-focused">Trust-focused</SelectItem>
+                      <SelectItem value="compassionate">Compassionate</SelectItem>
+                      <SelectItem value="informative">Informative</SelectItem>
+                      <SelectItem value="authoritative">Authoritative</SelectItem>
                     </SelectContent>
                   </Select>
                   <Select value={genWordCount} onValueChange={setGenWordCount}>
-                    <SelectTrigger className="w-[140px]"><SelectValue placeholder="Words" /></SelectTrigger>
+                    <SelectTrigger className="w-[150px]"><SelectValue placeholder="Words" /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="500">500 words</SelectItem>
-                      <SelectItem value="900">900 words</SelectItem>
-                      <SelectItem value="1400">1400 words</SelectItem>
+                      <SelectItem value="500">500 words (Concise)</SelectItem>
+                      <SelectItem value="800">800 words (Standard)</SelectItem>
+                      <SelectItem value="1200">1200 words (Detailed)</SelectItem>
+                      <SelectItem value="1500">1500 words (In-depth)</SelectItem>
+                      <SelectItem value="2000">2000 words (Comprehensive)</SelectItem>
                     </SelectContent>
                   </Select>
                   <Button 
@@ -1008,27 +1178,14 @@ export default function ContentIntelligenceCenterTab() {
                     setIsOptimizing(true);
                     setOptimizationResult(null);
                     try {
-                      // Call edge function for content optimization
-                      const response = await fetch(
-                        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/content-optimizer`,
-                        {
-                          method: 'POST',
-                          headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`
-                          },
-                          body: JSON.stringify({
-                            pageId: page.id,
-                            focus: optFocus,
-                            content: page.content || '',
-                            title: page.title || '',
-                            metaTitle: page.meta_title || undefined,
-                            metaDescription: page.meta_description || undefined
-                          })
-                        }
-                      );
-                      if (!response.ok) throw new Error('Optimization failed');
-                      const result = await response.json();
+                      const result = await optimizeContent.mutateAsync({
+                        pageId: page.id,
+                        focus: optFocus,
+                        content: page.content || '',
+                        title: page.title || '',
+                        metaTitle: page.meta_title || undefined,
+                        metaDescription: page.meta_description || undefined
+                      });
                       setOptimizationResult(result);
                       toast.success('Content optimized');
                     } catch (error: any) { toast.error(error.message || 'Optimization failed'); }
@@ -1135,26 +1292,32 @@ export default function ContentIntelligenceCenterTab() {
                   <SelectTrigger className="w-[180px]"><SelectValue placeholder="Target Pages" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="low-score">Low Score Pages</SelectItem>
-                    <SelectItem value="thin">Thin Content</SelectItem>
-                    <SelectItem value="missing-meta">Missing Meta</SelectItem>
+                    <SelectItem value="thin">Thin Content (&lt;500 words)</SelectItem>
+                    <SelectItem value="missing-meta">Missing Meta Tags</SelectItem>
                     <SelectItem value="missing-faq">Missing FAQs</SelectItem>
+                    <SelectItem value="all-issues">All Issues</SelectItem>
                   </SelectContent>
                 </Select>
                 <Select value={bulkAction} onValueChange={setBulkAction}>
                   <SelectTrigger className="w-[180px]"><SelectValue placeholder="Action" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="generate-faq">Generate FAQs</SelectItem>
-                    <SelectItem value="refresh">Refresh</SelectItem>
-                    <SelectItem value="optimize">Optimize</SelectItem>
+                    <SelectItem value="fix-meta">Generate Meta Tags</SelectItem>
+                    <SelectItem value="regenerate">Regenerate Content</SelectItem>
+                    <SelectItem value="optimize">Optimize Content</SelectItem>
                   </SelectContent>
                 </Select>
                 <Button variant="outline" onClick={runBulkAction} disabled={isRunningBulk || !bulkTarget}>
                   {isRunningBulk ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
                   Find Pages
                 </Button>
-                {bulkAction === 'generate-faq' && bulkResults.length > 0 && (
-                  <Button variant="default" onClick={runBulkGenerateFAQs} disabled={isRunningBulk}>
-                    Generate FAQs ({bulkResults.length})
+                {bulkResults.length > 0 && bulkAction && (
+                  <Button variant="default" onClick={runBulkFix} disabled={isRunningBulk}>
+                    {isRunningBulk ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Zap className="h-4 w-4 mr-2" />}
+                    {bulkAction === 'generate-faq' ? `Generate FAQs (${bulkResults.length})` :
+                     bulkAction === 'fix-meta' ? `Fix Meta (${bulkResults.length})` :
+                     bulkAction === 'regenerate' ? `Regenerate (${bulkResults.length})` :
+                     `Optimize (${bulkResults.length})`}
                   </Button>
                 )}
               </div>
@@ -1178,7 +1341,12 @@ export default function ContentIntelligenceCenterTab() {
                           <TableCell><div className="font-medium">{page.title}</div><div className="text-xs">/{page.slug}</div></TableCell>
                           <TableCell><Badge>{page.type}</Badge></TableCell>
                           <TableCell><div className="flex gap-1">{page.issues?.map((iss: string, j: number) => <Badge key={j} variant="outline" className="text-xs">{iss}</Badge>)}</div></TableCell>
-                          <TableCell><Badge variant="secondary">{page.status}</Badge></TableCell>
+                          <TableCell>
+                            {page.status === 'completed' ? <Badge className="bg-green-100 text-green-800">Fixed</Badge> :
+                             page.status === 'processing' ? <Badge variant="secondary"><Loader2 className="h-3 w-3 animate-spin mr-1 inline" />Processing</Badge> :
+                             page.status === 'error' ? <Badge variant="destructive">Error</Badge> :
+                             <Badge variant="secondary">Ready</Badge>}
+                          </TableCell>
                         </TableRow>
                       ))
                     )}
@@ -1193,31 +1361,107 @@ export default function ContentIntelligenceCenterTab() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><BarChart className="h-5 w-5 text-teal-600" />Content Reports</CardTitle>
+              <CardDescription>Generate and export detailed content reports</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                <Button variant="outline" onClick={() => toast.success('Report: Full Audit')}>Full Audit Report</Button>
-                <Button variant="outline" onClick={() => toast.success('Report: Page Scores')}>Page Score Report</Button>
-                <Button variant="outline" onClick={() => toast.success('Report: Competitor Gap')}>Competitor Gap</Button>
-                <Button variant="outline" onClick={() => toast.success('Report: AI Search')}>AI Search Readiness</Button>
-                <Button variant="outline" onClick={() => toast.success('Report: Content Refresh')}>Content Refresh</Button>
-                <Button variant="outline" onClick={() => toast.success('Report: Location Content')}>Location Content</Button>
-                <Button variant="outline" onClick={() => toast.success('Report: Service Content')}>Service Content</Button>
+                <Button variant="outline" onClick={() => {
+                  if (!contentStats) return;
+                  const report = [
+                    '=== FULL CONTENT AUDIT REPORT ===',
+                    `Generated: ${new Date().toLocaleString()}`,
+                    '',
+                    '--- Overview ---',
+                    `Total Pages: ${contentStats.total}`,
+                    `Published: ${contentStats.indexed}`,
+                    `Drafts: ${contentStats.draft}`,
+                    '',
+                    '--- Content Breakdown ---',
+                    `Location Pages: ${contentStats.locations}`,
+                    `Service Pages: ${contentStats.services}`,
+                    `Agencies: ${contentStats.agencies}`,
+                    `Blog Posts: ${contentStats.blogs}`,
+                    '',
+                    '--- Issues Found ---',
+                    `Thin Content (<500 words): ${contentStats.thin}`,
+                    `Missing Meta Tags: ${contentStats.missingTitle + contentStats.missingDesc}`,
+                    `Missing FAQs: ${contentStats.missingFaq}`,
+                    `Missing Schema: ${contentStats.missingSchema}`,
+                    `Low SEO Score (<60): ${contentStats.lowScore}`,
+                    '',
+                    '--- Health Scores ---',
+                    ...Object.entries(healthScores).map(([k, v]) => `${k}: ${v}/100`),
+                  ].join('\n');
+                  const blob = new Blob([report], { type: 'text/plain' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url; a.download = 'full-audit-report.txt'; a.click();
+                  toast.success('Full audit report generated');
+                }}>Full Audit Report</Button>
                 <Button variant="outline" onClick={() => {
                   const pagesList = seoPages || [];
-                  const rows = ['Page,Type,Status,Words,Score'];
+                  const sorted = [...pagesList].sort((a, b) => (b.seo_score || 0) - (a.seo_score || 0));
+                  const rows = ['Page Score Report', `Generated: ${new Date().toLocaleString()}`, '', 'Page,Type,Score,Words,Status'];
+                  sorted.forEach(p => rows.push(`${p.title || p.slug},${p.page_type},${p.seo_score || 'N/A'},${p.word_count || 0},${p.is_indexed ? 'Published' : 'Draft'}`));
+                  const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url; a.download = 'page-score-report.csv'; a.click();
+                  toast.success('Page score report exported');
+                }}>Page Score Report</Button>
+                <Button variant="outline" onClick={() => {
+                  const thinPages = (seoPages || []).filter(p => (p.word_count || 0) < 500);
+                  const rows = ['Content Refresh Report', `Generated: ${new Date().toLocaleString()}`, `Pages needing refresh: ${thinPages.length}`, '', 'Page,Words,Score,Last Updated'];
+                  thinPages.forEach(p => rows.push(`${p.title || p.slug},${p.word_count || 0},${p.seo_score || 'N/A'},${new Date(p.updated_at).toLocaleDateString()}`));
+                  const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url; a.download = 'content-refresh-report.csv'; a.click();
+                  toast.success(`Found ${thinPages.length} pages needing refresh`);
+                }}>Content Refresh</Button>
+                <Button variant="outline" onClick={() => {
+                  const locationPages = (seoPages || []).filter(p => p.page_type === 'city' || p.page_type === 'region' || p.page_type === 'state');
+                  const rows = ['Location Content Report', `Generated: ${new Date().toLocaleString()}`, `Location pages: ${locationPages.length}`, '', 'Page,Type,Score,Words,Indexed'];
+                  locationPages.forEach(p => rows.push(`${p.title || p.slug},${p.page_type},${p.seo_score || 'N/A'},${p.word_count || 0},${p.is_indexed ? 'Yes' : 'No'}`));
+                  const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url; a.download = 'location-content-report.csv'; a.click();
+                  toast.success('Location content report exported');
+                }}>Location Content</Button>
+                <Button variant="outline" onClick={() => {
+                  const servicePages = (seoPages || []).filter(p => p.page_type === 'service' || p.page_type === 'service_location');
+                  const rows = ['Service Content Report', `Generated: ${new Date().toLocaleString()}`, `Service pages: ${servicePages.length}`, '', 'Page,Type,Score,Words,Indexed'];
+                  servicePages.forEach(p => rows.push(`${p.title || p.slug},${p.page_type},${p.seo_score || 'N/A'},${p.word_count || 0},${p.is_indexed ? 'Yes' : 'No'}`));
+                  const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url; a.download = 'service-content-report.csv'; a.click();
+                  toast.success('Service content report exported');
+                }}>Service Content</Button>
+                <Button variant="outline" onClick={() => {
+                  const missingFaqs = (seoPages || []).filter(p => !p.faqs);
+                  const rows = ['Missing FAQs Report', `Generated: ${new Date().toLocaleString()}`, `Pages missing FAQs: ${missingFaqs.length}`, '', 'Page,Type,Score,Words'];
+                  missingFaqs.forEach(p => rows.push(`${p.title || p.slug},${p.page_type},${p.seo_score || 'N/A'},${p.word_count || 0}`));
+                  const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url; a.download = 'missing-faqs-report.csv'; a.click();
+                  toast.success(`Found ${missingFaqs.length} pages missing FAQs`);
+                }}>Missing FAQs</Button>
+                <Button variant="outline" onClick={() => {
+                  const pagesList = seoPages || [];
+                  const rows = ['Page,Type,Status,Words,Score,HasContent,HasMeta,HasFAQs'];
                   pagesList.forEach((p: SeoPage) => {
-                    rows.push(`${p.title || p.slug},${p.page_type},${p.is_indexed ? 'Published' : 'Draft'},${p.word_count || 0},${p.seo_score || 0}`);
+                    rows.push(`${p.title || p.slug},${p.page_type},${p.is_indexed ? 'Published' : 'Draft'},${p.word_count || 0},${p.seo_score || 0},${p.content ? 'Yes' : 'No'},${p.meta_title ? 'Yes' : 'No'},${p.faqs ? 'Yes' : 'No'}`);
                   });
                   const csvContent = rows.join('\n');
                   const blob = new Blob([csvContent], { type: 'text/csv' });
                   const url = URL.createObjectURL(blob);
                   const a = document.createElement('a');
-                  a.href = url;
-                  a.download = 'content-report.csv';
-                  a.click();
-                  toast.success('Exported CSV');
-                }}>Export CSV</Button>
+                  a.href = url; a.download = 'full-content-report.csv'; a.click();
+                  toast.success('Full CSV report exported');
+                }}>Export Full CSV</Button>
               </div>
             </CardContent>
           </Card>

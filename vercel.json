@@ -20,7 +20,7 @@
     { "source": "/sitemap-locations.xml", "destination": "/sitemap-locations.xml" },
     { "source": "/sitemap-categories.xml", "destination": "/sitemap-categories.xml" },
     { "source": "/sitemap-cities.xml", "destination": "/sitemap-cities.xml" },
-    { "source": "/sitemap-agencies.xml", "destination": "/sitemap-agencies.xml" },
+    { "source": "/sitemap-agencies.xml", "destination": "https://vcvvtklbyvdbysfdbnfp.supabase.co/functions/v1/sitemap?type=agencies" },
     { "source": "/sitemap-service-location.xml", "destination": "/sitemap-service-location.xml" },
     { "source": "/robots.txt", "destination": "/robots.txt" },
     { "source": "/llms.txt", "destination": "/llms.txt" },

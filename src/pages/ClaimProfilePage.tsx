@@ -59,7 +59,7 @@ const extractEmailDomain = (email: string): string | null => {
 
 const ClaimProfilePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const prefilledAgency = searchParams.get("agency");
+  const prefilledAgency = searchParams.get("agency") || searchParams.get("clinic");
   const { user } = useAuth();
   const { toast } = useToast();
   const { data: counts } = useRealCounts();
@@ -76,6 +76,24 @@ const ClaimProfilePage = () => {
   const [emailPrefix, setEmailPrefix] = useState("");
   const [selectedClaimEmail, setSelectedClaimEmail] = useState<string | null>(null);
   const [emailSource, setEmailSource] = useState<EmailSource>("domain");
+  const [selectedAgencyTable, setSelectedAgencyTable] = useState<"agencies" | "clinics">("agencies");
+  
+  // Fetch claim_emails from the selected agency's table
+  const { data: claimEmailsData } = useQuery({
+    queryKey: ["claim-emails", selectedAgency?.id, selectedAgencyTable],
+    queryFn: async () => {
+      if (!selectedAgency?.id) return [];
+      const { data } = await supabase
+        .from(selectedAgencyTable)
+        .select("claim_emails")
+        .eq("id", selectedAgency.id)
+        .single();
+      return (data?.claim_emails as string[]) || [];
+    },
+    enabled: !!selectedAgency?.id,
+  });
+  const claimEmails = claimEmailsData || [];
+  const hasClaimEmails = claimEmails.length > 0;
   
   // Manual review form fields
   const [manualForm, setManualForm] = useState({
@@ -116,15 +134,17 @@ const ClaimProfilePage = () => {
       }
       
       // If no results from agencies, try clinics table
-      let results = agencyResults || [];
-      if (results.length === 0) {
+      let results: any[] = [];
+      if (agencyResults && agencyResults.length > 0) {
+        results = agencyResults.map(r => ({ ...r, _table: 'agencies' }));
+      } else {
         const { data: clinicResults } = await supabase
           .from("clinics")
           .select("id, name, slug, address, email, phone, website")
           .ilike("name", `%${searchQuery}%`)
           .limit(10);
         
-        results = clinicResults || [];
+        results = (clinicResults || []).map(r => ({ ...r, _table: 'clinics' }));
       }
       
       return results;
@@ -134,6 +154,7 @@ const ClaimProfilePage = () => {
 
   const handleSelectAgency = (agency: any) => {
     setSelectedAgency(agency);
+    setSelectedAgencyTable(agency._table || 'agencies');
     setEmailPrefix("");
     setStep("choose-method");
   };
@@ -196,7 +217,8 @@ const ClaimProfilePage = () => {
     try {
       const { data, error } = await supabase.functions.invoke('send-claim-otp', {
         body: {
-          clinicId: selectedAgency.id,
+          entityType: selectedAgencyTable,
+          entityId: selectedAgency.id,
           method: "email",
           businessEmail: emailToVerify,
           businessPhone: selectedAgency.phone || "",
@@ -249,7 +271,8 @@ const ClaimProfilePage = () => {
     try {
       const { data, error } = await supabase.functions.invoke('verify-claim-otp', {
         body: {
-          clinicId: selectedAgency.id,
+          entityType: selectedAgencyTable,
+          entityId: selectedAgency.id,
           code: verificationCode,
         },
       });
@@ -298,24 +321,41 @@ const ClaimProfilePage = () => {
 
     setIsSubmitting(true);
     try {
+      const insertData: Record<string, any> = {
+        user_id: user.id,
+        status: "pending",
+        claim_type: "manual_review",
+        requester_name: manualForm.name,
+        business_email: manualForm.email,
+        requester_phone: manualForm.phone,
+        requester_address: manualForm.address,
+        admin_notes: manualForm.notes ? `User notes: ${manualForm.notes}` : null,
+        verification_method: "manual",
+      };
+      if (selectedAgencyTable === 'clinics') {
+        insertData.clinic_id = selectedAgency.id;
+      } else {
+        insertData.agency_id = selectedAgency.id;
+      }
       const { error } = await supabase
         .from("claim_requests")
-        .upsert({
-          clinic_id: selectedAgency.id,
-          user_id: user.id,
-          status: "pending",
-          claim_type: "manual_review",
-          requester_name: manualForm.name,
-          business_email: manualForm.email,
-          requester_phone: manualForm.phone,
-          requester_address: manualForm.address,
-          admin_notes: manualForm.notes ? `User notes: ${manualForm.notes}` : null,
-          verification_method: "manual",
-        }, {
-          onConflict: 'clinic_id,user_id'
+        .upsert(insertData, {
+          onConflict: selectedAgencyTable === 'clinics' ? 'clinic_id,user_id' : 'agency_id,user_id'
         });
 
       if (error) throw error;
+
+      // Notify admins
+      try {
+        await supabase.functions.invoke('notify-admin-claim', {
+          body: {
+            agencyId: selectedAgency.id,
+            agencyName: selectedAgency.name,
+            requesterName: manualForm.name,
+            requesterEmail: manualForm.email,
+          }
+        });
+      } catch {}
 
       setStep("submitted");
       toast({

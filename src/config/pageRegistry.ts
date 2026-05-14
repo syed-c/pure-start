@@ -76,6 +76,53 @@ export const INDEXABLE_PAGES: PageRegistryEntry[] = [
     changefreq: 'weekly',
   },
 
+  // ==================== FOSTERING AGENCIES DIRECTORY ====================
+  {
+    route: '/fostering-agencies',
+    pageType: 'city',
+    indexable: true,
+    renderMode: 'PRERENDER',
+    description: 'Fostering agencies directory index',
+    priority: 0.9,
+    changefreq: 'daily',
+  },
+  {
+    route: '/fostering-agencies/:locationSlug',
+    pageType: 'city',
+    indexable: true,
+    renderMode: 'PRERENDER',
+    description: 'Fostering agencies in a location (e.g., /fostering-agencies/london)',
+    priority: 0.9,
+    changefreq: 'weekly',
+  },
+  {
+    route: '/fostering-agencies/:locationSlug/:categorySlug',
+    pageType: 'service-location',
+    indexable: true,
+    renderMode: 'PRERENDER',
+    description: 'Fostering type in a location (e.g., /fostering-agencies/london/emergency-fostering)',
+    priority: 0.8,
+    changefreq: 'weekly',
+  },
+  {
+    route: '/categories',
+    pageType: 'service',
+    indexable: true,
+    renderMode: 'PRERENDER',
+    description: 'All fostering categories index',
+    priority: 0.8,
+    changefreq: 'weekly',
+  },
+  {
+    route: '/search',
+    pageType: 'static',
+    indexable: false,
+    renderMode: 'CSR',
+    description: 'Search page (noindex)',
+    priority: 0.3,
+    changefreq: 'daily',
+  },
+
   // ==================== SERVICE PAGES ====================
   {
     route: '/services',

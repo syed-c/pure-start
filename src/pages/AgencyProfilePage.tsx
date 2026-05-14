@@ -257,16 +257,42 @@ const AgencyProfilePage = () => {
 
   const handleClaimSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Claim request submitted! We'll be in touch soon.");
-    setClaimDialogOpen(false);
-    setClaimForm({
-      contact_name: "",
-      role: "",
-      email: "",
-      phone: "",
-      website: "",
-      message: "",
-    });
+    const { data: { user: currentUser } } = await supabase.auth.getUser();
+    if (!currentUser) {
+      toast.error("Please sign in to submit a claim.");
+      return;
+    }
+    try {
+      const { error } = await supabase.from("claim_requests").insert({
+        agency_id: agency.id,
+        user_id: currentUser.id,
+        status: "pending",
+        claim_type: "manual_review",
+        requester_name: claimForm.contact_name,
+        business_email: claimForm.email,
+        requester_phone: claimForm.phone,
+        admin_notes: `Role: ${claimForm.role}. Website: ${claimForm.website}. Message: ${claimForm.message}`,
+        verification_method: "manual",
+      });
+      if (error) throw error;
+      toast.success("Claim request submitted! We'll be in touch soon.");
+      setClaimDialogOpen(false);
+      setClaimForm({
+        contact_name: "",
+        role: "",
+        email: "",
+        phone: "",
+        website: "",
+        message: "",
+      });
+      try {
+        await supabase.functions.invoke('notify-admin-claim', {
+          body: { agencyId: agency.id, agencyName: agency.name, requesterName: claimForm.contact_name, requesterEmail: claimForm.email }
+        });
+      } catch {}
+    } catch (error: any) {
+      toast.error(error.message || "Failed to submit claim request");
+    }
   };
 
   if (isLoading) {

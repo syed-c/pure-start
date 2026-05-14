@@ -121,12 +121,12 @@ export default function AppointmentsTab() {
   };
 
   const getFilteredAppointments = () => {
-    let filtered = enquiries || [];
+    let filtered = appointments || [];
     filtered = filtered.filter(a =>
       a.enquirer_name?.toLowerCase().includes(filters.search.toLowerCase()) ||
       a.enquirer_phone?.includes(filters.search) ||
-      a.clinic?.name?.toLowerCase().includes(filters.search.toLowerCase()) ||
-      a.dentist?.name?.toLowerCase().includes(filters.search.toLowerCase())
+      a.agency_name?.toLowerCase().includes(filters.search.toLowerCase()) ||
+      a.enquirer_email?.toLowerCase().includes(filters.search.toLowerCase())
     );
     const today = new Date().toISOString().split('T')[0];
     switch (activeView) {

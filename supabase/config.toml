@@ -100,6 +100,9 @@ verify_jwt = false  # Custom auth: bearer token validated
 [functions.verify-claim-otp]
 verify_jwt = false  # Custom auth: bearer token + OTP validation
 
+[functions.notify-admin-claim]
+verify_jwt = false  # Custom auth: internal admin notification
+
 # --------------------------------------------------------------------------
 # Email/SMS/Communication (Various auth patterns)
 # --------------------------------------------------------------------------
