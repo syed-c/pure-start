@@ -302,96 +302,20 @@ export default function GooglePlacesImportTab() {
         setIsSearching(false);
         return;
       }
-
-      setImportLog(prev => [...prev, `Starting auto-import for ${importType} mode...`]);
-      setSearchProgress('Auto-importing...');
-      
-      const placeIdsToImport = allResults.map(r => r.place_id);
-      const imported: any[] = [];
-      const errors: string[] = [];
-      const skipped: string[] = [];
-
-      // Convert Map to object for JSON serialization
-      const cityAssignmentsObj = Object.fromEntries(cityAssignments);
-
-      setImportLog(prev => [...prev, `Starting auto-import for ${importType} mode...`]);
-      setSearchProgress('Auto-importing...');
-      
-      try {
-        const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/gmb-import`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY}`,
-          },
-          body: JSON.stringify({
-            action: 'import',
-            placeIds: placeIdsToImport,
-            city: selectedState?.name,
-            state: selectedState?.name,
-            importType,
-            cityAssignments: cityAssignmentsObj,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error: ${response.status} ${response.statusText}`);
-        }
-        
-        const importData = await response.json();
-        
-        if (!importData.success) {
-          throw new Error(importData.error || 'Import failed');
-        }
-        imported.push(...(importData.imported_agencies || []));
-        skipped.push(...(importData.skipped_agencies || []));
-        errors.push(...(importData.error_messages || []));
-        
-        setImportLog(prev => [...prev, `✓ Imported: ${imported.length} agencies`]);
-        if (skipped.length > 0) setImportLog(prev => [...prev, `- Skipped: ${skipped.length}`]);
-        if (errors.length > 0) setImportLog(prev => [...prev, `✗ Errors: ${errors.length}`]);
-        
-        if (imported.length > 0) {
-          setImportLog(prev => [...prev, `Successfully imported:`]);
-          imported.forEach((agency: any) => {
-            setImportLog(prev => [...prev, `  ✓ ${agency.name} (${agency.city || 'N/A'})`]);
-          });
-        }
-        
-        if (errors.length > 0) {
-          setImportLog(prev => [...prev, `Errors:`]);
-          errors.forEach((err: string) => {
-            setImportLog(prev => [...prev, `  ✗ ${err}`]);
-          });
-        }
-
-        const importTypeLabels: Record<string, string> = {
-          'new': 'New agencies imported',
-          'update': 'Existing agencies updated', 
-          'sync': 'Sync complete',
-          'photos': 'Photos imported',
-          'business_hours': 'Business hours updated',
-          'reviews': 'Reviews imported',
-        };
-        
-        toast.success(`${importTypeLabels[importType] || 'Import'}: ${imported.length} imported, ${skipped.length} skipped, ${errors.length} errors`);
-      } catch (error: any) {
-        console.error('Auto-import error:', error);
-        setImportLog(prev => [...prev, `✗ Import failed: ${error.message}`]);
-      }
       
       queryClient.invalidateQueries({ queryKey: ['existing-agencies-place-ids'] });
-      queryClient.invalidateQueries({ queryKey: ['import-jobs'] });
       
     } catch (error: any) {
-      console.error('Search/Import error:', error);
-      toast.error(error.message || 'Failed to search or import');
+      console.error('Search error:', error);
+      toast.error(error.message || 'Failed to search');
       setImportLog(prev => [...prev, `✗ Error: ${error.message}`]);
     } finally {
       setIsSearching(false);
       setSearchProgress('');
     }
   };
+
+  const BATCH_SIZE = 20;
 
   const importSelectedPlaces = async () => {
     if (selectedPlaces.size === 0) {
@@ -403,59 +327,75 @@ export default function GooglePlacesImportTab() {
     setImportLog([]);
     
     const placeIdsToImport = Array.from(selectedPlaces);
-    let imported = 0;
-    let errors = 0;
-    let skipped = 0;
+    let totalImported = 0;
+    let totalErrors = 0;
+    let totalSkipped = 0;
+    const allImportedAgencies: any[] = [];
+    const allErrorMessages: string[] = [];
 
     try {
-      // Batch import all at once
-      setImportLog(prev => [...prev, `Starting import of ${placeIdsToImport.length} agencies...`]);
-      setSearchProgress('Importing...');
+      setImportLog(prev => [...prev, `Starting import of ${placeIdsToImport.length} agencies in batches of ${BATCH_SIZE}...`]);
       
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/gmb-import`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY}`,
-        },
-        body: JSON.stringify({
-          action: 'import',
-          placeIds: placeIdsToImport,
-          city: selectedState?.name,
-          state: selectedState?.name,
-          importType,
-          cityAssignments: Object.fromEntries(cityAssignments),
-        }),
-      });
+      // Process in batches to avoid edge function timeout (504)
+      for (let i = 0; i < placeIdsToImport.length; i += BATCH_SIZE) {
+        const batch = placeIdsToImport.slice(i, i + BATCH_SIZE);
+        const batchNum = Math.floor(i / BATCH_SIZE) + 1;
+        const totalBatches = Math.ceil(placeIdsToImport.length / BATCH_SIZE);
+        
+        setSearchProgress(`Importing batch ${batchNum}/${totalBatches}...`);
+        setImportLog(prev => [...prev, `\nBatch ${batchNum}/${totalBatches} (${batch.length} agencies)...`]);
 
-      const data = await response.json();
-      
-      if (data.success) {
-        imported = data.imported || 0;
-        skipped = data.skipped?.length || 0;
-        errors = data.errors || 0;
-        
-        setImportLog(prev => [...prev, `✓ Imported: ${imported} agencies`]);
-        if (skipped > 0) setImportLog(prev => [...prev, `- Skipped: ${skipped} (duplicates)`]);
-        if (errors > 0) setImportLog(prev => [...prev, `✗ Errors: ${errors}`]);
-        
-        // Show detailed results
-        if (data.imported_agencies?.length > 0) {
-          data.imported_agencies.forEach((agency: any) => {
-            setImportLog(prev => [...prev, `  ✓ ${agency.name} (${agency.city}) - Photos: ${agency.photos_stored}, Hours: ${agency.hours_stored}, Reviews: ${agency.reviews_stored}`]);
-          });
+        const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/gmb-import`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY}`,
+          },
+          body: JSON.stringify({
+            action: 'import',
+            placeIds: batch,
+            city: selectedState?.name,
+            state: selectedState?.name,
+            importType: 'sync',
+            cityAssignments: Object.fromEntries(cityAssignments),
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status} on batch ${batchNum} — too many results, try fewer cities`);
         }
         
-        if (data.error_messages?.length > 0) {
-          data.error_messages.forEach((err: string) => {
-            setImportLog(prev => [...prev, `  ✗ ${err}`]);
-          });
-        }
+        const data = await response.json();
         
-        toast.success(`Import complete: ${imported} imported, ${skipped} skipped, ${errors} errors`);
-      } else {
-        throw new Error(data.error || 'Import failed');
+        if (data.success) {
+          totalImported += data.imported || 0;
+          totalSkipped += data.skipped?.length || 0;
+          totalErrors += data.errors || 0;
+          
+          if (data.imported_agencies?.length > 0) {
+            allImportedAgencies.push(...data.imported_agencies);
+            data.imported_agencies.forEach((agency: any) => {
+              setImportLog(prev => [...prev, `  ✓ ${agency.name} (${agency.city})`]);
+            });
+          }
+          if (data.skipped_agencies?.length > 0) {
+            data.skipped_agencies.forEach((s: string) => {
+              setImportLog(prev => [...prev, `  - ${s}`]);
+            });
+          }
+          if (data.error_messages?.length > 0) {
+            allErrorMessages.push(...data.error_messages);
+            data.error_messages.forEach((err: string) => {
+              setImportLog(prev => [...prev, `  ✗ ${err}`]);
+            });
+          }
+        } else {
+          throw new Error(data.error || `Batch ${batchNum} failed`);
+        }
       }
+      
+      setImportLog(prev => [...prev, `\n✓ Complete: ${totalImported} imported, ${totalSkipped} skipped, ${totalErrors} errors`]);
+      toast.success(`Import complete: ${totalImported} imported, ${totalSkipped} skipped, ${totalErrors} errors`);
       
       // Refresh data
       queryClient.invalidateQueries({ queryKey: ['existing-agencies-place-ids'] });
@@ -634,12 +574,12 @@ export default function GooglePlacesImportTab() {
               {isSearching ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  {searchProgress || 'Processing...'}
+                  {searchProgress || 'Searching...'}
                 </>
               ) : (
                 <>
                   <Search className="h-4 w-4 mr-2" />
-                  Search & Auto-Import
+                  Search Places
                 </>
               )}
             </Button>
@@ -666,7 +606,37 @@ export default function GooglePlacesImportTab() {
                 Found {resultsWithImportStatus.length} places from {processedCities.length} cities • {newCount} new • {importedCount} already imported
               </CardDescription>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              {newCount > 0 && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={toggleSelectAll}
+                  className="font-bold"
+                >
+                  {selectedPlaces.size === newCount ? 'Deselect All' : `Select All New (${newCount})`}
+                </Button>
+              )}
+              {selectedPlaces.size > 0 && (
+                <Button
+                  onClick={importSelectedPlaces}
+                  disabled={isImporting}
+                  size="sm"
+                  className="bg-primary font-bold"
+                >
+                  {isImporting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Importing...
+                    </>
+                  ) : (
+                    <>
+                      <Download className="h-4 w-4 mr-2" />
+                      Import Selected ({selectedPlaces.size})
+                    </>
+                  )}
+                </Button>
+              )}
               <Button
                 variant="outline"
                 size="sm"
@@ -674,7 +644,7 @@ export default function GooglePlacesImportTab() {
                 disabled={results.length === 0}
               >
                 <Trash2 className="h-4 w-4 mr-2" />
-                Clear Results
+                Clear
               </Button>
             </div>
           </CardHeader>
