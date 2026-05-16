@@ -13,11 +13,19 @@
     <lastmod>2026-05-16</lastmod>
   </sitemap>
   <sitemap>
+    <loc>https://www.foster-care.co.uk/sitemap-city-categories.xml</loc>
+    <lastmod>2026-05-16</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.foster-care.co.uk/sitemap-fostering-service-location.xml</loc>
+    <lastmod>2026-05-16</lastmod>
+  </sitemap>
+  <sitemap>
     <loc>https://www.foster-care.co.uk/sitemap-agencies.xml</loc>
     <lastmod>2026-05-16</lastmod>
   </sitemap>
   <sitemap>
-    <loc>https://www.foster-care.co.uk/sitemap-service-location.xml</loc>
+    <loc>https://www.foster-care.co.uk/sitemap-blog.xml</loc>
     <lastmod>2026-05-16</lastmod>
   </sitemap>
 </sitemapindex>

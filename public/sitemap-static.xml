@@ -3,7 +3,7 @@
   <url><loc>https://www.foster-care.co.uk/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
   <url><loc>https://www.foster-care.co.uk/fostering-agencies/</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.foster-care.co.uk/search</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.foster-care.co.uk/become-a-foster-carer/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/become-foster-carer/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.foster-care.co.uk/how-it-works/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.foster-care.co.uk/about/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.foster-care.co.uk/contact/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
@@ -11,14 +11,38 @@
   <url><loc>https://www.foster-care.co.uk/blog/</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.foster-care.co.uk/resources/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.foster-care.co.uk/categories/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/services/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.foster-care.co.uk/privacy/</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.foster-care.co.uk/terms/</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.foster-care.co.uk/verification-policy/</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.foster-care.co.uk/editorial-policy/</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.foster-care.co.uk/medical-review-policy/</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.foster-care.co.uk/pricing/</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.foster-care.co.uk/sitemap/</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.foster-care.co.uk/list-your-agency/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.foster-care.co.uk/claim-profile/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.foster-care.co.uk/locations/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.foster-care.co.uk/emergency-fostering/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/tools/fostering-allowance-calculator/</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.foster-care.co.uk/tools/insurance-checker/</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.foster-care.co.uk/compare/ifa-vs-local-authority/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.foster-care.co.uk/england/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.foster-care.co.uk/fostering-agencies/england/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/scotland/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.foster-care.co.uk/fostering-agencies/scotland/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/wales/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.foster-care.co.uk/fostering-agencies/wales/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/northern-ireland/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.foster-care.co.uk/fostering-agencies/northern-ireland/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/london/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/manchester/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/birmingham/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/leeds/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/liverpool/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/bristol/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/sheffield/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/glasgow/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/cardiff/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/newcastle/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/edinburgh/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
 </urlset>
