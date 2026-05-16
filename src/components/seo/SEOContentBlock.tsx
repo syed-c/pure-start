@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { 
   Sparkles, 
   MapPin,
@@ -178,11 +177,7 @@ const OptimizedContentLayout = ({
       itemType="https://schema.org/Article"
     >
       {/* Main Content Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-card border border-border rounded-3xl overflow-hidden shadow-sm"
-      >
+      <div className="bg-card border border-border rounded-3xl overflow-hidden shadow-sm animate-fade-in-up">
         {/* Header */}
         <div className="p-4 md:p-6 border-b border-border bg-gradient-to-r from-primary/5 to-transparent">
           <div className="flex items-center gap-3">
@@ -232,15 +227,13 @@ const OptimizedContentLayout = ({
             ))}
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Internal Links Section */}
       {(popularTreatments && popularTreatments.length > 0) && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-card border border-border rounded-2xl p-6"
+        <div
+          className="bg-card border border-border rounded-2xl p-6 animate-fade-in-up"
+          style={{ animationDelay: '0.1s' }}
         >
           <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
             <Stethoscope className="h-4 w-4 text-primary" />
@@ -257,16 +250,14 @@ const OptimizedContentLayout = ({
               </Link>
             ))}
           </nav>
-        </motion.div>
+        </div>
       )}
 
       {/* Nearby Locations */}
       {(nearbyLocations && nearbyLocations.length > 0) && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          className="bg-card border border-border rounded-2xl p-6"
+        <div
+          className="bg-card border border-border rounded-2xl p-6 animate-fade-in-up"
+          style={{ animationDelay: '0.15s' }}
         >
           <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
             <MapPin className="h-4 w-4 text-primary" />
@@ -284,7 +275,7 @@ const OptimizedContentLayout = ({
               </Link>
             ))}
           </nav>
-        </motion.div>
+        </div>
       )}
     </article>
   );

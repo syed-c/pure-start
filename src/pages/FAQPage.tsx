@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Button } from "@/components/ui/button";
 import { SEOHead } from "@/components/seo/SEOHead";
@@ -16,20 +15,6 @@ import {
 } from "lucide-react";
 
 import faqImg from "@/assets/faq-illustration.png";
-
-const fadeUp = {
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.5 },
-};
-
-const stagger = (i: number) => ({
-  initial: { opacity: 0, y: 20 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.45, delay: i * 0.08 },
-});
 
 const FAQPage = () => {
   const { data: siteSettings } = useSiteSettings();
@@ -108,7 +93,7 @@ const FAQPage = () => {
 
         <div className="container relative">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div {...fadeUp}>
+            <div className="animate-fade-in-up">
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-6">
                 <HelpCircle className="h-3.5 w-3.5" /> Help Centre
               </span>
@@ -130,17 +115,14 @@ const FAQPage = () => {
                   <span><strong className="text-foreground">{categories.length}</strong> categories</span>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }} 
-              whileInView={{ opacity: 1, scale: 1 }} 
-              viewport={{ once: true }} 
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex justify-center"
+            <div 
+              className="animate-scale-up flex justify-center"
+              style={{ animationDelay: '0.2s' }}
             >
-              <img src={faqImg} alt="Help and support" className="w-full max-w-md drop-shadow-xl" />
-            </motion.div>
+              <img src={faqImg} alt="Help and support" width="600" height="400" fetchPriority="high" className="w-full max-w-md drop-shadow-xl" />
+            </div>
           </div>
         </div>
       </section>
@@ -164,7 +146,7 @@ const FAQPage = () => {
         <div className="container">
           <div className="max-w-4xl mx-auto space-y-12">
             {categories.map((category, catIndex) => (
-              <motion.div key={catIndex} {...stagger(catIndex)}>
+              <div key={catIndex} className="animate-fade-in-up" style={{ animationDelay: `${0.08 * catIndex}s` }}>
                 {/* Category header */}
                 <div className="flex items-start gap-4 mb-6">
                   <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${category.color} flex items-center justify-center shrink-0`}>
@@ -190,7 +172,7 @@ const FAQPage = () => {
                     ))}
                   </Accordion>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -199,7 +181,7 @@ const FAQPage = () => {
       {/* ───── Still Have Questions ───── */}
       <section className="py-16 bg-muted/30">
         <div className="container">
-          <motion.div {...fadeUp} className="max-w-4xl mx-auto">
+          <div className="animate-fade-in-up max-w-4xl mx-auto">
             <div className="bg-card border border-border rounded-3xl p-8 md:p-12">
               <div className="grid md:grid-cols-2 gap-8 items-center">
                 <div>
@@ -228,7 +210,7 @@ const FAQPage = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -237,7 +219,7 @@ const FAQPage = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary/80 pointer-events-none" />
         <div className="absolute -top-20 -right-20 w-60 h-60 bg-white/10 rounded-full blur-3xl" />
         <div className="container relative text-center">
-          <motion.div {...fadeUp}>
+          <div className="animate-fade-in-up">
             <h2 className="text-2xl md:text-4xl font-extrabold text-primary-foreground mb-4">
               Ready to Start Your Fostering Journey?
             </h2>
@@ -247,7 +229,7 @@ const FAQPage = () => {
             <Button asChild size="lg" variant="secondary" className="rounded-xl font-semibold h-12 px-8 shadow-lg">
               <Link to="/search"><Search className="mr-2 h-4 w-4" /> Find an Agency</Link>
             </Button>
-          </motion.div>
+          </div>
         </div>
       </section>
     </PageLayout>

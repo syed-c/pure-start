@@ -125,15 +125,16 @@ const AgenciesDirectoryPage = () => {
         keywords={isCityPage 
           ? [`fostering agencies ${cityName}`, "UK foster care agencies", "find foster agency"]
           : ["fostering agencies England", "UK foster care agencies", "find foster agency", "Ofsted rated fostering"]}
-        noIndex={shouldNoIndex}
+        noindex={shouldNoIndex}
       />
       <StructuredData type="breadcrumb" items={[
-        { name: "Home", url: "https://fostercareuk.com/" },
-        { name: "Agencies", url: "https://fostercareuk.com/agencies" },
-        ...(isCityPage ? [{ name: cityName!, url: `https://fostercareuk.com/agencies/${citySlug}` }] : []),
+        { name: "Home", url: "https://www.foster-care.co.uk/" },
+        { name: "Agencies", url: "https://www.foster-care.co.uk/agencies" },
+        ...(isCityPage ? [{ name: cityName!, url: `https://www.foster-care.co.uk/agencies/${citySlug}` }] : []),
       ]} />
       <StructuredData type="organization" />
-      <StructuredData type="localBusiness" name="Foster Care UK" url="https://fostercareuk.com" areaServed="England" />
+      <StructuredData type="website" />
+      <StructuredData type="localBusiness" name="Foster Care UK" url="https://www.foster-care.co.uk" areaServed="England" />
       <StructuredData type="faq" questions={faqs.map(f => ({ question: f.q, answer: f.a }))} />
 
       {/* Hero */}

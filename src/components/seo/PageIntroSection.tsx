@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { FileText } from "lucide-react";
 import { parseMarkdownToHtml, stripMarkdown } from "@/lib/utils/parseMarkdown";
 
@@ -58,12 +57,7 @@ export const PageIntroSection = ({
   return (
     <section className={`py-8 md:py-10 bg-muted/30 border-y border-border ${className}`}>
       <div className="container px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="max-w-4xl mx-auto"
-        >
+        <div className="max-w-4xl mx-auto animate-fade-in-up">
           <div className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-sm">
             <div className="flex items-start gap-4">
               <div className="hidden md:flex shrink-0 h-10 w-10 rounded-xl bg-primary/10 items-center justify-center">
@@ -89,7 +83,7 @@ export const PageIntroSection = ({
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

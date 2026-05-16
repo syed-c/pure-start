@@ -1,5 +1,4 @@
 import { useState, useCallback } from "react";
-import { motion } from "framer-motion";
 import { PoundSterling, Star, Shield, Sparkles, Filter, ChevronDown, ChevronUp, X, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -86,10 +85,8 @@ export function BudgetFilterSidebar({
   const displayedServices = showAllServices ? availableServices : availableServices.slice(0, 6);
 
   return (
-    <motion.aside
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      className={cn(
+    <aside
+      className={cn("animate-slide-in-left",
         "bg-card border border-border rounded-3xl overflow-hidden shadow-lg",
         className
       )}
@@ -252,7 +249,7 @@ export function BudgetFilterSidebar({
           </Button>
         )}
       </div>
-    </motion.aside>
+    </aside>
   );
 }
 

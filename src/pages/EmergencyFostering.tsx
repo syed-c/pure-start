@@ -13,7 +13,6 @@ import {
   Heart, ArrowRight, Building2
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Section } from '@/components/layout/Section';
 import { SEOHead } from '@/components/seo/SEOHead';
@@ -27,12 +26,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
-const fadeUp = {
-  initial: { opacity: 0, y: 20 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-};
 
 export default function EmergencyFosteringFinder() {
   const { data: seoContent } = useSeoPageContent("emergency-fostering");
@@ -120,18 +113,18 @@ export default function EmergencyFosteringFinder() {
           </div>
           
           <div className="max-w-3xl mx-auto text-center">
-            <motion.div {...fadeUp} className="inline-flex items-center gap-2 bg-destructive/10 border border-destructive/20 rounded-full px-4 py-2 mb-4">
+            <div className="animate-fade-in-up inline-flex items-center gap-2 bg-destructive/10 border border-destructive/20 rounded-full px-4 py-2 mb-4">
               <Zap className="h-4 w-4 text-destructive" />
               <span className="text-xs font-semibold text-destructive">Urgent Placements</span>
-            </motion.div>
+            </div>
             
-            <motion.h1 {...fadeUp} transition={{ delay: 0.1 }} className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
+            <h1 className="animate-fade-in-up font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4" style={{ animationDelay: '0.1s' }}>
               Emergency <span className="text-destructive">Fostering</span> Finder
-            </motion.h1>
+            </h1>
             
-            <motion.p {...fadeUp} transition={{ delay: 0.2 }} className="text-base md:text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
+            <p className="animate-fade-in-up text-base md:text-lg text-muted-foreground mb-6 max-w-2xl mx-auto" style={{ animationDelay: '0.2s' }}>
               Find fostering agencies that offer emergency placements across the UK. Select your location to see agencies with immediate availability.
-            </motion.p>
+            </p>
           </div>
         </div>
       </section>
@@ -139,7 +132,7 @@ export default function EmergencyFosteringFinder() {
       {/* Search Section */}
       <Section size="sm">
         <div className="max-w-3xl mx-auto">
-          <motion.div {...fadeUp} className="bg-card border border-border rounded-2xl p-6 shadow-card">
+          <div className="animate-fade-in-up bg-card border border-border rounded-2xl p-6 shadow-card">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label className="text-sm font-semibold">Region</Label>
@@ -178,7 +171,7 @@ export default function EmergencyFosteringFinder() {
                 </Button>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </Section>
 
@@ -249,15 +242,15 @@ export default function EmergencyFosteringFinder() {
       {/* What is Emergency Fostering */}
       <Section size="lg" className="bg-muted/30">
         <div className="max-w-4xl mx-auto">
-          <motion.div {...fadeUp} className="text-center mb-10">
+          <div className="animate-fade-in-up text-center mb-10">
             <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-2">
               What is <span className="text-destructive">Emergency Fostering?</span>
             </h2>
             <p className="text-muted-foreground max-w-lg mx-auto text-sm">Emergency fostering provides immediate, short-notice care for children who need urgent placement.</p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            <motion.div {...fadeUp} className="bg-card border border-destructive/20 rounded-2xl p-6">
+            <div className="animate-fade-in-up bg-card border border-destructive/20 rounded-2xl p-6">
               <div className="flex items-center gap-2 mb-4">
                 <div className="h-10 w-10 rounded-xl bg-destructive/10 flex items-center justify-center">
                   <AlertTriangle className="h-5 w-5 text-destructive" />
@@ -272,9 +265,9 @@ export default function EmergencyFosteringFinder() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
 
-            <motion.div {...fadeUp} transition={{ delay: 0.1 }} className="bg-card border border-border rounded-2xl p-6">
+            <div className="animate-fade-in-up bg-card border border-border rounded-2xl p-6" style={{ animationDelay: '0.1s' }}>
               <div className="flex items-center gap-2 mb-4">
                 <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
                   <Heart className="h-5 w-5 text-primary" />
@@ -296,7 +289,7 @@ export default function EmergencyFosteringFinder() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
           </div>
         </div>
       </Section>
@@ -304,11 +297,11 @@ export default function EmergencyFosteringFinder() {
       {/* FAQ */}
       <Section size="lg">
         <div className="max-w-3xl mx-auto">
-          <motion.div {...fadeUp} className="text-center mb-10">
+          <div className="animate-fade-in-up text-center mb-10">
             <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground">
               Frequently Asked <span className="text-primary">Questions</span>
             </h2>
-          </motion.div>
+          </div>
 
           <Accordion type="single" collapsible className="space-y-3">
             {[

@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -103,48 +102,40 @@ const HomeV2 = () => {
         <div className="container relative z-10 px-4 py-20">
           <div className="max-w-4xl mx-auto text-center">
             {/* Top Badge */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-6"
+            <div 
+              className="animate-fade-in-up mb-6"
             >
               <Badge className="bg-white/10 backdrop-blur-md border-white/20 text-white px-5 py-2">
                 <Star className="w-4 h-4 mr-2 text-yellow-400 fill-yellow-400" />
                 Trusted by 10,000+ Families
               </Badge>
-            </motion.div>
+            </div>
 
             {/* Main Heading */}
-            <motion.h1 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-5xl md:text-7xl font-bold text-white leading-[1.1]"
+            <h1 
+              className="animate-fade-in-up text-5xl md:text-7xl font-bold text-white leading-[1.1]"
+              style={{ animationDelay: '0.1s' }}
             >
               Find Your{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-orange-400 to-pink-400">
                 Perfect Foster
               </span>
               {" "}Agency
-            </motion.h1>
+            </h1>
 
             {/* Subtitle */}
-            <motion.p 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-lg md:text-xl text-slate-400 mt-6 max-w-2xl mx-auto"
+            <p 
+              className="animate-fade-in-up text-lg md:text-xl text-slate-400 mt-6 max-w-2xl mx-auto"
+              style={{ animationDelay: '0.2s' }}
             >
               Connect with verified fostering agencies across England, Scotland, Wales & Northern Ireland. 
               Your journey to becoming a foster family starts here.
-            </motion.p>
+            </p>
 
             {/* Search Box */}
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="mt-10"
+            <div 
+              className="animate-fade-in-up mt-10"
+              style={{ animationDelay: '0.3s' }}
             >
               <form onSubmit={handleSearch} className="max-w-xl mx-auto">
                 <div className="relative">
@@ -168,14 +159,12 @@ const HomeV2 = () => {
                   </div>
                 </div>
               </form>
-            </motion.div>
+            </div>
 
             {/* Quick Stats */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="flex flex-wrap justify-center gap-6 mt-8"
+            <div 
+              className="animate-fade-in flex flex-wrap justify-center gap-6 mt-8"
+              style={{ animationDelay: '0.5s' }}
             >
               <div className="flex items-center gap-2 text-slate-400">
                 <CheckCircle className="w-5 h-5 text-green-500" />
@@ -189,14 +178,12 @@ const HomeV2 = () => {
                 <CheckCircle className="w-5 h-5 text-green-500" />
                 <span>4.8 Avg Rating</span>
               </div>
-            </motion.div>
+            </div>
 
             {/* Quick Links */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="flex flex-wrap justify-center gap-3 mt-8"
+            <div 
+              className="animate-fade-in flex flex-wrap justify-center gap-3 mt-8"
+              style={{ animationDelay: '0.6s' }}
             >
               {fosteringTypes.slice(0, 4).map((type) => (
                 <Link 
@@ -207,7 +194,7 @@ const HomeV2 = () => {
                   {type.name}
                 </Link>
               ))}
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -222,12 +209,10 @@ const HomeV2 = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {fosteringTypes.map((type, i) => (
-              <motion.div
+              <div
                 key={type.slug}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                viewport={{ once: true }}
+                className="animate-fade-in-up"
+                style={{ animationDelay: `${0.1 * i}s` }}
               >
                 <Link to={`/categories/${type.slug}`}>
                   <Card className="bg-[#151520] border-white/10 hover:border-primary/50 hover:bg-[#1a1a28] transition-all cursor-pointer group">
@@ -240,7 +225,7 @@ const HomeV2 = () => {
                     </CardContent>
                   </Card>
                 </Link>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -256,12 +241,10 @@ const HomeV2 = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
             {cities.map((city, i) => (
-              <motion.div
+              <div
                 key={city.slug}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-                viewport={{ once: true }}
+                className="animate-fade-in-up"
+                style={{ animationDelay: `${0.05 * i}s` }}
               >
                 <Link to={`/fostering-agencies/${city.slug}`}>
                   <Card className="bg-[#151520] border-white/10 hover:border-primary/50 hover:bg-[#1a1a28] transition-all cursor-pointer group">
@@ -272,7 +255,7 @@ const HomeV2 = () => {
                     </CardContent>
                   </Card>
                 </Link>
-              </motion.div>
+              </div>
             ))}
           </div>
           
@@ -294,12 +277,10 @@ const HomeV2 = () => {
 
           <div className="flex gap-4 overflow-x-auto pb-4 snap-x">
             {featuredAgencies.map((agency, i) => (
-              <motion.div
+              <div
                 key={agency.slug}
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.1 }}
-                viewport={{ once: true }}
+                className="animate-fade-in-up"
+                style={{ animationDelay: `${0.1 * i}s` }}
                 className="snap-start"
               >
                 <Link to={`/agencies/${agency.slug}`}>
@@ -325,7 +306,7 @@ const HomeV2 = () => {
                     </CardContent>
                   </Card>
                 </Link>
-              </motion.div>
+              </div>
             ))}
           </div>
           
@@ -347,20 +328,17 @@ const HomeV2 = () => {
 
           <div className="grid md:grid-cols-4 gap-6">
             {howItWorks.map((item, i) => (
-              <motion.div
+              <div
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center"
+                className="animate-fade-in-up text-center"
+                style={{ animationDelay: `${0.1 * i}s` }}
               >
                 <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-white">{item.step}</span>
                 </div>
                 <h3 className="font-bold text-white mb-2">{item.title}</h3>
                 <p className="text-slate-400 text-sm">{item.desc}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

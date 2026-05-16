@@ -16,7 +16,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { TrendingUp, MapPin, Shield, BarChart3, Heart } from "lucide-react";
-import { motion } from "framer-motion";
 
 const ServicePricePage = () => {
   const { serviceSlug } = useParams();
@@ -91,37 +90,29 @@ const ServicePricePage = () => {
               <BarChart3 className="h-4 w-4 mr-2" /> Agency Directory
             </Badge>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4"
+            <h1
+              className="animate-fade-in-up text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4"
             >
               {treatmentName} <span className="text-primary">Agencies</span> in England
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.1 }}
-              className="text-white/60 text-sm md:text-base max-w-2xl mx-auto mb-8"
+            <p
+              className="animate-fade-in text-white/60 text-sm md:text-base max-w-2xl mx-auto mb-8"
+              style={{ animationDelay: '0.1s' }}
             >
               Find {totalAgencies}+ Ofsted-rated {treatmentName.toLowerCase()} agencies across England. Compare ratings, read reviews from current foster carers, and connect directly.
-            </motion.p>
+            </p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="max-w-xl mx-auto"
+            <div
+              className="animate-fade-in-up max-w-xl mx-auto"
+              style={{ animationDelay: '0.2s' }}
             >
               <SearchBox variant="hero" defaultTreatment={slug} />
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="flex flex-wrap justify-center gap-4 mt-8"
+            <div
+              className="animate-fade-in flex flex-wrap justify-center gap-4 mt-8"
+              style={{ animationDelay: '0.3s' }}
             >
               <div className="bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-xl px-4 py-3">
                 <div className="text-2xl font-bold text-primary">{totalAgencies}+</div>
@@ -137,7 +128,7 @@ const ServicePricePage = () => {
                   <span className="text-sm font-bold text-white">Ofsted Verified</span>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>

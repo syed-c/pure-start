@@ -158,39 +158,35 @@ const StateSEOContent = ({
       <div className="grid md:grid-cols-3 gap-4 mt-6">
         <div className="bg-muted/50 rounded-2xl p-5">
           <HeartPulse className="h-8 w-8 text-primary mb-3" />
-          <h3 className="font-bold text-foreground mb-2">Preventive Care</h3>
+          <h3 className="font-bold text-foreground mb-2">Emergency & Short-Term Care</h3>
           <ul className="text-sm text-muted-foreground space-y-1">
-            <li>• Regular checkups & cleanings</li>
-            <li>• X-rays & assessments</li>
-            <li>• Fluoride treatments</li>
-            <li>• Sealants for children</li>
+            <li>• Emergency fostering placements</li>
+            <li>• Short-term fostering (days to months)</li>
+            <li>• Respite care for foster families</li>
           </ul>
         </div>
         <div className="bg-muted/50 rounded-2xl p-5">
           <Stethoscope className="h-8 w-8 text-primary mb-3" />
-          <h3 className="font-bold text-foreground mb-2">Specialist Support</h3>
+          <h3 className="font-bold text-foreground mb-2">Specialist & Long-Term Support</h3>
           <ul className="text-sm text-muted-foreground space-y-1">
-            <li>• Fillings & restorations</li>
-            <li>• Root canal treatment</li>
-            <li>• Bridges & implants</li>
-            <li>• Dentures & partials</li>
+            <li>• Long-term fostering (months to years)</li>
+            <li>• Therapeutic fostering (specialist support)</li>
+            <li>• Parent and child fostering placements</li>
           </ul>
         </div>
         <div className="bg-muted/50 rounded-2xl p-5">
           <Star className="h-8 w-8 text-primary mb-3" />
-          <h3 className="font-bold text-foreground mb-2">Specialist Care</h3>
+          <h3 className="font-bold text-foreground mb-2">Specialist Pathways</h3>
           <ul className="text-sm text-muted-foreground space-y-1">
-            <li>• Teeth whitening</li>
-            <li>• Porcelain veneers</li>
-            <li>• Invisalign & braces</li>
-            <li>• Smile makeovers</li>
+            <li>• Fostering to adoption pathways</li>
+            <li>• Remand fostering (youth justice)</li>
           </ul>
         </div>
       </div>
       
       {popularTreatments.length > 0 && (
         <div className="mt-8">
-          <h3 className="font-bold text-foreground mb-4">Popular Treatments in {stateName}:</h3>
+          <h3 className="font-bold text-foreground mb-4">Popular Services in {stateName}:</h3>
           <div className="flex flex-wrap gap-2">
             {popularTreatments.map((treatment) => (
               <Link
@@ -282,9 +278,9 @@ const CitySEOContent = ({
       </p>
       <p className="text-muted-foreground leading-relaxed mb-6">
         Whether you're looking for short-term care, emergency placements, or long-term 
-        enhancements, you'll find qualified professionals in {cityName} ready to meet your needs. Many 
+        fostering support, you'll find qualified professionals in {cityName} ready to meet your needs. Many 
         local agencies use modern approaches and best practices including comprehensive assessments, 
-        and CAD/CAM systems for same-day restorations.
+        and therapeutic parenting and trauma-informed care approaches.
       </p>
       
       <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4 mt-8">
@@ -320,34 +316,34 @@ const CitySEOContent = ({
         <div>
           <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
             <HeartPulse className="h-5 w-5 text-primary" />
-            General & Preventive
+            Core Fostering Services
           </h3>
           <ul className="text-muted-foreground space-y-2 ml-7">
             <li>• Comprehensive care assessments</li>
-            <li>• Professional assessments & checkups</li>
-            <li>• Fillings & sealants</li>
-            <li>• Gum disease treatment</li>
-            <li>• Oral cancer screenings</li>
+            <li>• Professional fostering assessments</li>
+            <li>• Short-term & emergency placements</li>
+            <li>• Long-term fostering placements</li>
+            <li>• Respite care services</li>
           </ul>
         </div>
         <div>
           <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
             <Star className="h-5 w-5 text-primary" />
-            Cosmetic & Specialty
+            Specialist Fostering Services
           </h3>
           <ul className="text-muted-foreground space-y-2 ml-7">
-            <li>• Teeth whitening treatments</li>
-            <li>• Porcelain veneers & bonding</li>
-            <li>• Invisalign & orthodontics</li>
-            <li>• Implants & crowns</li>
-            <li>• Full smile makeovers</li>
+            <li>• Therapeutic fostering support</li>
+            <li>• Parent and child placements</li>
+            <li>• Fostering to adoption pathways</li>
+            <li>• Sibling group placements</li>
+            <li>• Remand fostering support</li>
           </ul>
         </div>
       </div>
       
       {popularTreatments.length > 0 && (
         <div className="mt-8 pt-6 border-t border-border">
-          <h3 className="font-bold text-foreground mb-4">Find Specialists by Treatment:</h3>
+          <h3 className="font-bold text-foreground mb-4">Find Services by Type:</h3>
           <div className="flex flex-wrap gap-2">
             {popularTreatments.slice(0, 8).map((treatment) => (
               <Link

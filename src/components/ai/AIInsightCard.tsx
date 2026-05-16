@@ -66,10 +66,10 @@ export const AIInsightCard = ({
   const getContextExamples = (): string[] => {
     if (variant === "city" && locationName) {
       return [
-        `Affordable dentist in ${locationName}`,
-        `Teeth whitening ${locationName}`,
+        `Fostering agencies in ${locationName}`,
+        `Fostering allowances ${locationName}`,
         `Emergency fostering care`,
-        `Best implant specialist`,
+        `Best fostering agency`,
       ];
     } else if (variant === "service" && treatmentName) {
       return [
@@ -87,10 +87,10 @@ export const AIInsightCard = ({
       ];
     }
     return [
-      "Affordable dentist near me",
+      "Fostering agencies near me",
       "Emergency fostering care",
-      "Teeth whitening cost",
-      "Best implant specialist",
+      "Fostering allowance amounts",
+      "Best fostering agency",
     ];
   };
 
@@ -99,20 +99,20 @@ export const AIInsightCard = ({
     switch (variant) {
       case "city":
         return [
-          { icon: Stethoscope, label: "Popular", value: "Cleanings, Implants, Invisalign" },
-          { icon: DollarSign, label: "Avg. Budget", value: "$150 - $3,500" },
-          { icon: Shield, label: "Insurance", value: "Most accept major plans" },
+          { icon: Stethoscope, label: "Popular", value: "Short-term, Long-term, Emergency" },
+          { icon: DollarSign, label: "Avg. Allowance", value: "£400 - £700/week" },
+          { icon: Shield, label: "Support", value: "24/7 support & training" },
         ];
       case "service":
         return [
           { icon: TrendingUp, label: "Demand", value: "High search volume" },
-          { icon: DollarSign, label: "Price Range", value: "$500 - $6,000" },
-          { icon: Shield, label: "Coverage", value: "Often covered by insurance" },
+          { icon: DollarSign, label: "Allowance Range", value: "£400 - £1,000/week" },
+          { icon: Shield, label: "Support", value: "Full training provided" },
         ];
       case "service-location":
         return [
           { icon: MapPin, label: "Area", value: `${locationName} specialists` },
-          { icon: DollarSign, label: "Local Range", value: "$400 - $5,000" },
+          { icon: DollarSign, label: "Local Range", value: "£400 - £750/week" },
           { icon: TrendingUp, label: "Trending", value: "Growing demand" },
         ];
       default:
@@ -206,7 +206,7 @@ export const AIInsightCard = ({
       {variant !== "service-location" && stateSlug && citySlug && (
         <div className="mt-4 pt-3 border-t border-border">
           <p className="text-sm text-muted-foreground mb-2">
-            Not sure what treatment fits your budget?
+            Not sure which fostering type suits you?
           </p>
           <Link
             to={`/${stateSlug}/${citySlug}`}

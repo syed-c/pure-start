@@ -36,7 +36,7 @@ export function SmartCitySearch({
   onChange,
   error,
   disabled,
-  placeholder = "Search area, e.g. 'Deira, Dubai'",
+  placeholder = "Search area, e.g. 'Manchester' or 'Birmingham'",
   className,
 }: SmartCitySearchProps) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -347,10 +347,10 @@ export function SmartCitySearch({
             <div className="p-4 text-center">
               <AlertCircle className="h-5 w-5 text-muted-foreground mx-auto mb-2" />
               <p className="text-sm text-muted-foreground">
-                No areas found. Try "Area, Emirate" format
+                No areas found. Try "City, County" format
               </p>
               <p className="text-xs text-muted-foreground mt-1">
-                e.g., "Deira, Dubai" or "Khalidiya, Abu Dhabi"
+                e.g., "Manchester" or "Birmingham"
               </p>
             </div>
           )}

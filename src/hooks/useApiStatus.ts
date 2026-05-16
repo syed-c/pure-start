@@ -18,7 +18,7 @@ export function useApiStatus() {
     try {
       // Test by calling our edge function with a small search (server-side uses New Places API)
       const { data, error } = await supabase.functions.invoke('gmb-import', {
-        body: { action: 'search', category: 'dentist', city: 'Dubai', radius: 1000 },
+        body: { action: 'search', category: 'fostering', city: 'Manchester', radius: 1000 },
       });
 
       if (error) {

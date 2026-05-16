@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
@@ -158,15 +157,11 @@ const ServicePage = () => {
       <section className="relative overflow-hidden bg-gradient-to-b from-background via-primary/[0.03] to-background pt-6 pb-10">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute inset-0 bg-subtle-grid opacity-30" />
-          <motion.div 
+          <div 
             className="absolute top-20 left-[10%] w-48 md:w-64 h-48 md:h-64 bg-foreground/5 rounded-full blur-3xl"
-            animate={{ scale: [1, 1.1, 1], opacity: [0.05, 0.1, 0.05] }}
-            transition={{ duration: 6, repeat: Infinity }}
           />
-          <motion.div 
+          <div 
             className="absolute bottom-10 right-[15%] w-56 md:w-80 h-56 md:h-80 bg-primary/10 rounded-full blur-3xl"
-            animate={{ scale: [1, 1.15, 1], opacity: [0.1, 0.15, 0.1] }}
-            transition={{ duration: 8, repeat: Infinity, delay: 2 }}
           />
         </div>
         
@@ -176,48 +171,38 @@ const ServicePage = () => {
           </div>
           
           <div className="max-w-3xl mx-auto text-center">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 bg-foreground/5 backdrop-blur-sm border border-foreground/10 rounded-full px-4 py-2 mb-4"
+            <div 
+              className="animate-fade-in-up inline-flex items-center gap-2 bg-foreground/5 backdrop-blur-sm border border-foreground/10 rounded-full px-4 py-2 mb-4"
             >
               <Building2 className="h-4 w-4 text-emerald" />
               <span className="text-xs md:text-sm font-bold text-foreground/80">UK Fostering Service</span>
-            </motion.div>
+            </div>
             
-            <motion.h1 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-3 px-2"
+            <h1 
+              className="animate-fade-in-up font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-3 px-2"
+              style={{ animationDelay: '0.1s' }}
             >
               {treatmentName} in the <span className="text-primary">UK</span>
-            </motion.h1>
+            </h1>
             
-            <motion.p 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="text-base md:text-lg text-muted-foreground mb-6 max-w-2xl mx-auto px-2"
+            <p 
+              className="animate-fade-in text-base md:text-lg text-muted-foreground mb-6 max-w-2xl mx-auto px-2"
+              style={{ animationDelay: '0.2s' }}
             >
               {treatmentDesc}
-            </motion.p>
+            </p>
 
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="max-w-xl md:max-w-2xl mx-auto mb-6"
+            <div 
+              className="animate-fade-in-up max-w-xl md:max-w-2xl mx-auto mb-6"
+              style={{ animationDelay: '0.3s' }}
             >
               <SearchBox variant="hero" />
-            </motion.div>
+            </div>
 
             {/* Stats */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="flex flex-wrap justify-center gap-2"
+            <div 
+              className="animate-fade-in flex flex-wrap justify-center gap-2"
+              style={{ animationDelay: '0.4s' }}
             >
               <div className="flex items-center gap-1.5 bg-card/80 backdrop-blur-sm border border-border rounded-xl px-3 py-2 shadow-sm">
                 <Users className="h-4 w-4 text-primary" />
@@ -231,7 +216,7 @@ const ServicePage = () => {
                 <Shield className="h-4 w-4 text-emerald" />
                 <span className="font-bold text-sm">Ofsted Registered</span>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>

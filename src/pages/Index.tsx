@@ -1,5 +1,4 @@
 import { ArrowRight, Shield, Heart, Search, MapPin, Star, Users, ChevronRight, Sparkles, CheckCircle, Phone, BookOpen, Award, Building2, Globe, HeartHandshake } from "lucide-react";
-import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SearchBox } from "@/components/SearchBox";
@@ -77,9 +76,6 @@ const ukFaqs = [
   { q: "How long does it take to become a foster carrier?", a: "The assessment process typically takes 4–6 months, including training, home visits, interviews, and background checks." },
 ];
 
-const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
-const fadeUp = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
-
 const headingFont = "'DM Sans', 'Quicksand', system-ui, sans-serif";
 
 const Index = () => {
@@ -113,32 +109,21 @@ const Index = () => {
 
         {/* Floating cards decoration */}
         <div className="absolute top-20 left-[10%] hidden lg:block">
-          <motion.div 
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 shadow-xl"
-          >
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 shadow-xl">
             <Shield className="h-8 w-8 text-teal-400" />
-          </motion.div>
+          </div>
         </div>
         <div className="absolute bottom-32 right-[15%] hidden lg:block">
-          <motion.div 
-            animate={{ y: [0, -15, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 shadow-xl"
-          >
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 shadow-xl">
             <Heart className="h-8 w-8 text-rose-400" />
-          </motion.div>
+          </div>
         </div>
 
         <div className="container relative z-10 py-20 md:py-28 lg:py-32 px-5 md:px-8">
           <div className="max-w-5xl mx-auto text-center">
             {/* Trust badges */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="flex flex-wrap gap-3 mb-8 justify-center"
+            <div
+              className="animate-fade-in-up flex flex-wrap gap-3 mb-8 justify-center"
             >
               <span className="inline-flex items-center gap-2 bg-teal-500/20 backdrop-blur-md border border-teal-500/30 rounded-full px-5 py-2.5">
                 <Shield className="h-4 w-4 text-teal-400" />
@@ -148,15 +133,12 @@ const Index = () => {
                 <Heart className="h-4 w-4 text-rose-400 fill-rose-400" />
                 <span className="text-sm font-semibold text-white">2,000+ Families</span>
               </span>
-            </motion.div>
+            </div>
 
             {/* Main heading */}
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="mb-6"
-              style={{ fontFamily: headingFont }}
+            <h1
+              className="animate-fade-in-up mb-6"
+              style={{ fontFamily: headingFont, animationDelay: '0.1s' }}
             >
               <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight">
                 Find Your Perfect
@@ -164,42 +146,36 @@ const Index = () => {
               <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent mt-1">
                 Fostering Agency
               </span>
-            </motion.h1>
+            </h1>
 
             {/* Subheading with typewriter */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="mb-6">
+            <div className="animate-fade-in mb-6" style={{ animationDelay: '0.3s' }}>
               <span className="text-lg md:text-xl font-medium text-slate-400">
                 Discover trusted agencies for{" "}
                 <TypewriterText texts={heroTexts} className="text-teal-400 font-bold" />
               </span>
-            </motion.div>
+            </div>
 
             {/* Description */}
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="text-base md:text-lg text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed"
+            <p
+              className="animate-fade-in-up text-base md:text-lg text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed"
+              style={{ animationDelay: '0.4s' }}
             >
               Connect with Ofsted-rated fostering agencies across England. Read genuine reviews from foster families and find the right match for your journey.
-            </motion.p>
+            </p>
 
             {/* Search box */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="max-w-3xl mx-auto mb-12"
+            <div
+              className="animate-fade-in-up max-w-3xl mx-auto mb-12"
+              style={{ animationDelay: '0.5s' }}
             >
               <SearchBox variant="hero" />
-            </motion.div>
+            </div>
 
 {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto"
+            <div
+              className="animate-fade-in-up grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto"
+              style={{ animationDelay: '0.6s' }}
             >
               {[
                 { value: counts?.agencies?.toLocaleString() || "500+", label: "Agencies" },
@@ -212,7 +188,7 @@ const Index = () => {
                   <div className="text-sm font-medium text-slate-500 mt-2">{stat.label}</div>
                 </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </div>
 
@@ -229,11 +205,8 @@ const Index = () => {
           ============================== */}
       <section className="py-20 md:py-28 bg-background relative">
         <div className="container px-5 md:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12 md:mb-16"
+          <div
+            className="animate-fade-in-up text-center mb-12 md:mb-16"
           >
             <span className="inline-flex items-center gap-2 bg-teal-500/10 rounded-full px-5 py-2.5 mb-5">
               <Heart className="h-4 w-4 text-teal-600" />
@@ -245,17 +218,13 @@ const Index = () => {
             <p className="text-muted-foreground mt-4 max-w-xl mx-auto text-base md:text-lg">
               Every child has unique needs. Discover which fostering type suits your family and lifestyle.
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            variants={stagger}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
+          <div
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           >
-            {FOSTERING_CATEGORIES.slice(0, 6).map((cat) => (
-              <motion.div key={cat.slug} variants={fadeUp}>
+            {FOSTERING_CATEGORIES.slice(0, 6).map((cat, i) => (
+              <div key={cat.slug} className="animate-fade-in-up" style={{ animationDelay: `${0.08 * i}s` }}>
                 <Link
                   to={`/services/${cat.slug}`}
                   className="group block bg-card rounded-2xl overflow-hidden border border-border hover:border-teal-500/40 hover:shadow-2xl hover:shadow-teal-500/10 transition-all duration-300"
@@ -283,9 +252,9 @@ const Index = () => {
                     </span>
                   </div>
                 </Link>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
 
           <div className="text-center mt-10">
             <Button asChild variant="outline-white" className="rounded-full font-semibold px-8">
@@ -306,11 +275,8 @@ const Index = () => {
         </div>
         
         <div className="container px-5 md:px-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12 md:mb-16"
+          <div
+            className="animate-fade-in-up text-center mb-12 md:mb-16"
           >
             <span className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-5 py-2.5 mb-5">
               <MapPin className="h-4 w-4 text-primary" />
@@ -322,16 +288,16 @@ const Index = () => {
             <p className="text-muted-foreground mt-4 max-w-lg mx-auto text-base md:text-lg">
               Select your city to discover Ofsted-rated fostering agencies near you.
             </p>
-          </motion.div>
+          </div>
 
+          <style>{`@keyframes marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-50%); } }`}</style>
           <div className="relative">
             <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
             <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
             <div className="overflow-hidden py-4">
-              <motion.div
+              <div
                 className="flex gap-8"
-                animate={{ x: ['0%', '-50%'] }}
-                transition={{ x: { duration: 35, repeat: Infinity, ease: 'linear' } }}
+                style={{ animation: 'marquee 35s linear infinite' }}
               >
                 {[...popularCities, ...popularCities].map((city, idx) => (
                   <Link
@@ -353,7 +319,7 @@ const Index = () => {
                     </span>
                   </Link>
                 ))}
-              </motion.div>
+              </div>
             </div>
           </div>
         </div>
@@ -369,11 +335,8 @@ const Index = () => {
         </div>
         
         <div className="container relative z-10 px-5 md:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12 md:mb-16"
+          <div
+            className="animate-fade-in-up text-center mb-12 md:mb-16"
           >
             <span className="inline-flex items-center gap-2 bg-teal-500/20 rounded-full px-5 py-2.5 mb-5 border border-teal-500/30">
               <Award className="h-4 w-4 text-teal-400" />
@@ -386,17 +349,13 @@ const Index = () => {
             <p className="text-slate-400 mt-4 max-w-xl mx-auto text-base md:text-lg">
               Trusted by thousands of families across England to find their perfect match.
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            variants={stagger}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
+          <div
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
           >
             {benefits.map((benefit, i) => (
-              <motion.div key={i} variants={fadeUp}>
+              <div key={i} className="animate-fade-in-up" style={{ animationDelay: `${0.08 * i}s` }}>
                 <div className="group bg-white/[0.05] backdrop-blur-sm rounded-2xl p-7 text-center border border-white/10 hover:border-teal-500/40 hover:bg-white/[0.08] transition-all duration-300 h-full">
                   <div className="inline-flex items-center justify w-14 h-14 rounded-2xl bg-teal-500/20 mb-5 group-hover:scale-110 transition-transform duration-300">
                     <benefit.icon className="h-7 w-7 text-teal-400" />
@@ -406,9 +365,9 @@ const Index = () => {
                   </h3>
                   <p className="text-slate-400 text-sm leading-relaxed">{benefit.description}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -417,11 +376,8 @@ const Index = () => {
           ============================== */}
       <section className="py-20 md:py-28 bg-background relative">
         <div className="container px-5 md:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12 md:mb-16"
+          <div
+            className="animate-fade-in-up text-center mb-12 md:mb-16"
           >
             <span className="inline-flex items-center gap-2 bg-amber-500/10 rounded-full px-5 py-2.5 mb-5">
               <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
@@ -430,17 +386,13 @@ const Index = () => {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground" style={{ fontFamily: headingFont }}>
               Loved by <span className="text-teal-600">Foster Families</span>
             </h2>
-          </motion.div>
+          </div>
 
-          <motion.div
-            variants={stagger}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
+          <div
             className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto"
           >
             {testimonials.map((t, i) => (
-              <motion.div key={i} variants={fadeUp}>
+              <div key={i} className="animate-fade-in-up" style={{ animationDelay: `${0.08 * i}s` }}>
                 <div className="bg-card rounded-2xl p-7 border border-border hover:border-teal-500/30 hover:shadow-lg transition-all duration-300 h-full flex flex-col">
                   <div className="flex gap-1 mb-4">
                     {Array.from({ length: t.rating }).map((_, j) => (
@@ -455,9 +407,9 @@ const Index = () => {
                     </p>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -466,11 +418,8 @@ const Index = () => {
           ============================== */}
       <section className="py-20 md:py-28 bg-muted/20 relative overflow-hidden">
         <div className="container relative z-10 px-5 md:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-3xl mx-auto text-center mb-16"
+          <div
+            className="animate-fade-in-up max-w-3xl mx-auto text-center mb-16"
           >
             <span className="inline-flex items-center gap-2 bg-teal-500/10 rounded-full px-5 py-2.5 mb-5">
               <Sparkles className="h-4 w-4 text-teal-600" />
@@ -482,22 +431,18 @@ const Index = () => {
             <p className="text-muted-foreground text-base md:text-lg max-w-xl mx-auto">
               Finding the right fostering agency in three simple steps.
             </p>
-          </motion.div>
+          </div>
 
           <div className="max-w-5xl mx-auto">
-            <motion.div
-              variants={stagger}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
+            <div
               className="grid md:grid-cols-3 gap-8"
             >
               {[
                 { step: 1, icon: Search, title: "Search", desc: "Enter your location or browse agencies by city. Filter by type, Ofsted rating, and services." },
                 { step: 2, icon: CheckCircle, title: "Compare", desc: "Read reviews, view profiles, and compare what each agency offers to find your match." },
                 { step: 3, icon: Phone, title: "Connect", desc: "Contact your chosen agencies directly for information or to start your assessment." },
-              ].map((item) => (
-                <motion.div key={item.step} variants={fadeUp}>
+              ].map((item, i) => (
+                <div key={item.step} className="animate-fade-in-up" style={{ animationDelay: `${0.08 * i}s` }}>
                   <div className="group bg-card rounded-2xl p-8 border border-border hover:border-teal-500/30 hover:shadow-lg transition-all duration-300 h-full text-center">
                     <div className="w-12 h-12 rounded-xl bg-teal-600 text-white flex items-center justify-center mx-auto mb-5 text-lg font-bold">
                       {item.step}
@@ -510,9 +455,9 @@ const Index = () => {
                     </h3>
                     <p className="text-muted-foreground leading-relaxed text-sm">{item.desc}</p>
                   </div>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -522,11 +467,8 @@ const Index = () => {
           ============================== */}
       <section className="py-20 md:py-28 bg-background relative">
         <div className="container px-5 md:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-3xl mx-auto text-center mb-12"
+          <div
+            className="animate-fade-in-up max-w-3xl mx-auto text-center mb-12"
           >
             <span className="inline-flex items-center gap-2 bg-teal-500/10 rounded-full px-5 py-2.5 mb-5">
               <BookOpen className="h-4 w-4 text-teal-600" />
@@ -535,24 +477,21 @@ const Index = () => {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground" style={{ fontFamily: headingFont }}>
               Common <span className="text-teal-600">Questions</span>
             </h2>
-          </motion.div>
+          </div>
           
           <div className="max-w-3xl mx-auto space-y-3">
             {ukFaqs.map((faq, i) => (
-              <motion.details
+              <details
                 key={i}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.04 }}
-                className="group bg-card border border-border rounded-xl overflow-hidden"
+                className="animate-fade-in-up group bg-card border border-border rounded-xl overflow-hidden"
+                style={{ animationDelay: `${0.04 * i}s` }}
               >
                 <summary className="flex items-center justify-between cursor-pointer px-6 py-5 font-semibold text-foreground hover:text-teal-600 transition-colors text-sm md:text-base">
                   {faq.q}
                   <ChevronRight className="h-5 w-5 text-muted-foreground group-open:rotate-90 transition-transform shrink-0 ml-4" />
                 </summary>
                 <div className="px-6 pb-5 text-muted-foreground text-sm leading-relaxed">{faq.a}</div>
-              </motion.details>
+              </details>
             ))}
           </div>
           
@@ -576,11 +515,7 @@ const Index = () => {
 
         <div className="container relative z-10 px-5 md:px-8">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
+            <div className="animate-fade-in-up">
               <span className="inline-flex items-center gap-2.5 bg-teal-500/20 backdrop-blur-sm rounded-full px-5 py-2.5 mb-8 border border-teal-500/30">
                 <Heart className="h-4 w-4 text-teal-400 fill-teal-400 animate-pulse" />
                 <span className="text-sm font-semibold text-teal-400">Every Child Deserves a Home</span>
@@ -607,7 +542,7 @@ const Index = () => {
                   </Link>
                 </Button>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>

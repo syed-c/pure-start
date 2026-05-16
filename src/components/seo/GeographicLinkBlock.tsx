@@ -11,7 +11,6 @@
  */
 
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { 
   MapPin, 
   Stethoscope, 
@@ -20,68 +19,48 @@ import {
   Navigation
 } from "lucide-react";
 
-// Neighboring emirate/state relationships (UAE + existing US states)
+// Neighboring UK region relationships
 const NEIGHBORING_STATES: Record<string, { name: string; slug: string }[]> = {
-  dubai: [
-    { name: "Sharjah", slug: "sharjah" },
-    { name: "Abu Dhabi", slug: "abu-dhabi" },
-    { name: "Ajman", slug: "ajman" },
+  england: [
+    { name: "North West England", slug: "north-west-england" },
+    { name: "North East England", slug: "north-east-england" },
+    { name: "Yorkshire and the Humber", slug: "yorkshire-and-the-humber" },
+    { name: "East Midlands", slug: "east-midlands" },
+    { name: "West Midlands", slug: "west-midlands" },
+    { name: "East of England", slug: "east-of-england" },
+    { name: "South East England", slug: "south-east-england" },
+    { name: "South West England", slug: "south-west-england" },
+    { name: "London", slug: "london" },
   ],
-  "abu-dhabi": [
-    { name: "Dubai", slug: "dubai" },
-    { name: "Sharjah", slug: "sharjah" },
+  scotland: [
+    { name: "Glasgow and Clyde", slug: "glasgow-and-clyde" },
+    { name: "Edinburgh and Lothians", slug: "edinburgh-and-lothians" },
+    { name: "Highlands and Islands", slug: "highlands-and-islands" },
+    { name: "Central Scotland", slug: "central-scotland" },
   ],
-  sharjah: [
-    { name: "Dubai", slug: "dubai" },
-    { name: "Ajman", slug: "ajman" },
+  wales: [
+    { name: "South Wales", slug: "south-wales" },
+    { name: "North Wales", slug: "north-wales" },
+    { name: "Mid Wales", slug: "mid-wales" },
   ],
-  ajman: [
-    { name: "Sharjah", slug: "sharjah" },
-    { name: "Dubai", slug: "dubai" },
-  ],
-  "ras-al-khaimah": [
-    { name: "Sharjah", slug: "sharjah" },
-    { name: "Umm Al Quwain", slug: "umm-al-quwain" },
-  ],
-  "umm-al-quwain": [
-    { name: "Ajman", slug: "ajman" },
-    { name: "Ras Al Khaimah", slug: "ras-al-khaimah" },
-  ],
-  fujairah: [
-    { name: "Sharjah", slug: "sharjah" },
-    { name: "Ras Al Khaimah", slug: "ras-al-khaimah" },
-  ],
-  ca: [],
-  nj: [
-    { name: "Connecticut", slug: "ct" },
-    { name: "Massachusetts", slug: "ma" },
-  ],
-  ma: [
-    { name: "Connecticut", slug: "ct" },
-    { name: "New Jersey", slug: "nj" },
-  ],
-  ct: [
-    { name: "New Jersey", slug: "nj" },
-    { name: "Massachusetts", slug: "ma" },
+  "northern-ireland": [
+    { name: "Belfast", slug: "belfast" },
+    { name: "County Antrim", slug: "county-antrim" },
+    { name: "County Down", slug: "county-down" },
+    { name: "County Armagh", slug: "county-armagh" },
   ],
 };
 
 // Related services mapping for cross-linking
 const RELATED_SERVICES: Record<string, string[]> = {
-  "fostering-placements": ["dental-crowns", "dental-veneers", "teeth-whitening", "bone-grafting"],
-  "teeth-whitening": ["dental-veneers", "teeth-cleaning", "invisalign", "smile-makeover"],
-  "root-canal": ["dental-crowns", "teeth-cleaning", "fostering-placements", "tooth-extraction"],
-  "dental-crowns": ["dental-veneers", "root-canal", "fostering-placements", "dental-bridges"],
-  "invisalign": ["braces", "teeth-whitening", "dental-veneers", "retainers"],
-  "dental-veneers": ["teeth-whitening", "dental-crowns", "invisalign", "smile-makeover"],
-  "teeth-cleaning": ["teeth-whitening", "root-canal", "dental-crowns", "gum-treatment"],
-  "braces": ["invisalign", "teeth-cleaning", "teeth-whitening", "retainers"],
-  "gum-treatment": ["teeth-cleaning", "root-canal", "fostering-placements"],
-  "tooth-extraction": ["fostering-placements", "root-canal", "wisdom-teeth-removal"],
-  "dental-bridges": ["dental-crowns", "fostering-placements", "dental-veneers"],
-  "smile-makeover": ["dental-veneers", "teeth-whitening", "invisalign"],
-  "pediatric-dentistry": ["teeth-cleaning", "braces", "dental-sealants"],
-  "wisdom-teeth-removal": ["tooth-extraction", "fostering-placements", "root-canal"],
+  "emergency-fostering": ["short-term-fostering", "long-term-fostering", "respite-fostering"],
+  "short-term-fostering": ["emergency-fostering", "long-term-fostering", "therapeutic-fostering"],
+  "long-term-fostering": ["short-term-fostering", "therapeutic-fostering", "fostering-to-adopt"],
+  "respite-fostering": ["emergency-fostering", "short-term-fostering", "therapeutic-fostering"],
+  "therapeutic-fostering": ["long-term-fostering", "short-term-fostering", "parent-and-child-fostering"],
+  "parent-and-child-fostering": ["therapeutic-fostering", "fostering-to-adopt", "short-term-fostering"],
+  "fostering-to-adopt": ["long-term-fostering", "therapeutic-fostering", "parent-and-child-fostering"],
+  "remand-fostering": ["emergency-fostering", "short-term-fostering", "therapeutic-fostering"],
 };
 
 interface GeographicLinkBlockProps {
@@ -117,10 +96,8 @@ export const GeographicLinkBlock = ({
   // STATE PAGE: Links to cities, services, neighboring states
   if (pageType === "state") {
     return (
-      <motion.section
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-card border border-border rounded-2xl p-6"
+      <section
+        className="animate-fade-in-up bg-card border border-border rounded-2xl p-6"
         aria-label="Explore more locations"
       >
         <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
@@ -185,17 +162,15 @@ export const GeographicLinkBlock = ({
             </div>
           )}
         </div>
-      </motion.section>
+      </section>
     );
   }
 
   // CITY PAGE: Links to services in city, nearby cities, parent state
   if (pageType === "city" && citySlug && cityName) {
     return (
-      <motion.section
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-card border border-border rounded-2xl p-6"
+      <section
+        className="animate-fade-in-up bg-card border border-border rounded-2xl p-6"
         aria-label="Explore agency services"
       >
         <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
@@ -264,18 +239,16 @@ export const GeographicLinkBlock = ({
             </nav>
           </div>
         </div>
-      </motion.section>
+      </section>
     );
   }
 
   // SERVICE-LOCATION PAGE: Links to same service nearby, related services, parent city
   if (pageType === "service-location" && citySlug && cityName && serviceSlug && serviceName) {
     return (
-      <motion.section
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-card border border-border rounded-2xl p-6"
-        aria-label="Related dental services"
+      <section
+        className="animate-fade-in-up bg-card border border-border rounded-2xl p-6"
+        aria-label="Related fostering services"
       >
         <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
           <Navigation className="h-5 w-5 text-primary" />
@@ -352,7 +325,7 @@ export const GeographicLinkBlock = ({
             </nav>
           </div>
         </div>
-      </motion.section>
+      </section>
     );
   }
 

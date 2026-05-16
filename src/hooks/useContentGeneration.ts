@@ -178,11 +178,10 @@ export function useGenerateContent() {
       
       const wordTarget = params.wordCount >= 1200 ? 'long-form' : params.wordCount >= 700 ? 'standard' : 'concise';
       
-      const prompt = `Generate high-quality, unique, comprehensive content for a UK fostering directory platform page.
+      const prompt = `Generate high-quality, unique, web-optimised content for a UK fostering directory platform page. The content must follow a proper heading hierarchy (H1 → H2 → H3) and use short, scannable paragraphs (max 3-4 sentences each).
 
 PLATFORM CONTEXT:
-- This is "Pure Start", a UK fostering directory that connects prospective foster carers with fostering agencies
-- The platform helps people find Independent Fostering Agencies (IFAs) and Local Authority fostering services
+- This is "Foster Care UK" (foster-care.co.uk), a UK fostering directory connecting prospective foster carers with fostering agencies
 - Audience: UK residents interested in becoming foster carers, looking for agencies in their local area
 - The platform covers all UK nations: England, Scotland, Wales, Northern Ireland
 
@@ -191,45 +190,58 @@ Target Keyword: ${params.targetKeyword}
 ${locationInfo}${serviceInfo}Tone: ${params.tone}
 Target Length: ${params.wordCount} words (${wordTarget} format)
 
-THE CONTENT MUST BE EXACTLY ${params.wordCount} WORDS. Count your words carefully. If under word count, add more substance.
-
-${params.existingContent ? `Existing content to improve/expand (may be too thin):\n${params.existingContent.substring(0, 2000)}\n\n` : ''}
-${params.competitors?.length ? `Competitor analysis - do NOT copy, but note what topics they cover:\n${params.competitors.join('\n')}\n\n` : ''}
+${params.existingContent ? `Existing content to improve/expand:\n${params.existingContent.substring(0, 2000)}\n\n` : ''}
+${params.competitors?.length ? `Competitor analysis — do NOT copy, but understand what topics they cover:\n${params.competitors.join('\n')}\n\n` : ''}
 
 CONTENT STRUCTURE REQUIREMENTS:
-- H1 tag that includes the target keyword and location
-- 4-6 H2 sections with substantive paragraphs under each
-- Introduction paragraph (100-150 words) that hooks the reader
-- Local/regional context about fostering in the specific area
-- Information about types of fostering available in that area
-- How to choose a fostering agency in that location
-- The fostering process and what to expect
-- Financial support and allowance information (UK-specific)
-- Trust signals: Ofsted ratings, regulatory info, support provided
-- FAQ section with 4-6 common questions specific to the location/topic
-- Strong CTA encouraging readers to browse agencies or get in touch
+- <h2> headings for each major section (NOT H1 — H1 is rendered separately in the page hero)
+- Short paragraphs: MAXIMUM 3-4 sentences each. Never write a paragraph longer than 4 sentences.
+- Use <ul> with <li> for any list of items, features, or steps
+- Use <p> for paragraphs
+- Break up text with frequent headings. A wall of text without a heading for more than 200 words is not allowed.
+- 5-7 H2 sections minimum, plus the FAQ
 
-RULES:
-- Write unique, helpful content for UK fostering applicants and foster carers
-- Include specific local context for UK locations (mention city/region landmarks, regional fostering statistics where applicable)
+REQUIRED SECTIONS (in order):
+1. Introduction (2-3 short paragraphs, 80-120 words total — hook the reader)
+2. "Why Choose a Fostering Agency in [Location]?" — 2-3 short paragraphs + bullet points for key benefits
+3. "Types of Fostering Available" — list fostering types as <ul> with short <li> descriptions
+4. "The Fostering Assessment Process" — use a numbered step list (<ol>) with brief explanations
+5. "Fostering Allowances and Financial Support" — present rates in short paragraphs + bullet points for breakdown
+6. "How to Find the Right Agency" — bullet point checklist format
+7. FAQ section with 5-7 questions (render each as <h3> heading + <p> answer)
+
+WRITING RULES:
+- MAXIMUM paragraph length: 4 sentences. Never more.
+- Use <ul> or <ol> for ANY listing of 2+ items
+- Every H2 section must be at least 2 paragraphs OR 1 paragraph + a list
+- No two consecutive sections without a heading between them
+- Write unique, location-specific content for UK fostering applicants
+- Include specific local context (mention city landmarks, regional fostering stats where applicable)
 - Follow Google E-E-A-T guidelines (experience, expertise, authoritativeness, trustworthiness)
 - People-first content, not search-first
-- No template or duplicate content - each page must feel unique to its location
+- Absolutely NO template phrases like "If you're looking for..." or "When it comes to..." — vary your sentence openings
 - No exaggerated claims about safeguarding or fostering outcomes
-- Include factual UK fostering information (fostering allowance rates, assessment process, etc.)
-- Use HTML tags properly: <h2> for sections, <p> for paragraphs, <ul>/<li> for lists
-- Make every page feel like it was hand-written for that specific location
-- Include trust building elements: mention Ofsted, fostering panels, support systems
+- Include factual UK fostering information (fostering allowance rates, assessment process, Ofsted inspection criteria)
+- Make every page feel hand-written for that specific location — use specific local details
+- Use varied sentence structure throughout — avoid repetitive patterns
+- Each paragraph must have a distinct angle — do not repeat the same idea across multiple paragraphs
+
+ANTI-DUPLICATION RULES:
+- This content will be compared against other pages. Every paragraph must contain at least one sentence that is unique to this location/topic.
+- Do NOT start paragraphs with the same phrase across different sections (vary: "In...", "Across...", "For...", "Carers in...", "Prospective foster parents...", etc.)
+- Do NOT use the same sentence structure or cadence across multiple pages
+- Do NOT use the phrase "Whether you're" or "When it comes to" — find fresh openings
+- Each list item must be genuinely informative, not generic filler
 
 Return ONLY valid JSON with NO text before or after:
 {
-  "content": "full HTML content with h2 sections, minimum ${params.wordCount} words",
+  "content": "full HTML content with h2 sections, short paragraphs, lists, minimum ${params.wordCount} words. Each section must have a heading.",
   "metaTitle": "string (max 60 chars, include location and keyword)",
-  "metaDescription": "string (max 160 chars, compelling with location context)",
-  "faqs": [{"question": "string", "answer": "string"}]
+  "metaDescription": "string (max 160 chars, compelling with location context, not starting with 'Find' or 'Discover')",
+  "faqs": [{"question": "string (natural question, not keyword-stuffed)", "answer": "string (2-4 sentences max)"}]
 }
 
-IMPORTANT: The content field must contain AT LEAST ${params.wordCount} words. Count words before returning. If short, add more detailed paragraphs.
+IMPORTANT: The content field must contain AT LEAST ${params.wordCount} words. Count words before returning. If short, add more detailed paragraphs with specific local information. Short paragraphs are OK — they improve readability. NEVER repeat the same section heading pattern across different pages.
 `;
 
       const response = await fetch(

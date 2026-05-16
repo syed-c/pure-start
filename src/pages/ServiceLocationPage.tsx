@@ -1,6 +1,5 @@
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
 import { supabase, supabaseAdmin } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
@@ -11,6 +10,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { SyncStructuredData } from "@/components/seo/SyncStructuredData";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
+import { ConversationalQABlock } from "@/components/ai-seo/ConversationalQABlock";
+import { QuickAnswerBox } from "@/components/ai-seo/QuickAnswerBox";
+import { PeopleAlsoAskBlock } from "@/components/ai-seo/PeopleAlsoAskBlock";
 import { useState as useStateData, useCity, useCitiesByStateSlug } from "@/hooks/useLocations";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
@@ -19,20 +21,6 @@ import {
   Heart, Shield, Users, MapPin, ArrowRight, Star, Search, ChevronRight, CheckCircle,
   Award, ThumbsUp, Clock, Wallet, Sparkles, Building2
 } from "lucide-react";
-
-const fadeUp = {
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.5 },
-};
-
-const stagger = (i: number) => ({
-  initial: { opacity: 0, y: 20 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.45, delay: i * 0.08 },
-});
 
 const ServiceLocationPage = () => {
   const { stateSlug, citySlug, serviceSlug } = useParams();
@@ -134,7 +122,7 @@ const ServiceLocationPage = () => {
       <SEOHead
         title={pageTitle}
         description={pageDescription}
-        canonical={`https://www.foster-care.co.uk/${normalizedStateSlug}/${citySlug}/${service}/`}
+        canonical={`/${normalizedStateSlug}/${citySlug}/${service}/`}
         keywords={[`${treatmentName} ${locationName}`, `fostering ${locationName}`, `${treatmentName.toLowerCase()} agency`]}
         noindex={shouldNoIndex}
         ogImage={`https://www.foster-care.co.uk/og/${service}-${normalizedStateSlug}-${citySlug}.png`}
@@ -150,6 +138,7 @@ const ServiceLocationPage = () => {
           { type: 'place', name: locationName, description: pageDescription, url: `/${normalizedStateSlug}/${citySlug}/${service}/`, addressLocality: locationName, addressRegion: stateName, addressCountry: 'GB' },
           { type: 'service', name: treatmentName, description: treatment?.description || `${treatmentName} fostering services`, provider: { name: 'Foster Care UK', url: 'https://www.foster-care.co.uk' } },
           { type: 'faq', questions: faqs.map(f => ({ question: f.q, answer: f.a })) },
+          { type: 'webSite', name: pageTitle, url: `https://www.foster-care.co.uk/${normalizedStateSlug}/${citySlug}/${service}/` },
         ]}
         id="service-location-schema"
       />
@@ -175,7 +164,7 @@ const ServiceLocationPage = () => {
           <Breadcrumbs items={breadcrumbs} className="mb-8 text-white/70 [&_a]:text-white/80 [&_a:hover]:text-teal-300" />
 
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <div className="animate-fade-in-up">
               <span className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-6">
                 <Heart className="h-4 w-4 text-teal-400" />
                 <span className="text-sm font-medium text-white">{treatmentName} Agencies</span>
@@ -212,14 +201,12 @@ const ServiceLocationPage = () => {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
             {/* CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="flex flex-wrap justify-center gap-3"
+            <div
+              className="animate-fade-in-up flex flex-wrap justify-center gap-3"
+              style={{ animationDelay: '0.3s' }}
             >
               <Button size="lg" className="h-14 px-8 text-base font-semibold bg-teal-500 hover:bg-teal-600 text-slate-900 rounded-xl shadow-lg shadow-teal-500/30" asChild>
                 <Link to="/search">
@@ -232,7 +219,7 @@ const ServiceLocationPage = () => {
                   View All in {locationName}
                 </Link>
               </Button>
-            </motion.div>
+            </div>
           </div>
         </div>
 
@@ -245,11 +232,12 @@ const ServiceLocationPage = () => {
 
       {/* Trust Badges Section */}
       <Section size="md" className="relative overflow-hidden">
+        <h2 className="sr-only">About {treatmentName} Fostering in {locationName}</h2>
         <div className="absolute inset-0 bg-subtle-grid opacity-20 pointer-events-none" />
         <div className="container px-4 relative">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {trustBadges.map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }}>
+              <div key={i} className="animate-fade-in-up" style={{ animationDelay: `${0.1 * i}s` }}>
                 <Card className="text-center py-6 hover:border-teal-500/30 transition-colors">
                   <CardContent className="p-0">
                     <div className="w-12 h-12 rounded-full bg-teal-500/10 flex items-center justify-center mx-auto mb-3">
@@ -259,7 +247,7 @@ const ServiceLocationPage = () => {
                     <p className="text-xs text-muted-foreground">{item.desc}</p>
                   </CardContent>
                 </Card>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -270,12 +258,12 @@ const ServiceLocationPage = () => {
         <div className="absolute inset-0 bg-subtle-dots opacity-10 pointer-events-none" />
         <div className="container px-4">
           <div className="max-w-3xl mx-auto">
-            <motion.div {...fadeUp} className="text-center mb-10">
+            <div className="animate-fade-in-up text-center mb-10">
               <Badge variant="outline" className="mb-3">About</Badge>
               <h2 className="text-2xl md:text-3xl font-bold">
                 About <span className="text-teal-600">{treatmentName}</span> in {locationName}
               </h2>
-            </motion.div>
+            </div>
 
             <Card className="bg-card border-border mb-6">
               <CardContent className="p-6 md:p-8">
@@ -318,20 +306,20 @@ const ServiceLocationPage = () => {
       <Section size="lg" className="relative overflow-hidden">
         <div className="absolute inset-0 bg-muted/30 pointer-events-none" />
         <div className="container px-4 relative">
-          <motion.div {...fadeUp} className="text-center mb-10">
+          <div className="animate-fade-in-up text-center mb-10">
             <Badge variant="outline" className="mb-3">Agencies</Badge>
             <h2 className="text-2xl md:text-3xl font-bold">
               {treatmentName} Agencies in <span className="text-teal-600">{locationName}</span>
             </h2>
             <p className="text-muted-foreground mt-2">Connect with verified fostering agencies</p>
-          </motion.div>
+          </div>
 
           <div className="grid gap-4 max-w-3xl mx-auto">
             {profilesLoading ? (
               [...Array(3)].map((_, i) => <Skeleton key={i} className="h-28 rounded-xl" />)
             ) : profiles && profiles.length > 0 ? (
               profiles.map((agency, i) => (
-                <motion.div key={agency.id} {...stagger(i)}>
+                <div key={agency.id} className="animate-fade-in-up" style={{ animationDelay: `${0.08 * i}s` }}>
                   <Link to={`/agency/${agency.slug}/`}>
                     <Card className="hover:border-teal-500/50 hover:bg-teal-500/5 hover:shadow-lg transition-all duration-300 group">
                       <CardContent className="p-5 flex items-center gap-4">
@@ -360,7 +348,7 @@ const ServiceLocationPage = () => {
                       </CardContent>
                     </Card>
                   </Link>
-                </motion.div>
+                </div>
               ))
             ) : (
               <div className="text-center py-16">
@@ -385,27 +373,30 @@ const ServiceLocationPage = () => {
       <Section size="lg" className="relative overflow-hidden">
         <div className="absolute inset-0 bg-subtle-dots opacity-10 pointer-events-none" />
         <div className="container px-4">
-          <motion.div {...fadeUp} className="max-w-3xl mx-auto">
-            <div className="text-center mb-10">
-              <Badge variant="outline" className="mb-3">FAQ</Badge>
-              <h2 className="text-2xl md:text-3xl font-bold">
-                Frequently Asked <span className="text-teal-600">Questions</span>
-              </h2>
-            </div>
-
-            <div className="space-y-4">
-              {faqs.map((faq, i) => (
-                <motion.div key={i} {...stagger(i)}>
-                  <Card className="bg-card border-border hover:border-teal-500/30 transition-colors">
-                    <CardContent className="p-6">
-                      <h3 className="font-bold text-foreground mb-2">{faq.q}</h3>
-                      <p className="text-muted-foreground leading-relaxed">{faq.a}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+          <div className="max-w-3xl mx-auto space-y-8">
+            <QuickAnswerBox
+              question={`What ${treatmentName} fostering options are available in ${locationName}?`}
+              answer={`${locationName} has agencies offering ${treatmentName.toLowerCase()} fostering, providing specialist support for children and families. The assessment process for fostering typically takes 4-6 months with comprehensive training and 24/7 support.`}
+              highlights={[
+                `Specialist ${treatmentName.toLowerCase()} fostering support`,
+                `Full training and ongoing development provided`,
+                `24/7 support from your chosen agency`,
+                `Competitive fostering allowances`
+              ]}
+            />
+            <ConversationalQABlock
+              title={`${treatmentName} Fostering in ${locationName}`}
+              subtitle="Common questions about this type of fostering"
+              items={faqs.map(f => ({ question: f.q, answer: f.a }))}
+              defaultOpen
+            />
+            <PeopleAlsoAskBlock
+              items={[
+                { question: `How do I apply for ${treatmentName.toLowerCase()} fostering in ${locationName}?`, answer: `Contact agencies in ${locationName} that offer ${treatmentName.toLowerCase()} fostering. They will guide you through the application, assessment, and training process.` },
+                { question: `What support is available for ${treatmentName.toLowerCase()} foster carers?`, answer: `Agencies provide dedicated support workers, training programs, respite care, and access to specialist resources for ${treatmentName.toLowerCase()} placements.` }
+              ]}
+            />
+          </div>
         </div>
       </Section>
 
@@ -413,10 +404,10 @@ const ServiceLocationPage = () => {
       <Section size="md" className="bg-muted/30 relative overflow-hidden">
         <div className="absolute inset-0 bg-subtle-grid opacity-20 pointer-events-none" />
         <div className="container px-4 relative">
-          <motion.div {...fadeUp} className="text-center mb-8">
+          <div className="animate-fade-in-up text-center mb-8">
             <h2 className="text-xl font-bold">Other Areas in {stateName}</h2>
             <p className="text-muted-foreground text-sm mt-1">Find agencies in nearby locations</p>
-          </motion.div>
+          </div>
 
           <div className="flex flex-wrap justify-center gap-2">
             {nearbyLocations.length > 0 ? nearbyLocations.map((loc) => (
@@ -438,7 +429,7 @@ const ServiceLocationPage = () => {
         <div className="absolute -top-20 -right-20 w-60 h-60 bg-white/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-white/5 rounded-full blur-3xl" />
         <div className="container relative text-center">
-          <motion.div {...fadeUp}>
+          <div className="animate-fade-in-up">
             <Sparkles className="h-10 w-10 text-white/50 mx-auto mb-4" />
             <h2 className="text-2xl md:text-4xl font-extrabold text-white mb-4">
               Interested in {treatmentName}?
@@ -458,7 +449,7 @@ const ServiceLocationPage = () => {
                 <Link to="/faq">Fostering FAQ</Link>
               </Button>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
     </PageLayout>

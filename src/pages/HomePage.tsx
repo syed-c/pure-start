@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { getLetterAvatarUrl } from "@/hooks/useProfiles";
@@ -126,6 +125,8 @@ function HomePage() {
         keywords={['fostering agencies UK', 'foster care directory', 'become foster carrier', 'Ofsted registered agencies', 'UK fostering', 'foster agencies near me']}
       />
       <StructuredData type="organization" />
+      <StructuredData type="website" />
+      <StructuredData type="breadcrumb" items={[{ name: "Home", url: "https://www.foster-care.co.uk/" }]} />
       <PageLayout>
       {/* Hero Section */}
       <section className="relative overflow-hidden min-h-[600px] flex items-center">
@@ -146,39 +147,31 @@ function HomePage() {
 
         <div className="container relative z-10 px-4 py-16 md:py-24">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-6"
+            <div 
+              className="animate-fade-in-up inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-6"
             >
               <Shield className="h-4 w-4 text-teal-400" />
               <span className="text-sm font-medium text-white">UK's Leading Fostering Directory</span>
-            </motion.div>
+            </div>
 
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: 0.1 }}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight"
+            <h1 
+              className="animate-fade-in-up text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight"
+              style={{ animationDelay: '0.1s' }}
             >
               Find Trusted <span className="text-teal-400">Fostering Agencies</span> UK
-            </motion.h1>
+            </h1>
 
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: 0.2 }}
-              className="text-base md:text-lg text-white/70 mb-6 md:mb-8 max-w-2xl mx-auto"
+            <p 
+              className="animate-fade-in-up text-base md:text-lg text-white/70 mb-6 md:mb-8 max-w-2xl mx-auto"
+              style={{ animationDelay: '0.2s' }}
             >
               Connect with {totalAgencies}+ Ofsted-registered fostering agencies across England, Scotland, Wales, and Northern Ireland. Compare ratings, read reviews, and find your perfect match.
-            </motion.p>
+            </p>
 
             {/* Stats Cards */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: 0.3 }}
-              className="flex flex-wrap justify-center gap-4 mb-10"
+            <div 
+              className="animate-fade-in-up flex flex-wrap justify-center gap-4 mb-10" 
+              style={{ animationDelay: '0.3s' }}
             >
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-5 py-3">
                 <Users className="h-5 w-5 text-teal-400" />
@@ -208,15 +201,13 @@ function HomePage() {
                   <p className="text-xs text-white/60">Ofsted Rated</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
             {/* Search Box */}
-            <motion.form 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: 0.4 }}
+            <form 
+              className="animate-fade-in-up max-w-xl mx-auto px-2"
               onSubmit={handleSearch}
-              className="max-w-xl mx-auto px-2"
+              style={{ animationDelay: '0.4s' }}
             >
               <div className="flex flex-col sm:flex-row shadow-2xl">
                 <input
@@ -231,14 +222,12 @@ function HomePage() {
                   <span className="hidden sm:inline">Search</span>
                 </Button>
               </div>
-            </motion.form>
+            </form>
 
             {/* Quick Links */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: 0.5 }}
-              className="flex flex-wrap justify-center gap-3 mt-6"
+            <div 
+              className="animate-fade-in-up flex flex-wrap justify-center gap-3 mt-6"
+              style={{ animationDelay: '0.5s' }}
             >
               <Link to="/categories" className="text-white/60 hover:text-teal-400 text-sm transition-colors">
                 Browse Services →
@@ -249,7 +238,7 @@ function HomePage() {
               <Link to="/become-foster-carer" className="text-white/60 hover:text-teal-400 text-sm transition-colors">
                 Become a Foster Carer →
               </Link>
-            </motion.div>
+            </div>
           </div>
         </div>
 
@@ -267,7 +256,7 @@ function HomePage() {
         <div className="relative">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {trustBadges.map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }}>
+              <div key={i} className="animate-fade-in-up" style={{ animationDelay: `${0.1 * i}s` }}>
                 <Card className="text-center py-6 bg-slate-800/50 border-slate-700 hover:border-teal-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-teal-500/5 hover:-translate-y-1">
                   <CardContent className="p-0">
                     <div className="w-14 h-14 rounded-full bg-teal-500/10 flex items-center justify-center mx-auto mb-3 group-hover:bg-teal-500/20 transition-colors">
@@ -277,7 +266,7 @@ function HomePage() {
                     <p className="text-xs text-slate-400 mt-1">{item.desc}</p>
                   </CardContent>
                 </Card>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -296,7 +285,7 @@ function HomePage() {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
             {fosteringServices.map((service, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
+              <div key={i} className="animate-fade-in-up" style={{ animationDelay: `${0.05 * i}s` }}>
                 <Link to={`/categories/${service.slug}/`}>
                   <Card className="group bg-slate-800/50 border-slate-700 hover:border-teal-500/50 hover:bg-teal-500/10 transition-all duration-300 cursor-pointer h-full">
                     <CardContent className="p-5 flex flex-col items-center text-center">
@@ -308,7 +297,7 @@ function HomePage() {
                     </CardContent>
                   </Card>
                 </Link>
-              </motion.div>
+              </div>
             ))}
           </div>
 
@@ -335,7 +324,7 @@ function HomePage() {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4">
             {displayCities.map((city: any, i: number) => (
-              <motion.div key={city.id || i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
+              <div key={city.id || i} className="animate-fade-in-up" style={{ animationDelay: `${0.05 * i}s` }}>
                 <Link to={`/fostering-agencies/${city.slug}/`}>
                   <Card className="group bg-slate-800/50 border-slate-700 hover:border-teal-500/50 hover:bg-teal-500/10 transition-all duration-300 cursor-pointer">
                     <CardContent className="p-4 flex items-center justify-between">
@@ -349,7 +338,7 @@ function HomePage() {
                     </CardContent>
                   </Card>
                 </Link>
-              </motion.div>
+              </div>
             ))}
           </div>
 
@@ -457,13 +446,10 @@ function HomePage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-6xl mx-auto">
             {testimonials.map((t, i) => (
-              <motion.div
+              <div
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-slate-900/60 border border-slate-700/50 rounded-2xl p-6 hover:border-teal-500/30 hover:shadow-xl hover:shadow-teal-500/5 transition-all duration-300 relative group"
+                className="animate-fade-in-up bg-slate-900/60 border border-slate-700/50 rounded-2xl p-6 hover:border-teal-500/30 hover:shadow-xl hover:shadow-teal-500/5 transition-all duration-300 relative group"
+                style={{ animationDelay: `${0.1 * i}s` }}
               >
                 <div className="absolute top-4 right-4 text-4xl text-teal-500/10 font-serif leading-none select-none">"</div>
                 <div className="flex gap-1 mb-4">
@@ -476,7 +462,7 @@ function HomePage() {
                   <p className="font-bold text-white text-sm">{t.name}</p>
                   <p className="text-xs text-slate-500">{t.location}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -487,20 +473,17 @@ function HomePage() {
         <div className="container px-4 py-8">
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-3">
             {trustCredentials.map((cred, i) => (
-              <motion.div
+              <div
                 key={i}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                className={`flex items-center gap-2 ${cred.label === "Ofsted Registered" ? "trust-badge-ofsted px-3 py-1.5 rounded-full" : ""}`}
+                className={`animate-fade-in-up flex items-center gap-2 ${cred.label === "Ofsted Registered" ? "trust-badge-ofsted px-3 py-1.5 rounded-full" : ""}`}
+                style={{ animationDelay: `${0.08 * i}s` }}
               >
                 <Shield className={`h-4 w-4 shrink-0 ${cred.label === "Ofsted Registered" ? "text-primary" : "text-teal-400"}`} />
                 <div>
                   <span className={`text-sm font-bold ${cred.label === "Ofsted Registered" ? "text-primary" : "text-white"}`}>{cred.label}</span>
                   <span className="text-xs text-slate-500 ml-2 hidden sm:inline">{cred.description}</span>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -524,12 +507,10 @@ function HomePage() {
                 { icon: MapPin, title: "Local Fostering Agencies", desc: "Find fostering agencies near you. We list local foster care providers in every UK city and region, making it easy to find support in your community." },
                 { icon: Heart, title: "Support Every Step", desc: "From your first enquiry to becoming a foster carer, find agencies that provide comprehensive support, training, and allowance guidance." },
               ].map((item, i) => (
-                <motion.div
+                <div
                   key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: `${0.1 * i}s` }}
                 >
                   <Card className="bg-slate-900/60 border-slate-800/80 hover:border-teal-500/30 transition-all duration-300 group card-depth">
                     <CardContent className="p-6 md:p-7">
@@ -544,7 +525,7 @@ function HomePage() {
                       </div>
                     </CardContent>
                   </Card>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>

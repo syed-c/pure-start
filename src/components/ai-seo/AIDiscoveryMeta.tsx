@@ -74,7 +74,7 @@ export function AIDiscoveryMeta({
     schemas.push({
       "@context": "https://schema.org",
       "@type": "HowTo",
-      name: `How to find the best ${pageTitle} in the UAE`,
+      name: `How to find the best ${pageTitle} across the UK`,
       description: aiSummary,
       step: keyFacts.map((fact, i) => ({
         "@type": "HowToStep",

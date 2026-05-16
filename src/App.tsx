@@ -17,9 +17,9 @@ import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
 import { MetaTagInjector } from "@/components/analytics/MetaTagInjector";
 import { CriticalResourceLoader } from "@/components/common/CriticalResourceLoader";
 
-import HomePage from "./pages/HomePage";
-import SearchPage from "./pages/SearchPage";
-import NotFound from "./pages/NotFound";
+const HomePage = lazyRetry(() => import("./pages/HomePage"));
+const SearchPage = lazyRetry(() => import("./pages/SearchPage"));
+const NotFound = lazyRetry(() => import("./pages/NotFound"));
 
 const Auth = lazyRetry(() => import("./pages/Auth"));
 const AuthCallback = lazyRetry(() => import("./pages/AuthCallback"));

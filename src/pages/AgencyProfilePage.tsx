@@ -364,7 +364,7 @@ const AgencyProfilePage = () => {
         data={[
           {
             type: 'breadcrumb',
-            items: breadcrumbs.map(b => ({ name: b.label, url: b.href === '/' ? 'https://fostercare.uk/' : `https://fostercare.uk${b.href}` })),
+            items: breadcrumbs.map(b => ({ name: b.label, url: b.href === '/' ? 'https://www.foster-care.co.uk/' : `https://www.foster-care.co.uk${b.href}` })),
           },
           {
             type: 'Organization',
@@ -375,7 +375,7 @@ const AgencyProfilePage = () => {
             addressRegion: agencyState,
             addressCountry: 'GB',
             telephone: agency.phone || '',
-            url: `https://fostercare.uk/agency/${agency.slug}/`,
+            url: `https://www.foster-care.co.uk/agency/${agency.slug}/`,
           },
         ]}
         id="agency-schema"

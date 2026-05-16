@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface AnimatedHeroHeadlinesProps {
   headlines: string[];
@@ -18,22 +17,12 @@ export const AnimatedHeroHeadlines = ({ headlines, className = "" }: AnimatedHer
 
   return (
     <div className={`relative overflow-hidden ${className}`}>
-      <AnimatePresence mode="popLayout">
-        <motion.div
-          key={currentIndex}
-          initial={{ x: "-100%", opacity: 0, scale: 0.9 }}
-          animate={{ x: "0%", opacity: 1, scale: 1 }}
-          exit={{ x: "100%", opacity: 0, scale: 0.9 }}
-          transition={{
-            x: { type: "spring", stiffness: 100, damping: 20 },
-            opacity: { duration: 0.4 },
-            scale: { duration: 0.4 }
-          }}
-          className="text-primary whitespace-nowrap py-2"
-        >
-          {headlines[currentIndex]}
-        </motion.div>
-      </AnimatePresence>
+      <div
+        key={currentIndex}
+        className="text-primary whitespace-nowrap py-2 animate-slide-in-left"
+      >
+        {headlines[currentIndex]}
+      </div>
     </div>
   );
 };

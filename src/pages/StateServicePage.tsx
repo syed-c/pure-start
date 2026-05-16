@@ -5,7 +5,6 @@
  */
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
 import { supabase, supabaseAdmin } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
@@ -166,47 +165,38 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, fosterin
           </div>
 
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <div className="animate-fade-in-up">
               <Badge variant="secondary" className="rounded-full px-4 py-1.5 text-xs md:text-sm font-bold mb-4 bg-primary/15 text-primary border-primary/30 backdrop-blur-md">
                 <Heart className="h-3 w-3 md:h-4 md:w-4 mr-1.5" />
                 {stateName} Agencies
               </Badge>
-            </motion.div>
+            </div>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-3 px-2"
-              style={{ fontFamily: "'Varela Round', system-ui, sans-serif" }}
+            <h1
+              className="animate-fade-in-up font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-3 px-2"
+              style={{ fontFamily: "'Varela Round', system-ui, sans-serif", animationDelay: '0.1s' }}
             >
               <span className="text-white">{treatmentName} in </span>
               <span className="text-primary">{stateName}</span>
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="text-sm md:text-base lg:text-lg text-white/40 max-w-2xl mx-auto mb-5 px-2"
+            <p
+              className="animate-fade-in text-sm md:text-base lg:text-lg text-white/40 max-w-2xl mx-auto mb-5 px-2"
+              style={{ animationDelay: '0.2s' }}
             >
               Compare {profiles?.length || 0}+ Ofsted-rated {treatmentName.toLowerCase()} agencies across {stateName}.
-            </motion.p>
+            </p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="max-w-xl md:max-w-2xl mx-auto mb-5"
+            <div
+              className="animate-fade-in-up max-w-xl md:max-w-2xl mx-auto mb-5"
+              style={{ animationDelay: '0.3s' }}
             >
               <SearchBox variant="hero" stateSlug={stateSlug} defaultTreatment={serviceSlug} />
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="flex flex-wrap justify-center gap-2"
+            <div
+              className="animate-fade-in flex flex-wrap justify-center gap-2"
+              style={{ animationDelay: '0.4s' }}
             >
               <div className="flex items-center gap-1.5 bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-xl px-3 py-2">
                 <Users className="h-4 w-4 text-primary" />
@@ -220,7 +210,7 @@ const StateServicePage = ({ stateSlug, serviceSlug, stateName, stateId, fosterin
                 <Clock className="h-4 w-4 text-primary" />
                 <span className="font-bold text-sm text-white">Connect Today</span>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
 

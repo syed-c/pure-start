@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
 import { supabase, supabaseAdmin } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
@@ -19,6 +18,9 @@ import { usePrerenderReady } from "@/hooks/usePrerenderReady";
 import { normalizeStateSlug } from "@/lib/slug/normalizeStateSlug";
 import StateServicePage from "./StateServicePage";
 import NotFound from "./NotFound";
+import { ConversationalQABlock } from "@/components/ai-seo/ConversationalQABlock";
+import { QuickAnswerBox } from "@/components/ai-seo/QuickAnswerBox";
+import { PeopleAlsoAskBlock } from "@/components/ai-seo/PeopleAlsoAskBlock";
 import { 
   Star, Shield, Heart, Users, MapPin, ArrowRight, 
   Search, ChevronRight, Phone, Mail, Clock, Filter,
@@ -151,13 +153,14 @@ const CityPage = () => {
         canonical={`/${normalizedStateSlug}/${citySlug}/`}
         keywords={[`fostering agencies ${cityName}`, `foster care ${cityName} ${stateAbbr}`]}
         noindex={shouldNoIndex}
-        ogImage={`https://fostercareuk.com/og/city-${normalizedStateSlug}-${citySlug}.png`}
+        ogImage={`https://www.foster-care.co.uk/og/city-${normalizedStateSlug}-${citySlug}.png`}
       />
       <SyncStructuredData
         data={[
-          { type: 'breadcrumb', items: [{ name: 'Home', url: 'https://fostercareuk.com/' }, { name: stateName, url: `https://fostercareuk.com/${normalizedStateSlug}/` }, { name: cityName, url: `https://fostercareuk.com/${normalizedStateSlug}/${citySlug}/` }] },
+          { type: 'breadcrumb', items: [{ name: 'Home', url: 'https://www.foster-care.co.uk/' }, { name: stateName, url: `https://www.foster-care.co.uk/${normalizedStateSlug}/` }, { name: cityName, url: `https://www.foster-care.co.uk/${normalizedStateSlug}/${citySlug}/` }] },
           { type: 'place', name: cityName, description: pageDescription, url: `/${normalizedStateSlug}/${citySlug}/`, addressLocality: cityName, addressRegion: stateName, addressCountry: 'GB' },
           { type: 'faq', questions: faqs.map(f => ({ question: f.q, answer: f.a })) },
+          { type: 'webSite', name: pageTitle, url: `https://www.foster-care.co.uk/${normalizedStateSlug}/${citySlug}/` },
         ]}
         id="city-schema"
       />
@@ -182,7 +185,7 @@ const CityPage = () => {
           <Breadcrumbs items={breadcrumbs} className="mb-6 text-white/70 [&_a]:text-white/80 [&_a:hover]:text-teal-300" />
           
           <div className="max-w-3xl">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <div className="animate-fade-in-up">
               <Badge variant="secondary" className="mb-3 bg-white/10 text-white border-white/20">Fostering Agencies</Badge>
               <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
                 {cityName}, <span className="text-teal-400">{stateName}</span>
@@ -206,7 +209,7 @@ const CityPage = () => {
                   <span className="font-semibold text-white">Ofsted Verified</span>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
 
@@ -219,10 +222,11 @@ const CityPage = () => {
 
       {/* Trust Benefits */}
       <Section size="md">
+        <h2 className="sr-only">Benefits of Fostering</h2>
         <div className="container px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {benefits.map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }}>
+              <div key={i} className="animate-fade-in-up" style={{ animationDelay: `${0.1 * i}s` }}>
                 <Card className="text-center py-5 hover:border-teal-500/30 transition-colors">
                   <CardContent className="p-0">
                     <item.icon className="h-8 w-8 mx-auto mb-2 text-teal-600" />
@@ -230,7 +234,7 @@ const CityPage = () => {
                     <p className="text-xs text-muted-foreground">{item.desc}</p>
                   </CardContent>
                 </Card>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -268,7 +272,7 @@ const CityPage = () => {
               [...Array(3)].map((_, i) => <Skeleton key={i} className="h-32 rounded-xl" />)
             ) : filteredProfiles && filteredProfiles.length > 0 ? (
               filteredProfiles.map((agency, i) => (
-                <motion.div key={agency.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+                <div key={agency.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 0.05}s` }}>
                   <Link to={`/agency/${agency.slug}/`}>
                     <Card className="hover:border-teal-500/50 hover:bg-teal-500/5 transition-all duration-300 group">
                       <CardContent className="p-5 flex flex-col md:flex-row md:items-center gap-4">
@@ -305,7 +309,7 @@ const CityPage = () => {
                       </CardContent>
                     </Card>
                   </Link>
-                </motion.div>
+                </div>
               ))
             ) : (
               <div className="text-center py-12">
@@ -334,7 +338,7 @@ const CityPage = () => {
               { step: "3", icon: Calendar, title: "Meet", desc: "Attend information sessions" },
               { step: "4", icon: Heart, title: "Start", desc: "Begin your fostering journey" },
             ].map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }} className="text-center">
+              <div key={i} className="animate-fade-in-up text-center" style={{ animationDelay: `${0.1 * i}s` }}>
                 <div className="w-14 h-14 rounded-full bg-teal-500/10 flex items-center justify-center mx-auto mb-3">
                   <item.icon className="h-7 w-7 text-teal-600" />
                 </div>
@@ -343,7 +347,7 @@ const CityPage = () => {
                 </div>
                 <h3 className="font-bold">{item.title}</h3>
                 <p className="text-xs text-muted-foreground">{item.desc}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -500,6 +504,42 @@ const CityPage = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* AI-SEO Content */}
+            <Section size="lg" className="bg-muted/30">
+              <div className="container px-4">
+                <div className="max-w-3xl mx-auto space-y-8">
+                  <QuickAnswerBox
+                    question={`What fostering options are available in ${cityName}?`}
+                    answer={`${cityName} has ${profiles?.length || 0} Ofsted-rated fostering agencies offering emergency, short-term, long-term, respite, therapeutic, and parent & child fostering placements. The assessment process typically takes 4-6 months with full training and 24/7 support provided.`}
+                    highlights={[
+                      `${profiles?.length || 0} Ofsted-verified agencies to choose from`,
+                      `Fostering types: emergency, short-term, long-term, respite, therapeutic`,
+                      `Assessment process: 4-6 months with full training provided`,
+                      `24/7 support from your chosen agency`
+                    ]}
+                  />
+                  <ConversationalQABlock
+                    title={`Fostering in ${cityName} - Your Questions Answered`}
+                    subtitle="Everything you need to know about fostering in this area"
+                    items={[
+                      ...faqs.map(f => ({ question: f.q, answer: f.a })),
+                      { question: `How do I contact agencies in ${cityName}?`, answer: `You can browse our verified list of agencies in ${cityName} above, view their Ofsted ratings, read reviews from other foster carers, and contact them directly through their profile pages.` },
+                      { question: `What training is provided by ${cityName} agencies?`, answer: `All Ofsted-registered agencies in ${cityName} provide comprehensive training covering safeguarding, attachment theory, therapeutic parenting, and first aid. Most also offer ongoing professional development opportunities.` },
+                      { question: `What fostering allowances can I expect in ${cityName}?`, answer: `Fostering allowances in ${cityName} vary by agency and placement type. Typically, foster carers receive between £400-£800 per week per child, plus additional payments for specialist placements and holidays.` }
+                    ]}
+                    defaultOpen
+                  />
+                  <PeopleAlsoAskBlock
+                    items={[
+                      { question: `Do I need my own home to foster in ${cityName}?`, answer: `Yes, you typically need a spare bedroom for fostering. This can be a rented or owned property. Agencies in ${cityName} will assess your home during the application process.` },
+                      { question: `Can I work while fostering in ${cityName}?`, answer: `Many foster carers work part-time or are stay-at-home parents. Some fostering types like emergency and parent-child placements may require full-time availability. Discuss your situation with agencies in ${cityName}.` },
+                      { question: `Are there support groups for foster carers in ${cityName}?`, answer: `Most agencies in ${cityName} offer local support groups where foster carers can connect, share experiences, and access additional training. These groups are often a valuable source of peer support.` }
+                    ]}
+                  />
+                </div>
+              </div>
+            </Section>
 
             {/* CTA Links */}
             <div className="mt-10 flex flex-wrap gap-3 justify-center">

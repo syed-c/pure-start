@@ -14,7 +14,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Calculator, Heart, Shield, Star, Users, ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
 
 const FOSTERING_TYPES = [
   { id: "emergency-fostering", name: "Emergency Fostering", description: "Immediate placements for children in crisis" },
@@ -179,11 +178,7 @@ export default function FosteringAllowanceCalculator() {
                 </div>
 
                 {(selectedType || selectedAge) && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mt-8 p-6 bg-primary/5 rounded-xl border border-primary/20"
-                  >
+                  <div className="animate-fade-in-up mt-8 p-6 bg-primary/5 rounded-xl border border-primary/20">
                     <div className="text-center">
                       <p className="text-sm text-muted-foreground mb-2">Estimated Weekly Allowance</p>
                       <p className="text-4xl font-bold text-primary">
@@ -200,7 +195,7 @@ export default function FosteringAllowanceCalculator() {
                         </Link>
                       </Button>
                     </div>
-                  </motion.div>
+                  </div>
                 )}
               </CardContent>
             </Card>

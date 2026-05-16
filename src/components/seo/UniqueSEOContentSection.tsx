@@ -367,14 +367,14 @@ const CityFallbackContent = ({
       
       <p className="text-lg text-muted-foreground leading-relaxed mb-6">
         {cityName} is home to {clinicCount > 0 ? `${clinicCount}+` : 'several'} fostering agencies serving 
-        the local community. Whether you need a family fostering for routine checkups, an therapeutic specialist for 
-        braces, or a specialist for fostering placements, {cityName} has qualified professionals ready to help.
+        the local community. Whether you need a family fostering for short-term care, a therapeutic specialist for
+        specialist care, or a foster carer for long-term placements, {cityName} has qualified professionals ready to help.
       </p>
       
       <p className="text-muted-foreground leading-relaxed mb-6">
-        {cityName}, {stateName} agency offices offer comprehensive services ranging from preventive care 
-        like cleanings and exams to advanced treatments including specialist fosteringry, periodontics, and 
-        oral surgery. Many clinics serve patients from surrounding {stateAbbr} communities as well.
+        {cityName}, {stateName} agencies offer comprehensive services ranging from short-term fostering
+        to advanced placements including specialist therapeutic care, sibling group placements, and
+        emergency fostering. Many agencies serve families from surrounding {stateAbbr} communities as well.
       </p>
       
       <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4 mt-8">
@@ -598,7 +598,7 @@ const ServiceFallbackContent = ({
         <div>
           <h3 className="font-bold text-foreground mb-1">Benefits</h3>
           <p className="text-muted-foreground text-sm">
-            Improved oral health, enhanced smile aesthetics, and long-lasting results with proper care.
+            Stable, nurturing environment, improved developmental outcomes, and long-term support networks.
           </p>
         </div>
       </div>
@@ -609,7 +609,7 @@ const ServiceFallbackContent = ({
         <div>
           <h3 className="font-bold text-foreground mb-1">Safety</h3>
           <p className="text-muted-foreground text-sm">
-            Modern techniques and anesthesia ensure comfortable, safe treatment experiences.
+            Thorough assessments, matching processes, and ongoing support ensure safe, positive fostering experiences.
           </p>
         </div>
       </div>

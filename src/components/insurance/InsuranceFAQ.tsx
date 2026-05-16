@@ -6,24 +6,24 @@ interface InsuranceFAQProps {
 
 const faqs = [
   {
-    q: "How do I verify my {insurance} coverage?",
-    a: "Contact your insurance provider directly or ask the clinic's front desk to verify your coverage before your appointment. Most clinics can check your benefits in real-time.",
+    q: "How do I apply for {insurance} fostering?",
+    a: "Contact your local {insurance} fostering agency or visit their website to begin the application process. Agencies typically provide information sessions and initial assessments to help you understand the requirements and steps involved.",
   },
   {
-    q: "What is direct billing?",
-    a: "Direct billing means the clinic bills your insurance company directly, so you don't have to pay upfront for covered services. You only pay your copay or deductible at the time of service.",
+    q: "What allowances and support are available?",
+    a: "Foster carers receive weekly allowances to cover the cost of caring for a child, including food, clothing, and activities. Additional support such as respite care, training, and 24/7 helpline access is also provided by most agencies.",
   },
   {
-    q: "Do I need pre-approval for specialized procedures?",
-    a: "Some procedures like crowns, bridges, or orthodontics may require pre-approval. Ask your dentist to submit a pre-authorization request before scheduling major work.",
+    q: "What types of fostering are there?",
+    a: "There are several types of fostering including short-term, long-term, emergency, respite, and specialist fostering for children with complex needs. Your agency will help match you with the type that best suits your circumstances.",
   },
   {
-    q: "What if my dentist isn't in-network?",
-    a: "You can still see out-of-network agencies, but you may pay more. Check with your insurance about out-of-network benefits and reimbursement rates.",
+    q: "Do I need my own home to foster?",
+    a: "You can foster if you own your home or rent, as long as you have a spare bedroom. Agencies assess your living situation to ensure it meets the requirements for providing a safe and nurturing environment.",
   },
   {
-    q: "How often can I get preventive care?",
-    a: "Most {insurance} plans cover two cleanings and exams per year at 100%. Some plans also cover fluoride treatments and sealants for children.",
+    q: "Can I foster if I work full-time?",
+    a: "Many foster carers work full-time, though some types of fostering may require more flexibility. Agencies discuss availability and commitments during the assessment process to find the right balance for you.",
   },
 ];
 

@@ -17,7 +17,6 @@
   "rewrites": [
     { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
     { "source": "/sitemap-static.xml", "destination": "/sitemap-static.xml" },
-    { "source": "/sitemap-locations.xml", "destination": "/sitemap-locations.xml" },
     { "source": "/sitemap-categories.xml", "destination": "/sitemap-categories.xml" },
     { "source": "/sitemap-cities.xml", "destination": "/sitemap-cities.xml" },
     { "source": "/sitemap-agencies.xml", "destination": "https://vcvvtklbyvdbysfdbnfp.supabase.co/functions/v1/sitemap?type=agencies" },
@@ -35,6 +34,7 @@
     { "source": "/api/stripe-webhook", "destination": "https://vcvvtklbyvdbysfdbnfp.supabase.co/functions/v1/stripe-webhook" },
     { "source": "/api/whatsapp-webhook", "destination": "https://vcvvtklbyvdbysfdbnfp.supabase.co/functions/v1/whatsapp-webhook" },
 
+    { "source": "/(.*)", "has": [{ "type": "header", "key": "user-agent", "value": "(bot|crawler|spider|prerender|Googlebot|Twitterbot|facebookexternalhit|Slack|LinkedInBot|bingbot|Baiduspider|YandexBot|DuckDuckBot|Applebot|SemrushBot|AhrefsBot|DotBot)" }], "destination": "/api/prerender?path=$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

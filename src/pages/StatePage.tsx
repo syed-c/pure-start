@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
 import { supabase, supabaseAdmin } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
@@ -17,6 +16,9 @@ import { useSeoPageContent, parseMarkdownContent } from "@/hooks/useSeoPageConte
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
 import { usePinnedProfiles } from "@/hooks/usePinnedProfiles";
 import { normalizeStateSlug } from "@/lib/slug/normalizeStateSlug";
+import { ConversationalQABlock } from "@/components/ai-seo/ConversationalQABlock";
+import { QuickAnswerBox } from "@/components/ai-seo/QuickAnswerBox";
+import { PeopleAlsoAskBlock } from "@/components/ai-seo/PeopleAlsoAskBlock";
 import NotFound from "./NotFound";
 import { 
   Star, Shield, Heart, Users, MapPin, ArrowRight, 
@@ -153,19 +155,19 @@ const StatePage = () => {
             <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "All Locations", href: "/locations/" }]} className="mb-8 text-white/70 [&_a]:text-white/80 [&_a:hover]:text-teal-300" />
 
             <div className="max-w-4xl mx-auto text-center">
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-6">
+              <div className="animate-fade-in-up inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-6">
                 <MapPin className="h-4 w-4 text-teal-400" />
                 <span className="text-sm font-medium text-white">UK Locations</span>
-              </motion.div>
+              </div>
 
-              <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+              <h1 className="animate-fade-in-up text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight" style={{ animationDelay: '0.1s' }}>
                 Find Fostering Agencies Across <span className="text-teal-400">the UK</span>
-              </motion.h1>
+              </h1>
 
-              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-lg md:text-xl text-white/70 mb-8 max-w-2xl mx-auto">
+              <p className="animate-fade-in-up text-lg md:text-xl text-white/70 mb-8 max-w-2xl mx-auto" style={{ animationDelay: '0.2s' }}>
                 Browse Ofsted-rated fostering agencies in England, Scotland, Wales, and Northern Ireland. 
                 Select your region to find agencies near you.
-              </motion.p>
+              </p>
             </div>
           </div>
 
@@ -191,7 +193,7 @@ const StatePage = () => {
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {stateList.map((s, i) => (
-                  <motion.div key={s.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
+                  <div key={s.id} className="animate-fade-in-up" style={{ animationDelay: `${0.05 * i}s` }}>
                     <Link to={`/locations/${s.slug}/`}>
                       <Card className="group hover:border-teal-500/50 hover:bg-teal-500/5 transition-all duration-300 cursor-pointer h-full overflow-hidden">
                         <div className="h-32 bg-gradient-to-br from-teal-500/20 via-teal-600/10 to-amber-500/10 relative flex items-center justify-center">
@@ -205,7 +207,7 @@ const StatePage = () => {
                         </CardContent>
                       </Card>
                     </Link>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             )}
@@ -275,13 +277,14 @@ const StatePage = () => {
         canonical={`/${normalizedStateSlug}/`}
         keywords={[`fostering agencies ${stateName}`, `foster care ${stateName}`, `become foster carrier ${stateName}`]}
         noindex={shouldNoIndex}
-        ogImage={`https://fostercareuk.com/og/region-${normalizedStateSlug}.png`}
+        ogImage={`https://www.foster-care.co.uk/og/region-${normalizedStateSlug}.png`}
       />
       <SyncStructuredData
         data={[
-          { type: 'breadcrumb', items: [{ name: 'Home', url: 'https://fostercareuk.com/' }, { name: stateName, url: `https://fostercareuk.com/${normalizedStateSlug}/` }] },
+          { type: 'breadcrumb', items: [{ name: 'Home', url: 'https://www.foster-care.co.uk/' }, { name: stateName, url: `https://www.foster-care.co.uk/${normalizedStateSlug}/` }] },
           { type: 'place', name: stateName, description: pageDescription, url: `/${normalizedStateSlug}/`, addressRegion: stateName, addressCountry: 'GB' },
           { type: 'faq', questions: faqs.map(f => ({ question: f.q, answer: f.a })) },
+          { type: 'webSite', name: pageTitle, url: `https://www.foster-care.co.uk/${normalizedStateSlug}/` },
         ]}
         id="state-schema"
       />
@@ -307,21 +310,21 @@ const StatePage = () => {
           <Breadcrumbs items={breadcrumbs} className="mb-8 text-white/70 [&_a]:text-white/80 [&_a:hover]:text-teal-300" />
           
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-6">
+            <div className="animate-fade-in-up inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-6">
               <Shield className="h-4 w-4 text-teal-400" />
               <span className="text-sm font-medium text-white">Ofsted Registered Agencies</span>
-            </motion.div>
+            </div>
 
-            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+            <h1 className="animate-fade-in-up text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight" style={{ animationDelay: '0.1s' }}>
               Find Fostering Agencies in <span className="text-teal-400">{stateName}</span>
-            </motion.h1>
+            </h1>
 
-            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-lg md:text-xl text-white/70 mb-8 max-w-2xl mx-auto">
+            <p className="animate-fade-in-up text-lg md:text-xl text-white/70 mb-8 max-w-2xl mx-auto" style={{ animationDelay: '0.2s' }}>
               Connect with {totalAgencyCount}+ trusted fostering agencies across {stateName}. 
               All agencies are Ofsted-registered and verified.
-            </motion.p>
+            </p>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-wrap justify-center gap-4 mb-10">
+            <div className="animate-fade-in-up flex flex-wrap justify-center gap-4 mb-10" style={{ animationDelay: '0.3s' }}>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-5 py-3">
                 <Users className="h-5 w-5 text-teal-400" />
                 <div className="text-left">
@@ -343,9 +346,9 @@ const StatePage = () => {
                   <p className="text-xs text-white/60">Ofsted Rated</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="flex flex-wrap justify-center gap-4">
+            <div className="animate-fade-in-up flex flex-wrap justify-center gap-4" style={{ animationDelay: '0.4s' }}>
               <Button size="lg" className="h-14 px-8 text-base font-semibold bg-teal-500 hover:bg-teal-600 text-slate-900 rounded-xl" asChild>
                 <Link to="/search">
                   <Search className="mr-2 h-5 w-5" />
@@ -357,7 +360,7 @@ const StatePage = () => {
                   Learn About Fostering
                 </Link>
               </Button>
-            </motion.div>
+            </div>
           </div>
         </div>
 
@@ -379,7 +382,7 @@ const StatePage = () => {
               { icon: Clock, title: "24/7 Support", desc: "Round the clock help" },
               { icon: Wallet, title: "Competitive Rates", desc: "Fair allowances" },
             ].map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }}>
+              <div key={i} className="animate-fade-in-up" style={{ animationDelay: `${0.1 * i}s` }}>
                 <Card className="text-center py-6 hover:border-teal-500/30 transition-colors">
                   <CardContent className="p-0">
                     <div className="w-12 h-12 rounded-full bg-teal-500/10 flex items-center justify-center mx-auto mb-3">
@@ -389,7 +392,7 @@ const StatePage = () => {
                     <p className="text-xs text-muted-foreground">{item.desc}</p>
                   </CardContent>
                 </Card>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -408,7 +411,7 @@ const StatePage = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {fosteringTypes.map((type, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
+              <div key={i} className="animate-fade-in-up" style={{ animationDelay: `${0.05 * i}s` }}>
                 <Link to={`/categories/${type.name.toLowerCase().replace(' ', '-')}/`}>
                   <Card className="group hover:border-teal-500/50 hover:bg-teal-500/5 transition-all duration-300 cursor-pointer h-full">
                     <CardContent className="p-5 flex flex-col items-center text-center">
@@ -420,7 +423,7 @@ const StatePage = () => {
                     </CardContent>
                   </Card>
                 </Link>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -439,7 +442,7 @@ const StatePage = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {topCities.map((city, i) => (
-              <motion.div key={city.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
+              <div key={city.id} className="animate-fade-in-up" style={{ animationDelay: `${0.05 * i}s` }}>
                 <Link to={`/${normalizedStateSlug}/${city.slug}/`}>
                   <Card className="group hover:border-teal-500/50 hover:bg-teal-500/5 transition-all duration-300 cursor-pointer h-full overflow-hidden">
                     <div className="h-20 bg-gradient-to-br from-teal-500/20 via-teal-600/10 to-amber-500/10 relative">
@@ -458,7 +461,7 @@ const StatePage = () => {
                     </CardContent>
                   </Card>
                 </Link>
-              </motion.div>
+              </div>
             ))}
           </div>
 
@@ -487,7 +490,7 @@ const StatePage = () => {
 
           <div className="grid md:grid-cols-3 gap-6">
             {testimonials.map((testimonial, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }}>
+              <div key={i} className="animate-fade-in-up" style={{ animationDelay: `${0.1 * i}s` }}>
                 <Card className="h-full">
                   <CardContent className="p-6">
                     <div className="flex gap-1 mb-3">
@@ -499,7 +502,7 @@ const StatePage = () => {
                     <p className="font-semibold text-foreground">{testimonial.name}</p>
                   </CardContent>
                 </Card>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -523,7 +526,7 @@ const StatePage = () => {
               { step: "3", title: "Apply", desc: "Complete your application and assessment", icon: FileText },
               { step: "4", title: "Start", desc: "Get matched and begin your fostering journey", icon: Heart },
             ].map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }} className="text-center">
+              <div key={i} className="animate-fade-in-up text-center" style={{ animationDelay: `${0.1 * i}s` }}>
                 <div className="w-16 h-16 rounded-full bg-teal-500/10 flex items-center justify-center mx-auto mb-4">
                   <item.icon className="h-8 w-8 text-teal-600" />
                 </div>
@@ -532,7 +535,7 @@ const StatePage = () => {
                 </div>
                 <h3 className="font-bold text-foreground mb-1">{item.title}</h3>
                 <p className="text-sm text-muted-foreground">{item.desc}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -600,7 +603,7 @@ const StatePage = () => {
           ) : profiles && profiles.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {profiles.slice(0, 12).map((agency: any, i) => (
-                <motion.div key={agency.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
+                <div key={agency.id} className="animate-fade-in-up" style={{ animationDelay: `${0.05 * i}s` }}>
                   <Link to={`/agency/${agency.slug}/`}>
                     <Card className="hover:border-teal-500/50 hover:bg-teal-500/5 transition-all duration-300 group h-full">
                       <CardContent className="p-0">
@@ -640,7 +643,7 @@ const StatePage = () => {
                       </CardContent>
                     </Card>
                   </Link>
-                </motion.div>
+                </div>
               ))}
             </div>
           ) : (
@@ -698,30 +701,31 @@ const StatePage = () => {
       <Section size="lg" className="bg-muted/30 relative overflow-hidden">
         <div className="absolute inset-0 bg-subtle-grid opacity-10 pointer-events-none" />
         <div className="container px-4 relative">
-          <div className="max-w-3xl mx-auto">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground">Frequently Asked Questions</h2>
-              <p className="text-muted-foreground mt-2">Common questions about fostering in {stateName}</p>
-            </div>
-            
-            <div className="space-y-3">
-              {faqs.map((faq, i) => (
-                <Card key={i}>
-                  <CardContent className="p-5">
-                    <h3 className="font-semibold text-foreground mb-2">{faq.q}</h3>
-                    <p className="text-muted-foreground text-sm">{faq.a}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            <div className="text-center mt-6">
-              <Button variant="link" className="text-teal-600" asChild>
-                <Link to="/faq">
-                  View All FAQs <ArrowRight className="ml-1 h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
+          <div className="max-w-3xl mx-auto space-y-8">
+            <QuickAnswerBox
+              question={`What fostering options are available in ${stateName}?`}
+              answer={`${stateName} has ${profiles?.length || 0} Ofsted-rated fostering agencies offering emergency, short-term, long-term, respite, therapeutic, and parent & child fostering. The assessment process typically takes 4-6 months with full training provided.`}
+              highlights={[
+                `${profiles?.length || 0} Ofsted-verified agencies across ${stateName}`,
+                `Multiple fostering types available`,
+                `4-6 month assessment process with full training`,
+                `24/7 support from your chosen agency`
+              ]}
+            />
+            <ConversationalQABlock
+              title={`Fostering in ${stateName} - Your Questions Answered`}
+              subtitle="Common questions about becoming a foster carer"
+              items={faqs.map(f => ({ question: f.q, answer: f.a }))}
+              defaultOpen
+            />
+            <PeopleAlsoAskBlock
+              title="More Questions About Fostering?"
+              items={[
+                { question: `Do I need my own home to foster in ${stateName}?`, answer: `Yes, you typically need a spare bedroom. This can be a rented or owned home. Agencies in ${stateName} will assess your property during the application process.` },
+                { question: `Can I work while fostering in ${stateName}?`, answer: `Many foster carers work part-time. Some fostering types like emergency placements may require full-time availability. Discuss with agencies in ${stateName}.` },
+                { question: `Are there support groups for foster carers in ${stateName}?`, answer: `Most agencies offer local support groups where foster carers connect and share experiences. These are often a valuable source of peer support.` }
+              ]}
+            />
           </div>
         </div>
       </Section></div>

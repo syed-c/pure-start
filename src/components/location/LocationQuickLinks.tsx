@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { 
   Stethoscope, 
   MapPin, 
@@ -76,10 +75,8 @@ export const LocationQuickLinks = ({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="bg-card border border-border rounded-2xl p-4 md:p-5"
+    <div
+      className="animate-fade-in-up bg-card border border-border rounded-2xl p-4 md:p-5"
     >
       <div className="flex items-center gap-2 mb-3">
         {getIcon()}
@@ -109,7 +106,7 @@ export const LocationQuickLinks = ({
           </Link>
         ))}
       </nav>
-    </motion.div>
+    </div>
   );
 };
 

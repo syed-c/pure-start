@@ -30,8 +30,7 @@ const NotFound = () => {
       <SEOHead
         title="Page Not Found | Foster Care"
         description="The page you're looking for doesn't exist or has been moved. Browse our directory of fostering agencies across the UK."
-        canonical={location.pathname}
-        noIndex={true}
+        noindex={true}
       />
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-background to-muted/30">
       <div className="text-center px-4 max-w-md">

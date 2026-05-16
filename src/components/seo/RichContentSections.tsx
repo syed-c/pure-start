@@ -1,13 +1,5 @@
-import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Heart, Shield, Users, BookOpen, Home, HandHeart, Phone, CheckCircle } from "lucide-react";
-
-const fade = (i: number) => ({
-  initial: { opacity: 0, y: 16 } as const,
-  whileInView: { opacity: 1, y: 0 } as const,
-  viewport: { once: true } as const,
-  transition: { duration: 0.4, delay: i * 0.08 },
-});
 
 // Deterministic hash to pick variants so each page gets unique but stable content
 function simpleHash(str: string): number {
@@ -226,7 +218,7 @@ export const RichContentSections = ({
   return (
     <div className="space-y-6">
       {sections.map((section, i) => (
-        <motion.div key={i} {...fade(i)} className="bg-card border border-border rounded-2xl p-6 md:p-8">
+        <div key={i} className="animate-fade-in-up bg-card border border-border rounded-2xl p-6 md:p-8" style={{ animationDelay: `${0.08 * i}s` }}>
           <div className="flex items-start gap-4">
             <div className="hidden md:flex shrink-0 h-10 w-10 rounded-xl bg-primary/10 items-center justify-center">
               <section.icon className="h-5 w-5 text-primary" />
@@ -240,7 +232,7 @@ export const RichContentSections = ({
               </p>
             </div>
           </div>
-        </motion.div>
+        </div>
       ))}
     </div>
   );

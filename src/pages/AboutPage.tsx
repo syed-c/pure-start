@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Button } from "@/components/ui/button";
 import { SEOHead } from "@/components/seo/SEOHead";
@@ -14,20 +13,6 @@ import {
 
 import aboutHeroImg from "@/assets/about-hero-illustration.png";
 import missionImg from "@/assets/about-mission-illustration.png";
-
-const fadeUp = {
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.5 },
-};
-
-const stagger = (i: number) => ({
-  initial: { opacity: 0, y: 20 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.45, delay: i * 0.1 },
-});
 
 const AboutPage = () => {
   const { data: counts } = useRealCounts();
@@ -73,7 +58,7 @@ const AboutPage = () => {
         
         <div className="container relative">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div {...fadeUp}>
+            <div className="animate-fade-in-up">
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-6">
                 <Sparkles className="h-3.5 w-3.5" /> About Us
               </span>
@@ -98,21 +83,21 @@ const AboutPage = () => {
                   <Link to="/list-your-agency">List Your Agency</Link>
                 </Button>
               </div>
-            </motion.div>
+            </div>
             
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }} 
-              whileInView={{ opacity: 1, scale: 1 }} 
-              viewport={{ once: true }} 
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative flex justify-center"
+            <div 
+              className="animate-scale-up relative flex justify-center"
+              style={{ animationDelay: '0.2s' }}
             >
               <img
                 src="https://images.unsplash.com/photo-1593113630400-ea4288922497?w=600&q=80"
                 alt="Welcoming foster home"
-                className="w-full max-w-md rounded-2xl drop-shadow-2xl"
-                loading="lazy"
+                width="600"
+                height="400"
+                fetchPriority="high"
+                loading="eager"
                 onError={(e) => { (e.target as HTMLImageElement).src = aboutHeroImg; }}
+                className="w-full max-w-md rounded-2xl drop-shadow-2xl"
               />
               {/* Floating stat card */}
               <div className="absolute -bottom-4 -left-4 bg-card border border-border rounded-2xl p-4 shadow-xl">
@@ -126,7 +111,7 @@ const AboutPage = () => {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -137,13 +122,13 @@ const AboutPage = () => {
         <div className="container">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, i) => (
-              <motion.div key={i} {...stagger(i)} className="text-center">
+              <div key={i} className="animate-fade-in-up text-center" style={{ animationDelay: `${0.1 * i}s` }}>
                 <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
                   <stat.icon className="h-5 w-5 text-primary" />
                 </div>
                 <p className="text-3xl md:text-4xl font-extrabold text-foreground">{stat.value}</p>
                 <p className="text-sm text-muted-foreground mt-1 font-medium">{stat.label}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -154,7 +139,7 @@ const AboutPage = () => {
         <div className="absolute inset-0 bg-subtle-dots opacity-10 pointer-events-none" />
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <motion.div {...fadeUp} className="order-2 lg:order-1">
+            <div className="animate-fade-in-up order-2 lg:order-1">
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-5">
                 <Lightbulb className="h-3.5 w-3.5" /> Our Mission
               </span>
@@ -170,32 +155,30 @@ const AboutPage = () => {
               </p>
               <div className="grid sm:grid-cols-2 gap-3">
                 {["Ofsted Registered Agencies", "Verified Agency Profiles", "Real Carer Reviews", "100% Free to Use", "All Fostering Types", "UK-Wide Coverage"].map((item, i) => (
-                  <motion.div key={i} {...stagger(i)} className="flex items-center gap-2.5 p-3 rounded-xl bg-muted/50 border border-border">
+                  <div key={i} className="animate-fade-in-up flex items-center gap-2.5 p-3 rounded-xl bg-muted/50 border border-border" style={{ animationDelay: `${0.1 * i}s` }}>
                     <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
                     <span className="font-medium text-sm">{item}</span>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
             
-            <motion.div 
-              initial={{ opacity: 0, x: 30 }} 
-              whileInView={{ opacity: 1, x: 0 }} 
-              viewport={{ once: true }} 
-              transition={{ duration: 0.6 }}
-              className="order-1 lg:order-2 flex justify-center"
+            <div 
+              className="animate-slide-in-right order-1 lg:order-2 flex justify-center"
             >
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 rounded-3xl blur-2xl scale-110" />
                 <img
                   src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&q=80"
                   alt="Foster care mission"
-                  className="relative w-full max-w-sm rounded-2xl drop-shadow-xl"
+                  width="600"
+                  height="400"
                   loading="lazy"
                   onError={(e) => { (e.target as HTMLImageElement).src = missionImg; }}
+                  className="relative w-full max-w-sm rounded-2xl drop-shadow-xl"
                 />
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -204,7 +187,7 @@ const AboutPage = () => {
       <section className="py-20 md:py-28 bg-muted/30 relative overflow-hidden">
         <div className="absolute inset-0 bg-subtle-grid opacity-20 pointer-events-none" />
         <div className="container">
-          <motion.div {...fadeUp} className="text-center mb-16">
+          <div className="animate-fade-in-up text-center mb-16">
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-4">
               <BookOpen className="h-3.5 w-3.5" /> Our Journey
             </span>
@@ -212,11 +195,11 @@ const AboutPage = () => {
             <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
               From a small idea to the UK's leading fostering directory — here's how we got here.
             </p>
-          </motion.div>
+          </div>
 
           <div className="max-w-3xl mx-auto">
             {timeline.map((item, i) => (
-              <motion.div key={i} {...stagger(i)} className="flex gap-6 mb-8 last:mb-0">
+              <div key={i} className="animate-fade-in-up flex gap-6 mb-8 last:mb-0" style={{ animationDelay: `${0.1 * i}s` }}>
                 <div className="flex flex-col items-center">
                   <div className="w-12 h-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center font-bold text-xs shrink-0">
                     {item.year}
@@ -227,7 +210,7 @@ const AboutPage = () => {
                   <h3 className="text-lg font-bold text-foreground mb-1">{item.title}</h3>
                   <p className="text-muted-foreground leading-relaxed">{item.description}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -237,7 +220,7 @@ const AboutPage = () => {
       <section className="py-20 md:py-28 relative overflow-hidden">
         <div className="absolute inset-0 bg-subtle-dots opacity-10 pointer-events-none" />
         <div className="container">
-          <motion.div {...fadeUp} className="text-center mb-16">
+          <div className="animate-fade-in-up text-center mb-16">
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-4">
               <Eye className="h-3.5 w-3.5" /> What We Stand For
             </span>
@@ -245,11 +228,11 @@ const AboutPage = () => {
             <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
               These values guide every decision we make and every feature we build.
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {values.map((value, i) => (
-              <motion.div key={i} {...stagger(i)} className="group relative bg-card border border-border rounded-2xl p-7 text-center hover:shadow-xl hover:border-primary/30 hover:-translate-y-1 transition-all duration-300">
+              <div key={i} className="animate-fade-in-up group relative bg-card border border-border rounded-2xl p-7 text-center hover:shadow-xl hover:border-primary/30 hover:-translate-y-1 transition-all duration-300" style={{ animationDelay: `${0.1 * i}s` }}>
                 <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${value.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                 <div className="relative">
                   <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-5 group-hover:bg-primary/20 transition-colors">
@@ -258,7 +241,7 @@ const AboutPage = () => {
                   <h3 className="text-lg font-bold mb-2">{value.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{value.description}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -267,14 +250,14 @@ const AboutPage = () => {
       {/* ───── Why Choose Us ───── */}
       <section className="py-20 md:py-28 bg-foreground text-background">
         <div className="container">
-          <motion.div {...fadeUp} className="text-center mb-16">
+          <div className="animate-fade-in-up text-center mb-16">
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/20 text-primary text-xs font-bold uppercase tracking-wider mb-4">
               <Award className="h-3.5 w-3.5" /> Why Foster Care
             </span>
             <h2 className="text-3xl md:text-4xl font-extrabold text-background">
               The UK's Most Trusted Fostering Directory
             </h2>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {[
@@ -282,13 +265,13 @@ const AboutPage = () => {
               { icon: HandHeart, title: "Completely Free", description: "No hidden costs, no subscriptions. Search, compare, and enquire with agencies at no charge whatsoever." },
               { icon: Star, title: "Real Reviews", description: "Read genuine reviews from foster carers who have worked with agencies. Make informed decisions with real experiences." },
             ].map((item, i) => (
-              <motion.div key={i} {...stagger(i)} className="bg-background/5 border border-background/10 rounded-2xl p-7 hover:bg-background/8 transition-colors">
+              <div key={i} className="animate-fade-in-up bg-background/5 border border-background/10 rounded-2xl p-7 hover:bg-background/8 transition-colors" style={{ animationDelay: `${0.1 * i}s` }}>
                 <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mb-5">
                   <item.icon className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="text-lg font-bold text-background mb-2">{item.title}</h3>
                 <p className="text-background/60 leading-relaxed">{item.description}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -300,7 +283,7 @@ const AboutPage = () => {
         <div className="absolute -top-20 -right-20 w-60 h-60 bg-white/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-white/5 rounded-full blur-3xl" />
         <div className="container relative text-center">
-          <motion.div {...fadeUp}>
+          <div className="animate-fade-in-up">
             <h2 className="text-2xl md:text-4xl font-extrabold text-primary-foreground mb-4">
               Ready to Start Your Fostering Journey?
             </h2>
@@ -315,7 +298,7 @@ const AboutPage = () => {
                 <Link to="/how-it-works">How It Works</Link>
               </Button>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
     </PageLayout>

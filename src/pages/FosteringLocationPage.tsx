@@ -1,6 +1,5 @@
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
 import { supabase, supabaseAdmin } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
@@ -332,38 +331,30 @@ const FosteringLocationPage = () => {
             <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Fostering Agencies", href: "/fostering-agencies" }]} />
             
             <div className="max-w-3xl mx-auto text-center">
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }} 
-                animate={{ opacity: 1, y: 0 }}
-                className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-3 py-1.5 mb-4"
+              <div 
+                className="animate-fade-in-up inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-3 py-1.5 mb-4"
               >
                 <Shield className="h-3.5 w-3.5 text-teal-400" />
                 <span className="text-xs font-medium text-white">UK's Leading Fostering Directory</span>
-              </motion.div>
+              </div>
 
-              <motion.h1 
-                initial={{ opacity: 0, y: 20 }} 
-                animate={{ opacity: 1, y: 0 }} 
-                transition={{ delay: 0.1 }}
-                className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 leading-tight"
+              <h1 
+                className="animate-fade-in-up text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 leading-tight"
+                style={{ animationDelay: '0.1s' }}
               >
                 Find Trusted <span className="text-teal-400">Fostering Agencies</span> UK
-              </motion.h1>
+</h1>
 
-              <motion.p 
-                initial={{ opacity: 0, y: 20 }} 
-                animate={{ opacity: 1, y: 0 }} 
-                transition={{ delay: 0.2 }}
-                className="text-sm text-white/70 mb-5 max-w-lg mx-auto"
+              <p 
+                className="animate-fade-in-up text-sm text-white/70 mb-5 max-w-lg mx-auto"
+                style={{ animationDelay: '0.2s' }}
               >
                 Connect with Ofsted-registered fostering agencies across the UK.
-              </motion.p>
+</p>
 
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }} 
-                animate={{ opacity: 1, y: 0 }} 
-                transition={{ delay: 0.3 }}
-                className="flex justify-center gap-5"
+              <div 
+                className="animate-fade-in-up flex justify-center gap-5"
+                style={{ animationDelay: '0.3s' }}
               >
                 <div className="flex items-center gap-1.5">
                   <Users className="h-4 w-4 text-teal-400" />
@@ -375,7 +366,7 @@ const FosteringLocationPage = () => {
                   <span className="text-sm font-semibold text-white">100+</span>
                   <span className="text-xs text-white/60">Cities</span>
                 </div>
-              </motion.div>
+              </div>
             </div>
           </div>
         </section>
@@ -526,7 +517,7 @@ const shouldNoIndex = !isIndexPage && (!agencies || agencies.length === 0);
         description={seoContent?.meta_description || pageDescription}
         canonical={canonicalUrl}
         keywords={[`fostering agencies ${locationName}`, `foster care ${locationName}`, `Ofsted registered fostering ${locationName}`, `foster care ${locationName}`]}
-        noIndex={shouldNoIndex}
+        noindex={shouldNoIndex}
         openGraph={{
           title: seoContent?.meta_title || pageTitle,
           description: seoContent?.meta_description || pageDescription,
@@ -560,8 +551,8 @@ const shouldNoIndex = !isIndexPage && (!agencies || agencies.length === 0);
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             "itemListElement": [
-              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://fostercareuk.com/" },
-              { "@type": "ListItem", "position": 2, "name": "Fostering Agencies", "item": "https://fostercareuk.com/fostering-agencies" },
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.foster-care.co.uk/" },
+              { "@type": "ListItem", "position": 2, "name": "Fostering Agencies", "item": "https://www.foster-care.co.uk/fostering-agencies" },
               { "@type": "ListItem", "position": 3, "name": locationName, "item": canonicalUrl },
             ],
           }),
@@ -575,8 +566,8 @@ const shouldNoIndex = !isIndexPage && (!agencies || agencies.length === 0);
             "@context": "https://schema.org",
             "@type": "Organization",
             "name": "Foster Care UK",
-            "url": "https://fostercareuk.com",
-            "logo": "https://fostercareuk.com/logo.png",
+            "url": "https://www.foster-care.co.uk",
+            "logo": "https://www.foster-care.co.uk/logo.png",
             "contactPoint": {
               "@type": "ContactPoint",
               "telephone": "+44-800-123-4567",
@@ -623,39 +614,31 @@ const shouldNoIndex = !isIndexPage && (!agencies || agencies.length === 0);
           <Breadcrumbs items={breadcrumbs} />
           
           <div className="max-w-3xl mx-auto text-center">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl px-4 py-2 mb-5"
+            <div 
+              className="animate-fade-in-up inline-flex items-center gap-2 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl px-4 py-2 mb-5"
             >
               <Shield className="h-4 w-4 text-teal-400" />
               <span className="text-xs font-semibold text-white">Fostering Agencies in {locationName}</span>
-            </motion.div>
+            </div>
 
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: 0.1 }}
-              className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 leading-tight"
+            <h1 
+              className="animate-fade-in-up text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 leading-tight"
+              style={{ animationDelay: '0.1s' }}
             >
               {seoContent?.h1 || `Find Trusted Fostering Agencies in ${locationName}`}
-            </motion.h1>
+            </h1>
 
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: 0.2 }}
-              className="text-base md:text-lg text-white/80 mb-8 max-w-xl mx-auto"
+            <p 
+              className="animate-fade-in-up text-base md:text-lg text-white/80 mb-8 max-w-xl mx-auto"
+              style={{ animationDelay: '0.2s' }}
             >
               {seoContent?.meta_description || `Find verified fostering agencies in ${locationName}.`}
-            </motion.p>
+            </p>
 
             {/* Modern Stats */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: 0.3 }}
-              className="flex justify-center gap-4"
+            <div 
+              className="animate-fade-in-up flex justify-center gap-4"
+              style={{ animationDelay: '0.3s' }}
             >
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl px-5 py-2.5">
                 <Users className="h-5 w-5 text-teal-400" />
@@ -667,7 +650,7 @@ const shouldNoIndex = !isIndexPage && (!agencies || agencies.length === 0);
                 <span className="text-base font-bold text-white">4.8</span>
                 <span className="text-xs text-white/60">Avg Rating</span>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>

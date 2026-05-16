@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Button } from "@/components/ui/button";
 import { SEOHead } from "@/components/seo/SEOHead";
@@ -12,20 +11,6 @@ import {
 } from "lucide-react";
 
 import howItWorksImg from "@/assets/how-it-works-illustration.png";
-
-const fadeUp = {
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.5 },
-};
-
-const stagger = (i: number) => ({
-  initial: { opacity: 0, y: 20 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.45, delay: i * 0.12 },
-});
 
 const HowItWorksPage = () => {
   const { data: counts } = useRealCounts();
@@ -65,7 +50,7 @@ const HowItWorksPage = () => {
 
         <div className="container relative">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div {...fadeUp}>
+            <div className="animate-fade-in-up">
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-6">
                 <Sparkles className="h-3.5 w-3.5" /> Simple & Easy
               </span>
@@ -85,23 +70,23 @@ const HowItWorksPage = () => {
                   <Link to="/list-your-agency">I'm an Agency</Link>
                 </Button>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }} 
-              whileInView={{ opacity: 1, scale: 1 }} 
-              viewport={{ once: true }} 
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex justify-center"
+            <div 
+              className="animate-scale-up flex justify-center" 
+              style={{ animationDelay: '0.2s' }}
             >
               <img
                 src="https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=600&q=80"
                 alt="How Foster Care works"
-                className="w-full max-w-md rounded-2xl drop-shadow-xl"
-                loading="lazy"
+                width="600"
+                height="400"
+                fetchPriority="high"
+                loading="eager"
                 onError={(e) => { (e.target as HTMLImageElement).src = howItWorksImg; }}
+                className="w-full max-w-md rounded-2xl drop-shadow-xl"
               />
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -109,7 +94,7 @@ const HowItWorksPage = () => {
       {/* ───── For Carers Steps ───── */}
       <section className="py-20 md:py-28">
         <div className="container">
-          <motion.div {...fadeUp} className="text-center mb-16">
+          <div className="animate-fade-in-up text-center mb-16">
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-4">
               <Heart className="h-3.5 w-3.5" /> For Prospective Carers
             </span>
@@ -117,12 +102,12 @@ const HowItWorksPage = () => {
             <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
               From your first search to writing a review — we guide you through every step of finding the perfect fostering agency.
             </p>
-          </motion.div>
+          </div>
 
           {/* Timeline steps */}
           <div className="max-w-4xl mx-auto space-y-6">
             {carerSteps.map((item, i) => (
-              <motion.div key={i} {...stagger(i)} className="group relative">
+              <div key={i} className="animate-fade-in-up group relative" style={{ animationDelay: `${0.12 * i}s` }}>
                 <div className="flex gap-6 items-start">
                   {/* Step number & line */}
                   <div className="flex flex-col items-center shrink-0">
@@ -145,12 +130,12 @@ const HowItWorksPage = () => {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
 
           {/* Carer benefits */}
-          <motion.div {...fadeUp} className="mt-14 max-w-4xl mx-auto">
+          <div className="animate-fade-in-up mt-14 max-w-4xl mx-auto">
             <div className="bg-gradient-to-br from-primary/[0.04] to-muted/30 border border-border rounded-3xl p-8 md:p-10">
               <div className="grid md:grid-cols-2 gap-8 items-center">
                 <div>
@@ -173,14 +158,14 @@ const HowItWorksPage = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* ───── For Agencies ───── */}
       <section className="bg-foreground text-background py-20 md:py-28">
         <div className="container">
-          <motion.div {...fadeUp} className="text-center mb-16">
+          <div className="animate-fade-in-up text-center mb-16">
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/20 text-primary text-xs font-bold uppercase tracking-wider mb-4">
               <Building2 className="h-3.5 w-3.5" /> For Agencies
             </span>
@@ -188,11 +173,11 @@ const HowItWorksPage = () => {
             <p className="text-background/50 mt-4 max-w-2xl mx-auto">
               Reach prospective foster carers actively searching for agencies in your area. It's free to get started.
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto mb-14">
             {agencySteps.map((item, i) => (
-              <motion.div key={i} {...stagger(i)} className="bg-background/5 border border-background/10 rounded-2xl p-6 text-center hover:bg-background/8 transition-colors">
+              <div key={i} className="animate-fade-in-up bg-background/5 border border-background/10 rounded-2xl p-6 text-center hover:bg-background/8 transition-colors" style={{ animationDelay: `${0.12 * i}s` }}>
                 <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold mx-auto mb-4">
                   {item.step}
                 </div>
@@ -201,12 +186,12 @@ const HowItWorksPage = () => {
                 </div>
                 <h3 className="text-base font-bold text-background mb-2">{item.title}</h3>
                 <p className="text-sm text-background/50 leading-relaxed">{item.description}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
 
           {/* Agency benefits */}
-          <motion.div {...fadeUp} className="max-w-4xl mx-auto">
+          <div className="animate-fade-in-up max-w-4xl mx-auto">
             <div className="bg-background/5 border border-background/10 rounded-3xl p-8 md:p-10">
               <div className="grid md:grid-cols-2 gap-8 items-center">
                 <div>
@@ -227,19 +212,19 @@ const HowItWorksPage = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* ───── Comparison Section ───── */}
       <section className="py-20 md:py-28">
         <div className="container">
-          <motion.div {...fadeUp} className="text-center mb-16">
+          <div className="animate-fade-in-up text-center mb-16">
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-4">
               <Eye className="h-3.5 w-3.5" /> Why Us
             </span>
             <h2 className="text-3xl md:text-4xl font-extrabold">Why Choose Foster Care?</h2>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {[
@@ -247,7 +232,7 @@ const HowItWorksPage = () => {
               { icon: HandHeart, title: "Completely Free", desc: "No hidden fees. No subscriptions. Search, compare, and enquire at zero cost to prospective carers.", stat: "£0", statLabel: "Always Free" },
               { icon: Award, title: "Trusted Reviews", desc: "Read real experiences from foster carers. Every review is moderated to ensure authenticity and helpfulness.", stat: "4.8★", statLabel: "Avg Rating" },
             ].map((item, i) => (
-              <motion.div key={i} {...stagger(i)} className="group bg-card border border-border rounded-2xl p-7 hover:shadow-xl hover:border-primary/30 hover:-translate-y-1 transition-all duration-300">
+              <div key={i} className="animate-fade-in-up group bg-card border border-border rounded-2xl p-7 hover:shadow-xl hover:border-primary/30 hover:-translate-y-1 transition-all duration-300" style={{ animationDelay: `${0.12 * i}s` }}>
                 <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5 group-hover:bg-primary/20 transition-colors">
                   <item.icon className="h-7 w-7 text-primary" />
                 </div>
@@ -257,7 +242,7 @@ const HowItWorksPage = () => {
                   <p className="text-2xl font-extrabold text-primary">{item.stat}</p>
                   <p className="text-xs text-muted-foreground">{item.statLabel}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -269,7 +254,7 @@ const HowItWorksPage = () => {
         <div className="absolute -top-20 -right-20 w-60 h-60 bg-white/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-white/5 rounded-full blur-3xl" />
         <div className="container relative text-center">
-          <motion.div {...fadeUp}>
+          <div className="animate-fade-in-up">
             <h2 className="text-2xl md:text-4xl font-extrabold text-primary-foreground mb-4">
               Ready to Get Started?
             </h2>
@@ -284,7 +269,7 @@ const HowItWorksPage = () => {
                 <Link to="/list-your-agency">List Your Agency</Link>
               </Button>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
     </PageLayout>

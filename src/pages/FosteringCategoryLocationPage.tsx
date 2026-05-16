@@ -1,6 +1,5 @@
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
 import { supabase, supabaseAdmin } from "@/integrations/supabase/client";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Section } from "@/components/layout/Section";
@@ -230,7 +229,7 @@ const FosteringCategoryLocationPage = () => {
         description={seoContent?.meta_description || pageDescription} 
         canonical={canonicalUrl}
         keywords={[`${categoryName} agencies ${locationName}`, 'foster care agency', 'fostering type UK']}
-        noIndex={shouldNoIndex}
+        noindex={shouldNoIndex}
       />
       <StructuredData type="breadcrumb" items={[
         { name: "Home", url: "/" },
@@ -250,8 +249,8 @@ const FosteringCategoryLocationPage = () => {
         </div>
         <div className="container py-12 relative z-10">
           <Breadcrumbs items={breadcrumbs} className="[&_a]:text-white/60 [&_span]:text-white/40" />
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-4xl md:text-5xl font-bold text-white mt-6">{categoryName} in {locationName}</motion.h1>
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="text-xl text-white/80 mt-4 max-w-2xl">{seoContent?.content || `Find verified ${categoryName.toLowerCase()} agencies in ${locationName}.`}</motion.p>
+          <h1 className="animate-fade-in-up text-4xl md:text-5xl font-bold text-white mt-6">{categoryName} in {locationName}</h1>
+          <p className="animate-fade-in text-xl text-white/80 mt-4 max-w-2xl" style={{ animationDelay: '0.1s' }}>{seoContent?.content || `Find verified ${categoryName.toLowerCase()} agencies in ${locationName}.`}</p>
         </div>
       </section>
       <div className="container py-8">

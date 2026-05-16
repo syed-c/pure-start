@@ -11,7 +11,7 @@ Disallow: /auth/callback
 Disallow: /onboarding
 Disallow: /account
 Disallow: /api
-Disallow: /search$
+Disallow: /search
 Disallow: /*?utm_*
 Disallow: /*?ref=*
 Disallow: /*?source=*
