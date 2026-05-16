@@ -12,9 +12,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Slider } from '@/components/ui/slider';
 import { useGenerateContentBrief, useGenerateContent, useOptimizeContent, useAnalyzeCompetitors } from '@/hooks/useContentGeneration';
 import { useContentHealthStats } from '@/hooks/useContentHealthStats';
 import { ACTIVE_REGIONS, POPULAR_CITIES, FOSTERING_CATEGORIES } from '@/lib/constants/activeRegions';
+import { TONE_DIMENSION_LABELS, TONE_DIMENSIONS, ToneBlend, ToneMode, getToneBlendForPageType, blendTotal } from '@/lib/content/toneEngine';
 import { 
   Brain, MapPin, Users, BookOpen, Target, 
   Sparkles, RefreshCw, Loader2, 
@@ -80,6 +82,86 @@ function getScoreColor(score: number | null): string {
   return 'text-red-600';
 }
 
+function ToneEngineControl({
+  toneMode,
+  toneBlend,
+  onModeChange,
+  onBlendChange,
+}: {
+  toneMode: ToneMode;
+  toneBlend: ToneBlend;
+  onModeChange: (mode: ToneMode) => void;
+  onBlendChange: (blend: ToneBlend) => void;
+}) {
+  const total = blendTotal(toneBlend);
+  const isValid = total === 100;
+
+  return (
+    <div className="border rounded-lg p-3 bg-muted/20 space-y-3 min-w-[260px]">
+      <div className="flex items-center gap-2">
+        <Label className="text-xs font-semibold text-muted-foreground">Tone Engine Mode</Label>
+      </div>
+      <div className="flex gap-1">
+        <Button
+          type="button"
+          size="sm"
+          variant={toneMode === 'auto' ? 'default' : 'outline'}
+          className="text-xs h-7 px-2 flex-1"
+          onClick={() => onModeChange('auto')}
+        >
+          Auto Smart Tone
+        </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant={toneMode === 'custom' ? 'default' : 'outline'}
+          className="text-xs h-7 px-2 flex-1"
+          onClick={() => onModeChange('custom')}
+        >
+          Custom Weighted
+        </Button>
+      </div>
+      {toneMode === 'custom' && (
+        <div className="space-y-3 pt-1">
+          {TONE_DIMENSIONS.map((dim) => (
+            <div key={dim} className="space-y-1">
+              <div className="flex justify-between text-xs">
+                <span>{TONE_DIMENSION_LABELS[dim]}</span>
+                <span className="font-mono font-medium">{toneBlend[dim]}%</span>
+              </div>
+              <Slider
+                value={[toneBlend[dim]]}
+                min={0}
+                max={100}
+                step={5}
+                onValueChange={([val]) =>
+                  onBlendChange({ ...toneBlend, [dim]: val })
+                }
+              />
+            </div>
+          ))}
+          <div className="flex items-center gap-2 pt-1 border-t text-xs">
+            <span className="text-muted-foreground">Total:</span>
+            <span className={`font-mono font-semibold ${isValid ? 'text-green-600' : 'text-red-500'}`}>
+              {total}%
+            </span>
+            {!isValid && (
+              <span className="text-red-500 text-[10px]">Must equal 100%</span>
+            )}
+          </div>
+        </div>
+      )}
+      {toneMode === 'auto' && (
+        <p className="text-[10px] text-muted-foreground leading-relaxed">
+          Automatically selects optimal tone blend based on page type. 
+          Warm & Compassionate (40%), Professional & Authoritative (30%), 
+          Informative & Educational (20%), Conversion Focused (10%).
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function ContentIntelligenceCenterTab() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isAuditing, setIsAuditing] = useState(false);
@@ -102,7 +184,13 @@ export default function ContentIntelligenceCenterTab() {
   const [generatedBrief, setGeneratedBrief] = useState<any>(null);
 
   const [genPageId, setGenPageId] = useState('');
-  const [genTone, setGenTone] = useState('professional');
+  const [toneMode, setToneMode] = useState<ToneMode>('auto');
+  const [toneBlend, setToneBlend] = useState<ToneBlend>({
+    warm_compassionate: 40,
+    professional_authoritative: 30,
+    informative_educational: 20,
+    conversion_focused: 10,
+  });
   const [genWordCount, setGenWordCount] = useState('1200');
   const [genMode, setGenMode] = useState('create');
   const [isGeneratingContent, setIsGeneratingContent] = useState(false);
@@ -376,19 +464,21 @@ export default function ContentIntelligenceCenterTab() {
     setIsGeneratingContent(true);
     setGeneratedContent(null);
     try {
+      const resolvedBlend = getToneBlendForPageType(page.page_type, toneMode, toneBlend);
       const context = await getPageContext(page);
       const content = await generateContent.mutateAsync({
         pageId: page.id,
         pageType: page.page_type,
         targetKeyword: page.title || page.slug,
-        tone: genTone,
+        tone: 'blended',
+        toneBlend: resolvedBlend,
         wordCount: parseInt(genWordCount),
         existingContent: page.content || undefined,
         location: context.location || undefined,
         service: context.service || undefined
       });
       setGeneratedContent(content);
-      toast.success(`Content generated (${genWordCount} words, ${genTone} tone)`);
+      toast.success(`Content generated (${genWordCount} words, blended tone)`);
     } catch (error: any) {
       toast.error(error.message || 'Failed to generate content');
     } finally {
@@ -413,12 +503,14 @@ export default function ContentIntelligenceCenterTab() {
       
       setBulkGenProgress(prev => ({ ...prev, current: i + 1 }));
       
+      const resolvedBlend = getToneBlendForPageType(page.page_type, toneMode, toneBlend);
       try {
         const result = await generateContent.mutateAsync({
           pageId: page.id,
           pageType: page.page_type,
           targetKeyword: page.title || page.slug,
-          tone: genTone,
+          tone: 'blended',
+          toneBlend: resolvedBlend,
           wordCount: parseInt(genWordCount),
         });
         
@@ -670,11 +762,13 @@ export default function ContentIntelligenceCenterTab() {
           const fullPage = seoPages?.find((p: SeoPage) => p.id === page.id);
           if (fullPage) {
             const context = await getPageContext(fullPage);
+            const resolvedBlend = getToneBlendForPageType(fullPage.page_type, toneMode, toneBlend);
             await generateContent.mutateAsync({
               pageId: fullPage.id,
               pageType: fullPage.page_type,
               targetKeyword: fullPage.title || fullPage.slug,
-              tone: genTone,
+              tone: 'blended',
+              toneBlend: resolvedBlend,
               wordCount: parseInt(genWordCount),
               existingContent: fullPage.content || undefined,
               location: context.location || undefined,
@@ -685,11 +779,13 @@ export default function ContentIntelligenceCenterTab() {
           const fullPage = seoPages?.find((p: SeoPage) => p.id === page.id);
           if (fullPage) {
             const { location, service } = await getPageContext(fullPage);
+            const resolvedBlend = getToneBlendForPageType(fullPage.page_type, 'auto');
             const content = await generateContent.mutateAsync({
               pageId: fullPage.id,
               pageType: fullPage.page_type,
               targetKeyword: fullPage.title || fullPage.slug,
-              tone: 'professional',
+              tone: 'blended',
+              toneBlend: resolvedBlend,
               wordCount: 300,
               existingContent: fullPage.content || undefined,
               location: location || undefined,
@@ -1260,17 +1356,12 @@ export default function ContentIntelligenceCenterTab() {
                       <SelectItem value="northern-ireland">Northern Ireland</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Select value={genTone} onValueChange={setGenTone}>
-                    <SelectTrigger className="w-[150px]"><SelectValue placeholder="Tone" /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="professional">Professional</SelectItem>
-                      <SelectItem value="warm">Warm & Friendly</SelectItem>
-                      <SelectItem value="trust-focused">Trust-focused</SelectItem>
-                      <SelectItem value="compassionate">Compassionate</SelectItem>
-                      <SelectItem value="informative">Informative</SelectItem>
-                      <SelectItem value="authoritative">Authoritative</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <ToneEngineControl
+                    toneMode={toneMode}
+                    toneBlend={toneBlend}
+                    onModeChange={setToneMode}
+                    onBlendChange={setToneBlend}
+                  />
                   <Select value={genWordCount} onValueChange={setGenWordCount}>
                     <SelectTrigger className="w-[150px]"><SelectValue placeholder="Words" /></SelectTrigger>
                     <SelectContent>
@@ -1336,17 +1427,12 @@ export default function ContentIntelligenceCenterTab() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <Select value={genTone} onValueChange={setGenTone}>
-                    <SelectTrigger className="w-[150px]"><SelectValue placeholder="Tone" /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="professional">Professional</SelectItem>
-                      <SelectItem value="warm">Warm & Friendly</SelectItem>
-                      <SelectItem value="trust-focused">Trust-focused</SelectItem>
-                      <SelectItem value="compassionate">Compassionate</SelectItem>
-                      <SelectItem value="informative">Informative</SelectItem>
-                      <SelectItem value="authoritative">Authoritative</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <ToneEngineControl
+                    toneMode={toneMode}
+                    toneBlend={toneBlend}
+                    onModeChange={setToneMode}
+                    onBlendChange={setToneBlend}
+                  />
                   <Select value={genWordCount} onValueChange={setGenWordCount}>
                     <SelectTrigger className="w-[150px]"><SelectValue placeholder="Words" /></SelectTrigger>
                     <SelectContent>

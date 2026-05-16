@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { buildTonePrompt, getToneBlendForPageType, ToneBlend } from '@/lib/content/toneEngine';
 
 const API_KEY = 'aimlapi';
 
@@ -35,6 +36,7 @@ interface GenerateContentParams {
   location?: string;
   service?: string;
   tone: string;
+  toneBlend?: ToneBlend;
   wordCount: number;
   competitors?: string[];
   existingContent?: string;
@@ -178,6 +180,10 @@ export function useGenerateContent() {
       
       const wordTarget = params.wordCount >= 1200 ? 'long-form' : params.wordCount >= 700 ? 'standard' : 'concise';
       
+      const tonePrompt = params.toneBlend
+        ? buildTonePrompt(params.toneBlend, params.pageType)
+        : `Tone: ${params.tone}\n\nWRITING STYLE: Write in a ${params.tone} tone that is appropriate for UK fostering content. Use clear, professional language that builds trust with prospective foster carers.`;
+
       const prompt = `Generate high-quality, unique, web-optimised content for a UK fostering directory platform page. The content must follow a proper heading hierarchy (H1 → H2 → H3) and use short, scannable paragraphs (max 3-4 sentences each).
 
 PLATFORM CONTEXT:
@@ -187,7 +193,8 @@ PLATFORM CONTEXT:
 
 Page Type: ${params.pageType}
 Target Keyword: ${params.targetKeyword}
-${locationInfo}${serviceInfo}Tone: ${params.tone}
+${locationInfo}${serviceInfo}
+${tonePrompt}
 Target Length: ${params.wordCount} words (${wordTarget} format)
 
 ${params.existingContent ? `Existing content to improve/expand:\n${params.existingContent.substring(0, 2000)}\n\n` : ''}
