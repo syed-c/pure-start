@@ -263,6 +263,8 @@ const FosteringLocationPage = () => {
     queryFn: async () => {
       if (!location) return [];
 
+      const currentRegion = POPULAR_CITIES.find(c => c.slug === locationSlug)?.region;
+
       // Get current city's state_id for sibling cities
       const { data: currentCity } = await supabase
         .from("cities")
@@ -271,7 +273,8 @@ const FosteringLocationPage = () => {
         .eq("is_active", true)
         .maybeSingle();
 
-      // If we have a state_id, show sibling cities in same nation
+      let dbSiblings: { id: string; name: string; slug: string }[] = [];
+
       if (currentCity?.state_id) {
         const { data: siblings } = await supabase
           .from("cities")
@@ -281,18 +284,25 @@ const FosteringLocationPage = () => {
           .neq("slug", locationSlug)
           .order("name")
           .limit(8);
-        return siblings || [];
+        if (siblings) dbSiblings = siblings;
       }
 
-      // Fallback: show other active cities
-      const { data } = await supabase
-        .from("cities")
-        .select("id, name, slug")
-        .eq("is_active", true)
-        .neq("slug", locationSlug)
-        .order("name")
-        .limit(8);
-      return data || [];
+      // Merge with static fallback from POPULAR_CITIES
+      if (dbSiblings.length < 8 && currentRegion) {
+        const staticNearby = POPULAR_CITIES
+          .filter(c => c.region === currentRegion && c.slug !== locationSlug)
+          .slice(0, 8)
+          .map(c => ({ id: c.slug, name: c.name, slug: c.slug }));
+        const seen = new Set(dbSiblings.map(s => s.slug));
+        for (const c of staticNearby) {
+          if (!seen.has(c.slug)) {
+            seen.add(c.slug);
+            dbSiblings.push(c);
+          }
+        }
+      }
+
+      return dbSiblings.slice(0, 8);
     },
     enabled: !!locationSlug && !!location,
   });

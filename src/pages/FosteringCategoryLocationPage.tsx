@@ -12,6 +12,7 @@ import { StructuredData } from "@/components/seo/StructuredData";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { useSeoPageContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
+import { POPULAR_CITIES } from "@/lib/constants/activeRegions";
 import { Heart, Shield, Users, MapPin, Star, ArrowRight } from "lucide-react";
 
 const FosteringCategoryLocationPage = () => {
@@ -191,8 +192,25 @@ const FosteringCategoryLocationPage = () => {
   const { data: nearbyLocations } = useQuery({
     queryKey: ["nearby-locations", locationSlug],
     queryFn: async () => {
-      const { data } = await supabase.from("cities").select("id, name, slug").neq("slug", locationSlug).limit(10);
-      return (data || []).slice(0, 8);
+      const { data: dbCities } = await supabase.from("cities").select("id, name, slug").neq("slug", locationSlug).limit(10);
+      const dbList = (dbCities || []).slice(0, 8);
+      if (dbList.length < 8) {
+        const currentRegion = POPULAR_CITIES.find(c => c.slug === locationSlug)?.region;
+        if (currentRegion) {
+          const staticNearby = POPULAR_CITIES
+            .filter(c => c.region === currentRegion && c.slug !== locationSlug)
+            .slice(0, 8)
+            .map(c => ({ id: c.slug, name: c.name, slug: c.slug }));
+          const seen = new Set(dbList.map(s => s.slug));
+          for (const c of staticNearby) {
+            if (!seen.has(c.slug)) {
+              seen.add(c.slug);
+              dbList.push(c);
+            }
+          }
+        }
+      }
+      return dbList.slice(0, 8);
     },
     enabled: !!locationSlug,
   });

@@ -171,7 +171,10 @@ export function useCity(slug: string, stateSlug?: string) {
         }
         if (normalizedStateSlug) {
           const matchingCity = cities.find((city: any) => city.state?.slug === normalizedStateSlug);
-          return (matchingCity as City) || null;
+          if (matchingCity) return matchingCity as City;
+          const staticFallback = STATIC_CITIES.find(c => c.slug === slug && c.state_id === normalizedStateSlug);
+          if (staticFallback) return staticFallback;
+          return cities[0] as City;
         }
         return cities[0] as City;
       } catch {

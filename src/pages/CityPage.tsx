@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase, supabaseAdmin } from "@/integrations/supabase/client";
@@ -12,10 +12,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { SyncStructuredData } from "@/components/seo/SyncStructuredData";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
-import { useCity, useState as useStateData } from "@/hooks/useLocations";
+import { useCity, useCitiesByStateSlug, useState as useStateData } from "@/hooks/useLocations";
 import { useSeoPageContent, parseMarkdownContent } from "@/hooks/useSeoPageContent";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
 import { normalizeStateSlug } from "@/lib/slug/normalizeStateSlug";
+import { buildInterlinkCandidates, injectInterlinksIntoText, getInterlinkRule } from "@/lib/content/interlinkingEngine";
+import { FOSTERING_CATEGORIES } from "@/lib/constants/activeRegions";
 import StateServicePage from "./StateServicePage";
 import NotFound from "./NotFound";
 import { ConversationalQABlock } from "@/components/ai-seo/ConversationalQABlock";
@@ -65,15 +67,10 @@ const CityPage = () => {
     enabled: !!city,
   });
 
-  const { data: nearbyCities } = useQuery({
-    queryKey: ['nearby-cities', state?.id],
-    queryFn: async () => {
-      if (!state) return [];
-      const { data } = await supabase.from('cities').select('id, name, slug').eq('state_id', state.id).neq('id', city?.id).order('name').limit(10);
-      return data || [];
-    },
-    enabled: !!state && !!city,
-  });
+  const { data: allStateCities } = useCitiesByStateSlug(normalizedStateSlug || '');
+  const nearbyCities = useMemo(() => {
+    return (allStateCities || []).filter((c: any) => c.slug !== citySlug).slice(0, 12);
+  }, [allStateCities, citySlug]);
 
   usePrerenderReady(!stateLoading && !cityLoading && !profilesLoading);
 
@@ -109,6 +106,26 @@ const CityPage = () => {
   const stateName = state.name;
   const stateAbbr = state.abbreviation;
   const parsedContent = seoContent?.content ? parseMarkdownContent(seoContent.content) : null;
+
+  const interlinkCandidates = useMemo(() => {
+    const nearbyForLinks = (nearbyCities || []).map((c: any) => ({
+      name: c.name,
+      slug: c.slug,
+      region: normalizedStateSlug || '',
+    }));
+    const servicesForLinks = FOSTERING_CATEGORIES.slice(0, 8).map(c => ({
+      name: c.name,
+      slug: c.slug,
+    }));
+    return buildInterlinkCandidates('city', cityName, nearbyForLinks, servicesForLinks, stateName, normalizedStateSlug);
+  }, [cityName, normalizedStateSlug, stateName, nearbyCities]);
+
+  const interlinkRule = getInterlinkRule('city');
+
+  const interlinkText = (text: string): string => {
+    const result = injectInterlinksIntoText(text, interlinkCandidates, interlinkRule.maxLinks, cityName, normalizedStateSlug || '');
+    return result.content;
+  };
 
   const pageTitle = seoContent?.meta_title || `Fostering Agencies in ${cityName}, ${stateAbbr} | Find Agencies`;
   const pageDescription = seoContent?.meta_description || `Find trusted fostering agencies in ${cityName}, ${stateName}. Browse verified agencies.`;
@@ -400,9 +417,9 @@ const CityPage = () => {
               <h2 className="text-2xl md:text-4xl font-bold mb-4">
                 Fostering in <span className="text-teal-600">{cityName}</span>, {stateName}
               </h2>
-              <p className="text-muted-foreground text-lg">
-                Your complete guide to becoming a foster carrier in {cityName}, {stateName}.
-              </p>
+              <p className="text-muted-foreground text-lg" dangerouslySetInnerHTML={{ __html: interlinkText(
+                `Your complete guide to becoming a foster carer in ${cityName}, ${stateName}.`
+              )}} />
             </div>
 
             {/* Intro SEO Paragraph */}
@@ -410,20 +427,20 @@ const CityPage = () => {
               <CardContent className="p-6 md:p-8">
                 <h3 className="text-xl font-bold mb-4">About Fostering in {cityName}</h3>
                 <div className="prose prose-teal max-w-none">
-                  <p className="text-muted-foreground leading-relaxed mb-4">
-                    {cityName} in {stateName} offers excellent access to fostering agencies with strong support networks. 
-                    With {profiles?.length || 0} Ofsted-rated agencies in the area, families have plenty of choices when selecting 
-                    the right agency for their fostering journey.
-                  </p>
-                  <p className="text-muted-foreground leading-relaxed mb-4">
-                    The area has good transport links, making it easy to attend training sessions and meetings with agencies. 
-                    Whether you're looking for emergency placements, short-term care, or long-term fostering, 
-                    {cityName} has agencies that can support your needs.
-                  </p>
-                  <p className="text-muted-foreground leading-relaxed">
-                    All agencies in {cityName} provide comprehensive training, 24/7 support, and competitive allowances. 
-                    The assessment process typically takes 4-6 months from initial enquiry to being matched with a child.
-                  </p>
+                  <p className="text-muted-foreground leading-relaxed mb-4" dangerouslySetInnerHTML={{ __html: interlinkText(
+                    `${cityName} in ${stateName} offers excellent access to fostering agencies with strong support networks. ` +
+                    `With ${profiles?.length || 0} Ofsted-rated agencies in the area, families have plenty of choices when selecting ` +
+                    `the right agency for their fostering journey.`
+                  )}} />
+                  <p className="text-muted-foreground leading-relaxed mb-4" dangerouslySetInnerHTML={{ __html: interlinkText(
+                    `The area has good transport links, making it easy to attend training sessions and meetings with agencies. ` +
+                    `Whether you're looking for emergency placements, short-term care, or long-term fostering, ` +
+                    `${cityName} has agencies that can support your needs.`
+                  )}} />
+                  <p className="text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: interlinkText(
+                    `All agencies in ${cityName} provide comprehensive training, 24/7 support, and competitive allowances. ` +
+                    `The assessment process typically takes 4-6 months from initial enquiry to being matched with a child.`
+                  )}} />
                 </div>
               </CardContent>
             </Card>
@@ -433,22 +450,21 @@ const CityPage = () => {
               <Card>
                 <CardContent className="p-6">
                   <h3 className="text-lg font-bold mb-3">Why Foster in {cityName}, {stateName}?</h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {cityName} offers a thriving foster care community with multiple agencies providing various types of fostering. 
-                    The city has excellent transport links making it convenient for training sessions and support meetings. 
-                    With {profiles?.length || 0} agencies to choose from, you can find the perfect match for your experience and preferences.
-                    Agencies in {cityName} are known for their comprehensive support packages and competitive allowances.
-                  </p>
+                  <p className="text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: interlinkText(
+                    `${cityName} offers a thriving foster care community with multiple agencies providing various types of fostering. ` +
+                    `The city has excellent transport links making it convenient for training sessions and support meetings. ` +
+                    `With ${profiles?.length || 0} agencies to choose from, you can find the perfect match for your experience and preferences. ` +
+                    `Agencies in ${cityName} are known for their comprehensive support packages and competitive allowances.`
+                  )}} />
                 </CardContent>
               </Card>
 
               <Card>
                 <CardContent className="p-6">
                   <h3 className="text-lg font-bold mb-3">How to Find the Right Fostering Agency in {cityName}</h3>
-                  <p className="text-muted-foreground leading-relaxed mb-3">
-                    When searching for "fostering agencies {cityName.toLowerCase()}" or "foster care {cityName.toLowerCase()}", 
-                    consider these factors:
-                  </p>
+                  <p className="text-muted-foreground leading-relaxed mb-3" dangerouslySetInnerHTML={{ __html: interlinkText(
+                    `When searching for fostering agencies in ${cityName}, consider these factors:`
+                  )}} />
                   <ul className="space-y-2 text-muted-foreground">
                     <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 text-teal-600 mt-1 shrink-0" /><span><strong>Ofsted Rating</strong> - Look for Outstanding or Good ratings</span></li>
                     <li className="flex items-start gap-2"><CheckCircle className="h-4 w-4 text-teal-600 mt-1 shrink-0" /><span><strong>Fostering Types</strong> - Choose agencies offering your preferred type</span></li>
@@ -462,9 +478,9 @@ const CityPage = () => {
               <Card>
                 <CardContent className="p-6">
                   <h3 className="text-lg font-bold mb-3">The Fostering Process in {cityName}</h3>
-                  <p className="text-muted-foreground leading-relaxed mb-3">
-                    Starting your fostering journey in {cityName} is straightforward:
-                  </p>
+                  <p className="text-muted-foreground leading-relaxed mb-3" dangerouslySetInnerHTML={{ __html: interlinkText(
+                    `Starting your fostering journey in ${cityName} is straightforward:`
+                  )}} />
                   <ol className="space-y-2 text-muted-foreground">
                     <li className="flex items-start gap-3"><span className="font-bold text-teal-600 shrink-0">1.</span><span><strong>Research</strong> - Browse agencies above and read reviews from current foster carers</span></li>
                     <li className="flex items-start gap-3"><span className="font-bold text-teal-600 shrink-0">2.</span><span><strong>Contact</strong> - Reach out to preferred agencies for information packs</span></li>
@@ -478,12 +494,12 @@ const CityPage = () => {
               <Card>
                 <CardContent className="p-6">
                   <h3 className="text-lg font-bold mb-3">Fostering Allowances in {cityName}</h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Fostering allowances in {cityName} follow national guidelines with variations based on the type of placement. 
-                    The minimum weekly allowance ranges from £132-£187 depending on the child's age. 
-                    Independent Fostering Agencies often pay enhanced rates ranging from £200-500+ per week for specialist placements. 
-                    All foster carers receive regular payments, holiday allowances, and birthday payments.
-                  </p>
+                  <p className="text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: interlinkText(
+                    `Fostering allowances in ${cityName} follow national guidelines with variations based on the type of placement. ` +
+                    `The minimum weekly allowance ranges from £132-£187 depending on the child's age. ` +
+                    `Independent Fostering Agencies often pay enhanced rates ranging from £200-500+ per week for specialist placements. ` +
+                    `All foster carers receive regular payments, holiday allowances, and birthday payments.`
+                  )}} />
                 </CardContent>
               </Card>
             </div>
