@@ -126,6 +126,8 @@ export default function ContentIntelligenceCenterTab() {
   const [selectedPageIds, setSelectedPageIds] = useState<string[]>([]);
   const [isBulkGenerating, setIsBulkGenerating] = useState(false);
   const [bulkGenProgress, setBulkGenProgress] = useState({ current: 0, total: 0, results: [] as any[] });
+  const [bulkTypeFilter, setBulkTypeFilter] = useState('all');
+  const [bulkRegionFilter, setBulkRegionFilter] = useState('all');
 
   const [competitorPageId, setCompetitorPageId] = useState('');
   const [competitorUrls, setCompetitorUrls] = useState('');
@@ -216,7 +218,45 @@ export default function ContentIntelligenceCenterTab() {
     },
   });
 
+  const { data: allPages } = useQuery({
+    queryKey: ['all-seo-pages'],
+    queryFn: async () => {
+      const { data } = await supabase.from('seo_pages')
+        .select('id, slug, page_type, title, word_count, seo_score')
+        .order('updated_at', { ascending: false });
+      return data || [];
+    },
+  });
+
   const { data: healthStats } = useContentHealthStats();
+
+  function getPageRegion(slug: string, pageType: string): string | null {
+    const parts = slug.split('/').filter(Boolean);
+    if (parts.length >= 2 && ['england', 'scotland', 'wales', 'northern-ireland'].includes(parts[1])) {
+      return parts[1];
+    }
+    if (pageType === 'city' || pageType === 'location') {
+      const lastPart = parts[parts.length - 1] || slug;
+      const city = POPULAR_CITIES.find(c => c.slug === lastPart);
+      if (city) return city.region;
+    }
+    for (const region of ['england', 'scotland', 'wales', 'northern-ireland'] as const) {
+      if (slug.includes(region)) return region;
+    }
+    return null;
+  }
+
+  const filteredBulkPages = useMemo(() => {
+    if (!allPages) return [];
+    let filtered = allPages;
+    if (bulkTypeFilter !== 'all') {
+      filtered = filtered.filter(p => p.page_type === bulkTypeFilter);
+    }
+    if (bulkRegionFilter !== 'all') {
+      filtered = filtered.filter(p => getPageRegion(p.slug || '', p.page_type) === bulkRegionFilter);
+    }
+    return filtered;
+  }, [allPages, bulkTypeFilter, bulkRegionFilter]);
 
   const healthScores = useMemo(() => {
     const total = healthStats?.total || 1;
@@ -368,7 +408,7 @@ export default function ContentIntelligenceCenterTab() {
     
     for (let i = 0; i < selectedPageIds.length; i++) {
       const pageId = selectedPageIds[i];
-      const page = seoPages?.find((p: SeoPage) => p.id === pageId);
+      const page = allPages?.find((p: any) => p.id === pageId);
       if (!page) continue;
       
       setBulkGenProgress(prev => ({ ...prev, current: i + 1 }));
@@ -380,7 +420,6 @@ export default function ContentIntelligenceCenterTab() {
           targetKeyword: page.title || page.slug,
           tone: genTone,
           wordCount: parseInt(genWordCount),
-          existingContent: page.content || undefined
         });
         
         const wordCount = computeWordCount(result.content || '');
@@ -999,8 +1038,9 @@ export default function ContentIntelligenceCenterTab() {
                             </div>
                           </TableCell>
                         </TableRow>
-                      ))
-                    )}
+                      );
+                    })
+                  )}
                   </TableBody>
                 </Table>
               </div>
@@ -1185,21 +1225,41 @@ export default function ContentIntelligenceCenterTab() {
               <div className="mb-6 p-4 border rounded-lg bg-slate-800/50">
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="font-semibold text-slate-200">Bulk Generate</h4>
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => {
-                      if (selectedPageIds.length === seoPages?.length) {
-                        setSelectedPageIds([]);
-                      } else {
-                        setSelectedPageIds(seoPages?.map((p: SeoPage) => p.id) || []);
-                      }
-                    }}
-                  >
-                    {selectedPageIds.length === seoPages?.length ? 'Deselect All' : 'Select All'} ({selectedPageIds.length}/{seoPages?.length || 0})
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-slate-400">{filteredBulkPages.length} matching</span>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => {
+                        if (selectedPageIds.length === filteredBulkPages.length) {
+                          setSelectedPageIds([]);
+                        } else {
+                          setSelectedPageIds(filteredBulkPages.map((p: any) => p.id));
+                        }
+                      }}
+                    >
+                      {selectedPageIds.length === filteredBulkPages.length ? 'Deselect All' : 'Select All'} ({selectedPageIds.length}/{filteredBulkPages.length})
+                    </Button>
+                  </div>
                 </div>
                 <div className="flex gap-2 flex-wrap mb-3">
+                  <Select value={bulkTypeFilter} onValueChange={setBulkTypeFilter}>
+                    <SelectTrigger className="w-[160px]"><SelectValue placeholder="Page Type" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Types</SelectItem>
+                      {PAGE_TYPES.map(t => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                  <Select value={bulkRegionFilter} onValueChange={setBulkRegionFilter}>
+                    <SelectTrigger className="w-[160px]"><SelectValue placeholder="Region" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Regions</SelectItem>
+                      <SelectItem value="england">England</SelectItem>
+                      <SelectItem value="scotland">Scotland</SelectItem>
+                      <SelectItem value="wales">Wales</SelectItem>
+                      <SelectItem value="northern-ireland">Northern Ireland</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <Select value={genTone} onValueChange={setGenTone}>
                     <SelectTrigger className="w-[150px]"><SelectValue placeholder="Tone" /></SelectTrigger>
                     <SelectContent>
