@@ -567,7 +567,7 @@ export default function AdminDashboard() {
       case 'visitor-analytics': return <VisitorAnalyticsTab />;
       case 'leads': return <EnquiriesTab />;
       case 'pages': return <PagesTab />;
-      case 'blog': return <BlogManagementTab />;
+      case 'blog': return <BlogTab />;
       case 'seo': return <SeoTab />;
       case 'static-pages': return <StaticPagesTab />;
       case 'seo-health': return <SeoHealthCheckTab />;
