@@ -1,4 +1,4 @@
-import { useState, useEffect, type ClipboardEvent } from 'react';
+import { useState, useEffect, useMemo, type ClipboardEvent } from 'react';
 import { useAdminBlogPosts, useCreateBlogPost, useUpdateBlogPost, useDeleteBlogPost, getPostContentAsString } from '@/hooks/useAdminBlog';
 import { useCheckBlogSimilarity, useSuggestInternalLinks, useAutoAssignCluster, useBlogTopicClusters, useCreateTopicCluster, useDeleteTopicCluster } from '@/hooks/useBlogAntiCannibalization';
 import { useBlogCategories, useAllBlogCategories, useCreateBlogCategory, useUpdateBlogCategory, useDeleteBlogCategory, useBlogAuthors, useAllBlogAuthors, useCreateBlogAuthor, useUpdateBlogAuthor, useDeleteBlogAuthor, useBlogAIAssistant, useGenerateFeaturedImage, generateSlug } from '@/hooks/useBlogManagement';
@@ -17,7 +17,11 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { BookOpen, Search, Plus, Edit, Trash2, Eye, EyeOff, AlertTriangle, Link2, Loader2, Sparkles, FileText, Users, Tags, Settings, ChevronDown, ChevronRight, Wand2, ExternalLink, RefreshCw, FolderTree, ImageIcon, Lightbulb } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { BookOpen, Search, Plus, Edit, Trash2, Eye, EyeOff, AlertTriangle, Link2, Loader2, Sparkles, FileText, Users, Tags, Settings, ChevronDown, ChevronRight, ChevronUp, ChevronLeft, Wand2, ExternalLink, RefreshCw, FolderTree, ImageIcon, Lightbulb, ArrowUpDown, CheckCheck, Copy, BarChart3, FileWarning, Columns3, GripVertical } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import BlogContentBlockEditor, { type ContentBlock, blocksToMarkdown, markdownToBlocks } from '@/components/admin/blog/BlogContentBlockEditor';
@@ -29,8 +33,12 @@ type MainTab = 'posts' | 'categories' | 'authors' | 'clusters' | 'topics';
 
 export default function BlogTab() {
   const [mainTab, setMainTab] = useState<MainTab>('posts');
-  const [filters, setFilters] = useState({ status: '', search: '', category: '', author: '' });
-  const { data: posts, isLoading } = useAdminBlogPosts(filters.status || undefined);
+  const [filters, setFilters] = useState({ status: '', search: '', category: '', author: '', cluster: '', missingMeta: false, dateFrom: '', dateTo: '', sortBy: 'created_at' as string, sortDir: 'desc' as 'asc' | 'desc' });
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(20);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [previewPost, setPreviewPost] = useState<any>(null);
+  const { data: posts, isLoading } = useAdminBlogPosts();
   const { data: topicClusters } = useBlogTopicClusters();
   const { data: categories } = useBlogCategories();
   const { data: allCategories } = useAllBlogCategories();
@@ -486,18 +494,39 @@ export default function BlogTab() {
     setDialogOpen(true);
   };
 
-  const filteredPosts = posts?.filter(p => {
-    const matchesSearch = !filters.search || 
-      p.title?.toLowerCase().includes(filters.search.toLowerCase()) ||
-      p.slug?.toLowerCase().includes(filters.search.toLowerCase());
-    const matchesCategory = !filters.category || filters.category === 'all' || p.category === filters.category;
-    const matchesAuthor = !filters.author || filters.author === 'all' || p.author_name === filters.author;
-    return matchesSearch && matchesCategory && matchesAuthor;
-  }) || [];
+  const enrichedPosts = useMemo(() => (posts || []).map(p => {
+    const contentStr = getPostContentAsString(p);
+    const wordCount = contentStr ? contentStr.split(/\s+/).filter(Boolean).length : 0;
+    const hasMeta = !!(p.seo_title && p.seo_description);
+    return { ...p, _wordCount: wordCount, _hasMeta: hasMeta };
+  }), [posts]);
+
+  const filteredPosts = useMemo(() => enrichedPosts.filter(p => {
+    if (filters.search && !p.title?.toLowerCase().includes(filters.search.toLowerCase()) && !p.slug?.toLowerCase().includes(filters.search.toLowerCase())) return false;
+    if (filters.category && filters.category !== 'all' && p.category !== filters.category) return false;
+    if (filters.author && filters.author !== 'all' && p.author_name !== filters.author) return false;
+    if (filters.cluster && filters.cluster !== 'all' && p.topic_cluster_id !== filters.cluster) return false;
+    if (filters.missingMeta && p._hasMeta) return false;
+    if (filters.dateFrom && p.created_at && new Date(p.created_at) < new Date(filters.dateFrom)) return false;
+    if (filters.dateTo && p.created_at && new Date(p.created_at) > new Date(filters.dateTo + 'T23:59:59')) return false;
+    return true;
+  }).sort((a, b) => {
+    const dir = filters.sortDir === 'asc' ? 1 : -1;
+    if (filters.sortBy === 'title') return dir * (a.title || '').localeCompare(b.title || '');
+    if (filters.sortBy === 'word_count') return dir * ((a as any)._wordCount - (b as any)._wordCount);
+    if (filters.sortBy === 'status') return dir * ((a.status || '').localeCompare(b.status || ''));
+    return dir * (new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime());
+  }), [enrichedPosts, filters]);
+
+  const totalPages = Math.ceil(filteredPosts.length / pageSize);
+  const pagedPosts = filteredPosts.slice(page * pageSize, (page + 1) * pageSize);
 
   const publishedCount = posts?.filter(p => p.status === 'published').length || 0;
   const draftCount = posts?.filter(p => p.status === 'draft').length || 0;
   const featuredCount = posts?.filter(p => p.is_featured).length || 0;
+  const missingMetaCount = enrichedPosts.filter(p => !p._hasMeta).length;
+  const thinContentCount = enrichedPosts.filter(p => p._wordCount > 0 && p._wordCount < 300).length;
+  const avgWordCount = enrichedPosts.length ? Math.round(enrichedPosts.reduce((s, p) => s + (p as any)._wordCount, 0) / enrichedPosts.length) : 0;
 
   if (isLoading) {
     return (
@@ -549,49 +578,71 @@ export default function BlogTab() {
 
         {/* Posts Tab */}
         <TabsContent value="posts" className="space-y-6">
-          {/* Stats */}
-          <div className="grid grid-cols-4 gap-4">
+          {/* Enhanced Stats */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             <Card className="card-modern">
-              <CardContent className="p-4 flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <BookOpen className="h-6 w-6 text-primary" />
+              <CardContent className="p-4 flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                  <BookOpen className="h-5 w-5 text-primary" />
                 </div>
-                <div>
-                  <p className="text-2xl font-bold">{posts?.length || 0}</p>
-                  <p className="text-sm text-muted-foreground">Total Posts</p>
+                <div className="min-w-0">
+                  <p className="text-xl font-bold">{enrichedPosts.length}</p>
+                  <p className="text-xs text-muted-foreground truncate">Total Posts</p>
                 </div>
               </CardContent>
             </Card>
             <Card className="card-modern">
-              <CardContent className="p-4 flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-teal/10 flex items-center justify-center">
-                  <Eye className="h-6 w-6 text-teal" />
+              <CardContent className="p-4 flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-green-500/10 flex items-center justify-center shrink-0">
+                  <Eye className="h-5 w-5 text-green-600" />
                 </div>
-                <div>
-                  <p className="text-2xl font-bold">{publishedCount}</p>
-                  <p className="text-sm text-muted-foreground">Published</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="card-modern">
-              <CardContent className="p-4 flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-gold/10 flex items-center justify-center">
-                  <EyeOff className="h-6 w-6 text-gold" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold">{draftCount}</p>
-                  <p className="text-sm text-muted-foreground">Drafts</p>
+                <div className="min-w-0">
+                  <p className="text-xl font-bold">{publishedCount}</p>
+                  <p className="text-xs text-muted-foreground truncate">Published</p>
                 </div>
               </CardContent>
             </Card>
             <Card className="card-modern">
-              <CardContent className="p-4 flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-coral/10 flex items-center justify-center">
-                  <Sparkles className="h-6 w-6 text-coral" />
+              <CardContent className="p-4 flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center shrink-0">
+                  <EyeOff className="h-5 w-5 text-amber-600" />
                 </div>
-                <div>
-                  <p className="text-2xl font-bold">{featuredCount}</p>
-                  <p className="text-sm text-muted-foreground">Featured</p>
+                <div className="min-w-0">
+                  <p className="text-xl font-bold">{draftCount}</p>
+                  <p className="text-xs text-muted-foreground truncate">Drafts</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="card-modern">
+              <CardContent className="p-4 flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-purple-500/10 flex items-center justify-center shrink-0">
+                  <Sparkles className="h-5 w-5 text-purple-600" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xl font-bold">{featuredCount}</p>
+                  <p className="text-xs text-muted-foreground truncate">Featured</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="card-modern">
+              <CardContent className="p-4 flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-red-500/10 flex items-center justify-center shrink-0">
+                  <FileWarning className="h-5 w-5 text-red-600" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xl font-bold">{missingMetaCount}</p>
+                  <p className="text-xs text-muted-foreground truncate">Missing Meta</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="card-modern">
+              <CardContent className="p-4 flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0">
+                  <BarChart3 className="h-5 w-5 text-blue-600" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xl font-bold">{avgWordCount.toLocaleString()}</p>
+                  <p className="text-xs text-muted-foreground truncate">Avg Words</p>
                 </div>
               </CardContent>
             </Card>
@@ -599,20 +650,20 @@ export default function BlogTab() {
 
           {/* Filters & Actions */}
           <Card className="card-modern">
-            <CardContent className="p-4">
-              <div className="flex flex-wrap gap-4">
+            <CardContent className="p-4 space-y-3">
+              <div className="flex flex-wrap gap-3">
                 <div className="flex-1 min-w-[200px] relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Search posts..."
                     value={filters.search}
-                    onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+                    onChange={(e) => { setFilters({ ...filters, search: e.target.value }); setPage(0); }}
                     className="pl-10"
                   />
                 </div>
-                <Select value={filters.status || 'all'} onValueChange={(v) => setFilters({ ...filters, status: v === 'all' ? '' : v })}>
-                  <SelectTrigger className="w-40">
-                    <SelectValue placeholder="All Statuses" />
+                <Select value={filters.status || 'all'} onValueChange={(v) => { setFilters({ ...filters, status: v === 'all' ? '' : v }); setPage(0); }}>
+                  <SelectTrigger className="w-36">
+                    <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Statuses</SelectItem>
@@ -620,9 +671,9 @@ export default function BlogTab() {
                     <SelectItem value="published">Published</SelectItem>
                   </SelectContent>
                 </Select>
-                <Select value={filters.category || 'all'} onValueChange={(v) => setFilters({ ...filters, category: v })}>
-                  <SelectTrigger className="w-48">
-                    <SelectValue placeholder="All Categories" />
+                <Select value={filters.category || 'all'} onValueChange={(v) => { setFilters({ ...filters, category: v }); setPage(0); }}>
+                  <SelectTrigger className="w-44">
+                    <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Categories</SelectItem>
@@ -631,9 +682,9 @@ export default function BlogTab() {
                     ))}
                   </SelectContent>
                 </Select>
-                <Select value={filters.author || 'all'} onValueChange={(v) => setFilters({ ...filters, author: v })}>
-                  <SelectTrigger className="w-48">
-                    <SelectValue placeholder="All Authors" />
+                <Select value={filters.author || 'all'} onValueChange={(v) => { setFilters({ ...filters, author: v }); setPage(0); }}>
+                  <SelectTrigger className="w-44">
+                    <SelectValue placeholder="Author" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Authors</SelectItem>
@@ -642,6 +693,52 @@ export default function BlogTab() {
                     ))}
                   </SelectContent>
                 </Select>
+                <Select value={filters.cluster || 'all'} onValueChange={(v) => { setFilters({ ...filters, cluster: v }); setPage(0); }}>
+                  <SelectTrigger className="w-44">
+                    <SelectValue placeholder="Cluster" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Clusters</SelectItem>
+                    {topicClusters?.map(c => (
+                      <SelectItem key={c.id} value={c.id}>{c.cluster_name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" size="sm" className="h-10">
+                      <Calendar className="h-4 w-4 mr-2" />
+                      {filters.dateFrom || filters.dateTo ? 'Date Range' : 'Date'}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-4" align="start">
+                    <div className="space-y-3">
+                      <div>
+                        <Label className="text-xs">From</Label>
+                        <Input type="date" value={filters.dateFrom} onChange={(e) => setFilters({ ...filters, dateFrom: e.target.value })} />
+                      </div>
+                      <div>
+                        <Label className="text-xs">To</Label>
+                        <Input type="date" value={filters.dateTo} onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })} />
+                      </div>
+                      {(filters.dateFrom || filters.dateTo) && (
+                        <Button variant="ghost" size="sm" className="w-full text-xs" onClick={() => setFilters({ ...filters, dateFrom: '', dateTo: '' })}>Clear</Button>
+                      )}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant={filters.missingMeta ? 'default' : 'outline'} size="sm" className="h-10" onClick={() => { setFilters({ ...filters, missingMeta: !filters.missingMeta }); setPage(0); }}>
+                        <FileWarning className="h-4 w-4 mr-1" />
+                        Missing SEO
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Show only posts missing SEO title/description</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <div className="flex-1" />
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                   <DialogTrigger asChild>
                     <Button onClick={() => resetForm()}>
@@ -1151,93 +1248,296 @@ export default function BlogTab() {
             </CardContent>
           </Card>
 
+          {/* Bulk Action Bar */}
+          {selectedIds.size > 0 && (
+            <div className="flex items-center gap-3 px-4 py-2 bg-primary/5 border border-primary/20 rounded-lg">
+              <span className="text-sm font-medium">{selectedIds.size} selected</span>
+              <div className="h-4 w-px bg-border" />
+              <Button size="sm" variant="outline" onClick={() => {
+                const ids = Array.from(selectedIds);
+                ids.forEach(id => {
+                  const post = enrichedPosts.find(p => p.id === id);
+                  if (post && post.status !== 'published') {
+                    updatePost.mutate({ id, status: 'published' as const, published_at: new Date().toISOString() });
+                  }
+                });
+                setSelectedIds(new Set());
+                toast.success(`Publishing ${ids.length} posts...`);
+              }}>
+                <Eye className="h-3 w-3 mr-1" />Publish All
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => {
+                const ids = Array.from(selectedIds);
+                ids.forEach(id => updatePost.mutate({ id, status: 'draft' as const }));
+                setSelectedIds(new Set());
+                toast.success(`Drafting ${ids.length} posts...`);
+              }}>
+                <EyeOff className="h-3 w-3 mr-1" />Draft All
+              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button size="sm" variant="outline" className="text-destructive border-destructive/30">
+                    <Trash2 className="h-3 w-3 mr-1" />Delete All
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete {selectedIds.size} posts?</AlertDialogTitle>
+                    <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel onClick={() => setSelectedIds(new Set())}>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => {
+                      selectedIds.forEach(id => deletePost.mutate(id));
+                      setSelectedIds(new Set());
+                    }} className="bg-destructive text-destructive-foreground">Delete All</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              <Button size="sm" variant="ghost" className="ml-auto" onClick={() => setSelectedIds(new Set())}>
+                Clear Selection
+              </Button>
+            </div>
+          )}
+
           {/* Posts Table */}
           <Card className="card-modern">
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Title</TableHead>
+                    <TableHead className="w-10">
+                      <Checkbox
+                        checked={pagedPosts.length > 0 && pagedPosts.every(p => selectedIds.has(p.id))}
+                        onCheckedChange={(checked) => {
+                          if (checked) setSelectedIds(new Set(pagedPosts.map(p => p.id)));
+                          else setSelectedIds(new Set());
+                        }}
+                      />
+                    </TableHead>
+                    <TableHead className="cursor-pointer hover:text-foreground" onClick={() => setFilters(f => ({ ...f, sortBy: 'title', sortDir: f.sortDir === 'asc' ? 'desc' : 'asc' }))}>
+                      <div className="flex items-center gap-1">Title <ArrowUpDown className="h-3 w-3" /></div>
+                    </TableHead>
                     <TableHead>Category</TableHead>
                     <TableHead>Author</TableHead>
                     <TableHead>Cluster</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Created</TableHead>
+                    <TableHead>Words</TableHead>
+                    <TableHead className="cursor-pointer hover:text-foreground" onClick={() => setFilters(f => ({ ...f, sortBy: 'status', sortDir: f.sortDir === 'asc' ? 'desc' : 'asc' }))}>
+                      <div className="flex items-center gap-1">Status <ArrowUpDown className="h-3 w-3" /></div>
+                    </TableHead>
+                    <TableHead className="cursor-pointer hover:text-foreground" onClick={() => setFilters(f => ({ ...f, sortBy: 'created_at', sortDir: f.sortDir === 'asc' ? 'desc' : 'asc' }))}>
+                      <div className="flex items-center gap-1">Created <ArrowUpDown className="h-3 w-3" /></div>
+                    </TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredPosts.map((post) => (
-                    <TableRow key={post.id}>
-                      <TableCell>
-                        <div className="font-medium">{post.title}</div>
-                        <p className="text-xs text-muted-foreground">/blog/{post.slug}</p>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{post.category || '-'}</Badge>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">{post.author_name || '-'}</TableCell>
-                      <TableCell className="text-muted-foreground text-xs">
-                        {topicClusters?.find(c => c.id === post.topic_cluster_id)?.cluster_name || '-'}
-                      </TableCell>
-                      <TableCell>
-                        {post.status === 'published' ? (
-                          <Badge className="bg-teal text-white"><Eye className="h-3 w-3 mr-1" />Published</Badge>
-                        ) : (
-                          <Badge variant="secondary"><EyeOff className="h-3 w-3 mr-1" />Draft</Badge>
-                        )}
-                        {post.is_featured && <Badge className="ml-1 bg-gold text-white">Featured</Badge>}
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {post.created_at ? format(new Date(post.created_at), 'MMM d, yyyy') : '-'}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {post.status === 'published' && (
-                          <Button variant="ghost" size="sm" asChild>
-                            <a href={`/blog/${post.slug}`} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="h-4 w-4" />
-                            </a>
-                          </Button>
-                        )}
-                        <Button variant="ghost" size="sm" onClick={() => openEdit(post)}>
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button variant="ghost" size="sm" className="text-destructive">
-                              <Trash2 className="h-4 w-4" />
+                  {pagedPosts.map((post) => {
+                    const postWordCount = (post as any)._wordCount;
+                    const postHasMeta = (post as any)._hasMeta;
+                    const clusterName = topicClusters?.find(c => c.id === post.topic_cluster_id)?.cluster_name;
+                    return (
+                      <TableRow key={post.id} className={selectedIds.has(post.id) ? 'bg-primary/5' : ''}>
+                        <TableCell>
+                          <Checkbox
+                            checked={selectedIds.has(post.id)}
+                            onCheckedChange={(checked) => {
+                              const next = new Set(selectedIds);
+                              if (checked) next.add(post.id);
+                              else next.delete(post.id);
+                              setSelectedIds(next);
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <div className="min-w-0">
+                              <button className="font-medium text-left hover:text-primary transition-colors" onClick={() => setPreviewPost(post)}>
+                                {post.title || 'Untitled'}
+                              </button>
+                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                <span>/blog/{post.slug}</span>
+                                {!postHasMeta && <FileWarning className="h-3 w-3 text-red-500" title="Missing SEO meta" />}
+                                {post.is_featured && <Sparkles className="h-3 w-3 text-purple-500" title="Featured" />}
+                              </div>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {post.category ? <Badge variant="outline" className="text-xs">{post.category}</Badge> : <span className="text-muted-foreground text-xs">-</span>}
+                        </TableCell>
+                        <TableCell className="text-xs text-muted-foreground">{post.author_name || '-'}</TableCell>
+                        <TableCell className="text-xs text-muted-foreground max-w-[120px] truncate">{clusterName || '-'}</TableCell>
+                        <TableCell className="text-xs text-muted-foreground">{postWordCount > 0 ? postWordCount.toLocaleString() : '-'}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-1">
+                            {post.status === 'published' ? (
+                              <Badge className="bg-green-500 text-white text-xs"><Eye className="h-3 w-3 mr-1" />Published</Badge>
+                            ) : (
+                              <Badge variant="secondary" className="text-xs"><EyeOff className="h-3 w-3 mr-1" />Draft</Badge>
+                            )}
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-5 w-5 p-0"
+                              onClick={() => updatePost.mutate({ id: post.id, is_featured: !post.is_featured })}
+                            >
+                              <Sparkles className={`h-3 w-3 ${post.is_featured ? 'text-purple-500 fill-purple-500' : 'text-muted-foreground'}`} />
                             </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Delete Post?</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                This will permanently delete "{post.title}".
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => deletePost.mutate(post.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                                Delete
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                  {filteredPosts.length === 0 && (
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
+                          {post.created_at ? format(new Date(post.created_at), 'd MMM yyyy') : '-'}
+                        </TableCell>
+                        <TableCell className="text-right whitespace-nowrap">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button variant="ghost" size="sm" onClick={() => setPreviewPost(post)}>
+                                  <Eye className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>Preview</TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                          {post.status === 'published' && (
+                            <Button variant="ghost" size="sm" asChild>
+                              <a href={`/blog/${post.slug}`} target="_blank" rel="noopener noreferrer">
+                                <ExternalLink className="h-4 w-4" />
+                              </a>
+                            </Button>
+                          )}
+                          <Button variant="ghost" size="sm" onClick={() => openEdit(post)}>
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="ghost" size="sm" className="text-destructive">
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Delete Post?</AlertDialogTitle>
+                                <AlertDialogDescription>This will permanently delete "{post.title}".</AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => deletePost.mutate(post.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                  {pagedPosts.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={10} className="text-center py-12 text-muted-foreground">
                         <BookOpen className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                        <p>No posts found</p>
+                        <p className="font-medium">No posts found</p>
+                        <p className="text-sm mt-1">Try adjusting your filters or create a new post</p>
                       </TableCell>
                     </TableRow>
                   )}
                 </TableBody>
               </Table>
             </CardContent>
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between px-4 py-3 border-t">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <span>Showing {page * pageSize + 1}-{Math.min((page + 1) * pageSize, filteredPosts.length)} of {filteredPosts.length}</span>
+                  <select className="text-xs border rounded px-1 py-0.5" value={pageSize} onChange={(e) => { setPageSize(Number(e.target.value)); setPage(0); }}>
+                    <option value={10}>10/page</option>
+                    <option value={20}>20/page</option>
+                    <option value={50}>50/page</option>
+                    <option value={100}>100/page</option>
+                  </select>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Button variant="outline" size="sm" disabled={page === 0} onClick={() => setPage(p => p - 1)}>
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
+                    let pageNum: number;
+                    if (totalPages <= 7) {
+                      pageNum = i;
+                    } else if (page < 3) {
+                      pageNum = i;
+                    } else if (page > totalPages - 4) {
+                      pageNum = totalPages - 7 + i;
+                    } else {
+                      pageNum = page - 3 + i;
+                    }
+                    return (
+                      <Button key={pageNum} variant={page === pageNum ? 'default' : 'outline'} size="sm" className="w-8 h-8 p-0 text-xs" onClick={() => setPage(pageNum)}>
+                        {pageNum + 1}
+                      </Button>
+                    );
+                  })}
+                  <Button variant="outline" size="sm" disabled={page >= totalPages - 1} onClick={() => setPage(p => p + 1)}>
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
           </Card>
+
+          {/* Preview Dialog */}
+          <Dialog open={!!previewPost} onOpenChange={(open) => { if (!open) setPreviewPost(null); }}>
+            <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  {previewPost?.title}
+                  {previewPost?.status === 'published' && (
+                    <Badge className="bg-green-500 text-white text-xs">Published</Badge>
+                  )}
+                  {previewPost?.is_featured && (
+                    <Badge className="bg-purple-500 text-white text-xs">Featured</Badge>
+                  )}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                {previewPost?.featured_image_url && (
+                  <img src={previewPost.featured_image_url} alt={previewPost.title} className="w-full h-48 object-cover rounded-lg" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                )}
+                <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
+                  {previewPost?.category && <Badge variant="outline">{previewPost.category}</Badge>}
+                  {previewPost?.author_name && <span>By {previewPost.author_name}</span>}
+                  {previewPost?.created_at && <span>{format(new Date(previewPost.created_at), 'MMMM d, yyyy')}</span>}
+                  {previewPost?.topic_cluster_id && (
+                    <span>Cluster: {topicClusters?.find(c => c.id === previewPost.topic_cluster_id)?.cluster_name}</span>
+                  )}
+                </div>
+                {previewPost?.seo_title && (
+                  <div className="p-3 bg-blue-50 border border-blue-200 rounded text-sm">
+                    <span className="font-medium text-blue-700">SEO Title:</span>{' '}
+                    <span className="text-blue-600">{previewPost.seo_title}</span>
+                  </div>
+                )}
+                {previewPost?.excerpt && (
+                  <div className="p-3 bg-muted/30 rounded">
+                    <p className="text-sm text-muted-foreground italic">{previewPost.excerpt}</p>
+                  </div>
+                )}
+                {previewPost?.content && (
+                  <div className="prose prose-sm max-w-none">
+                    {typeof previewPost.content === 'string'
+                      ? previewPost.content.substring(0, 3000)
+                      : getPostContentAsString(previewPost).substring(0, 3000)}
+                    {(getPostContentAsString(previewPost)?.length || 0) > 3000 && (
+                      <p className="text-xs text-muted-foreground mt-2">Content truncated — open editor to view full post</p>
+                    )}
+                  </div>
+                )}
+                <div className="flex justify-end gap-2 pt-2 border-t">
+                  <Button variant="outline" onClick={() => setPreviewPost(null)}>Close</Button>
+                  <Button onClick={() => { setPreviewPost(null); openEdit(previewPost); }}>Edit Post</Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </TabsContent>
 
         {/* Categories Tab */}
