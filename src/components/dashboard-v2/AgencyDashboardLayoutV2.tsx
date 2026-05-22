@@ -66,7 +66,27 @@ export default function AgencyDashboardLayoutV2({ children, activeTab, onTabChan
       <AgencySidebar activeTab={activeTab} onTabChange={onTabChange} collapsed={sidebarCollapsed} onCollapsedChange={setSidebarCollapsed} />
       <div className={cn('min-h-screen transition-all duration-300 ease-out', sidebarCollapsed ? 'ml-[72px]' : 'ml-64')}>
         <AgencyTopBar pageTitle={pageInfo.title} pageDescription={pageInfo.description} breadcrumbs={getBreadcrumbs()} />
-        <main className="p-6">{children}</main>
+        <main className="p-6" style={{
+          '--background': '40 30% 97%',
+          '--foreground': '35 20% 15%',
+          '--card': '0 0% 100%',
+          '--card-foreground': '35 20% 15%',
+          '--popover': '0 0% 100%',
+          '--popover-foreground': '35 20% 15%',
+          '--primary': '25 90% 55%',
+          '--primary-foreground': '0 0% 100%',
+          '--secondary': '35 20% 94%',
+          '--secondary-foreground': '35 20% 15%',
+          '--muted': '35 15% 92%',
+          '--muted-foreground': '35 10% 45%',
+          '--accent': '150 60% 40%',
+          '--accent-foreground': '0 0% 100%',
+          '--destructive': '0 70% 50%',
+          '--destructive-foreground': '0 0% 100%',
+          '--border': '35 10% 85%',
+          '--input': '35 10% 85%',
+          '--ring': '25 90% 55%',
+        } as React.CSSProperties}>{children}</main>
       </div>
     </div>
   );

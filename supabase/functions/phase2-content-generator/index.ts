@@ -229,57 +229,58 @@ const CITY_PAGE_TEMPLATE = `You are generating a COMPREHENSIVE city directory pa
 // 4 categories, 1,500-2,800 words each
 // ========================================
 const BLOG_TEMPLATES = {
-  'cost-guides': `You are writing a COST GUIDE blog post for Foster Care.
+  'cost-guides': `You are writing an ALLOWANCE GUIDE blog post for Foster Care.
 
-=== TEMPLATE: "How Much Does [Procedure] Cost in [State]? [2026 Price Guide]" ===
+=== TEMPLATE: "How Much Fostering Allowance in [Region]? [2026 Guide]" ===
 Target: 1,800-2,200 words
 
-H1: How Much Does [Procedure] Cost in [State]? [2026 Price Guide]
+H1: How Much Fostering Allowance in [Region]? [2026 Guide]
 
 1. INTRODUCTION (150 words)
-   - Direct answer to the cost question
+   - Direct answer to the allowance question
    - Range overview
-   - What affects pricing
+   - What affects allowance rates
 
-2. H2: Average Cost of [Procedure] in [State] (300 words)
-   - State average with range
+2. H2: Average Fostering Allowance in [Region] (300 words)
+   - Regional average with range
    - How it compares to national average
    - Year-over-year changes
 
-3. H2: Cost by City (400 words)
-   - TABLE: Top 10 cities in state with costs
-   - Why costs vary by city
-   - Urban vs. suburban differences
+3. H2: Allowance by Age Group (400 words)
+   - TABLE: Age bands with weekly rates
+   - Why rates vary
+   - Additional payments for specialist care
 
-4. H2: Factors That Affect Cost (350 words)
-   - Complexity of case
-   - Dentist experience
-   - Materials used
+4. H2: Factors That Affect Allowance (350 words)
+   - Type of placement
+   - Foster carer experience
+   - Child's needs
    - Geographic location
-   - Facility type
+   - Agency type (IFA vs Local Authority)
 
-5. H2: Does Insurance Cover [Procedure]? (300 words)
-   - Typical coverage percentages
-   - In-network vs. out-of-network
-   - Pre-authorization needs
+5. H2: Additional Financial Support (300 words)
+   - Holiday allowances
+   - Birthday and celebration payments
+   - Clothing allowances
+   - Equipment and nursery grants
 
-6. H2: How to Save Money on [Procedure] (350 words)
-   - Dental schools
+6. H2: How to Maximise Your Fostering Allowance (350 words)
+   - Fostering networks
    - Payment plans
-   - Dental savings plans
-   - Shop around tips
+   - Tax relief and exemptions
+   - Shop around agencies
 
-7. H2: Find Affordable [Procedure] Agencies (200 words)
+7. H2: Find Fostering Agencies in Your Area (200 words)
    - CTA to Foster Care
-   - How to filter by price
-   - Request quotes
+   - How to filter by agency type
+   - Compare allowances
 
 8. H2: FAQs (200 words)
-   - 5-6 cost-specific questions`,
+   - 5-6 allowance-specific questions`,
 
   'comparisons': `You are writing a COMPARISON blog post for Foster Care.
 
-=== TEMPLATE: "[Option A] vs [Option B]: Complete Comparison Guide [2026]" ===
+=== TEMPLATE: "[Fostering Type A] vs [Fostering Type B]: Complete Comparison Guide [2026]" ===
 Target: 2,000-2,500 words
 
 H1: [A] vs [B]: Complete Comparison Guide [2026]
@@ -289,33 +290,33 @@ H1: [A] vs [B]: Complete Comparison Guide [2026]
    - Quick verdict overview
    - Who should read this
 
-2. H2: What is [Option A]? (300 words)
+2. H2: What is [Fostering Type A]? (300 words)
    - Detailed explanation
    - How it works
-   - Ideal candidates
+   - Ideal foster carer profile
 
-3. H2: What is [Option B]? (300 words)
+3. H2: What is [Fostering Type B]? (300 words)
    - Detailed explanation
    - How it works
-   - Ideal candidates
+   - Ideal foster carer profile
 
 4. H2: Side-by-Side Comparison (400 words)
    - COMPARISON TABLE:
      | Factor | [A] | [B] |
      |--------|-----|-----|
-     | Cost | | |
-     | Treatment Time | | |
-     | Longevity | | |
-     | Maintenance | | |
-     | Comfort | | |
-     | Aesthetics | | |
+     | Time Commitment | | |
+     | Support Level | | |
+     | Training Required | | |
+     | Allowances | | |
+     | Child Age Range | | |
+     | Placement Duration | | |
    - Detailed discussion of each factor
 
-5. H2: Cost Comparison (300 words)
-   - [A] cost range
-   - [B] cost range
-   - Long-term cost considerations
-   - Insurance coverage differences
+5. H2: Allowance Comparison (300 words)
+   - [A] allowance range
+   - [B] allowance range
+   - Factors affecting payments
+   - Additional support differences
 
 6. H2: Pros and Cons of [A] (200 words)
    - 4-5 pros
@@ -325,12 +326,12 @@ H1: [A] vs [B]: Complete Comparison Guide [2026]
    - 4-5 pros
    - 3-4 cons
 
-8. H2: Which Option is Right for You? (300 words)
-   - Patient profile for [A]
-   - Patient profile for [B]
-   - Questions to ask your dentist
+8. H2: Which Fostering Type is Right for You? (300 words)
+   - Foster carer profile for [A]
+   - Foster carer profile for [B]
+   - Questions to ask your fostering agency
 
-9. H2: Find Agencys Offering Both Options (150 words)
+9. H2: Find Agencies Offering Both Options (150 words)
    - CTA to Foster Care
 
 10. H2: FAQs (150 words)
@@ -372,9 +373,9 @@ H1: How to [Action]: Complete Guide [2026]
    - 5-6 mistakes
    - How to avoid each
 
-8. H2: Tips from Dental Professionals (200 words)
+8. H2: Tips from Experienced Foster Carers (200 words)
    - Expert advice
-   - Industry best practices
+   - Best practices from fostering community
 
 9. H2: Take Action Today (150 words)
    - CTA to Foster Care
@@ -383,46 +384,46 @@ H1: How to [Action]: Complete Guide [2026]
 10. H2: FAQs (150 words)
     - 5 how-to questions`,
 
-  'local-content': `You are writing a LOCAL/LISTICLE blog post for Foster Care.
+  'local-content': `You are writing a LOCAL LISTICLE blog post for Foster Care.
 
-=== TEMPLATE: "Best [Type] Agencies in [City]: Top [#] Clinics [2026]" ===
+=== TEMPLATE: "Best [Type] Fostering Agencies in [City]: Top [Number] Agencies [2026]" ===
 Target: 2,200-2,800 words
 
-H1: Best [Type] Agencies in [City]: Top [#] Clinics [2026]
+H1: Best [Type] Fostering Agencies in [City]: Top [Number] Agencies [2026]
 
 1. INTRODUCTION (200 words)
-   - Why [City] for [type] dentistry
-   - What makes a great [type] dentist
+   - Why [City] for [type] fostering
+   - What makes a great [type] fostering agency
    - How we compiled this list
 
 2. H2: How We Chose the Best (200 words)
    - Methodology
    - Criteria used
-   - Data sources
+   - Data sources (Ofsted ratings, reviews)
 
-3. H2: 1. [Generic Practice Description] - [Neighborhood] (250 words)
+3. H2: [Number]. [Agency Name] - [Neighborhood] (250 words)
    - What makes them notable
    - Services offered
-   - Patient experience highlights
+   - Foster carer experience highlights
    - Location advantages
-   - CTA: Book on Foster Care
+   - CTA: Browse on Foster Care
 
 4. H2: 2-7. [Repeat for each featured entry]
    - 200-250 words each
    - Unique angle for each
 
-5. H2: What to Look for in a [Type] Dentist (300 words)
-   - Qualifications
-   - Experience markers
+5. H2: What to Look for in a [Type] Fostering Agency (300 words)
+   - Ofsted ratings and inspection reports
+   - Support and training offerings
    - Red flags
 
-6. H2: Average Costs in [City] (250 words)
-   - Cost table
-   - How [City] compares
+6. H2: Average Allowances in [City] (250 words)
+   - Allowance table
+   - How [City] compares regionally
 
-7. H2: Insurance & Payment (200 words)
-   - Common insurances accepted
-   - Payment options
+7. H2: Funding & Support (200 words)
+   - Agency types and their payment structures
+   - Additional allowances available
 
 8. H2: FAQs (200 words)
    - 5-6 local questions`
@@ -586,7 +587,7 @@ serve(async (req) => {
 
     if (template === "service") {
       // Sprint 2.1: Service pages
-      const serviceName = pageData.title || pageData.slug?.split("/").pop()?.replace(/-/g, " ") || "Dental Service";
+      const serviceName = pageData.title || pageData.slug?.split("/").pop()?.replace(/-/g, " ") || "Fostering Service";
       
       systemPrompt = SERVICE_PAGE_TEMPLATE;
       userPrompt = `Generate a COMPLETE service page for: ${serviceName}
@@ -598,8 +599,8 @@ TARGET WORD COUNT: ${target_word_count}-${max_word_count} words
 This content MUST be 100% unique. Generate fresh perspectives, examples, and phrasing.
 
 Generate the FULL content following all 14 sections in the template.
-Include realistic cost data for CA, MA, CT, NJ.
-Include comparison with the most common alternative treatment.
+Include realistic allowance data for England, Scotland, Wales, Northern Ireland.
+Include comparison with the most common alternative fostering type.
 
 Write in Foster Care's voice. Return pure markdown content.`;
 
@@ -619,7 +620,6 @@ TARGET WORD COUNT: ${target_word_count}-${max_word_count} words
 This content MUST be 100% unique with local context specific to ${cityName}.
 
 Generate the FULL content following all 11 sections in the template.
-Include realistic cost comparison table (15 procedures).
 Include 6-10 real neighborhoods/areas in ${cityName}.
 Add local context about ${cityName}'s fostering care landscape.
 
@@ -643,7 +643,7 @@ This content MUST be 100% unique and provide genuine value to readers.
 
 Generate the FULL content following the template structure.
 Include relevant data tables where specified.
-Write in Foster Care's voice - helpful, trustworthy, patient-focused.
+Write in Foster Care's voice - helpful, trustworthy, carer-focused.
 
 Return pure markdown content.`;
     } else {

@@ -100,7 +100,7 @@ export default function TabPermissionsDialog({
               </span>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={selectAll}>Select All</Button>
-                <Button variant="ghost" size="sm" onClick={clearAll}>Clear All</Button>
+                <Button variant="ghost" size="sm" onClick={clearAll} className="text-slate-600">Clear All</Button>
               </div>
             </div>
             

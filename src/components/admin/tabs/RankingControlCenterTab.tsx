@@ -41,7 +41,7 @@ function GaugeCard({ title, score, icon: Icon, subtitle, benchmark }: {
           </div>
           <span className={`text-3xl font-display font-black ${color}`}>{Math.round(score)}%</span>
         </div>
-        <h3 className="font-semibold text-sm text-foreground">{title}</h3>
+        <h3 className="font-semibold text-sm text-card-foreground">{title}</h3>
         <p className="text-xs text-muted-foreground mt-0.5">{subtitle}</p>
         <Progress value={score} className="mt-3 h-2" />
         {benchmark !== undefined && (

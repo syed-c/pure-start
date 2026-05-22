@@ -18,7 +18,7 @@ interface PandaBotProps {
   iconUrl?: string;
 }
 
-export function PandaBot({ className, iconUrl = '/favicon.png' }: PandaBotProps) {
+export function PandaBot({ className, iconUrl = '/logo.png' }: PandaBotProps) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);

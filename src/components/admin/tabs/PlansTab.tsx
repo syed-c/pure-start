@@ -503,7 +503,7 @@ export default function PlansTab() {
                 <div className="space-y-5 py-4">
                   {/* Clinic Search & Selection */}
                   <div className="space-y-3">
-                    <Label className="text-sm font-bold text-foreground">Select Agency</Label>
+                    <Label className="text-sm font-bold text-slate-800">Select Agency</Label>
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
@@ -569,7 +569,7 @@ export default function PlansTab() {
 
                   {/* Plan Selection with Cards */}
                   <div className="space-y-3">
-                    <Label className="text-sm font-bold text-foreground">Select Plan</Label>
+                    <Label className="text-sm font-bold text-slate-800">Select Plan</Label>
                     <div className="grid grid-cols-2 gap-3">
                       {plans.map((plan) => {
                         const isSelected = selectedPlan === plan.id;
@@ -591,10 +591,10 @@ export default function PlansTab() {
                             )}
                             <div className="flex items-center gap-2 mb-2">
                               <Crown className={`h-5 w-5 ${plan.color === 'gold' ? 'text-amber-500' : plan.color === 'primary' ? 'text-indigo-500' : 'text-slate-500'}`} />
-                              <span className="font-bold text-foreground">{plan.name}</span>
+                              <span className="font-bold text-slate-800">{plan.name}</span>
                             </div>
                             <div className="flex items-baseline gap-1">
-                              <span className="text-2xl font-black text-foreground">${plan.price_usd}</span>
+                              <span className="text-2xl font-black text-slate-800">${plan.price_usd}</span>
                               <span className="text-muted-foreground text-sm">/{plan.billing_period}</span>
                             </div>
                           </button>
@@ -704,7 +704,7 @@ export default function PlansTab() {
                   }`} />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-foreground">{plan.name}</h3>
+                  <h3 className="text-xl font-bold text-card-foreground">{plan.name}</h3>
                   <p className="text-sm text-muted-foreground">{plan.description}</p>
                 </div>
               </div>
@@ -775,7 +775,7 @@ export default function PlansTab() {
             <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary/10 to-gold/10 flex items-center justify-center mb-4">
               <Sparkles className="h-8 w-8 text-primary" />
             </div>
-            <h3 className="text-xl font-bold text-foreground mb-2">Custom Plan</h3>
+            <h3 className="text-xl font-bold text-card-foreground mb-2">Custom Plan</h3>
             <p className="text-muted-foreground text-sm mb-6">
               Need specific features or volume? Build a plan tailored to your practice's unique needs.
             </p>

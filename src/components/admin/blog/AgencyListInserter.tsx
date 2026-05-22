@@ -15,7 +15,7 @@ interface AgencyListInserterProps {
   onInsert: (blocks: ContentBlock[], insertAfterIndex: number | null) => void;
 }
 
-interface Clinic {
+interface AgencyItem {
   id: string;
   name: string;
   slug: string;
@@ -61,9 +61,9 @@ export default function AgencyListInserter({ blocks, onInsert }: AgencyListInser
     },
   });
 
-  // Fetch top clinics for selected city
-  const { data: clinics, isLoading: loadingClinics } = useQuery({
-    queryKey: ['blog-insert-clinics', selectedCity, limit],
+  // Fetch top agencies for selected city
+  const { data: agencies, isLoading: loadingAgencies } = useQuery({
+    queryKey: ['blog-insert-agencies', selectedCity, limit],
     enabled: !!selectedCity,
     queryFn: async () => {
       const { data } = await supabase
@@ -75,7 +75,7 @@ export default function AgencyListInserter({ blocks, onInsert }: AgencyListInser
         .order('rating', { ascending: false, nullsFirst: false })
         .order('review_count', { ascending: false, nullsFirst: false })
         .limit(parseInt(limit));
-      return data as Clinic[] || [];
+      return data as AgencyItem[] || [];
     },
   });
 
@@ -84,31 +84,29 @@ export default function AgencyListInserter({ blocks, onInsert }: AgencyListInser
   const selectedCityName = cities?.find(c => c.id === selectedCity)?.name || '';
 
   // Get block labels for position selector
-  const blockOptions = blocks.map((block, index) => ({
-    value: index.toString(),
-    label: block.type === 'heading' 
-      ? `${block.headingLevel?.toUpperCase()}: ${block.headingText?.slice(0, 40) || 'Untitled'}${(block.headingText?.length || 0) > 40 ? '...' : ''}`
-      : block.type === 'dentist-list'
-        ? `Dentist List: ${block.locationLabel}`
-        : block.type === 'faq-list'
-          ? `FAQ Section (${block.faqs?.length || 0} items)`
-          : `Image: ${block.imageAlt?.slice(0, 30) || 'No alt'}`,
-  }));
+    const blockOptions = blocks.map((block, index) => ({
+      value: index.toString(),
+      label: block.type === 'heading' 
+        ? `${block.headingLevel?.toUpperCase()}: ${block.headingText?.slice(0, 40) || 'Untitled'}${(block.headingText?.length || 0) > 40 ? '...' : ''}`
+        : block.type === 'agency-list'
+          ? `Agency List: ${block.locationLabel}`
+          : block.type === 'faq-list'
+            ? `FAQ Section (${block.faqs?.length || 0} items)`
+            : `Image: ${block.imageAlt?.slice(0, 30) || 'No alt'}`,
+    }));
 
   const handleInsert = () => {
-    if (!clinics || clinics.length === 0) {
-      toast.error('No clinics to insert');
+    if (!agencies || agencies.length === 0) {
+      toast.error('No agencies to insert');
       return;
     }
 
     const locationLabel = `${selectedCityName}, ${selectedStateAbbr}`;
     
-    // Create a single dentist-list block that stores clinic IDs
-    // The BlogPostPage will render these dynamically with proper UI
-    const dentistListBlock: ContentBlock = {
+    const agencyListBlock: ContentBlock = {
       id: Math.random().toString(36).substring(2, 11),
-      type: 'dentist-list',
-      clinicIds: clinics.map(c => c.id),
+      type: 'agency-list',
+      agencyIds: agencies.map(c => c.id),
       locationLabel: locationLabel,
       headingText: `Top ${limit} Agencies in ${locationLabel}`,
     };
@@ -119,7 +117,7 @@ export default function AgencyListInserter({ blocks, onInsert }: AgencyListInser
         ? -1 
         : parseInt(insertAfterIndex);
 
-    onInsert([dentistListBlock], insertIndex);
+    onInsert([agencyListBlock], insertIndex);
     toast.success(`Inserted Top ${limit} agencies from ${locationLabel}`);
     
     // Reset selection
@@ -136,7 +134,7 @@ export default function AgencyListInserter({ blocks, onInsert }: AgencyListInser
         >
           <CardTitle className="text-sm flex items-center gap-2">
             <Users className="h-4 w-4 text-emerald-500" />
-            Insert Dentist List
+            Insert Agency List
           </CardTitle>
           {isExpanded ? (
             <ChevronUp className="h-4 w-4 text-muted-foreground" />
@@ -228,29 +226,29 @@ export default function AgencyListInserter({ blocks, onInsert }: AgencyListInser
           )}
 
           {/* Preview */}
-          {selectedCity && clinics && clinics.length > 0 && (
+          {selectedCity && agencies && agencies.length > 0 && (
             <div className="space-y-2">
               <Label className="text-xs flex items-center gap-2">
                 Preview 
-                <Badge variant="secondary" className="text-[10px]">{clinics.length} clinics</Badge>
+                <Badge variant="secondary" className="text-[10px]">{agencies.length} agencies</Badge>
               </Label>
               <div className="max-h-48 overflow-y-auto rounded-lg border bg-background/50 p-2 space-y-2">
-                {clinics.map((clinic, i) => (
-                  <div key={clinic.id} className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-xs">
+                {agencies.map((agency, i) => (
+                  <div key={agency.id} className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-xs">
                     <span className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-[10px] font-bold text-primary shrink-0">
                       {i + 1}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{clinic.name}</p>
+                      <p className="font-medium truncate">{agency.name}</p>
                       <div className="flex items-center gap-2 text-muted-foreground">
-                        {clinic.rating && (
+                        {agency.rating && (
                           <span className="flex items-center gap-0.5">
                             <Star className="h-2.5 w-2.5 fill-amber-400 text-amber-400" />
-                            {clinic.rating}
+                            {agency.rating}
                           </span>
                         )}
-                        {clinic.address && (
-                          <span className="truncate">{clinic.address}</span>
+                        {agency.address && (
+                          <span className="truncate">{agency.address}</span>
                         )}
                       </div>
                     </div>
@@ -261,14 +259,14 @@ export default function AgencyListInserter({ blocks, onInsert }: AgencyListInser
           )}
 
           {/* Loading State */}
-          {loadingClinics && (
+          {loadingAgencies && (
             <div className="flex items-center justify-center py-4">
               <Loader2 className="h-5 w-5 animate-spin text-primary" />
             </div>
           )}
 
           {/* Insert Button */}
-          {selectedCity && clinics && clinics.length > 0 && (
+          {selectedCity && agencies && agencies.length > 0 && (
             <Button 
               type="button" 
               onClick={handleInsert}
@@ -280,10 +278,10 @@ export default function AgencyListInserter({ blocks, onInsert }: AgencyListInser
             </Button>
           )}
 
-          {/* No Clinics Message */}
-          {selectedCity && !loadingClinics && clinics && clinics.length === 0 && (
+          {/* No Agencies Message */}
+          {selectedCity && !loadingAgencies && agencies && agencies.length === 0 && (
             <p className="text-xs text-center text-muted-foreground py-2">
-              No clinics found in this city. Try selecting a different location.
+              No agencies found in this city. Try selecting a different location.
             </p>
           )}
         </CardContent>

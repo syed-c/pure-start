@@ -625,7 +625,7 @@ export default function SystemAuditTab() {
           <div className="flex items-center gap-4">
             <CheckCircle className="h-12 w-12 text-teal shrink-0" />
             <div>
-              <h3 className="text-xl font-bold text-foreground">Audit Complete</h3>
+              <h3 className="text-xl font-bold text-card-foreground">Audit Complete</h3>
               <p className="text-muted-foreground">
                 The system has been audited. Proceed to Phase 1: Feature Flags to safely add new booking engine functionality.
                 All new features will be additive and behind toggles.

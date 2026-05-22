@@ -13,7 +13,7 @@ import { getContentBody, calculateReadingTime } from "@/lib/blogContent";
 import { useRealCounts } from "@/hooks/useRealCounts";
 import { parseMarkdownToHtml } from "@/lib/utils/parseMarkdown";
 import { usePrerenderReady } from "@/hooks/usePrerenderReady";
-import { BlogAgencyList } from "@/components/blog/BlogDentistList";
+import { BlogAgencyList } from "@/components/blog/BlogAgencyList";
 import { BlogFAQList } from "@/components/blog/BlogFAQList";
 import { 
   Calendar, User, Clock, ArrowLeft, Share2, Facebook, Twitter, Linkedin,
@@ -29,6 +29,8 @@ type BlogContentBlock = {
   content?: string;
   imageUrl?: string;
   imageAlt?: string;
+  agencyIds?: string[];
+  agencySlugs?: string[];
   clinicIds?: string[];
   clinicSlugs?: string[];
   locationLabel?: string;
@@ -532,8 +534,8 @@ const BlogPostPage = () => {
         return (
           <BlogAgencyList
             key={b.id || `agency-${i}`}
-            agencyIds={b.agencyIds || []}
-            agencySlugs={b.agencySlugs || []}
+            agencyIds={b.clinicIds || b.agencyIds || []}
+            agencySlugs={b.clinicSlugs || b.agencySlugs || []}
             locationLabel={b.locationLabel}
             headingText={b.headingText}
           />

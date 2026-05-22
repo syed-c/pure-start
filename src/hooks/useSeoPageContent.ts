@@ -98,14 +98,16 @@ export function parseMarkdownContent(content: string | null): {
   for (const line of lines) {
     const h2Match = line.match(/^## (.+)$/);
     const h3Match = line.match(/^### (.+)$/);
-    if (h2Match) {
+    const htmlH2Match = line.match(/<h2[^>]*>(.+?)<\/h2>/i);
+    const htmlH3Match = line.match(/<h3[^>]*>(.+?)<\/h3>/i);
+    if (h2Match || htmlH2Match) {
       inIntro = false;
       if (currentSection) sections.push(currentSection);
-      currentSection = { heading: h2Match[1], content: "", level: 2 };
-    } else if (h3Match) {
+      currentSection = { heading: h2Match ? h2Match[1] : htmlH2Match![1], content: "", level: 2 };
+    } else if (h3Match || htmlH3Match) {
       inIntro = false;
       if (currentSection) sections.push(currentSection);
-      currentSection = { heading: h3Match[1], content: "", level: 3 };
+      currentSection = { heading: h3Match ? h3Match[1] : htmlH3Match![1], content: "", level: 3 };
     } else if (inIntro) {
       intro += line + "\n";
     } else if (currentSection) {

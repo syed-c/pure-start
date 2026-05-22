@@ -12,14 +12,14 @@ import { supabase } from '@/integrations/supabase/client';
 
 export interface ContentBlock {
   id: string;
-  type: 'heading' | 'image' | 'dentist-list' | 'faq-list';
+  type: 'heading' | 'image' | 'agency-list' | 'faq-list';
   headingLevel?: 'h1' | 'h2' | 'h3';
   headingText?: string;
   content?: string;
   imageUrl?: string;
   imageAlt?: string;
   // For agency-list blocks
-  clinicIds?: string[];
+  agencyIds?: string[];
   locationLabel?: string;
   // For faq-list blocks
   faqs?: Array<{ question: string; answer: string }>;
@@ -145,7 +145,7 @@ function InsertLinkDialog({
             <Input
               value={linkText}
               onChange={(e) => setLinkText(e.target.value)}
-              placeholder="e.g., Best dentist in Boston"
+              placeholder="e.g., Best fostering agencies in London"
             />
             <p className="text-xs text-muted-foreground">
               This text will be clickable and displayed to users
@@ -291,7 +291,7 @@ export default function BlogContentBlockEditor({ blocks, onChange, blogTitle }: 
               <GripVertical className="h-4 w-4 text-muted-foreground cursor-grab" />
               {block.type === 'heading' && `${block.headingLevel?.toUpperCase() || 'H2'} Block`}
               {block.type === 'image' && 'Image Block'}
-              {block.type === 'dentist-list' && `Agency List (${block.clinicIds?.length || 0} agencies)`}
+              {block.type === 'agency-list' && `Agency List (${block.agencyIds?.length || 0} agencies)`}
               {block.type === 'faq-list' && `FAQ Section (${block.faqs?.length || 0} items)`}
             </div>
             <div className="flex items-center gap-1">
@@ -433,13 +433,13 @@ export default function BlogContentBlockEditor({ blocks, onChange, blogTitle }: 
               </>
             )}
             
-            {block.type === 'dentist-list' && (
+            {block.type === 'agency-list' && (
               <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4">
                 <p className="text-sm font-medium text-emerald-600 mb-2">
-                  📍 Dentist List: {block.locationLabel}
+                  📍 Agency List: {block.locationLabel}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {block.clinicIds?.length || 0} clinics will be dynamically displayed with booking buttons
+                  {block.agencyIds?.length || 0} agencies will be dynamically displayed with booking buttons
                 </p>
               </div>
             )}
@@ -477,9 +477,8 @@ export function blocksToMarkdown(blocks: ContentBlock[]): string {
       if (b.type === 'image') {
         return `![${b.imageAlt || 'image'}](${b.imageUrl || ''})`;
       }
-      if (b.type === 'dentist-list') {
-        // Store as a special marker that can be parsed on render
-        return `<!-- DENTIST_LIST:${JSON.stringify({ clinicIds: b.clinicIds, locationLabel: b.locationLabel })} -->`;
+      if (b.type === 'agency-list') {
+        return `<!-- AGENCY_LIST:${JSON.stringify({ agencyIds: b.agencyIds, locationLabel: b.locationLabel })} -->`;
       }
       if (b.type === 'faq-list') {
         // Store FAQs as a special marker
@@ -509,17 +508,32 @@ export function markdownToBlocks(md: string): ContentBlock[] {
 
   for (const line of lines) {
     // Check for special markers first
+    const agencyListMatch = line.match(/<!-- AGENCY_LIST:(.+?) -->/);
     const dentistListMatch = line.match(/<!-- DENTIST_LIST:(.+?) -->/);
     const faqListMatch = line.match(/<!-- FAQ_LIST:(.+?) -->/);
     
+    if (agencyListMatch) {
+      flushBlock();
+      try {
+        const data = JSON.parse(agencyListMatch[1]);
+        blocks.push({
+          id: generateId(),
+          type: 'agency-list',
+          agencyIds: data.agencyIds,
+          locationLabel: data.locationLabel,
+        });
+      } catch { /* ignore parse errors */ }
+      continue;
+    }
+
     if (dentistListMatch) {
       flushBlock();
       try {
         const data = JSON.parse(dentistListMatch[1]);
         blocks.push({
           id: generateId(),
-          type: 'dentist-list',
-          clinicIds: data.clinicIds,
+          type: 'agency-list',
+          agencyIds: data.clinicIds,
           locationLabel: data.locationLabel,
         });
       } catch { /* ignore parse errors */ }

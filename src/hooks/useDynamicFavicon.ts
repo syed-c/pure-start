@@ -8,7 +8,7 @@ export function useDynamicFavicon() {
   const { data: settings } = useSiteSettings();
 
   useEffect(() => {
-    const faviconUrl = settings?.branding?.favicon_url || '/favicon.png?v=6';
+    const faviconUrl = settings?.branding?.favicon_url || '/favicon.svg';
     
     const getContentType = (url: string) => {
       if (url.includes('.svg')) return 'image/svg+xml';

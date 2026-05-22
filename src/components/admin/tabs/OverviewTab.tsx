@@ -565,7 +565,7 @@ export default function OverviewTab() {
         {/* Weekly Report Card */}
         <div className="bg-card rounded-2xl border border-border/50 p-5 shadow-sm">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-foreground">Weekly Report</h3>
+            <h3 className="font-bold text-card-foreground">Weekly Report</h3>
             <Button variant="ghost" size="sm" onClick={() => navigateTo('weekly')}>
               <ArrowRight className="h-4 w-4" />
             </Button>
@@ -639,7 +639,7 @@ export default function OverviewTab() {
 
         {/* Progress Circle */}
         <div className="bg-card rounded-2xl border border-border/50 p-6 shadow-sm">
-          <h3 className="font-bold text-foreground mb-4">Agency Progress</h3>
+          <h3 className="font-bold text-card-foreground mb-4">Agency Progress</h3>
           <div className="flex flex-col items-center">
             <CircularProgress value={claimRate} size="lg" label="Claimed" />
             <div className="flex items-center justify-center gap-4 mt-6 flex-wrap">
@@ -732,7 +732,7 @@ export default function OverviewTab() {
 
         {/* Agency Distribution Pie Chart */}
         <div className="bg-card rounded-2xl border border-border/50 p-6 shadow-sm">
-          <h3 className="font-bold text-foreground mb-4">Agency Distribution</h3>
+          <h3 className="font-bold text-card-foreground mb-4">Agency Distribution</h3>
           <div className="h-44">
             <ResponsiveContainer width="100%" height="100%">
               <RechartsPie>
@@ -776,11 +776,11 @@ export default function OverviewTab() {
 
         {/* Performance Summary */}
         <div className="bg-card rounded-2xl border border-border/50 p-6 shadow-sm">
-          <h3 className="font-bold text-foreground mb-4">Performance Summary</h3>
+          <h3 className="font-bold text-card-foreground mb-4">Performance Summary</h3>
           <div className="space-y-4">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-foreground">Claim Rate</span>
+                <span className="text-sm font-medium text-card-foreground">Claim Rate</span>
                 <span className="text-sm font-bold text-primary">{claimRate}%</span>
               </div>
               <Progress value={claimRate} className="h-2" />
@@ -816,7 +816,7 @@ export default function OverviewTab() {
                 <AlertTriangle className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h3 className="font-bold text-foreground">Compliance Alerts</h3>
+                <h3 className="font-bold text-card-foreground">Compliance Alerts</h3>
                 <p className="text-xs text-muted-foreground">Items requiring immediate attention</p>
               </div>
             </div>
@@ -890,7 +890,7 @@ export default function OverviewTab() {
               <Bot className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h3 className="font-bold text-foreground">AI Insights</h3>
+              <h3 className="font-bold text-card-foreground">AI Insights</h3>
               <p className="text-xs text-muted-foreground">Powered by intelligent automation</p>
             </div>
           </div>

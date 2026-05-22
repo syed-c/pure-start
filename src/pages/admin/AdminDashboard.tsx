@@ -631,7 +631,27 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f7fa] flex">
+    <div className="min-h-screen bg-[#f5f7fa] flex text-slate-900" style={{
+      '--background': '40 30% 97%',
+      '--foreground': '35 20% 15%',
+      '--card': '0 0% 100%',
+      '--card-foreground': '35 20% 15%',
+      '--popover': '0 0% 100%',
+      '--popover-foreground': '35 20% 15%',
+      '--primary': '25 90% 55%',
+      '--primary-foreground': '0 0% 100%',
+      '--secondary': '35 20% 94%',
+      '--secondary-foreground': '35 20% 15%',
+      '--muted': '35 15% 92%',
+      '--muted-foreground': '35 10% 45%',
+      '--accent': '150 60% 40%',
+      '--accent-foreground': '0 0% 100%',
+      '--destructive': '0 70% 50%',
+      '--destructive-foreground': '0 0% 100%',
+      '--border': '35 10% 85%',
+      '--input': '35 10% 85%',
+      '--ring': '25 90% 55%',
+    } as React.CSSProperties}>
       {/* Sidebar - Dark Modern Design with Graphics */}
       <aside
         className={cn(
@@ -759,7 +779,7 @@ export default function AdminDashboard() {
         <div className="h-16 border-b border-border/30 bg-white flex items-center justify-between px-6 sticky top-0 z-40 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="h-8 w-1 rounded-full bg-gradient-to-b from-primary to-teal" />
-            <h2 className="font-bold text-foreground text-lg">
+            <h2 className="font-bold text-slate-900 text-lg">
               {tabGroups.flatMap(g => g.tabs).find(t => t.id === activeTab)?.label || 'Dashboard'}
             </h2>
           </div>
@@ -774,7 +794,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="p-6 bg-[#f5f7fa] min-h-[calc(100vh-4rem)]">
+        <div className="p-6 bg-[#f5f7fa] min-h-[calc(100vh-4rem)]" style={{ '--foreground': '35 20% 15%' } as React.CSSProperties}>
           <Suspense fallback={
             <div className="flex items-center justify-center py-20">
               <div className="text-center">

@@ -27,12 +27,12 @@
   <url><loc>https://www.foster-care.co.uk/tools/insurance-checker/</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://www.foster-care.co.uk/compare/ifa-vs-local-authority/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.foster-care.co.uk/england/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.foster-care.co.uk/fostering-agencies/england/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.foster-care.co.uk/scotland/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.foster-care.co.uk/fostering-agencies/scotland/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.foster-care.co.uk/wales/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.foster-care.co.uk/fostering-agencies/wales/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.foster-care.co.uk/northern-ireland/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/fostering-agencies/england/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/fostering-agencies/scotland/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.foster-care.co.uk/fostering-agencies/wales/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.foster-care.co.uk/fostering-agencies/northern-ireland/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.foster-care.co.uk/london/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.foster-care.co.uk/manchester/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>

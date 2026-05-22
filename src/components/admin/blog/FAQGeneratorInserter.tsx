@@ -135,8 +135,8 @@ export default function FAQGeneratorInserter({
     value: index.toString(),
     label: block.type === 'heading' 
       ? `${block.headingLevel?.toUpperCase()}: ${block.headingText?.slice(0, 40) || 'Untitled'}${(block.headingText?.length || 0) > 40 ? '...' : ''}`
-      : block.type === 'dentist-list'
-        ? `Dentist List: ${block.locationLabel}`
+      : block.type === 'agency-list'
+        ? `Agency List: ${block.locationLabel}`
         : block.type === 'faq-list'
           ? `FAQ Section (${block.faqs?.length || 0} items)`
           : `Image: ${block.imageAlt?.slice(0, 30) || 'No alt'}`,

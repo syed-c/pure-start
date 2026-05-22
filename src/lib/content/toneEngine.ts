@@ -43,13 +43,13 @@ const DEFAULT_BLEND: ToneBlend = {
 };
 
 const PAGE_TYPE_PRESETS: Record<TonePageType, ToneBlend> = {
-  location: { warm_compassionate: 35, professional_authoritative: 25, informative_educational: 30, conversion_focused: 10 },
-  city: { warm_compassionate: 35, professional_authoritative: 25, informative_educational: 30, conversion_focused: 10 },
-  region: { warm_compassionate: 35, professional_authoritative: 25, informative_educational: 30, conversion_focused: 10 },
+  location: { warm_compassionate: 30, professional_authoritative: 25, informative_educational: 25, conversion_focused: 20 },
+  city: { warm_compassionate: 30, professional_authoritative: 20, informative_educational: 30, conversion_focused: 20 },
+  region: { warm_compassionate: 30, professional_authoritative: 25, informative_educational: 25, conversion_focused: 20 },
   agency: { warm_compassionate: 25, professional_authoritative: 45, informative_educational: 20, conversion_focused: 10 },
   agency_profile: { warm_compassionate: 25, professional_authoritative: 45, informative_educational: 20, conversion_focused: 10 },
-  service: { warm_compassionate: 45, professional_authoritative: 25, informative_educational: 20, conversion_focused: 10 },
-  service_location: { warm_compassionate: 45, professional_authoritative: 25, informative_educational: 20, conversion_focused: 10 },
+  service: { warm_compassionate: 40, professional_authoritative: 25, informative_educational: 15, conversion_focused: 20 },
+  service_location: { warm_compassionate: 40, professional_authoritative: 25, informative_educational: 15, conversion_focused: 20 },
   blog: { warm_compassionate: 20, professional_authoritative: 20, informative_educational: 50, conversion_focused: 10 },
   homepage: { warm_compassionate: 40, professional_authoritative: 30, informative_educational: 20, conversion_focused: 10 },
   faq: { warm_compassionate: 20, professional_authoritative: 20, informative_educational: 50, conversion_focused: 10 },

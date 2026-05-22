@@ -25,7 +25,7 @@ import { BookOpen, Search, Plus, Edit, Trash2, Eye, EyeOff, AlertTriangle, Link2
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import BlogContentBlockEditor, { type ContentBlock, blocksToMarkdown, markdownToBlocks } from '@/components/admin/blog/BlogContentBlockEditor';
-import AgencyListInserter from '@/components/admin/blog/DentistListInserter';
+import AgencyListInserter from '@/components/admin/blog/AgencyListInserter';
 import FAQGeneratorInserter from '@/components/admin/blog/FAQGeneratorInserter';
 import BlogTopicsLibrary from '@/components/admin/blog/BlogTopicsLibrary';
 
@@ -929,7 +929,7 @@ export default function BlogTab() {
                           </Alert>
                         )}
 
-                        {/* Dentist List Inserter */}
+                        {/* Agency List Inserter */}
                         <AgencyListInserter
                           blocks={contentBlocks}
                           onInsert={(newBlocks, insertAfterIndex) => {
@@ -1019,7 +1019,7 @@ export default function BlogTab() {
                               </div>
                             </div>
                             <p className="text-xs text-muted-foreground mt-1">
-                              AI scans your content and suggests links to services, locations, blogs, and clinics
+                              AI scans your content and suggests links to services, locations, blogs, and agencies
                             </p>
                           </CardHeader>
                           <CardContent className="p-4 pt-2">

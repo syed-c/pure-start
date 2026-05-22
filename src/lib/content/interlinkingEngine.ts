@@ -111,14 +111,21 @@ export function buildInterlinkCandidates(
 
   for (const targetType of rule.targetTypes) {
     if (targetType === 'nearby_city' || targetType === 'city') {
-      const cities = targetType === 'nearby_city' ? nearbyCities : nearbyCities;
-      for (const city of cities.slice(0, 4)) {
-        const variants = rule.anchorVariants[targetType] || [];
+      if (targetType === 'city') {
+        const variants = rule.anchorVariants.city || [];
         for (const variant of variants) {
-          const phrase = variant.replace('{name}', city.name).replace('{location}', locationName);
-          const href = `/${city.region}/${city.slug}/`;
-          const priority = targetType === 'nearby_city' ? 80 : 70;
-          candidates.push({ phrase, href, priority });
+          const phrase = variant.replace('{name}', locationName).replace('{location}', regionName || '');
+          const href = `/${regionSlug || ''}/${locationName.toLowerCase().replace(/\s+/g, '-')}/`;
+          candidates.push({ phrase, href, priority: 70 });
+        }
+      } else {
+        for (const city of nearbyCities.slice(0, 4)) {
+          const variants = rule.anchorVariants.nearby_city || [];
+          for (const variant of variants) {
+            const phrase = variant.replace('{name}', city.name).replace('{location}', locationName);
+            const href = `/${city.region}/${city.slug}/`;
+            candidates.push({ phrase, href, priority: 80 });
+          }
         }
       }
     }
